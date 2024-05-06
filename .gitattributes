@@ -1,0 +1,8 @@
+*.so binary
+*.a binary
+
+*.dll binary
+*.lib binary
+
+*.sh binary
+*.bat binary
