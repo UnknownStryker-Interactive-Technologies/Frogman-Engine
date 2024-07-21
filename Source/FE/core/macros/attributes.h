@@ -1,6 +1,6 @@
 ﻿#ifndef _FE_CORE_MACROS_ATTRIBUTES_H_
 #define _FE_CORE_MACROS_ATTRIBUTES_H_
-#include <FE/core/macros/macro_definitions.h>
+#include <FE/core/macros/definitions.h>
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 
 
@@ -16,15 +16,26 @@
 #ifdef _HAS_CXX20_
 	#define _LIKELY_ [[likely]]
 	#define _UNLIKELY_ [[unlikely]]
+	#define LIKELY(c) (c)
+	#define UNLIKELY(c) (c)
+
 		#ifdef _MSVC_
 			#define _NO_UNIQUE_ADDRESS_ [[msvc::no_unique_address]]
 		#else
 			#define _NO_UNIQUE_ADDRESS_ [[no_unique_address]]
 		#endif
 #else
-#define _LIKELY_
-#define _UNLIKELY_
-#define _NO_UNIQUE_ADDRESS_
+	#ifdef _LINUX_X86_64_
+		#define LIKELY(c) __builtin_expect((c), 1)
+		#define UNLIKELY(c) __builtin_expect((c), 0)
+	#else
+		#define LIKELY(c) (c)
+		#define UNLIKELY(c) (c)
+	#endif
+
+	#define _LIKELY_ 
+	#define _UNLIKELY_
+	#define _NO_UNIQUE_ADDRESS_
 #endif
 
 

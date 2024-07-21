@@ -1,8 +1,9 @@
 ﻿#ifndef _FE_CORE_RANDOM_HXX_
 #define _FE_CORE_RANDOM_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#pragma warning(disable: 4714)
-#include <FE/core/prerequisites.h>
+#include <FE/core/types.hxx>
+
+// std
 #include <optional>
 #include <random>
 
@@ -15,10 +16,10 @@ BEGIN_NAMESPACE(FE)
 template <typename T>
 class random_integer final
 {
-    FE_STATIC_ASSERT(::std::is_integral<T>::value == false, "typename T is not an integral type");
+    static_assert(std::is_integral<T>::value == true, "typename T is not an integral type");
 
-    std::optional<::std::mt19937_64> m_value_generator;
-    std::optional<::std::uniform_int_distribution<T>> m_uniform_int_distribution;
+    std::optional<std::mt19937_64> m_value_generator;
+    std::optional<std::uniform_int_distribution<T>> m_uniform_int_distribution;
 
 public:
     using value_type = T;

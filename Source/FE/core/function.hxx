@@ -2,8 +2,10 @@
 #define _FE_CORE_FUNCTION_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
+#include <FE/core/type_traits.hxx>
+
+// std
 #include <any>
-#define PASS_RETURN_BUFFER(return_buffer) (&return_buffer)
 
 
 
@@ -11,801 +13,14 @@
 BEGIN_NAMESPACE(FE)
 
 
-using void_t = uint8;
+class void_t{};
 
-
-enum struct FORWARD_DATA : boolean
-{
-    _AS_LVALUE_REF = true,
-    _AS_RVALUE_REF = false
-};
-
-
-
-
-template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode = FE::FORWARD_DATA::_AS_RVALUE_REF, typename ...ArgumentsBufferTypes>
-struct cpp_style_task;
-
-template<typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode = FE::FORWARD_DATA::_AS_RVALUE_REF, typename ...ArgumentsBufferTypes>
-struct c_style_task;
-
-
-
-
-template<typename F, FORWARD_DATA ArgumentsForwardingMode = FE::FORWARD_DATA::_AS_RVALUE_REF>
-class function;
-
-template<typename R, typename ...Arguments>
-class function<R(Arguments...), FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct c_style_task;
-
-    R(*m_function_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using function_type = decltype(m_function_pointer);
-    using return_type = R;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function() noexcept : m_function_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~function() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function&& rvalue_p) noexcept : m_function_pointer(rvalue_p.m_function_pointer) { rvalue_p.m_function_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_function_pointer));
-        return this->m_function_pointer(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function_type function_p) noexcept
-    {
-        this->m_function_pointer = function_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(const function& other_p) noexcept
-    {
-        this->m_function_pointer = other_p.m_function_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function&& rvalue_p) noexcept
-    {
-        this->m_function_pointer = rvalue_p.m_function_pointer;
-        rvalue_p.m_function_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_function_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
-    }
-};
-
-template<typename ...Arguments>
-class function<void(Arguments...), FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct c_style_task;
-
-    void(*m_function_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using function_type = decltype(m_function_pointer);
-    using return_type = void;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function() noexcept : m_function_pointer() {}
-    ~function() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function&& rvalue_p) noexcept : m_function_pointer(rvalue_p.m_function_pointer) { rvalue_p.m_function_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_function_pointer));
-        this->m_function_pointer(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function_type function_p) noexcept
-    {
-        this->m_function_pointer = function_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(const function& other_p) noexcept
-    {
-        this->m_function_pointer = other_p.m_function_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function&& rvalue_p) noexcept
-    {
-        this->m_function_pointer = rvalue_p.m_function_pointer;
-        rvalue_p.m_function_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_function_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
-    }
-};
-
-
-
-
-template<typename R, typename ...Arguments>
-class function<R(Arguments...), FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct c_style_task;
-
-    R(*m_function_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using function_type = decltype(m_function_pointer);
-    using return_type = R;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function() noexcept : m_function_pointer() {}
-    ~function() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function_type function_ptr_p) noexcept : m_function_pointer(function_ptr_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(const function& other_cref_p) noexcept : m_function_pointer(other_cref_p.m_function_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function&& rvalue_p) noexcept : m_function_pointer(rvalue_p.m_function_pointer) { rvalue_p.m_function_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_function_pointer));
-        return this->m_function_pointer(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function_type function_p) noexcept
-    {
-        this->m_function_pointer = function_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(const function& other_p) noexcept
-    {
-        this->m_function_pointer = other_p.m_function_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function&& rvalue_p) noexcept
-    {
-        this->m_function_pointer = rvalue_p.m_function_pointer;
-        rvalue_p.m_function_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_function_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
-    }
-};
-
-template<typename ...Arguments>
-class function<void(Arguments...), FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct c_style_task;
-
-    void(*m_function_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using function_type = decltype(m_function_pointer);
-    using return_type = void;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function() noexcept : m_function_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~function() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ function(function&& rvalue_p) noexcept : m_function_pointer(rvalue_p.m_function_pointer) { rvalue_p.m_function_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_function_pointer));
-        this->m_function_pointer(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function_type function_p) noexcept
-    {
-        this->m_function_pointer = function_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(const function& other_p) noexcept
-    {
-        this->m_function_pointer = other_p.m_function_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ function& operator=(function&& rvalue_p) noexcept
-    {
-        this->m_function_pointer = rvalue_p.m_function_pointer;
-        rvalue_p.m_function_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_function_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const function& other_p) const noexcept
-    {
-        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
-    }
-};
-
-
-
-
-template<class C, typename F, FORWARD_DATA ArgumentsForwardingMode = FE::FORWARD_DATA::_AS_RVALUE_REF>
-class method;
-
-template<class C, typename R, typename ...Arguments>
-class method<C, R(Arguments...) const, FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    R(C::* m_method_pointer)(Arguments...) const;
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = R;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(class_type& instance_p, Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        return (instance_p.*this->m_method_pointer)(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename ...Arguments>
-class method<C, void(Arguments...) const, FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    void(C::* m_method_pointer)(Arguments...) const;
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = void;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(class_type& instance_p, Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        (instance_p.*this->m_method_pointer)(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename R, typename ...Arguments>
-class method<C, R(Arguments...), FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    R(C::* m_method_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = R;
-    using class_type = C;
-
-    constexpr _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(class_type& instance_p, Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        return (instance_p.*this->m_method_pointer)(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename ...Arguments>
-class method<C, void(Arguments...), FE::FORWARD_DATA::_AS_LVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    void(C::* m_method_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = void;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(class_type& instance_p, Arguments& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        (instance_p.*this->m_method_pointer)(arguments_p...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-
-template<class C, typename R, typename ...Arguments>
-class method<C, R(Arguments...) const, FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    R(C::* m_method_pointer)(Arguments...) const;
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = R;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(class_type& instance_p, Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        return (instance_p.*this->m_method_pointer)(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename ...Arguments>
-class method<C, void(Arguments...) const, FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    void(C::* m_method_pointer)(Arguments...) const;
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = void;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(class_type& instance_p, Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        (instance_p.*this->m_method_pointer)(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename R, typename ...Arguments>
-class method<C, R(Arguments...), FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    R(C::* m_method_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = false;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = R;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-     _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ R operator()(class_type& instance_p, Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        return (instance_p.*this->m_method_pointer)(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ var::boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ var::boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-template<class C, typename ...Arguments>
-class method<C, void(Arguments...), FE::FORWARD_DATA::_AS_RVALUE_REF> final
-{
-    template<class C, typename TaskImpl, FORWARD_DATA ArgumentsForwardingMode, typename ...ArgumentsBufferTypes>
-    friend struct cpp_style_task;
-
-    void(C::* m_method_pointer)(Arguments...);
-
-public:
-    static constexpr inline boolean has_void_return_type = true;
-
-    using method_type = decltype(m_method_pointer);
-    using return_type = void;
-    using class_type = C;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
-    _CONSTEXPR23_ _FORCE_INLINE_ ~method() noexcept {}
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ method(method&& rvalue_p) noexcept : m_method_pointer(rvalue_p.m_method_pointer) { rvalue_p.m_method_pointer = nullptr; }
-
-    _FORCE_INLINE_ void operator()(class_type& instance_p, Arguments&& ...arguments_p) noexcept
-    {
-        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->m_method_pointer));
-        (instance_p.*this->m_method_pointer)(std::forward<Arguments>(arguments_p)...);
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method_type method_p) noexcept
-    {
-        this->m_method_pointer = method_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(const method& other_p) noexcept
-    {
-        this->m_method_pointer = other_p.m_method_pointer;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ method& operator=(method&& rvalue_p) noexcept
-    {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
-        rvalue_p.m_method_pointer = nullptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ operator bool() const noexcept
-    {
-        return this->m_method_pointer != nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ var::boolean operator==(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ var::boolean operator!=(const method& other_p) const noexcept
-    {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
-    }
-};
-
-
-
-
-enum struct ARGUMENTS_COUNT
+enum class ARGUMENTS_COUNT : uint8
 {
     _0 = 0,
     _1 = 1,
     _2 = 2,
-    _3 =3,
+    _3 = 3,
     _4 = 4,
     _5 = 5,
     _6 = 6,
@@ -815,108 +30,84 @@ enum struct ARGUMENTS_COUNT
     _10 = 10
 };
 
-template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth, typename Tenth>
-struct arguments;
+class argument_base {};
+
+template<typename First = void, typename Second = void, typename Third = void, typename Fourth = void, typename Fifth = void, typename Sixth = void, typename Seventh = void, typename Eighth = void, typename Ninth = void, typename Tenth = void>
+class arguments;
 
 template<>
-struct arguments<void, void, void, void, void, void, void, void, void, void> 
+class arguments<void, void, void, void, void, void, void, void, void, void> : public argument_base
 {
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_0;
+public:
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_0;
 };
 
 template<typename First>
-struct arguments<First, void, void, void, void, void, void, void, void, void>
+class arguments<First, void, void, void, void, void, void, void, void, void> : public argument_base
 {
+public:
     using first_type = First;
 
     First _first;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_1;
-    
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept = default;
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : _first(arguments_p._first) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : _first(std::move(arguments_p._first)) {};
+    _FORCE_INLINE_ arguments() noexcept 
+        : _first() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        this->_first = arguments_p._first;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        this->_first = std::move(arguments_p._first);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p) noexcept
+        : _first(first_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second>
-struct arguments<First, Second, void, void, void, void, void, void, void, void> : public arguments<First, void, void, void, void, void, void, void, void, void>
+class arguments<First, Second, void, void, void, void, void, void, void, void> : public arguments<First, void, void, void, void, void, void, void, void, void>
 {
+public:
     using base_type = arguments<First, void, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = Second;
 
     second_type _second;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_2;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _second() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _second(arguments_p._second) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _second(std::move(arguments_p._second)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_second = arguments_p._second;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_second = std::move(arguments_p._second);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _second() {}
+    
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p) noexcept
+        : base_type(first_p), _second(second_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third>
-struct arguments<First, Second, Third, void, void, void, void, void, void, void> : public arguments<First, Second, void, void, void, void, void, void, void, void>
+class arguments<First, Second, Third, void, void, void, void, void, void, void> : public arguments<First, Second, void, void, void, void, void, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::Second;
     using third_type = Third;
 
     third_type _third;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_3;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _third() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _third(arguments_p._third) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _third(std::move(arguments_p._third)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_third = arguments_p._third;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_third = std::move(arguments_p._third);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _third() {}
+    
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p) noexcept
+        : base_type(first_p, second_p), _third(third_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth>
-struct arguments<First, Second, Third, Fourth, void, void, void, void, void, void> : public arguments<First, Second, Third, void, void, void, void, void, void, void>
+class arguments<First, Second, Third, Fourth, void, void, void, void, void, void> : public arguments<First, Second, Third, void, void, void, void, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -924,32 +115,22 @@ struct arguments<First, Second, Third, Fourth, void, void, void, void, void, voi
     using fourth_type = Fourth;
 
     fourth_type _fourth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_4;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _fourth() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
+    _FORCE_INLINE_ arguments() noexcept
+        : base_type(), _fourth() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _fourth(arguments_p._fourth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _fourth(std::move(arguments_p._fourth)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_fourth = arguments_p._fourth;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_fourth = std::move(arguments_p._fourth);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p) noexcept
+        : base_type(first_p, second_p, third_p), _fourth(fourth_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth>
-struct arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, void> : public arguments<First, Second, Third, Fourth, void, void, void, void, void, void>
+class arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, void> : public arguments<First, Second, Third, Fourth, void, void, void, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -958,32 +139,23 @@ struct arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, vo
     using fifth_type = Fifth;
 
     fifth_type _fifth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_5;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _fifth() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _fifth() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _fifth(arguments_p._fifth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _fifth(std::move(arguments_p._fifth)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_fifth = arguments_p._fifth;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_fifth = std::move(arguments_p._fifth);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p, 
+                             const Fifth& fifth_p) noexcept
+        : base_type(first_p, second_p, third_p, fourth_p), _fifth(fifth_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth>
-struct arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, void> : public arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, void>
+class arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, void> : public arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, Fifth, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -993,32 +165,23 @@ struct arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, v
     using sixth_type = Sixth;
 
     sixth_type _sixth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_6;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _sixth() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _sixth() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _sixth(arguments_p._sixth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _sixth(std::move(arguments_p._sixth)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_sixth = arguments_p._sixth;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_sixth = std::move(arguments_p._sixth);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+                             const Fifth& fifth_p, const Sixth& sixth_p) noexcept
+        : base_type(first_p, second_p, third_p, fourth_p, fifth_p), _sixth(sixth_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh>
-struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void, void> : public arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, void>
+class arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void, void> : public arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, Fifth, Sixth, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -1029,32 +192,24 @@ struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void
     using seventh_type = Seventh;
 
     seventh_type _seventh;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_7;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _seventh() {};
-    _CONSTEXPR23_ _FORCE_INLINE_ ~arguments() noexcept = default;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _seventh(arguments_p._seventh) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _seventh(std::move(arguments_p._seventh)) {};
+    _FORCE_INLINE_ arguments() noexcept
+        : base_type(), _seventh() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_seventh = arguments_p._seventh;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_seventh = std::move(arguments_p._seventh);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p) noexcept
+        : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p), _seventh(seventh_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth>
-struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, void, void> : public arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void, void>
+class arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, void, void> : public arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -1066,32 +221,23 @@ struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, vo
     using eighth_type = Eighth;
 
     eighth_type _eighth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_8;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _eighth() {};
-    _FORCE_INLINE_ ~arguments() noexcept = default;
+    _FORCE_INLINE_ arguments() noexcept
+        : base_type(), _eighth() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _eighth(arguments_p._eighth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _eighth(std::move(arguments_p._eighth)) {};
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_eighth = arguments_p._eighth;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_eighth = std::move(arguments_p._eighth);
-        return *this;
-    }
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p)
+        : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p), _eighth(eighth_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth>
-struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void> : public  arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, void, void>
+class arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void> : public  arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, void, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -1104,33 +250,27 @@ struct arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ni
     using ninth_type = Ninth;
 
     ninth_type _ninth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_9;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _ninth() {};
-    _FORCE_INLINE_ ~arguments() noexcept = default;
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _ninth() {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _ninth(arguments_p._ninth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _ninth(std::move(arguments_p._ninth)) {};
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
+                             const Ninth& ninth_p) noexcept
+        : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p), _ninth(ninth_p) {}
+};
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_ninth = arguments_p._ninth;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
-    {
-        base_type::operator=(arguments_p);
-        this->_ninth = std::move(arguments_p._ninth);
-        return *this;
-    }
+=======
 };
 
 
-template<typename First = void, typename Second = void, typename Third = void, typename Fourth = void, typename Fifth = void, typename Sixth = void, typename Seventh = void, typename Eighth = void, typename Ninth = void, typename Tenth = void>
-struct arguments : public arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void>
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth, typename Tenth>
+class arguments : public arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void>
 {
+public:
     using base_type = arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
@@ -1144,413 +284,950 @@ struct arguments : public arguments<First, Second, Third, Fourth, Fifth, Sixth, 
     using tenth_type = Tenth;
 
     tenth_type _tenth;
-    static constexpr inline ARGUMENTS_COUNT arguments_count = ARGUMENTS_COUNT::_10;
+    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;
+<<<<<<< HEAD
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments() noexcept : base_type(), _tenth() {};
-    _FORCE_INLINE_ ~arguments() noexcept = default;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments& arguments_p) noexcept : base_type(arguments_p), _tenth(arguments_p._tenth) {};
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments(arguments&& arguments_p) noexcept : base_type(std::move(arguments_p)), _tenth(std::move(arguments_p._tenth)) {};
+    _FORCE_INLINE_ arguments() noexcept 
+        : base_type(), _tenth() {}
+        
+    _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
+                             const Ninth& ninth_p, const Tenth& tenth_p) noexcept
+        : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p, ninth_p), _tenth(tenth_p) {}
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+};
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments& arguments_p) noexcept
+
+template<class C, typename TaskImpl, class ArgumentsBufferType>
+class cpp_style_task;
+
+template<typename TaskImpl, class ArgumentsBufferType>
+class c_style_task;
+
+
+template<typename F>
+class function;
+
+template<typename R, typename ...Arguments>
+class function<R(Arguments...)> final
+{
+    template<typename task_impl, class arguments_buffer_type>
+    friend class c_style_task;
+
+    R(*m_function_pointer)(Arguments...);
+
+public:
+    static constexpr inline boolean has_void_return_type = false;
+
+    using function_type = decltype(m_function_pointer);
+    using return_type = R;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function() noexcept : m_function_pointer() {}
+    _FORCE_INLINE_ _CONSTEXPR23_ ~function() noexcept = default;
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
+
+    _FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
-        base_type::operator=(arguments_p);
-        this->_tenth = arguments_p._tenth;
+        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        return this->m_function_pointer(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ const R operator()(Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        return this->m_function_pointer(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function_type function_p) noexcept
+    {
+        this->m_function_pointer = function_p;
         return *this;
     }
 
-    _CONSTEXPR20_ _FORCE_INLINE_ arguments& operator=(arguments&& arguments_p) noexcept
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(const function& other_p) noexcept
     {
-        base_type::operator=(arguments_p);
-        this->_tenth = std::move(arguments_p._tenth);
+        this->m_function_pointer = other_p.m_function_pointer;
         return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function&& rvalue_p) noexcept
+    {
+        this->m_function_pointer = rvalue_p.m_function_pointer;
+        rvalue_p.m_function_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_function_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const function& other_p) const noexcept
+    {
+        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const function& other_p) const noexcept
+    {
+        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
+    }
+};
+
+template<typename ...Arguments>
+class function<void(Arguments...)> final
+{
+    template<typename task_impl, class arguments_buffer_type>
+    friend class c_style_task;
+
+    void(*m_function_pointer)(Arguments...);
+
+public:
+    static constexpr inline boolean has_void_return_type = true;
+
+    using function_type = decltype(m_function_pointer);
+    using return_type = void;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function() noexcept : m_function_pointer() {}
+    ~function() noexcept = default;
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
+
+    _FORCE_INLINE_ void operator()(Arguments&& ...arguments_p) noexcept
+    {
+        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        this->m_function_pointer(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ void operator()(Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        this->m_function_pointer(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function_type function_p) noexcept
+    {
+        this->m_function_pointer = function_p;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(const function& other_p) noexcept
+    {
+        this->m_function_pointer = other_p.m_function_pointer;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function&& rvalue_p) noexcept
+    {
+        this->m_function_pointer = rvalue_p.m_function_pointer;
+        rvalue_p.m_function_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_function_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const function& other_p) const noexcept
+    {
+        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const function& other_p) const noexcept
+    {
+        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
+    }
+};
+
+
+template<class C, typename F>
+class method;
+
+template<class C, typename R, typename ...Arguments>
+class method<C, R(Arguments...) const> final
+{
+    template<class c, typename task_impl, class arguments_buffer_type>
+    friend class cpp_style_task;
+
+    R(C::* m_method_pointer)(Arguments...) const;
+
+public:
+    static constexpr inline boolean has_void_return_type = false;
+
+    using method_type = decltype(m_method_pointer);
+    using return_type = R;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using class_type = C;
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
+    _FORCE_INLINE_ _CONSTEXPR23_ ~method() noexcept {}
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+
+    _FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    {
+        this->m_method_pointer = method_p;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    {
+        this->m_method_pointer = other_p.m_method_pointer;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    {
+        this->m_method_pointer = rvalue_p.m_method_pointer;
+        rvalue_p.m_method_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_method_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+    }
+};
+
+template<class C, typename ...Arguments>
+class method<C, void(Arguments...) const> final
+{
+    template<class c, typename task_impl, class arguments_buffer_type>
+    friend class cpp_style_task;
+
+    void(C::* m_method_pointer)(Arguments...) const;
+
+public:
+    static constexpr inline boolean has_void_return_type = true;
+
+    using method_type = decltype(m_method_pointer);
+    using return_type = void;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using class_type = C;
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
+    _FORCE_INLINE_ _CONSTEXPR23_ ~method() noexcept {}
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+
+    _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    {
+        this->m_method_pointer = method_p;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    {
+        this->m_method_pointer = other_p.m_method_pointer;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    {
+        this->m_method_pointer = rvalue_p.m_method_pointer;
+        rvalue_p.m_method_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_method_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+    }
+};
+
+template<class C, typename R, typename ...Arguments>
+class method<C, R(Arguments...)> final
+{
+    template<class c, typename task_impl, class arguments_buffer_type>
+    friend class cpp_style_task;
+
+    R(C::* m_method_pointer)(Arguments...);
+
+public:
+    static constexpr inline boolean has_void_return_type = false;
+
+    using method_type = decltype(m_method_pointer);
+    using return_type = R;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using class_type = C;
+
+    constexpr _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
+    _FORCE_INLINE_ _CONSTEXPR23_ ~method() noexcept {}
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+
+    _FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    {
+        this->m_method_pointer = method_p;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    {
+        this->m_method_pointer = other_p.m_method_pointer;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    {
+        this->m_method_pointer = rvalue_p.m_method_pointer;
+        rvalue_p.m_method_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_method_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+    }
+};
+
+template<class C, typename ...Arguments>
+class method<C, void(Arguments...)> final
+{
+    template<class c, typename task_impl, class arguments_buffer_type>
+    friend class cpp_style_task;
+
+    void(C::* m_method_pointer)(Arguments...);
+
+public:
+    static constexpr inline boolean has_void_return_type = true;
+
+    using method_type = decltype(m_method_pointer);
+    using return_type = void;
+    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+<<<<<<< HEAD
+    using parameters_type = FE::arguments<Arguments...>;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using class_type = C;
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
+    _FORCE_INLINE_ _CONSTEXPR23_ ~method() noexcept {}
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FORCE_INLINE_ _CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+
+    _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+<<<<<<< HEAD
+    _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
+    {
+        FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+    }
+
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    {
+        this->m_method_pointer = method_p;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    {
+        this->m_method_pointer = other_p.m_method_pointer;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    {
+        this->m_method_pointer = rvalue_p.m_method_pointer;
+        rvalue_p.m_method_pointer = nullptr;
+        return *this;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ operator bool() const noexcept
+    {
+        return this->m_method_pointer != nullptr;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+    }
+
+    _FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    {
+        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
 };
 
 
 
 
-struct task_base
+class task_base
 {
-    virtual void operator()(void) noexcept = 0;
+public:
+    task_base() noexcept = default;
+<<<<<<< HEAD
+    virtual ~task_base() noexcept = default;
+
+    virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
+    virtual std::any operator()(std::any& arguments_p) noexcept = 0;
+
+    // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
+	virtual void set_instance(const std::any& target_instance_p) noexcept = 0;
+=======
+
+    virtual ~task_base() {};
+
+    virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
+
+    // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
+	virtual void set_instance(void* const target_instance_p) noexcept = 0;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+
+	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
-    virtual std::any get_result() const noexcept = 0;
 };
 
 
-
-
-template<class C, typename TaskImpl, typename ...ArgumentsBufferTypes>
-struct cpp_style_task<C, TaskImpl, FE::FORWARD_DATA::_AS_RVALUE_REF, ArgumentsBufferTypes...> : public task_base
+template<class C, typename TaskImpl, class ArgumentsBufferType = typename FE::method<C, TaskImpl>::arguments_type>
+class cpp_style_task : public task_base
 {
-    static_assert(std::is_class<C>::value == true, "C must be a class or a struct type.");
+    static_assert(std::is_class<C>::value == true, "C must be a class type.");
 
+public:
     using class_type = C;
     using task_impl_type = TaskImpl;
-    using task_type = FE::method<class_type, task_impl_type, FE::FORWARD_DATA::_AS_RVALUE_REF>;
-    using arguments_buffer_type = FE::arguments<ArgumentsBufferTypes...>;
-    using return_type = typename FE::remove_const_reference<typename FE::method<class_type, task_impl_type, FE::FORWARD_DATA::_AS_RVALUE_REF>::return_type>::type;
+    using task_type = FE::method<class_type, task_impl_type>;
+    using arguments_buffer_type = ArgumentsBufferType;
+<<<<<<< HEAD
+    using parameters_type = typename task_type::parameters_type;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using return_type = typename FE::remove_const_reference<typename FE::method<class_type, task_impl_type>::return_type>::type;
     using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
 
-    task_result_buffer_type _task_result;
-    arguments_buffer_type _arguments_buffer;
+    //static_assert(std::is_same<typename task_type::arguments_type, arguments_buffer_type>::value == true, "Static assertion failed: The task arugments type and the task arugments buffer type mismatch.");
+
     typename task_type::method_type _method;
-    class_type* _instance_ptr;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task() noexcept : _task_result(), _arguments_buffer(), _method(), _instance_ptr() {}
-    _FORCE_INLINE_ ~cpp_style_task() noexcept = default;
+private:
+    class_type* m_instance;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(typename task_type::method_type task_p) noexcept : _arguments_buffer(), _method(task_p), _instance_ptr(), _task_result() {}
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(cpp_style_task& other_p) noexcept : _arguments_buffer(other_p._arguments_buffer), _method(other_p._method), _instance_ptr(other_p._instance_ptr), _task_result(other_p._task_result) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(cpp_style_task&& rvalue_p) noexcept : _arguments_buffer(std::move(rvalue_p._arguments_buffer)), _method(rvalue_p._method), _instance_ptr(rvalue_p._instance_ptr), _task_result(rvalue_p._task_result)
+public:
+    _FORCE_INLINE_ _CONSTEXPR20_ cpp_style_task() noexcept : _method(), m_instance() {}
+<<<<<<< HEAD
+    virtual ~cpp_style_task() noexcept = default;
+=======
+    virtual ~cpp_style_task() noexcept override {};
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+
+    _FORCE_INLINE_ _CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : _method(task_p), m_instance() {}
+
+    virtual std::any operator()(argument_base* const arguments_p) noexcept override
     {
-        rvalue_p._method = nullptr;
-        rvalue_p._instance_ptr = nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(typename task_type::method_type task_p) noexcept
-    {
-        this->_method = task_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(cpp_style_task& other_p) noexcept
-    {
-        this->_arguments_buffer = other_p._arguments_buffer;
-        this->_method = other_p._method;
-        this->_instance_ptr = other_p._instance_ptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(cpp_style_task&& rvalue_p) noexcept
-    {
-        this->_arguments_buffer = std::move(rvalue_p._arguments_buffer);
-
-        this->_method = rvalue_p._method;
-        rvalue_p._method = nullptr;
-
-        this->_instance_ptr = rvalue_p._instance_ptr;
-        rvalue_p._instance_ptr = nullptr;
-        return *this;
-    }
-
-    virtual void operator()(void) noexcept override
-    {
-        FE_ASSERT(this->_instance_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->_instance_ptr));
+        FE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
 
         if constexpr (task_type::has_void_return_type == true)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {   
-                (_instance_ptr->*_method)();
-                return;
+                (m_instance->*_method)();
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                (_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth), std::forward<typename arguments_buffer_type::_tenth>(this->_arguments_buffer._tenth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+=======
+                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
         }
         else if constexpr (task_type::has_void_return_type == false)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)());
-                return;
+                return (m_instance->*_method)();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth), std::forward<typename arguments_buffer_type::_tenth>(this->_arguments_buffer._tenth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                              static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+=======
+                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
     }
 
-    virtual boolean is_null(void) const noexcept override
+<<<<<<< HEAD
+    virtual std::any operator()(std::any& arguments_p) noexcept override
     {
-        if (!this->_method)
-        {
-            return true;
-        }
-
-        if (this->_instance_ptr == nullptr)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    virtual std::any get_result() const noexcept override
-    {
-		return this->_task_result;
-    }
-};
-
-template<class C, typename TaskImpl, typename ...ArgumentsBufferTypes>
-struct cpp_style_task<C, TaskImpl, FE::FORWARD_DATA::_AS_LVALUE_REF, ArgumentsBufferTypes...> : public task_base
-{
-    static_assert(std::is_class<C>::value == true, "C must be a class or a struct type.");
-
-    using class_type = C;
-    using task_impl_type = TaskImpl;
-    using task_type = FE::method<class_type, task_impl_type, FE::FORWARD_DATA::_AS_LVALUE_REF>;
-    using arguments_buffer_type = FE::arguments<ArgumentsBufferTypes...>;
-    using return_type = typename FE::remove_const_reference<typename FE::method<class_type, task_impl_type, FE::FORWARD_DATA::_AS_LVALUE_REF>::return_type>::type;
-    using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
-
-    task_result_buffer_type _task_result;
-    arguments_buffer_type _arguments_buffer;
-    typename task_type::method_type _method;
-    class_type* _instance_ptr;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task() noexcept : _task_result(), _arguments_buffer(), _method(), _instance_ptr() {}
-    _FORCE_INLINE_ ~cpp_style_task() noexcept = default;
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(typename task_type::method_type task_p) noexcept : _arguments_buffer(), _method(task_p), _instance_ptr(), _task_result(){}
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(cpp_style_task& other_p) noexcept : _arguments_buffer(other_p._arguments_buffer), _method(other_p._method), _instance_ptr(other_p._instance_ptr), _task_result(other_p._task_result) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task(cpp_style_task&& rvalue_p) noexcept : _arguments_buffer(std::move(rvalue_p._arguments_buffer)), _method(rvalue_p._method), _instance_ptr(rvalue_p._instance_ptr), _task_result(rvalue_p._task_result)
-    {
-        rvalue_p._method = nullptr;
-        rvalue_p._instance_ptr = nullptr;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(typename task_type::method_type task_p) noexcept
-    {
-        this->_method = task_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(cpp_style_task& other_p) noexcept
-    {
-        this->_arguments_buffer = other_p._arguments_buffer;
-        this->_method = other_p._method;
-        this->_instance_ptr = other_p._instance_ptr;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ cpp_style_task& operator=(cpp_style_task&& rvalue_p) noexcept
-    {
-        this->_arguments_buffer = std::move(rvalue_p._arguments_buffer);
-
-        this->_method = rvalue_p._method;
-        rvalue_p._method = nullptr;
-
-        this->_instance_ptr = rvalue_p._instance_ptr;
-        rvalue_p._instance_ptr = nullptr;
-        return *this;
-    }
-
-    virtual void operator()(void) noexcept override
-    {
-        FE_ASSERT(this->_instance_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(MEMORY_ERROR_1XX::_FATAL_ERROR_NULLPTR), TO_STRING(this->_instance_ptr));
+        FE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
 
         if constexpr (task_type::has_void_return_type == true)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
-            {
-                (_instance_ptr->*_method)();
-                return;
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            {   
+                (m_instance->*_method)();
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type&>(arguments_p)._first);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)->_second);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._ninth);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                (_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth, this->_arguments_buffer._tenth);
-                return;
+                (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._ninth, std::any_cast<arguments_buffer_type>(arguments_p)._tenth);
+                return void_t();
             }
         }
         else if constexpr (task_type::has_void_return_type == false)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)());
-                return;
+                return (m_instance->*_method)();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type&>(arguments_p)._first);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)->_second);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._seventh);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                *this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._ninth);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->_task_result = std::move((_instance_ptr->*_method)(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth, this->_arguments_buffer._tenth));
-                return;
+                return (m_instance->*_method)(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                              std::any_cast<arguments_buffer_type>(arguments_p)._ninth, std::any_cast<arguments_buffer_type>(arguments_p)._tenth);
             }
         }
+    }
+
+    virtual void set_instance(const std::any& host_class_instance_p) noexcept override
+    {
+		this->m_instance = std::any_cast<class_type*>(host_class_instance_p);
+=======
+    virtual void set_instance(void* const host_class_instance_p) noexcept override
+    {
+        FE_ASSERT(host_class_instance_p == nullptr, "The target instance is null!");
+		this->m_instance = static_cast<class_type*>(host_class_instance_p);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     virtual boolean is_null(void) const noexcept override
@@ -1560,185 +1237,423 @@ struct cpp_style_task<C, TaskImpl, FE::FORWARD_DATA::_AS_LVALUE_REF, ArgumentsBu
             return true;
         }
 
-        if (this->_instance_ptr == nullptr)
+        if (this->m_instance == nullptr)
         {
             return true;
         }
 
         return false;
     }
-
-    virtual std::any get_result() const noexcept override
-    {
-        return this->_task_result;
-    }
 };
 
 
-
-
-
-
-
-
-template<typename TaskImpl, typename ...ArgumentsBufferTypes>
-struct c_style_task<TaskImpl, FE::FORWARD_DATA::_AS_RVALUE_REF, ArgumentsBufferTypes...> : public task_base
+template<typename TaskImpl, class ArgumentsBufferType = typename FE::function<TaskImpl>::arguments_type>
+class c_style_task : public task_base
 {
+public:
     using task_impl_type = TaskImpl;
-    using task_type = FE::function<task_impl_type, FE::FORWARD_DATA::_AS_RVALUE_REF>;
-    using arguments_buffer_type = FE::arguments<ArgumentsBufferTypes...>;
-    using return_type = typename FE::remove_const_reference<typename FE::function<task_impl_type, FE::FORWARD_DATA::_AS_RVALUE_REF>::return_type>::type;
+    using task_type = FE::function<task_impl_type>;
+    using arguments_buffer_type = ArgumentsBufferType;
+<<<<<<< HEAD
+    using parameters_type = typename task_type::parameters_type;
+=======
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    using return_type = typename FE::remove_const_reference<typename FE::function<task_impl_type>::return_type>::type;
     using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
 
-    task_result_buffer_type _task_result;
-    arguments_buffer_type _arguments_buffer;
+    //static_assert(std::is_same<typename task_type::arguments_type, arguments_buffer_type>::value == true, "Static assertion failed: The task arugments type and the task arugments buffer type mismatch.");
+
     typename task_type::function_type _function;
-    
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task() noexcept : _task_result(), _arguments_buffer(), _function() {}
-    _FORCE_INLINE_ ~c_style_task() noexcept = default;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(typename task_type::function_type task_p) noexcept : _function(task_p), _task_result() {}
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(c_style_task& other_p) noexcept : _arguments_buffer(other_p._arguments_buffer), _function(other_p._function), _task_result(other_p._task_result) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(c_style_task&& rvalue_p) noexcept : _arguments_buffer(std::move(rvalue_p._arguments_buffer)), _function(rvalue_p._function), _task_result(rvalue_p._task_result) { rvalue_p._function = nullptr; }
+public:
+    _FORCE_INLINE_ _CONSTEXPR20_ c_style_task() noexcept : _function() {}
+<<<<<<< HEAD
+    virtual ~c_style_task() noexcept = default;
+=======
+    virtual ~c_style_task() noexcept override {};
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(typename task_type::function_type task_p) noexcept
-    {
-        this->_function = task_p;
-        return *this;
-    }
+    _FORCE_INLINE_ _CONSTEXPR20_ c_style_task(typename task_type::function_type task_p) noexcept : _function(task_p) {}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(c_style_task& other_p) noexcept
-    {
-        this->_arguments_buffer = other_p._arguments_buffer;
-        this->_function = other_p._function;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(c_style_task&& rvalue_p) noexcept
-    {
-        this->_arguments_buffer = std::move(rvalue_p._arguments_buffer);
-
-        this->_function = rvalue_p._function;
-        rvalue_p._function = nullptr;
-        return *this;
-    }
-
-    virtual void operator()(void) noexcept override
+    virtual std::any operator()(argument_base* const arguments_p) noexcept override
     {
         if constexpr (task_type::has_void_return_type == true)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
                 this->_function();
-                return;
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second);
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth), std::forward<typename arguments_buffer_type::_tenth>(this->_arguments_buffer._tenth));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+=======
+                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+                return void_t();
             }
         }
         else if constexpr (task_type::has_void_return_type == false)
         {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                this->_task_result = std::move(this->_function());
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                return this->_function();
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second);
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                *this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->_task_result = std::move(this->_function(std::forward<typename arguments_buffer_type::first_type>(this->_arguments_buffer._first), std::forward<typename arguments_buffer_type::second_type>(this->_arguments_buffer._second), std::forward<typename arguments_buffer_type::third_type>(this->_arguments_buffer._third), std::forward<typename arguments_buffer_type::fourth_type>(this->_arguments_buffer._fourth), std::forward<typename arguments_buffer_type::fifth_type>(this->_arguments_buffer._fifth), std::forward<typename arguments_buffer_type::sixth_type>(this->_arguments_buffer._sixth), std::forward<typename arguments_buffer_type::seventh_type>(this->_arguments_buffer._seventh), std::forward<typename arguments_buffer_type::Eighth>(this->_arguments_buffer._eighth), std::forward<typename arguments_buffer_type::_ninth>(this->_arguments_buffer._ninth), std::forward<typename arguments_buffer_type::_tenth>(this->_arguments_buffer._tenth)));
-                return;
+                FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
+<<<<<<< HEAD
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
+                                       static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+            }
+        }
+    }
+
+    virtual std::any operator()(std::any& arguments_p) noexcept override
+    {
+        if constexpr (task_type::has_void_return_type == true)
+        {
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            {
+                this->_function();
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._seventh);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second,
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._ninth);
+                return void_t();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            {
+                this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                std::any_cast<arguments_buffer_type>(arguments_p)._ninth, std::any_cast<arguments_buffer_type>(arguments_p)._tenth);
+                return void_t();
+            }
+        }
+        else if constexpr (task_type::has_void_return_type == false)
+        {
+            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            {
+                return this->_function();
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type&>(arguments_p)._first);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._ninth);
+            }
+            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            {
+                return this->_function(std::any_cast<arguments_buffer_type>(arguments_p)._first, std::any_cast<arguments_buffer_type>(arguments_p)._second, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._third, std::any_cast<arguments_buffer_type>(arguments_p)._fourth,
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
+                                       std::any_cast<arguments_buffer_type>(arguments_p)._ninth, std::any_cast<arguments_buffer_type>(arguments_p)._tenth);
+=======
+                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
     }
@@ -1753,189 +1668,22 @@ struct c_style_task<TaskImpl, FE::FORWARD_DATA::_AS_RVALUE_REF, ArgumentsBufferT
         return false;
     }
 
-    virtual std::any get_result() const noexcept override
-    {
-        return this->_task_result;
-    }
+<<<<<<< HEAD
+    virtual void set_instance(const std::any&) noexcept override {};
 };
 
-template<typename TaskImpl, typename ...ArgumentsBufferTypes>
-struct c_style_task<TaskImpl, FE::FORWARD_DATA::_AS_LVALUE_REF, ArgumentsBufferTypes...> : public task_base
+=======
+    virtual void set_instance(void* const) noexcept override {};
+};
+
+
+template <class FunctionSignature>
+_FORCE_INLINE_ typename FE::function<FunctionSignature>::function_type function_cast(typename FE::function<FunctionSignature>::function_type lamda_p) noexcept
 {
-    using task_impl_type = TaskImpl;
-    using task_type = FE::function<task_impl_type, FE::FORWARD_DATA::_AS_LVALUE_REF>;
-    using arguments_buffer_type = FE::arguments<ArgumentsBufferTypes...>;
-    using return_type = typename FE::remove_const_reference<typename FE::function<task_impl_type, FE::FORWARD_DATA::_AS_LVALUE_REF>::return_type>::type;
-    using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
-    
-    task_result_buffer_type _task_result;
-    arguments_buffer_type _arguments_buffer;
-    typename task_type::function_type _function;
+    return lamda_p;
+}
 
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task() noexcept : _task_result(), _arguments_buffer(), _function() {}
-    _FORCE_INLINE_ ~c_style_task() noexcept = default;
 
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(typename task_type::function_type task_p) noexcept : _function(task_p), _task_result() {}
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(c_style_task& other_p) noexcept : _arguments_buffer(other_p._arguments_buffer), _function(other_p._function), _task_result(other_p._task_result) {}
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task(c_style_task&& rvalue_p) noexcept : _arguments_buffer(std::move(rvalue_p._arguments_buffer)), _function(rvalue_p._function), _task_result(rvalue_p._task_result) { rvalue_p._function = nullptr; }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(typename task_type::function_type task_p) noexcept
-    {
-        this->_function = task_p;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(c_style_task& other_p) noexcept
-    {
-        this->_arguments_buffer = other_p._arguments_buffer;
-        this->_function = other_p._function;
-        return *this;
-    }
-
-    _CONSTEXPR20_ _FORCE_INLINE_ c_style_task& operator=(c_style_task&& rvalue_p) noexcept
-    {
-        this->_arguments_buffer = std::move(rvalue_p._arguments_buffer);
-
-        this->_function = rvalue_p._function;
-        rvalue_p._function = nullptr;
-        return *this;
-    }
-
-    virtual void operator()(void) noexcept override
-    {
-        if constexpr (task_type::has_void_return_type == true)
-        {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
-            {
-                this->_function();
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
-            {
-                this->_function(this->_arguments_buffer._first);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth);
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
-            {
-                this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth, this->_arguments_buffer._tenth);
-                return;
-            }
-        }
-        else if constexpr (task_type::has_void_return_type == false)
-        {
-            if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_0)
-            {
-                this->_task_result = std::move(this->_function());
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_1)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_2)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_3)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_4)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_5)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_6)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_7)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_8)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_9)
-            {
-                *this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth));
-                return;
-            }
-            else if constexpr (this->_arguments_buffer.arguments_count == ARGUMENTS_COUNT::_10)
-            {
-                this->_task_result = std::move(this->_function(this->_arguments_buffer._first, this->_arguments_buffer._second, this->_arguments_buffer._third, this->_arguments_buffer._fourth, this->_arguments_buffer._fifth, this->_arguments_buffer._sixth, this->_arguments_buffer._seventh, this->_arguments_buffer._eighth, this->_arguments_buffer._ninth, this->_arguments_buffer._tenth));
-                return;
-            }
-        }
-    }
-
-    virtual boolean is_null(void) const noexcept override
-    {
-        if (!this->_function)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    virtual std::any get_result() const noexcept override
-    {
-        return this->_task_result;
-    }
-};
-
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 END_NAMESPACE
 #endif

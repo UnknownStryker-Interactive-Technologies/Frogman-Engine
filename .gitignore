@@ -3,6 +3,6 @@
 *.idb
 *.pdb
 
-Solution/
-
 goorm.manifest
+
+Solution/

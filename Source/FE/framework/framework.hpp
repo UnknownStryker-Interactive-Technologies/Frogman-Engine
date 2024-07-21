@@ -3,7 +3,17 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
 #include <functional>
-#define _CREATE_AN_APP_ new
+
+#ifdef CONFIGURE_A_FROGMAN_ENGINE_PROJECT
+	#error Frogman Engine Prohibits macroizing the keyword "CONFIGURE_A_FROGMAN_ENGINE_PROJECT()".
+#else
+	#define CONFIGURE_A_FROGMAN_ENGINE_PROJECT() FE::framework::application_base::initializer_t g_init = FE::framework::application_base::create_application( []() {
+	#ifdef END_OF_THE_FROGMAN_ENGINE_PROJECT_CONFIGURATION
+		#error Frogman Engine Prohibits macroizing the keyword "END_OF_THE_FROGMAN_ENGINE_PROJECT_CONFIGURATION()".
+	#else
+		#define END_OF_THE_FROGMAN_ENGINE_PROJECT_CONFIGURATION() } );
+	#endif
+#endif
 
 
 
@@ -21,11 +31,11 @@ enum struct RESTART_OR_NOT : uint8
 	_HAS_TO_RESTART = 1,
 };
 
-class application
+class application_base
 {
 	friend int ::main(int argc_p, char** argv_p);
 
-	static application* s_app;
+	static application_base* s_app;
 
 protected:
 	virtual bool set_up(int argc_p, char** argv_p) = 0;
@@ -33,12 +43,12 @@ protected:
 	virtual void clean_up() = 0;
 
 public:
-	using initializer_t = std::function<application* (void)>;
+	using initializer_t = std::function<application_base* (void)>;
 
 	static RESTART_OR_NOT s_restart_or_not;
 
-	application() = default;
-	virtual ~application() {};
+	application_base() = default;
+	virtual ~application_base() {};
 
 	static initializer_t create_application(initializer_t script_p = []() { return nullptr; }) noexcept;
 
@@ -47,10 +57,10 @@ private:
 	static void __shutdown_main() noexcept;
 	_NORETURN_ static void __abnormal_shutdown_with_exit_code(int32 signal_p);
 
-	application(const application&) = delete;
-	application(application&&) = delete;
-	application& operator=(const application&) = delete;
-	application& operator=(application&&) = delete;
+	application_base(const application_base&) = delete;
+	application_base(application_base&&) = delete;
+	application_base& operator=(const application_base&) = delete;
+	application_base& operator=(application_base&&) = delete;
 };
 
 

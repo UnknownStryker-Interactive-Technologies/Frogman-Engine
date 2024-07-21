@@ -1,7 +1,7 @@
 ﻿#ifndef _FE_DEFINE_MAX_MIN_H_
 #define _FE_DEFINE_MAX_MIN_H_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#include <FE/core/macros/macro_definitions.h>
+#include <FE/core/macros/definitions.h>
 
 #ifdef _MSVC_
 #ifndef max

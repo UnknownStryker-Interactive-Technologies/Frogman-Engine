@@ -2,7 +2,20 @@
 #define _FE_CORE_THREAD_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
+#include <FE/core/algorithm/utility.hxx>
+#include <FE/core/function.hxx>
+
+// std
+#include <atomic>
 #include <thread>
+
+#ifdef _WINDOWS_X86_64_
+	#include <processthreadsapi.h>
+
+#elif defined(_LINUX_X86_64_)
+	#include <pthread.h>
+	#include <unistd.h>
+#endif
 
 
 
@@ -10,49 +23,89 @@
 BEGIN_NAMESPACE(FE)
 
 
-struct task_base;
+class task_base;
 
 
 class thread final
 {
-	std::thread m_thread;
-
 public:
 	thread_local static var::uint64 tl_s_this_thread_instance_id;
 
-	typedef std::thread thread_type;
-	typedef var::uint64 id_type;
-
-	_MAYBE_UNUSED_ static constexpr var::uint16 minimum_suitable_thread_count = 6;
-	_MAYBE_UNUSED_ static constexpr var::uint16 max_thread_id_digit_length = 24;
-
-	thread() noexcept = default;
-	~thread() noexcept = default;
-	thread(thread& other_p) noexcept;
-	thread(thread&& rvalue_p) noexcept;
-
-	thread& operator=(thread& other_p) noexcept;
-	thread& operator=(thread&& rvalue_p) noexcept;
-
-	_FORCE_INLINE_ boolean is_this_thread_active() noexcept
-	{
-		return this->m_thread.joinable();
-	}
-
-	void fork(FE::task_base* const function_p) noexcept;
-
-	_FORCE_INLINE_ void join() noexcept
-	{
-		this->m_thread.join();
-	}
-	
-	void swap(thread& in_out_other_p) noexcept;
-	static uint64 calculate_suitable_thread_count() noexcept;
-
-	static uint64 this_thread_id() noexcept;
+	using thread_type = std::thread;
+	using id_type = var::uint64;
 
 private:
-	static uint64 __generate_instance_id() noexcept;
+	thread_type m_thread;
+	std::any m_task_result;
+
+public:
+	_MAYBE_UNUSED_ static constexpr var::uint16 minimum_suitable_thread_count = 4;
+	_MAYBE_UNUSED_ static constexpr var::uint16 max_thread_id_digit_length = 24;
+
+	_FORCE_INLINE_ thread() noexcept = default;
+	_FORCE_INLINE_ ~thread() noexcept = default;
+	thread(const thread&) = delete;
+	_FORCE_INLINE_ thread(thread&& rvalue_p) noexcept : m_thread(std::move(rvalue_p.m_thread)) {}
+
+	_FORCE_INLINE_ thread& operator=(const thread&) noexcept = delete;
+	_FORCE_INLINE_ thread& operator=(thread&& rvalue_p) noexcept { this->m_thread = std::move(rvalue_p.m_thread); return *this; };
+
+<<<<<<< HEAD
+	// fork()
+=======
+	_FORCE_INLINE_ std::any& fork(FE::task_base* const function_p, FE::argument_base* const arguments_p) noexcept
+	{
+		FE_ASSERT(function_p == nullptr, "ERROR: function_p is nullptr.");
+		std::any* l_result = &(this->m_task_result);
+		this->m_thread = thread_type
+		(
+			[function_p, arguments_p, l_result]()
+			{
+				tl_s_this_thread_instance_id = __generate_instance_id();
+				*l_result = (*function_p)(arguments_p);
+			}
+		);
+		return *l_result;
+	}
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+
+	_FORCE_INLINE_ void join() { this->m_thread.join(); }
+
+	_FORCE_INLINE_ static uint64 calculate_suitable_thread_count() noexcept
+	{
+		if ( ((::std::thread::hardware_concurrency() >> 1) + (::std::thread::hardware_concurrency() / 8)) < minimum_suitable_thread_count)
+		{
+			return minimum_suitable_thread_count;
+		}
+		return static_cast<var::uint64>(::std::thread::hardware_concurrency() >> 1) + static_cast<var::uint64>(::std::thread::hardware_concurrency() / 8);
+	}
+
+	_FORCE_INLINE_ boolean is_this_thread_active() const noexcept { return this->m_thread.joinable(); }
+
+	_FORCE_INLINE_ static id_type this_thread_id() noexcept
+	{
+#ifdef _WINDOWS_X86_64_
+		return GetCurrentThreadId();
+#elif defined(_LINUX_X86_64_)
+		return static_cast<var::uint64>(pthread_self());
+#endif
+	}
+
+	_FORCE_INLINE_ static id_type this_process_id() noexcept
+	{
+#ifdef _WINDOWS_X86_64_
+		return GetCurrentProcessId();
+#elif defined(_LINUX_X86_64_)
+		return static_cast<var::uint64>(getpid());
+#endif
+	}
+
+private:
+	_FORCE_INLINE_ static id_type __generate_instance_id() noexcept
+	{
+		static std::atomic<id_type> l_s_id = 0;
+		return ++l_s_id;
+	}
 };
 
 

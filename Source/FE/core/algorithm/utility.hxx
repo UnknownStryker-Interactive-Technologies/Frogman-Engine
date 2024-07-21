@@ -1,15 +1,20 @@
 ﻿#ifndef _FE_CORE_ALGORITHM_UTILITY_HXX_
 #define _FE_CORE_ALGORITHM_UTILITY_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#include <FE/core/types.hxx>
 #include <FE/core/private/debug.h>
-#include <FE/core/private/strlen.h>
+#include <FE/core/private/strlen.hxx>
 #include <FE/core/type_traits.hxx>
+
+// std
 #include <bitset>
+#include <cstring>
+
 #pragma warning(push)
-#pragma warning(disable: 4244)
-#pragma warning(disable: 26479)
-#define CHAR_TO_INT(c) (c - '0')
+#pragma warning(disable: 4244) // silent the warning 'argument': conversion from 'var::float64' to 'IntT', possible loss of data
+#ifdef FE_CHAR_TO_INT
+#error FE_CHAR_TO_INT is a reserved Frogman Engine macro keyword.
+#endif
+#define FE_CHAR_TO_INT(c) (c - '0')
 
 
 
@@ -21,7 +26,10 @@ template<typename T>
 _FORCE_INLINE_ void swap(T& in_out_first_p, T& in_out_second_p) noexcept
 {
 	T l_temporary = std::move(in_out_first_p);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	in_out_first_p = std::move(in_out_second_p);
 	in_out_second_p = std::move(l_temporary);
 }
@@ -35,9 +43,9 @@ _FORCE_INLINE_ T exchange(T& in_out_target_p, T value_p) noexcept
 }
 
 template<class Comparator, typename T>
-_FORCE_INLINE_ T& select(T& for_true_p, T& for_false_p) noexcept
+_FORCE_INLINE_ T& select(T& for_FE_TRUE_p, T& for_false_p) noexcept
 {
-    return Comparator()(for_true_p, for_false_p) ? for_true_p : for_false_p;
+    return Comparator()(for_FE_TRUE_p, for_false_p) ? for_FE_TRUE_p : for_false_p;
 }
 
 
@@ -65,7 +73,7 @@ struct real_info
 
 
 template<typename UIntT, typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ integral_info<UIntT> string_to_uint(const CharT* const integral_string_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ integral_info<UIntT> string_to_uint(const CharT* const integral_string_p) noexcept
 {
     FE_STATIC_ASSERT(std::is_unsigned<UIntT>::value == false, "static assertion failed: the template argument UIntT is not an unsigned integral type.");
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
@@ -76,7 +84,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ integral_info<UIntT> string_to_uint(const CharT* co
     while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
     {
         l_result *= 10;
-        l_result += static_cast<UIntT>(CHAR_TO_INT(*l_integral_string_pointer));
+        l_result += static_cast<UIntT>(FE_CHAR_TO_INT(*l_integral_string_pointer));
         ++l_integral_string_pointer;
     }
 
@@ -85,7 +93,11 @@ _CONSTEXPR20_ _FORCE_INLINE_ integral_info<UIntT> string_to_uint(const CharT* co
 
 
 template<typename SIntT, typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ integral_info<SIntT> string_to_int(const CharT* integral_string_p) noexcept
+<<<<<<< HEAD
+_CONSTEXPR20_ integral_info<SIntT> string_to_int(const CharT* integral_string_p) noexcept
+=======
+_FORCE_INLINE_ _CONSTEXPR20_ integral_info<SIntT> string_to_int(const CharT* integral_string_p) noexcept
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     FE_STATIC_ASSERT(std::is_signed<SIntT>::value == false, "static assertion failed: the template argument SIntT is not a signed integral type.");
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
@@ -101,7 +113,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ integral_info<SIntT> string_to_int(const CharT* int
         while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
         {
             l_result *= 10;
-            l_result += static_cast<SIntT>(CHAR_TO_INT(*l_integral_string_pointer));
+            l_result += static_cast<SIntT>(FE_CHAR_TO_INT(*l_integral_string_pointer));
             ++l_integral_string_pointer;
         }
 
@@ -112,7 +124,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ integral_info<SIntT> string_to_int(const CharT* int
     while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
     {
         l_result *= 10;
-        l_result += static_cast<SIntT>(CHAR_TO_INT(*l_integral_string_pointer));
+        l_result += static_cast<SIntT>(FE_CHAR_TO_INT(*l_integral_string_pointer));
         ++l_integral_string_pointer;
     }
 
@@ -125,22 +137,52 @@ _CONSTEXPR20_ _FORCE_INLINE_ integral_info<SIntT> string_to_int(const CharT* int
 #pragma warning(push)
 #pragma warning(disable:4715)
 template<typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ boolean string_to_boolean(const CharT* const string_p) noexcept
+<<<<<<< HEAD
+_CONSTEXPR20_ boolean string_to_boolean(const CharT* const string_p) noexcept
+=======
+_FORCE_INLINE_ _CONSTEXPR20_ boolean string_to_boolean(const CharT* const string_p) noexcept
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
     const CharT* l_string_pointer = string_p;
 
-    const CharT* l_s_true_pointer = "true";
+<<<<<<< HEAD
+    const CharT* l_true = "true";
+    const CharT* l_false = "false";
+=======
+    const CharT* l_s_FE_TRUE_pointer = "true";
     const CharT* l_s_false_pointer = "false";
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
     switch (*l_string_pointer)
     {
     case 't':
-        while ((*l_s_true_pointer == *l_string_pointer) && (*l_s_true_pointer != '\0'))
+<<<<<<< HEAD
+        while ((*l_true == *l_string_pointer) && (*l_true != '\0'))
         {
-            ++l_s_true_pointer;
+            ++l_true;
+            ++l_string_pointer;
+        }
+        FE_ABORT_IF((l_string_pointer - string_p) != 4, "ERROR: The operation could not be done properly. The input string is not \"true\".");
+        return true;
+
+    case 'f':
+        while ((*l_false == *l_string_pointer) && (*l_false != '\0'))
+        {
+            ++l_false;
+            ++l_string_pointer;
+        }
+        FE_ABORT_IF((l_string_pointer - string_p) != 5, "ERROR: The operation could not be done properly. The input string is not \"false\".");
+        return false;
+
+    default: _UNLIKELY_
+        FE_ABORT_IF(true, "ERROR: The operation could not be done properly. The input string is neither \"true\" nor \"false\".");
+=======
+        while ((*l_s_FE_TRUE_pointer == *l_string_pointer) && (*l_s_FE_TRUE_pointer != '\0'))
+        {
+            ++l_s_FE_TRUE_pointer;
             ++l_string_pointer;
         }
         FE_ABORT_IF((l_string_pointer - string_p) != 4, "ERROR: The calculation cannot be done properly. The input string is not \"true\".");
@@ -157,7 +199,8 @@ _CONSTEXPR20_ _FORCE_INLINE_ boolean string_to_boolean(const CharT* const string
 
     default: _UNLIKELY_
         FE_ABORT_IF(true, "ERROR: The calculation cannot be done properly. The input string is neither \"true\" nor \"false\".");
-        break;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+        return false;
     }
 }
 #pragma warning(pop)
@@ -166,7 +209,11 @@ _CONSTEXPR20_ _FORCE_INLINE_ boolean string_to_boolean(const CharT* const string
 
 
 template<typename FloatT, typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ real_info<FloatT> string_to_float(const CharT* float_string_p) noexcept
+<<<<<<< HEAD
+_CONSTEXPR20_ real_info<FloatT> string_to_float(const CharT* float_string_p) noexcept
+=======
+_FORCE_INLINE_ _CONSTEXPR20_ real_info<FloatT> string_to_float(const CharT* float_string_p) noexcept
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     integral_info<var::int64> l_integral_part_info = string_to_int<var::int64>(float_string_p);
 
@@ -187,7 +234,11 @@ _CONSTEXPR20_ _FORCE_INLINE_ real_info<FloatT> string_to_float(const CharT* floa
     }
     
 
+<<<<<<< HEAD
+    float_string_p += (1llu + static_cast<uint64>(l_integral_part_info._digit_length));
+=======
     float_string_p += (1llu + (uint64)l_integral_part_info._digit_length);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     integral_info<var::uint64> l_real_part_info = string_to_uint<var::uint64>(float_string_p);
 
     FloatT l_integral_part = static_cast<FloatT>(l_integral_part_info._value);
@@ -204,11 +255,15 @@ _CONSTEXPR20_ _FORCE_INLINE_ real_info<FloatT> string_to_float(const CharT* floa
 
 
 template<typename IntT>
-_NODISCARD_ _CONSTEXPR20_ _FORCE_INLINE_ var::uint8 count_integral_digit_length(IntT value_p) noexcept
+_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ var::uint8 count_integral_digit_length(IntT value_p) noexcept
 {
     static_assert(::std::is_integral<IntT>::value == true || ::std::is_floating_point<IntT>::value == true, "the type of the template parameter IntT is not numeric");
 
+<<<<<<< HEAD
+    var::uint8 l_length_of_n = 0;
+=======
     var::int8 l_length_of_n = 0;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     if (value_p < 0)
     {
         for (; value_p <= static_cast<IntT>(-10); value_p /= static_cast<IntT>(10)) { ++l_length_of_n; }
@@ -222,19 +277,27 @@ _NODISCARD_ _CONSTEXPR20_ _FORCE_INLINE_ var::uint8 count_integral_digit_length(
 
 
 
-#define _MAX_NUMERIC_STRING_LENGTH_ 512
-#define _256_BYTES_BIT_COUNT_ 2048
-#define _16_BYTES_BIT_COUNT_ 128
-
-
 template<typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ void int_to_string(CharT* const string_out_p, _MAYBE_UNUSED_ length_t input_string_capacity_p, var::int64 value_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _MAYBE_UNUSED_ length_t input_string_capacity_p, var::int64 value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
     FE_ABORT_IF(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
     FE_ABORT_IF(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
 
-    var::int8 l_integral_digits = count_integral_digit_length<var::int64>(value_p);
+    var::uint8 l_integral_digits = count_integral_digit_length<var::int64>(value_p);
+<<<<<<< HEAD
+
+    if (value_p < 0)
+    {
+        value_p *= -1;
+        *string_out_p = static_cast<CharT>('-');
+        ++l_integral_digits;
+    }
+
+    FE_ABORT_IF(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+
+    var::uint8 l_idx = l_integral_digits - 1;
+=======
     var::boolean l_is_negative = false;
 
     if (value_p < 0)
@@ -253,6 +316,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ void int_to_string(CharT* const string_out_p, _MAYB
     FE_ABORT_IF(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::int8 l_idx = l_integral_digits - 1;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     while (value_p > 0)
     {
         string_out_p[l_idx] = ASCII_code_zero + (value_p % 10);
@@ -260,22 +324,32 @@ _CONSTEXPR20_ _FORCE_INLINE_ void int_to_string(CharT* const string_out_p, _MAYB
         --l_idx;
     }
 
+<<<<<<< HEAD
+    string_out_p[l_integral_digits] = null;
+=======
 
     if (l_is_negative) { *string_out_p = static_cast<CharT>('-'); }
 
-    string_out_p[l_integral_digits] = _NULL_;
+    string_out_p[l_integral_digits] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 
 
 
 template<typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ void uint_to_string(CharT* const string_out_p, _MAYBE_UNUSED_ length_t input_string_capacity_p, var::uint64 value_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _MAYBE_UNUSED_ length_t input_string_capacity_p, var::uint64 value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
     FE_ABORT_IF(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
-    var::int8 l_integral_digits = count_integral_digit_length<var::uint64>(value_p);
+    var::uint8 l_integral_digits = count_integral_digit_length<var::uint64>(value_p);
+<<<<<<< HEAD
+
+    FE_ABORT_IF(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+
+    var::uint8 l_idx = l_integral_digits - 1;
+=======
     var::boolean l_is_negative = false;
 
     if (value_p == 0)
@@ -288,6 +362,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ void uint_to_string(CharT* const string_out_p, _MAY
     FE_ABORT_IF(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::int8 l_idx = l_integral_digits - 1;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     while (value_p > 0)
     {
         string_out_p[l_idx] = ASCII_code_zero + (value_p % 10);
@@ -295,17 +370,25 @@ _CONSTEXPR20_ _FORCE_INLINE_ void uint_to_string(CharT* const string_out_p, _MAY
         --l_idx;
     }
 
+<<<<<<< HEAD
+    string_out_p[l_integral_digits] = null;
+=======
 
     if (l_is_negative) { *string_out_p = static_cast<CharT>('-'); }
 
-    string_out_p[l_integral_digits] = _NULL_;
+    string_out_p[l_integral_digits] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 
 
 
 template<typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ void float_to_string(CharT* const string_out_p, length_t input_string_capacity_p, float64 value_p) noexcept
+<<<<<<< HEAD
+_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_string_capacity_p, float64 value_p) noexcept
+=======
+_FORCE_INLINE_ _CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_string_capacity_p, float64 value_p) noexcept
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
@@ -318,12 +401,21 @@ _CONSTEXPR20_ _FORCE_INLINE_ void float_to_string(CharT* const string_out_p, len
     ++l_integral_part_string_length;
 
     var::float64 l_floating_point = value_p - static_cast<float64>(static_cast<var::int64>(value_p));
+<<<<<<< HEAD
+    while (0.0 != (l_floating_point - static_cast<var::float64>(static_cast<var::int64>(l_floating_point))))
+    {
+        l_floating_point *= 10.0;
+    }
+
+    FE_ABORT_IF(input_string_capacity_p <= (count_integral_digit_length<var::int64>(static_cast<var::int64>(l_floating_point)) + l_integral_part_string_length), "MEMORY BOUNDRY CHECK FAILURE: the digit length of the integral part exceeds the output string buffer capacity");
+=======
     while (0 != (l_floating_point - static_cast<var::int64>(l_floating_point)))
     {
         l_floating_point *= 10.0f;
     }
 
     FE_ABORT_IF(input_string_capacity_p <= (count_integral_digit_length<var::int64>(l_floating_point) + l_integral_part_string_length), "MEMORY BOUNDRY CHECK FAILURE: the digit length of the integral part exceeds the output string buffer capacity");
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
 }
@@ -332,7 +424,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ void float_to_string(CharT* const string_out_p, len
 
 
 template<typename CharT>
-_CONSTEXPR20_ _FORCE_INLINE_ const CharT* boolean_to_string(boolean value_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ const CharT* boolean_to_string(boolean value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
@@ -343,7 +435,11 @@ _CONSTEXPR20_ _FORCE_INLINE_ const CharT* boolean_to_string(boolean value_p) noe
 
 
 template <typename CharT, typename T>
-_CONSTEXPR20_ _FORCE_INLINE_ void any_object_binary_representation(CharT* const dest_buffer_p, _MAYBE_UNUSED_ capacity_t dest_buffer_capacity_p, T& object_p)
+<<<<<<< HEAD
+_CONSTEXPR20_ void any_object_binary_representation(CharT* const out_dest_buffer_p, _MAYBE_UNUSED_ capacity_t dest_buffer_capacity_p, T& object_p)
+=======
+_FORCE_INLINE_ _CONSTEXPR20_ void any_object_binary_representation(CharT* const out_dest_buffer_p, _MAYBE_UNUSED_ capacity_t dest_buffer_capacity_p, T& object_p)
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
@@ -355,7 +451,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ void any_object_binary_representation(CharT* const 
     byte* l_ptr = reinterpret_cast<byte*>(&object_p);
 
     std::bitset<8> l_binary_representation = *l_ptr;
-    for (var::size_t i = 0; i != sizeof(T); ++i)
+    for (var::size i = 0; i != sizeof(T); ++i)
     {
         *l_buffer_pointer = (l_binary_representation[0] + 48);
         ++l_buffer_pointer;
@@ -373,19 +469,24 @@ _CONSTEXPR20_ _FORCE_INLINE_ void any_object_binary_representation(CharT* const 
         ++l_buffer_pointer;
         *l_buffer_pointer = (l_binary_representation[7] + 48);
         ++l_buffer_pointer;
-        *l_buffer_pointer = '\n';
+        *l_buffer_pointer = (CharT)'\n';
 
         ++l_ptr;
         l_binary_representation = *l_ptr;
         ++l_buffer_pointer;
     }
 
-    std::memcpy(dest_buffer_p, l_buffer, l_required_bit_count * sizeof(CharT));
+    std::memcpy(out_dest_buffer_p, l_buffer, l_required_bit_count * sizeof(CharT));
 }
 
 
+
+
+#define _MAX_NUMERIC_STRING_LENGTH_ 512
+
+
 template<typename CharT, typename T>
-_CONSTEXPR20_ _FORCE_INLINE_ const CharT* any_primitive_to_string(T value_p) noexcept
+_FORCE_INLINE_ const CharT* buffered_any_primitive_to_string(T value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
     FE_STATIC_ASSERT(FE::is_primitive<T>::value == false, "static assertion failed: T must be a primitive type.");
@@ -393,30 +494,50 @@ _CONSTEXPR20_ _FORCE_INLINE_ const CharT* any_primitive_to_string(T value_p) noe
 
     if constexpr (FE::is_boolean<T>::value)
     {
-        std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+<<<<<<< HEAD
+        std::memset(tl_s_buffer, null, sizeof(CharT) * internal::strlen(tl_s_buffer));
+=======
+        std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return boolean_to_string<CharT>(value_p);
     }
     else if constexpr (FE::is_char<T>::value)
     {
         tl_s_buffer[0] = value_p;
-        tl_s_buffer[1] = _NULL_;
+<<<<<<< HEAD
+        tl_s_buffer[1] = null;
+=======
+        tl_s_buffer[1] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return tl_s_buffer;
     }
     else if constexpr (std::is_unsigned<T>::value && std::is_integral<T>::value)
     {
-        std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+<<<<<<< HEAD
+        std::memset(tl_s_buffer, null, sizeof(CharT) * internal::strlen(tl_s_buffer));
+=======
+        std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         uint_to_string<CharT>(tl_s_buffer, _MAX_NUMERIC_STRING_LENGTH_, value_p);
         return tl_s_buffer;
     }
     else if constexpr (std::is_signed<T>::value && std::is_integral<T>::value)
     {
-        std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+<<<<<<< HEAD
+        std::memset(tl_s_buffer, null, sizeof(CharT) * internal::strlen(tl_s_buffer));
+=======
+        std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         int_to_string<CharT>(tl_s_buffer, _MAX_NUMERIC_STRING_LENGTH_, value_p);
         return tl_s_buffer;
     }
     else if constexpr (std::is_floating_point<T>::value)
     {
-        std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+<<<<<<< HEAD
+        std::memset(tl_s_buffer, null, sizeof(CharT) * internal::strlen(tl_s_buffer));
+=======
+        std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         float_to_string<CharT>(tl_s_buffer, _MAX_NUMERIC_STRING_LENGTH_, value_p);
         return tl_s_buffer;
     }
@@ -426,7 +547,11 @@ _CONSTEXPR20_ _FORCE_INLINE_ const CharT* any_primitive_to_string(T value_p) noe
     }
     else if constexpr (std::is_pointer<T>::value)
     {
-        std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+<<<<<<< HEAD
+        std::memset(tl_s_buffer, null, sizeof(CharT) * internal::strlen(tl_s_buffer));
+=======
+        std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         std::snprintf(tl_s_buffer, _MAX_NUMERIC_STRING_LENGTH_, "%p", value_p);
         return tl_s_buffer;
     }
@@ -438,7 +563,7 @@ _CONSTEXPR20_ _FORCE_INLINE_ const CharT* any_primitive_to_string(T value_p) noe
 
 
 template<typename CharT, typename T>
-_CONSTEXPR20_ _FORCE_INLINE_ void any_primitive_to_string(CharT* const dest_buffer_p, capacity_t dest_buffer_capacity_p, T value_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ void any_primitive_to_string(CharT* const out_dest_buffer_p, capacity_t dest_buffer_capacity_p, T value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
     FE_STATIC_ASSERT(FE::is_primitive<T>::value == false, "static assertion failed: T must be a primitive type.");
@@ -447,84 +572,108 @@ _CONSTEXPR20_ _FORCE_INLINE_ void any_primitive_to_string(CharT* const dest_buff
     {
         const CharT* const l_result = boolean_to_string<CharT>(value_p);
         uint64 l_length = internal::strlen(l_result);
-        std::memcpy(dest_buffer_p, l_result, l_length * sizeof(CharT));
-        dest_buffer_p[l_length] = _NULL_;
+        std::memcpy(out_dest_buffer_p, l_result, l_length * sizeof(CharT));
+<<<<<<< HEAD
+        out_dest_buffer_p[l_length] = null;
+=======
+        out_dest_buffer_p[l_length] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     else if constexpr (FE::is_char<T>::value)
     {
-        dest_buffer_p[0] = value_p;
-        dest_buffer_p[1] = _NULL_;
+        out_dest_buffer_p[0] = value_p;
+<<<<<<< HEAD
+        out_dest_buffer_p[1] = null;
+=======
+        out_dest_buffer_p[1] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     else if constexpr (std::is_unsigned<T>::value && std::is_integral<T>::value)
     {
-        uint_to_string<CharT>(dest_buffer_p, dest_buffer_capacity_p, value_p);
+        uint_to_string<CharT>(out_dest_buffer_p, dest_buffer_capacity_p, value_p);
     }
     else if constexpr (std::is_signed<T>::value && std::is_integral<T>::value)
     {
-        int_to_string<CharT>(dest_buffer_p, dest_buffer_capacity_p, value_p);
+        int_to_string<CharT>(out_dest_buffer_p, dest_buffer_capacity_p, value_p);
     }
     else if constexpr (std::is_floating_point<T>::value)
     {
-        float_to_string<CharT>(dest_buffer_p, dest_buffer_capacity_p, value_p);
+        float_to_string<CharT>(out_dest_buffer_p, dest_buffer_capacity_p, value_p);
     }
     else if constexpr (FE::is_c_style_constant_string<T>::value)
     {
         uint64 l_length = internal::strlen(value_p);
         uint64 l_bytes_to_copy = l_length * sizeof(CharT);
-        if (dest_buffer_capacity_p < l_bytes_to_copy) _UNLIKELY_{ std::abort(); }
-        std::memcpy(dest_buffer_p, value_p, l_bytes_to_copy);
-        dest_buffer_p[l_length] = _NULL_;
+        if (UNLIKELY(dest_buffer_capacity_p < l_bytes_to_copy)) _UNLIKELY_{ std::abort(); }
+        std::memcpy(out_dest_buffer_p, value_p, l_bytes_to_copy);
+<<<<<<< HEAD
+        out_dest_buffer_p[l_length] = null;
+=======
+        out_dest_buffer_p[l_length] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     else if constexpr (std::is_pointer<T>::value)
     {
-        std::snprintf(dest_buffer_p, dest_buffer_capacity_p, "%p", value_p);
+        std::snprintf(out_dest_buffer_p, dest_buffer_capacity_p, "%p", value_p);
     }
     else if constexpr (FE::is_nullptr<T>::value)
     {
-        dest_buffer_p[0] = 'n';
-        dest_buffer_p[1] = 'u';
-        dest_buffer_p[2] = 'l';
-        dest_buffer_p[3] = 'l';
-        dest_buffer_p[4] = 'p';
-        dest_buffer_p[5] = 't';
-        dest_buffer_p[6] = 'r';
-        dest_buffer_p[7] = _NULL_;
+        out_dest_buffer_p[0] = 'n';
+        out_dest_buffer_p[1] = 'u';
+        out_dest_buffer_p[2] = 'l';
+        out_dest_buffer_p[3] = 'l';
+        out_dest_buffer_p[4] = 'p';
+        out_dest_buffer_p[5] = 't';
+        out_dest_buffer_p[6] = 'r';
+<<<<<<< HEAD
+        out_dest_buffer_p[7] = null;
+=======
+        out_dest_buffer_p[7] = _FE_NULL_;
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 }
 
 
-template<typename CharT, typename U>
-_CONSTEXPR20_ _FORCE_INLINE_ const CharT* any_to_string(U& value_p) noexcept
-{
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+#define _UTILITY_ALGORITHM_BUFER_SIZE_ 2048
 
-    thread_local static CharT tl_s_buffer[_256_BYTES_BIT_COUNT_]{};
-    std::memset(tl_s_buffer, _NULL_, sizeof(CharT) * internal::strlen(tl_s_buffer));
+template<typename CharT, typename U>
+_FORCE_INLINE_ const CharT* buffered_any_to_string(U& value_p) noexcept
+{
+    FE_STATIC_ASSERT((FE::is_char<CharT>::value == false), "Static Assertion Failed: an illegal type assigned to the template argument CharT");
+
+    FE_STATIC_ASSERT((sizeof(U) > _UTILITY_ALGORITHM_BUFER_SIZE_), "Static Assertion Failed: Buffer Overflow Detected!");
+
+    thread_local static CharT tl_s_buffer[_UTILITY_ALGORITHM_BUFER_SIZE_]{};
+<<<<<<< HEAD
+    std::memset(tl_s_buffer, null, sizeof(CharT) * _UTILITY_ALGORITHM_BUFER_SIZE_);
+=======
+    std::memset(tl_s_buffer, _FE_NULL_, sizeof(CharT) * _UTILITY_ALGORITHM_BUFER_SIZE_);
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     if constexpr (std::is_class< typename std::remove_reference< decltype(value_p) >::type >::value == true)
     {
-        any_object_binary_representation(tl_s_buffer, _256_BYTES_BIT_COUNT_, value_p);
+        any_object_binary_representation(tl_s_buffer, _UTILITY_ALGORITHM_BUFER_SIZE_, value_p);
     }
     else if constexpr (FE::is_primitive< typename std::remove_reference< decltype(value_p) >::type >::value == true)
     {
-        any_primitive_to_string(tl_s_buffer, _256_BYTES_BIT_COUNT_, value_p);
+        any_primitive_to_string(tl_s_buffer, _UTILITY_ALGORITHM_BUFER_SIZE_, value_p);
     }
     return tl_s_buffer;
 }
 
 
 template<typename CharT, typename U>
-_CONSTEXPR20_ _FORCE_INLINE_ void any_to_string(CharT* const dest_buffer_p, capacity_t dest_buffer_capacity_p, U& value_p) noexcept
+_FORCE_INLINE_ _CONSTEXPR20_ void any_to_string(CharT* const out_dest_buffer_p, capacity_t dest_buffer_capacity_p, U& value_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
     if constexpr (std::is_class< typename std::remove_reference< decltype(value_p) >::type >::value == true)
     {
-        any_object_binary_representation(dest_buffer_p, dest_buffer_capacity_p, value_p);
+        any_object_binary_representation(out_dest_buffer_p, dest_buffer_capacity_p, value_p);
     }
     else if constexpr (FE::is_primitive< typename std::remove_reference< decltype(value_p) >::type >::value == true)
     {
-        any_primitive_to_string(dest_buffer_p, dest_buffer_capacity_p, value_p);
+        any_primitive_to_string(out_dest_buffer_p, dest_buffer_capacity_p, value_p);
     }
 }
 

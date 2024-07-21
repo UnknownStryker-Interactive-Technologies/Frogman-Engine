@@ -12,8 +12,9 @@ BEGIN_NAMESPACE(FE)
 
 
 template<typename First, typename Second>
-struct pair
+class pair
 {
+public:
 	using first_type = First;
 	using second_type = Second;
 

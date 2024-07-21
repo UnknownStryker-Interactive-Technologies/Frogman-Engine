@@ -2,7 +2,11 @@
 #define _FE_CORE_CLOCK_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/types.hxx>
-#include <chrono>
+
+// boost
+#include <boost/chrono.hpp>
+
+// std
 #include <memory>
 
 
@@ -20,16 +24,16 @@ public:
     _MAYBE_UNUSED_ static constexpr int current_local_time_buffer_size = 64;
 
 private:
-    std::chrono::steady_clock::time_point m_starting_point;
-    std::chrono::steady_clock::time_point m_ending_point;
-    std::chrono::duration<var::float64> m_delta_time;
+    boost::chrono::steady_clock::time_point m_starting_point;
+    boost::chrono::steady_clock::time_point m_ending_point;
+    boost::chrono::duration<var::float64> m_delta_time;
 
 public:
     _CONSTEXPR17_ clock() noexcept : m_starting_point(), m_ending_point(), m_delta_time() {}
     _FORCE_INLINE_ ~clock() noexcept {}
 
-    _FORCE_INLINE_ void start_clock() noexcept { this->m_starting_point = ::std::chrono::steady_clock::now(); }
-    _FORCE_INLINE_ void end_clock() noexcept { this->m_ending_point = ::std::chrono::steady_clock::now(); }
+    _FORCE_INLINE_ void start_clock() noexcept { this->m_starting_point = boost::chrono::steady_clock::now(); }
+    _FORCE_INLINE_ void end_clock() noexcept { this->m_ending_point = boost::chrono::steady_clock::now(); }
 
     _FORCE_INLINE_ float64 get_delta_time() noexcept
     {

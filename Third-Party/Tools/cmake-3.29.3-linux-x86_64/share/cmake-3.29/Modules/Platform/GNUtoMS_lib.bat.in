@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+@echo off
+set VSCMD_START_DIR=.
+call "@CMAKE_GNUtoMS_BAT@"
+lib /machine:"@CMAKE_GNUtoMS_ARCH@" %*
+=======
+@echo off
+set VSCMD_START_DIR=.
+call "@CMAKE_GNUtoMS_BAT@"
+lib /machine:"@CMAKE_GNUtoMS_ARCH@" %*
+>>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948

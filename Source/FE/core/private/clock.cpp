@@ -17,7 +17,7 @@ const FE::clock::char_type* FE::clock::get_current_local_time() noexcept
     localtime_s(&l_time, &l_current_time_t);
     std::strftime(tl_s_local_time_string_buffer, current_local_time_buffer_size, "%Y-%B-%d-%A  %p %Ih.%Mm.%Ss", &l_time);
 
-#elif defined(_LINUX_64BIT_OS_)
+#elif defined(_LINUX_X86_64_) 
     std::strftime(tl_s_local_time_string_buffer, current_local_time_buffer_size, "%Y-%B-%d-%A  %p %Ih.%Mm.%Ss", localtime_r(&l_current_time_t, &l_time));
 #endif
     return tl_s_local_time_string_buffer;
