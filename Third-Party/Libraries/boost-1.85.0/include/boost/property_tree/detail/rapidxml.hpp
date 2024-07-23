@@ -640,11 +640,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
     
         // Construct a base with empty name, value and parent
         xml_base()
-<<<<<<< HEAD
-            : m_raw_name(0)
-=======
             : m_name(0)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             , m_value(0)
             , m_parent(0)
         {
@@ -661,11 +657,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
         //! \return Name of node, or empty string if node has no name.
         Ch *name() const
         {
-<<<<<<< HEAD
-            return m_raw_name ? m_raw_name : nullstr();
-=======
             return m_name ? m_name : nullstr();
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         //! Gets size of node name, not including terminator character.
@@ -673,11 +665,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
         //! \return Size of node name, in characters.
         std::size_t name_size() const
         {
-<<<<<<< HEAD
-            return m_raw_name ? m_name_size : 0;
-=======
             return m_name ? m_name_size : 0;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         //! Gets value of node. 
@@ -717,11 +705,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
         //! \param size Size of name, in characters. This does not include zero terminator, if one is present.
         void name(const Ch *n, std::size_t size)
         {
-<<<<<<< HEAD
-            m_raw_name = const_cast<Ch *>(n);
-=======
             m_name = const_cast<Ch *>(n);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             m_name_size = size;
         }
 
@@ -782,11 +766,7 @@ namespace boost { namespace property_tree { namespace detail {namespace rapidxml
             return &zero;
         }
 
-<<<<<<< HEAD
-        Ch *m_raw_name;                         // Name of node, or 0 if no name
-=======
         Ch *m_name;                         // Name of node, or 0 if no name
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         Ch *m_value;                        // Value of node, or 0 if no value
         std::size_t m_name_size;            // Length of node name, or undefined of no name
         std::size_t m_value_size;           // Length of node value, or undefined if no value

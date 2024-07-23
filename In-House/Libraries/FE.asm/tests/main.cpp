@@ -1,9 +1,5 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <FE/experimental/asm/__x86_64_memcpy.h>
-=======
-#include <FE/asm/__x86_64_memcpy.h>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 int main()
@@ -15,11 +11,8 @@ int main()
         __x86_64_memcpy(dest, source, 19);
         std::cout << "\nright after memcpy:\n" << dest << '\n';
     }
-<<<<<<< HEAD
         std::cout << "\n\n";
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     
     return 0;
 }

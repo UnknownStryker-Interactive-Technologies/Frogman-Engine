@@ -230,16 +230,6 @@ inline void file_mapping::priv_close()
 //!of exceptions
 class remove_file_on_destroy
 {
-<<<<<<< HEAD
-   const char * m_raw_name;
-   public:
-   remove_file_on_destroy(const char *name)
-      :  m_raw_name(name)
-   {}
-
-   ~remove_file_on_destroy()
-   {  ipcdetail::delete_file(m_raw_name);  }
-=======
    const char * m_name;
    public:
    remove_file_on_destroy(const char *name)
@@ -248,7 +238,6 @@ class remove_file_on_destroy
 
    ~remove_file_on_destroy()
    {  ipcdetail::delete_file(m_name);  }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED

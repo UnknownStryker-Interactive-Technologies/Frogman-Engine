@@ -2,18 +2,16 @@
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-<<<<<<< HEAD
-    // 
+    // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/FE.framework.reflection_test
     // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.pool/FE.core.pool_test
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+    // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.managed/FE.core.managed_test
     "version": "0.2.0",
     "configurations": [
         {
             "name": "Clang++ Debug",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/FE.framework.reflection_test",
+            "program": "${workspaceFolder}/Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.algorithm.string/FE.core.algorithm.string_test",
             "args": [],
             "stopOnEntry": true,
             "cwd": "${workspaceFolder}",

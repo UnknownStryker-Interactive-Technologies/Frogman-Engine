@@ -28,11 +28,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -43,11 +39,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -88,11 +80,7 @@ int main(int argc_p, char** argv_p)
 TEST(memmove, string_insertion)
 {
 	std::unique_ptr<char[]> l_string(new char[64] {"Freddy's Pizza\0"});
-<<<<<<< HEAD
 	 ASCII l_string2[] = " Fazbear";
-=======
-	 character l_string2[] = " Fazbear";
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	 length_t l_string2_len = algorithm::string::length(l_string2);
 
 	 index_t l_target_location = algorithm::string::find_the_first(l_string.get(), "'")->_begin;
@@ -217,11 +205,7 @@ void FE_aligned_memset_benchmark(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-<<<<<<< HEAD
 		FE::memset<FE::ADDRESS::_ALIGNED>(l_dest, null, _MAGICAL_SIZE_);
-=======
-		FE::memset<FE::ADDRESS::_ALIGNED>(l_dest, _FE_NULL_, _MAGICAL_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		FE::memset<FE::ADDRESS::_ALIGNED>(l_dest, 1, _MAGICAL_SIZE_);
 	}
 }
@@ -234,11 +218,7 @@ void std_memset_benchmark(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-<<<<<<< HEAD
 		std::memset(l_dest, null, _MAGICAL_SIZE_);
-=======
-		std::memset(l_dest, _FE_NULL_, _MAGICAL_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		std::memset(l_dest, 1, _MAGICAL_SIZE_);
 	}
 }

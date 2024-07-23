@@ -49,11 +49,7 @@ public:
                     const std::map<std::string, std::string> &definitions,
                     const ArgTuple &args,
                     const CaptureTuple &capture)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source),
           m_definitions(definitions),
           m_args(args),
@@ -63,11 +59,7 @@ public:
 
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     std::string source() const
@@ -91,11 +83,7 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::string m_source;
     std::map<std::string, std::string> m_definitions;
     ArgTuple m_args;
@@ -119,11 +107,7 @@ public:
     closure(const std::string &name,
             const CaptureTuple &capture,
             const std::string &source)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source),
           m_capture(capture)
     {
@@ -135,11 +119,7 @@ public:
 
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /// \internal_
@@ -164,11 +144,7 @@ public:
         );
 
         return detail::invoked_closure<result_type, boost::tuple<>, CaptureTuple>(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(), m_capture
-=======
             m_name, m_source, m_definitions, boost::make_tuple(), m_capture
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -183,11 +159,7 @@ public:
         );
 
         return detail::invoked_closure<result_type, boost::tuple<Arg1>, CaptureTuple>(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1), m_capture
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1), m_capture
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -202,11 +174,7 @@ public:
         );
 
         return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2>, CaptureTuple>(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1, arg2), m_capture
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2), m_capture
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -221,20 +189,12 @@ public:
         );
 
         return detail::invoked_closure<result_type, boost::tuple<Arg1, Arg2, Arg3>, CaptureTuple>(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3), m_capture
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3), m_capture
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::string m_source;
     std::map<std::string, std::string> m_definitions;
     CaptureTuple m_capture;

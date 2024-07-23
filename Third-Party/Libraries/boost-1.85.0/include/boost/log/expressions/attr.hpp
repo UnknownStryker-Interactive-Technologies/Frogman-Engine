@@ -86,11 +86,7 @@ public:
 
 private:
     //! Attribute value name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Attribute value extractor
     value_extractor_type m_value_extractor;
 
@@ -98,11 +94,7 @@ public:
     /*!
      * Initializing constructor
      */
-<<<<<<< HEAD
-    explicit attribute_terminal(attribute_name const& name) : m_raw_name(name)
-=======
     explicit attribute_terminal(attribute_name const& name) : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -110,11 +102,7 @@ public:
      * Initializing constructor
      */
     template< typename U >
-<<<<<<< HEAD
-    attribute_terminal(attribute_name const& name, U const& arg) : m_raw_name(name), m_value_extractor(arg)
-=======
     attribute_terminal(attribute_name const& name, U const& arg) : m_name(name), m_value_extractor(arg)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -123,11 +111,7 @@ public:
      */
     attribute_name get_name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!
@@ -145,11 +129,7 @@ public:
     typename result< this_type(ContextT const&) >::type
     operator() (ContextT const& ctx)
     {
-<<<<<<< HEAD
-        return m_value_extractor(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()));
-=======
         return m_value_extractor(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!
@@ -159,11 +139,7 @@ public:
     typename result< const this_type(ContextT const&) >::type
     operator() (ContextT const& ctx) const
     {
-<<<<<<< HEAD
-        return m_value_extractor(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()));
-=======
         return m_value_extractor(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     BOOST_DELETED_FUNCTION(attribute_terminal())

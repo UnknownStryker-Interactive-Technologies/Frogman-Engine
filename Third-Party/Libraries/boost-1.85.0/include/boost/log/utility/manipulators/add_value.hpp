@@ -77,28 +77,16 @@ private:
     //! Attribute value
     stored_type m_value;
     //! Attribute name
-<<<<<<< HEAD
-    attribute_name m_raw_name;
-
-public:
-    //! Initializing constructor
-    add_value_manip(attribute_name const& name, reference_type value) : m_value(static_cast< lvalue_reference_type >(value)), m_raw_name(name)
-=======
     attribute_name m_name;
 
 public:
     //! Initializing constructor
     add_value_manip(attribute_name const& name, reference_type value) : m_value(static_cast< lvalue_reference_type >(value)), m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     //! Returns attribute name
-<<<<<<< HEAD
-    attribute_name get_name() const { return m_raw_name; }
-=======
     attribute_name get_name() const { return m_name; }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Returns attribute value
     get_value_result_type get_value() const { return static_cast< get_value_result_type >(m_value); }
 };

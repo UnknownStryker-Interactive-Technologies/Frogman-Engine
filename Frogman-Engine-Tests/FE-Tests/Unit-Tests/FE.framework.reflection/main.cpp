@@ -29,11 +29,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -44,11 +40,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -102,7 +94,6 @@ END_OF_THE_FROGMAN_ENGINE_PROJECT_CONFIGURATION()
 
 
 BEGIN_NAMESPACE(test)
-<<<<<<< HEAD
 
 struct vector3
 {
@@ -152,31 +143,6 @@ class object : public super
 public:
 	object() noexcept : m_is_it_dead(false), m_colors{} {}
 	object(FE::boolean dead_on_start_p, test::RGBA rgba_p) noexcept : m_is_it_dead{dead_on_start_p}, m_colors{rgba_p} {}
-=======
-class object
-{ 
-	FE_CLASS_HAS_NO_BASE();
-	REGISTER_FE_CLASS(test::object);
-
-	REGISTER_FE_PROPERTY(m_speed);
-	_MAYBE_UNUSED_ var::float64 m_speed;
-
-	REGISTER_FE_PROPERTY(m_direction);
-	_MAYBE_UNUSED_ var::float64 m_direction;
-
-	REGISTER_FE_PROPERTY(m_health);
-	_MAYBE_UNUSED_ var::float64 m_health;
-
-	REGISTER_FE_PROPERTY(m_integers);
-	_MAYBE_UNUSED_ var::int32 m_integers[4];
-
-	REGISTER_FE_PROPERTY(m_name); 
-	var::character* m_name;
-
-public:
-	object() noexcept : m_speed(), m_direction(), m_health(), m_integers(), m_name(new var::character('\0')) {}
-	object(FE::float64 speed_p, FE::float64 direction_p, FE::float64 health_p) noexcept : m_speed(speed_p), m_direction(direction_p), m_health(health_p), m_integers{1, 2, 3, 4}, m_name(new var::character('J')) {}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	REGISTER_FE_METHOD(test::object, initialize, std::string (void));
 	std::string initialize() { return "object initialized"; }
@@ -192,7 +158,6 @@ public:
 		return s; 
 	}
 
-<<<<<<< HEAD
 	const test::RGBA* get_color() const noexcept { return this->m_colors; }
 	FE::boolean is_dead() const noexcept { return this->m_is_it_dead; }
 };
@@ -203,21 +168,6 @@ TEST(reflection, method_and_property)
 {
 	test::object l_object(true, test::RGBA{255.0f, 191.0f, 52.0f, 1.0f});
 	std::any l_result = FE::framework::reflection::function::invoke(l_object, "std::string test::object::initialize(void)");
-=======
-	FE::float64 get_speed() const noexcept { return this->m_speed; }
-	FE::float64 get_direction() const noexcept { return this->m_direction; }
-	FE::float64 get_health() const noexcept { return this->m_health; }
-
-	FE::int32* get_integers() const noexcept { return this->m_integers; }
-	FE::character* get_name() const noexcept { return this->m_name; }
-};
-END_NAMESPACE
-
-TEST(reflection, method_and_property)
-{
-	test::object l_object(10, 90, 100);
-	std::any l_result = FE::framework::reflection::function_table::invoke_method(l_object, "std::string test::object::initialize(void)");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	EXPECT_TRUE(l_result.has_value());
 	{
 		std::string l_actual_result = std::any_cast<std::string>(l_result);
@@ -228,18 +178,13 @@ TEST(reflection, method_and_property)
 	FE::arguments<var::length_t> l_args;
 	l_args._first = 16;
 	
-<<<<<<< HEAD
 	l_result = ::FE::framework::reflection::function::invoke(l_object, l_object.method_reflection_instance_do_as_what_i_say.get_signature(), std::move(l_args));
-=======
-	l_result = ::FE::framework::reflection::function_table::invoke_method(l_object, l_object.method_reflection_instance_do_as_what_i_say.get_signature(), std::move(l_args));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	EXPECT_TRUE(l_result.has_value());
 	{
 		std::string l_actual_result = std::any_cast<std::string>(l_result);
 		EXPECT_TRUE(l_actual_result == "you've failed to guess.");
 	}
 
-<<<<<<< HEAD
 
 	FE::framework::reflection::property::serialize<test::object>("Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/serialized", "test-object.froggy", l_object);
 
@@ -253,22 +198,6 @@ TEST(reflection, method_and_property)
 }
 
 
-=======
-	FE::framework::reflection::variable_map::serialize<test::object>("Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/serialized", "test-object.froggy", l_object);
-
-	test::object l_new_object;
-	FE::framework::reflection::variable_map::deserialize<test::object>("Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/serialized", "test-object.froggy", l_new_object);
-
-	EXPECT_EQ(l_object.get_speed(), l_new_object.get_speed());
-	EXPECT_EQ(l_object.get_direction(), l_new_object.get_direction());
-	EXPECT_EQ(l_object.get_health(), l_new_object.get_health());
-
-	FE::int32 l_integers[4] = {1, 2, 3, 4};
-	EXPECT_EQ(std::memcmp(l_new_object.get_integers(), l_object.get_integers(), sizeof(l_integers)), 0);
-
-	EXPECT_EQ(*l_object.get_name(), *l_new_object.get_name()); 
-}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 bool JesusLovesYou() noexcept
@@ -280,43 +209,23 @@ bool JesusLovesYou() noexcept
 TEST(reflection, function)
 {
 	FE::string l_function_signature = "bool JesusLovesYou() noexcept";
-<<<<<<< HEAD
 	FE::framework::reflection::function::register_task<FE::c_style_task<bool(void)>>(l_function_signature, &JesusLovesYou);
 	EXPECT_TRUE(FE::framework::reflection::function::check_presence(l_function_signature));
 
 	auto l_result = FE::framework::reflection::function::invoke(l_function_signature);
 
 	_MAYBE_UNUSED_ FE::task_base* l_fn = FE::framework::reflection::function::retrieve(l_function_signature);
-=======
-	FE::framework::reflection::function_table::register_task<FE::c_style_task<bool(void)>>(l_function_signature, &JesusLovesYou);
-	EXPECT_TRUE(FE::framework::reflection::function_table::check_presence(l_function_signature));
-
-	auto l_result = FE::framework::reflection::function_table::invoke_function(l_function_signature);
-
-	_MAYBE_UNUSED_ FE::task_base* l_fn = FE::framework::reflection::function_table::retrieve(l_function_signature);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	EXPECT_TRUE(std::any_cast<FE::boolean>(l_result));
 }
 
 
-<<<<<<< HEAD
 void FE_function_invocation_overhead_benchmark(benchmark::State& state_p) noexcept
-=======
-void FE_function_table_invocation_overhead_benchmark(benchmark::State& state_p) noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	FE::string l_function_signature = "bool JesusLovesYou() noexcept";
 	for(auto _ : state_p)
 	{
-<<<<<<< HEAD
 		FE::framework::reflection::function::invoke(l_function_signature);
 	}
 }
 BENCHMARK(FE_function_invocation_overhead_benchmark);
-=======
-		FE::framework::reflection::function_table::invoke_function(l_function_signature);
-	}
-}
-BENCHMARK(FE_function_table_invocation_overhead_benchmark);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948

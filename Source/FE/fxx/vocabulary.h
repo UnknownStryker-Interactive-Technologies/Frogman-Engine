@@ -92,11 +92,7 @@ enum struct VOCABULARY
 };
 
 
-<<<<<<< HEAD
 const robin_hood::unordered_map<FE::ASCII*, VOCABULARY, FE::hash<FE::ASCII*>> g_fxx_language_vocabulary_map = {
-=======
-const robin_hood::unordered_map<FE::character*, VOCABULARY, FE::hash<FE::character*>> g_fxx_language_vocabulary_map = {
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	
 	{"$Undefined$", VOCABULARY::_UNDEFINED}, {"$EndOfToken$", VOCABULARY::_END_OF_TOKEN},
 	{"true", VOCABULARY::_LITERAL_TRUE}, {"false", VOCABULARY::_LITERAL_FALSE}, 

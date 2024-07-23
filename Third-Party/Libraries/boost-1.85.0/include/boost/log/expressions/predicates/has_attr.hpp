@@ -50,11 +50,7 @@ public:
 
 private:
     //! Attribute value name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Visitor invoker
     value_visitor_invoker< value_type > m_visitor_invoker;
 
@@ -64,11 +60,7 @@ public:
      *
      * \param name Attribute name
      */
-<<<<<<< HEAD
-    explicit has_attribute(attribute_name const& name) : m_raw_name(name)
-=======
     explicit has_attribute(attribute_name const& name) : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -81,11 +73,7 @@ public:
     template< typename ArgT >
     result_type operator() (ArgT const& arg) const
     {
-<<<<<<< HEAD
-        return m_visitor_invoker(m_raw_name, arg, nop()).code() == visitation_result::ok;
-=======
         return m_visitor_invoker(m_name, arg, nop()).code() == visitation_result::ok;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 };
 
@@ -103,11 +91,7 @@ public:
 
 private:
     //! Attribute name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 public:
     /*!
@@ -115,11 +99,7 @@ public:
      *
      * \param name Attribute name
      */
-<<<<<<< HEAD
-    explicit has_attribute(attribute_name const& name) : m_raw_name(name)
-=======
     explicit has_attribute(attribute_name const& name) : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -131,11 +111,7 @@ public:
      */
     result_type operator() (attribute_value_set const& attrs) const
     {
-<<<<<<< HEAD
-        return attrs.find(m_raw_name) != attrs.end();
-=======
         return attrs.find(m_name) != attrs.end();
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!

@@ -35,11 +35,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -50,11 +46,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -104,15 +96,9 @@ TEST(fstring, constructor)
 		EXPECT_TRUE(l_fstring == "FE::fstring<_UNIT_TEST_FSTRING_LENGTH_> is a fixed sized string class template.");
 	}
 
-<<<<<<< HEAD
 	ASCII* l_str = "Pizza";
 	FE::const_iterator<FE::contiguous_iterator<ASCII>> l_cbegin{ l_str };
 	FE::const_iterator<FE::contiguous_iterator<ASCII>> l_cend{ l_str  + strlen(l_str)};
-=======
-	character* l_str = "Pizza";
-	FE::const_iterator<FE::contiguous_iterator<character>> l_cbegin{ l_str };
-	FE::const_iterator<FE::contiguous_iterator<character>> l_cend{ l_str  + strlen(l_str)};
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	FE::fstring<_TEST_FSTRING_LENGTH_> l_fstring(l_cbegin, l_cend);
 
@@ -278,15 +264,9 @@ TEST(fstring, begin_end)
 	FE::fstring<_TEST_FSTRING_LENGTH_>::value_type l_buffer[_TEST_FSTRING_LENGTH_] = "\0";
 	
 	var::index_t l_idx = 0;
-<<<<<<< HEAD
 	for (auto ASCII = l_fstring.begin(); ASCII != l_fstring.end(); ++ASCII)
 	{
 		l_buffer[l_idx] = *ASCII;
-=======
-	for (auto character = l_fstring.begin(); character != l_fstring.end(); ++character)
-	{
-		l_buffer[l_idx] = *character;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		++l_idx;
 	}
 

@@ -6,16 +6,6 @@
 
 #ifndef BOOST_STACKTRACE_DETAIL_COLLECT_UNWIND_IPP
 #define BOOST_STACKTRACE_DETAIL_COLLECT_UNWIND_IPP
-<<<<<<< HEAD
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-/*
-/workspace/Frogman-Engine-Lab/Source/CMakeLists/../../Third-Party/Libraries/boost-1.85.0/include/boost/stacktrace/detail/collect_unwind.ipp:91:34: error: implicit conversion changes signedness: 'long' to 'std::size_t' (aka 'unsigned long') [-Werror,-Wsign-conversion]
-    frames_count = state.current - out_frames;
-*/
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #include <boost/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #   pragma once
@@ -111,9 +101,4 @@ std::size_t this_thread_frames::collect(native_frame_ptr_t* out_frames, std::siz
 }}} // namespace boost::stacktrace::detail
 
 #undef BOOST_STACKTRACE_USE_LIBC_BACKTRACE_FUNCTION
-<<<<<<< HEAD
-#pragma clang diagnostic pop
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #endif // BOOST_STACKTRACE_DETAIL_COLLECT_UNWIND_IPP

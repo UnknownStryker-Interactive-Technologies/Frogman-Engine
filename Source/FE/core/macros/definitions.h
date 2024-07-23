@@ -18,24 +18,12 @@
 
 #ifdef _MSVC_
     #define _FORCE_INLINE_ __forceinline
-<<<<<<< HEAD
 #else
     #define _FORCE_INLINE_ inline __attribute__((always_inline))
 #endif
 
 #define _VECTOR_CALL_ __vectorcall
 #define _REGISTER_CALL_ __regcall
-=======
-    #define _STDCALL_ __stdcall
-    #define _FASTCALL_ __fastcall
-#else
-    #define _FORCE_INLINE_ inline __attribute__((always_inline))
-    #define _STDCALL_ 
-    #define _FASTCALL_
-#endif
-
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #define _CDECL_ __cdecl
 
 
@@ -62,14 +50,18 @@
 
 #ifdef _HAS_CXX20_
     #define _CONSTEXPR20_ constexpr
+    #define _CONSTEVAL20_ consteval
 #else
     #define _CONSTEXPR20_
+    #define _CONSTEVAL20_
 #endif
 
 #ifdef _HAS_CXX23_
     #define _CONSTEXPR23_ constexpr
+    #define _CONSTEVAL23_ consteval
 #else
     #define _CONSTEXPR23_
+    #define _CONSTEVAL23_
 #endif
 
 

@@ -25,6 +25,7 @@ public:
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
+	using alignment_type = FE::align_custom_bytes<sizeof(T)>;
 
 	_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
@@ -102,6 +103,7 @@ public:
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
+	using alignment_type = FE::align_custom_bytes<sizeof(T)>;
 
 	_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;

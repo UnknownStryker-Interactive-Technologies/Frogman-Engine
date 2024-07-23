@@ -33,11 +33,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -48,11 +44,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -89,11 +81,7 @@ int main(int argc_p, char** argv_p)
 
 
 
-<<<<<<< HEAD
 /* has a bug
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 TEST(pool_allocator, all)
 {
 	{
@@ -121,18 +109,13 @@ TEST(new_delete_pool_allocator, all)
 		l_allocator.deallocate(l_ptr, 1);
 	}
 }
-<<<<<<< HEAD
 */
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 
 void memory_pooled_std_list_iteration(benchmark::State& state_p) noexcept
 {
 	// std::list nodes are allocated under the memory pool namespace named "list node pool". This provides higher cache hit ratio. 
-<<<<<<< HEAD
 	std::list<int, FE::pool_allocator<int, FE::size_in_bytes<1 MB>>> l_list;
 	benchmark::DoNotOptimize(l_list);
 
@@ -140,11 +123,6 @@ void memory_pooled_std_list_iteration(benchmark::State& state_p) noexcept
 	l_list.pop_front();
 
 	for (int i = 1; i < 1000; ++i)
-=======
-	std::list<int, FE::pool_allocator<int>> l_list;
-	benchmark::DoNotOptimize(l_list);
-	for (int i = 0; i < 1000; ++i)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		l_list.push_back(1);
 	}
@@ -179,11 +157,7 @@ void std_list_iteration(benchmark::State& state_p) noexcept
 }
 BENCHMARK(std_list_iteration);
 
-<<<<<<< HEAD
 #define _MAX_ITERATION_ 10000
-=======
-#define _MAX_ITERATION_ 1000
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 void boost_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
@@ -255,11 +229,7 @@ BENCHMARK(boost_object_pool_allocator_extreme_test);
 
 void FE_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-<<<<<<< HEAD
 	FE::scalable_pool<1000 MB> l_allocator;
-=======
-	FE::dynamic_pool<1000 MB> l_allocator;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 

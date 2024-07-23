@@ -25,10 +25,7 @@ class ptr final
 public:
 	using element_type = typename std::remove_all_extents<T>::type;
 	using pointer = element_type*;
-<<<<<<< HEAD
-	using const_pointer = element_type* const;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+	using const_pointer = const element_type*;
 
 private:
 	smart_ptr_type m_ref_block;
@@ -130,20 +127,31 @@ public:
 		return this->is_expired();
 	}
 
-	_FORCE_INLINE_ element_type& operator*() const noexcept
+	_FORCE_INLINE_ element_type& operator*() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to dereference nullptr.");
 		return *static_cast<pointer>(this->m_ref_block->_address);
 	}
 
-	_FORCE_INLINE_ pointer operator->() const noexcept
+	_FORCE_INLINE_ pointer operator->() noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to access nullptr.");
+		return static_cast<pointer>(this->m_ref_block->_address);
+	}
+
+	_FORCE_INLINE_ const element_type& operator*() const noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to dereference nullptr.");
+		return *static_cast<pointer>(this->m_ref_block->_address);
+	}
+
+	_FORCE_INLINE_ const_pointer operator->() const noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to access nullptr.");
 		return static_cast<pointer>(this->m_ref_block->_address);
 	}
 
 	// this function 'get()' returns nullptr if the current smart pointer is null.
-<<<<<<< HEAD
 	_FORCE_INLINE_ pointer get() noexcept
 	{
 		if(this->operator!() == true)
@@ -154,9 +162,6 @@ public:
 	}
 
 	_FORCE_INLINE_ const_pointer get() const noexcept
-=======
-	_FORCE_INLINE_ pointer get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		if(this->operator!() == true)
 		{
@@ -307,10 +312,7 @@ class ptr<T[]> final
 public:
 	using element_type = typename std::remove_all_extents<T>::type;
 	using pointer = element_type*;
-<<<<<<< HEAD
-	using const_pointer = element_type* const;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+	using const_pointer = const element_type*;
 
 private:
 	mutable smart_ptr_type m_ref_block;
@@ -420,7 +422,6 @@ public:
 		return this->is_expired();
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ const element_type& operator*() const noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to dereference nullptr.");
@@ -444,30 +445,19 @@ public:
 	}
 
 	_FORCE_INLINE_ element_type& operator*() noexcept
-=======
-	_FORCE_INLINE_ element_type& operator*() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to dereference nullptr.");
 		return *static_cast<pointer>(this->m_ref_block->_address);
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ pointer operator->() noexcept
-=======
-	_FORCE_INLINE_ pointer operator->() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failure: unable to access nullptr.");
 		return static_cast<pointer>(this->m_ref_block->_address);
 	}
 
 	// this function 'get()' returns nullptr if the current smart pointer is null.
-<<<<<<< HEAD
 	_FORCE_INLINE_ pointer get() noexcept
-=======
-	_FORCE_INLINE_ pointer get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		if(this->operator!() == true)
 		{
@@ -605,16 +595,28 @@ public:
 		return static_cast<pointer>(this->m_ref_block->_address)[index_p];
 	}
 
-	_FORCE_INLINE_ FE::iterator<FE::contiguous_iterator<element_type>> begin() const noexcept
+	_FORCE_INLINE_ FE::iterator<FE::contiguous_iterator<element_type>> begin() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->operator->();
 	}
-	_FORCE_INLINE_ FE::iterator<FE::contiguous_iterator<element_type>> end() const noexcept
+	_FORCE_INLINE_ FE::iterator<FE::contiguous_iterator<element_type>> end() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr_end;
 	}
+
+	_FORCE_INLINE_ FE::const_iterator<FE::contiguous_iterator<element_type>> begin() const noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->operator->();
+	}
+	_FORCE_INLINE_ FE::const_iterator<FE::contiguous_iterator<element_type>> end() const noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr_end;
+	}
+
 	_FORCE_INLINE_ FE::const_iterator<FE::contiguous_iterator<element_type>> cbegin() const noexcept
 	{ 
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -624,16 +626,29 @@ public:
 	{
 		return this->m_smart_ptr_end;
 	}
-	_FORCE_INLINE_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() const noexcept
+	
+	_FORCE_INLINE_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->operator->();
 	}
-	_FORCE_INLINE_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rend() const noexcept
+	_FORCE_INLINE_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rend() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr_end;
 	}
+
+	_FORCE_INLINE_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() const noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->operator->();
+	}
+	_FORCE_INLINE_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rend() const noexcept
+	{
+		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr_end;
+	}
+
 	_FORCE_INLINE_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> crbegin() const noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "${%s@0}: ${%s@1} is invalid", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));

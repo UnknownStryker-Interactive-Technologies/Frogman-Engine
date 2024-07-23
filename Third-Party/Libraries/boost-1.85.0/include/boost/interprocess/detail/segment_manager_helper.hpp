@@ -296,33 +296,6 @@ class char_ptr_holder
 {
    public:
    char_ptr_holder(const CharType *name)
-<<<<<<< HEAD
-      : m_raw_name(name)
-   {}
-
-   char_ptr_holder(const anonymous_instance_t *)
-      : m_raw_name(static_cast<CharType*>(0))
-   {}
-
-   char_ptr_holder(const unique_instance_t *)
-      : m_raw_name(reinterpret_cast<CharType*>(-1))
-   {}
-
-   operator const CharType *()
-   {  return m_raw_name;  }
-
-   const CharType *get() const
-   {  return m_raw_name;  }
-
-   bool is_unique() const
-   {  return m_raw_name == reinterpret_cast<CharType*>(-1);  }
-
-   bool is_anonymous() const
-   {  return m_raw_name == static_cast<CharType*>(0);  }
-
-   private:
-   const CharType *m_raw_name;
-=======
       : m_name(name)
    {}
 
@@ -348,7 +321,6 @@ class char_ptr_holder
 
    private:
    const CharType *m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 //!The key of the the named allocation information index. Stores an offset pointer

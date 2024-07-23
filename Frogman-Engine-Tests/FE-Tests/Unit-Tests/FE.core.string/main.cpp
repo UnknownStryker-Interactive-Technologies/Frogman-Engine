@@ -28,11 +28,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -43,11 +39,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -229,15 +221,9 @@ TEST(basic_string, iterators)
 	}
 
 	{
-<<<<<<< HEAD
 		FE::ASCII* l_str = "Pizza";
 		FE::const_iterator<FE::contiguous_iterator<FE::ASCII>> l_cbegin{ l_str };
 		FE::const_iterator<FE::contiguous_iterator<FE::ASCII>> l_cend{ l_str + strlen(l_str) };
-=======
-		FE::character* l_str = "Pizza";
-		FE::const_iterator<FE::contiguous_iterator<FE::character>> l_cbegin{ l_str };
-		FE::const_iterator<FE::contiguous_iterator<FE::character>> l_cend{ l_str + strlen(l_str) };
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 		FE::string l_string(l_cbegin, l_cend);
 
@@ -377,11 +363,7 @@ TEST(basic_string, operations)
 		EXPECT_TRUE(l_second_string == "Another my favorite AAA title is Tom Clancy's");
 
 
-<<<<<<< HEAD
 		var::ASCII l_cstring[] = " Ghost Recon: ";
-=======
-		var::character l_cstring[] = " Ghost Recon: ";
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		l_second_string.append(FE::const_iterator<FE::contiguous_iterator<char>>{l_cstring}, FE::const_iterator<FE::contiguous_iterator<char>>{l_cstring + 14});
 		EXPECT_TRUE(l_second_string == "Another my favorite AAA title is Tom Clancy's Ghost Recon: ");
 

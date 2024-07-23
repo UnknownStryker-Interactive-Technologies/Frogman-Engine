@@ -59,11 +59,7 @@ private:
     //! Argument for the predicate
     const argument_type m_arg;
     //! Attribute value name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Visitor invoker
     value_visitor_invoker< value_type, fallback_policy > m_visitor_invoker;
 
@@ -74,11 +70,7 @@ public:
      * \param name Attribute name
      * \param pred_arg The predicate argument
      */
-<<<<<<< HEAD
-    attribute_predicate(attribute_name const& name, argument_type const& pred_arg) : m_arg(pred_arg), m_raw_name(name)
-=======
     attribute_predicate(attribute_name const& name, argument_type const& pred_arg) : m_arg(pred_arg), m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -90,11 +82,7 @@ public:
      * \param arg Additional parameter for the fallback policy
      */
     template< typename U >
-<<<<<<< HEAD
-    attribute_predicate(attribute_name const& name, argument_type const& pred_arg, U const& arg) : m_arg(pred_arg), m_raw_name(name), m_visitor_invoker(arg)
-=======
     attribute_predicate(attribute_name const& name, argument_type const& pred_arg, U const& arg) : m_arg(pred_arg), m_name(name), m_visitor_invoker(arg)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -110,11 +98,7 @@ public:
         typedef binder2nd< predicate_type, argument_type const& > visitor_type;
 
         bool res = false;
-<<<<<<< HEAD
-        m_visitor_invoker(m_raw_name, arg, boost::log::save_result(visitor_type(predicate_type(), m_arg), res));
-=======
         m_visitor_invoker(m_name, arg, boost::log::save_result(visitor_type(predicate_type(), m_arg), res));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return res;
     }
 };

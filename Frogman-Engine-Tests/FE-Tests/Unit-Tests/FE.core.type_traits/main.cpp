@@ -8,7 +8,6 @@
 #include <string_view>
 
 
-<<<<<<< HEAD
 
 
 class base
@@ -52,18 +51,12 @@ public:
     }
 };
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 /*
 ls: lists all folders in the current working directory
 ls filename: checks the presence of files with the specified name.
 */
 int main()
 {
-<<<<<<< HEAD
-
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _MAYBE_UNUSED_ FE::remove_const_reference<const int&>::type i = 0;
 
     _MAYBE_UNUSED_ FE::conditional_type<false, int, float>::type false_type = 0.0f;
@@ -75,7 +68,6 @@ int main()
     assert(FE::is_numeric<FE::int64>::value == true);
     assert(FE::is_trivial<std::string>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL);
     assert(FE::is_string_class<std::string_view>::value == true);
-<<<<<<< HEAD
     assert(FE::has_base_type<int>::value == false);
 
     derived* l_derived = new derived;
@@ -87,9 +79,6 @@ int main()
     _MAYBE_UNUSED_ const object& l_assign_by_move = FE::forward_to<const object&, decltype(l_source)>(l_source);
     _MAYBE_UNUSED_ object&& l_assign_by_move2 = FE::forward_to<object&&, decltype(l_source)>(l_source);
     _MAYBE_UNUSED_ object l_assign_by_move3 = FE::forward_to<object, decltype(l_source)>(l_source);
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::cout << "Compilation test of FE.core.type_traits source code is successful.\n";
     return 0;
 }

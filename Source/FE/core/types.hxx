@@ -1,18 +1,11 @@
 ﻿#ifndef _FE_CORE_TYPES_HXX_
 #define _FE_CORE_TYPES_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-<<<<<<< HEAD
 #include <FE/miscellaneous/suppress_warnings.h>
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #include <FE/core/macros/attributes.h>
 #include <atomic>
 #include <cassert>
 #include <cstdint>
-<<<<<<< HEAD
-=======
-#include <functional>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #include <limits>
 #include <typeinfo>
 #include <type_traits>
@@ -27,11 +20,7 @@ BEGIN_NAMESPACE(FE)
 
 typedef const bool boolean; // primitive types are const by default
 
-<<<<<<< HEAD
 typedef const char ASCII;  // primitive types are const by default
-=======
-typedef const char character;  // primitive types are const by default
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 typedef const signed char schar; // primitive types are const by default
 typedef const unsigned char uchar; // primitive types are const by default
 typedef const wchar_t wchar; // primitive types are const by default
@@ -109,11 +98,6 @@ _MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_min = min_value<FE::uint32>;
 _MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>;
 
 
-<<<<<<< HEAD
-=======
-#define _FE_NULL_ 0
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #define _FE_TRUE_ 1
 #define _FE_FALSE_ 0
 
@@ -183,15 +167,9 @@ public:
 	_FORCE_INLINE_ const_reference load() const noexcept { return this->m_data; }
 };
 
-<<<<<<< HEAD
 #ifdef _DEBUG_
 template<typename T>
 class buffer final // a temporary arguments buffer to be used with FE.log
-=======
-
-template<typename T>
-class buffer final
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	thread_local static T tl_s_rvalue_buffer;
 
@@ -219,45 +197,7 @@ public:
 
 template<typename T>
 thread_local T buffer<T>::tl_s_rvalue_buffer;
-<<<<<<< HEAD
 #endif
-=======
-
-
-namespace internal
-{
-	struct do_once
-	{
-		_FORCE_INLINE_ do_once(const std::function<void()>& code_p) noexcept
-		{
-			code_p();
-		}
-	};
-}
-
-#ifdef _DO_ONCE_AT_APP_EXECUTION_
-#error _DO_ONCE_AT_APP_EXECUTION_ is a reserved Frogman Engine macro keyword.
-#endif 
-// A directive for executing a given code once per an application launch.
-#define _DO_ONCE_AT_APP_EXECUTION_ static
-
-
-#ifdef _DO_ONCE_AT_THREAD_PROCESS_
-#error _DO_ONCE_AT_THREAD_PROCESS_ is a reserved Frogman Engine macro keyword.
-#endif 
-// A directive for executing a given code once per thread.
-#define _DO_ONCE_AT_THREAD_PROCESS_ thread_local static 
-
-
-#ifdef FE_DO_ONCE
-#error FE_DO_ONCE is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_DO_ONCE(frequency, ...)\
-{ \
-	frequency ::FE::internal::do_once __FE_DO_ONCE_INSTANCE__([=]() { __VA_ARGS__; }); \
-}
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 END_NAMESPACE
 
 // variable types
@@ -267,15 +207,9 @@ namespace var
 	static_assert(::std::atomic<boolean>::is_always_lock_free == true, "std::atomic is not compatible with boolean.");
 	static_assert(sizeof(boolean) == 1, "The size of boolean must be one byte.");
 
-<<<<<<< HEAD
 	typedef char ASCII;
 	static_assert(::std::atomic<ASCII>::is_always_lock_free == true, "std::atomic is not compatible with ASCII.");
 	static_assert(sizeof(ASCII) == 1, "The size of ASCII must be one byte.");
-=======
-	typedef char character;
-	static_assert(::std::atomic<character>::is_always_lock_free == true, "std::atomic is not compatible with character.");
-	static_assert(sizeof(character) == 1, "The size of character must be one byte.");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	typedef signed char schar;
 	static_assert(::std::atomic<schar>::is_always_lock_free == true, "std::atomic is not compatible with schar.");

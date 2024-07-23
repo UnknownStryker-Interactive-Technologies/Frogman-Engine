@@ -5,13 +5,8 @@
 
 // See http://www.boost.org/libs/iostreams for documentation.
 
-<<<<<<< HEAD
-#ifndef BOOST_IOSTREAMS_DETAItl_s_fstream_HPP_INCLUDED
-#define BOOST_IOSTREAMS_DETAItl_s_fstream_HPP_INCLUDED
-=======
 #ifndef BOOST_IOSTREAMS_DETAIL_FSTREAM_HPP_INCLUDED
 #define BOOST_IOSTREAMS_DETAIL_FSTREAM_HPP_INCLUDED
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 #if defined(_MSC_VER)
 # pragma once
@@ -35,8 +30,4 @@
 # define BOOST_IOSTREAMS_BASIC_FILEBUF(Ch) std::filebuf
 #endif
 
-<<<<<<< HEAD
-#endif // #ifndef BOOST_IOSTREAMS_DETAItl_s_fstream_HPP_INCLUDED
-=======
 #endif // #ifndef BOOST_IOSTREAMS_DETAIL_FSTREAM_HPP_INCLUDED
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948

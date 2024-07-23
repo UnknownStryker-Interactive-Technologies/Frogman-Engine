@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 ﻿#ifndef _FE_LOGGER_HPP_
 #define _FE_LOGGER_HPP_
-=======
-﻿#ifndef _FE_LOG_HPP_
-#define _FE_LOG_HPP_
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/types.hxx>
 #include <FE/core/private/debug.h>
@@ -91,11 +86,7 @@ public:
     fatal_error_logger_base() noexcept;
     ~fatal_error_logger_base() noexcept;
 
-<<<<<<< HEAD
     void do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept;
-=======
-    void do_log(character* const message_p, character* const file_name_p, character* const function_name_p, uint32 line_p) noexcept;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 
@@ -108,11 +99,7 @@ public:
     message_logger_base() noexcept;
     ~message_logger_base() noexcept;
 
-<<<<<<< HEAD
     void do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept;
-=======
-    void do_log(character* const message_p, character* const file_name_p, character* const function_name_p, uint32 line_p) noexcept;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 };
 

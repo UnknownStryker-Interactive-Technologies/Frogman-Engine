@@ -12,7 +12,11 @@
 
 // std
 #include <string>
+#include <shared_mutex>
 #include <typeinfo>
+
+// boost
+#include <boost/thread/shared_lock_guard.hpp>
 
 // ronbin hood hash
 #include <robin_hood.h>
@@ -31,16 +35,19 @@ namespace internal::type_info
         string_type _typename;
         string_type _base_typename;
     };
-    
-    using table_type = robin_hood::unordered_map<typename name::string_type, internal::type_info::name>;
-
-    extern table_type g_type_information;
 }
 
 
 class type_info
 {
+    using table_type = robin_hood::unordered_map<typename internal::type_info::name::string_type, internal::type_info::name>;
+    using lock_type = std::shared_mutex;
+
     typename internal::type_info::name::string_type m_name;
+
+    static table_type s_type_information;
+    static lock_type s_lock;
+   
 
     template<class String>
     _FORCE_INLINE_ static String __demangle_type_name(const char* mangled_name_p) noexcept
@@ -69,34 +76,39 @@ public:
     {
         internal::type_info::name l_info; 
         l_info._typename = __demangle_type_name<typename internal::type_info::name::string_type>( typeid(T).name() ); 
-        this->m_name = l_info._typename;
         if constexpr (FE::has_base_type<T>::value == true)
         { 
             l_info._base_typename = __demangle_type_name<typename internal::type_info::name::string_type>( typeid(typename T::base_type).name() );
         }
 
-        internal::type_info::g_type_information.emplace(this->m_name, std::move(l_info));
+        std::lock_guard<lock_type> l_lock(s_lock);
+        this->m_name = l_info._typename;
+        type_info::s_type_information.emplace(this->m_name, std::move(l_info));
     }
 
     _FORCE_INLINE_ FE::ASCII* name() const noexcept
     {
-        return internal::type_info::g_type_information.find(this->m_name)->second._typename.c_str();
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        return type_info::s_type_information.find(this->m_name)->second._typename.c_str();
     }
 
     _FORCE_INLINE_ FE::uint64 hash_code() const noexcept
     {
-        typename internal::type_info::name::string_type& l_typename = internal::type_info::g_type_information.find(this->m_name)->second._typename;
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        typename internal::type_info::name::string_type& l_typename = type_info::s_type_information.find(this->m_name)->second._typename;
         return robin_hood::hash_bytes(l_typename.data(), l_typename.length());
     }
 
     _FORCE_INLINE_ FE::ASCII* base_name() const noexcept
     {
-        return internal::type_info::g_type_information.find(this->m_name)->second._base_typename.c_str();
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        return type_info::s_type_information.find(this->m_name)->second._base_typename.c_str();
     }
 
     _FORCE_INLINE_ FE::uint64 base_hash_code() const noexcept
     {
-        typename internal::type_info::name::string_type& l_typename = internal::type_info::g_type_information.find(this->m_name)->second._base_typename;
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        typename internal::type_info::name::string_type& l_typename = type_info::s_type_information.find(this->m_name)->second._base_typename;
         return robin_hood::hash_bytes(l_typename.data(), l_typename.length());
     }
 
@@ -104,7 +116,8 @@ public:
     {
         thread_local static typename internal::type_info::name::string_type l_typename;
         l_typename = this_type_name_p;
-        return internal::type_info::g_type_information.find(l_typename)->second._base_typename.c_str();
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        return type_info::s_type_information.find(l_typename)->second._base_typename.c_str();
     }
 };
 

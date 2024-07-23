@@ -40,7 +40,6 @@ namespace internal::pool
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
         }
 
-<<<<<<< HEAD
         _FORCE_INLINE_ boolean has_reached_the_end(size size_in_bytes_to_allocate_p) const noexcept
         {
             return (_page_iterator + size_in_bytes_to_allocate_p) >= _end;
@@ -51,12 +50,6 @@ namespace internal::pool
             constexpr static size merging_point = (PageCapacity / 4) * 3; // Trigger at 75%
             return _page_iterator > (_begin + merging_point);
         }
-=======
-        _FORCE_INLINE_ boolean will_it_overflow(size size_in_bytes_to_allocate_p) const noexcept
-        {
-            return (_page_iterator + size_in_bytes_to_allocate_p) >= _end;
-        }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     };
 }
 
@@ -106,28 +99,15 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         FE_STATIC_ASSERT(std::is_array<U>::value == true, "Static Assertion Failed: The T must not be an array[] type.");
         FE_STATIC_ASSERT(std::is_const<U>::value == true, "Static Assertion Failed: The T must not be a const type.");
         FE_ASSERT(size_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(size_p));
-<<<<<<< HEAD
         FE_EXIT(size_p >= PageCapacity, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity [which is ${%lu@1} bytes].", &size_p, &FE::buffer<var::size>::set_and_get(PageCapacity));
 
         size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
 
-=======
-        FE_EXIT(size_p > PageCapacity, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY, "Fatal Error: Unable to allocate the size of memmory that exceeds the pool chunk's capacity.");
-
-        size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
-
-        /*
-            first contains the address of the memory block.
-            second contains the size of the memory block.
-        */
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         for (typename pool_type::iterator iterator = this->m_memory_pool.begin(); iterator != this->m_memory_pool.cend(); ++iterator)
         {
             if (iterator->is_full() == false)
             {
                 internal::pool::block_info l_memblock_info;
-<<<<<<< HEAD
                 l_memblock_info._address = nullptr;
                 l_memblock_info._size_in_bytes = _FE_NOT_FOUND_;
 
@@ -139,43 +119,14 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                     }
 
                     if (l_memblock_info._size_in_bytes == _FE_NOT_FOUND_)
-=======
-
-                if (iterator->_free_blocks.is_empty() == true)
-                {
-                    if (UNLIKELY(iterator->will_it_overflow(l_queried_allocation_size_in_bytes) == true)) _UNLIKELY_
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                     {
                         create_pages(1);
                         continue;
                     }
-<<<<<<< HEAD
                 }
 
                 l_memblock_info._address = iterator->_page_iterator;
                 iterator->_page_iterator += l_queried_allocation_size_in_bytes;
-=======
-
-                    l_memblock_info._address = iterator->_page_iterator;
-                    iterator->_page_iterator += l_queried_allocation_size_in_bytes;
-                }
-                else
-                {
-                    __recycle<U>(l_memblock_info, *iterator, l_queried_allocation_size_in_bytes);
-
-                    if (l_memblock_info._size_in_bytes == _FE_NOT_FOUND_)
-                    {
-                        if (UNLIKELY(iterator->will_it_overflow(l_queried_allocation_size_in_bytes) == true)) _UNLIKELY_
-                        {
-                            create_pages(1);
-                            continue;
-                        }
-
-                        l_memblock_info._address = iterator->_page_iterator;
-                        iterator->_page_iterator += l_queried_allocation_size_in_bytes;
-                    }
-                }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
                 if constexpr (FE::is_trivial<U>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
                 {
@@ -188,14 +139,11 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 
                 return reinterpret_cast<U*>(l_memblock_info._address);
             }
-<<<<<<< HEAD
             else
             {
                 create_pages(1);
                 continue;
             }
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         create_pages(1);
@@ -211,11 +159,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
             this->m_memory_pool.emplace_back();
         }
 
-<<<<<<< HEAD
 		FE_ASSERT(this->m_memory_pool.size() == maximum_list_node_count, "Maximum chunk count of a memory chunk list is limited to ${%lu@0} for some performance reasons.", &maximum_list_node_count);
-=======
-		FE_ASSERT(this->m_memory_pool.size() == maximum_list_node_count, "Maximum chunk count of a memory chunk list is limited to ${%lu@0} for some performance reasons.");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     boolean shrink_to_fit() noexcept
@@ -259,11 +203,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         return true;
     }
 
-<<<<<<< HEAD
     template <typename T> // Incorrect non-trivial T type will cause a critical runtime error.
-=======
-    template <typename T>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     void deallocate(T* pointer_p, count_t element_count_p) noexcept 
     {
         typename pool_type::iterator l_list_iterator = this->m_memory_pool.begin();
@@ -283,15 +223,9 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 }
 
                 auto l_dealloc_result = l_list_iterator->_free_blocks.insert(reinterpret_cast<var::byte*>(pointer_p), FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(element_count_p));
-<<<<<<< HEAD
                 FE_EXIT(l_dealloc_result == l_list_iterator->_free_blocks.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
 
                 if (l_list_iterator->has_to_merge() == true)
-=======
-                FE_EXIT(l_dealloc_result == nullptr, ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
-
-                if (l_list_iterator->_free_blocks.size() > 1)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 {
                     __merge(l_dealloc_result, l_list_iterator->_free_blocks);
                 }
@@ -303,7 +237,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 private:
     static void __merge(recycler_iterator in_out_recently_deleted_p, recycler_type& in_out_free_block_list_p) noexcept
     {
-<<<<<<< HEAD
         var::byte* l_merged_address = in_out_recently_deleted_p->get_key();
         var::size l_merged_size = in_out_recently_deleted_p->_value;
 
@@ -319,23 +252,6 @@ private:
 
                 auto l_previous = l_adjacent;
                 ++l_adjacent;
-=======
-        auto l_upper_adjacent = in_out_recently_deleted_p + 1;
-        auto l_lower_adjacent = in_out_recently_deleted_p - 1;
-
-        var::byte* l_merged_address = in_out_recently_deleted_p->get_key();
-        var::size l_merged_size = in_out_recently_deleted_p->_value;
-
-        // merge upper part
-        for(; l_upper_adjacent != nullptr;)
-        {
-            if(l_merged_address + l_merged_size == l_upper_adjacent->get_key())
-            {
-                l_merged_size += l_upper_adjacent->_value;
-
-                auto l_previous = l_upper_adjacent;
-                ++l_upper_adjacent;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 in_out_free_block_list_p.erase(l_previous); 
                 continue;
             }
@@ -345,7 +261,6 @@ private:
             }
         }
 
-<<<<<<< HEAD
         l_adjacent = in_out_recently_deleted_p;
         --l_adjacent;
         auto l_rend = --(in_out_free_block_list_p.begin());
@@ -358,17 +273,6 @@ private:
                 l_merged_address = l_adjacent->get_key();
                 auto l_previous = l_adjacent;
                 --l_adjacent; 
-=======
-        // merge lower part
-        for(; l_lower_adjacent != nullptr;) 
-        {
-            if( l_lower_adjacent->get_key() + l_lower_adjacent->_value == l_merged_address)
-            {
-                l_merged_size += l_lower_adjacent->_value;
-                l_merged_address = l_lower_adjacent->get_key();
-                auto l_previous = l_lower_adjacent;
-                --l_lower_adjacent; 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 in_out_free_block_list_p.erase(l_previous); 
                 continue;
             }
@@ -382,7 +286,6 @@ private:
     }
 
     template <typename T>
-<<<<<<< HEAD
     static void __recycle(internal::pool::block_info& out_memblock_info_p, typename chunk_type::recycler_type& in_out_free_blocks_p, size queried_allocation_size_in_bytes_p) noexcept
     {
         FE_ASSERT(in_out_free_blocks_p.is_empty() == true, "Assertion Failure: Cannot recycle from an empty bin.");
@@ -401,32 +304,6 @@ private:
                     FE_EXIT(l_split_result == in_out_free_blocks_p.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
                 }
                 in_out_free_blocks_p.erase(iterator);
-=======
-    static void __recycle(internal::pool::block_info& out_memblock_info_p, chunk_type& in_out_memory_p, size queried_allocation_size_in_bytes_p) noexcept
-    {
-        FE_ASSERT(in_out_memory_p._free_blocks.is_empty() == true, "Assertion Failure: Cannot recycle from an empty bin.");
-
-        /*
-                     first contains the address of the memory block.
-                     second contains the size of the memory block.
-        */
-
-        for (auto free_block_iterator = in_out_memory_p._free_blocks.begin(); free_block_iterator != nullptr; ++free_block_iterator)
-        {
-            if (free_block_iterator->_value >= queried_allocation_size_in_bytes_p)
-            {
-                out_memblock_info_p._address = free_block_iterator->get_key();
-                out_memblock_info_p._size_in_bytes = queried_allocation_size_in_bytes_p;
-                auto l_leftover_address = out_memblock_info_p._address + queried_allocation_size_in_bytes_p;
-                auto l_leftover_size = free_block_iterator->_value - queried_allocation_size_in_bytes_p;
-
-                if (l_leftover_size > 0)
-                {
-                    _MAYBE_UNUSED_ auto l_split_result = in_out_memory_p._free_blocks.insert(l_leftover_address, l_leftover_size);
-                    FE_EXIT(l_split_result == nullptr, ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
-                }
-                in_out_memory_p._free_blocks.erase(free_block_iterator);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
                 return;
             }
@@ -435,13 +312,8 @@ private:
 };
 
 
-<<<<<<< HEAD
 template<size PageCapacity = 8 KB, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment>>>
 using scalable_pool = pool<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment, Allocator>;
-=======
-template<size PageCapacity = 1 MB, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment>>>
-using dynamic_pool = pool<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment, Allocator>;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 END_NAMESPACE

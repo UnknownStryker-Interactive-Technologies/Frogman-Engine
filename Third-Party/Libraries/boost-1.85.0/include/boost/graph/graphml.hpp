@@ -176,11 +176,7 @@ public:
             const Key& key, const std::string& value,
             const std::string& value_type, const char** type_names,
             bool& type_found)
-<<<<<<< HEAD
-        : m_raw_name(name)
-=======
         : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         , m_dp(dp)
         , m_key(key)
         , m_value(value)
@@ -195,21 +191,13 @@ public:
                 == m_type_names[mpl::find< ValueVector,
                     Value >::type::pos::value])
             {
-<<<<<<< HEAD
-                put(m_raw_name, m_dp, m_key, lexical_cast< Value >(m_value));
-=======
                 put(m_name, m_dp, m_key, lexical_cast< Value >(m_value));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 m_type_found = true;
             }
         }
 
     private:
-<<<<<<< HEAD
-        const std::string& m_raw_name;
-=======
         const std::string& m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         dynamic_properties& m_dp;
         const Key& m_key;
         const std::string& m_value;

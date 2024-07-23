@@ -6,22 +6,25 @@
 #include <FE/core/iterator.hxx>
 #include <FE/core/memory.hxx>
 
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
 #include <FE/core/pool_allocator.hxx>
 #endif
 
 // std
 #include <initializer_list>
+#include <memory>
+
+
 
 
 BEGIN_NAMESPACE(FE)
 
 
 template <typename T,
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
-	class Allocator = FE::new_delete_allocator<FE::pool_allocator<typename std::remove_all_extents<T>::type>>
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
+	class Allocator = FE::new_delete_pool_allocator<typename std::remove_all_extents<T>::type>
 #else
-	class Allocator = FE::new_delete_allocator<FE::aligned_allocator<typename std::remove_all_extents<T>::type>>
+	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
 class unique_ptr final
@@ -32,10 +35,7 @@ class unique_ptr final
 public:
 	using pointer = typename Allocator::pointer;
 	using element_type = typename Allocator::value_type;
-<<<<<<< HEAD
-	using const_pointer = element_type* const;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+	using const_pointer = const element_type*;
 	using allocator_type = Allocator;
 
 private:
@@ -134,16 +134,11 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		return this->m_allocator;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept
 	{
 		return this->m_allocator;
@@ -155,9 +150,6 @@ public:
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		return this->m_smart_ptr;
 	}
@@ -172,7 +164,6 @@ public:
 		return this->m_smart_ptr == nullptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ const element_type& operator*() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -186,19 +177,12 @@ public:
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return *this->m_smart_ptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
@@ -247,10 +231,10 @@ public:
 };
 
 template <typename T,
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
-	class Allocator = FE::new_delete_allocator<FE::pool_allocator<typename std::remove_all_extents<T>::type>>
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
+	class Allocator = FE::new_delete_pool_allocator<typename std::remove_all_extents<T>::type>
 #else
-	class Allocator = FE::new_delete_allocator<FE::aligned_allocator<typename std::remove_all_extents<T>::type>>
+	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
 _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<T, Allocator> make_unique() noexcept
@@ -260,10 +244,10 @@ _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<T, Allocator> make_unique() 
 }
 
 template <typename T,
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
-	class Allocator = FE::new_delete_allocator<FE::pool_allocator<typename std::remove_all_extents<T>::type>>
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
+	class Allocator = FE::new_delete_pool_allocator<typename std::remove_all_extents<T>::type>
 #else
-	class Allocator = FE::new_delete_allocator<FE::aligned_allocator<typename std::remove_all_extents<T>::type>>
+	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
 _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<T, Allocator> make_unique(T value_p) noexcept
@@ -284,10 +268,7 @@ class unique_ptr<T[], Allocator> final
 public:
 	using pointer = typename Allocator::pointer;
 	using element_type = typename Allocator::value_type;
-<<<<<<< HEAD
-	using const_pointer = element_type* const;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
+	using const_pointer = const element_type*;
 	using allocator_type = Allocator;
 
 private:
@@ -442,30 +423,22 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept
 	{
 		return this->m_smart_ptr;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer get() const noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		return this->m_smart_ptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept
 	{
 		return this->m_allocator;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		return this->m_allocator;
 	}
@@ -480,7 +453,6 @@ public:
 		return this->m_smart_ptr == nullptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ const element_type& operator*() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -502,29 +474,18 @@ public:
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return *this->m_smart_ptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator[](index_t index_p) noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator[](index_t index_p) const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		FE_ASSERT(static_cast<index_t>(this->m_smart_ptr_end - this->m_smart_ptr) <= index_p, "${%s@0}: ${%s@1} exceeds the index boundary. ${%s@1} was ${%lu@2}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(index_p), &index_p);
@@ -573,16 +534,28 @@ public:
 		return this->m_smart_ptr <= other_p.m_smart_ptr;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ FE::iterator<FE::contiguous_iterator<element_type>> begin() const noexcept
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::iterator<FE::contiguous_iterator<element_type>> begin() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
 	}
-	_FORCE_INLINE_ _CONSTEXPR20_ FE::iterator<FE::contiguous_iterator<element_type>> end() const noexcept
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::iterator<FE::contiguous_iterator<element_type>> end() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr_end;
 	}
+
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_iterator<FE::contiguous_iterator<element_type>> begin() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr;
+	}
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_iterator<FE::contiguous_iterator<element_type>> end() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr_end;
+	}
+
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_iterator<FE::contiguous_iterator<element_type>> cbegin() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -593,16 +566,29 @@ public:
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr_end;
 	}
-	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() const noexcept
+
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
 	}
-	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rend() const noexcept
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rend() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr_end;
 	}
+
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr;
+	}
+	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rend() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr_end;
+	}
+
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> crbegin() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -646,10 +632,10 @@ private:
 };
 
 template <typename T,
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
-	class Allocator = FE::new_delete_allocator<FE::pool_allocator<typename std::remove_all_extents<T>::type>>
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
+	class Allocator = FE::new_delete_pool_allocator<typename std::remove_all_extents<T>::type>
 #else
-	class Allocator = FE::new_delete_allocator<FE::aligned_allocator<typename std::remove_all_extents<T>::type>>
+	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
 _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<typename std::remove_all_extents<T>::type[], Allocator> make_unique(size array_size_p) noexcept
@@ -659,10 +645,10 @@ _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<typename std::remove_all_ext
 }
 
 template <typename T,
-#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_PROPERTIES_
-	class Allocator = FE::new_delete_allocator<FE::pool_allocator<typename std::remove_all_extents<T>::type>>
+#ifdef _MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_
+	class Allocator = FE::new_delete_pool_allocator<typename std::remove_all_extents<T>::type>
 #else
-	class Allocator = FE::new_delete_allocator<FE::aligned_allocator<typename std::remove_all_extents<T>::type>>
+	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
 _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<typename std::remove_all_extents<T>::type[], Allocator> make_unique(std::initializer_list<typename std::remove_all_extents<T>::type>&& values_p) noexcept

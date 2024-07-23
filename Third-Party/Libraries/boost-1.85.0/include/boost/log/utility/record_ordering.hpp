@@ -139,11 +139,7 @@ private:
         template< typename LeftT >
         result_type operator() (LeftT const& left) const
         {
-<<<<<<< HEAD
-            boost::log::visit< value_type >(m_owner.m_raw_name, m_right, l2_visitor< LeftT >(static_cast< FunT const& >(m_owner), left, m_result));
-=======
             boost::log::visit< value_type >(m_owner.m_name, m_right, l2_visitor< LeftT >(static_cast< FunT const& >(m_owner), left, m_result));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
     private:
@@ -154,11 +150,7 @@ private:
 
 private:
     //! Attribute value name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 public:
     /*!
@@ -169,11 +161,7 @@ public:
      */
     explicit attribute_value_ordering(attribute_name const& name, FunT const& fun = FunT()) :
         FunT(fun),
-<<<<<<< HEAD
-        m_raw_name(name)
-=======
         m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -183,15 +171,9 @@ public:
     result_type operator() (record_view const& left, record_view const& right) const
     {
         bool result = false;
-<<<<<<< HEAD
-        if (!boost::log::visit< value_type >(m_raw_name, left, l1_visitor(*this, right, result)))
-        {
-            return !boost::log::visit< value_type >(m_raw_name, right, nop());
-=======
         if (!boost::log::visit< value_type >(m_name, left, l1_visitor(*this, right, result)))
         {
             return !boost::log::visit< value_type >(m_name, right, nop());
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
         return result;
     }

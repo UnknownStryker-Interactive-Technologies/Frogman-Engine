@@ -48,11 +48,7 @@ public:
 
     invoked_function(const std::string &name,
                      const std::string &source)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source)
     {
     }
@@ -60,11 +56,7 @@ public:
     invoked_function(const std::string &name,
                      const std::string &source,
                      const std::map<std::string, std::string> &definitions)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source),
           m_definitions(definitions)
     {
@@ -73,11 +65,7 @@ public:
     invoked_function(const std::string &name,
                      const std::string &source,
                      const ArgTuple &args)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source),
           m_args(args)
     {
@@ -87,11 +75,7 @@ public:
                      const std::string &source,
                      const std::map<std::string, std::string> &definitions,
                      const ArgTuple &args)
-<<<<<<< HEAD
-        : m_raw_name(name),
-=======
         : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
           m_source(source),
           m_definitions(definitions),
           m_args(args)
@@ -100,11 +84,7 @@ public:
 
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     std::string source() const
@@ -123,11 +103,7 @@ public:
     }
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::string m_source;
     std::map<std::string, std::string> m_definitions;
     ArgTuple m_args;
@@ -155,11 +131,7 @@ public:
 
     /// Creates a new function object with \p name.
     function(const std::string &name)
-<<<<<<< HEAD
-        : m_raw_name(name)
-=======
         : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -171,11 +143,7 @@ public:
     /// \internal_
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /// \internal_
@@ -199,11 +167,7 @@ public:
     bool operator==(const function<Signature>& other) const
     {
         return
-<<<<<<< HEAD
-            (m_raw_name == other.m_raw_name)
-=======
             (m_name == other.m_name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 && (m_definitions == other.m_definitions)
                 && (m_source == other.m_source);
     }
@@ -223,11 +187,7 @@ public:
         );
 
         return detail::invoked_function<result_type, boost::tuple<> >(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions
-=======
             m_name, m_source, m_definitions
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -242,11 +202,7 @@ public:
         );
 
         return detail::invoked_function<result_type, boost::tuple<Arg1> >(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1)
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -261,11 +217,7 @@ public:
         );
 
         return detail::invoked_function<result_type, boost::tuple<Arg1, Arg2> >(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1, arg2)
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
@@ -280,20 +232,12 @@ public:
         );
 
         return detail::invoked_function<result_type, boost::tuple<Arg1, Arg2, Arg3> >(
-<<<<<<< HEAD
-            m_raw_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3)
-=======
             m_name, m_source, m_definitions, boost::make_tuple(arg1, arg2, arg3)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         );
     }
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::string m_source;
     std::map<std::string, std::string> m_definitions;
 };
@@ -421,21 +365,13 @@ struct argument_list_inserter
     {
         n = 0;
         m_last = last;
-<<<<<<< HEAD
-        m_raw_name = first;
-=======
         m_name = first;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     template<class T>
     void operator()(const T*)
     {
-<<<<<<< HEAD
-        s << type_name<T>() << " " << m_raw_name++;
-=======
         s << type_name<T>() << " " << m_name++;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         if(n+1 < m_last){
             s << ", ";
         }
@@ -444,11 +380,7 @@ struct argument_list_inserter
 
     size_t n;
     size_t m_last;
-<<<<<<< HEAD
-    char m_raw_name;
-=======
     char m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::stringstream &s;
 };
 

@@ -68,11 +68,7 @@ TEST(int_to_string, _)
 
 TEST(convert_uint_to_string, _)
 {
-<<<<<<< HEAD
 	var::uint64 l_int = 65165684;
-=======
-	int l_int = 65165684;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	char l_buffer[10] = "\0";
 	uint_to_string<char>(l_buffer, 10, l_int);
 	EXPECT_EQ(0, strcmp(l_buffer, "65165684"));
@@ -140,11 +136,7 @@ TEST(any_primitive_to_string, thread_local_buffer)
 		l_result_ptr = buffered_any_primitive_to_string<char>(l_int32);
 		EXPECT_EQ(0, strcmp(l_result_ptr, "1024"));
 
-<<<<<<< HEAD
 		var::ASCII l_character = 't';
-=======
-		var::character l_character = 't';
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		l_result_ptr = buffered_any_primitive_to_string<char>(l_character);
 		EXPECT_EQ(0, strcmp(l_result_ptr, "t"));
 
@@ -175,11 +167,7 @@ TEST(any_to_string, thread_local_buffer)
 	l_complex.emplace_back();
 	const char* l_result_ptr = buffered_any_to_string<char>(l_complex);
 
-<<<<<<< HEAD
 	std::unique_ptr<var::ASCII[]> l_unqiue_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-=======
-	std::unique_ptr<var::character[]> l_unqiue_buffer(new var::character[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	any_object_binary_representation(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
 
 	EXPECT_EQ(0, strcmp(l_result_ptr, l_unqiue_buffer.get()));
@@ -190,11 +178,7 @@ TEST(any_to_string, thread_local_buffer)
 
 TEST(any_primitive_to_string, local_buffer)
 {
-<<<<<<< HEAD
 	std::unique_ptr<var::ASCII[]> l_unqiue_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-=======
-	std::unique_ptr<var::character[]> l_unqiue_buffer(new var::character[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 	{
@@ -233,11 +217,7 @@ TEST(any_primitive_to_string, local_buffer)
 		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_int32);
 		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "1024"));
 
-<<<<<<< HEAD
 		var::ASCII l_character = 't';
-=======
-		var::character l_character = 't';
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_character);
 		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "t"));
 
@@ -264,20 +244,12 @@ TEST(any_primitive_to_string, local_buffer)
 
 TEST(any_to_string, local_buffer)
 {
-<<<<<<< HEAD
 	std::unique_ptr<var::ASCII[]> l_result_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-=======
-	std::unique_ptr<var::character[]> l_result_buffer(new var::character[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	std::vector<std::unordered_map<std::string, void*>> l_complex;
 	l_complex.emplace_back();
 	any_to_string<char>(l_result_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
 
-<<<<<<< HEAD
 	std::unique_ptr<var::ASCII[]> l_answer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-=======
-	std::unique_ptr<var::character[]> l_answer(new var::character[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	any_object_binary_representation(l_answer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
 
 	EXPECT_EQ(0, strcmp(l_result_buffer.get(), l_answer.get()));

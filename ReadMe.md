@@ -9,10 +9,7 @@ Users who use, modify, or redistribute the original source code cannot claim aut
 This project is under development and may contain some bugs and issues.
 
 # Dev Team Discord Link: https://discord.gg/jhu4vAU3Mm
-<<<<<<< HEAD
 Currently, Unknown Stryker(Hojin Lee) is the only active developer for this project.
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 # Frogman Engine Coding Conventions and Rules.
 https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413ff4f40de9204c4aa22907ffc&pvs=4
@@ -20,10 +17,7 @@ https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413f
 # Prerequisite: CMake 3.27.0 or latest, and LLVM Clang 10 or latest [ includes LLVM (clangcl) ].
 
 # C++ standard version: C++ 17 or latest.
-<<<<<<< HEAD
 C++ 20 is highly recommended unless it is unavailable.
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 All project settings can be adjusted by modifying CMakeLists.txt.
 
@@ -63,13 +57,9 @@ In order to build boost libraries using Microsoft Visual Studio 2022 Clang CL:
 
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug 
 
-<<<<<<< HEAD
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release 
 
 
 # Goorm IDE GPU Reference
 https://www.techpowerup.com/gpu-specs/tesla-t4.c3316
 https://docs.nvidia.com/datacenter/tesla/pdf/tesla-release-notes-410-72.pdf
-=======
-./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948

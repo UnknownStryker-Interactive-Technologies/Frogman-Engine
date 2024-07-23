@@ -25,7 +25,7 @@ BEGIN_NAMESPACE(FE)
 
 class task_base;
 
-
+// needs some work...
 class thread final
 {
 public:
@@ -50,24 +50,7 @@ public:
 	_FORCE_INLINE_ thread& operator=(const thread&) noexcept = delete;
 	_FORCE_INLINE_ thread& operator=(thread&& rvalue_p) noexcept { this->m_thread = std::move(rvalue_p.m_thread); return *this; };
 
-<<<<<<< HEAD
 	// fork()
-=======
-	_FORCE_INLINE_ std::any& fork(FE::task_base* const function_p, FE::argument_base* const arguments_p) noexcept
-	{
-		FE_ASSERT(function_p == nullptr, "ERROR: function_p is nullptr.");
-		std::any* l_result = &(this->m_task_result);
-		this->m_thread = thread_type
-		(
-			[function_p, arguments_p, l_result]()
-			{
-				tl_s_this_thread_instance_id = __generate_instance_id();
-				*l_result = (*function_p)(arguments_p);
-			}
-		);
-		return *l_result;
-	}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	_FORCE_INLINE_ void join() { this->m_thread.join(); }
 

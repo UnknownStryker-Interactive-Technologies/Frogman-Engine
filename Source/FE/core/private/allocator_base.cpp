@@ -14,6 +14,8 @@
 #endif
 
 
+
+
 var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept
 {
 #ifdef _WINDOWS_X86_64_
@@ -49,7 +51,6 @@ var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO selec
 		return invalid_memory_util_query;
 	}
 
-
 #else
 	#ifdef _LINUX_X86_64_
 	struct sysinfo l_memory_information;
@@ -83,10 +84,27 @@ var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO selec
 }
 
 
-
-
 std::atomic_int64_t FE::internal::allocator_base::s_total_memory_util = 0;
 thread_local var::int64 FE::internal::allocator_base::tl_s_thread_local_memory_util = 0;
 
 std::atomic_int64_t FE::internal::allocator_base::s_total_memory_pool_util = 0;
 thread_local var::int64 FE::internal::allocator_base::tl_s_thread_local_memory_pool_util = 0;
+
+
+void* operator new(std::size_t bytes_p)
+{
+	return FE_ALIGNED_ALLOC(bytes_p, FE::SIMD_auto_alignment::size);
+}
+void* operator new[](std::size_t bytes_p)
+{
+	return FE_ALIGNED_ALLOC(bytes_p, FE::SIMD_auto_alignment::size);
+}
+
+void operator delete(void* ptr_p) noexcept
+{
+	FE_ALIGNED_FREE(ptr_p);
+}
+void operator delete[](void* ptr_p) noexcept
+{
+	FE_ALIGNED_FREE(ptr_p);
+}

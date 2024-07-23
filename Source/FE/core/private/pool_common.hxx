@@ -30,13 +30,8 @@ namespace internal::pool
 {
     struct block_info
     {
-<<<<<<< HEAD
         var::byte* _address;
         var::size _size_in_bytes;
-=======
-        var::byte* _address = nullptr;
-        var::size _size_in_bytes = 0;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     };
 
     template<POOL_TYPE PoolType, size PageCapacity, class Alignment>

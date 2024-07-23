@@ -50,31 +50,19 @@ public:
     typedef T result_type;
 
     meta_kernel_variable(const std::string &name)
-<<<<<<< HEAD
-        : m_raw_name(name)
-=======
         : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     meta_kernel_variable(const meta_kernel_variable &other)
-<<<<<<< HEAD
-        : m_raw_name(other.m_raw_name)
-=======
         : m_name(other.m_name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     meta_kernel_variable& operator=(const meta_kernel_variable &other)
     {
         if(this != &other){
-<<<<<<< HEAD
-            m_raw_name = other.m_raw_name;
-=======
             m_name = other.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         return *this;
@@ -86,19 +74,11 @@ public:
 
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-    }
-
-private:
-    std::string m_raw_name;
-=======
         return m_name;
     }
 
 private:
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<class T>
@@ -295,22 +275,14 @@ public:
     {
     public:
         argument(const std::string &name, size_t index)
-<<<<<<< HEAD
-            : m_raw_name(name),
-=======
             : m_name(name),
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
               m_index(index)
         {
         }
 
         const std::string &name() const
         {
-<<<<<<< HEAD
-            return m_raw_name;
-=======
             return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         size_t index() const
@@ -319,20 +291,12 @@ public:
         }
 
     private:
-<<<<<<< HEAD
-        std::string m_raw_name;
-=======
         std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         size_t m_index;
     };
 
     explicit meta_kernel(const std::string &name)
-<<<<<<< HEAD
-        : m_raw_name(name)
-=======
         : m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -358,11 +322,7 @@ public:
 
     std::string name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     std::string source() const
@@ -387,11 +347,7 @@ public:
         stream << m_external_function_source.str() << "\n";
 
         // add kernel source
-<<<<<<< HEAD
-        stream << "__kernel void " << m_raw_name
-=======
         stream << "__kernel void " << m_name
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                << "(" << boost::join(m_args, ", ") << ")\n"
                << "{\n" << m_source.str() << "\n}\n";
 
@@ -994,11 +950,7 @@ private:
     }
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::stringstream m_source;
     std::stringstream m_external_function_source;
     std::stringstream m_type_declaration_source;

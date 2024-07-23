@@ -84,11 +84,7 @@ public:
     BOOST_COPYABLE_AND_MOVABLE(object_name)
 
 private:
-<<<<<<< HEAD
-    std::string m_raw_name;
-=======
     std::string m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 #endif // !defined(BOOST_LOG_DOXYGEN_PASS)
 
@@ -107,21 +103,13 @@ public:
      */
     object_name(BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        m_raw_name.swap(that.m_raw_name);
-=======
         m_name.swap(that.m_name);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!
      * Copy constructor.
      */
-<<<<<<< HEAD
-    object_name(object_name const& that) : m_raw_name(that.m_raw_name)
-=======
     object_name(object_name const& that) : m_name(that.m_name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -133,11 +121,7 @@ public:
     static object_name from_native(const char* str)
     {
         object_name name;
-<<<<<<< HEAD
-        name.m_raw_name = str;
-=======
         name.m_name = str;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return name;
     }
 
@@ -149,11 +133,7 @@ public:
     static object_name from_native(std::string const& str)
     {
         object_name name;
-<<<<<<< HEAD
-        name.m_raw_name = str;
-=======
         name.m_name = str;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return name;
     }
 
@@ -176,13 +156,8 @@ public:
      */
     object_name& operator= (BOOST_RV_REF(object_name) that) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        m_raw_name.clear();
-        m_raw_name.swap(that.m_raw_name);
-=======
         m_name.clear();
         m_name.swap(that.m_name);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -191,49 +166,29 @@ public:
      */
     object_name& operator= (BOOST_COPY_ASSIGN_REF(object_name) that)
     {
-<<<<<<< HEAD
-        m_raw_name = that.m_raw_name;
-=======
         m_name = that.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
     /*!
      * Returns \c true if the object name is empty
      */
-<<<<<<< HEAD
-    bool empty() const BOOST_NOEXCEPT { return m_raw_name.empty(); }
-=======
     bool empty() const BOOST_NOEXCEPT { return m_name.empty(); }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     /*!
      * Returns length of the name, in bytes
      */
-<<<<<<< HEAD
-    std::size_t size() const BOOST_NOEXCEPT { return m_raw_name.size(); }
-=======
     std::size_t size() const BOOST_NOEXCEPT { return m_name.size(); }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     /*!
      * Returns the name string
      */
-<<<<<<< HEAD
-    const char* c_str() const BOOST_NOEXCEPT { return m_raw_name.c_str(); }
-=======
     const char* c_str() const BOOST_NOEXCEPT { return m_name.c_str(); }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     /*!
      * Swaps the object name with another object name
      */
-<<<<<<< HEAD
-    void swap(object_name& that) BOOST_NOEXCEPT { m_raw_name.swap(that.m_raw_name); }
-=======
     void swap(object_name& that) BOOST_NOEXCEPT { m_name.swap(that.m_name); }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     /*!
      * Swaps two object names
@@ -248,11 +203,7 @@ public:
      */
     friend std::string to_string(object_name const& name)
     {
-<<<<<<< HEAD
-        return name.m_raw_name;
-=======
         return name.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!
@@ -260,66 +211,42 @@ public:
      */
     friend bool operator== (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name == right.m_raw_name;
-=======
         return left.m_name == right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     /*!
      * Inequality operator
      */
     friend bool operator!= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name != right.m_raw_name;
-=======
         return left.m_name != right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     /*!
      * Less operator
      */
     friend bool operator< (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name < right.m_raw_name;
-=======
         return left.m_name < right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     /*!
      * Greater operator
      */
     friend bool operator> (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name > right.m_raw_name;
-=======
         return left.m_name > right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     /*!
      * Less or equal operator
      */
     friend bool operator<= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name <= right.m_raw_name;
-=======
         return left.m_name <= right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
     /*!
      * Greater or equal operator
      */
     friend bool operator>= (object_name const& left, object_name const& right) BOOST_NOEXCEPT
     {
-<<<<<<< HEAD
-        return left.m_raw_name >= right.m_raw_name;
-=======
         return left.m_name >= right.m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     /*!

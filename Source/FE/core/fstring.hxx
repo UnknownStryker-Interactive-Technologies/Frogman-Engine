@@ -45,15 +45,9 @@ private:
 
 
 public:
-<<<<<<< HEAD
     _CONSTEXPR20_ fixed_sized_string() noexcept : m_fstring{ null }, m_length() {}
 
     _CONSTEXPR20_ fixed_sized_string(const value_type* const string_p) noexcept : m_fstring{ null }, m_length(algorithm::string::length<CharT>(string_p))
-=======
-    _CONSTEXPR20_ fixed_sized_string() noexcept : m_fstring{ _FE_NULL_ }, m_length() {}
-
-    _CONSTEXPR20_ fixed_sized_string(const value_type* const string_p) noexcept : m_fstring{ _FE_NULL_ }, m_length(algorithm::string::length<CharT>(string_p))
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
         FE_ASSERT(string_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(string_p));
         FE_ASSERT(this->m_length >= Capacity, "${%s@0}: the input string length exceeds the max string capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY));
@@ -61,11 +55,7 @@ public:
         Traits::copy( this->m_fstring, string_p, this->m_length);
     }
 
-<<<<<<< HEAD
     _CONSTEXPR20_ fixed_sized_string(const fixed_sized_string& other_p) noexcept : m_fstring{ null }, m_length(other_p.m_length)
-=======
-    _CONSTEXPR20_ fixed_sized_string(const fixed_sized_string& other_p) noexcept : m_fstring{ _FE_NULL_ }, m_length(other_p.m_length)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
         if (other_p.m_length == 0)
         {
@@ -90,17 +80,10 @@ public:
         Traits::assign(l_this_string_info, first_p, last_p);
     }
 
-<<<<<<< HEAD
     _CONSTEXPR20_ fixed_sized_string(fixed_sized_string&& rvalue_p) noexcept : m_fstring{ null }, m_length(rvalue_p.m_length)
     {
         Traits::copy(this->m_fstring, rvalue_p.m_fstring, Capacity);
         *(rvalue_p.m_fstring) = null;
-=======
-    _CONSTEXPR20_ fixed_sized_string(fixed_sized_string&& rvalue_p) noexcept : m_fstring{ _FE_NULL_ }, m_length(rvalue_p.m_length)
-    {
-        Traits::copy(this->m_fstring, rvalue_p.m_fstring, Capacity);
-        *(rvalue_p.m_fstring) = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         rvalue_p.m_length = 0;
     }
 
@@ -136,11 +119,7 @@ public:
         }
 
         Traits::copy(this->m_fstring, rvalue_p.m_fstring, Capacity);
-<<<<<<< HEAD
         *(rvalue_p.m_fstring) = null;
-=======
-        *(rvalue_p.m_fstring) = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = rvalue_p.m_length;
         rvalue_p.m_length = 0;
         return *this;
@@ -182,11 +161,7 @@ public:
         l_this_string_info._capacity = Capacity;
 
         Traits::assign(l_this_string_info, string_p, input_begin_p, input_end_p);
-<<<<<<< HEAD
         this->m_length = static_cast<length_type>(input_end_p - input_begin_p);
-=======
-        this->m_length = input_end_p - input_begin_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -218,11 +193,7 @@ public:
         l_this_string_info._capacity = Capacity;
 
         Traits::assign(l_this_string_info, input_begin_p, input_end_p);
-<<<<<<< HEAD
         this->m_length = static_cast<length_type>(input_end_p - input_begin_p);
-=======
-        this->m_length = input_end_p - input_begin_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -233,11 +204,7 @@ public:
        
         algorithm::string::concatenate(this->m_fstring, Capacity, std::move(initializer_list_p));
         this->m_length = initializer_list_p.size();
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -259,18 +226,27 @@ public:
     }
 
 
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ CharT front() const noexcept { return *this->m_fstring; }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ CharT back() const noexcept { return this->m_fstring[this->m_length - 1]; }
-    _NODISCARD_  _FORCE_INLINE_ _CONSTEXPR20_ CharT* data() const noexcept { return const_cast<CharT*>(this->m_fstring); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reference front() noexcept { return *this->m_fstring; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reference back() noexcept { return this->m_fstring[this->m_length - 1]; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ pointer data() noexcept { return const_cast<CharT*>(this->m_fstring); }
+
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reference front() const noexcept { return *this->m_fstring; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reference back() const noexcept { return this->m_fstring[this->m_length - 1]; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_pointer data() const noexcept { return const_cast<CharT*>(this->m_fstring); }
     _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const CharT* c_str() const noexcept { return this->m_fstring; }
 
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ iterator begin() noexcept { return const_cast<CharT*>(this->m_fstring); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ iterator end() noexcept { return const_cast<CharT*>(this->m_fstring + this->m_length); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator begin() const noexcept { return const_cast<CharT*>(this->m_fstring); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator end() const noexcept { return const_cast<CharT*>(this->m_fstring + this->m_length); }
 
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ iterator begin() const noexcept { return const_cast<CharT*>(this->m_fstring); }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ iterator end() const noexcept { return const_cast<CharT*>(this->m_fstring + this->m_length); }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reverse_iterator rbegin() const noexcept { return const_cast<CharT*>(this->m_fstring + (this->m_length - 1)); }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reverse_iterator rend() const noexcept { return const_cast<CharT*>(this->m_fstring - 1); }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator cbegin() noexcept { return this->m_fstring; }
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator cend() noexcept { return this->m_fstring + this->m_length; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reverse_iterator rbegin() noexcept { return const_cast<CharT*>(this->m_fstring + (this->m_length - 1)); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ reverse_iterator rend() noexcept { return const_cast<CharT*>(this->m_fstring - 1); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reverse_iterator rbegin() const noexcept { return const_cast<CharT*>(this->m_fstring + (this->m_length - 1)); }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reverse_iterator rend() const noexcept { return const_cast<CharT*>(this->m_fstring - 1); }
+
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator cbegin() const noexcept { return this->m_fstring; }
+    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_iterator cend() const noexcept { return this->m_fstring + this->m_length; }
     _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reverse_iterator crbegin() const noexcept { return this->m_fstring + (this->m_length - 1); }
     _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ const_reverse_iterator crend() const noexcept { return this->m_fstring - 1; }
 
@@ -280,17 +256,13 @@ public:
     _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ length_type max_length() const noexcept { return Capacity; }
     _NODISCARD_ _FORCE_INLINE_ size_type capacity() const noexcept { return Capacity; }
 
+
     _FORCE_INLINE_ _CONSTEXPR20_ void clear() noexcept 
     {
-<<<<<<< HEAD
         this->m_fstring[0] = null;
-=======
-        this->m_fstring[0] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = 0;
     }
    
-
     _CONSTEXPR20_ fixed_sized_string& insert(const size_type position_p, const size_type count_p, value_type value_p) noexcept
     {
         FE_ASSERT(position_p >= Capacity, "ERROR: position_p cannot be greater than the string capacity.");
@@ -435,11 +407,7 @@ public:
         FE_ASSERT(this->m_length >= Capacity, "${%s0}: out of capacity", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
         this->m_fstring[this->m_length] = value_p;
         ++this->m_length;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     _CONSTEXPR20_ CharT pop_back() noexcept
@@ -447,11 +415,7 @@ public:
         FE_ASSERT(this->m_length == 0, "${%s0}: Unable to pop an empty fstring", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
         const CharT l_return_value = this->back();
         --this->m_length;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return l_return_value;
     }
 
@@ -527,11 +491,7 @@ public:
         FE_ASSERT(input_begin_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(input_begin_p));
         FE_ASSERT(input_end_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(input_end_p));
         FE_ASSERT(input_begin_p >= input_end_p, "${%s@0}: input_position_p must not be greater than input_count_p.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
-<<<<<<< HEAD
         FE_ASSERT(static_cast<size_type>(input_end_p - input_begin_p) + this->m_length >= Capacity, "${%s@0}: input string range length exceeds fixed sized string capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
-=======
-        FE_ASSERT((input_end_p - input_begin_p) + this->m_length >= Capacity, "${%s@0}: input string range length exceeds fixed sized string capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_fstring;
@@ -539,11 +499,7 @@ public:
         l_this_string_info._capacity = Capacity;
 
         Traits::append(l_this_string_info, input_begin_p, input_end_p);
-<<<<<<< HEAD
         this->m_length += static_cast<size_type>(input_end_p - input_begin_p);
-=======
-        this->m_length += input_end_p - input_begin_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -554,11 +510,7 @@ public:
         
         algorithm::string::concatenate(this->data() + this->m_length, this->max_length(), std::move(initializer_list_p));
         this->m_length += initializer_list_p.size();
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -588,11 +540,7 @@ public:
 
         this->m_length += other_p.m_length;
         algorithm::string::concatenate<CharT>(this->m_fstring, Capacity, other_p.m_fstring, other_p.m_length);
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -603,11 +551,7 @@ public:
         length_type l_input_string_length = algorithm::string::length<CharT>(string_p);
         algorithm::string::concatenate<CharT>(this->m_fstring, Capacity, string_p, l_input_string_length);
         this->m_length += l_input_string_length;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -615,11 +559,7 @@ public:
     {
         algorithm::string::concatenate<CharT>(this->m_fstring, Capacity, &value_p, 1);
         this->m_length += 1;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -724,11 +664,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, other_p.m_fstring, other_p.m_length);
         this->m_length = (this->m_length + other_p.m_length) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -752,11 +688,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, other_p.m_fstring + other_position_p, other_count_p);
         this->m_length = (this->m_length + other_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -775,11 +707,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, string_p, input_count_p);
         this->m_length = (this->m_length + input_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -799,11 +727,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, string_p, l_input_length);
         this->m_length = (this->m_length + l_input_length) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -821,11 +745,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, value_p, input_count_p);
         this->m_length = (this->m_length + input_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -845,11 +765,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, std::move(initializer_list_p));
         this->m_length = (this->m_length + l_input_size) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -860,13 +776,8 @@ public:
         FE_ASSERT(input_last_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(input_last_p));
         FE_ASSERT(input_first_p > input_last_p, "${%s@0}: ${%s@1} must not be greater than ${%s@2}.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(input_first_p), TO_STRING(input_last_p));
        
-<<<<<<< HEAD
         size_type l_input_size = static_cast<size_type>(input_last_p - input_first_p);
         size_type l_this_count_to_replace = static_cast<size_type>(last_index_p - first_index_p);
-=======
-        size_type l_input_size = input_last_p - input_first_p;
-        size_type l_this_count_to_replace = last_index_p - first_index_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_fstring;
@@ -875,11 +786,7 @@ public:
 
         Traits::replace(l_this_string_info, first_index_p, last_index_p, input_first_p, input_last_p);
         this->m_length = (this->m_length + l_input_size) - l_this_count_to_replace;
-<<<<<<< HEAD
         this->m_fstring[this->m_length] = null;
-=======
-        this->m_fstring[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_fstring), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1008,11 +915,7 @@ public:
             return this->end();
         }
 
-<<<<<<< HEAD
         return this->begin() + static_cast<ptrdiff>(l_result->_begin);
-=======
-        return this->begin() + (l_result->_begin);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     _NODISCARD_ _CONSTEXPR20_ std::optional<algorithm::string::count<CharT>> count_chars(const value_type value_p, const size_type position_p = 0) const noexcept

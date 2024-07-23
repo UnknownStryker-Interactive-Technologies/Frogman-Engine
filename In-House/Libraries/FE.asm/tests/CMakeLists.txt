@@ -3,11 +3,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
 TARGET_LINK_LIBRARIES(test
-<<<<<<< HEAD
 ${CMAKE_CURRENT_SOURCE_DIR}/../lib/x86-64/linux/libFE-asm.a
-=======
-${CMAKE_CURRENT_SOURCE_DIR}/../lib/libFE.asm.a
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 )
 
 SET_TARGET_PROPERTIES(test PROPERTIES 

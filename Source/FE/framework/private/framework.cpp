@@ -1,7 +1,6 @@
 ﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/framework/framework.hpp>
 #include <FE/core/clock.hpp>
-<<<<<<< HEAD
 #include <FE/core/do_once.hxx>
 #include <FE/core/fstream_guard.hxx>
 #include <FE/core/fstring.hxx>
@@ -9,13 +8,6 @@
 
 // FE.framework
 #include <FE/framework/reflection/reflection.h>
-=======
-#include <FE/core/fstream_guard.hxx>
-#include <FE/core/fstring.hxx>
-#include <FE/core/log/logger.hpp>
-#include <FE/framework/reflection/function_table.hpp>
-#include <FE/framework/reflection/variable_map.hpp>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 // boost
 #include <boost/stacktrace.hpp>
@@ -51,23 +43,12 @@ void application_base::__set_up_main() noexcept
 	FE::framework::application_base::initializer_t l_get_app_address = FE::framework::application_base::create_application();
 	FE::framework::application_base::s_app = l_get_app_address();
 	FE_ASSERT(FE::framework::application_base::s_app == nullptr, "Assertion Failure: An app pointer is nullptr.");
-<<<<<<< HEAD
 	FE::framework::reflection::initialize();
-=======
-
-	FE::framework::reflection::function_table::initialize();
-	FE::framework::reflection::variable_map::initialize();
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 void application_base::__shutdown_main() noexcept
 {
-<<<<<<< HEAD
 	FE::framework::reflection::clean_up();
-=======
-	FE::framework::reflection::variable_map::clean_up();
-	FE::framework::reflection::function_table::clean_up();
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	delete FE::framework::application_base::s_app;
 }
 
@@ -91,14 +72,9 @@ _NORETURN_ void application_base::__abnormal_shutdown_with_exit_code(int32 signa
 		l_release_build_crash_report << "\n-------------------------------------------------- END OF STACK TRACE RECORD --------------------------------------------------\n";
 
 	}
-<<<<<<< HEAD
 	l_release_build_crash_report_guard.get_stream().close();
 #endif
 	FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::application_base::s_app->clean_up(); FE::framework::application_base::s_app->__shutdown_main());
-=======
-#endif
-	FE_DO_ONCE(_DO_ONCE_AT_APP_EXECUTION_, FE::framework::application_base::s_app->clean_up(); FE::framework::application_base::s_app->__shutdown_main());
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	std::exit(signal_p);
 }
 

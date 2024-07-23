@@ -70,19 +70,11 @@ public:
     pool() noexcept = default;
     ~pool() noexcept = default;
 
-<<<<<<< HEAD
     pool(const pool&) noexcept = delete;
     pool(pool&&) noexcept = delete;
 
     pool& operator=(const pool&) noexcept = delete;
     pool& operator=(pool&&) noexcept = delete;
-=======
-    pool(const pool& other_p) noexcept = delete;
-    pool(pool&& rvalue) noexcept = delete;
-
-    pool& operator=(const pool& other_p) noexcept = delete;
-    pool& operator=(pool&& rvalue) noexcept = delete;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 /* - Memory pool corruption detector - 
 1. unused bits are always 0.
@@ -118,7 +110,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 }
 
             #ifdef _DEBUG_
-<<<<<<< HEAD
                 #pragma clang diagnostic push
                 #pragma clang diagnostic ignored "-Wdynamic-class-memaccess" // This is to avoid -Werror causing build failure and to suppress the -Wdynamic-class-memaccess.
                 /*
@@ -132,11 +123,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 #pragma clang diagnostic pop
             #endif
 
-=======
-                FE_ASSERT(( std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) != 0 ), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
-            #endif
-            
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 if constexpr (FE::is_trivial<U>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
                 {
                     new(l_allocation_result) U();
@@ -150,13 +136,8 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         return allocate<U>();
     }
 
-<<<<<<< HEAD
     template<typename U>  // Incorrect non-trivial T type will cause a critical runtime error.
     void deallocate(U* const pointer_p) noexcept 
-=======
-    template<typename U>
-    void deallocate(U* const pointer_p) noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
         FE_STATIC_ASSERT((sizeof(U) > fixed_block_size_in_bytes), "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         typename pool_type::iterator  l_list_iterator = this->m_memory_pool.begin();
@@ -174,11 +155,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 }
 
             #ifdef _DEBUG_
-<<<<<<< HEAD
                 std::memset(l_to_be_freed, null, sizeof(U));
-=======
-                std::memset(l_to_be_freed, _FE_NULL_, sizeof(U));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             #endif
                 l_list_iterator->_free_blocks.push(l_to_be_freed);
                 return;

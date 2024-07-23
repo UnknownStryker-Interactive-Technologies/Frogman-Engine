@@ -55,7 +55,6 @@ public:
 
 	_CONSTEXPR20_ ~basic_string_view() noexcept {}
 
-
 	template<class Allocator>
 	_CONSTEXPR20_ basic_string_view(const FE::exclusive_ptr<CharT[], Allocator>& source_p) noexcept : m_watcher(source_p), m_begin(), m_end()
 	{
@@ -66,7 +65,6 @@ public:
 
 		this->m_end = algorithm::string::length(this->m_watcher.get());
 	}
-
 
 	_CONSTEXPR20_ basic_string_view& operator=(basic_string_view& other_p) noexcept
 	{
@@ -113,89 +111,137 @@ public:
 		this->m_watcher = source_p;
 	}
 
-
-	_NODISCARD_ _FORCE_INLINE_ iterator begin() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ iterator begin() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return iterator{ l_pointer_to_string + this->m_begin };
 	}
-	_NODISCARD_ _FORCE_INLINE_ iterator end() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ iterator end() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return iterator{ l_pointer_to_string + this->m_end };
 	}
 
+	_NODISCARD_ _FORCE_INLINE_ const_iterator begin() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return const_iterator{ l_pointer_to_string + this->m_begin };
+	}
+	_NODISCARD_ _FORCE_INLINE_ const_iterator end() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return const_iterator{ l_pointer_to_string + this->m_end };
+	}
+
 	_NODISCARD_ _FORCE_INLINE_ const_iterator cbegin() const noexcept
 	{
-		pointer l_pointer_to_string = this->m_watcher.operator->();
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return const_iterator{ l_pointer_to_string + this->m_begin };
 	}
 	_NODISCARD_ _FORCE_INLINE_ const_iterator cend() const noexcept
 	{
-		pointer l_pointer_to_string = this->m_watcher.operator->();
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return const_iterator{ l_pointer_to_string + this->m_end };
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ reverse_iterator rbegin() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ reverse_iterator rbegin() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return reverse_iterator{ (l_pointer_to_string + this->m_end) - 1 };
 	}
-
-	_NODISCARD_ _FORCE_INLINE_ reverse_iterator rend() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ reverse_iterator rend() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return reverse_iterator{ (l_pointer_to_string + this->m_begin) - 1 };
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator rbegin() const noexcept
 	{
-		pointer l_pointer_to_string = this->m_watcher.operator->();
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return const_reverse_iterator{ (l_pointer_to_string + this->m_end) - 1 };
 	}
-
-	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crend() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator rend() const noexcept
 	{
-		pointer l_pointer_to_string = this->m_watcher.operator->();
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return const_reverse_iterator{ (l_pointer_to_string + this->m_begin) - 1 };
 	}
 	
+	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return const_reverse_iterator{ (l_pointer_to_string + this->m_end) - 1 };
+	}
+	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crend() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return const_reverse_iterator{ (l_pointer_to_string + this->m_begin) - 1 };
+	}
 
-	_NODISCARD_ _FORCE_INLINE_ CharT& operator[](index_t index_p) const noexcept
+	_NODISCARD_ _FORCE_INLINE_ reference operator[](index_t index_p) noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		FE_ASSERT(index_p >= this->m_end, "${%s@0}: ${%s@1} was ${%lu@2}, and the string capacity was ${%lu@3}", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(index_p), &index_p, &m_end);
 		return l_pointer_to_string[index_p];
 	}
+	_NODISCARD_ _FORCE_INLINE_ const_reference operator[](index_t index_p) const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		FE_ASSERT(index_p >= this->m_end, "${%s@0}: ${%s@1} was ${%lu@2}, and the string capacity was ${%lu@3}", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(index_p), &index_p, &m_end);
+		return l_pointer_to_string[index_p];
+	}
 
-	_NODISCARD_ _FORCE_INLINE_ CharT front() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ reference front() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return *(l_pointer_to_string + this->m_begin);
 	}
-	_NODISCARD_ _FORCE_INLINE_ CharT back() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ const_reference front() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return *(l_pointer_to_string + this->m_begin);
+	}
+
+	_NODISCARD_ _FORCE_INLINE_ reference back() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return *((l_pointer_to_string + this->m_end) - 1);
 	}
-	_NODISCARD_ _FORCE_INLINE_ CharT* data() const noexcept
+	_NODISCARD_ _FORCE_INLINE_ const_reference back() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return *((l_pointer_to_string + this->m_end) - 1);
+	}
+
+	_NODISCARD_ _FORCE_INLINE_ pointer data() noexcept
 	{
 		pointer l_pointer_to_string = this->m_watcher.operator->();
 		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
 		return l_pointer_to_string + this->m_begin;
 	}
-
+	_NODISCARD_ _FORCE_INLINE_ const_pointer data() const noexcept
+	{
+		const_pointer l_pointer_to_string = this->m_watcher.operator->();
+		FE_ASSERT(l_pointer_to_string == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(l_pointer_to_string));
+		return l_pointer_to_string + this->m_begin;
+	}
 
 	_NODISCARD_ _FORCE_INLINE_ length_type length() const noexcept
 	{
@@ -514,11 +560,7 @@ public:
 };
 
 
-<<<<<<< HEAD
 using string_view = basic_string_view<var::ASCII>;
-=======
-using string_view = basic_string_view<var::character>;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 using ustring_view = basic_string_view<var::uchar>;
 using sstring_view = basic_string_view<var::schar>;
 using wstring_view = basic_string_view<var::wchar>;

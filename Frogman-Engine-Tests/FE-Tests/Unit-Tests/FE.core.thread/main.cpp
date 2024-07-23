@@ -3,14 +3,9 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
-<<<<<<< HEAD
 #include <FE/core/function.hxx>
 #include <FE/experimental/task_queue.hxx>
 #include <FE/core/thread.hpp>
-=======
-#include <FE/core/thread.hpp>
-#include <FE/core/function.hxx>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 using namespace FE;
 
 #ifdef _LINUX_X86_64_
@@ -19,11 +14,8 @@ using namespace FE;
 
 // std
 #include <cmath>
-<<<<<<< HEAD
 #include <string>
 #include <vector>
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 /*
 ls: lists all folders in the current working directory
@@ -115,11 +107,7 @@ int32 int_fn(int32 param_p) noexcept
 	EXPECT_EQ(param_p, 0);
 	return param_p;
 }
-<<<<<<< HEAD
 /*
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 TEST(thread, fork_and_join)
 {
 	FE::thread l_thread;
@@ -145,11 +133,7 @@ TEST(thread, fork_and_join)
 
 		EXPECT_EQ( std::any_cast<int32>(l_result) , 0);
 	}
-<<<<<<< HEAD
 }*/
-=======
-}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 
@@ -298,7 +282,6 @@ TEST(cpp_style_task, call_by_address)
 }
 
 
-<<<<<<< HEAD
 template<class Container>
 void iterate(const Container& container_p) noexcept
 {
@@ -327,8 +310,6 @@ TEST(task_queue, _)
 	l_tasks.execute_front();
 	l_tasks.pop();
 }
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 namespace performance_benchmark

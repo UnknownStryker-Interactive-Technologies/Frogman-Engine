@@ -50,15 +50,12 @@ public:
 
     First _first;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : _first() {}
 
     _FORCE_INLINE_ arguments(const First& first_p) noexcept
         : _first(first_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second>
@@ -71,15 +68,12 @@ public:
 
     second_type _second;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : base_type(), _second() {}
     
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p) noexcept
         : base_type(first_p), _second(second_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third>
@@ -93,15 +87,12 @@ public:
 
     third_type _third;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : base_type(), _third() {}
     
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p) noexcept
         : base_type(first_p, second_p), _third(third_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth>
@@ -116,15 +107,12 @@ public:
 
     fourth_type _fourth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept
         : base_type(), _fourth() {}
 
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p) noexcept
         : base_type(first_p, second_p, third_p), _fourth(fourth_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth>
@@ -140,7 +128,6 @@ public:
 
     fifth_type _fifth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : base_type(), _fifth() {}
@@ -148,8 +135,6 @@ public:
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p, 
                              const Fifth& fifth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p), _fifth(fifth_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth>
@@ -166,7 +151,6 @@ public:
 
     sixth_type _sixth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : base_type(), _sixth() {}
@@ -174,8 +158,6 @@ public:
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p), _sixth(sixth_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh>
@@ -193,7 +175,6 @@ public:
 
     seventh_type _seventh;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
-<<<<<<< HEAD
 
 
     _FORCE_INLINE_ arguments() noexcept
@@ -202,8 +183,6 @@ public:
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p), _seventh(seventh_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth>
@@ -222,7 +201,6 @@ public:
 
     eighth_type _eighth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept
         : base_type(), _eighth() {}
@@ -230,8 +208,6 @@ public:
     _FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p)
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p), _eighth(eighth_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth>
@@ -251,7 +227,6 @@ public:
 
     ninth_type _ninth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
-<<<<<<< HEAD
 
     _FORCE_INLINE_ arguments() noexcept 
         : base_type(), _ninth() {}
@@ -262,11 +237,6 @@ public:
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p), _ninth(ninth_p) {}
 };
 
-=======
-};
-
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 template<typename First, typename Second, typename Third, typename Fourth, typename Fifth, typename Sixth, typename Seventh, typename Eighth, typename Ninth, typename Tenth>
 class arguments : public arguments<First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, void>
 {
@@ -285,7 +255,6 @@ public:
 
     tenth_type _tenth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;
-<<<<<<< HEAD
 
 
     _FORCE_INLINE_ arguments() noexcept 
@@ -295,8 +264,6 @@ public:
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
                              const Ninth& ninth_p, const Tenth& tenth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p, ninth_p), _tenth(tenth_p) {}
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 
@@ -324,10 +291,7 @@ public:
     using function_type = decltype(m_function_pointer);
     using return_type = R;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     _FORCE_INLINE_ _CONSTEXPR20_ function() noexcept : m_function_pointer() {}
     _FORCE_INLINE_ _CONSTEXPR23_ ~function() noexcept = default;
@@ -341,15 +305,12 @@ public:
         return this->m_function_pointer(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ const R operator()(Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
         return this->m_function_pointer(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function_type function_p) noexcept
     {
         this->m_function_pointer = function_p;
@@ -399,10 +360,7 @@ public:
     using function_type = decltype(m_function_pointer);
     using return_type = void;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     _FORCE_INLINE_ _CONSTEXPR20_ function() noexcept : m_function_pointer() {}
     ~function() noexcept = default;
@@ -416,15 +374,12 @@ public:
         this->m_function_pointer(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ void operator()(Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
         this->m_function_pointer(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ function& operator=(function_type function_p) noexcept
     {
         this->m_function_pointer = function_p;
@@ -478,10 +433,7 @@ public:
     using method_type = decltype(m_method_pointer);
     using return_type = R;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using class_type = C;
 
     _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
@@ -496,15 +448,12 @@ public:
         return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
         this->m_method_pointer = method_p;
@@ -554,10 +503,7 @@ public:
     using method_type = decltype(m_method_pointer);
     using return_type = void;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using class_type = C;
 
     _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
@@ -572,15 +518,12 @@ public:
         (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
         this->m_method_pointer = method_p;
@@ -630,10 +573,7 @@ public:
     using method_type = decltype(m_method_pointer);
     using return_type = R;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using class_type = C;
 
     constexpr _FORCE_INLINE_ method() noexcept : m_method_pointer() {}
@@ -648,15 +588,12 @@ public:
         return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
         this->m_method_pointer = method_p;
@@ -706,10 +643,7 @@ public:
     using method_type = decltype(m_method_pointer);
     using return_type = void;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
-<<<<<<< HEAD
     using parameters_type = FE::arguments<Arguments...>;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using class_type = C;
 
     _FORCE_INLINE_ _CONSTEXPR20_ method() noexcept : m_method_pointer() {}
@@ -724,15 +658,12 @@ public:
         (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-<<<<<<< HEAD
     _FORCE_INLINE_ void operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
         FE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
     }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     _FORCE_INLINE_ _CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
         this->m_method_pointer = method_p;
@@ -775,7 +706,6 @@ class task_base
 {
 public:
     task_base() noexcept = default;
-<<<<<<< HEAD
     virtual ~task_base() noexcept = default;
 
     virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
@@ -783,15 +713,6 @@ public:
 
     // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
 	virtual void set_instance(const std::any& target_instance_p) noexcept = 0;
-=======
-
-    virtual ~task_base() {};
-
-    virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
-
-    // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
-	virtual void set_instance(void* const target_instance_p) noexcept = 0;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
@@ -808,10 +729,7 @@ public:
     using task_impl_type = TaskImpl;
     using task_type = FE::method<class_type, task_impl_type>;
     using arguments_buffer_type = ArgumentsBufferType;
-<<<<<<< HEAD
     using parameters_type = typename task_type::parameters_type;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using return_type = typename FE::remove_const_reference<typename FE::method<class_type, task_impl_type>::return_type>::type;
     using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
 
@@ -824,11 +742,7 @@ private:
 
 public:
     _FORCE_INLINE_ _CONSTEXPR20_ cpp_style_task() noexcept : _method(), m_instance() {}
-<<<<<<< HEAD
     virtual ~cpp_style_task() noexcept = default;
-=======
-    virtual ~cpp_style_task() noexcept override {};
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     _FORCE_INLINE_ _CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : _method(task_p), m_instance() {}
 
@@ -858,101 +772,69 @@ public:
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
-=======
-                (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
         }
@@ -975,99 +857,66 @@ public:
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                               static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
-=======
-                return (m_instance->*_method)(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
     }
 
-<<<<<<< HEAD
     virtual std::any operator()(std::any& arguments_p) noexcept override
     {
         FE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
@@ -1222,12 +1071,6 @@ public:
     virtual void set_instance(const std::any& host_class_instance_p) noexcept override
     {
 		this->m_instance = std::any_cast<class_type*>(host_class_instance_p);
-=======
-    virtual void set_instance(void* const host_class_instance_p) noexcept override
-    {
-        FE_ASSERT(host_class_instance_p == nullptr, "The target instance is null!");
-		this->m_instance = static_cast<class_type*>(host_class_instance_p);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     virtual boolean is_null(void) const noexcept override
@@ -1254,10 +1097,7 @@ public:
     using task_impl_type = TaskImpl;
     using task_type = FE::function<task_impl_type>;
     using arguments_buffer_type = ArgumentsBufferType;
-<<<<<<< HEAD
     using parameters_type = typename task_type::parameters_type;
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     using return_type = typename FE::remove_const_reference<typename FE::function<task_impl_type>::return_type>::type;
     using task_result_buffer_type = typename FE::conditional_type<std::is_void<return_type>::value, void_t, return_type>::type;
 
@@ -1267,11 +1107,7 @@ public:
 
 public:
     _FORCE_INLINE_ _CONSTEXPR20_ c_style_task() noexcept : _function() {}
-<<<<<<< HEAD
     virtual ~c_style_task() noexcept = default;
-=======
-    virtual ~c_style_task() noexcept override {};
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     _FORCE_INLINE_ _CONSTEXPR20_ c_style_task(typename task_type::function_type task_p) noexcept : _function(task_p) {}
 
@@ -1299,101 +1135,69 @@ public:
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                 static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
-=======
-                this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
                 return void_t();
             }
         }
@@ -1417,86 +1221,57 @@ public:
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
                 FE_ASSERT(arguments_p == nullptr, "Incorrect argument value detected: nullptr has been passed to a task() with non-void parameters.");
-<<<<<<< HEAD
                 return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, 
                                        static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, 
@@ -1651,9 +1426,6 @@ public:
                                        std::any_cast<arguments_buffer_type>(arguments_p)._fifth, std::any_cast<arguments_buffer_type>(arguments_p)._sixth, 
                                        std::any_cast<arguments_buffer_type>(arguments_p)._seventh, std::any_cast<arguments_buffer_type>(arguments_p)._eighth, 
                                        std::any_cast<arguments_buffer_type>(arguments_p)._ninth, std::any_cast<arguments_buffer_type>(arguments_p)._tenth);
-=======
-                return this->_function(static_cast<arguments_buffer_type* const>(arguments_p)->_first, static_cast<arguments_buffer_type* const>(arguments_p)->_second, static_cast<arguments_buffer_type* const>(arguments_p)->_third, static_cast<arguments_buffer_type* const>(arguments_p)->_fourth, static_cast<arguments_buffer_type* const>(arguments_p)->_fifth, static_cast<arguments_buffer_type* const>(arguments_p)->_sixth, static_cast<arguments_buffer_type* const>(arguments_p)->_seventh, static_cast<arguments_buffer_type* const>(arguments_p)->_eighth, static_cast<arguments_buffer_type* const>(arguments_p)->_ninth, static_cast<arguments_buffer_type* const>(arguments_p)->_tenth);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
     }
@@ -1668,22 +1440,8 @@ public:
         return false;
     }
 
-<<<<<<< HEAD
     virtual void set_instance(const std::any&) noexcept override {};
 };
 
-=======
-    virtual void set_instance(void* const) noexcept override {};
-};
-
-
-template <class FunctionSignature>
-_FORCE_INLINE_ typename FE::function<FunctionSignature>::function_type function_cast(typename FE::function<FunctionSignature>::function_type lamda_p) noexcept
-{
-    return lamda_p;
-}
-
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 END_NAMESPACE
 #endif

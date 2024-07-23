@@ -78,11 +78,7 @@ private:
     //! Left argument actor
     LeftT m_left;
     //! Attribute name
-<<<<<<< HEAD
-    const attribute_name m_raw_name;
-=======
     const attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Attribute value visitor invoker
     visitor_invoker_type m_visitor_invoker;
     //! Manipulator implementation
@@ -90,41 +86,25 @@ private:
 
 public:
     //! Initializing constructor
-<<<<<<< HEAD
-    attribute_output_terminal(LeftT const& left, attribute_name const& name) : m_left(left), m_raw_name(name)
-=======
     attribute_output_terminal(LeftT const& left, attribute_name const& name) : m_left(left), m_name(name)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     //! Initializing constructor
-<<<<<<< HEAD
-    attribute_output_terminal(LeftT const& left, attribute_name const& name, impl_type const& impl) : m_left(left), m_raw_name(name), m_impl(impl)
-=======
     attribute_output_terminal(LeftT const& left, attribute_name const& name, impl_type const& impl) : m_left(left), m_name(name), m_impl(impl)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     //! Initializing constructor
     template< typename U >
     attribute_output_terminal(LeftT const& left, attribute_name const& name, impl_type const& impl, U const& arg) :
-<<<<<<< HEAD
-        m_left(left), m_raw_name(name), m_visitor_invoker(arg), m_impl(impl)
-=======
         m_left(left), m_name(name), m_visitor_invoker(arg), m_impl(impl)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     //! Copy constructor
     attribute_output_terminal(attribute_output_terminal const& that) :
-<<<<<<< HEAD
-        m_left(that.m_left), m_raw_name(that.m_raw_name), m_visitor_invoker(that.m_visitor_invoker), m_impl(that.m_impl)
-=======
         m_left(that.m_left), m_name(that.m_name), m_visitor_invoker(that.m_visitor_invoker), m_impl(that.m_impl)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
@@ -134,11 +114,7 @@ public:
     {
         typedef typename result< this_type(ContextT const&) >::type result_type;
         result_type strm = phoenix::eval(m_left, ctx);
-<<<<<<< HEAD
-        m_visitor_invoker(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< impl_type&, result_type >(m_impl, strm));
-=======
         m_visitor_invoker(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< impl_type&, result_type >(m_impl, strm));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return strm;
     }
 
@@ -148,11 +124,7 @@ public:
     {
         typedef typename result< const this_type(ContextT const&) >::type result_type;
         result_type strm = phoenix::eval(m_left, ctx);
-<<<<<<< HEAD
-        m_visitor_invoker(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< impl_type const&, result_type >(m_impl, strm));
-=======
         m_visitor_invoker(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< impl_type const&, result_type >(m_impl, strm));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return strm;
     }
 

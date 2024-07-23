@@ -40,29 +40,17 @@ private:
 template <class stt>
 struct get_state_name
 {
-<<<<<<< HEAD
-    get_state_name(std::string& name_to_fill, int state_id):m_raw_name(name_to_fill),m_state_id(state_id){}
-=======
     get_state_name(std::string& name_to_fill, int state_id):m_name(name_to_fill),m_state_id(state_id){}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     template <class StateType>
     void operator()(boost::msm::wrap<StateType> const&)
     {
         if (get_state_id<stt,StateType>::value == m_state_id)
         {
-<<<<<<< HEAD
-            m_raw_name = typeid(StateType).name();
-        }
-    }
-private:
-    std::string&    m_raw_name;
-=======
             m_name = typeid(StateType).name();
         }
     }
 private:
     std::string&    m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     int             m_state_id;
 };
 

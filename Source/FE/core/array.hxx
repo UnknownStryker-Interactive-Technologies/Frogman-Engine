@@ -2,11 +2,8 @@
 #define _FE_CORE_ARRAY_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
-#include <FE/core/private/array_impl.hxx>
 #include <array>
-#ifdef _MEMORY_POOL_FE_ARRAYS_
-#include <FE/core/pool_allocator.hxx>
-#endif
+#include <FE/core/iterator.hxx>
 
 
 
@@ -95,7 +92,7 @@ public:
 		return iterator{ base_type::begin().operator->() };
 	}
 
-	_FORCE_INLINE_ const_iterator cbegin() noexcept 
+	_FORCE_INLINE_ const_iterator cbegin() const noexcept 
 	{
 		return const_iterator{ base_type::begin().operator->() };
 	}
@@ -105,7 +102,7 @@ public:
 		return this->begin() + this->m_array_size;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR17_ const_iterator cend() noexcept 
+	_FORCE_INLINE_ _CONSTEXPR17_ const_iterator cend() const noexcept 
 	{
 		return this->cbegin() + this->m_array_size;
 	}
@@ -115,7 +112,12 @@ public:
 		return (this->begin() + this->m_array_size) - 1;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator crbegin() noexcept 
+	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator rbegin() const noexcept 
+	{
+		return (this->begin() + this->m_array_size) - 1;
+	}
+
+	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator crbegin() const noexcept 
 	{
 		return (this->cbegin() + this->m_array_size) - 1;
 	}
@@ -125,23 +127,16 @@ public:
 		return this->begin() - 1;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator crend() noexcept 
+	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator rend() const noexcept 
+	{
+		return this->begin() - 1;
+	}
+
+	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator crend() const noexcept 
 	{
 		return this->cbegin() - 1;
 	}
 };
-
-
-
-
-template <class T, 
-#ifdef _MEMORY_POOL_FE_ARRAYS_
-	class Allocator = FE::pool_allocator<T>
-#else
-	class Allocator = FE::aligned_allocator<T>
-#endif
->
-using array = internal::array_impl<T, Allocator, FE::is_trivial<T>::value>;
 
 
 END_NAMESPACE

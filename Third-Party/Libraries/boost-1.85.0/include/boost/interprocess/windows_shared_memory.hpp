@@ -155,11 +155,7 @@ class windows_shared_memory
 
    void *         m_handle;
    mode_t         m_mode;
-<<<<<<< HEAD
-   char_wchar_holder m_raw_name;
-=======
    char_wchar_holder m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
    #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED
 };
 
@@ -173,21 +169,13 @@ inline windows_shared_memory::~windows_shared_memory()
 {  this->priv_close(); }
 
 inline const char *windows_shared_memory::get_name() const BOOST_NOEXCEPT
-<<<<<<< HEAD
-{  return m_raw_name.getn(); }
-=======
 {  return m_name.getn(); }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 inline void windows_shared_memory::swap(windows_shared_memory &other) BOOST_NOEXCEPT
 {
    (simple_swap)(m_handle,  other.m_handle);
    (simple_swap)(m_mode,    other.m_mode);
-<<<<<<< HEAD
-   m_raw_name.swap(other.m_raw_name);
-=======
    m_name.swap(other.m_name);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 inline mapping_handle_t windows_shared_memory::get_mapping_handle() const BOOST_NOEXCEPT
@@ -207,17 +195,10 @@ inline bool windows_shared_memory::priv_open_or_create
    (ipcdetail::create_enum_t type, const CharT *filename, mode_t mode, std::size_t size, const permissions& perm)
 {
    if (filename){
-<<<<<<< HEAD
-      m_raw_name = filename;
-   }
-   else{
-      m_raw_name = "";
-=======
       m_name = filename;
    }
    else{
       m_name = "";
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
    }
 
    unsigned long protection = 0;

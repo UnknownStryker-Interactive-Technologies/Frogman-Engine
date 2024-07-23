@@ -51,11 +51,7 @@ struct BOOST_PYTHON_DECL function : PyObject
  private: // data members
     py_function m_fn;
     handle<function> m_overloads;
-<<<<<<< HEAD
-    object m_raw_name;
-=======
     object m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     object m_namespace;
     object m_doc;
     object m_arg_names;
@@ -78,11 +74,7 @@ inline void function::doc(object const& x)
 
 inline object const& function::name() const
 {
-<<<<<<< HEAD
-    return this->m_raw_name;
-=======
     return this->m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
   
 }}} // namespace boost::python::objects

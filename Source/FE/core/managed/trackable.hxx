@@ -124,16 +124,12 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ _CONSTEXPR20_ reference get() noexcept
 	{
 		return this->m_data;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ const_reference get() const noexcept
-=======
-	_FORCE_INLINE_ _CONSTEXPR20_ reference get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		return this->m_data;
 	}

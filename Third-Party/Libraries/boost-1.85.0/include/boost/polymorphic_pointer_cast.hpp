@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-//  boost polymorphic_cast.hpp header file  ----------------------------------------------//
-=======
 //  boost polymorphic_pointer_cast.hpp header file  ----------------------------------------------//
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 //  (C) Copyright Boris Rasin, 2014-2021.
 //  (C) Copyright Antony Polukhin, 2014-2024.
 //  Distributed under the Boost
@@ -27,11 +23,7 @@
 namespace boost
 {
 //  See the documentation for descriptions of how to choose between
-<<<<<<< HEAD
-//  static_pointer_cast<>, dynamic_pointer_cast<>, polymorphic_cast<> and polymorphic_pointer_downcast<>
-=======
 //  static_pointer_cast<>, dynamic_pointer_cast<>, polymorphic_pointer_cast<> and polymorphic_pointer_downcast<>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 //  polymorphic_pointer_downcast  --------------------------------------------//
 
@@ -55,11 +47,7 @@ namespace boost
     }
 
     template <typename Target, typename Source>
-<<<<<<< HEAD
-    inline auto polymorphic_cast (const Source& x)
-=======
     inline auto polymorphic_pointer_cast (const Source& x)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         -> decltype(dynamic_pointer_cast<Target>(x))
     {
         auto tmp = dynamic_pointer_cast<Target> (x);

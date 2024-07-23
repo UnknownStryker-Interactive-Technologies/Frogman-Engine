@@ -1,29 +1,16 @@
-<<<<<<< HEAD
 #ifndef _FE_CORE_CONTAINERS_BINARY_TREE_HXX_
 #define _FE_CORE_CONTAINERS_BINARY_TREE_HXX_
-=======
-#ifndef _FE_CORE_CONTAINERS_ADJACENCY_GRAPH_HXX_
-#define _FE_CORE_CONTAINERS_ADJACENCY_GRAPH_HXX_
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
 #include <FE/core/allocator.hxx>
 #include <FE/core/iterator.hxx>
 
 // std
-<<<<<<< HEAD
-=======
-#include <any>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #include <set>
 
 
 
-<<<<<<< HEAD
 // To do: custom binary tree implementation.
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 BEGIN_NAMESPACE(FE)
 
 namespace internal::adjacency_graph
@@ -55,17 +42,10 @@ class node_type
 {
 	template<typename key, typename t, class allocator>
 	friend class adjacency_graph;
-<<<<<<< HEAD
 /*
 	node_type* m_upper_adjacent = nullptr;
 	node_type* m_lower_adjacent = nullptr;
 */
-=======
-
-	node_type* m_upper_adjacent = nullptr;
-	node_type* m_lower_adjacent = nullptr;
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	Key m_key;
 
 public:
@@ -100,11 +80,7 @@ public:
 
 	using pointer = typename underlying_container::pointer;
 	using const_pointer = typename underlying_container::const_pointer;
-<<<<<<< HEAD
 /*
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	struct adjacent_node_iterator
 	{
 		using category = adjacent_node_iterator;
@@ -262,21 +238,12 @@ public:
 		{
 			return this->m_iterator != other_p.m_iterator;
 		}
-<<<<<<< HEAD
 	};*/
 	
 	using iterator = typename underlying_container::iterator;
 	using const_iterator = typename underlying_container::const_iterator;
 	using reverse_iterator = typename underlying_container::reverse_iterator;
 	using const_reverse_iterator = typename underlying_container::const_reverse_iterator;
-=======
-	};
-	
-	using iterator = FE::iterator<adjacent_node_iterator>;
-	using const_iterator = FE::const_iterator<adjacent_node_iterator>;
-	using reverse_iterator = FE::reverse_iterator<adjacent_node_iterator>;
-	using const_reverse_iterator = FE::const_reverse_iterator<adjacent_node_iterator>;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 private:
 	underlying_container m_set;
@@ -286,18 +253,7 @@ public:
 	_FORCE_INLINE_ adjacency_graph(const allocator_type& allocator_p) noexcept : m_set(allocator_p) {}
 	_FORCE_INLINE_ adjacency_graph(std::initializer_list<node_type<Key, T>>&& initializer_list_p, const allocator_type& allocator_p = allocator_type()) noexcept : m_set(allocator_p)
 	{
-<<<<<<< HEAD
 		this->m_set = initializer_list_p;
-=======
-		auto l_input_data = const_cast<node_type<Key, T>*>(initializer_list_p.begin());
-		auto l_input_end = initializer_list_p.end();
-
-		while(l_input_data != l_input_end)
-		{
-			this->insert(l_input_data->m_key, l_input_data->_value);
-			++l_input_data;
-		}
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	}
 
 	_FORCE_INLINE_ ~adjacency_graph() noexcept {}
@@ -317,7 +273,6 @@ public:
 		return *this;
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ iterator insert(const Key& key_p, const T& value_p) noexcept // Logarithmic time complexity
 	{
 		node_type<Key, T> l_node;
@@ -329,59 +284,6 @@ public:
 	_FORCE_INLINE_ void erase(iterator position_p) noexcept //
 	{
 		this->m_set.erase(position_p);
-=======
-	iterator insert(const Key& key_p, const T& value_p) noexcept // Logarithmic time complexity: O(3 * log N)
-	{
-		node_type<Key, T> l_value;
-		l_value.m_key = key_p;
-		l_value._value = value_p;
-		typename underlying_container::iterator l_result = this->m_set.insert(std::move(l_value)).first;
-
-		auto l_upper_adjacent = l_result;
-		++l_upper_adjacent;
-
-		auto l_lower_adjacent = l_result;
-		--l_lower_adjacent;
-
-		edge_type l_type_casted_result = (l_result != this->m_set.end()) ? std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*l_result)) : nullptr;
-		if(l_upper_adjacent != this->m_set.end())
-		{
-			edge_type l_upper_adjacent_node = std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*l_upper_adjacent));
-			l_upper_adjacent_node->m_lower_adjacent = l_type_casted_result;
-			l_type_casted_result->m_upper_adjacent = l_upper_adjacent_node;
-		}
-
-		if(l_lower_adjacent != l_result)
-		{
-			edge_type l_lower_adjacent_node = std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*l_lower_adjacent));
-			l_lower_adjacent_node->m_upper_adjacent = l_type_casted_result;
-			l_type_casted_result->m_lower_adjacent = l_lower_adjacent_node;
-		}
-		return iterator_cast<iterator>(l_type_casted_result);
-	}
-
-	_FORCE_INLINE_ void erase(iterator position_p) noexcept // Logarithmic time complexity
-	{
-		FE_ASSERT(position_p == nullptr, "Assertion failure: failed to assert that the iterator must not be null.");
-
-		// restructure adjacent node links
-		edge_type l_upper_adjacent = position_p->m_upper_adjacent;
-		edge_type l_lower_adjacent = position_p->m_lower_adjacent;
-
-		if(l_lower_adjacent != nullptr)
-		{
-			l_lower_adjacent->m_upper_adjacent = l_upper_adjacent;
-		}
-
-		if(l_upper_adjacent != nullptr)
-		{
-			l_upper_adjacent->m_lower_adjacent = l_lower_adjacent;
-		}
-
-		node_type<Key, T> l_target_to_erase;
-		l_target_to_erase.m_key = position_p->get_key();
-		this->m_set.erase(l_target_to_erase);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	}
 
 	_FORCE_INLINE_ iterator find(const Key& key_p) noexcept // Logarithmic time complexity
@@ -392,7 +294,6 @@ public:
 	}
 
 	/* Iterating adjacent nodes from begin to end takes linear time complexity of N amount of nodes. */
-<<<<<<< HEAD
 	_FORCE_INLINE_ iterator begin() const noexcept { return this->m_set.begin(); }
 	_FORCE_INLINE_ const_iterator cbegin() const noexcept { return this->m_set.cbegin(); }
 
@@ -404,19 +305,6 @@ public:
 
 	_FORCE_INLINE_ reverse_iterator rend() const noexcept { return this->m_set.rend(); }
 	_FORCE_INLINE_ const_reverse_iterator crend() const noexcept { return this->m_set.crend(); }
-=======
-	_FORCE_INLINE_ iterator begin() const noexcept { return iterator{ std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*(this->m_set.begin()))) }; }
-	_FORCE_INLINE_ const_iterator cbegin() const noexcept { return const_iterator{ std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*(this->m_set.cbegin()))) }; }
-
-	_FORCE_INLINE_ _CONSTEXPR17_ iterator end() const noexcept { return iterator{nullptr}; }
-	_FORCE_INLINE_ _CONSTEXPR17_ const_iterator cend() const noexcept { return const_iterator{nullptr}; }
-
-	_FORCE_INLINE_ reverse_iterator rbegin() const noexcept { return reverse_iterator{ std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*(this->m_set.rbegin()))) }; }
-	_FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator{ std::pointer_traits<edge_type>::pointer_to(const_cast<reference>(*(this->m_set.crbegin()))) }; }
-
-	_FORCE_INLINE_ _CONSTEXPR17_ reverse_iterator rend() const noexcept { return reverse_iterator{nullptr}; }
-	_FORCE_INLINE_ _CONSTEXPR17_ const_reverse_iterator crend() const noexcept { return const_reverse_iterator{nullptr}; }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	_FORCE_INLINE_ size_type size() const noexcept { return this->m_set.size(); }
 	_FORCE_INLINE_ boolean is_empty() const noexcept { return this->m_set.empty(); }

@@ -31,11 +31,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-<<<<<<< HEAD
 	|  FE::string m_raw_name --------------|----|                                         |
-=======
-	|  FE::string m_name --------------|----|                                         |
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -46,11 +42,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 													                                  |
 																					  *
 																					  
-<<<<<<< HEAD
 Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
-=======
-Memory Layer Traversal Order: Entry.FE::string m_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data 
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 																									|
 												    |-----------------------------------------------|
 												    |
@@ -111,11 +103,7 @@ TEST(FE_algorithm_string, length)
 {
 	char l_buffer[] = "FE::algorithm::string::length is a templated function that provides more functionalities than the traditional C-style length.";
 
-<<<<<<< HEAD
 	FE::uint64 l_result = ::FE::algorithm::string::length<char>(l_buffer);
-=======
-	::FE::int64 l_result = ::FE::algorithm::string::length<char>(l_buffer);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	EXPECT_EQ(125, l_result);
 }
@@ -176,13 +164,8 @@ TEST(FE_algorithm_string, capitalize)
 	EXPECT_TRUE(::FE::algorithm::string::compare(l_string.c_str(), "EXPERIENCE OUR BRITISH PREMIUM BOTTLE OF WATER!"));
 
 
-<<<<<<< HEAD
 	var::ASCII l_grade = 'a';
 	EXPECT_EQ(::FE::algorithm::string::capitalize<var::ASCII>(l_grade), 'A');
-=======
-	var::character l_grade = 'a';
-	EXPECT_EQ(::FE::algorithm::string::capitalize<var::character>(l_grade), 'A');
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 
@@ -196,13 +179,8 @@ TEST(FE_algorithm_string, to_lowercase)
 	EXPECT_TRUE(::FE::algorithm::string::compare(l_string.c_str(), "experience our korean premium kimchi!"));
 
 
-<<<<<<< HEAD
 	var::ASCII l_grade = 'F';
 	EXPECT_EQ(::FE::algorithm::string::to_lowercase<var::ASCII>(l_grade), 'f');
-=======
-	var::character l_grade = 'F';
-	EXPECT_EQ(::FE::algorithm::string::to_lowercase<var::character>(l_grade), 'f');
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 
@@ -327,17 +305,10 @@ TEST(FE_algorithm_string, find_the_first)
 	{
 		char l_string[] = "the University of Utah";
 
-<<<<<<< HEAD
 		std::optional l_result = ::FE::algorithm::string::find_the_first<var::ASCII>(l_string, "Orange County");
 		EXPECT_FALSE(l_result.has_value());
 
 		l_result = ::FE::algorithm::string::find_the_first<var::ASCII>(l_string, "Utah");
-=======
-		std::optional l_result = ::FE::algorithm::string::find_the_first<var::character>(l_string, "Orange County");
-		EXPECT_FALSE(l_result.has_value());
-
-		l_result = ::FE::algorithm::string::find_the_first<var::character>(l_string, "Utah");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 		EXPECT_TRUE(FE::algorithm::string::compare<char>(l_string + l_result->_begin, "Utah"));
 	}
@@ -349,11 +320,7 @@ TEST(FE_algorithm_string, find_the_last)
 {
 	{
 		const char* l_string = "Jesus is the son of GOD";
-<<<<<<< HEAD
 		std::optional l_result = ::FE::algorithm::string::find_the_last<var::ASCII>(l_string, "son");
-=======
-		std::optional l_result = ::FE::algorithm::string::find_the_last<var::character>(l_string, "son");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		char l_substring[7] = "\0";
 		FE::algorithm::string::copy(l_substring, l_string + l_result->_begin, 3);
 		EXPECT_TRUE(FE::algorithm::string::compare<char>(l_substring, "son"));
@@ -361,7 +328,6 @@ TEST(FE_algorithm_string, find_the_last)
 		l_string = "Third Person Spec Ops Stealth Action Shooter";
 
 		//#ifndef _IMPORT_RELEASE_BUILD_MODE_MSVC_COMPILER_BUG_
-<<<<<<< HEAD
 		//	EXPECT_FALSE(::FE::algorithm::string::search_very_last_substring<var::ASCII>(l_string, "Expects Failure").has_value());
 		//#else
 		//	l_result = ::FE::algorithm::string::search_very_last_substring<var::ASCII>(l_string, "Expects Failure");
@@ -369,15 +335,6 @@ TEST(FE_algorithm_string, find_the_last)
 		//#endif
 
 		l_result = ::FE::algorithm::string::find_the_last<var::ASCII>(l_string, "Action");
-=======
-		//	EXPECT_FALSE(::FE::algorithm::string::search_very_last_substring<var::character>(l_string, "Expects Failure").has_value());
-		//#else
-		//	l_result = ::FE::algorithm::string::search_very_last_substring<var::character>(l_string, "Expects Failure");
-		//	EXPECT_FALSE(l_result.has_value());
-		//#endif
-
-		l_result = ::FE::algorithm::string::find_the_last<var::character>(l_string, "Action");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		EXPECT_TRUE(l_result.has_value());
 		FE::algorithm::string::copy(l_substring, l_string + l_result->_begin, 6);
 
@@ -435,17 +392,10 @@ TEST(FE_algorithm_string, find_the_first_within_range)
 	{
 		char l_string[] = "Love never fails. But where there are prophecies, they will cease; where there are tongues, they will be stilled; where there is knowledge, it will pass away.";
 
-<<<<<<< HEAD
 		std::optional l_result = ::FE::algorithm::string::find_the_first_within_range<var::ASCII>(l_string, algorithm::string::range{ 0, 17 }, "Love never fails.");
 		EXPECT_TRUE(l_result.has_value());
 
 		l_result = ::FE::algorithm::string::find_the_first_within_range<var::ASCII>(l_string, algorithm::string::range{ 0, 120 }, "will");
-=======
-		std::optional l_result = ::FE::algorithm::string::find_the_first_within_range<var::character>(l_string, algorithm::string::range{ 0, 17 }, "Love never fails.");
-		EXPECT_TRUE(l_result.has_value());
-
-		l_result = ::FE::algorithm::string::find_the_first_within_range<var::character>(l_string, algorithm::string::range{ 0, 120 }, "will");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 		EXPECT_TRUE(FE::algorithm::string::compare_ranged<char>(l_string, algorithm::string::range{ l_result->_begin, l_result->_end }, "will", algorithm::string::range{ 0, 4 }));
 	}
@@ -464,27 +414,16 @@ TEST(FE_algorithm_string, find_the_last_within_range)
 
 	{
 		const char* l_string = "Love is patient, love is kind. It does not envy, it does not boast, it is not proud. 5 It does not dishonor others, it is not self-seeking, it is not easily angered, it keeps no record of wrongs. 6 Love does not delight in evil but rejoices with the truth. 7 It always protects, always trusts, always hopes, always perseveres.\n";
-<<<<<<< HEAD
 		std::optional l_result = ::FE::algorithm::string::find_the_last_within_range<var::ASCII>(l_string, algorithm::string::range{ 0, 21 }, "love");
-=======
-		std::optional l_result = ::FE::algorithm::string::find_the_last_within_range<var::character>(l_string, algorithm::string::range{ 0, 21 }, "love");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		char l_substring[7] = "\0";
 		FE::algorithm::string::copy(l_substring, l_string + l_result->_begin, 4);
 		EXPECT_TRUE(FE::algorithm::string::compare<char>(l_substring, "love"));
 
 		l_string = "1 Corinthians 13:4-8\n";
-<<<<<<< HEAD
 		l_result = ::FE::algorithm::string::find_the_last_within_range<var::ASCII>(l_string, algorithm::string::range{ 0, 13 }, "9");
 		EXPECT_FALSE(l_result.has_value());
 
 		l_result = ::FE::algorithm::string::find_the_last_within_range<var::ASCII>(l_string, algorithm::string::range{ 2, 13 }, "i");
-=======
-		l_result = ::FE::algorithm::string::find_the_last_within_range<var::character>(l_string, algorithm::string::range{ 0, 13 }, "9");
-		EXPECT_FALSE(l_result.has_value());
-
-		l_result = ::FE::algorithm::string::find_the_last_within_range<var::character>(l_string, algorithm::string::range{ 2, 13 }, "i");
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		EXPECT_TRUE(l_result.has_value());
 		FE::algorithm::string::copy(l_substring, l_string + l_result->_begin, 1);
 

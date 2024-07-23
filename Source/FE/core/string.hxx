@@ -14,11 +14,7 @@
 
 #pragma warning(push)
 
-<<<<<<< HEAD
 #define _NULL_ESCAPE_SIZE_ 1
-=======
-#define _FE_NULL_ESCAPE_SIZE_ 1
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 
 
@@ -79,22 +75,14 @@ public:
     _CONSTEXPR20_ basic_string() noexcept : m_smart_string(), m_length() {}
     _CONSTEXPR23_ ~basic_string() noexcept {}
 
-<<<<<<< HEAD
     _CONSTEXPR20_ basic_string(const size_type count_p, const value_type value_p = null) noexcept
-=======
-    _CONSTEXPR20_ basic_string(const size_type count_p, const value_type value_p = _FE_NULL_) noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
         if(count_p == 0)
         {
             return;
         }
 
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<value_type[], Allocator>(count_p + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<value_type[], Allocator>(count_p + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = count_p;
         Traits::assign(this->m_smart_string.get(), count_p, value_p);
     }
@@ -110,11 +98,7 @@ public:
         }
 
         size_type l_input_string_length = other_p.m_length - position_p;
-<<<<<<< HEAD
         this->m_smart_string.reset(FE::resize_to{ l_input_string_length + _NULL_ESCAPE_SIZE_ });
-=======
-        this->m_smart_string.reset(FE::resize_to{ l_input_string_length + _FE_NULL_ESCAPE_SIZE_ });
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_smart_string.get();
@@ -136,11 +120,7 @@ public:
 
         size_type l_input_string_length = rvalue_p.m_length - position_p;
         FE_UNALIGNED_MEMMOVE(rvalue_p.m_smart_string.get() + position_p, rvalue_p.m_smart_string.get(), sizeof(CharT) * l_input_string_length);
-<<<<<<< HEAD
         rvalue_p.m_smart_string[l_input_string_length] = null;
-=======
-        rvalue_p.m_smart_string[l_input_string_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_smart_string.swap(rvalue_p.m_smart_string);
         this->m_length = l_input_string_length;
 
@@ -157,17 +137,10 @@ public:
             return;
         }
 
-<<<<<<< HEAD
         this->m_smart_string.reset(FE::resize_to{ count_p + _NULL_ESCAPE_SIZE_ });
         FE_UNALIGNED_MEMCPY(this->m_smart_string.get(), other_p.m_smart_string.get() + position_p, sizeof(CharT) * count_p);
         this->m_length = count_p;
         this->m_smart_string[count_p] = null;
-=======
-        this->m_smart_string.reset(FE::resize_to{ count_p + _FE_NULL_ESCAPE_SIZE_ });
-        FE_UNALIGNED_MEMCPY(this->m_smart_string.get(), other_p.m_smart_string.get() + position_p, sizeof(CharT) * count_p);
-        this->m_length = count_p;
-        this->m_smart_string[count_p] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
 
@@ -183,11 +156,7 @@ public:
         FE_UNALIGNED_MEMMOVE(rvalue_p.m_smart_string.get(), rvalue_p.m_smart_string.get() + position_p, sizeof(CharT) * count_p);
         this->m_smart_string.swap(rvalue_p.m_smart_string);
         this->m_length = count_p;
-<<<<<<< HEAD
         this->m_smart_string[count_p] = null;
-=======
-        this->m_smart_string[count_p] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     _CONSTEXPR20_ basic_string(const value_type* const string_p, const size_type count_p) noexcept 
@@ -199,11 +168,7 @@ public:
         {
             return;
         }
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<value_type[], Allocator>(count_p + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<value_type[], Allocator>(count_p + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = count_p;
 
         string_info<CharT> l_this_string_info;
@@ -222,11 +187,7 @@ public:
         {
             return;
         }
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_smart_string.get();
@@ -237,12 +198,9 @@ public:
 
     basic_string(std::nullptr_t) noexcept = delete;
 
-<<<<<<< HEAD
     _FORCE_INLINE_ const allocator_type& get_allocator() const noexcept { return this->m_smart_string.get_allocator(); }
     _FORCE_INLINE_ allocator_type& get_allocator() noexcept { return this->m_smart_string.get_allocator(); }
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     template<class InputIterator>
     _CONSTEXPR20_ basic_string(InputIterator first_p, InputIterator last_p) noexcept
     {
@@ -256,11 +214,7 @@ public:
         {
             return;
         }
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_smart_string.get();
@@ -300,11 +254,7 @@ public:
             return;
         }
         this->m_length = string_view_p.length();
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(this->m_length + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
         string_info<CharT> l_this_string_info;
         l_this_string_info._string_pointer = this->m_smart_string.get();
@@ -323,11 +273,7 @@ public:
 
         FE_ASSERT(position_p >= string_view_p.length(), "${%s@0}: The inserting position index value cannot be greater than the length of ${%s@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_POSITIONING), TO_STRING(string_view_p));
         
-<<<<<<< HEAD
         this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(count_p + _NULL_ESCAPE_SIZE_);
-=======
-        this->m_smart_string = FE::make_exclusive<CharT[], Allocator>(count_p + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = count_p;
 
         string_info<CharT> l_this_string_info;
@@ -382,20 +328,12 @@ public:
 
         if (this->m_smart_string.capacity() < l_input_string_length)
         {
-<<<<<<< HEAD
             this->reserve(l_input_string_length + _NULL_ESCAPE_SIZE_);
-=======
-            this->reserve(l_input_string_length + _FE_NULL_ESCAPE_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         }
 
         FE_UNALIGNED_MEMCPY(this->m_smart_string.get(), string_p, sizeof(CharT) * l_input_string_length);
         this->m_length = l_input_string_length;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
     _CONSTEXPR20_ basic_string& operator=(const value_type value_p) noexcept
@@ -403,11 +341,7 @@ public:
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
 
         this->m_smart_string[0] = value_p;
-<<<<<<< HEAD
         this->m_smart_string[1] = null;
-=======
-        this->m_smart_string[1] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = 1;
         return *this;
     }
@@ -551,11 +485,7 @@ public:
 
         algorithm::string::concatenate(this->m_smart_string.get(), this->capacity(), std::move(initializer_list_p));
         this->m_length = initializer_list_p.size();
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -584,34 +514,58 @@ public:
         return this->assign(string_p, input_string_range_p._begin, input_string_range_p._end);
     }
 
-
-    _NODISCARD_ _FORCE_INLINE_ CharT& operator[](index_t index_p) const noexcept
+    _NODISCARD_ _FORCE_INLINE_ const_reference operator[](index_t index_p) const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         FE_ASSERT(index_p >= this->m_smart_string.capacity(), "${%s@0}: ${%s@1} was ${%lu@2}, and the string capacity was ${%lu@3}", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(index_p), &index_p, &FE::buffer<size_type>::set_and_get(this->m_smart_string.capacity()));
-        return this->m_smart_string.get()[index_p];
+        return this->m_smart_string[index_p];
+    }
+    _NODISCARD_ _FORCE_INLINE_ reference operator[](index_t index_p) noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        FE_ASSERT(index_p >= this->m_smart_string.capacity(), "${%s@0}: ${%s@1} was ${%lu@2}, and the string capacity was ${%lu@3}", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(index_p), &index_p, &FE::buffer<size_type>::set_and_get(this->m_smart_string.capacity()));
+        return this->m_smart_string[index_p];
     }
 
-    _NODISCARD_ _FORCE_INLINE_ CharT& front() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ const_reference front() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return *(this->m_smart_string.get()); 
     }
-    _NODISCARD_ _FORCE_INLINE_ CharT& back() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ reference front() noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return *(this->m_smart_string.get()); 
+    }
+
+    _NODISCARD_ _FORCE_INLINE_ const_reference back() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return *((this->m_smart_string.get() + this->m_length) - 1); 
     }
-    _NODISCARD_ _FORCE_INLINE_ CharT* data() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ reference back() noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return *((this->m_smart_string.get() + this->m_length) - 1); 
+    }
+
+    _NODISCARD_ _FORCE_INLINE_ const_pointer data() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return this->m_smart_string.get(); 
     }
+    _NODISCARD_ _FORCE_INLINE_ pointer data() noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return this->m_smart_string.get(); 
+    }
+
     _NODISCARD_ _FORCE_INLINE_ const CharT* c_str() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return this->m_smart_string.get();
     }
+
     _NODISCARD_ _FORCE_INLINE_ operator basic_string_view<CharT>() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
@@ -623,16 +577,26 @@ public:
         return FE::ptr<CharT[]>(this->m_smart_string);
     }
 
-
-    _NODISCARD_ _FORCE_INLINE_ iterator begin() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ iterator begin() noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return iterator{this->m_smart_string.get()}; 
     }
-    _NODISCARD_ _FORCE_INLINE_ iterator end() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ iterator end()  noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return iterator{this->m_smart_string.get() + this->m_length}; 
+    }
+
+    _NODISCARD_ _FORCE_INLINE_ const_iterator begin() const noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return const_iterator{this->m_smart_string.get()}; 
+    }
+    _NODISCARD_ _FORCE_INLINE_ const_iterator end() const noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return const_iterator{this->m_smart_string.get() + this->m_length}; 
     }
 
     _NODISCARD_ _FORCE_INLINE_ const_iterator cbegin() const noexcept
@@ -646,15 +610,26 @@ public:
         return const_iterator{this->m_smart_string.get() + this->m_length};
     }
 
-    _NODISCARD_ _FORCE_INLINE_ reverse_iterator rbegin() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ reverse_iterator rbegin() noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return reverse_iterator{(this->m_smart_string.get() + this->m_length) - 1}; 
     }
-    _NODISCARD_ _FORCE_INLINE_ reverse_iterator rend() const noexcept
+    _NODISCARD_ _FORCE_INLINE_ reverse_iterator rend() noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return reverse_iterator{this->m_smart_string.get() - 1}; 
+    }
+
+    _NODISCARD_ _FORCE_INLINE_ const_reverse_iterator rbegin() const noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return const_reverse_iterator{(this->m_smart_string.get() + this->m_length) - 1}; 
+    }
+    _NODISCARD_ _FORCE_INLINE_ const_reverse_iterator rend() const noexcept
+    {
+        FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        return const_reverse_iterator{this->m_smart_string.get() - 1}; 
     }
 
     _NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
@@ -667,7 +642,6 @@ public:
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         return const_reverse_iterator{this->m_smart_string.get() - 1}; 
     }
-
 
     _NODISCARD_ _FORCE_INLINE_ boolean is_empty() const noexcept { return this->m_length == 0; }
     _NODISCARD_ _FORCE_INLINE_ length_type length() const noexcept { return this->m_length; }
@@ -685,11 +659,7 @@ public:
             return;
         }
 
-<<<<<<< HEAD
         this->m_smart_string.reset(FE::resize_to{ new_capacity_p + _NULL_ESCAPE_SIZE_});
-=======
-        this->m_smart_string.reset(FE::resize_to{ new_capacity_p + _FE_NULL_ESCAPE_SIZE_});
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     // if requested size is 5, then the acual size will be 6 including the null terminator.
@@ -710,11 +680,7 @@ public:
         FE_ASSERT(this->m_length == 0, "${%s@0}: Unable to shrink_to_fit() an empty string instance.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
 
-<<<<<<< HEAD
         this->m_smart_string.reset(FE::resize_to{ this->m_length + _NULL_ESCAPE_SIZE_ });
-=======
-        this->m_smart_string.reset(FE::resize_to{ this->m_length + _FE_NULL_ESCAPE_SIZE_ });
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
 
@@ -723,11 +689,7 @@ public:
         FE_ASSERT(this->m_length == 0, "${%s@0}: Unable to clear() an empty string instance.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
 
-<<<<<<< HEAD
         *(this->m_smart_string) = null;
-=======
-        *(this->m_smart_string) = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_length = 0;
     }   
 
@@ -898,11 +860,7 @@ public:
 
         this->m_smart_string[this->m_length] = value_p;
         ++this->m_length;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     _CONSTEXPR20_ CharT pop_back() noexcept
@@ -912,11 +870,7 @@ public:
 
         const CharT l_return_value = this->back();
         --this->m_length;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return l_return_value;
     }
 
@@ -1000,11 +954,7 @@ public:
         FE_ASSERT(input_begin_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(input_begin_p));
         FE_ASSERT(input_end_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(input_end_p));
         FE_ASSERT(input_begin_p >= input_end_p, "${%s@0}: input_position_p must not be greater than input_count_p.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
-<<<<<<< HEAD
         FE_ASSERT(static_cast<size_type>(input_end_p - input_begin_p) + this->m_length >= this->capacity(), "${%s@0}: input string range length exceeds string capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
-=======
-        FE_ASSERT((input_end_p - input_begin_p) + this->m_length >= this->capacity(), "${%s@0}: input string range length exceeds string capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
         if(input_begin_p == input_end_p)
         {
@@ -1016,11 +966,7 @@ public:
         l_this_string_info._capacity = this->m_smart_string.capacity();
 
         Traits::append(l_this_string_info, input_begin_p, input_end_p);
-<<<<<<< HEAD
         this->m_length += static_cast<size_type>(input_end_p - input_begin_p);
-=======
-        this->m_length += input_end_p - input_begin_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -1034,11 +980,7 @@ public:
 
         algorithm::string::concatenate(this->data() + this->m_length, this->capacity(), std::move(initializer_list_p));
         this->m_length += initializer_list_p.size();
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 #pragma warning(pop)
@@ -1079,14 +1021,9 @@ public:
         }
 
         this->m_length += other_p.m_length;
-<<<<<<< HEAD
         FE_ASSERT( this->m_length >= this->m_smart_string.capacity(), "FE::string overflowed: please reference 'basic_string& operator+=(const basic_string& other_p) noexcept'.");
         algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), other_p.m_smart_string.get(), other_p.m_length);
         this->m_smart_string[this->m_length] = null;
-=======
-        algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), other_p.m_smart_string.get(), other_p.m_length);
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -1099,16 +1036,10 @@ public:
             return *this;
         }
         length_type l_input_string_length = algorithm::string::length<CharT>(string_p);
-<<<<<<< HEAD
         FE_ASSERT( (this->m_length + l_input_string_length) >= this->m_smart_string.capacity(), "FE::string overflowed: please reference 'basic_string& operator+=(const basic_string& other_p) noexcept'.");
         algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), string_p, l_input_string_length);
         this->m_length += l_input_string_length;
         this->m_smart_string[this->m_length] = null;
-=======
-        algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), string_p, l_input_string_length);
-        this->m_length += l_input_string_length;
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -1116,16 +1047,10 @@ public:
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
 
-<<<<<<< HEAD
         FE_ASSERT( (this->m_length + 1) >= this->m_smart_string.capacity(), "FE::string overflowed: please reference 'basic_string& operator+=(const basic_string& other_p) noexcept'.");
         algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), &value_p, 1);
         this->m_length += 1;
         this->m_smart_string[this->m_length] = null;
-=======
-        algorithm::string::concatenate<CharT>(this->m_smart_string.get(), this->capacity(), &value_p, 1);
-        this->m_length += 1;
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         return *this;
     }
 
@@ -1257,11 +1182,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, other_p.m_smart_string.get(), other_p.m_length);
         this->m_length = (this->m_length + other_p.m_length) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1289,11 +1210,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, other_p.m_smart_string.get() + other_position_p, other_count_p);
         this->m_length = (this->m_length + other_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1316,11 +1233,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, string_p, input_count_p);
         this->m_length = (this->m_length + input_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1344,11 +1257,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, string_p, l_input_length);
         this->m_length = (this->m_length + l_input_length) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1367,11 +1276,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, value_p, input_count_p);
         this->m_length = (this->m_length + input_count_p) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1392,11 +1297,7 @@ public:
 
         Traits::replace(l_this_string_info, position_p, count_to_be_removed_p, std::move(initializer_list_p));
         this->m_length = (this->m_length + l_input_size) - count_to_be_removed_p;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1408,11 +1309,7 @@ public:
         FE_ASSERT(input_first_p > input_last_p, "${%s@0}: ${%s@1} must not be greater than ${%s@2}.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(input_first_p), TO_STRING(input_last_p));
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
  
-<<<<<<< HEAD
         size_type l_input_size = static_cast<size_type>(input_last_p - input_first_p);
-=======
-        size_type l_input_size = input_last_p - input_first_p;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         size_type l_this_count_to_replace = last_index_p - first_index_p;
 
         string_info<CharT> l_this_string_info;
@@ -1422,11 +1319,7 @@ public:
 
         Traits::replace(l_this_string_info, first_index_p, last_index_p, input_first_p, input_last_p);
         this->m_length = (this->m_length + l_input_size) - l_this_count_to_replace;
-<<<<<<< HEAD
         this->m_smart_string[this->m_length] = null;
-=======
-        this->m_smart_string[this->m_length] = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         FE_ASSERT(this->m_length > algorithm::string::length(this->m_smart_string.get()), "length integrity is broken: The replace() opertation failed due to undesired use.");
         return *this;
     }
@@ -1492,11 +1385,7 @@ public:
 	// if requested size is 5, then the acual size will be 6 including the null terminator.
     _CONSTEXPR20_ void resize(const size_type count_p) noexcept
     {
-<<<<<<< HEAD
         this->m_smart_string.reset(FE::resize_to{ count_p  + _NULL_ESCAPE_SIZE_ });
-=======
-        this->m_smart_string.reset(FE::resize_to{ count_p  + _FE_NULL_ESCAPE_SIZE_ });
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     _FORCE_INLINE_ void swap(basic_string& in_out_other_p) noexcept
@@ -1646,11 +1535,7 @@ public:
 };
 
 
-<<<<<<< HEAD
 using string = basic_string<var::ASCII>;
-=======
-using string = basic_string<var::character>;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 using ustring = basic_string<var::uchar>;
 using sstring = basic_string<var::schar>;
 using wstring = basic_string<var::wchar>;
@@ -1711,8 +1596,4 @@ struct is_string_class<FE::string32>
 END_NAMESPACE
 #pragma warning(pop)
 #endif
-<<<<<<< HEAD
 #undef _NULL_ESCAPE_SIZE_
-=======
-#undef _FE_NULL_ESCAPE_SIZE_
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948

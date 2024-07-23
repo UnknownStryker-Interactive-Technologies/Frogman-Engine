@@ -494,16 +494,6 @@ inline void shared_memory_object::priv_close()
 //!of exceptions
 class remove_shared_memory_on_destroy
 {
-<<<<<<< HEAD
-   const char * m_raw_name;
-   public:
-   remove_shared_memory_on_destroy(const char *name)
-      :  m_raw_name(name)
-   {}
-
-   ~remove_shared_memory_on_destroy()
-   {  shared_memory_object::remove(m_raw_name);  }
-=======
    const char * m_name;
    public:
    remove_shared_memory_on_destroy(const char *name)
@@ -512,7 +502,6 @@ class remove_shared_memory_on_destroy
 
    ~remove_shared_memory_on_destroy()
    {  shared_memory_object::remove(m_name);  }
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 #endif   //#ifndef BOOST_INTERPROCESS_DOXYGEN_INVOKED

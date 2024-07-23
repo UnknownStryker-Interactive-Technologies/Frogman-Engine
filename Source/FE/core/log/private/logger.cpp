@@ -23,17 +23,10 @@ BEGIN_NAMESPACE(FE::log)
 logger_base::logger_base() noexcept : m_file_logger(), m_file_guard(m_file_logger)
 {
     this->m_log_buffer.reserve(default_buffer_size);
-<<<<<<< HEAD
     std::memset(this->m_log_buffer.data(), null, this->m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
 
     this->m_directory_buffer.reserve(default_buffer_size);
     std::memset(this->m_directory_buffer.data(), null, _ALLOWED_DIRECTORY_LENGTH_ * sizeof(directory_char_t));
-=======
-    std::memset(this->m_log_buffer.data(), _FE_NULL_, this->m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
-
-    this->m_directory_buffer.reserve(default_buffer_size);
-    std::memset(this->m_directory_buffer.data(), _FE_NULL_, _ALLOWED_DIRECTORY_LENGTH_ * sizeof(directory_char_t));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
     this->set_root_directory((std::filesystem::current_path() / "Logs").c_str());
 }
@@ -96,11 +89,7 @@ void logger_base::cd(directory_char_t* folder_name_p) noexcept
         {
             ++l_reverse_iterator;
         }
-<<<<<<< HEAD
         *l_reverse_iterator = null;
-=======
-        *l_reverse_iterator = _FE_NULL_;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         this->m_directory_buffer = this->m_directory_buffer.c_str();
     }
         break;
@@ -165,28 +154,16 @@ fatal_error_logger_base::fatal_error_logger_base() noexcept : base_type()
 
 #else
 #ifdef _LINUX_X86_64_
-<<<<<<< HEAD
     var::ASCII l_current_local_time_buffer[FE::clock::current_local_time_buffer_size] = STRING(\0);
-=======
-    var::character l_current_local_time_buffer[FE::clock::current_local_time_buffer_size] = STRING(\0);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::strcpy(l_current_local_time_buffer, FE::clock::get_current_local_time());
 
     std::filesystem::path l_path_to_log_file = std::filesystem::path{ m_directory_buffer.c_str() } / l_current_local_time_buffer;
 
-<<<<<<< HEAD
     var::ASCII l_thread_id[FE::thread::max_thread_id_digit_length] = STRING(\0);
     std::snprintf(l_thread_id, FE::thread::max_thread_id_digit_length, STRING(%lu), FE::thread::this_thread_id()); // hashed thread-ids from std::hash are too long and hard to read 
 
     var::ASCII l_path_to_log_file_buffer[default_buffer_size - 1] = STRING(\0);
     FE::algorithm::string::concatenate<var::ASCII>
-=======
-    var::character l_thread_id[FE::thread::max_thread_id_digit_length] = STRING(\0);
-    std::snprintf(l_thread_id, FE::thread::max_thread_id_digit_length, STRING(%lu), FE::thread::this_thread_id()); // hashed thread-ids from std::hash are too long and hard to read 
-
-    var::character l_path_to_log_file_buffer[default_buffer_size - 1] = STRING(\0);
-    FE::algorithm::string::concatenate<var::character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     (
             l_path_to_log_file_buffer,
             default_buffer_size,
@@ -216,11 +193,7 @@ fatal_error_logger_base::~fatal_error_logger_base() noexcept
 {
 }
 
-<<<<<<< HEAD
 void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
-=======
-void fatal_error_logger_base::do_log(character* const message_p, character* const file_name_p, character* const function_name_p, uint32 line_p) noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     if (UNLIKELY(this->m_log_buffer.capacity() <= default_buffer_size)) _UNLIKELY_
     {
@@ -231,11 +204,7 @@ void fatal_error_logger_base::do_log(character* const message_p, character* cons
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
 
-<<<<<<< HEAD
     FE::algorithm::string::concatenate<var::ASCII>
-=======
-    FE::algorithm::string::concatenate<var::character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         (
             this->m_log_buffer.data(),
             default_buffer_size,
@@ -268,11 +237,8 @@ void fatal_error_logger_base::do_log(character* const message_p, character* cons
     std::cerr << l_stack_trace_dumps_string.data() << '\n';
 
     std::cerr << "\n-------------------------------------------------------- END OF RECORD -------------------------------------------------------\n";
-<<<<<<< HEAD
 
     this->m_file_logger.close();
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 
@@ -307,28 +273,16 @@ message_logger_base::message_logger_base() noexcept : base_type()
 
 #else
 #ifdef _LINUX_X86_64_
-<<<<<<< HEAD
     var::ASCII l_current_local_time_buffer[FE::clock::current_local_time_buffer_size] = "\0";
-=======
-    var::character l_current_local_time_buffer[FE::clock::current_local_time_buffer_size] = "\0";
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     std::strcpy(l_current_local_time_buffer, FE::clock::get_current_local_time());
 
     std::filesystem::path l_path_to_log_file = std::filesystem::path{ m_directory_buffer.c_str() } / l_current_local_time_buffer;
 
-<<<<<<< HEAD
     var::ASCII l_thread_id[FE::thread::max_thread_id_digit_length] = "\0";
     std::snprintf(l_thread_id, FE::thread::max_thread_id_digit_length, "%lu", FE::thread::this_thread_id()); // hashed thread-ids from std::hash are too long and hard to read 
 
     var::ASCII l_path_to_log_file_buffer[default_buffer_size - 1] = "\0";
     FE::algorithm::string::concatenate<var::ASCII>
-=======
-    var::character l_thread_id[FE::thread::max_thread_id_digit_length] = "\0";
-    std::snprintf(l_thread_id, FE::thread::max_thread_id_digit_length, "%lu", FE::thread::this_thread_id()); // hashed thread-ids from std::hash are too long and hard to read 
-
-    var::character l_path_to_log_file_buffer[default_buffer_size - 1] = "\0";
-    FE::algorithm::string::concatenate<var::character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         (
             l_path_to_log_file_buffer,
             default_buffer_size,
@@ -360,11 +314,7 @@ message_logger_base::~message_logger_base() noexcept
     std::cerr << "\n-------------------------------------------------- END OF LOG --------------------------------------------------\n\n";
 }
 
-<<<<<<< HEAD
 void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
-=======
-void message_logger_base::do_log(character* const message_p, character* const file_name_p, character* const function_name_p, uint32 line_p) noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
     if (UNLIKELY(this->m_log_buffer.capacity() <= default_buffer_size)) _UNLIKELY_
     {
@@ -375,11 +325,7 @@ void message_logger_base::do_log(character* const message_p, character* const fi
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
 
-<<<<<<< HEAD
     FE::algorithm::string::concatenate<var::ASCII>
-=======
-    FE::algorithm::string::concatenate<var::character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         (
             this->m_log_buffer.data(),
             default_buffer_size,
@@ -395,11 +341,7 @@ void message_logger_base::do_log(character* const message_p, character* const fi
 
     // re-calculate length
     this->m_log_buffer = this->m_log_buffer.c_str();
-<<<<<<< HEAD
     std::memset(this->m_log_buffer.data(), null, this->m_log_buffer.length() * sizeof(typename buffer_type::value_type));
-=======
-    std::memset(this->m_log_buffer.data(), _FE_NULL_, this->m_log_buffer.length() * sizeof(typename buffer_type::value_type));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 }
 
 END_NAMESPACE

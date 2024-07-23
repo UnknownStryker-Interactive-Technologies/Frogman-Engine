@@ -50,10 +50,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../FE/core/block_pool_allocator.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/block_pool.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/char_traits.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/clock.hpp
-<<<<<<< HEAD
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/do_once.hxx
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/fstream_guard.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/fstring.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/function.hxx
@@ -82,7 +79,6 @@ SET(FE_FRAMEWORK
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/game/object.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/game/private/object.cpp
 
-<<<<<<< HEAD
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/function.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/private/function.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/reflection.h
@@ -90,13 +86,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/property.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/private/property.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/type_info.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/private/type_info.cpp
-=======
-${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/function_table.hpp
-${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/private/function_table.cpp
-${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/variable_map.hpp
-${CMAKE_CURRENT_LIST_DIR}/../FE/framework/reflection/private/variable_map.cpp
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/framework.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/private/framework.cpp
@@ -108,13 +97,8 @@ ${CMAKE_CURRENT_LIST_DIR}/../FE/framework/private/framework.cpp
 IF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_ARCHITECTURE STREQUAL "x86-64")
     ENABLE_LANGUAGE(ASM-ATT)
     SET(FE_ASM
-<<<<<<< HEAD
     ${CMAKE_CURRENT_LIST_DIR}/../FE/experimental/asm/__x86_64_memcpy.h
     ${CMAKE_CURRENT_LIST_DIR}/../FE/experimental/asm/__x86_64_memcpy.asm
-=======
-    ${CMAKE_CURRENT_LIST_DIR}/../FE/asm/__x86_64_memcpy.h
-    ${CMAKE_CURRENT_LIST_DIR}/../FE/asm/__x86_64_memcpy.asm
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     )
 ENDIF()
 
@@ -151,13 +135,8 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-
     $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_serialization.a>
     )
 
-<<<<<<< HEAD
     #SET(FE_ASM ${CMAKE_CURRENT_LIST_DIR}/../../In-House/Libraries/FE.asm/lib/x86-64/linux/libFE-asm.a)
     #LINK_LIBRARIES(${FE_ASM})
-=======
-    SET(FE_ASM ${CMAKE_CURRENT_LIST_DIR}/../../In-House/Libraries/FE.asm/lib/x86-64/linux/libFE.asm.a)
-    LINK_LIBRARIES(${FE_ASM})
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     
 
 ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")

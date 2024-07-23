@@ -199,21 +199,6 @@ class name_filter : public test_tree_visitor {
                 m_kind  = SFK_ALL;
             else if( first_char( name ) == '*' && last_char( name ) == '*' ) {
                 m_kind  = SFK_SUBSTR;
-<<<<<<< HEAD
-                m_raw_name  = name.substr( 1, name.size()-1 );
-            }
-            else if( first_char( name ) == '*' ) {
-                m_kind  = SFK_TRAILING;
-                m_raw_name  = name.substr( 1 );
-            }
-            else if( last_char( name ) == '*' ) {
-                m_kind  = SFK_LEADING;
-                m_raw_name  = name.substr( 0, name.size()-1 );
-            }
-            else {
-                m_kind  = SFK_MATCH;
-                m_raw_name  = name;
-=======
                 m_name  = name.substr( 1, name.size()-1 );
             }
             else if( first_char( name ) == '*' ) {
@@ -227,7 +212,6 @@ class name_filter : public test_tree_visitor {
             else {
                 m_kind  = SFK_MATCH;
                 m_name  = name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
 
@@ -240,15 +224,6 @@ class name_filter : public test_tree_visitor {
             case SFK_ALL:
                 return true;
             case SFK_LEADING:
-<<<<<<< HEAD
-                return name.substr( 0, m_raw_name.size() ) == m_raw_name;
-            case SFK_TRAILING:
-                return name.size() >= m_raw_name.size() && name.substr( name.size() - m_raw_name.size() ) == m_raw_name;
-            case SFK_SUBSTR:
-                return name.find( m_raw_name ) != const_string::npos;
-            case SFK_MATCH:
-                return m_raw_name == tu.p_name.get();
-=======
                 return name.substr( 0, m_name.size() ) == m_name;
             case SFK_TRAILING:
                 return name.size() >= m_name.size() && name.substr( name.size() - m_name.size() ) == m_name;
@@ -256,17 +231,12 @@ class name_filter : public test_tree_visitor {
                 return name.find( m_name ) != const_string::npos;
             case SFK_MATCH:
                 return m_name == tu.p_name.get();
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             }
         }
         enum kind { SFK_ALL, SFK_LEADING, SFK_TRAILING, SFK_SUBSTR, SFK_MATCH };
 
         kind            m_kind;
-<<<<<<< HEAD
-        const_string    m_raw_name;
-=======
         const_string    m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     };
 
 public:

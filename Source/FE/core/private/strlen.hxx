@@ -15,24 +15,14 @@ namespace FE::internal
         FE_STATIC_ASSERT((sizeof(CharT) > sizeof(UTF32)), "Static assertion failure: failed to assert that the size of CharT must not be greater than the size of UTF32.");
         const CharT* l_iterator = str_p;
 
-<<<<<<< HEAD
         if (str_p == nullptr || *str_p == null)
-=======
-        if (str_p == nullptr || *str_p == _FE_NULL_)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         {
             return 0;
         }
 
-<<<<<<< HEAD
         while (*(++l_iterator) != null) {}
 
         return static_cast<uint64>(l_iterator - str_p);
-=======
-        while (*(++l_iterator) != _FE_NULL_) {}
-
-        return (l_iterator - str_p);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 }
 

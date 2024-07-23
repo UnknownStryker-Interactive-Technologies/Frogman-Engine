@@ -33,11 +33,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
     {
         if ((*string_format_p == '$') && (string_format_p[_OPEN_CURLY_BRACKET_] == '{') && (string_format_p[_FORMAT_SPECIFIER_PERCENT_] == '%'))
         {
-<<<<<<< HEAD
             std::memset(tl_s_buffer, null, _FORMAT_STRING_BUFFER_SIZE_);
-=======
-            std::memset(tl_s_buffer, _FE_NULL_, _FORMAT_STRING_BUFFER_SIZE_);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
             algorithm::utility::integral_info<var::uint32> l_index;
 
             if (string_format_p[4] == '@')

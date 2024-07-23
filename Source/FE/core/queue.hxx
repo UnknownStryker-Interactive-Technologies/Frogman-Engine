@@ -196,7 +196,6 @@ public:
 		return *(this->m_back_ptr - 1);
 	}
 
-<<<<<<< HEAD
 	_NODISCARD_ _FORCE_INLINE_ reference front() noexcept
 	{
 		return *this->m_front_ptr;
@@ -207,8 +206,6 @@ public:
 		return *(this->m_back_ptr - 1);
 	}
 
-=======
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	_NODISCARD_ _FORCE_INLINE_ boolean is_empty() const noexcept
 	{
 		return this->m_indirected_element_count == 0;

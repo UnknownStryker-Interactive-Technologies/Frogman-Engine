@@ -10,8 +10,6 @@
 #include <memory>
 
 
-
-
 #ifdef FE_ALIGNED_ALLOC
 	#error FE_ALIGNED_ALLOC is a reserved Frogman Engine macro function.
 #endif
@@ -51,20 +49,12 @@ enum struct HEAP_MEMORY_UTIL_INFO : FE::uint8
 	_TOTAL_PHYSICAL_MEMORY_SIZE = 3,
 	_TOTAL_PHYSICAL_MEMORY_UTIL = 4,
 
-<<<<<<< HEAD
 	_THIS_PROCESS_PHYSICAL_MEMORY_UTIL = 5/*,
-=======
-	_THIS_PROCESS_PHYSICAL_MEMORY_UTIL = 5,
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 	_LIBRARY_TOTAL_HEAP_UTIL_SIZE = 6,
 
 	_LIBRARY_HEAP_UTIL_SIZE_BY_THREAD_ID = 7,
-<<<<<<< HEAD
 	_LIBRARY_HEAP_UTIL_SIZE_BY_TYPE = 8*/
-=======
-	_LIBRARY_HEAP_UTIL_SIZE_BY_TYPE = 8
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 };
 
 enum struct SIZE_BYTE_UNIT : FE::uint8
@@ -187,11 +177,7 @@ public:
 		};
 		return l_data;
 #else
-<<<<<<< HEAD
 		memory_utilization l_null{ null };
-=======
-		memory_utilization l_null{ _FE_NULL_ };
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 		return l_null;
 #endif
 	}
@@ -203,11 +189,7 @@ public:
 		FE_ASSERT(l_result == nullptr, "${%s@0}: Failed to allocate memory from scalable_aligned_malloc()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 		FE_ASSERT((reinterpret_cast<uintptr>(l_result) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
 #ifndef _RELEASE_
-<<<<<<< HEAD
 		FE_ALIGNED_MEMSET(l_result, null, bytes_p);
-=======
-		FE_ALIGNED_MEMSET(l_result, _FE_NULL_, bytes_p);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #endif
 #ifdef _ENABLE_MEMORY_TRACKER_
 		allocator_base::__log_heap_memory_allocation<T>(bytes_p, l_result);
@@ -239,11 +221,7 @@ public:
 			l_realloc_result = (T*)FE_ALIGNED_ALLOC(new_bytes_p, Alignment::size);
 			FE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 	#ifndef _RELEASE_
-<<<<<<< HEAD
 			FE_ALIGNED_MEMSET(l_realloc_result, null, new_bytes_p);
-=======
-			FE_ALIGNED_MEMSET(l_realloc_result, _FE_NULL_, new_bytes_p);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	#endif
 			FE::memcpy<ADDRESS::_ALIGNED, ADDRESS::_ALIGNED>(l_realloc_result, new_bytes_p, ptr_to_memory_p, prev_bytes_p);
 			if (l_realloc_result != ptr_to_memory_p) _LIKELY_
@@ -256,11 +234,7 @@ public:
 		T* l_realloc_result = (T*)FE_ALIGNED_ALLOC(new_bytes_p, Alignment::size);
 		FE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 #ifndef _RELEASE_
-<<<<<<< HEAD
 		FE_ALIGNED_MEMSET(l_realloc_result, null, new_bytes_p);
-=======
-		FE_ALIGNED_MEMSET(l_realloc_result, _FE_NULL_, new_bytes_p);
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #endif
 		if (ptr_to_memory_p != nullptr)
 		{
@@ -286,4 +260,11 @@ public:
 };
 
 END_NAMESPACE
+
+void* operator new(std::size_t bytes_p);
+void* operator new[](std::size_t bytes_p);
+
+void operator delete(void* ptr_p) noexcept;
+void operator delete[](void* ptr_p) noexcept;
+
 #endif 

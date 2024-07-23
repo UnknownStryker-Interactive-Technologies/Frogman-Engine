@@ -2,15 +2,9 @@
 #define _FE_CORE_TYPE_TRAITS_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/macros/definitions.h>
-<<<<<<< HEAD
 #include <FE/core/log/log.h>
 #include <FE/core/types.hxx>
 #include <FE/core/private/strlen.hxx>
-=======
-#include <FE/core/types.hxx>
-#include <FE/core/private/strlen.hxx>
-#include <FE/core/log/log.h>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 // std
 #include <string>
@@ -42,11 +36,7 @@ struct is_c_style_constant_string
 };
 
 template<>
-<<<<<<< HEAD
 struct is_c_style_constant_string<ASCII*>
-=======
-struct is_c_style_constant_string<character*>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	_MAYBE_UNUSED_ static constexpr inline bool value = true;
 };
@@ -90,11 +80,7 @@ struct is_c_style_constant_string<UTF32*>
 };
 
 template<>
-<<<<<<< HEAD
 struct is_c_style_constant_string<ASCII[]>
-=======
-struct is_c_style_constant_string<character[]>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	_MAYBE_UNUSED_ static constexpr inline bool value = true;
 };
@@ -145,21 +131,13 @@ struct is_char
 };
 
 template<>
-<<<<<<< HEAD
 struct is_char<ASCII>
-=======
-struct is_char<character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	_MAYBE_UNUSED_ static constexpr inline bool value = true;
 };
 
 template<>
-<<<<<<< HEAD
 struct is_char<var::ASCII>
-=======
-struct is_char<var::character>
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 {
 	_MAYBE_UNUSED_ static constexpr inline bool value = true;
 };
@@ -375,7 +353,6 @@ struct is_string_class<std::u32string_view>
 	_MAYBE_UNUSED_ static constexpr inline bool value = true;
 };
 
-<<<<<<< HEAD
 
 template<typename T>
 struct is_const_reference
@@ -451,29 +428,6 @@ _FORCE_INLINE_ To forward_to(std::conditional_t< std::is_reference<From>::value,
 	}
 }
 
-=======
-#ifdef _FROGMAN_ENGINE_CORE_HAS_CXXABI_H_
-template<class String>
-_FORCE_INLINE_ String demangle_type_name(const char* mangled_name_p) noexcept
-{
-	FE_STATIC_ASSERT(std::is_class<String>::value == false, "Static Assertion failed: the template argument String must not be a string class type.");
-	
-	int l_result = 0;
-	char* const l_demangled_typename = abi::__cxa_demangle(mangled_name_p, nullptr, nullptr, &l_result);
-	FE_ASSERT((l_result != 0), "abi::__cxa_demangle() operation unsuccessful: abi::__cxa_demangle() returned the error code '${%d@0}'.\nNOTE:\n0: The demangling operation succeeded.\n-1: A memory allocation failiure occurred.\n-2: mangled_name is not a valid name under the C++ ABI mangling rules.\n-3: One of the arguments is invalid.", &l_result);
-	String l_buffer = l_demangled_typename; // This line of code never throws any exceptions. In fact, Frogman Engine does not like throwing exceptions, and it always adheres to fail-fast strategy.
-	free(l_demangled_typename);
-	return l_buffer;
-}
-#else
-template<class String>
-_FORCE_INLINE_ String demangle_type_name(const char* mangled_name_p) noexcept
-{
-	FE_STATIC_ASSERT(std::is_class<String>::value == false, "Static Assertion failed: the template argument String must not be a string class type.");
-	return mangled_name_p;
-}
-#endif
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 
 END_NAMESPACE
 #endif

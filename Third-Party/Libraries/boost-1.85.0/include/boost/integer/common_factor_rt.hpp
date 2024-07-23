@@ -6,17 +6,6 @@
 
 #ifndef BOOST_INTEGER_COMMON_FACTOR_RT_HPP
 #define BOOST_INTEGER_COMMON_FACTOR_RT_HPP
-<<<<<<< HEAD
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-/*
-/workspace/Frogman-Engine-Lab/Source/CMakeLists/../../Third-Party/Libraries/boost-1.85.0/include/boost/integer/common_factor_rt.hpp:273:20: error: implicit conversion changes signedness: 'int' to 'unsigned int' [-Werror,-Wsign-conversion]
-            return __builtin_ctzll(mask);
-            ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~
-*/
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #include <boost/assert.hpp>
 #include <boost/core/enable_if.hpp>
 
@@ -586,14 +575,4 @@ public:
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
-<<<<<<< HEAD
-#pragma clang diagnostic pop 
-/*
-/workspace/Frogman-Engine-Lab/Source/CMakeLists/../../Third-Party/Libraries/boost-1.85.0/include/boost/integer/common_factor_rt.hpp:273:20: error: implicit conversion changes signedness: 'int' to 'unsigned int' [-Werror,-Wsign-conversion]
-            return __builtin_ctzll(mask);
-            ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~
-*/
-=======
-
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 #endif  // BOOST_INTEGER_COMMON_FACTOR_RT_HPP

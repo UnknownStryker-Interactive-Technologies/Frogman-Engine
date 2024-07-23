@@ -84,11 +84,7 @@ private:
 
 private:
     //! Attribute name
-<<<<<<< HEAD
-    attribute_name m_raw_name;
-=======
     attribute_name m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     //! Formattr function
     formatter_function_type m_formatter;
     //! Attribute value visitor invoker
@@ -97,31 +93,19 @@ private:
 public:
     //! Initializing constructor
     format_date_time_terminal(attribute_name const& name, fallback_policy const& fallback, string_type const& format) :
-<<<<<<< HEAD
-        m_raw_name(name), m_formatter(formatter_generator::parse(format)), m_visitor_invoker(fallback)
-=======
         m_name(name), m_formatter(formatter_generator::parse(format)), m_visitor_invoker(fallback)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
     //! Copy constructor
     format_date_time_terminal(format_date_time_terminal const& that) :
-<<<<<<< HEAD
-        m_raw_name(that.m_raw_name), m_formatter(that.m_formatter), m_visitor_invoker(that.m_visitor_invoker)
-=======
         m_name(that.m_name), m_formatter(that.m_formatter), m_visitor_invoker(that.m_visitor_invoker)
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     {
     }
 
     //! Returns attribute name
     attribute_name get_name() const
     {
-<<<<<<< HEAD
-        return m_raw_name;
-=======
         return m_name;
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
     }
 
     //! Returns fallback policy
@@ -142,11 +126,7 @@ public:
     {
         string_type str;
         stream_type strm(str);
-<<<<<<< HEAD
-        m_visitor_invoker(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< formatter_function_type&, stream_type& >(m_formatter, strm));
-=======
         m_visitor_invoker(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< formatter_function_type&, stream_type& >(m_formatter, strm));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         strm.flush();
         return BOOST_LOG_NRVO_RESULT(str);
     }
@@ -157,11 +137,7 @@ public:
     {
         string_type str;
         stream_type strm(str);
-<<<<<<< HEAD
-        m_visitor_invoker(m_raw_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< formatter_function_type const&, stream_type& >(m_formatter, strm));
-=======
         m_visitor_invoker(m_name, fusion::at_c< 0 >(phoenix::env(ctx).args()), binder1st< formatter_function_type const&, stream_type& >(m_formatter, strm));
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
         strm.flush();
         return BOOST_LOG_NRVO_RESULT(str);
     }

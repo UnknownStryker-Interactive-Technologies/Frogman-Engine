@@ -117,7 +117,6 @@ public:
 		return this->is_expired();
 	}
 
-<<<<<<< HEAD
 	_FORCE_INLINE_ const_reference get() const noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failed: unable to get() a null reference");
@@ -125,9 +124,6 @@ public:
 	}
 
 	_FORCE_INLINE_ reference get() noexcept
-=======
-	_FORCE_INLINE_ reference get() const noexcept
->>>>>>> 19ea598051b1a13a8ae6b12b0447f686f156f948
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failed: unable to get() a null reference");
 		return *(static_cast<element_type*>(this->m_ref_block->_address));
