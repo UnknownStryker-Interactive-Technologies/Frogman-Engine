@@ -34,7 +34,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../FE/core/managed/private/ref_table.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/allocator_base.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/allocator_base.cpp
-${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/array_impl.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/clock.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/debug.h
 ${CMAKE_CURRENT_LIST_DIR}/../FE/core/private/hash.cpp

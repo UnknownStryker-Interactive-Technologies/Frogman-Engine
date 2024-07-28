@@ -6,6 +6,7 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/algorithm/math.h>
+#include <FE/core/math/vector.hpp>
 
 
 
@@ -87,4 +88,10 @@ TEST(math, is_nearly_equal)
 
 	EXPECT_TRUE(FE_IS_NEARLY_EQUAL(l_first, l_second, 0.0000'0000'0020));
 
+}
+
+
+TEST(math, vector3)
+{
+	
 }

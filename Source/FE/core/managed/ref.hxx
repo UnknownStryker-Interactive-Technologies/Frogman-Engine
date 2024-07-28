@@ -44,10 +44,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ ref(ref&& rvalue_p) noexcept : m_ref_block(rvalue_p.m_ref_block)
-	{
-		rvalue_p.m_ref_block = nullptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ ref(ref&& rvalue_p) noexcept : m_ref_block(rvalue_p.m_ref_block) { rvalue_p.m_ref_block = nullptr; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ ref(const FE::trackable<T>& trackable_p) noexcept : m_ref_block(trackable_p.m_ref_block)
 	{
@@ -97,147 +94,25 @@ public:
 		}
 	}
 
- 	_FORCE_INLINE_ void swap(ref& in_out_other_p) noexcept
-	{
-		this->m_ref_block = algorithm::utility::exchange<smart_ref_type>(in_out_other_p.m_ref_block, nullptr);
-	}
+ 	_FORCE_INLINE_ void swap(ref& in_out_other_p) noexcept { this->m_ref_block = algorithm::utility::exchange<smart_ref_type>(in_out_other_p.m_ref_block, nullptr); }
 
-	_FORCE_INLINE_ boolean is_expired() const noexcept
-	{
-		return (this->m_ref_block == nullptr) || (this->m_ref_block->_address == nullptr);
-	}
-
-	_FORCE_INLINE_ explicit operator bool() const noexcept
-	{
-		return !(this->is_expired());
-	}
-
-	_FORCE_INLINE_ boolean operator!() const noexcept
-	{
-		return this->is_expired();
-	}
+	_FORCE_INLINE_ boolean is_expired() const noexcept { return (this->m_ref_block == nullptr) || (this->m_ref_block->_address == nullptr); }
+	_FORCE_INLINE_ explicit operator bool() const noexcept { return !(this->is_expired()); }
+	_FORCE_INLINE_ boolean operator!() const noexcept { return this->is_expired(); }
 
 	_FORCE_INLINE_ const_reference get() const noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failed: unable to get() a null reference");
 		return *(static_cast<element_type*>(this->m_ref_block->_address));
 	}
-
 	_FORCE_INLINE_ reference get() noexcept
 	{
 		FE_ASSERT(this->is_expired() == true, "Assertion failed: unable to get() a null reference");
 		return *(static_cast<element_type*>(this->m_ref_block->_address));
 	}
 
-	_FORCE_INLINE_ boolean operator==(_MAYBE_UNUSED_ FE::null_t nullref_p) const noexcept
-	{
-		return this->is_expired();
-	}
-
-	_FORCE_INLINE_ boolean operator!=(_MAYBE_UNUSED_ FE::null_t nullref_p) const noexcept
-	{
-		return !(this->is_expired());
-	}
-
-	_FORCE_INLINE_ boolean operator==(const ref& other_p) const noexcept
-	{
-		return this->m_ref_block == other_p.m_ref_block;
-	}
-
-	_FORCE_INLINE_ boolean operator!=(const ref& other_p) const noexcept
-	{
-		return this->m_ref_block != other_p.m_ref_block;
-	}
-
-	_FORCE_INLINE_ boolean operator>(const ref& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr || other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_ref_block->_address > other_p.m_ref_block->_address;
-	}
-
-	_FORCE_INLINE_ boolean operator>=(const ref& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr || other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_ref_block->_address >= other_p.m_ref_block->_address;
-	}
-
-	_FORCE_INLINE_ boolean operator<(const ref& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr || other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_ref_block->_address < other_p.m_ref_block->_address;
-	}
-
-	_FORCE_INLINE_ boolean operator<=(const ref& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr || other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_ref_block->_address <= other_p.m_ref_block->_address;
-	}
-
-	_FORCE_INLINE_ boolean operator==(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) == other_p.m_data;
-	}
-
-	_FORCE_INLINE_ boolean operator!=(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) != other_p.m_data;
-	}
-
-	_FORCE_INLINE_ boolean operator>(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) > other_p.m_data;
-	}
-
-	_FORCE_INLINE_ boolean operator>=(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) >= other_p.m_data;
-	}
-
-	_FORCE_INLINE_ boolean operator<(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) < other_p.m_data;
-	}
-
-	_FORCE_INLINE_ boolean operator<=(const FE::trackable<T>& other_p) const noexcept
-	{
-		if(this->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return *(static_cast<element_type*>(this->m_ref_block->_address)) <= other_p.m_data;
-	}
+	_FORCE_INLINE_ boolean operator==(_MAYBE_UNUSED_ FE::null_t nullref_p) const noexcept { return this->is_expired(); }
+	_FORCE_INLINE_ boolean operator!=(_MAYBE_UNUSED_ FE::null_t nullref_p) const noexcept { return !(this->is_expired()); }
 
 private:
 	_FORCE_INLINE_ _CONSTEXPR20_ void __destruct() noexcept
@@ -245,9 +120,9 @@ private:
 		FE_ASSERT(this->m_ref_block == nullptr, "${%s@0}: The smart pointer was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_ERROR_NULLref));
 		--(this->m_ref_block->_ref_count);
 
-		if(this->m_ref_block->_address == nullptr && this->m_ref_block->_ref_count == 0)
+		if((this->m_ref_block->_address == nullptr) && (this->m_ref_block->_ref_count == 0))
 		{
-			internal::managed::ref_table::tl_s_ref_block_pool.template deallocate<ref_block_type>(this->m_ref_block);
+			delete this->m_ref_block;
 			this->m_ref_block = nullptr;
 		}
 	}

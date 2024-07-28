@@ -5,6 +5,9 @@
 #include <FE/core/memory.hxx>
 #include <FE/core/thread.hpp>
 
+// boost
+#include <boost/smart_ptr/intrusive_ptr.hpp>
+
 // std
 #include <cstdlib>
 #include <memory>
@@ -80,7 +83,41 @@ _FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexcept
 
 var::uint64 request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept;
 
+
+template<class Resource>
+class resource
+{
+	var::count_t m_ref_count = 0;
+
+public:
+	Resource _resource;
+
+    _FORCE_INLINE_ friend void intrusive_ptr_add_ref(resource* const resource_p) noexcept
+	{
+        ++(resource_p->m_ref_count);
+    }
+
+    _FORCE_INLINE_ friend void intrusive_ptr_release(resource* const resource_p) noexcept
+	{
+		--(resource_p->m_ref_count);
+        if (resource_p->m_ref_count == 0) 
+		{
+            delete resource_p;
+        }
+    }
+};
+
+template<class Resource>
+_FORCE_INLINE_ resource<Resource>* make_resource() noexcept
+{
+	return new resource<Resource>; // Note that the allocated memory address is always aligned by SIMD alignment requirement size.
+}
+
 END_NAMESPACE
+
+
+
+
 
 
 
@@ -252,9 +289,9 @@ public:
 	}
 
 	template<class Resource>
-	_FORCE_INLINE_ std::shared_ptr<Resource> get_default_resource() const noexcept
+	_FORCE_INLINE_ boost::intrusive_ptr<FE::resource<Resource>> get_default_allocator() const noexcept
 	{
-		thread_local static std::shared_ptr<Resource> tl_s_shared_resource = std::make_shared<Resource>();
+		thread_local static boost::intrusive_ptr<FE::resource<Resource>> tl_s_shared_resource = FE::make_resource<Resource>();
 		return tl_s_shared_resource;
 	} 
 };

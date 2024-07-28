@@ -2,7 +2,6 @@
 #define _FE_CORE_MANAGED_REF_TABLE_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
-#include <FE/core/block_pool.hxx>
 
 
 
@@ -34,29 +33,8 @@ template<typename T>
 struct ref_block
 {
 	T* _address = nullptr;
+	T* _end = nullptr;
 	var::count_t _ref_count = 0;
-};
-
-
-class ref_table 
-{
-	template<typename T, class Allocator>
-	friend class ::FE::exclusive_ptr;
-
-	template<typename T>
-	friend class ::FE::ptr;
-
-	template<typename T>
-	friend class ::FE::trackable;
-
-	template<typename T>
-	friend class ::FE::ref;
-	
-public:
-	static constexpr auto ref_table_page_capacity = 10000;
-
-private:
-	thread_local static FE::block_pool<sizeof(ref_block<void>), ref_table_page_capacity> tl_s_ref_block_pool;
 };
 
 

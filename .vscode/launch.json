@@ -4,14 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/FE.framework.reflection_test
     // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.pool/FE.core.pool_test
-    // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.managed/FE.core.managed_test
+    // 
+    // /Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.algorithm.math/FE.core.algorithm.math_test
     "version": "0.2.0",
     "configurations": [
         {
             "name": "Clang++ Debug",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.algorithm.string/FE.core.algorithm.string_test",
+            "program": "${workspaceFolder}/Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.core.managed/FE.core.managed_test",
             "args": [],
             "stopOnEntry": true,
             "cwd": "${workspaceFolder}",

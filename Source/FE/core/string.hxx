@@ -574,7 +574,7 @@ public:
     _NODISCARD_ _FORCE_INLINE_ operator ptr<CharT[]>() const noexcept
     {
         FE_ASSERT(this->m_smart_string.get() == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
-        return FE::ptr<CharT[]>(this->m_smart_string);
+        return FE::ptr<CharT>(this->m_smart_string);
     }
 
     _NODISCARD_ _FORCE_INLINE_ iterator begin() noexcept

@@ -248,7 +248,7 @@ public:
         FE_ASSERT(((in_out_string_p._length + input_count_p) - count_to_be_removed_p) > in_out_string_p._capacity, "${%s@0}: failed to replace.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY));
         FE_ASSERT(target_position_p > in_out_string_p._length, "${%s@0}: ${%s@1} must not be greater than ${%s@2}.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE), TO_STRING(target_position_p), TO_STRING(in_out_string_p._length));
         FE_ASSERT(count_to_be_removed_p == 0, "${%s@0}: ${%s@1} is zero.", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(count_to_be_removed_p));
-        FE_ASSERT(in_out_string_p._capacity <= (target_position_p + count_to_be_removed_p), "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_string.get()));
+        FE_ASSERT(in_out_string_p._capacity <= (target_position_p + count_to_be_removed_p), "${%s@0}: The string pointer was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 
         // move the string pointer to the target position
         in_out_string_p._string_pointer += target_position_p;

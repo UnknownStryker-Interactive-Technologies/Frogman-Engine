@@ -101,9 +101,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/D_RELEASE_;/D_MINSIZEREL_>")
 
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:/Od;/Ob0;/Ot;/Oy-;/MTd;/guard:cf;/sdl;/JMC>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/Ox;/Ob2;/Ot;/Oy-;/MT;/guard:cf;/sdl;/JMC>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/O2;/Ob2;/Ot;/Oy-;/MT;/guard:cf;/sdl;/JMC>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:/Ox;/Ob2;/Ot;/Oy;/MT>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/Ox;/Ob2;/Ot;/Oy;/MT>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/Os;/Ob2;/Ot;/Oy;/MT>")
 
 
 	ADD_LINK_OPTIONS(/MACHINE:X64 /INCREMENTAL:YES /PROFILE )
@@ -187,10 +187,10 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:-D_RELEASE_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-D_RELEASE_;-D_MINSIZEREL_>")
 
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:-g;-fno-inline-functions;-fno-unroll-loops;-fno-omit-frame-pointer;-O0>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-g;-finline-functions;-funroll-loops;-O3>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:-finline-functions;-funroll-loops;-fomit-frame-pointer;-O3>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-finline-functions;-funroll-loops;-fomit-frame-pointer;-Os>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:-O1;-fno-inline-functions;-fno-unroll-loops;-fno-omit-frame-pointer;-g>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-O3;-funroll-loops;-g>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:-O3;-funroll-loops;-fomit-frame-pointer>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-Os;-funroll-loops;-fomit-frame-pointer>")
 	
     
 	ADD_LINK_OPTIONS(-pthread -ldl)

@@ -71,7 +71,7 @@ public:
     ~pool() noexcept = default;
 
     pool(const pool&) noexcept = delete;
-    pool(pool&&) noexcept = delete;
+    pool(pool&& rvalue_p) noexcept : m_memory_pool( std::move(rvalue_p.m_memory_pool) ) {}
 
     pool& operator=(const pool&) noexcept = delete;
     pool& operator=(pool&&) noexcept = delete;

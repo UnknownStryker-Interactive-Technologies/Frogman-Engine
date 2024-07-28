@@ -31,30 +31,30 @@ public:
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 private:
-	std::shared_ptr<pool_type> m_pool;
+	boost::intrusive_ptr<FE::resource<pool_type>> m_pool;
 
 public:
-	_CONSTEXPR20_ new_delete_block_pool_allocator() noexcept : m_pool(base_type::get_default_resource<pool_type>()) {}
-	_CONSTEXPR20_ new_delete_block_pool_allocator(const std::shared_ptr<pool_type>& pool_p) noexcept : m_pool(pool_p) {}
+	_CONSTEXPR20_ new_delete_block_pool_allocator() noexcept : m_pool(base_type::get_default_allocator<pool_type>()) {}
+	_CONSTEXPR20_ new_delete_block_pool_allocator(const boost::intrusive_ptr<FE::resource<pool_type>>& pool_p) noexcept : m_pool(pool_p) {}
 	_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) {}
 	_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) {}
 	_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {};
 
 	template <typename U>
-	_CONSTEXPR20_ new_delete_block_pool_allocator(_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_resource< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
+	_CONSTEXPR20_ new_delete_block_pool_allocator(_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
 
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&) noexcept { return *this; };
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&&) noexcept { return *this; };
+	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&) noexcept = delete;
+	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&&) noexcept = delete;
 
 
 	_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
 	{
-		this->m_pool->create_pages(count_p);
+		this->m_pool->_resource.create_pages(count_p);
 	}
 
 	_FORCE_INLINE_ void shrink_to_fit() noexcept
 	{
-		this->m_pool->shrink_to_fit();
+		this->m_pool->_resource.shrink_to_fit();
 	}
 
 
@@ -62,7 +62,7 @@ public:
 	{
 		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 
-		return this->m_pool->allocate();
+		return this->m_pool->_resource.allocate();
 	}
 
 	_FORCE_INLINE_ void deallocate(pointer const pointer_p, _MAYBE_UNUSED_ const size_type count_p = 1) noexcept
@@ -70,7 +70,7 @@ public:
 		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 
-		this->m_pool->deallocate(pointer_p);
+		this->m_pool->_resource.deallocate(pointer_p);
 	}
 
 
@@ -109,31 +109,31 @@ public:
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 private:
-	std::shared_ptr<pool_type> m_pool;
+	boost::intrusive_ptr<FE::resource<pool_type>> m_pool;
 
 public:
-	_CONSTEXPR20_ block_pool_allocator() noexcept : m_pool(base_type::get_default_resource<pool_type>()) {}
-	_CONSTEXPR20_ block_pool_allocator(const std::shared_ptr<pool_type>& pool_p) noexcept : m_pool(pool_p) {}
+	_CONSTEXPR20_ block_pool_allocator() noexcept : m_pool(base_type::get_default_allocator<pool_type>()) {}
+	_CONSTEXPR20_ block_pool_allocator(const boost::intrusive_ptr<FE::resource<pool_type>>& pool_p) noexcept : m_pool(pool_p) {}
 	_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) {}
 	_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) {}
 
 	_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
 
 	template <typename U>
-	_CONSTEXPR20_ block_pool_allocator(_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_resource< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
+	_CONSTEXPR20_ block_pool_allocator(_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
 
-	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&) noexcept { return *this; };
-	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&&) noexcept { return *this; };
+	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&) noexcept = delete;
+	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&&) noexcept = delete;
 
 
 	_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
 	{
-		this->m_pool->create_pages(count_p);
+		this->m_pool->_resource.create_pages(count_p);
 	}
 
 	_FORCE_INLINE_ void shrink_to_fit() noexcept
 	{
-		this->m_pool->shrink_to_fit();
+		this->m_pool->_resource.shrink_to_fit();
 	}
 
 
@@ -141,7 +141,7 @@ public:
 	{
 		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 
-		return (T*)this->m_pool->template allocate<internal::pool::uninitialized_bytes<sizeof(T)>* const>();
+		return (T*)this->m_pool->_resource.template allocate<internal::pool::uninitialized_bytes<sizeof(T)>* const>();
 	}
 
 	_FORCE_INLINE_ void deallocate(pointer const pointer_p, _MAYBE_UNUSED_ const size_type count_p = 1) noexcept
@@ -149,7 +149,7 @@ public:
 		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 
-		this->m_pool->template deallocate<internal::pool::uninitialized_bytes<sizeof(T)>>(reinterpret_cast<internal::pool::uninitialized_bytes<sizeof(T)>* const>(pointer_p));
+		this->m_pool->_resource.template deallocate<internal::pool::uninitialized_bytes<sizeof(T)>>(reinterpret_cast<internal::pool::uninitialized_bytes<sizeof(T)>* const>(pointer_p));
 	}
 	
 

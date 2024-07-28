@@ -39,12 +39,11 @@ public:
 	using allocator_type = Allocator;
 
 private:
-	_NO_UNIQUE_ADDRESS_ mutable allocator_type m_allocator;
+	_NO_UNIQUE_ADDRESS_ allocator_type m_allocator;
 	pointer m_smart_ptr;
 
 public:
 	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr() noexcept : m_allocator(), m_smart_ptr() {}
-	
 	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const Allocator& allocator_p) noexcept : m_allocator(allocator_p), m_smart_ptr() {}
 	
 	_FORCE_INLINE_ _CONSTEXPR23_ ~unique_ptr() noexcept
@@ -56,31 +55,14 @@ public:
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const unique_ptr& other_p) noexcept = delete;
-
-	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(unique_ptr&& rvalue_p) noexcept : m_allocator(rvalue_p.m_allocator), m_smart_ptr(rvalue_p.m_smart_ptr)
-	{
-		rvalue_p.m_smart_ptr = nullptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const element_type& value_p, const Allocator& allocator_p) noexcept : m_allocator(allocator_p), m_smart_ptr(m_allocator.allocate(1))
-	{
-		*this->m_smart_ptr = value_p;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const element_type& value_p) noexcept : m_allocator(), m_smart_ptr(m_allocator.allocate(1))
-	{
-		*this->m_smart_ptr = value_p;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(unique_ptr&& rvalue_p) noexcept : m_allocator(rvalue_p.m_allocator), m_smart_ptr(rvalue_p.m_smart_ptr) { rvalue_p.m_smart_ptr = nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const element_type& value_p, const Allocator& allocator_p) noexcept : m_allocator(allocator_p), m_smart_ptr(m_allocator.allocate(1)) { *this->m_smart_ptr = value_p; }
+	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(const element_type& value_p) noexcept : m_allocator(), m_smart_ptr(m_allocator.allocate(1)) { *this->m_smart_ptr = value_p; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr& operator=(const unique_ptr& other_p) noexcept = delete;
 
 	_CONSTEXPR20_ unique_ptr& operator=(unique_ptr&& rvalue_p) noexcept
 	{
-		if (rvalue_p.m_smart_ptr == nullptr)
-		{
-			return *this;
-		}
-
 		if (this->m_smart_ptr != nullptr)
 		{
 			this->m_allocator.deallocate(this->m_smart_ptr, 1);
@@ -89,7 +71,6 @@ public:
 		this->m_smart_ptr = rvalue_p.m_smart_ptr;
 		rvalue_p.m_smart_ptr = nullptr;
 
-		this->m_allocator = rvalue_p.m_allocator;
 		return *this;
 	}
 
@@ -121,11 +102,7 @@ public:
 		this->m_allocator.deallocate(this->m_smart_ptr, 1);
 		this->m_smart_ptr = nullptr;
 	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ void reset(const element_type& value_p) noexcept
-	{
-		this->operator=(value_p);
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ void reset(const element_type& value_p) noexcept { this->operator=(value_p); }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ void swap(unique_ptr& in_out_other_p) noexcept
 	{
@@ -134,37 +111,21 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept
-	{
-		return this->m_allocator;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept { return this->m_allocator; }
+	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept { return this->m_allocator; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept
-	{
-		return this->m_allocator;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer get() const noexcept { return this->m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept { return this->m_smart_ptr; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer get() const noexcept
-	{
-		return this->m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept
-	{
-		return this->m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ explicit operator bool() const noexcept
-	{
-		return this->m_smart_ptr != nullptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ bool operator!() const noexcept
-	{
-		return this->m_smart_ptr == nullptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ explicit operator bool() const noexcept { return this->m_smart_ptr != nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ bool operator!() const noexcept { return this->m_smart_ptr == nullptr; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ const element_type& operator*() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return *this->m_smart_ptr;
+	}
+	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return *this->m_smart_ptr;
@@ -175,59 +136,21 @@ public:
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
 	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
-	{
-		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return *this->m_smart_ptr;
-	}
-
 	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
 	}
 
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(_MAYBE_UNUSED_ std::nullptr_t nullptr_p) const noexcept { return this->m_smart_ptr == nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(_MAYBE_UNUSED_ std::nullptr_t nullptr_p) const noexcept { return this->m_smart_ptr != nullptr; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(std::nullptr_t nullptr_p) const noexcept
-	{
-		return this->m_smart_ptr == nullptr_p;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(std::nullptr_t nullptr_p) const noexcept
-	{
-		return this->m_smart_ptr != nullptr_p;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr == other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr != other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr > other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr >= other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr < other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr <= other_p.m_smart_ptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr == other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr != other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr > other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr >= other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr < other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr <= other_p.m_smart_ptr; }
 };
 
 template <typename T,
@@ -250,10 +173,10 @@ template <typename T,
 	class Allocator = FE::new_delete_allocator<typename std::remove_all_extents<T>::type>
 #endif
 >
-_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<T, Allocator> make_unique(T value_p) noexcept
+_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ unique_ptr<T, Allocator> make_unique(const T& value_p) noexcept
 {
 	static_assert(std::is_array<T>::value == false, "static assertion failed: The typename T must not be an array type");
-	return unique_ptr<T, Allocator>( T( std::move(value_p) ) );
+	return unique_ptr<T, Allocator>( std::move(value_p) );
 }
 
 
@@ -272,7 +195,7 @@ public:
 	using allocator_type = Allocator;
 
 private:
-	_NO_UNIQUE_ADDRESS_ mutable allocator_type m_allocator;
+	_NO_UNIQUE_ADDRESS_ allocator_type m_allocator;
 	pointer m_smart_ptr;
 	pointer m_smart_ptr_end;
 
@@ -319,23 +242,25 @@ public:
 		this->m_smart_ptr_end = this->m_smart_ptr + array_size_p;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(std::initializer_list<element_type>&& values_p, const Allocator& allocator_p) noexcept : m_allocator(allocator_p), m_smart_ptr(m_allocator.allocate( values_p.size() )), m_smart_ptr_end(m_smart_ptr + values_p.size())
+	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(std::initializer_list<element_type>&& values_p, const Allocator& allocator_p) noexcept : m_allocator(allocator_p)
 	{
 		if (values_p.size() == 0)
 		{
 			return;
 		}
-
+ 		this->m_smart_ptr = this->m_allocator.allocate( values_p.size() );
+		this->m_smart_ptr_end = this->m_smart_ptr + values_p.size();
 		this->__copy_from_initializer_list(std::move(values_p));
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(std::initializer_list<element_type>&& values_p) noexcept : m_allocator(), m_smart_ptr(m_allocator.allocate( values_p.size() )), m_smart_ptr_end(m_smart_ptr + values_p.size())
+	_FORCE_INLINE_ _CONSTEXPR20_ unique_ptr(std::initializer_list<element_type>&& values_p) noexcept : m_allocator()
 	{
 		if (values_p.size() == 0)
 		{
 			return;
 		}
-
+ 		this->m_smart_ptr = this->m_allocator.allocate( values_p.size() );
+		this->m_smart_ptr_end = this->m_smart_ptr + values_p.size();
 		this->__copy_from_initializer_list(std::move(values_p));
 	}
 
@@ -401,20 +326,10 @@ public:
 		this->m_smart_ptr_end = nullptr;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ void reset(std::initializer_list<element_type>&& values_p) noexcept
-	{
-		this->operator=(std::move(values_p));
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ void reset(std::initializer_list<element_type>&& values_p) noexcept { this->operator=(std::move(values_p)); }
+	_FORCE_INLINE_ _CONSTEXPR20_ void reset(FE::resize_to&& new_array_size_p) noexcept { this->operator=(std::move(new_array_size_p)); }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ void reset(FE::resize_to&& new_array_size_p) noexcept
-	{
-		this->operator=(std::move(new_array_size_p));
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ size capacity() const noexcept
-	{
-		return this->m_smart_ptr_end - this->m_smart_ptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ size capacity() const noexcept { return this->m_smart_ptr_end - this->m_smart_ptr; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ void swap(unique_ptr& in_out_other_p) noexcept
 	{
@@ -423,43 +338,32 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept
-	{
-		return this->m_smart_ptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ pointer get() noexcept { return this->m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer get() const noexcept { return this->m_smart_ptr; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer get() const noexcept
-	{
-		return this->m_smart_ptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept { return this->m_allocator; }
+	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept { return this->m_allocator; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ const allocator_type& get_allocator() const noexcept
-	{
-		return this->m_allocator;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ allocator_type& get_allocator() noexcept
-	{
-		return this->m_allocator;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ explicit operator bool() const noexcept
-	{
-		return this->m_smart_ptr != nullptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ bool operator!() const noexcept
-	{
-		return this->m_smart_ptr == nullptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ explicit operator bool() const noexcept { return this->m_smart_ptr != nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ bool operator!() const noexcept { return this->m_smart_ptr == nullptr; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ const element_type& operator*() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return *this->m_smart_ptr;
 	}
+	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return *this->m_smart_ptr;
+	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ const_pointer operator->() const noexcept
+	{
+		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
+		return this->m_smart_ptr;
+	}
+	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 		return this->m_smart_ptr;
@@ -472,19 +376,6 @@ public:
 
 		return this->m_smart_ptr[index_p];
 	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator*() noexcept
-	{
-		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return *this->m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ pointer operator->() noexcept
-	{
-		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr;
-	}
-
 	_FORCE_INLINE_ _CONSTEXPR20_ element_type& operator[](index_t index_p) noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
@@ -493,46 +384,15 @@ public:
 		return this->m_smart_ptr[index_p];
 	}
 
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(_MAYBE_UNUSED_ std::nullptr_t nullptr_p) const noexcept { return this->m_smart_ptr == nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(_MAYBE_UNUSED_ std::nullptr_t nullptr_p) const noexcept { return this->m_smart_ptr != nullptr; }
 
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(std::nullptr_t nullptr_p) const noexcept
-	{
-		return this->m_smart_ptr == nullptr_p;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(std::nullptr_t nullptr_p) const noexcept
-	{
-		return this->m_smart_ptr != nullptr_p;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr == other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr != other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr > other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr >= other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr < other_p.m_smart_ptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const unique_ptr& other_p) const noexcept
-	{
-		return this->m_smart_ptr <= other_p.m_smart_ptr;
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr == other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr != other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr > other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr >= other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr < other_p.m_smart_ptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const unique_ptr& other_p) const noexcept { return this->m_smart_ptr <= other_p.m_smart_ptr; }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::iterator<FE::contiguous_iterator<element_type>> begin() noexcept
 	{
@@ -570,34 +430,34 @@ public:
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr;
+		return this->m_smart_ptr_end - 1;
 	}
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::reverse_iterator<FE::contiguous_iterator<element_type>> rend() noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr_end;
+		return this->m_smart_ptr - 1;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rbegin() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr;
+		return this->m_smart_ptr_end - 1;
 	}
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> rend() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr_end;
+		return this->m_smart_ptr - 1;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> crbegin() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr;
+		return this->m_smart_ptr_end - 1;
 	}
 	_FORCE_INLINE_ _CONSTEXPR20_ FE::const_reverse_iterator<FE::contiguous_iterator<element_type>> crend() const noexcept
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
-		return this->m_smart_ptr_end;
+		return this->m_smart_ptr - 1;
 	}
 
 private:
@@ -611,15 +471,13 @@ private:
 		}
 		else if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
 		{
-			count_t l_initializer_list_size = values_p.size();
-
-			pointer l_initializer_list_iterator = const_cast<pointer>(values_p.begin());
 			pointer l_smart_ptr_iterator = this->m_smart_ptr;
-			for (var::count_t i = 0; i < l_initializer_list_size; ++i)
+			const_pointer l_end = values_p.end();
+			
+			for (pointer iterator = const_cast<pointer>(values_p.begin()); iterator != l_end; ++iterator)
 			{
-				*l_smart_ptr_iterator = std::move(*l_initializer_list_iterator);
+				*l_smart_ptr_iterator = std::move(*iterator);
 				++l_smart_ptr_iterator;
-				++l_initializer_list_iterator;
 			}
 		}
 	}

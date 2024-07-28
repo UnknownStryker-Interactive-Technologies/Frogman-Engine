@@ -37,7 +37,6 @@ private:
 
 public:
 	_FORCE_INLINE_ _CONSTEXPR17_ trackable() noexcept : m_data(), m_ref_block() {}
-
 	_FORCE_INLINE_ _CONSTEXPR23_ ~trackable() noexcept
 	{
 		if (this->m_ref_block != nullptr)
@@ -46,32 +45,18 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ trackable(const trackable& other_p) noexcept : m_data(other_p.m_data), m_ref_block(internal::managed::ref_table::tl_s_ref_block_pool.template allocate<ref_block_type>())
-	{
-		this->m_ref_block->_address = &(this->m_data);
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ trackable(trackable&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_ref_block(rvalue_p.m_ref_block)
-	{
-		rvalue_p.m_ref_block = nullptr;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ trackable(const element_type& value_p) noexcept : m_data(value_p), m_ref_block(internal::managed::ref_table::tl_s_ref_block_pool.template allocate<ref_block_type>())
-	{
-		this->m_ref_block->_address = &(this->m_data);
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ trackable(const trackable& other_p) noexcept : m_data(other_p.m_data), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
+	_FORCE_INLINE_ _CONSTEXPR20_ trackable(trackable&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_ref_block(rvalue_p.m_ref_block) { rvalue_p.m_ref_block = nullptr; }
+	_FORCE_INLINE_ _CONSTEXPR20_ trackable(const element_type& value_p) noexcept : m_data(value_p), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
 
 	template<typename... Arguments>
-	_FORCE_INLINE_ _CONSTEXPR20_ trackable(Arguments&&... values_p) noexcept : m_data(std::forward<Arguments&&>(values_p)...), m_ref_block(internal::managed::ref_table::tl_s_ref_block_pool.template allocate<ref_block_type>())
-	{
-		this->m_ref_block->_address = &(this->m_data);
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ trackable(Arguments&&... values_p) noexcept : m_data(std::forward<Arguments&&>(values_p)...), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ trackable& operator=(const trackable& other_p) noexcept
 	{
 		if (this->m_ref_block == nullptr)
 		{
-			this->m_ref_block = internal::managed::ref_table::tl_s_ref_block_pool.template allocate<ref_block_type>();
+			this->m_ref_block = new ref_block_type;
 		}
 
 		this->m_data = other_p.m_data;
@@ -86,7 +71,9 @@ public:
 			this->__destruct();
 		}
 
-		this->m_ref_block = algorithm::utility::exchange<smart_ref_type>(rvalue_p.m_ref_block, nullptr);
+		this->m_ref_block = rvalue_p.m_ref_block;
+		rvalue_p.m_ref_block = nullptr;
+		
 		this->m_data = std::move(rvalue_p.m_data);
 		this->m_ref_block->_address = &(this->m_data);
 		return *this;
@@ -96,7 +83,7 @@ public:
 	{
 		if (this->m_ref_block == nullptr)
 		{
-			this->m_ref_block = internal::managed::ref_table::tl_s_ref_block_pool.template allocate<ref_block_type>();
+			this->m_ref_block = new ref_block_type;
 		}
 
 		this->m_data = value_p;
@@ -112,10 +99,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ void reset(const element_type& value_p) noexcept
-	{
-		*this->operator=(value_p);
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ void reset(const element_type& value_p) noexcept { *this->operator=(value_p); }
 
 	_FORCE_INLINE_ _CONSTEXPR20_ void swap(trackable& in_out_other_p) noexcept
 	{
@@ -124,99 +108,8 @@ public:
 		*this = std::move(l_tmp);
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ reference get() noexcept
-	{
-		return this->m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ const_reference get() const noexcept
-	{
-		return this->m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const trackable& other_p) const noexcept
-	{
-		return this->m_data == other_p.m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const trackable& other_p) const noexcept
-	{
-		return this->m_data != other_p.m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>(const trackable& other_p) const noexcept
-	{
-		return this->m_data > other_p.m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const trackable& other_p) const noexcept
-	{
-		return this->m_data >= other_p.m_data;
-	}
-	
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const trackable& other_p) const noexcept
-	{
-		return this->m_data < other_p.m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const trackable& other_p) const noexcept
-	{
-		return this->m_data <= other_p.m_data;
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator==(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data == *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data != *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
-
-	_FORCE_INLINE_ boolean operator>(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data > *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator>=(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data >= *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data < *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
-
-	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator<=(const ref<T>& other_p) const noexcept
-	{
-		if(other_p->m_ref_block == nullptr)
-		{
-			return false;
-		}
-		return this->m_data <= *(static_cast<element_type*>(other_p.m_ref_block->_address));
-	}
+	_FORCE_INLINE_ _CONSTEXPR20_ reference get() noexcept { return this->m_data; }
+	_FORCE_INLINE_ _CONSTEXPR20_ const_reference get() const noexcept { return this->m_data; }
 
 private:
 	_FORCE_INLINE_ _CONSTEXPR20_ void __destruct() noexcept
@@ -229,7 +122,7 @@ private:
 
 		if(this->m_ref_block->_ref_count == 0)
 		{
-			internal::managed::ref_table::tl_s_ref_block_pool.template deallocate<ref_block_type>(this->m_ref_block);
+			delete this->m_ref_block;
 			this->m_ref_block = nullptr;
 		}
 	}
