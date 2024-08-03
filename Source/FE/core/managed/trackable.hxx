@@ -3,7 +3,7 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
 #include <FE/core/algorithm/utility.hxx>
-#include <FE/core/managed/private/ref_table.hpp>
+#include <FE/core/managed/private/ref_block.hxx>
 
 
 
@@ -21,7 +21,7 @@ BEGIN_NAMESPACE(FE)
 template <typename T>
 class trackable final
 {
-	friend class ref<T>;
+	friend class ptr<T>;
 
 	using ref_block_type = internal::managed::ref_block<T>;
 	using smart_ref_type = ref_block_type*;

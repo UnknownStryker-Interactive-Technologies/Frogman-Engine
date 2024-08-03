@@ -6,7 +6,7 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/algorithm/math.h>
-#include <FE/core/math/vector.hpp>
+#include <FE/core/vector.hpp>
 
 
 

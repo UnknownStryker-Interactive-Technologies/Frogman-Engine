@@ -1,7 +1,6 @@
 ﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #define _CRT_SECURE_NO_WARNINGS
 #include <FE/core/clock.hpp>
-#include <FE/core/memory.hxx>
 #include <ctime>
 
 

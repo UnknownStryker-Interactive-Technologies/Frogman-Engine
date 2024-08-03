@@ -128,7 +128,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 l_memblock_info._address = iterator->_page_iterator;
                 iterator->_page_iterator += l_queried_allocation_size_in_bytes;
 
-                if constexpr (FE::is_trivial<U>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+                if constexpr (FE::is_trivial<U>::value == false)
                 {
                     for (var::index_t i = 0; i < size_p; ++i)
                     {
@@ -213,7 +213,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         {
             if ((l_list_iterator->_begin <= reinterpret_cast<var::byte*>(pointer_p)) && (reinterpret_cast<var::byte*>(pointer_p) < l_list_iterator->_end))
             {
-                if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+                if constexpr (FE::is_trivial<T>::value == false)
                 {
                     for (var::count_t i = 0; i < element_count_p; ++i)
                     {

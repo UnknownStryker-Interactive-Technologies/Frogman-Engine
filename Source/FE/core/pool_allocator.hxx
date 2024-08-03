@@ -170,7 +170,7 @@ public:
 
 		pointer l_result = this->m_pool->_resource.template allocate<value_type>(new_count_p);
 
-		if constexpr (is_trivial == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		if constexpr (is_trivial == false)
 		{
 			if (new_count_p > prev_count_p)
 			{

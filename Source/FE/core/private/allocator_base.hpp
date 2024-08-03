@@ -3,7 +3,7 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
 #include <FE/core/memory.hxx>
-#include <FE/core/thread.hpp>
+#include <FE/core/thread.h>
 
 // boost
 #include <boost/smart_ptr/intrusive_ptr.hpp>

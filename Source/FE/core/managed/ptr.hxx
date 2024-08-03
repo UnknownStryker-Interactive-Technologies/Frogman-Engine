@@ -3,7 +3,7 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/core/prerequisites.h>
 #include <FE/core/algorithm/utility.hxx>
-#include <FE/core/managed/private/ref_table.hpp>
+#include <FE/core/managed/private/ref_block.hxx>
 #include <FE/core/iterator.hxx>
 
 
@@ -66,6 +66,14 @@ public:
 		}
 	}
 
+	_FORCE_INLINE_ _CONSTEXPR20_ ptr(const FE::trackable<T>& trackable_p) noexcept : m_ref_block(trackable_p.m_ref_block)
+	{
+		if (this->m_ref_block != nullptr)
+		{
+			++(this->m_ref_block->_ref_count);
+		}
+	}
+
 	_FORCE_INLINE_ _CONSTEXPR20_ ptr& operator=(const ptr& other_p) noexcept
 	{
 		if (other_p.m_ref_block != nullptr)
@@ -95,6 +103,18 @@ public:
 		}
 		
 		this->m_ref_block = exclusive_ptr_p.m_ref_block;
+		++(this->m_ref_block->_ref_count);
+		return *this;
+	}
+
+	_FORCE_INLINE_ _CONSTEXPR20_ ptr& operator=(const FE::trackable<T>& trackable_p) noexcept
+	{
+		if (trackable_p.m_ref_block == nullptr)
+		{
+			return *this;
+		}
+		
+		this->m_ref_block = trackable_p.m_ref_block;
 		++(this->m_ref_block->_ref_count);
 		return *this;
 	}

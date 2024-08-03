@@ -155,7 +155,15 @@ public:
 	{
 		FE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
 
-		Traits::construct(*this->m_top_ptr, value_p);
+		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		{
+			new(this->m_top_ptr) T(value_p);
+		}
+		else if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_TRIVIAL)
+		{
+			*this->m_top_ptr = value_p;
+		}
+
 		++this->m_top_ptr;
 	}
 
@@ -168,7 +176,7 @@ public:
 
 		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
 		{
-			Traits::destruct(*this->m_top_ptr);
+			this->m_top_ptr->~T();
 		}
 
 		return l_return_value_buffer;

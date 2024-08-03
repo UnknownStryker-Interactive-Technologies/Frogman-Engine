@@ -5,7 +5,7 @@
 
 #include <FE/core/algorithm/utility.hxx>
 #include <FE/core/iterator.hxx>
-#include <FE/core/managed/private/ref_table.hpp>
+#include <FE/core/managed/private/ref_block.hxx>
 #include <FE/core/memory.hxx>
 
 #ifdef _MEMORY_POOL_FE_EXCLUSIVE_PTR_ALLOCATION_
@@ -96,26 +96,15 @@ public:
 			this->__destruct();
 		}
 
-		this->m_ref_block = algorithm::utility::exchange<smart_ptr_type>(rvalue_p.m_ref_block, nullptr);
+		this->m_ref_block = rvalue_p.m_ref_block;
+		rvalue_p.m_ref_block = nullptr;
 		return *this;
 	}
 
 	_FORCE_INLINE_ _CONSTEXPR20_ exclusive_ptr& operator=(const element_type& value_p) noexcept
 	{
-		if (this->m_ref_block != nullptr)
-		{
-			if(this->m_ref_block->_address == nullptr)
-			{
-				this->m_ref_block->_address = this->m_allocator.allocate(1);
-			}
-		}
-		else
-		{
-			this->m_ref_block = new ref_block_type;
-			this->m_ref_block->_address = this->m_allocator.allocate(1);
-		}
-
-		*static_cast<pointer>(this->m_ref_block->_address) = value_p;
+		this->__lazy_allocation();
+		*this->m_ref_block->_address = value_p;
 		return *this;
 	}
 
@@ -124,8 +113,9 @@ public:
 		pointer l_result = nullptr;
 		if (this->m_ref_block != nullptr)
 		{
-			l_result = static_cast<pointer>(this->m_ref_block->_address);
+			l_result = this->m_ref_block->_address;
 			this->m_ref_block->_address = nullptr;
+
 			if(this->m_ref_block->_ref_count == 0)
 			{
 				delete this->m_ref_block;
@@ -193,6 +183,20 @@ public:
 	_FORCE_INLINE_ _CONSTEXPR20_ boolean operator!=(const ptr<T>& other_p) const noexcept { return this->m_ref_block != other_p.m_ref_block; }
 
 private:
+
+	_FORCE_INLINE_ _CONSTEXPR20_ void __lazy_allocation() noexcept
+	{
+		if (this->m_ref_block == nullptr)
+		{
+			this->m_ref_block = new ref_block_type;
+			this->m_ref_block->_address = this->m_allocator.allocate(1);
+		}
+		else if(this->m_ref_block->_address == nullptr)
+		{
+			this->m_ref_block->_address = this->m_allocator.allocate(1);
+		}
+	}
+
 	_FORCE_INLINE_ _CONSTEXPR20_ void __destruct() noexcept
 	{	
 		FE_ASSERT(this->m_ref_block == nullptr, "${%s@0}: The smart pointer was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
@@ -295,7 +299,7 @@ public:
 		{
 			return;
 		}
-		FE_ASSERT(array_size_p == 0, "Assertion failed: the requested array size is zero.");
+
 		this->m_ref_block = new ref_block_type;
 		this->m_ref_block->_address = this->m_allocator.allocate(array_size_p);
 		this->m_ref_block->_end = this->m_ref_block->_address + array_size_p;
@@ -392,6 +396,7 @@ public:
 		{
 			l_result = this->m_ref_block->_address;
 			this->m_ref_block->_address = nullptr;
+
 			if(this->m_ref_block->_ref_count == 0)
 			{
 				delete this->m_ref_block;
@@ -553,11 +558,11 @@ private:
 	_CONSTEXPR20_ void __copy_from_initializer_list(std::initializer_list<element_type>&& values_p) noexcept
 	{
 		FE_ASSERT(this->m_ref_block == nullptr, "${%s@0}: The smart pointer was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
-		if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_TRIVIAL)
+		if constexpr (FE::is_trivial<T>::value == true)
 		{
 			FE::memcpy<allocator_type::is_address_aligned>(static_cast<pointer>(this->m_ref_block->_address), const_cast<pointer>(values_p.begin()), values_p.size() * sizeof(element_type));
 		}
-		else if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		else if constexpr (FE::is_trivial<T>::value == false)
 		{
 			pointer l_smart_ptr_iterator = this->m_ref_block->_address;
 			const_pointer l_end = values_p.end();

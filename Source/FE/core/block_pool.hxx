@@ -123,7 +123,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 #pragma clang diagnostic pop
             #endif
 
-                if constexpr (FE::is_trivial<U>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+                if constexpr (FE::is_trivial<U>::value == false)
                 {
                     new(l_allocation_result) U();
                 }
@@ -149,7 +149,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         {
             if ((l_list_iterator->_begin <= l_to_be_freed) && (l_to_be_freed < l_list_iterator->_end))
             {
-                if constexpr (FE::is_trivial<U>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+                if constexpr (FE::is_trivial<U>::value == false)
                 {
                     pointer_p->~U();
                 }

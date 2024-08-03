@@ -16,7 +16,7 @@ BEGIN_NAMESPACE(FE::algorithm::string)
 
 
 template<typename CharT, ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED, ADDRESS SourceAddressAlignment = ADDRESS::_NOT_ALIGNED>
-_REGISTER_CALL_ void copy(CharT* const out_dest_p, const CharT* const source_p, capacity_t count_p) noexcept
+_FORCE_INLINE_ void copy(CharT* const out_dest_p, const CharT* const source_p, capacity_t count_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "CharT is not a valid character type");
     FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is ${%p@2}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p), nullptr);

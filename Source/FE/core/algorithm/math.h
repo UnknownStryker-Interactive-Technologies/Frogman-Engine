@@ -107,6 +107,8 @@
 #endif
 #define FE_CLAMP(value, min, max) ((min > value) ? min : ((value > max) ? max : value))
 
+// std for std::numeric_limits<T>::epsilon()
+#include <limits> 
 #ifdef FE_IS_NEARLY_EQUAL
 #error FE_IS_NEARLY_EQUAL is a reserved Frogman Engine macro keyword.
 #endif

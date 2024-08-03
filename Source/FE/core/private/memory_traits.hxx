@@ -11,7 +11,7 @@
 BEGIN_NAMESPACE(FE::internal)
 
 
-template<typename T, ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED, ADDRESS SourceAddressAlignment = ADDRESS::_NOT_ALIGNED, TYPE_TRIVIALITY IsTrivial = FE::is_trivial<T>::value>
+template<typename T, ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED, ADDRESS SourceAddressAlignment = ADDRESS::_NOT_ALIGNED, TYPE_TRIVIALITY IsTrivial = static_cast<TYPE_TRIVIALITY>(FE::is_trivial<T>::value)>
 class memory_traits;
 
 template<typename T, ADDRESS DestAddressAlignment, ADDRESS SourceAddressAlignment>
@@ -22,15 +22,6 @@ public:
 
 	_MAYBE_UNUSED_ static constexpr inline TYPE_TRIVIALITY is_trivial = TYPE_TRIVIALITY::_TRIVIAL;
 
-
-	_FORCE_INLINE_ static void construct(_MAYBE_UNUSED_ T& out_dest_p) noexcept
-	{
-	}
-
-	_FORCE_INLINE_ static void construct(T& out_dest_p, T value_p) noexcept
-	{
-		out_dest_p = std::move(value_p);
-	}
 
 	template<class Iterator>
 	_FORCE_INLINE_ static void construct(Iterator in_out_dest_first_p, Iterator in_out_dest_last_p, const T& value_p) noexcept
@@ -156,20 +147,6 @@ public:
 		memory_traits<T>::template copy_construct<Iterator>(out_dest_p, source_p, count_to_copy_p);
 	}
 
-
-	_FORCE_INLINE_ static void destruct(_MAYBE_UNUSED_ T& out_dest_p) noexcept
-	{
-		out_dest_p = T();
-	}
-
-	template<class Iterator>
-	_FORCE_INLINE_ static void destruct(_MAYBE_UNUSED_ Iterator in_out_dest_first_p, _MAYBE_UNUSED_ Iterator in_out_dest_last_p) noexcept
-	{
-		FE_ASSERT(in_out_dest_first_p > in_out_dest_last_p, "${%s@0}: The begin iterator ${%s@1} must be pointing at the first element of a container.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_POSITIONING), TO_STRING(in_out_dest_first_p));
-
-	}
-
-
 	template<class Iterator, class InputIterator>
 	_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
 	{
@@ -235,20 +212,6 @@ class memory_traits<T, DestAddressAlignment, SourceAddressAlignment, TYPE_TRIVIA
 public:
 	_MAYBE_UNUSED_ static constexpr inline TYPE_TRIVIALITY is_trivial = TYPE_TRIVIALITY::_NOT_TRIVIAL;
 	using value_type = T;
-
-	_FORCE_INLINE_ static void construct(_MAYBE_UNUSED_ T& out_dest_p) noexcept
-	{
-		static_assert(std::is_constructible<T>::value == true, "static assertion failed: The typename T must be copy constructible.");
-
-		new(&out_dest_p) T();
-	}
-
-	_FORCE_INLINE_ static void construct(T& out_dest_p, T value_p) noexcept
-	{
-		static_assert(std::is_constructible<T>::value == true, "static assertion failed: The typename T must be copy constructible.");
-
-		new(&out_dest_p) T(std::move(value_p));
-	}
 
 	template<class Iterator>
 	_FORCE_INLINE_ static void construct(Iterator in_out_dest_first_p, Iterator in_out_dest_last_p, const T& value_p) noexcept
@@ -362,13 +325,6 @@ public:
 			++out_dest_p;
 			++source_p;
 		}
-	}
-
-
-	_FORCE_INLINE_ static void destruct(_MAYBE_UNUSED_ T& out_dest_p) noexcept
-	{
-		static_assert(std::is_destructible<T>::value == true, "static assertion failed: The typename T must be destructible.");
-		out_dest_p.~T();
 	}
 
 	template<class Iterator>

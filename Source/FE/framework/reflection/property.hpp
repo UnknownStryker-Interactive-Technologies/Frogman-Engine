@@ -17,6 +17,7 @@
 
 // std
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <mutex>
 #include <shared_mutex>
@@ -158,7 +159,7 @@ public:
 		FE_ASSERT((property_name_p == nullptr) || (*property_name_p == null), "Assertion failure: property name cannot be null.");
 
 		property_meta_data l_property_meta_data;
-		l_property_meta_data._is_trivial = FE::is_trivial<T>::value;
+		l_property_meta_data._is_trivial = static_cast<TYPE_TRIVIALITY>(FE::is_trivial<T>::value);
 		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
 		l_property_meta_data._total_size = sizeof(T);
 		l_property_meta_data._name = property_name_p;
@@ -181,7 +182,7 @@ public:
 			FE::framework::reflection::function::register_task< FE::c_style_task<void(T*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
 		}
 
-		if constexpr ((std::is_array<T>::value == true) && (FE::is_trivial<T>::value == TYPE_TRIVIALITY::_NOT_TRIVIAL))
+		if constexpr ((std::is_array<T>::value == true) && (FE::is_trivial<T>::value == false))
 		{
 			count_t l_array_size = l_property_meta_data._total_size / sizeof( std::remove_extent_t< std::remove_pointer_t<T> > );
 

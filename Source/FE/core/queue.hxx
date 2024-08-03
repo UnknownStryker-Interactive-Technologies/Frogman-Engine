@@ -138,7 +138,15 @@ public:
 			FE_ASSERT(this->m_back_ptr >= this->m_front_ptr, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
 		}
 
-		Traits::construct(*this->m_back_ptr, value_p);
+		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		{
+			new(this->m_back_ptr) T(value_p);
+		}
+		else if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_TRIVIAL)
+		{
+			*this->m_back_ptr = value_p;
+		}
+		
 		++this->m_back_ptr;
 		++this->m_indirected_element_count;
 	}
@@ -155,7 +163,7 @@ public:
 
 		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
 		{
-			Traits::destruct(*this->m_front_ptr);
+			this->m_front_ptr->~T();
 		}
 
 		++this->m_front_ptr;

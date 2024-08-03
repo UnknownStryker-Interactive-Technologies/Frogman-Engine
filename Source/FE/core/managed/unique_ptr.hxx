@@ -465,11 +465,11 @@ private:
 	{
 		FE_ASSERT(this->m_smart_ptr == nullptr, "${%s@0}: ${%s@1} was nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_smart_ptr));
 
-		if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_TRIVIAL)
+		if constexpr (FE::is_trivial<T>::value == true)
 		{
 			FE::memcpy<allocator_type::is_address_aligned>(this->m_smart_ptr, const_cast<pointer>(values_p.begin()), values_p.size() * sizeof(element_type));
 		}
-		else if constexpr (FE::is_trivial<T>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		else if constexpr (FE::is_trivial<T>::value == false)
 		{
 			pointer l_smart_ptr_iterator = this->m_smart_ptr;
 			const_pointer l_end = values_p.end();

@@ -66,7 +66,7 @@ int main()
     assert(FE::is_boolean<FE::boolean>::value == true);
     assert(FE::is_primitive<FE::float64>::value == true);
     assert(FE::is_numeric<FE::int64>::value == true);
-    assert(FE::is_trivial<std::string>::value == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL);
+    assert(FE::is_trivial<std::string>::value == false);
     assert(FE::is_string_class<std::string_view>::value == true);
     assert(FE::has_base_type<int>::value == false);
 

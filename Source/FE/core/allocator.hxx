@@ -28,7 +28,7 @@ public:
 	using difference_type = var::ptrdiff;
 	using alignment_type = Alignment;
 
-	_MAYBE_UNUSED_ static constexpr inline TYPE_TRIVIALITY is_trivial = FE::is_trivial<value_type>::value;
+	_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 private:
@@ -64,7 +64,7 @@ public:
 
 		pointer const l_result = new T[new_count_p];
 
-		if constexpr (is_trivial == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		if constexpr (is_trivial == false)
 		{
 			if (new_count_p > prev_count_p)
 			{
@@ -135,7 +135,7 @@ public:
 	using difference_type = var::ptrdiff;
 	using alignment_type = Alignment;
 
-	_MAYBE_UNUSED_ static constexpr inline TYPE_TRIVIALITY is_trivial = FE::is_trivial<value_type>::value;
+	_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 
@@ -163,7 +163,7 @@ public:
 
 		pointer const l_result = base_type::trackable_realloc<value_type, Alignment>(pointer_p, prev_count_p * sizeof(value_type), new_count_p * sizeof(value_type));
 		
-		if constexpr (is_trivial == FE::TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		if constexpr (is_trivial == false)
 		{
 			if(pointer_p == l_result)
 			{

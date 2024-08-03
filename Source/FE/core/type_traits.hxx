@@ -278,7 +278,7 @@ enum struct TYPE_TRIVIALITY : boolean
 template <typename T>
 struct is_trivial
 {
-	_MAYBE_UNUSED_ static constexpr inline TYPE_TRIVIALITY value = static_cast<TYPE_TRIVIALITY>(std::is_trivially_constructible<T>::value && std::is_trivially_destructible<T>::value);
+	_MAYBE_UNUSED_ static constexpr inline bool value = std::is_trivially_constructible<T>::value && std::is_trivially_destructible<T>::value;
 };
 
 
@@ -399,7 +399,7 @@ struct has_iterator<T, std::void_t<typename T::iterator>> : std::true_type {};
 template<typename T>
 struct is_serializable
 {
-	_MAYBE_UNUSED_ static constexpr inline bool value = ((FE::is_trivial<T>::value == TYPE_TRIVIALITY::_TRIVIAL) || (FE::is_reflectable<T>::value == true) || (FE::has_iterator<T>::value == true));
+	_MAYBE_UNUSED_ static constexpr inline bool value = ((FE::is_trivial<T>::value == true) || (FE::is_reflectable<T>::value == true) || (FE::has_iterator<T>::value == true));
 };
 
 

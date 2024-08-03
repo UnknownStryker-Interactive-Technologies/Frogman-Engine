@@ -384,7 +384,7 @@ TEST(FE_smart_refs, never_dangling_reference)
 {
 	using namespace FE;
 
-	FE::ref<std::string> l_smart_ref;
+	FE::ptr<std::string> l_smart_ref;
 	EXPECT_TRUE(l_smart_ref.is_expired()); // The reference is pointing to nothing.
 	{
 		FE::trackable<std::string> l_object = "Never dangle!";
@@ -392,7 +392,7 @@ TEST(FE_smart_refs, never_dangling_reference)
 		l_smart_ref = l_object;
 		if (l_smart_ref.is_expired() == false)
 		{
-			auto& l_raw = l_smart_ref.get();
+			auto& l_raw = *l_smart_ref.get();
 			(void)l_raw;
 		}
 	}
@@ -645,10 +645,10 @@ void FE_smart_refs(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-		FE::ref<var::uint32> l_safe_ref = l_trackable_uint32;
+		FE::ptr<var::uint32> l_safe_ref = l_trackable_uint32;
 		if (l_safe_ref.is_expired() == false)
 		{
-			auto& l_ref = l_safe_ref.get();
+			auto& l_ref = *l_safe_ref.get();
 			(void)l_ref;
 		}
 	}

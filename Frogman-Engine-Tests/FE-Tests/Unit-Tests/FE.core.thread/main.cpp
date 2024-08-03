@@ -5,7 +5,6 @@
 #include <FE/core/prerequisites.h>
 #include <FE/core/function.hxx>
 #include <FE/experimental/task_queue.hxx>
-#include <FE/core/thread.hpp>
 using namespace FE;
 
 #ifdef _LINUX_X86_64_
@@ -107,35 +106,6 @@ int32 int_fn(int32 param_p) noexcept
 	EXPECT_EQ(param_p, 0);
 	return param_p;
 }
-/*
-TEST(thread, fork_and_join)
-{
-	FE::thread l_thread;
-	{
-		FE::c_style_task<void(int32)> l_void_fn;
-		l_void_fn._function = void_fn;
-
-		FE::arguments<var::int32> l_arg0;
-		l_arg0._first = 0;
-		l_thread.fork(&l_void_fn, &l_arg0);
-		l_thread.join();
-	}
-
-	{
-		FE::c_style_task<int32(int32)> l_int_fn;
-		l_int_fn._function = int_fn;
-		
-		FE::arguments<var::int32> l_arg0;
-		l_arg0._first = 0;
-		
-		std::any& l_result = l_thread.fork(&l_int_fn, &l_arg0);
-		l_thread.join();
-
-		EXPECT_EQ( std::any_cast<int32>(l_result) , 0);
-	}
-}*/
-
-
 
 
 TEST(function, call_by_value)
