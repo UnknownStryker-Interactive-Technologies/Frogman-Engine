@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\ONEDRIVE\문서\GITHUB\FROGMAN-ENGINE\SDK\CORE\TESTS\UNIT-TESTS\SOLUTION\CMAKEFILES\C755E728530A9FB9D0E9828A5835896B\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/FE_UNIT_TEST.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

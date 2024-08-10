@@ -1,6 +1,0 @@
-*.obj
-*.ipch
-*.idb
-*.pdb
-
-build/
