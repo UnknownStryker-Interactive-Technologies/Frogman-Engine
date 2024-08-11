@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\Solution\x64\Debug\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.algorithm.math\Debug\FE.algorithm.math_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.algorithm.string\Debug\FE.algorithm.string_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.algorithm.utility\Debug\FE.algorithm.utility_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.containers\Debug\FE.containers_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.hash\Debug\FE.hash_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.iterator\Debug\FE.iterator_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.log\Debug\FE.log_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.managed\Debug\FE.managed_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.memory\Debug\FE.memory_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.pool\Debug\FE.pool_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.string\Debug\FE.string_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.string_view\Debug\FE.string_view_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.task\Debug\FE.task_test.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\Solution\x64\Debug\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

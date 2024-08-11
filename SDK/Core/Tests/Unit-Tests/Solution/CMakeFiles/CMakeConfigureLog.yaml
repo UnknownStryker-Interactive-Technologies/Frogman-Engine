@@ -25,7 +25,7 @@ events:
       The output was:
       0
       MSBuild version 17.9.8+b34f75857 for .NET Framework
-      Build started 2024-08-10 오후 5:02:51.
+      Build started 2024-08-11 오후 12:47:56.
       
       Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\3.29.6\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -53,7 +53,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.57
+      Time Elapsed 00:00:00.71
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -72,8 +72,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-9o8juv"
-      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-9o8juv"
+      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-5ek0xi"
+      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-5ek0xi"
     cmakeVariables:
       CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang-scan-deps.exe"
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
@@ -84,36 +84,36 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-9o8juv'
+        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-5ek0xi'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_db1de.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_8e61a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.9.8+b34f75857 for .NET Framework
-        Build started 2024-08-10 오후 5:02:52.
+        Build started 2024-08-11 오후 12:47:57.
         
-        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-9o8juv\\cmTC_db1de.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-5ek0xi\\cmTC_8e61a.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_db1de.dir\\Debug\\".
+          Creating directory "cmTC_8e61a.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-9o8juv\\Debug\\".
-          Creating directory "cmTC_db1de.dir\\Debug\\cmTC_db1de.tlog\\".
+          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-5ek0xi\\Debug\\".
+          Creating directory "cmTC_8e61a.dir\\Debug\\cmTC_8e61a.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_db1de.dir\\Debug\\cmTC_db1de.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_db1de.dir\\Debug\\cmTC_db1de.tlog\\unsuccessfulbuild".
+          Creating "cmTC_8e61a.dir\\Debug\\cmTC_8e61a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_8e61a.dir\\Debug\\cmTC_8e61a.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++20 /Fo"cmTC_db1de.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++20 /Fo"cmTC_8e61a.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Program Files\\CMake\\share\\cmake-3.29\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-9o8juv\\Debug\\cmTC_db1de.exe" /INCREMENTAL /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-9o8juv/Debug/cmTC_db1de.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-9o8juv/Debug/cmTC_db1de.lib"   /machine:x64 cmTC_db1de.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_db1de.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-9o8juv\\Debug\\cmTC_db1de.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-5ek0xi\\Debug\\cmTC_8e61a.exe" /INCREMENTAL /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-5ek0xi/Debug/cmTC_8e61a.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-5ek0xi/Debug/cmTC_8e61a.lib"   /machine:x64 cmTC_8e61a.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_8e61a.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-5ek0xi\\Debug\\cmTC_8e61a.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_db1de.dir\\Debug\\cmTC_db1de.tlog\\unsuccessfulbuild".
-          Touching "cmTC_db1de.dir\\Debug\\cmTC_db1de.tlog\\cmTC_db1de.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-9o8juv\\cmTC_db1de.vcxproj" (default targets).
+          Deleting file "cmTC_8e61a.dir\\Debug\\cmTC_8e61a.tlog\\unsuccessfulbuild".
+          Touching "cmTC_8e61a.dir\\Debug\\cmTC_8e61a.tlog\\cmTC_8e61a.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-5ek0xi\\cmTC_8e61a.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.49
+        Time Elapsed 00:00:00.54
         
       exitCode: 0
   -
@@ -177,8 +177,8 @@ events:
     checks:
       - "Detecting CXX compile features"
     directories:
-      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-p2lf8i"
-      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-p2lf8i"
+      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-54zehj"
+      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-54zehj"
     cmakeVariables:
       CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang-scan-deps.exe"
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
@@ -188,36 +188,36 @@ events:
       variable: "CMAKE_CXX_FEATURE_TEST"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-p2lf8i'
+        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-54zehj'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_88b00.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_86176.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.9.8+b34f75857 for .NET Framework
-        Build started 2024-08-10 오후 5:02:53.
+        Build started 2024-08-11 오후 12:47:58.
         
-        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\cmTC_88b00.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\cmTC_86176.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_88b00.dir\\Debug\\".
+          Creating directory "cmTC_86176.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\Debug\\".
-          Creating directory "cmTC_88b00.dir\\Debug\\cmTC_88b00.tlog\\".
+          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\Debug\\".
+          Creating directory "cmTC_86176.dir\\Debug\\cmTC_86176.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_88b00.dir\\Debug\\cmTC_88b00.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_88b00.dir\\Debug\\cmTC_88b00.tlog\\unsuccessfulbuild".
+          Creating "cmTC_86176.dir\\Debug\\cmTC_86176.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_86176.dir\\Debug\\cmTC_86176.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++14 /Fo"cmTC_88b00.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\feature_tests.cxx"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++14 /Fo"cmTC_86176.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\feature_tests.cxx"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\Debug\\cmTC_88b00.exe" /INCREMENTAL kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-p2lf8i/Debug/cmTC_88b00.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-p2lf8i/Debug/cmTC_88b00.lib"   /machine:x64 cmTC_88b00.dir\\Debug\\feature_tests.obj
-          cmTC_88b00.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\Debug\\cmTC_88b00.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\Debug\\cmTC_86176.exe" /INCREMENTAL kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-54zehj/Debug/cmTC_86176.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-54zehj/Debug/cmTC_86176.lib"   /machine:x64 cmTC_86176.dir\\Debug\\feature_tests.obj
+          cmTC_86176.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\Debug\\cmTC_86176.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_88b00.dir\\Debug\\cmTC_88b00.tlog\\unsuccessfulbuild".
-          Touching "cmTC_88b00.dir\\Debug\\cmTC_88b00.tlog\\cmTC_88b00.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-p2lf8i\\cmTC_88b00.vcxproj" (default targets).
+          Deleting file "cmTC_86176.dir\\Debug\\cmTC_86176.tlog\\unsuccessfulbuild".
+          Touching "cmTC_86176.dir\\Debug\\cmTC_86176.tlog\\cmTC_86176.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-54zehj\\cmTC_86176.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.50
+        Time Elapsed 00:00:02.42
         
       exitCode: 0
   -
@@ -232,8 +232,8 @@ events:
     checks:
       - "Detecting CXX compile features"
     directories:
-      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-hn3dz9"
-      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-hn3dz9"
+      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-786bnn"
+      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-786bnn"
     cmakeVariables:
       CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang-scan-deps.exe"
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
@@ -243,36 +243,36 @@ events:
       variable: "CMAKE_CXX_FEATURE_TEST"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-hn3dz9'
+        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-786bnn'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_17f7b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_b286d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.9.8+b34f75857 for .NET Framework
-        Build started 2024-08-10 오후 5:02:54.
+        Build started 2024-08-11 오후 12:48:01.
         
-        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\cmTC_17f7b.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\cmTC_b286d.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_17f7b.dir\\Debug\\".
+          Creating directory "cmTC_b286d.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\Debug\\".
-          Creating directory "cmTC_17f7b.dir\\Debug\\cmTC_17f7b.tlog\\".
+          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\Debug\\".
+          Creating directory "cmTC_b286d.dir\\Debug\\cmTC_b286d.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_17f7b.dir\\Debug\\cmTC_17f7b.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_17f7b.dir\\Debug\\cmTC_17f7b.tlog\\unsuccessfulbuild".
+          Creating "cmTC_b286d.dir\\Debug\\cmTC_b286d.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_b286d.dir\\Debug\\cmTC_b286d.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++20 /Fo"cmTC_17f7b.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\feature_tests.cxx"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\clang-cl.exe /c /Z7 /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /MDd /GS /fp:precise /std:c++20 /Fo"cmTC_b286d.dir\\Debug\\\\" /Gd /TP -m64  "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\feature_tests.cxx"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\Debug\\cmTC_17f7b.exe" /INCREMENTAL kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-hn3dz9/Debug/cmTC_17f7b.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-hn3dz9/Debug/cmTC_17f7b.lib"   /machine:x64 cmTC_17f7b.dir\\Debug\\feature_tests.obj
-          cmTC_17f7b.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\Debug\\cmTC_17f7b.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\Llvm\\x64\\bin\\lld-link.exe /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\Debug\\cmTC_b286d.exe" /INCREMENTAL kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FULL /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-786bnn/Debug/cmTC_b286d.pdb" /SUBSYSTEM:CONSOLE /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Core/Tests/Unit-Tests/Solution/CMakeFiles/CMakeScratch/TryCompile-786bnn/Debug/cmTC_b286d.lib"   /machine:x64 cmTC_b286d.dir\\Debug\\feature_tests.obj
+          cmTC_b286d.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\Debug\\cmTC_b286d.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_17f7b.dir\\Debug\\cmTC_17f7b.tlog\\unsuccessfulbuild".
-          Touching "cmTC_17f7b.dir\\Debug\\cmTC_17f7b.tlog\\cmTC_17f7b.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-hn3dz9\\cmTC_17f7b.vcxproj" (default targets).
+          Deleting file "cmTC_b286d.dir\\Debug\\cmTC_b286d.tlog\\unsuccessfulbuild".
+          Touching "cmTC_b286d.dir\\Debug\\cmTC_b286d.tlog\\cmTC_b286d.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Tests\\Unit-Tests\\Solution\\CMakeFiles\\CMakeScratch\\TryCompile-786bnn\\cmTC_b286d.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.50
+        Time Elapsed 00:00:00.81
         
       exitCode: 0
 ...

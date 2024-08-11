@@ -80,7 +80,6 @@ int main(int argc_p, char** argv_p)
 
 
 
-
 TEST(FE_algorithm_string, string_to_integer)
 {
 	char l_buffer[10] = "2023";

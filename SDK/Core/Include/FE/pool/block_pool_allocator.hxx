@@ -41,7 +41,7 @@ public:
 	_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {};
 
 	template <typename U>
-	_CONSTEXPR20_ new_delete_block_pool_allocator(_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
+	_CONSTEXPR20_ new_delete_block_pool_allocator(_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< pool_type >()) {}
 
 	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&) noexcept = delete;
 	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&&) noexcept = delete;
@@ -120,7 +120,7 @@ public:
 	_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
 
 	template <typename U>
-	_CONSTEXPR20_ block_pool_allocator(_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< FE::block_pool<sizeof(U), PageCapacity::size> >()) {}
+	_CONSTEXPR20_ block_pool_allocator(_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< pool_type >()) {}
 
 	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&) noexcept = delete;
 	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&&) noexcept = delete;

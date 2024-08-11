@@ -288,6 +288,7 @@ public:
 		return l_realloc_result;
 	}
 
+
 	template<class Resource>
 	_FORCE_INLINE_ boost::intrusive_ptr<FE::resource<Resource>> get_default_allocator() const noexcept
 	{

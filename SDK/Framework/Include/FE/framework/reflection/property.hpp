@@ -3,7 +3,6 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/prerequisites.h>
 #include <FE/private/allocator_base.hpp>
-#include <FE/adjacency_graph.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/hash.hpp>
 #include <FE/pair.hxx>
@@ -19,6 +18,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <map>
 #include <mutex>
 #include <shared_mutex>
 #include <stack>
@@ -80,7 +80,7 @@ It is worth noting that, FE::string's contents can be allocated on a thread loca
 by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 */
 	using property_meta_data_map_type = robin_hood::unordered_map<FE::ASCII*, 
-                                                        		  FE::adjacency_graph<var::ptrdiff, property_meta_data>,
+                                                        		  std::map<var::ptrdiff, property_meta_data>,
                                                         							  FE::hash<FE::ASCII*>>;
 																					  
 	using class_layer_stack = std::stack<FE::pair<typename  property_meta_data_map_type::mapped_type*, typename  property_meta_data_map_type::mapped_type::iterator>, 
@@ -108,7 +108,7 @@ public:
 	property() noexcept = default;
 	~property() noexcept = default;
 
-	_FORCE_INLINE_ static boolean initialize() noexcept
+	_FORCE_INLINE_ static FE::boolean initialize() noexcept
 	{
 		std::lock_guard<lock_type> l_mutex(s_lock);
 		FE_ASSERT(s_property_map != nullptr, "Assertion failure: cannot initialize FE::framework::reflection::property more than once.");
@@ -123,7 +123,7 @@ public:
 		return false;
 	}
 	
-	_FORCE_INLINE_ static boolean clean_up() noexcept
+	_FORCE_INLINE_ static FE::boolean clean_up() noexcept
 	{
 		std::lock_guard<lock_type> l_mutex(s_lock);
 		FE_ASSERT(s_property_map == nullptr, "Assertion failure: unable to clean_up() FE::framework::reflection::property. It is null.");
@@ -138,7 +138,7 @@ public:
 		return false;
 	}
 
-	_FORCE_INLINE_ static boolean is_available() noexcept
+	_FORCE_INLINE_ static FE::boolean is_available() noexcept
 	{
 		return s_property_map != nullptr;
 	}
@@ -325,7 +325,7 @@ private:
 		var::ptrdiff l_offset_from_this = 0;
 		while(tl_s_class_layer.empty() == false)
 		{
-			switch(tl_s_class_layer.top()._second->_value._is_trivial)
+			switch(tl_s_class_layer.top()._second->second._is_trivial)
 			{
 			case TYPE_TRIVIALITY::_TRIVIAL:
 			{
@@ -333,9 +333,9 @@ private:
 				auto l_property_meta_data = tl_s_class_layer.top()._second; // The first is the data structure that represents the class memory layer and the second is the property meta data iterator.
 				
 				// Check if the field variable meta data is valid.
-				FE_ASSERT(l_property_meta_data->_value._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
+				FE_ASSERT(l_property_meta_data->second._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
-				tl_s_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_this + l_property_meta_data->get_key()), l_property_meta_data->_value._total_size);
+				tl_s_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_this + l_property_meta_data->first), l_property_meta_data->second._total_size);
 
 				// Look for the next registered property of the class layer.
 				++(tl_s_class_layer.top()._second);
@@ -357,9 +357,9 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = s_property_map->find(tl_s_class_layer.top()._second->_value._typename);
+				auto l_search_result = s_property_map->find(tl_s_class_layer.top()._second->second._typename);
 				
-				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_serialization_task_name(tl_s_class_layer.top()._second->_value._typename)); // Load function pointer.
+				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_serialization_task_name(tl_s_class_layer.top()._second->second._typename)); // Load function pointer.
 				if(l_foreach_task != nullptr) // This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				{ 
 					FE::arguments<void*> l_pointer_to_data; // Any containers with begin() and end() can be serialized and deserialized.
@@ -369,7 +369,7 @@ private:
 
 				if(l_search_result != s_property_map->end())
 				{
-					l_offset_from_this = tl_s_class_layer.top()._second->get_key();
+					l_offset_from_this = tl_s_class_layer.top()._second->first;
 					
 					// Look for the next registered property of the class layer.
 					++(tl_s_class_layer.top()._second);
@@ -393,7 +393,7 @@ private:
 		var::ptrdiff l_offset_from_this = 0;
 		while(tl_s_class_layer.empty() == false)
 		{
-			switch(tl_s_class_layer.top()._second->_value._is_trivial)
+			switch(tl_s_class_layer.top()._second->second._is_trivial)
 			{
 			case TYPE_TRIVIALITY::_TRIVIAL:
 				{
@@ -401,11 +401,11 @@ private:
 					auto l_property_meta_data = tl_s_class_layer.top()._second;
 				
 					// Check if the meta data is valid.
-					FE_ASSERT(l_property_meta_data->_value._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
+					FE_ASSERT(l_property_meta_data->second._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
 					// Write the bits to the object, from a buffer.	
-					FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_this + l_property_meta_data->get_key()), FE::iterator_cast<FE::ASCII*>(tl_s_position), l_property_meta_data->_value._total_size);
-					tl_s_position += l_property_meta_data->_value._total_size; // Iterate to the next bits.
+					FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_this + l_property_meta_data->first), FE::iterator_cast<FE::ASCII*>(tl_s_position), l_property_meta_data->second._total_size);
+					tl_s_position += l_property_meta_data->second._total_size; // Iterate to the next bits.
 				
 					// Look for the next registered property of the class layer.
 					++(tl_s_class_layer.top()._second);
@@ -427,9 +427,9 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = s_property_map->find(tl_s_class_layer.top()._second->_value._typename);
+				auto l_search_result = s_property_map->find(tl_s_class_layer.top()._second->second._typename);
 
-				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_deserialization_task_name(tl_s_class_layer.top()._second->_value._typename)); // Load function pointer.
+				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_deserialization_task_name(tl_s_class_layer.top()._second->second._typename)); // Load function pointer.
 				if(l_foreach_task != nullptr) // This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				{ 
 					FE::arguments<void*> l_pointer_to_data; // Any containers with begin() and end() can be serialized and deserialized.
@@ -439,7 +439,7 @@ private:
 
 				if(l_search_result != s_property_map->end())
 				{
-					l_offset_from_this = tl_s_class_layer.top()._second->get_key();
+					l_offset_from_this = tl_s_class_layer.top()._second->first;
 				
 					// Look for the next registered property of the class layer.
 					++(tl_s_class_layer.top()._second);

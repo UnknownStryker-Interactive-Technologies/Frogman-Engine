@@ -31,9 +31,6 @@ public:
 	_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
 	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
-private:
-
-public:
 	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator() noexcept {}
 	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator(_MAYBE_UNUSED_ const new_delete_allocator&) noexcept {}
 	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator(_MAYBE_UNUSED_ new_delete_allocator&&) noexcept {}

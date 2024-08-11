@@ -9,6 +9,8 @@
 #include <boost/pool/object_pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
 
+#include <boost/intrusive_ptr.hpp>
+
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/pool/block_pool_allocator.hxx>
 #include <FE/pool/pool_allocator.hxx>
@@ -81,6 +83,7 @@ int main(int argc_p, char** argv_p)
 
 
 
+
 /* has a bug
 TEST(pool_allocator, all)
 {
@@ -110,7 +113,6 @@ TEST(new_delete_pool_allocator, all)
 	}
 }
 */
-
 
 
 void memory_pooled_std_list_iteration(benchmark::State& state_p) noexcept

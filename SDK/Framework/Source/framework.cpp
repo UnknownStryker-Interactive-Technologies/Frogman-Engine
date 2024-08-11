@@ -13,6 +13,7 @@
 
 // std
 #include <csignal>
+#include <string>
 
 #define _DUMP_FILE_NAME_LENGTH_ 128
 
@@ -58,7 +59,7 @@ _NORETURN_ void application_base::__abnormal_shutdown_with_exit_code(int32 signa
 
 	std::ofstream l_release_build_crash_report;
 	{
-		FE::fstring<_DUMP_FILE_NAME_LENGTH_> l_dump_filename = "Crashed Thread Stack Trace Report from ";
+		std::string l_dump_filename = "Crashed Thread Stack Trace Report from ";
 		l_dump_filename += FE::clock::get_current_local_time();
 		l_dump_filename += ".txt";
 		FE::ofstream_guard l_release_build_crash_report_guard(l_release_build_crash_report);
@@ -71,7 +72,6 @@ _NORETURN_ void application_base::__abnormal_shutdown_with_exit_code(int32 signa
 		l_release_build_crash_report << "\n-------------------------------------------------- END OF STACK TRACE RECORD --------------------------------------------------\n";
 
 	}
-	l_release_build_crash_report_guard.get_stream().close();
 #endif
 	FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::application_base::s_app->clean_up(); FE::framework::application_base::s_app->__shutdown_main());
 	std::exit(signal_p);
