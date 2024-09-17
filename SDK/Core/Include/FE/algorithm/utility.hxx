@@ -454,7 +454,7 @@ _FORCE_INLINE_ _CONSTEXPR20_ void any_primitive_to_string(CharT* const out_dest_
     {
         uint64 l_length = internal::strlen(value_p);
         uint64 l_bytes_to_copy = l_length * sizeof(CharT);
-        if (UNLIKELY(dest_buffer_capacity_p < l_bytes_to_copy)) _UNLIKELY_{ std::abort(); }
+        if (FE_UNLIKELY(dest_buffer_capacity_p < l_bytes_to_copy)) _UNLIKELY_{ std::abort(); }
         std::memcpy(out_dest_buffer_p, value_p, l_bytes_to_copy);
         out_dest_buffer_p[l_length] = null;
     }

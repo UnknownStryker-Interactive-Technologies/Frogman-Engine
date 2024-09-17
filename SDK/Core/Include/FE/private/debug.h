@@ -22,10 +22,10 @@
 #ifdef _ENABLE_ABORT_IF_
     #if defined(_RELEASE_) || defined(_RELWITHDEBINFO_)
          // It invokes abort() if the expression is true
-        #define FE_ABORT_IF(expression, message) if (UNLIKELY(expression)) _UNLIKELY_ { ::std::abort(); }
+        #define FE_ABORT_IF(expression, message) if (FE_UNLIKELY(expression)) _UNLIKELY_ { ::std::abort(); }
     #else
         // It invokes abort() if the expression is true
-        #define FE_ABORT_IF(expression, message) if (UNLIKELY(expression)) _UNLIKELY_ { std::cerr << "Expected the expression \"" << #expression << "\" to be false.\nAbort has been called from\ndirectory: " << __FILE__ << "\nfunction: " << __func__ << "()\nline number: " << __LINE__ << "\nmessage: " << #message; ::std::abort(); }
+        #define FE_ABORT_IF(expression, message) if (FE_UNLIKELY(expression)) _UNLIKELY_ { std::cerr << "Expected the expression \"" << #expression << "\" to be false.\nAbort has been called from\ndirectory: " << __FILE__ << "\nfunction: " << __func__ << "()\nline number: " << __LINE__ << "\nmessage: " << #message; ::std::abort(); }
     #endif
 #else
     // It invokes abort() if the expression is true

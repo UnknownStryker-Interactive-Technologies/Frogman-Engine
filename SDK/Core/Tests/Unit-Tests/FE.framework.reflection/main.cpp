@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
-#include <FE/core/function.hxx>
+#include <FE/function.hxx>
 #include <FE/framework/reflection/reflection.h>
 #include <FE/framework/framework.hpp>
 

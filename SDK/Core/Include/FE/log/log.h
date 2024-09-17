@@ -57,7 +57,7 @@ ${%p at n} - hexadecimal 64bit pointer | * A file and console logger_base with a
 // ${%s at n} - string
 // ${%p at n} - hexadecimal 64bit pointer | *Dynamically asserts the condition, that must not be true at runtime. 
 #define FE_ASSERT(expression, ...) \
-if(UNLIKELY(expression)) _UNLIKELY_ \
+if(FE_UNLIKELY(expression)) _UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	assert(!(expression)); \
@@ -77,7 +77,7 @@ ${%s at n}  - string  | ${%p at n}  - hexadecimal 64bit pointer
 *Dynamically asserts the condition, that must not be true at runtime, and exits the program with the given error code.
 */
 #define FE_EXIT(expression, error_code, ...) \
-if(UNLIKELY(expression)) _UNLIKELY_ \
+if(FE_UNLIKELY(expression)) _UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	::std::exit(static_cast<::var::int32>(error_code)); \
@@ -98,7 +98,7 @@ ${%s at n}  - string  | ${%p at n}  - hexadecimal 64bit pointer
 #define FE_EXPECT(fn_call, expected_value, ...)\
 { \
 	auto __FE_EXPECT_RESULT__ = fn_call; \
-	if(UNLIKELY(__FE_EXPECT_RESULT__ != expected_value)) _UNLIKELY_ \
+	if(FE_UNLIKELY(__FE_EXPECT_RESULT__ != expected_value)) _UNLIKELY_ \
 	{ \
 		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 		if constexpr (::FE::is_boolean<decltype(__FE_EXPECT_RESULT__)>::value == true) \

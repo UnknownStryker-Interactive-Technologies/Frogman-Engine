@@ -5,6 +5,10 @@
 #include <FE/pool/private/pool_common.hxx>
 #include <FE/stack.hxx>
 
+#if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
+    #include <robin_hood.h> // a hash map for checking double free.
+#endif
+
 
 
 
@@ -28,13 +32,16 @@ namespace internal::pool
         using block_info_type = var::byte*;
 
     private:
-    #ifdef _DEBUG_
+    #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
         alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory = { 0 };
     #else
         alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
     #endif
 
     public:
+    #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
+        robin_hood::unordered_set<block_info_type> _double_free_validator;
+    #endif
         FE::fstack<block_info_type, PageCapacity> _free_blocks;
         var::byte* const _begin = reinterpret_cast<var::byte* const>(m_memory.data());
         var::byte* _page_iterator = _begin;
@@ -90,7 +97,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         FE_STATIC_ASSERT((sizeof(U) > fixed_block_size_in_bytes), "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         typename pool_type::iterator l_list_iterator = this->m_memory_pool.begin();
 
-    #ifdef _DEBUG_
+    #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
         static FE::byte s_clean_bits[sizeof(U)] { 0 };
     #endif
 
@@ -98,18 +105,18 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         {
             if (l_list_iterator->is_full() == false)
             {
-                U* l_allocation_result;
+                void* l_allocation_result;
                 if (l_list_iterator->_free_blocks.is_empty() == true)
                 {
-                    l_allocation_result = reinterpret_cast<U*>(l_list_iterator->_page_iterator);
+                    l_allocation_result = l_list_iterator->_page_iterator;
                     l_list_iterator->_page_iterator += fixed_block_size_in_bytes;
                 }
                 else
                 {
-                    l_allocation_result = reinterpret_cast<U*>(l_list_iterator->_free_blocks.pop());
+                    l_allocation_result = l_list_iterator->_free_blocks.pop();
                 }
 
-            #ifdef _DEBUG_
+            #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
                 #pragma clang diagnostic push
                 #pragma clang diagnostic ignored "-Wdynamic-class-memaccess" // This is to avoid -Werror causing build failure and to suppress the -Wdynamic-class-memaccess.
                 /*
@@ -121,14 +128,17 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 */
                 FE_ASSERT(( std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) != 0 ), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
                 #pragma clang diagnostic pop
-            #endif
+
+                // erase from the list of free-ed blocks.
+                l_list_iterator->_double_free_validator.erase( static_cast<block_info_type>(l_allocation_result) );
+            #endif    
 
                 if constexpr (FE::is_trivial<U>::value == false)
                 {
-                    new(l_allocation_result) U();
+                    new( static_cast<U*>(l_allocation_result) ) U();
                 }
 
-                return l_allocation_result;
+                return static_cast<U*>( l_allocation_result );
             }
         }
 
@@ -154,9 +164,13 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                     pointer_p->~U();
                 }
 
-            #ifdef _DEBUG_
+            #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
                 std::memset(l_to_be_freed, null, sizeof(U));
+
+                FE_ASSERT(l_list_iterator->_double_free_validator.find(l_to_be_freed) != l_list_iterator->_double_free_validator.end(), "Critical Error from FE.pool.block_pool: Double free detected!");
+                FE_ASSERT(l_list_iterator->_double_free_validator.emplace(l_to_be_freed).second == false, "Assertion failured: The free-ed block registration was not successful. The resultant bool value supposed to be true.");
             #endif
+
                 l_list_iterator->_free_blocks.push(l_to_be_freed);
                 return;
             }

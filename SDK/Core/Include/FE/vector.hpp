@@ -23,19 +23,6 @@ BEGIN_NAMESPACE(FE)
 using scalar_t = float32;
 
 
-/*
-- Game world coordinate system scale - 
-
-100000f64 == 1km 
-
-100f64 == 1m
-
-1f64 == 1cm 
-
-0.1f64 == 1mm
-
-0.0001f64 == 1um
-*/
 _MAYBE_UNUSED_ constexpr static FE::float32 one_km = 10.0f;
 _MAYBE_UNUSED_ constexpr static FE::float32 one_m = 1.0f;
 _MAYBE_UNUSED_ constexpr static FE::float32 one_cm = 0.1f;

@@ -16,17 +16,17 @@
 #ifdef _HAS_CXX20_
 	#define _LIKELY_ [[likely]]
 	#define _UNLIKELY_ [[unlikely]]
-	#define LIKELY(c) (c)
-	#define UNLIKELY(c) (c)
+	#define FE_LIKELY(c) (c)
+	#define FE_UNLIKELY(c) (c)
 	#define _NO_UNIQUE_ADDRESS_ //[[no_unique_address]]
 
 #else
 	#ifdef _LINUX_X86_64_
-		#define LIKELY(c) __builtin_expect((c), 1)
-		#define UNLIKELY(c) __builtin_expect((c), 0)
+		#define FE_LIKELY(c) __builtin_expect((c), 1)
+		#define FE_UNLIKELY(c) __builtin_expect((c), 0)
 	#else
-		#define LIKELY(c) (c)
-		#define UNLIKELY(c) (c)
+		#define FE_LIKELY(c) (c)
+		#define FE_UNLIKELY(c) (c)
 	#endif
 
 	#define _LIKELY_ 

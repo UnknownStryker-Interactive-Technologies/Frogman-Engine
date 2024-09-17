@@ -170,7 +170,7 @@ public:
 
 		std::lock_guard<lock_type> l_mutex(s_lock);
 		auto l_iterator = s_property_map->find(l_host_class_instance_typename);
-		if(UNLIKELY(l_iterator == s_property_map->end())) _UNLIKELY_
+		if(FE_UNLIKELY(l_iterator == s_property_map->end())) _UNLIKELY_
 		{
 			(*s_property_map)[l_host_class_instance_typename];
 			l_iterator = s_property_map->find(l_host_class_instance_typename);
@@ -188,13 +188,13 @@ public:
 
 			for(var::count_t i = 0; i < l_array_size; ++i)
 			{
-				l_iterator->second.insert( (reinterpret_cast<FE::byte* const>(&property_p) + (i * sizeof( std::remove_extent_t< std::remove_pointer_t<T> > ))) - reinterpret_cast<FE::byte*>(&host_class_instance_p),
-				                           l_property_meta_data); // insert fixed-sized N of a non-trivial array.
+				l_iterator->second.emplace( (reinterpret_cast<FE::byte* const>(&property_p) + (i * sizeof( std::remove_extent_t< std::remove_pointer_t<T> > ))) - reinterpret_cast<FE::byte*>(&host_class_instance_p),
+				                           l_property_meta_data); // emplace fixed-sized N of a non-trivial array.
 			}
 			return;
 		}
 
-		l_iterator->second.insert((reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p)), l_property_meta_data); 
+		l_iterator->second.emplace((reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p)), l_property_meta_data); 
 	}
 
  	// component's base class iteration not implemented.
