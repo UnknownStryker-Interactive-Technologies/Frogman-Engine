@@ -7,6 +7,7 @@ FILE(GLOB THIRD_PARTY_CITY_HASH "${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Librar
 
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/include)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/Robin-Hood-Hash)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Core/Include)
@@ -166,12 +167,34 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-
     $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_chrono.a>
     )
 
+    SET(BOOST_THREAD 
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/debug/libboost_thread.a>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
+    )
+
     SET(GLM
     $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
     $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
     $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
     $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
     )
+
+    SET(FE_CORE
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/Debug/libFE.Core.a>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/RelWithDebInfo/libFE.Core.a>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/Release/libFE.Core.a>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/MinSizeRel/libFE.Core.a>
+    )
+
+    SET(FE_FRAMEWORK
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/Debug/libFE.Framework.a>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/RelWithDebInfo/libFE.Framework.a>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/Release/libFE.Framework.a>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/MinSizeRel/libFE.Framework.a>
+    )
+
     
 ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 
@@ -189,5 +212,39 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL
     $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_chrono-clangw17-mt-s-x64-1_85.lib>
     )
 
+    SET(BOOST_THREAD 
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/debug/libboost_thread-clangw17-mt-sgd-x64-1_85.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
+    )
+
+    SET(GLM
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/Debug/glm.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/MinSizeRel/glm.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/Release/glm.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/RelWithDebInfo/glm.lib>
+    )
+
+    SET(GLFW
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/Debug/glfw3.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/MinSizeRel/glfw3.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/Release/glfw3.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/RelWithDebInfo/glfw3.lib>
+    )
+
+    SET(FE_CORE
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Windows/Debug/FE.Core.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Windows/RelWithDebInfo/FE.Core.lib>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Windows/Release/FE.Core.lib>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Windows/MinSizeRel/FE.Core.lib>
+    )
+
+    SET(FE_FRAMEWORK
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Windows/Debug/FE.Framework.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Windows/RelWithDebInfo/FE.Framework.lib>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Windows/Release/FE.Framework.lib>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Windows/MinSizeRel/FE.Framework.lib>
+    )
 
 ENDIF()

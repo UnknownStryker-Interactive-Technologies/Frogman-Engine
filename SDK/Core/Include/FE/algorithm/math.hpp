@@ -125,19 +125,6 @@
 #include <FE/prerequisites.h>
 
 
-constexpr static FE::float64 pi = 3.1415926535897932;
-
-#ifdef FE_DEGREE_TO_RADIAN
-    #error FE_DEGREE_TO_RADIAN is a reserved Frogman Engine macro function name.
-#endif
-#define FE_DEGREE_TO_RADIAN(x) ((x * ::FE::pi) / 180.0)
-
-#ifdef FE_RADIAN_TO_DEGREE
-    #error FE_RADIAN_TO_DEGREE is a reserved Frogman Engine macro function name.
-#endif
-#define FE_RADIAN_TO_DEGREE(x) ((x * 180.0) / ::FE::pi)
-
-
 #include <cmath>
 #ifdef FE_CALCULATE_DIRECTION_2D
     #error FE_CALCULATE_DIRECTION_2D is a reserved Frogman Engine macro function name.
@@ -146,6 +133,23 @@ constexpr static FE::float64 pi = 3.1415926535897932;
 
 
 #define _SMALLEST_PRIME_NUMBER_ 2
+
+
+namespace FE
+{
+	constexpr static inline FE::float64 pi = 3.1415926535897932;
+
+#ifdef FE_DEGREE_TO_RADIAN
+#error FE_DEGREE_TO_RADIAN is a reserved Frogman Engine macro function name.
+#endif
+#define FE_DEGREE_TO_RADIAN(x) ((x * ::FE::pi) / 180.0)
+
+#ifdef FE_RADIAN_TO_DEGREE
+#error FE_RADIAN_TO_DEGREE is a reserved Frogman Engine macro function name.
+#endif
+#define FE_RADIAN_TO_DEGREE(x) ((x * 180.0) / ::FE::pi)
+
+}
 
 
 

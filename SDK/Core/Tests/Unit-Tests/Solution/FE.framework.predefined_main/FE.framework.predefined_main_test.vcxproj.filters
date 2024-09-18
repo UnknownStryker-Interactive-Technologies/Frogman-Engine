@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\allocator_base.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\clock.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\hash.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\framework.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\function.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\property.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\type_info.cpp">
+      <Filter>FE.framework.predefined_main_test</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\format_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\city.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.framework.predefined_main\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\city.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\citycrc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Tests\Unit-Tests\FE.framework.predefined_main\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FE.framework.predefined_main_test">
+      <UniqueIdentifier>{80874377-C5AB-37CC-A14A-DB65FF739EB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{8EF09D74-AA97-31C4-B790-F56BDECAFB98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{3CEDFB72-81F5-3C85-A4C7-3156109DDFCE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
