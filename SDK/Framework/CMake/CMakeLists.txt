@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.26.0...3.30.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.26.0...3.30.3)
 # Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 PROJECT(FE.Framework
         VERSION 0.0

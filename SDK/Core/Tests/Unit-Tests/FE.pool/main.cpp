@@ -159,7 +159,7 @@ void std_list_iteration(benchmark::State& state_p) noexcept
 }
 BENCHMARK(std_list_iteration);
 
-#define _MAX_ITERATION_ 10000
+#define _MAX_ITERATION_ 5000
 
 void boost_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {

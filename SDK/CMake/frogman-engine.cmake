@@ -175,10 +175,17 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-
     )
 
     SET(GLM
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/libglm.a>
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Debug/libglm.a>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Release/libglm.a>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Release/libglm.a>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/RelWithDebInfo/libglm.a>
+    )
+
+    SET(GLFW
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Debug/libglfw3.a>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Release/libglfw3.a>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Release/libglfw3.a>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/RelWithDebInfo/libglfw3.a>
     )
 
     SET(FE_CORE

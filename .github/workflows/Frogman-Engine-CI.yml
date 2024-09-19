@@ -20,19 +20,17 @@ jobs:
 
     - name: Build and Run Google Benchmark and Unit Tests
       run: |
-        cd Frogman-Engine-Tests/FE-Tests/Unit-Tests
-        ./build-tests.sh Debug
-        ./run-tests.sh
-
-        ./build-tests.sh RelWithDebInfo
-        ./run-tests.sh
-
-        ./build-tests.sh Release
+        cd SDK/Core/Tests/Unit-Tests
+        chmod +x build.sh
+        chmod +x run-tests.sh
+        ./build.sh
         ./run-tests.sh
 
     - name: LLVM libfuzzer Tests
       run: |
-        cd Frogman-Engine-Tests/FE-Tests/Fuzz-Tests
+        cd SDK/Core/Tests/Fuzz-Tests
+        chmod +x build-fuzz.sh
+        chmod +x run-fuzz.sh
         ./build-fuzz.sh Debug
         ./run-fuzz.sh
 
