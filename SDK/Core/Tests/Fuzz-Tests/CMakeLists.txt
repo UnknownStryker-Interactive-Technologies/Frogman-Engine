@@ -13,11 +13,11 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../../Third-Party/Tools/X86-6
 
 
 #https://llvm.org/docs/LibFuzzer.html?ref=jumpcrypto.com
-#-fsanitize=address
+#-fsanitize=address (It is not compatible with libFE.Core.a due to duplication of the operator new and delete definitions.)
 #-fsanitize=memory
 #-fsanitize=undefined
 #-fsanitize=fuzzer
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=fuzzer,undefined,address")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=fuzzer,undefined")
 
 
 
@@ -27,7 +27,7 @@ ${FE_CORE_SOURCES}
 tests/FE.core.algorithm.string.count_chars.cpp
 )
 SET_TARGET_PROPERTIES(FE.core.algorithm.string.count_chars PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/binaries)
-TARGET_LINK_LIBRARIES(FE.core.algorithm.string.count_chars ${BOOST_STACKTRACE} ${BOOST_CHRONO})
+TARGET_LINK_LIBRARIES(FE.core.algorithm.string.count_chars ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${FE_CORE})
 
 
 ADD_EXECUTABLE(FE.core.algorithm.string.capitalize
@@ -35,7 +35,7 @@ ${FE_CORE_SOURCES}
 tests/FE.core.algorithm.string.capitalize.cpp
 )
 SET_TARGET_PROPERTIES(FE.core.algorithm.string.capitalize PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/binaries)
-TARGET_LINK_LIBRARIES(FE.core.algorithm.string.capitalize ${BOOST_STACKTRACE} ${BOOST_CHRONO})
+TARGET_LINK_LIBRARIES(FE.core.algorithm.string.capitalize ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${FE_CORE})
 
 
 ADD_EXECUTABLE(FE.core.algorithm.string.to_lowercase
@@ -43,7 +43,7 @@ ${FE_CORE_SOURCES}
 tests/FE.core.algorithm.string.to_lowercase.cpp
 )
 SET_TARGET_PROPERTIES(FE.core.algorithm.string.to_lowercase PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/binaries)
-TARGET_LINK_LIBRARIES(FE.core.algorithm.string.to_lowercase ${BOOST_STACKTRACE} ${BOOST_CHRONO})
+TARGET_LINK_LIBRARIES(FE.core.algorithm.string.to_lowercase ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${FE_CORE})
 
 
 ADD_EXECUTABLE(FE.core.algorithm.string.capitalize_every_first_letter_of_words
@@ -51,7 +51,7 @@ ${FE_CORE_SOURCES}
 tests/FE.core.algorithm.string.capitalize_every_first_letter_of_words.cpp
 )
 SET_TARGET_PROPERTIES(FE.core.algorithm.string.capitalize_every_first_letter_of_words PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/binaries)
-TARGET_LINK_LIBRARIES(FE.core.algorithm.string.capitalize_every_first_letter_of_words ${BOOST_STACKTRACE} ${BOOST_CHRONO})
+TARGET_LINK_LIBRARIES(FE.core.algorithm.string.capitalize_every_first_letter_of_words ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${FE_CORE})
 
 
 ADD_EXECUTABLE(FE.core.algorithm.string.length
@@ -59,4 +59,4 @@ ${FE_CORE_SOURCES}
 tests/FE.core.algorithm.string.length.cpp
 )
 SET_TARGET_PROPERTIES(FE.core.algorithm.string.length PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/binaries)
-TARGET_LINK_LIBRARIES(FE.core.algorithm.string.length ${BOOST_STACKTRACE} ${BOOST_CHRONO})
+TARGET_LINK_LIBRARIES(FE.core.algorithm.string.length ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${FE_CORE})

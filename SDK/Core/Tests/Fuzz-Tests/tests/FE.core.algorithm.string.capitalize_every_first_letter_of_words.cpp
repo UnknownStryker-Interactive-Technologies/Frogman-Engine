@@ -3,7 +3,7 @@
 #include <cstring>
 
 // test target
-#include <FE/core/algorithm/string.hxx>
+#include <FE/algorithm/string.hxx>
 
 
 extern "C" int LLVMFuzzerTestOneInput(const char* data_p, _MAYBE_UNUSED_ long long size_p)
