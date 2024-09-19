@@ -4,5 +4,5 @@
 *.pdb
 *.exe
 
-Fuzz-Tests/Solution/
+Fuzz-Tests/build/
 Unit-Tests/Solution/
