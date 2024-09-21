@@ -58,7 +58,7 @@ template<class T>
    T real, imag;  // our results
 
    T safe_upper = detail::safe_max(two);
-   T safe_lower = detail::safe_min(static_cast<T>(2));
+   T safe_lower = detail::sa::FE::algorithm::math::min(static_cast<T>(2));
 
    //
    // Begin by handling the special cases specified in C99:

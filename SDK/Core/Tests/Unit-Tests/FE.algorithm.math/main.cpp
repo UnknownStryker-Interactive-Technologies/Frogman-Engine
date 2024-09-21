@@ -70,14 +70,14 @@ TEST(math, calculate_index)
 	};
 	/* Three by three matrix. The row and the column of the matrix above is three. */
 
-	constexpr index_t l_matrix_idx = FE_CALCULATE_INDEX(3, 1, 1);
+	constexpr index_t l_matrix_idx = FE::algorithm::math::calculate_index_of_a_matrix<index_t>(3, 1, 1);
 	EXPECT_EQ(l_matrix[l_matrix_idx], 1.0f);
 }
 
 
 TEST(math, abs)
 {
-	EXPECT_EQ(FE_ABS(-5), 5);
+	EXPECT_EQ(FE::algorithm::math::abs(-5), 5);
 }
 
 
@@ -86,7 +86,7 @@ TEST(math, is_nearly_equal)
 	float64 l_first = 3.1415'9265'3590;
 	float64 l_second = 3.1415'9265'3580;
 
-	EXPECT_TRUE(FE_IS_NEARLY_EQUAL(l_first, l_second, 0.0000'0000'0020));
+	EXPECT_TRUE(FE::algorithm::math::is_nearly_equal<float64>(l_first, l_second, 0.0000'0000'0020));
 
 }
 
@@ -100,31 +100,31 @@ TEST(math, vector3)
 TEST(math, sine)
 {
 	/*
-	    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-450)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-405)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-360)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-315)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-270)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-225)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-180)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-135)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-90)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(-45)) << '\n';
+	    std::cout << FE::sin(degree_to_radian(-450)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-405)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-360)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-315)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-270)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-225)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-180)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-135)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-90)) << '\n';
+    std::cout << FE::sin(degree_to_radian(-45)) << '\n';
     
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(0)) << '\n';
+    std::cout << FE::sin(degree_to_radian(0)) << '\n';
     
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(450)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(405)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(360)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(315)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(270)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(225)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(180)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(135)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(90)) << '\n';
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(45)) << '\n';
+    std::cout << FE::sin(degree_to_radian(450)) << '\n';
+    std::cout << FE::sin(degree_to_radian(405)) << '\n';
+    std::cout << FE::sin(degree_to_radian(360)) << '\n';
+    std::cout << FE::sin(degree_to_radian(315)) << '\n';
+    std::cout << FE::sin(degree_to_radian(270)) << '\n';
+    std::cout << FE::sin(degree_to_radian(225)) << '\n';
+    std::cout << FE::sin(degree_to_radian(180)) << '\n';
+    std::cout << FE::sin(degree_to_radian(135)) << '\n';
+    std::cout << FE::sin(degree_to_radian(90)) << '\n';
+    std::cout << FE::sin(degree_to_radian(45)) << '\n';
     
-    std::cout << FE::sin(FE_DEGREE_TO_RADIAN(4090)) << "\n\n";
+    std::cout << FE::sin(degree_to_radian(4090)) << "\n\n";
 	*/
 }
 
@@ -132,30 +132,30 @@ TEST(math, sine)
 TEST(math, cosine)
 {
 	/*
-	std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-450)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-405)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-360)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-315)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-270)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-225)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-180)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-135)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-90)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(-45)) << '\n';
+	std::cout << FE::cos(degree_to_radian(-450)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-405)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-360)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-315)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-270)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-225)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-180)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-135)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-90)) << '\n';
+    std::cout << FE::cos(degree_to_radian(-45)) << '\n';
 
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(0)) << '\n';
+    std::cout << FE::cos(degree_to_radian(0)) << '\n';
 
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(450)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(405)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(360)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(315)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(270)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(225)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(180)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(135)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(90)) << '\n';
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(45)) << '\n';
+    std::cout << FE::cos(degree_to_radian(450)) << '\n';
+    std::cout << FE::cos(degree_to_radian(405)) << '\n';
+    std::cout << FE::cos(degree_to_radian(360)) << '\n';
+    std::cout << FE::cos(degree_to_radian(315)) << '\n';
+    std::cout << FE::cos(degree_to_radian(270)) << '\n';
+    std::cout << FE::cos(degree_to_radian(225)) << '\n';
+    std::cout << FE::cos(degree_to_radian(180)) << '\n';
+    std::cout << FE::cos(degree_to_radian(135)) << '\n';
+    std::cout << FE::cos(degree_to_radian(90)) << '\n';
+    std::cout << FE::cos(degree_to_radian(45)) << '\n';
 
-    std::cout << FE::cos(FE_DEGREE_TO_RADIAN(4090)) << "\n\n";
+    std::cout << FE::cos(degree_to_radian(4090)) << "\n\n";
 	*/
 }

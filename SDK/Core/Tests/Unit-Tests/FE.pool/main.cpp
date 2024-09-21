@@ -84,7 +84,7 @@ int main(int argc_p, char** argv_p)
 
 
 
-/* has a bug
+
 TEST(pool_allocator, all)
 {
 	{
@@ -112,7 +112,7 @@ TEST(new_delete_pool_allocator, all)
 		l_allocator.deallocate(l_ptr, 1);
 	}
 }
-*/
+
 
 
 void memory_pooled_std_list_iteration(benchmark::State& state_p) noexcept
@@ -159,7 +159,7 @@ void std_list_iteration(benchmark::State& state_p) noexcept
 }
 BENCHMARK(std_list_iteration);
 
-#define _MAX_ITERATION_ 5000
+#define _MAX_ITERATION_ 384
 
 void boost_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {

@@ -85,7 +85,7 @@ public:
 			}
 			else
 			{
-				count_t l_max_count = FE_MIN(dest_capacity_p, source_count_p);
+				count_t l_max_count = ::FE::algorithm::math::min(dest_capacity_p, source_count_p);
 				for (var::count_t i = 0; i < l_max_count; ++i)
 				{
 					*out_dest_p = *source_p;

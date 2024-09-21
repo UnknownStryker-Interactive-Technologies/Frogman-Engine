@@ -6,7 +6,6 @@
 #define _FORMAT_SPECIFIER_PERCENT_ 2
 #define _FORMAT_SPECIFIER_VALUE_PREFIX_ 3
 #define _FORMAT_SPECIFIER_VALUE_SUFFIX_ 4
-#define _FORMAT_STRING_BUFFER_SIZE_ 10240
 
 
 
@@ -27,13 +26,13 @@ BEGIN_NAMESPACE(FE::log)
 void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAYBE_UNUSED_ size buffer_size_p, const void** arguments_pointer_p, _MAYBE_UNUSED_ count_t arguments_count_p) noexcept
 {
     FE_ABORT_IF(FE::internal::strlen(string_format_p) > buffer_size_p, "ERROR: buffer overflowed!");
-    thread_local static char tl_s_buffer[_FORMAT_STRING_BUFFER_SIZE_] = { "\0" };
+    thread_local static char tl_s_buffer[string_formatter_buffer_size] = { "\0" };
 
     while (*string_format_p != '\0')
     {
         if ((*string_format_p == '$') && (string_format_p[_OPEN_CURLY_BRACKET_] == '{') && (string_format_p[_FORMAT_SPECIFIER_PERCENT_] == '%'))
         {
-            std::memset(tl_s_buffer, null, _FORMAT_STRING_BUFFER_SIZE_);
+            std::memset(tl_s_buffer, null, string_formatter_buffer_size);
             algorithm::utility::integral_info<var::uint32> l_index;
 
             if (string_format_p[4] == '@')
@@ -61,7 +60,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
             {
             case 'd': // %d - int32
             {
-                algorithm::utility::int_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<int32*>(arguments_pointer_p[l_index._value]));
+                algorithm::utility::int_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<int32*>(arguments_pointer_p[l_index._value]));
                 uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                 std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -71,7 +70,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 
             case 'u': // %u - uint32
             {
-                algorithm::utility::uint_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<uint32*>(arguments_pointer_p[l_index._value]));
+                algorithm::utility::uint_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<uint32*>(arguments_pointer_p[l_index._value]));
                 uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                 std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -84,7 +83,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
                 {
                 case 'd': // %ld - int64
                 {
-                    algorithm::utility::int_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<int64*>(arguments_pointer_p[l_index._value]));
+                    algorithm::utility::int_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<int64*>(arguments_pointer_p[l_index._value]));
                     uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                     std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                     out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -94,7 +93,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 
                 case 'u': // %lu - uint64
                 {
-                    algorithm::utility::uint_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<uint64*>(arguments_pointer_p[l_index._value]));
+                    algorithm::utility::uint_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<uint64*>(arguments_pointer_p[l_index._value]));
                     uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                     std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                     out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -104,7 +103,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 
                 case 'f': // %lf - float64
                 {
-                    algorithm::utility::float_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<float64*>(arguments_pointer_p[l_index._value]));
+                    algorithm::utility::float_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<float64*>(arguments_pointer_p[l_index._value]));
                     uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                     std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                     out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -119,7 +118,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 
             case 'f': // %f - float32
             {
-                algorithm::utility::float_to_string(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, *static_cast<float32*>(arguments_pointer_p[l_index._value]));
+                algorithm::utility::float_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<float32*>(arguments_pointer_p[l_index._value]));
                 uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                 std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;
@@ -154,7 +153,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 
             case 'p': // %p - hexadecimal 64bit pointer
             {
-                std::snprintf(tl_s_buffer, _FORMAT_STRING_BUFFER_SIZE_, "%p", arguments_pointer_p[l_index._value]);
+                std::snprintf(tl_s_buffer, string_formatter_buffer_size, "%p", arguments_pointer_p[l_index._value]);
                 uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
                 std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;

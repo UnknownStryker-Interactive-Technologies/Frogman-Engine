@@ -74,88 +74,96 @@
 #define FE_MODULO_BY_128(input) ((input) & 127)
 
 
-#ifdef FE_IS_EVEN
-	#error FE_IS_EVEN is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_IS_EVEN(input) (FE_MODULO_BY_2(input) == 0)
-
-#ifdef FE_IS_ODD
-	#error FE_IS_ODD is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_IS_ODD(input) (FE_MODULO_BY_2(input) == 1)
-
-
-#ifdef FE_ABS
-	#error FE_ABS is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_ABS(x) ((x < 0) ? x * -1 : x)
-
-
-#ifdef FE_CALCULATE_INDEX
-	#error FE_CALCULATE_INDEX is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_CALCULATE_INDEX(row, coordinate_x, coordinate_y) (coordinate_x + (row * coordinate_y))
-
-
-#ifdef FE_MAX
-	#error FE_MAX is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_MAX(a, b) ((a >= b) ? a : b)
-
-#ifdef FE_MIN
-	#error FE_MIN is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_MIN(a, b) ((a <= b) ? a : b)
-
-
-#ifdef FE_CLAMP
-	#error FE_CLAMP is a reserved Frogman Engine macro keyword.
-#endif
-#define FE_CLAMP(value, min, max) ((min > value) ? min : ((value > max) ? max : value))
-
-
-#ifdef FE_IS_NEARLY_EQUAL
-	#error FE_IS_NEARLY_EQUAL is a reserved Frogman Engine macro keyword.
-#endif
-// std for std::numeric_limits<T>::epsilon()
-#include <limits> 
-#define FE_IS_NEARLY_EQUAL(left, right, offset) (FE_ABS(left - right) <= offset)
-
-
 #include <FE/prerequisites.h>
+#include <FE/type_traits.hxx>
 
-
+// std
 #include <cmath>
-#ifdef FE_CALCULATE_DIRECTION_2D
-    #error FE_CALCULATE_DIRECTION_2D is a reserved Frogman Engine macro function name.
-#endif
-#define FE_CALCULATE_DIRECTION_2D(vertical, horizontal) ((180.0 * ::std::atan2(vertical_p, horizontal_p)) / FE::pi)
-
-
-#define _SMALLEST_PRIME_NUMBER_ 2
-
-
-namespace FE
-{
-	constexpr static inline FE::float64 pi = 3.1415926535897932;
-
-#ifdef FE_DEGREE_TO_RADIAN
-#error FE_DEGREE_TO_RADIAN is a reserved Frogman Engine macro function name.
-#endif
-#define FE_DEGREE_TO_RADIAN(x) ((x * ::FE::pi) / 180.0)
-
-#ifdef FE_RADIAN_TO_DEGREE
-#error FE_RADIAN_TO_DEGREE is a reserved Frogman Engine macro function name.
-#endif
-#define FE_RADIAN_TO_DEGREE(x) ((x * 180.0) / ::FE::pi)
-
-}
+#include <limits> 
 
 
 
 
 BEGIN_NAMESPACE(FE::algorithm::math)
 
+
+template <typename Integer>
+_FORCE_INLINE_ _CONSTEXPR17_ FE::boolean is_even(const Integer integer_p) noexcept
+{
+	static_assert(std::is_integral<Integer>::value == true, "static assertion failed: the template argument N must be a integral type.");
+	return (FE_MODULO_BY_2(integer_p) == 0);
+}
+
+template <typename Integer>
+_FORCE_INLINE_ _CONSTEXPR17_ FE::boolean is_odd(const Integer integer_p) noexcept
+{
+	static_assert(std::is_integral<Integer>::value == true, "static assertion failed: the template argument N must be a integral type.");
+	return (FE_MODULO_BY_2(integer_p) == 1);
+}
+
+
+template<typename T>
+_FORCE_INLINE_ _CONSTEXPR20_ T abs(const T& x_p) noexcept
+{
+	return (x_p < 0) ? (x_p * -1) : x_p;
+}
+
+
+template<typename T>
+_FORCE_INLINE_ _CONSTEXPR20_ T max(const T& lhs_p, const T& rhs_p) noexcept
+{
+	return (lhs_p >= rhs_p) ? lhs_p : rhs_p;
+}
+
+template<typename T>
+_FORCE_INLINE_ _CONSTEXPR20_ T min(const T& lhs_p, const T& rhs_p) noexcept
+{
+	return (lhs_p <= rhs_p) ? lhs_p : rhs_p;
+}
+
+
+template<typename T>
+_FORCE_INLINE_ _CONSTEXPR20_ T clamp(const T& value_p, const T& min_p, const T& max_p) noexcept
+{
+	return ((min_p > value_p) ? min_p : ((value_p > max_p) ? max_p : value_p));
+}
+
+
+template<typename T>
+_FORCE_INLINE_ _CONSTEXPR20_ FE::boolean is_nearly_equal(const T& lhs_p, const T& rhs_p, const T& offset_p) noexcept
+{
+	return  ::FE::algorithm::math::abs(lhs_p - rhs_p) <= offset_p;
+}
+
+
+template<typename N>
+_FORCE_INLINE_ _CONSTEXPR17_ N calculate_index_of_a_matrix(const N coordinate_x_p, const N coordinate_y_p, const N row_p) noexcept
+{
+	static_assert(FE::is_numeric<N>::value == true, "static assertion failed: the template argument N must be a numerical type.");
+	return coordinate_x_p + (row_p * coordinate_y_p);
+}
+
+
+constexpr static inline FE::float64 pi = 3.1415926535897932;
+
+_FORCE_INLINE_ _CONSTEXPR17_ FE::float64 radian_to_degree(FE::float64 radian_p) noexcept
+{
+	return (radian_p * 180.0) / pi;
+}
+
+_FORCE_INLINE_ _CONSTEXPR17_ FE::float64 degree_to_radian(FE::float64 degree_p) noexcept
+{
+	return (degree_p * pi) / 180.0;
+}
+
+
+_FORCE_INLINE_ _CONSTEXPR17_ FE::float64 calculate_2D_direction(FE::float64 vertical_p, FE::float64 horizontal_p) noexcept
+{
+	return ((180.0 * ::std::atan2(vertical_p, horizontal_p)) / pi);
+}
+
+
+constexpr inline ::FE::uint64 smallest_prime_number = 2;
 
 _FORCE_INLINE_ _CONSTEXPR17_ boolean is_prime(uint64 number_p) noexcept
 {
@@ -169,10 +177,12 @@ _FORCE_INLINE_ _CONSTEXPR17_ boolean is_prime(uint64 number_p) noexcept
 }
 
 uint64 to_higher_prime(uint64 number_p) noexcept;
+
 uint64 to_lower_prime(uint64 number_p) noexcept;
 
+
 template<typename T>
-_CONSTEXPR17_ T select_minimum(std::initializer_list<T>&& initializer_list_p) noexcept
+_CONSTEXPR20_ T select_minimum(std::initializer_list<T>&& initializer_list_p) noexcept
 {
 	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
 	const T* const l_initializer_list_end = initializer_list_p.end();
@@ -190,7 +200,7 @@ _CONSTEXPR17_ T select_minimum(std::initializer_list<T>&& initializer_list_p) no
 }
 
 template<typename T>
-_CONSTEXPR17_ T select_maximum(std::initializer_list<T>&& initializer_list_p) noexcept
+_CONSTEXPR20_ T select_maximum(std::initializer_list<T>&& initializer_list_p) noexcept
 {
 	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
 	const T* const l_initializer_list_end = initializer_list_p.end();
@@ -220,7 +230,6 @@ https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expa
     180°(angle) = π(radian)
 */
 FE::float64 sin(::var::float64 radian_p) noexcept;
-
 
 /*
     Taylor's series of cos(𝑥)

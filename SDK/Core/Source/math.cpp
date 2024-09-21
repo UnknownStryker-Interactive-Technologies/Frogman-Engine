@@ -32,7 +32,7 @@ uint64 to_higher_prime(uint64 number_p) noexcept
 	case 0:
 		_FALLTHROUGH_;
 	case 1:
-		return _SMALLEST_PRIME_NUMBER_;
+		return smallest_prime_number;
 
 	case 3:
 		_FALLTHROUGH_;
@@ -77,7 +77,7 @@ uint64 to_lower_prime(uint64 number_p) noexcept
 	case 0:
 		_FALLTHROUGH_;
 	case 1:
-		return _SMALLEST_PRIME_NUMBER_;
+		return smallest_prime_number;
 
 	case 3:
 		_FALLTHROUGH_;
@@ -124,8 +124,8 @@ uint64 to_lower_prime(uint64 number_p) noexcept
 */
 FE::float64 sin(::var::float64 radian_p) noexcept
 {
-    // number of pies == ( static_cast<FE::int64>(FE_RADIAN_TO_DEGREE(radian_p) / 180) * FE::pi );
-    radian_p -= ( static_cast<FE::int64>(FE_RADIAN_TO_DEGREE(radian_p) / 180) * FE::pi );
+    // number of pies == ( static_cast<FE::float64>(static_cast<FE::int64>(radian_to_degree(radian_p)) / 180) * pi );
+    radian_p -= ( static_cast<FE::float64>(static_cast<FE::int64>(radian_to_degree(radian_p)) / 180) * pi );
     // radian is now less than a pi.
 
     // factorial lookups.
@@ -201,13 +201,13 @@ FE::float64 sin(::var::float64 radian_p) noexcept
 */
 FE::float64 cos(::var::float64 radian_p) noexcept
 {
-    // number of pies == ( static_cast<FE::int64>(FE_RADIAN_TO_DEGREE(radian_p) / 360) * (2 * FE::pi) );
-    radian_p -= ( static_cast<FE::int64>(FE_RADIAN_TO_DEGREE(radian_p) / 360) * (2 * FE::pi) );
+    // number of pies == ( static_cast<FE::int64>(radian_to_degree(radian_p) / 360) * (2 * pi) );
+    radian_p -= ( static_cast<FE::float64>(static_cast<FE::int64>(radian_to_degree(radian_p)) / 360) * (2.0 * pi) );
     // radian is now less than a pi.
 
-    if(radian_p > FE::pi)
+    if(radian_p > pi)
     {
-        radian_p -= (radian_p - FE::pi);
+        radian_p -= (radian_p - pi);
     }
 
     // factorial lookups.

@@ -111,12 +111,12 @@ template<class T>
       // match with the max and min methods of numeric_limits<T>.
       //
       T safe_max = detail::safe_max(static_cast<T>(8));
-      T safe_min = detail::safe_min(static_cast<T>(4));
+      T sa::FE::algorithm::math::min = detail::sa::FE::algorithm::math::min(static_cast<T>(4));
 
       T xp1 = one + x;
       T xm1 = x - one;
 
-      if((x < safe_max) && (x > safe_min) && (y < safe_max) && (y > safe_min))
+      if((x < safe_max) && (x > sa::FE::algorithm::math::min) && (y < safe_max) && (y > sa::FE::algorithm::math::min))
       {
          T yy = y * y;
          T r = std::sqrt(xp1*xp1 + yy);
@@ -187,7 +187,7 @@ template<class T>
                }
             }
          }
-         else if(y <= safe_min)
+         else if(y <= sa::FE::algorithm::math::min)
          {
             // There is an assumption in Hull et al's analysis that
             // if we get here then x == 1.  This is true for all "good"

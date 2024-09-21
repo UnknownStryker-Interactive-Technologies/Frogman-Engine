@@ -884,23 +884,23 @@ _FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, cons
 	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
 #if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    std::memcpy(out_dest_p, source_p, FE_MIN(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
+    std::memcpy(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 #else
 	if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED && SourceAddressAlignment == ADDRESS::_ALIGNED)
 	{
-		FE_ALIGNED_MEMCPY(out_dest_p, source_p, FE_MIN(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
+		FE_ALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 	}
 	else if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED && SourceAddressAlignment == ADDRESS::_NOT_ALIGNED)
 	{
-		FE_DEST_ALIGNED_MEMCPY(out_dest_p, source_p, FE_MIN(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
+		FE_DEST_ALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 	}
 	else if constexpr (DestAddressAlignment == ADDRESS::_NOT_ALIGNED && SourceAddressAlignment == ADDRESS::_ALIGNED)
 	{
-		FE_SOURCE_ALIGNED_MEMCPY(out_dest_p, source_p, FE_MIN(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
+		FE_SOURCE_ALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 	}
 	else if constexpr (DestAddressAlignment == ADDRESS::_NOT_ALIGNED && SourceAddressAlignment == ADDRESS::_NOT_ALIGNED)
 	{
-		FE_UNALIGNED_MEMCPY(out_dest_p, source_p, FE_MIN(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
+		FE_UNALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 	}
 #endif
 }
