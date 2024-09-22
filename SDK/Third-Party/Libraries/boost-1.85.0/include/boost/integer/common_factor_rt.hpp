@@ -6,6 +6,7 @@
 
 #ifndef BOOST_INTEGER_COMMON_FACTOR_RT_HPP
 #define BOOST_INTEGER_COMMON_FACTOR_RT_HPP
+
 #include <boost/assert.hpp>
 #include <boost/core/enable_if.hpp>
 
@@ -575,4 +576,5 @@ public:
 #ifdef BOOST_MSVC
 #pragma warning(pop)
 #endif
+
 #endif  // BOOST_INTEGER_COMMON_FACTOR_RT_HPP

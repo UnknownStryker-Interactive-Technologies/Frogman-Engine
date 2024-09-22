@@ -51,11 +51,11 @@ inline long double safe_max(long double t)
 }
 
 template <class T>
-inline T sa::FE::algorithm::math::min(T t)
+inline T safe_min(T t)
 {
    return std::sqrt((std::numeric_limits<T>::min)()) * t;
 }
-inline long double sa::FE::algorithm::math::min(long double t)
+inline long double safe_min(long double t)
 {
    // long double sqrt often returns zero due to
    // insufficient internal precision:

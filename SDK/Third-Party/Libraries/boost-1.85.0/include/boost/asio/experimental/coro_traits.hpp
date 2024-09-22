@@ -132,7 +132,7 @@ struct coro_traits
   using signature_type = argument_dependent;
 
   /// Whether or not the coroutine is noexcept.
-  static constexpr bool is_noexcept = argument_dependent;
+  constexpr static bool is_noexcept = argument_dependent;
 
   /// The error type of the coroutine. @c void for noexcept.
   using error_type = argument_dependent;
@@ -151,7 +151,7 @@ struct coro_traits
   using return_type = Return;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type();
-  static constexpr bool is_noexcept = false;
+  constexpr static bool is_noexcept = false;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };
@@ -164,7 +164,7 @@ struct coro_traits<T(), Return, Executor>
   using return_type = Return;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type();
-  static constexpr bool is_noexcept = false;
+  constexpr static bool is_noexcept = false;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };
@@ -177,7 +177,7 @@ struct coro_traits<T() noexcept, Return, Executor>
   using return_type = Return;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type();
-  static constexpr bool is_noexcept = true;
+  constexpr static bool is_noexcept = true;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };
@@ -190,7 +190,7 @@ struct coro_traits<T(U), Return, Executor>
   using return_type = Return;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type(input_type);
-  static constexpr bool is_noexcept = false;
+  constexpr static bool is_noexcept = false;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };
@@ -203,7 +203,7 @@ struct coro_traits<T(U) noexcept, Return, Executor>
   using return_type = Return;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type(input_type);
-  static constexpr bool is_noexcept = true;
+  constexpr static bool is_noexcept = true;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };
@@ -216,7 +216,7 @@ struct coro_traits<void() noexcept, void, Executor>
   using return_type = void;
   using result_type = detail::coro_result_t<yield_type, return_type>;
   using signature_type = result_type(input_type);
-  static constexpr bool is_noexcept = true;
+  constexpr static bool is_noexcept = true;
   using error_type = std::conditional_t<is_noexcept, void, std::exception_ptr>;
   using completion_handler = detail::coro_handler_t<result_type, is_noexcept>;
 };

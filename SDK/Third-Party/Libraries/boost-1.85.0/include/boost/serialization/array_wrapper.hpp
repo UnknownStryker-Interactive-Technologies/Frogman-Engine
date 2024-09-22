@@ -40,12 +40,12 @@ public:
 
     array_wrapper(const array_wrapper & rhs) :
         m_t(rhs.m_t),
-        m_indirected_element_count(rhs.m_indirected_element_count)
+        m_element_count(rhs.m_element_count)
     {}
 public:
     array_wrapper(T * t, std::size_t s) :
         m_t(t),
-        m_indirected_element_count(s)
+        m_element_count(s)
     {}
 
     // default implementation
@@ -98,12 +98,12 @@ public:
 
     std::size_t count() const
     {
-      return m_indirected_element_count;
+      return m_element_count;
     }
 
 private:
     T * const m_t;
-    const std::size_t m_indirected_element_count;
+    const std::size_t m_element_count;
 };
 
 template<class T, class S>

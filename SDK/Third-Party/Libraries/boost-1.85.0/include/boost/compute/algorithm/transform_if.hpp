@@ -58,11 +58,11 @@ inline OutputIterator transform_if_impl(InputIterator first,
     k1.exec_1d(queue, 0, count);
 
     // scan indices
-    size_t copied_indirected_element_count = (indices.cend() - 1).read(queue);
+    size_t copied_element_count = (indices.cend() - 1).read(queue);
     ::boost::compute::exclusive_scan(
         indices.begin(), indices.end(), indices.begin(), queue
     );
-    copied_indirected_element_count += (indices.cend() - 1).read(queue); // last scan element plus last mask element
+    copied_element_count += (indices.cend() - 1).read(queue); // last scan element plus last mask element
 
     // copy values
     ::boost::compute::detail::meta_kernel k2("transform_if_do_copy");
@@ -78,7 +78,7 @@ inline OutputIterator transform_if_impl(InputIterator first,
 
     k2.exec_1d(queue, 0, count);
 
-    return result + static_cast<difference_type>(copied_indirected_element_count);
+    return result + static_cast<difference_type>(copied_element_count);
 }
 
 template<class InputIterator, class UnaryFunction, class Predicate>
