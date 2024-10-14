@@ -8,6 +8,7 @@
 
 // std
 #include <initializer_list>
+#include <utility>
 
 
 
@@ -39,10 +40,10 @@ private:
 	pointer const m_absolute_begin_pointer;
 
 public:
-	_FORCE_INLINE_ fstack() noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr) {}
-	_FORCE_INLINE_ ~fstack() noexcept { this->pop_all(); }
+	_FE_FORCE_INLINE_ fstack() noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr) {}
+	_FE_FORCE_INLINE_ ~fstack() noexcept { this->pop_all(); }
 
-	_CONSTEXPR20_ fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
+	_FE_CONSTEXPR20_ fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
 	{
 		FE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
 		FE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
@@ -51,18 +52,18 @@ public:
 	}
 
 	template<class InputIterator>
-	_CONSTEXPR20_ fstack(InputIterator first_p, InputIterator last_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + (last_p - first_p)), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
+	_FE_CONSTEXPR20_ fstack(InputIterator first_p, InputIterator last_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + (last_p - first_p)), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
 	{
 		FE_STATIC_ASSERT(std::is_class<InputIterator>::value == false, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		FE_STATIC_ASSERT((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value == false), "Static Assertion Failure: InputIterator's value_type has to be the same as fstack's value_type.");
 
 		FE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than the iterator ${%s@2}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_POSITIONING), TO_STRING(first_p), TO_STRING(last_p));
-		FE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fstack capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY));
+		FE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fstack capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
 
 		Traits::copy_construct(InputIterator{ this->m_absolute_begin_pointer }, first_p, last_p - first_p);
 	}
 
-	_CONSTEXPR20_ fstack(fstack& other_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr)
+	_FE_CONSTEXPR20_ fstack(fstack& other_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr)
 	{
 		if (other_p.is_empty())
 		{
@@ -74,7 +75,7 @@ public:
 		this->__jump_top_pointer(other_p.m_top_ptr - other_p.m_absolute_begin_pointer);
 	}
 
-	_CONSTEXPR20_ fstack(fstack&& rvalue_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr)
+	_FE_CONSTEXPR20_ fstack(fstack&& rvalue_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr)
 	{
 		if (rvalue_p.is_empty())
 		{
@@ -87,7 +88,7 @@ public:
 		rvalue_p.__set_top_pointer_to_zero();
 	}
 
-	_CONSTEXPR20_ fstack& operator=(std::initializer_list<value_type> initializer_list_p) noexcept
+	_FE_CONSTEXPR20_ fstack& operator=(std::initializer_list<value_type> initializer_list_p) noexcept
 	{
 		FE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
 		FE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
@@ -106,7 +107,7 @@ public:
 		return *this;
 	}
 
-	_CONSTEXPR20_ fstack& operator=(fstack& other_p) noexcept
+	_FE_CONSTEXPR20_ fstack& operator=(fstack& other_p) noexcept
 	{
 		FE::size l_other_size = other_p.size();
 		if (l_other_size == 0)
@@ -128,7 +129,7 @@ public:
 		return *this;
 	}
 
-	_CONSTEXPR20_ fstack& operator=(fstack&& rvalue_p) noexcept
+	_FE_CONSTEXPR20_ fstack& operator=(fstack&& rvalue_p) noexcept
 	{
 		FE::size l_other_size = rvalue_p.size();
 		if (l_other_size == 0)
@@ -151,9 +152,9 @@ public:
 		return *this;
 	}
 
-	_FORCE_INLINE_ void push(const value_type& value_p) noexcept
+	_FE_FORCE_INLINE_ void push(const value_type& value_p) noexcept
 	{
-		FE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
+		FE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_OUT_OF_RANGE));
 
 		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
 		{
@@ -167,9 +168,9 @@ public:
 		++this->m_top_ptr;
 	}
 
-	_CONSTEXPR20_ value_type pop() noexcept
+	_FE_CONSTEXPR20_ value_type pop() noexcept
 	{
-		FE_ASSERT(this->is_empty() == true, "${%s@0}: The fstack top index reached zero. The index value_p must be greater than zero", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_RANGE));
+		FE_ASSERT(this->is_empty() == true, "${%s@0}: The fstack top index reached zero. The index value_p must be greater than zero", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_OUT_OF_RANGE));
 
 		--this->m_top_ptr;
 		T l_return_value_buffer = std::move(*this->m_top_ptr);
@@ -182,7 +183,7 @@ public:
 		return l_return_value_buffer;
 	}
 	
-	_FORCE_INLINE_ void pop_all() noexcept
+	_FE_FORCE_INLINE_ void pop_all() noexcept
 	{
 		if (this->is_empty() == false)
 		{
@@ -194,88 +195,88 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ const_reference top() const noexcept
+	_FE_FORCE_INLINE_ const_reference top() const noexcept
 	{
 		return *(this->m_top_ptr - 1);
 	}
 
-	_FORCE_INLINE_ reference top() noexcept
+	_FE_FORCE_INLINE_ reference top() noexcept
 	{
 		return *(this->m_top_ptr - 1);
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ var::boolean is_empty() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::boolean is_empty() const noexcept
 	{
 		return (this->m_top_ptr == this->m_absolute_begin_pointer) ? true : false;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ size_type count() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type count() const noexcept
 	{
 		return this->m_top_ptr - this->m_absolute_begin_pointer;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ size_type size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type size() const noexcept
 	{
 		return this->m_top_ptr - this->m_absolute_begin_pointer;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ size_type max_size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type max_size() const noexcept
 	{
 		return Capacity;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ size_type capacity() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type capacity() const noexcept
 	{
 		return Capacity;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ const_iterator cbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cbegin() const noexcept
 	{
 		return this->m_absolute_begin_pointer;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ const_iterator cend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cend() const noexcept
 	{
 		return this->m_top_ptr;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
 	{
 		return this->m_top_ptr - 1;
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ const_reverse_iterator crend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crend() const noexcept
 	{
 		return this->m_absolute_begin_pointer - 1;
 	}
 
-	_FORCE_INLINE_ void swap(fstack& in_out_other_p) noexcept
+	_FE_FORCE_INLINE_ void swap(fstack& in_out_other_p) noexcept
 	{
-		algorithm::utility::swap(*this, in_out_other_p);
+		std::swap(*this, in_out_other_p);
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ boolean operator==(const fstack& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator==(const fstack& other_p) const noexcept
 	{
 		return FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
-	_NODISCARD_ _FORCE_INLINE_ boolean operator!=(const fstack& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator!=(const fstack& other_p) const noexcept
 	{
 		return !FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
 private:
-	_FORCE_INLINE_ void __jump_top_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ void __jump_top_pointer(difference_type ptrdiff_p) noexcept
 	{
 		this->m_top_ptr += ptrdiff_p;
 	}
 
-	_FORCE_INLINE_ void __set_top_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ void __set_top_pointer_to_zero() noexcept
 	{
 		this->m_top_ptr = this->m_absolute_begin_pointer;
 	}
 
-	_CONSTEXPR20_ void __restructrue_fstack_with_move_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
+	_FE_CONSTEXPR20_ void __restructrue_fstack_with_move_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
 	{
 		FE::size l_this_size = this->size();
 
@@ -303,7 +304,7 @@ private:
 		}
 	}
 
-	_CONSTEXPR20_ void __restructrue_fstack_with_copy_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
+	_FE_CONSTEXPR20_ void __restructrue_fstack_with_copy_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
 	{
 		FE::size l_this_size = this->size();
 

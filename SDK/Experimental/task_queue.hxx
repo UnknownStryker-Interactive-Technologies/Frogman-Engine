@@ -36,7 +36,7 @@ public:
     task_queue& operator=(task_queue&&) noexcept = delete;
 
     template<class Task>
-    _FORCE_INLINE_ void push(const Task& task_p, const typename Task::arguments_buffer_type& arguments_p) noexcept
+    _FE_FORCE_INLINE_ void push(const Task& task_p, const typename Task::arguments_buffer_type& arguments_p) noexcept
     {
         FE_STATIC_ASSERT((std::is_base_of<FE::task_base, Task>::value == false), "Static type checking failed: the template parameter Task is not the one of the children of FE::task_base.");
         FE_STATIC_ASSERT((std::is_base_of<FE::argument_base, typename Task::arguments_buffer_type>::value == false), "Static type checking failed: the template parameter Arguments is not the one of the children of FE::argument_base.");
@@ -46,20 +46,20 @@ public:
         this->m_argument_queue.push(arguments_p);
     }
 
-    _FORCE_INLINE_ void pop() noexcept
+    _FE_FORCE_INLINE_ void pop() noexcept
     {
         this->m_task_pool.template deallocate<>(this->m_task_queue.pop());
         this->m_argument_queue.pop();
     }
 
-    _FORCE_INLINE_ void pop_all() noexcept
+    _FE_FORCE_INLINE_ void pop_all() noexcept
     {
         this->m_task_queue.pop_all();
         this->m_argument_queue.pop_all();
     }
 
     template<typename Return = void>
-    _FORCE_INLINE_ Return execute_front() noexcept
+    _FE_FORCE_INLINE_ Return execute_front() noexcept
     {
         if constexpr (std::is_void<Return>::value == false)
         {
@@ -78,7 +78,7 @@ public:
     }
 
     template<typename Return = void>
-    _FORCE_INLINE_ Return execute_back() noexcept
+    _FE_FORCE_INLINE_ Return execute_back() noexcept
     {
         if constexpr (std::is_void<Return>::value == false)
         {
@@ -96,7 +96,7 @@ public:
         }
     }
 
-    _FORCE_INLINE_ boolean is_empty() const noexcept
+    _FE_FORCE_INLINE_ boolean is_empty() const noexcept
 	{
 		return (this->m_task_queue.is_empty() == true) && (this->m_argument_queue.is_empty() == true);
 	}

@@ -19,6 +19,11 @@ BEGIN_NAMESPACE(FE::log)
 
 void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
 {
+    if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
+    {
+        std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
+        std::exit(FE::error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+    }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
@@ -52,6 +57,11 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
 
 void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
 {
+    if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
+    {
+        std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
+        std::exit(FE::error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+    }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
@@ -69,9 +79,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     std::cerr << this->m_log_buffer.data();
 
-    // re-calculate length
-    this->m_log_buffer = this->m_log_buffer.c_str();
-    std::memset(this->m_log_buffer.data(), null, this->m_log_buffer.length() * sizeof(typename buffer_type::value_type));
+    std::memset(this->m_log_buffer.data(), null, default_buffer_size * sizeof(typename buffer_type::value_type));
 }
 
 

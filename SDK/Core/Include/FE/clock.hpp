@@ -21,7 +21,7 @@ public:
     using char_type = char;
 
     // const char* FE::clock::get_current_local_time() noexcept;
-    _MAYBE_UNUSED_ static constexpr int current_local_time_buffer_size = 64;
+    _FE_MAYBE_UNUSED_ static constexpr int current_local_time_buffer_size = 64;
 
 private:
     boost::chrono::steady_clock::time_point m_starting_point;
@@ -29,13 +29,13 @@ private:
     boost::chrono::duration<var::float64> m_delta_time;
 
 public:
-    _CONSTEXPR17_ clock() noexcept : m_starting_point(), m_ending_point(), m_delta_time() {}
-    _FORCE_INLINE_ ~clock() noexcept {}
+    _FE_CONSTEXPR17_ clock() noexcept : m_starting_point(), m_ending_point(), m_delta_time() {}
+    _FE_FORCE_INLINE_ ~clock() noexcept {}
 
-    _FORCE_INLINE_ void start_clock() noexcept { this->m_starting_point = boost::chrono::steady_clock::now(); }
-    _FORCE_INLINE_ void end_clock() noexcept { this->m_ending_point = boost::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void start_clock() noexcept { this->m_starting_point = boost::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void end_clock() noexcept { this->m_ending_point = boost::chrono::steady_clock::now(); }
 
-    _FORCE_INLINE_ float64 get_delta_time() noexcept
+    _FE_FORCE_INLINE_ float64 get_delta_time() noexcept
     {
         this->m_delta_time = this->m_ending_point - this->m_starting_point;
         return this->m_delta_time.count();

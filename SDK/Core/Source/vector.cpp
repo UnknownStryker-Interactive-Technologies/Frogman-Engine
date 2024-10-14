@@ -7,7 +7,7 @@
 BEGIN_NAMESPACE(FE)
 
 
-_REGISTER_CALL_ vector4 cross_product_without_w(const vector4& lhs_p, const vector4& rhs_p) noexcept
+_FE_REGISTER_CALL_ vector4 cross_product_without_w(const vector4& lhs_p, const vector4& rhs_p) noexcept
 {
     vector4 l_lhs, l_rhs;
 
@@ -32,18 +32,18 @@ _REGISTER_CALL_ vector4 cross_product_without_w(const vector4& lhs_p, const vect
 }
 
 
-_REGISTER_CALL_ vector4 lerp(const vector4& lhs_p, const vector4& rhs_p, float32 t_p) noexcept
+_FE_REGISTER_CALL_ vector4 lerp(const vector4& lhs_p, const vector4& rhs_p, float32 t_p) noexcept
 {
     return lhs_p + (t_p * (rhs_p - lhs_p));
 }
 
 
-_REGISTER_CALL_ vector4 projection(const vector4& lhs_p, const vector4& rhs_p) noexcept
+_FE_REGISTER_CALL_ vector4 projection(const vector4& lhs_p, const vector4& rhs_p) noexcept
 {
     return (dot_product(lhs_p, rhs_p) / dot_product(rhs_p, rhs_p)) * rhs_p;
 }
 
-_REGISTER_CALL_ vector4 projection_without_w(const vector4& lhs_p, const vector4& rhs_p) noexcept
+_FE_REGISTER_CALL_ vector4 projection_without_w(const vector4& lhs_p, const vector4& rhs_p) noexcept
 {
     return (dot_product_without_w(lhs_p, rhs_p) / dot_product_without_w(rhs_p, rhs_p)) * rhs_p;
 }

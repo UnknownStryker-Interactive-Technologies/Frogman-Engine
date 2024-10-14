@@ -4,7 +4,7 @@
 
 
 #ifdef _MSC_VER
-    #define _MSVC_
+    #define _FE_WITH_MSVC_
     #include <vcruntime.h>
 #elif defined( __GLIBCXX__ ) || defined( __GLIBCPP__ )
     #include <cxxabi.h>
@@ -16,69 +16,102 @@
 #endif
 
 
-#ifdef _MSVC_
-    #define _FORCE_INLINE_ __forceinline
+#if defined(_WINDOWS_X86_64_) || defined(_LINUX_X86_64_)
+    #define _FE_ON_X86_64_
+#elif defined(__aarch64__)
+    #define _FE_ON_ARM64_
 #else
-    #define _FORCE_INLINE_ inline __attribute__((always_inline))
+#error platform macro not defined.
 #endif
-
-#define _VECTOR_CALL_ __vectorcall
-#define _REGISTER_CALL_ __regcall
-#define _CDECL_ __cdecl
 
 
 #if __cplusplus >= 202004L
-    #define _HAS_CXX23_
-    #define _HAS_CXX20_
-    #define _HAS_CXX17_
+    #define _FE_HAS_CXX23_
+    #define _FE_HAS_CXX20_
+    #define _FE_HAS_CXX17_
 #elif __cplusplus >= 202002L
-    #define _HAS_CXX20_
-    #define _HAS_CXX17_
+    #define _FE_HAS_CXX20_
+    #define _FE_HAS_CXX17_
 #elif __cplusplus >= 201703L
-    #define _HAS_CXX17_
+    #define _FE_HAS_CXX17_
 #else
 // please add /Zc:__cplusplus to the aditional options. [ C/C++ -> Command Line -> Aditional Options ]
     #error Archaic C++ version detected. Use C++ 17 or later versions. Please add /Zc:__cplusplus to the aditional options. [ C/C++ -> Command Line -> Aditional Options ]
 #endif
 
 
-#ifdef _HAS_CXX17_
-    #define _CONSTEXPR17_ constexpr
+#ifdef _FE_WITH_MSVC_
+    #define _FE_FORCE_INLINE_ __forceinline
 #else
-    #define _CONSTEXPR17_
+    #define _FE_FORCE_INLINE_ inline __attribute__((always_inline))
 #endif
 
-#ifdef _HAS_CXX20_
-    #define _CONSTEXPR20_ constexpr
-    #define _CONSTEVAL20_ consteval
+#define _FE_VECTOR_CALL_ __vectorcall
+#define _FE_REGISTER_CALL_ __regcall
+#define _FE_CDECL_ __cdecl
+
+
+#ifdef _FE_HAS_CXX17_
+    #define _FE_CONSTEXPR17_ constexpr
 #else
-    #define _CONSTEXPR20_
-    #define _CONSTEVAL20_
+    #define _FE_CONSTEXPR17_
 #endif
 
-#ifdef _HAS_CXX23_
-    #define _CONSTEXPR23_ constexpr
-    #define _CONSTEVAL23_ consteval
+#ifdef _FE_HAS_CXX20_
+    #define _FE_CONSTEXPR20_ constexpr
+    #define _FE_CONSTEVAL20_ consteval
 #else
-    #define _CONSTEXPR23_
-    #define _CONSTEVAL23_
+    #define _FE_CONSTEXPR20_
+    #define _FE_CONSTEVAL20_
+#endif
+
+#ifdef _FE_HAS_CXX23_
+    #define _FE_CONSTEXPR23_ constexpr
+    #define _FE_CONSTEVAL23_ consteval
+#else
+    #define _FE_CONSTEXPR23_
+    #define _FE_CONSTEVAL23_
 #endif
 
 
 #ifdef _WINDOWS_X86_64_
-    #define STRING(s) L#s
+    #define FE_TEXT(s) L#s
 #elif defined(_LINUX_X86_64_)
-    #define STRING(s) #s
+    #define FE_TEXT(s) #s
 #endif
 
 
-#if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_X64) || defined(_M_AMD64)
-    #define _X86_64_
-#elif defined(__aarch64__)
-    #define _ARM64_
+#define _FE_NODISCARD_ [[nodiscard]]
+#define _FE_FALLTHROUGH_ [[fallthrough]]
+#define _FE_MAYBE_UNUSED_ [[maybe_unused]]
+#define _FE_DISCARD_ _FE_MAYBE_UNUSED_
+#define _FE_NORETURN_ [[noreturn]]
+#define _FE_DEPRECATED_ [[deprecated]]
+#define _FE_IN_DEVELOPMENT_ _FE_DEPRECATED_
+
+
+#ifdef _FE_HAS_CXX20_
+	#define _FE_LIKELY_ [[likely]]
+	#define _FE_UNLIKELY_ [[unlikely]]
+	#define FE_LIKELY(c) (c)
+	#define FE_UNLIKELY(c) (c)
+	#define _FE_NO_UNIQUE_ADDRESS_ //[[no_unique_address]]
+
 #else
-#error platform macro not defined.
+	#ifdef _LINUX_X86_64_
+		#define FE_LIKELY(c) __builtin_expect((c), 1)
+		#define FE_UNLIKELY(c) __builtin_expect((c), 0)
+	#else
+		#define FE_LIKELY(c) (c)
+		#define FE_UNLIKELY(c) (c)
+	#endif
+
+	#define _FE_LIKELY_ 
+	#define _FE_UNLIKELY_
+	#define _FE_NO_UNIQUE_ADDRESS_
 #endif
+
+
 
 
 #define BEGIN_NAMESPACE(NAME_P) namespace NAME_P {

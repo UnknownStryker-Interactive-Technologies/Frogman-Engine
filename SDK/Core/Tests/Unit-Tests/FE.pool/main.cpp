@@ -17,16 +17,7 @@
 /*
 Profile Guided Optimization: https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations?view=msvc-170
 
-TO DO: 
-1. variable table
-                                 
-																														  |--- int32 variable hash map
-																														  |--- float64 variable hash map
-																														  |--- FE::string variable hash map
-std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaible name string, Value: varaible address>> -|--- FE::array variable hash map
-																														  |--- std::list variable hash map
-																														  |--- std::deque variable hash map
-2. memory layout reflection for serialization  																		      |--- etc...
+memory layout reflection for serialization  																		      |--- etc...
                                                                                       *
 	                                                                                  |
 	Shallower <----- Memory Hierarchy Depth ----> Deeper                      Lower Memory Address
@@ -35,7 +26,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-	|  FE::string m_raw_name --------------|----|                                         |
+	|  FE::string m_raw_name ----------|----|                                         |
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -72,7 +63,7 @@ int main(int argc_p, char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
@@ -84,41 +75,36 @@ int main(int argc_p, char** argv_p)
 
 
 
-
 TEST(pool_allocator, all)
 {
+	FE::scalable_pool<sizeof(std::string) * 64> l_scalable_pool;
+
+	FE::pool_allocator<std::string, FE::size_in_bytes<sizeof(std::string) * 64>> l_pool_allocator(&l_scalable_pool);
+	l_pool_allocator.create_pages(1);
+
 	{
-		FE::pool_allocator<std::string> l_allocator;
-		std::string* l_ptr = l_allocator.allocate(1);
-		l_allocator.deallocate(l_ptr, 1);
+
+		std::string* l_ptr = l_pool_allocator.allocate(1);
+		l_pool_allocator.deallocate(l_ptr, 1);
 	}
 	
 	{
-		std::vector<std::string, FE::pool_allocator<std::string>> l_vector;
+		std::vector<std::string, FE::pool_allocator<std::string, FE::size_in_bytes<sizeof(std::string) * 64>>> l_vector(l_pool_allocator);
 
-		l_vector.reserve(64);
+		l_vector.reserve(32);
 		l_vector.shrink_to_fit();
 	}
 }
 
-
-TEST(new_delete_pool_allocator, all)
-{
-	FE::new_delete_allocator<FE::pool_allocator<std::string>> l_allocator;
-
-	{
-		auto l_ptr = l_allocator.allocate(1);
-
-		l_allocator.deallocate(l_ptr, 1);
-	}
-}
 
 
 
 void memory_pooled_std_list_iteration(benchmark::State& state_p) noexcept
 {
 	// std::list nodes are allocated under the memory pool namespace named "list node pool". This provides higher cache hit ratio. 
-	std::list<int, FE::pool_allocator<int, FE::size_in_bytes<1 MB>>> l_list;
+	FE::scalable_pool< FE::size_in_bytes<1 * FE::one_mb>::size > l_scalable_pool;
+	FE::pool_allocator<int, FE::size_in_bytes<1 * FE::one_mb>> l_pool_allocator( &l_scalable_pool );
+	std::list<int, FE::pool_allocator<int, FE::size_in_bytes<1 * FE::one_mb>>> l_list(l_pool_allocator);
 	benchmark::DoNotOptimize(l_list);
 
 	l_list.push_back(0);
@@ -231,7 +217,7 @@ BENCHMARK(boost_object_pool_allocator_extreme_test);
 
 void FE_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<1000 MB> l_allocator;
+	FE::scalable_pool<1000 * FE::one_mb> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 

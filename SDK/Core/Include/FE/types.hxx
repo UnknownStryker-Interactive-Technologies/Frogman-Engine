@@ -2,7 +2,7 @@
 #define _FE_CORE_TYPES_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/miscellaneous/suppress_warnings.h>
-#include <FE/attributes.h>
+#include <FE/definitions.h>
 
 // std
 #include <atomic>
@@ -28,7 +28,7 @@ typedef const unsigned char uchar; // primitive types are const by default
 typedef const wchar_t wchar; // primitive types are const by default
 
 
-#ifdef _HAS_CXX20_
+#ifdef _FE_HAS_CXX20_
 typedef const char8_t UTF8; // primitive types are const by default
 #endif
 
@@ -79,25 +79,25 @@ template <typename T>
 constexpr inline auto min_value = ::std::numeric_limits<T>::min();
 
 
-_MAYBE_UNUSED_	constexpr inline FE::int8 int8_max = max_value<FE::int8>;
-_MAYBE_UNUSED_	constexpr inline FE::int16 int16_max = max_value<FE::int16>;
-_MAYBE_UNUSED_	constexpr inline FE::int32 int32_max = max_value<FE::int32>;
-_MAYBE_UNUSED_	constexpr inline FE::int64 int64_max = max_value<FE::int64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int8 int8_max = max_value<FE::int8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int16 int16_max = max_value<FE::int16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int32 int32_max = max_value<FE::int32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int64 int64_max = max_value<FE::int64>;
 	
-_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_max = max_value<FE::uint8>;
-_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_max = max_value<FE::uint16>;
-_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_max = max_value<FE::uint32>;
-_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_max = max_value<FE::uint64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_max = max_value<FE::uint8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_max = max_value<FE::uint16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_max = max_value<FE::uint32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_max = max_value<FE::uint64>;
 
-_MAYBE_UNUSED_	constexpr inline FE::int8 int8_min = min_value<FE::int8>;
-_MAYBE_UNUSED_	constexpr inline FE::int16 int16_min = min_value<FE::int16>;
-_MAYBE_UNUSED_	constexpr inline FE::int32 int32_min = min_value<FE::int32>;
-_MAYBE_UNUSED_	constexpr inline FE::int64 int64_min = min_value<FE::int64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int8 int8_min = min_value<FE::int8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int16 int16_min = min_value<FE::int16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int32 int32_min = min_value<FE::int32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::int64 int64_min = min_value<FE::int64>;
 
-_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_min = min_value<FE::uint8>;
-_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_min = min_value<FE::uint16>;
-_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_min = min_value<FE::uint32>;
-_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_min = min_value<FE::uint8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_min = min_value<FE::uint16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_min = min_value<FE::uint32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>;
 
 
 #define _FE_TRUE_ 1
@@ -113,7 +113,7 @@ _MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>;
 
 
 using null_t = uint8;
-_MAYBE_UNUSED_ inline constexpr null_t null = 0;
+_FE_MAYBE_UNUSED_ inline constexpr null_t null = 0;
 
 
 template <typename T>
@@ -129,14 +129,14 @@ private:
 	bool m_is_initialized;
 
 public:
-	_FORCE_INLINE_ _CONSTEXPR17_ lazy_const() noexcept : m_data(), m_is_initialized(false) {}
-	_FORCE_INLINE_ _CONSTEXPR17_ lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
-	_FORCE_INLINE_ _CONSTEXPR20_ ~lazy_const() noexcept {};
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ lazy_const() noexcept : m_data(), m_is_initialized(false) {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ~lazy_const() noexcept {};
 
-	_FORCE_INLINE_ _CONSTEXPR17_ lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
-	_FORCE_INLINE_ _CONSTEXPR17_ lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
 
-	_FORCE_INLINE_ lazy_const& operator=(value_type&& data_p) noexcept
+	_FE_FORCE_INLINE_ lazy_const& operator=(value_type&& data_p) noexcept
 	{
 		assert(this->m_is_initialized == false);
 
@@ -146,7 +146,7 @@ public:
 		return *this;
 	}
 
-	_FORCE_INLINE_ lazy_const& operator=(const lazy_const& other_p) noexcept
+	_FE_FORCE_INLINE_ lazy_const& operator=(const lazy_const& other_p) noexcept
 	{
 		assert(this->m_is_initialized == false);
 
@@ -156,7 +156,7 @@ public:
 		return *this;
 	}
 
-	_FORCE_INLINE_ lazy_const& operator=(lazy_const&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ lazy_const& operator=(lazy_const&& rvalue_p) noexcept
 	{
 		assert(this->m_is_initialized == false);
 
@@ -166,7 +166,7 @@ public:
 		return *this;
 	}
 
-	_FORCE_INLINE_ const_reference load() const noexcept { return this->m_data; }
+	_FE_FORCE_INLINE_ const_reference load() const noexcept { return this->m_data; }
 };
 
 #ifdef _DEBUG_
@@ -180,18 +180,18 @@ public:
 	using reference = T&;
 	using rvalue_reference = T&&;
 
-	_FORCE_INLINE_ _CONSTEXPR20_ static void set(rvalue_reference rvalue_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static void set(rvalue_reference rvalue_p) noexcept
 	{
 		tl_s_rvalue_buffer = std::move(rvalue_p);
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ static reference set_and_get(rvalue_reference rvalue_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static reference set_and_get(rvalue_reference rvalue_p) noexcept
 	{
 		tl_s_rvalue_buffer = std::move(rvalue_p);
 		return tl_s_rvalue_buffer;
 	}
 
-	_FORCE_INLINE_ _CONSTEXPR20_ static reference get() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static reference get() noexcept
 	{
 		return tl_s_rvalue_buffer;
 	}
@@ -225,7 +225,7 @@ namespace var
 	static_assert(::std::atomic<wchar>::is_always_lock_free == true, "std::atomic is not compatible with wchar.");
 	static_assert(sizeof(wchar) <= 4, "The size of wchar must be less than or equal to four bytes.");
 
-#ifdef _HAS_CXX20_
+#ifdef _FE_HAS_CXX20_
 	typedef char8_t UTF8;
 	static_assert(::std::atomic<UTF8>::is_always_lock_free == true, "std::atomic is not compatible with UTF8.");
 	static_assert(sizeof(UTF8) <= 1, "The size of UTF8 must be one byte.");

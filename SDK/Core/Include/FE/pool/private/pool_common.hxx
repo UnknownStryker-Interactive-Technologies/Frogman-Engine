@@ -24,8 +24,8 @@ BEGIN_NAMESPACE(FE)
 
 enum struct POOL_TYPE : uint8
 {
-    _STATIC = 0,
-    _DYNAMIC = 1,
+    _BLOCK = 0,
+    _SCALABLE = 1,
 };
 
 
@@ -38,7 +38,7 @@ namespace internal::pool
     };
 
     template<POOL_TYPE PoolType, size PageCapacity, class Alignment>
-    struct chunk;
+    class chunk;
 }
 
 
@@ -49,19 +49,19 @@ class pool;
 template<uint64 Capacity>
 struct capacity final
 {
-    _MAYBE_UNUSED_ static constexpr inline size size = Capacity;
+    _FE_MAYBE_UNUSED_ static constexpr inline size size = Capacity;
 };
 
 template<uint64 Count>
 struct object_count final
 {
-    _MAYBE_UNUSED_ static constexpr inline size size = Count;
+    _FE_MAYBE_UNUSED_ static constexpr inline size size = Count;
 };
 
 template<uint64 SizeInBytes>
 struct size_in_bytes final
 {
-    _MAYBE_UNUSED_ static constexpr inline size size = SizeInBytes;
+    _FE_MAYBE_UNUSED_ static constexpr inline size size = SizeInBytes;
 };
 
 

@@ -15,8 +15,9 @@ namespace internal::pool
 {
 
     template<size PageCapacity, class Alignment>
-    struct chunk<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment>
+    class chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>
     {
+    public:
         constexpr static count_t recycler_capacity = ((PageCapacity / Alignment::size) / 2) + 1; // The possible fragment count would be ((PageCapacity / Alignment::size) / 2) + 1 because adjacent fragments gets immediately merged during deallocate() operation.
         
         using recycler_type = std::map<var::byte*, 
@@ -29,7 +30,8 @@ namespace internal::pool
         using recycler_iterator = typename recycler_type::iterator;
         
     private:
-        alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, PageCapacity> m_memory;
+        alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, PageCapacity> m_memory{ 0 };
+        FE::block_pool< sizeof(std::pair<var::byte* const, var::size>), recycler_capacity > m_node_pool;
         /*
          std::pair's first contains the address of the memory block.
          std::pair's second contains the size of the memory block.
@@ -37,21 +39,27 @@ namespace internal::pool
 
     public:
         recycler_type _free_blocks;
-        var::byte* const _begin = m_memory.data();
-        var::byte* _page_iterator = _begin;
-        var::byte* const _end = _begin + m_memory.size();
+        var::byte* const _begin;
+        var::byte* _page_iterator;
+        var::byte* const _end;
 
-        _FORCE_INLINE_ boolean is_full() const noexcept
+        chunk() noexcept 
+            : m_memory{ 0 }, m_node_pool(), _free_blocks(typename recycler_type::allocator_type{ &m_node_pool }), _begin(m_memory.data()), _page_iterator(_begin), _end(_begin + m_memory.size())
+        {
+        }
+
+
+        _FE_FORCE_INLINE_ boolean is_full() const noexcept
         {
             return (_free_blocks.empty() == true) && (_page_iterator >= _end);
         }
 
-        _FORCE_INLINE_ boolean has_reached_the_end(size size_in_bytes_to_allocate_p) const noexcept
+        _FE_FORCE_INLINE_ boolean has_reached_the_end(size size_in_bytes_to_allocate_p) const noexcept
         {
             return (_page_iterator + size_in_bytes_to_allocate_p) >= _end;
         }
 
-        _FORCE_INLINE_ boolean has_to_merge() const noexcept
+        _FE_FORCE_INLINE_ boolean has_to_merge() const noexcept
         {
             constexpr static size merging_point = (PageCapacity / 4) * 3; // Trigger at 75%
             return _page_iterator > (_begin + merging_point);
@@ -64,10 +72,10 @@ namespace internal::pool
 
 // static declaration of FE.generic_pool is not supported.
 template<size PageCapacity, class Alignment, class Allocator>
-class pool<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment, Allocator>
+class pool<POOL_TYPE::_SCALABLE, PageCapacity, Alignment, Allocator>
 {
 public:
-    using chunk_type = internal::pool::chunk<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment>;
+    using chunk_type = internal::pool::chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>;
     using recycler_type = typename chunk_type::recycler_type;
     using recycler_iterator = typename chunk_type::recycler_iterator;
 
@@ -82,7 +90,7 @@ private:
     pool_type m_memory_pool;
 
 public:
-    pool() noexcept = default;
+    pool() noexcept : m_memory_pool() {};
     ~pool() noexcept = default;
 
     pool(const pool&) noexcept = delete;
@@ -105,7 +113,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         FE_STATIC_ASSERT(std::is_array<U>::value == true, "Static Assertion Failed: The T must not be an array[] type.");
         FE_STATIC_ASSERT(std::is_const<U>::value == true, "Static Assertion Failed: The T must not be a const type.");
         FE_ASSERT(size_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(size_p));
-        FE_EXIT(size_p >= PageCapacity, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity [which is ${%lu@1} bytes].", &size_p, &FE::buffer<var::size>::set_and_get(PageCapacity));
+        FE_EXIT(size_p >= PageCapacity, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity [which is ${%lu@1} bytes].", &size_p, &FE::buffer<var::size>::set_and_get(PageCapacity));
 
         size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
 
@@ -156,7 +164,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         return allocate<U>(size_p);
     }
 
-    _FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
+    _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
     {
         FE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
 
@@ -229,7 +237,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 }
 
                 auto l_dealloc_result = l_list_iterator->_free_blocks.emplace(reinterpret_cast<var::byte*>(pointer_p), FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(element_count_p)).first;
-                FE_EXIT(l_dealloc_result == l_list_iterator->_free_blocks.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
+                FE_EXIT(l_dealloc_result == l_list_iterator->_free_blocks.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
 
                 if (l_list_iterator->has_to_merge() == true)
                 {
@@ -306,8 +314,8 @@ private:
                 size l_leftover_size = iterator->second - queried_allocation_size_in_bytes_p;
                 if (l_leftover_size > 0)
                 {
-                    _MAYBE_UNUSED_ auto l_split_result = in_out_free_blocks_p.emplace((out_memblock_info_p._address + queried_allocation_size_in_bytes_p), l_leftover_size).first;
-                    FE_EXIT(l_split_result == in_out_free_blocks_p.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
+                    _FE_MAYBE_UNUSED_ auto l_split_result = in_out_free_blocks_p.emplace((out_memblock_info_p._address + queried_allocation_size_in_bytes_p), l_leftover_size).first;
+                    FE_EXIT(l_split_result == in_out_free_blocks_p.end(), ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_DOUBLE_FREE, "Frogman Engine Memory Pool Debug Information: double free detected.");
                 }
                 in_out_free_blocks_p.erase(iterator);
 
@@ -318,8 +326,8 @@ private:
 };
 
 
-template<size PageCapacity = 8 KB, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment>>>
-using scalable_pool = pool<POOL_TYPE::_DYNAMIC, PageCapacity, Alignment, Allocator>;
+template<size PageCapacity = 8192, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>>>
+using scalable_pool = pool<POOL_TYPE::_SCALABLE, PageCapacity, Alignment, Allocator>;
 
 
 END_NAMESPACE

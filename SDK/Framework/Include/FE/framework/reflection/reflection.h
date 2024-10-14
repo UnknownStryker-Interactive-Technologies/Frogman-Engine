@@ -9,6 +9,7 @@
 
 #include <FE/framework/reflection/function.hpp>
 #include <FE/framework/reflection/property.hpp>
+#include <FE/framework/reflection/type_info.hpp>
 
 
 /*
@@ -68,7 +69,7 @@ private:
 class method_reflection_##method_name \
 { \
 public: \
-	_FORCE_INLINE_ method_reflection_##method_name() noexcept \
+	_FE_FORCE_INLINE_ method_reflection_##method_name() noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::reflection::function::register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(get_signature(), &class_meta_data::type::method_name)); \
 	} \
@@ -96,7 +97,7 @@ public: \
 		return l_full_signature; \
 	} \
 }; \
-_NO_UNIQUE_ADDRESS_ method_reflection_##method_name method_reflection_instance_##method_name;
+_FE_NO_UNIQUE_ADDRESS_ method_reflection_##method_name method_reflection_instance_##method_name;
 #endif
 
 
@@ -107,24 +108,24 @@ _NO_UNIQUE_ADDRESS_ method_reflection_##method_name method_reflection_instance_#
 class property_reflection_##property_name \
 { \
 public: \
-	_FORCE_INLINE_ property_reflection_##property_name(typename class_meta_data::type* const this_p) noexcept \
+	_FE_FORCE_INLINE_ property_reflection_##property_name(typename class_meta_data::type* const this_p) noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::reflection::property::register_property<typename class_meta_data::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
 	} \
 }; \
-_NO_UNIQUE_ADDRESS_ property_reflection_##property_name property_reflection_instance_##property_name = this;
+_FE_NO_UNIQUE_ADDRESS_ property_reflection_##property_name property_reflection_instance_##property_name = this;
 #endif
 
 
 namespace FE::framework::reflection
 {
-	_FORCE_INLINE_ void initialize() noexcept
+	_FE_FORCE_INLINE_ void initialize() noexcept
 	{
 		FE::framework::reflection::function::initialize();
 		FE::framework::reflection::property::initialize();
 	}
 
-	_FORCE_INLINE_ void clean_up() noexcept
+	_FE_FORCE_INLINE_ void clean_up() noexcept
 	{
 		FE::framework::reflection::property::clean_up();
 		FE::framework::reflection::function::clean_up();

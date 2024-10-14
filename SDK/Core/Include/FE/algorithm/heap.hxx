@@ -18,7 +18,7 @@ BEGIN_NAMESPACE(FE)
 struct max_heap
 {
 	template<typename T>
-	_FORCE_INLINE_ boolean operator()(const T& first_p, const T& second_p) const noexcept
+	_FE_FORCE_INLINE_ boolean operator()(const T& first_p, const T& second_p) const noexcept
 	{
 		return first_p._second < second_p._second;
 	}
@@ -27,7 +27,7 @@ struct max_heap
 struct min_heap
 {
 	template<typename T>
-	_FORCE_INLINE_ boolean operator()(const T& first_p, const T& second_p) const noexcept
+	_FE_FORCE_INLINE_ boolean operator()(const T& first_p, const T& second_p) const noexcept
 	{
 		return first_p._second > second_p._second;
 	}

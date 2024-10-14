@@ -28,30 +28,30 @@ public:
 	using difference_type = var::ptrdiff;
 	using alignment_type = Alignment;
 
-	_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
-	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
+	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
-	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator() noexcept {}
-	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator(_MAYBE_UNUSED_ const new_delete_allocator&) noexcept {}
-	_FORCE_INLINE_ _CONSTEXPR20_ new_delete_allocator(_MAYBE_UNUSED_ new_delete_allocator&&) noexcept {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ new_delete_allocator() noexcept {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ new_delete_allocator(_FE_MAYBE_UNUSED_ const new_delete_allocator&) noexcept {}
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ new_delete_allocator(_FE_MAYBE_UNUSED_ new_delete_allocator&&) noexcept {}
 
 	template<typename U>
-	_FORCE_INLINE_ constexpr new_delete_allocator(_MAYBE_UNUSED_ const new_delete_allocator<U, Alignment>&) noexcept {}
+	_FE_FORCE_INLINE_ constexpr new_delete_allocator(_FE_MAYBE_UNUSED_ const new_delete_allocator<U, Alignment>&) noexcept {}
 	
-	_FORCE_INLINE_ ~new_delete_allocator() noexcept {};
+	_FE_FORCE_INLINE_ ~new_delete_allocator() noexcept {};
 
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_allocator& operator=(const new_delete_allocator&) noexcept { return *this; };
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_allocator& operator=(const new_delete_allocator&&) noexcept { return *this; };
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ new_delete_allocator& operator=(const new_delete_allocator&) noexcept = delete;
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ new_delete_allocator& operator=(const new_delete_allocator&&) noexcept = delete;
 
 
-	_NODISCARD_ _FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
 	{
 		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		
 		return new T[count_p];
 	}
 
-	_NODISCARD_ pointer reallocate(pointer const pointer_p, size_type prev_count_p, size_type new_count_p) noexcept
+	_FE_NODISCARD_ pointer reallocate(pointer const pointer_p, size_type prev_count_p, size_type new_count_p) noexcept
 	{
 		if (new_count_p == 0)
 		{
@@ -94,7 +94,7 @@ public:
 		return l_result;
 	}
 
-	_FORCE_INLINE_ void deallocate(pointer pointer_p, _MAYBE_UNUSED_ size_type count_p) noexcept
+	_FE_FORCE_INLINE_ void deallocate(pointer pointer_p, _FE_MAYBE_UNUSED_ size_type count_p) noexcept
 	{
 		FE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
@@ -103,12 +103,12 @@ public:
 	}
 
 
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator==(_MAYBE_UNUSED_ const new_delete_allocator&) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean operator==(_FE_MAYBE_UNUSED_ const new_delete_allocator&) noexcept
 	{
 		return true;
 	}
-#ifndef _HAS_CXX23_
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator!=(_MAYBE_UNUSED_ const new_delete_allocator&) noexcept
+#ifndef _FE_HAS_CXX23_
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean operator!=(_FE_MAYBE_UNUSED_ const new_delete_allocator&) noexcept
 	{
 		return false;
 	}
@@ -132,17 +132,17 @@ public:
 	using difference_type = var::ptrdiff;
 	using alignment_type = Alignment;
 
-	_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
-	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
+	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 
-	_FORCE_INLINE_ constexpr aligned_allocator() noexcept {}
+	_FE_FORCE_INLINE_ constexpr aligned_allocator() noexcept {}
 
 	template <typename U = T>
-	_FORCE_INLINE_ constexpr aligned_allocator(_MAYBE_UNUSED_ const aligned_allocator<U, Alignment>&) noexcept {}
+	_FE_FORCE_INLINE_ constexpr aligned_allocator(_FE_MAYBE_UNUSED_ const aligned_allocator<U, Alignment>&) noexcept {}
 
 
-	_NODISCARD_ _FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
 	{
 		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 
@@ -150,7 +150,7 @@ public:
 	}
 
 
-	_NODISCARD_ _FORCE_INLINE_ pointer reallocate(pointer pointer_p, size_type prev_count_p, size_type new_count_p) noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer reallocate(pointer pointer_p, size_type prev_count_p, size_type new_count_p) noexcept
 	{
 		if (new_count_p == 0)
 		{
@@ -209,7 +209,7 @@ public:
 	}
 
 
-	_FORCE_INLINE_ void deallocate(pointer pointer_p, size_type count_p) noexcept
+	_FE_FORCE_INLINE_ void deallocate(pointer pointer_p, size_type count_p) noexcept
 	{
 		FE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
@@ -218,12 +218,12 @@ public:
 	}
 
 
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator==(_MAYBE_UNUSED_ const aligned_allocator&) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean operator==(_FE_MAYBE_UNUSED_ const aligned_allocator&) noexcept
 	{
 		return true;
 	}
-#ifndef _HAS_CXX23_
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator!=(_MAYBE_UNUSED_ const aligned_allocator&) noexcept
+#ifndef _FE_HAS_CXX23_
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean operator!=(_FE_MAYBE_UNUSED_ const aligned_allocator&) noexcept
 	{
 		return false;
 	}

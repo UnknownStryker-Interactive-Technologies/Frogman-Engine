@@ -2,7 +2,6 @@
 #define _FE_CORE_PRIVATE_STRLEN_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/types.hxx>
-#include <FE/private/debug.h>
 
 
 
@@ -10,7 +9,7 @@
 namespace FE::internal
 {
     template<typename CharT>
-    _NODISCARD_ _FORCE_INLINE_ _CONSTEXPR17_ uint64 strlen(const CharT* const str_p) noexcept
+    _FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ uint64 strlen(const CharT* const str_p) noexcept
     {
         FE_STATIC_ASSERT((sizeof(CharT) > sizeof(UTF32)), "Static assertion failure: failed to assert that the size of CharT must not be greater than the size of UTF32.");
         const CharT* l_iterator = str_p;

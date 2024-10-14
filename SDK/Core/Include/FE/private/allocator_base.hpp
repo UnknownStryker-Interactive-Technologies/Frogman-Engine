@@ -13,6 +13,8 @@
 #include <thread>
 
 
+
+
 #ifdef FE_ALIGNED_ALLOC
 	#error FE_ALIGNED_ALLOC is a reserved Frogman Engine macro function.
 #endif
@@ -32,15 +34,11 @@
 
 BEGIN_NAMESPACE(FE)
 
-_MAYBE_UNUSED_ constexpr var::uint64 invalid_memory_util_query = max_value<var::uint64>;
+_FE_MAYBE_UNUSED_ constexpr var::uint64 invalid_memory_util_query = max_value<var::uint64>;
 
-_MAYBE_UNUSED_ constexpr uint64 one_kb = 1024;
-_MAYBE_UNUSED_ constexpr uint64 one_mb = 1048576;
-_MAYBE_UNUSED_ constexpr uint64 one_gb = 1073741824;
-
-#define KB * ::FE::one_kb
-#define MB * ::FE::one_mb
-#define GB * ::FE::one_gb
+_FE_MAYBE_UNUSED_ constexpr uint64 one_kb = 1024;
+_FE_MAYBE_UNUSED_ constexpr uint64 one_mb = 1048576;
+_FE_MAYBE_UNUSED_ constexpr uint64 one_gb = 1073741824;
 
 enum struct HEAP_MEMORY_UTIL_INFO : FE::uint8
 {
@@ -68,50 +66,20 @@ enum struct SIZE_BYTE_UNIT : FE::uint8
 	_GIGABYTE = 3
 };
 
-_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept
 {
 	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_kb);
 }
-_FORCE_INLINE_ var::float64 convert_bytes_to_megabytes(uint64 bytes_p) noexcept
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_megabytes(uint64 bytes_p) noexcept
 {
 	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_mb);
 }
-_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexcept
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexcept
 {
 	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_gb);
 }
 
 var::uint64 request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept;
-
-
-template<class Resource>
-class resource
-{
-	var::count_t m_ref_count = 0;
-
-public:
-	Resource _resource;
-
-    _FORCE_INLINE_ friend void intrusive_ptr_add_ref(resource* const resource_p) noexcept
-	{
-        ++(resource_p->m_ref_count);
-    }
-
-    _FORCE_INLINE_ friend void intrusive_ptr_release(resource* const resource_p) noexcept
-	{
-		--(resource_p->m_ref_count);
-        if (resource_p->m_ref_count == 0) 
-		{
-            delete resource_p;
-        }
-    }
-};
-
-template<class Resource>
-_FORCE_INLINE_ resource<Resource>* make_resource() noexcept
-{
-	return new resource<Resource>; // Note that the allocated memory address is always aligned by SIMD alignment requirement size.
-}
 
 END_NAMESPACE
 
@@ -143,26 +111,26 @@ protected:
 	static std::atomic_int64_t s_total_memory_pool_util;
 	thread_local static var::int64 tl_s_thread_local_memory_pool_util;
 
-	_FORCE_INLINE_ static void add(int64 size_bytes_p) noexcept
+	_FE_FORCE_INLINE_ static void add(int64 size_bytes_p) noexcept
 	{
 		s_total_memory_util.fetch_add(size_bytes_p, ::std::memory_order_relaxed);
 		tl_s_thread_local_memory_util += size_bytes_p;
 	}
 
-	_FORCE_INLINE_ static void sub(int64 size_bytes_p) noexcept
+	_FE_FORCE_INLINE_ static void sub(int64 size_bytes_p) noexcept
 	{
 		s_total_memory_util.fetch_sub(size_bytes_p, ::std::memory_order_relaxed);
 		tl_s_thread_local_memory_util -= size_bytes_p;
 	}
 
 
-	_FORCE_INLINE_ static void add_to_pool(int64 size_bytes_p) noexcept
+	_FE_FORCE_INLINE_ static void add_to_pool(int64 size_bytes_p) noexcept
 	{
 		s_total_memory_pool_util.fetch_add(size_bytes_p, ::std::memory_order_relaxed);
 		tl_s_thread_local_memory_pool_util += size_bytes_p;
 	}
 
-	_FORCE_INLINE_ static void sub_from_pool(int64 size_bytes_p) noexcept
+	_FE_FORCE_INLINE_ static void sub_from_pool(int64 size_bytes_p) noexcept
 	{
 		s_total_memory_pool_util.fetch_sub(size_bytes_p, ::std::memory_order_relaxed);
 		tl_s_thread_local_memory_pool_util -= size_bytes_p;
@@ -170,7 +138,7 @@ protected:
 
 #ifdef _ENABLE_MEMORY_TRACKER_
 	template <typename T>
-	_FORCE_INLINE_ static void __log_heap_memory_allocation(uint64 size_in_bytes_to_allocate_p, void* const allocated_address_p) noexcept
+	_FE_FORCE_INLINE_ static void __log_heap_memory_allocation(uint64 size_in_bytes_to_allocate_p, void* const allocated_address_p) noexcept
 	{
 		uint64 l_this_thread_id = std::this_thread::get_id();
 		add(size_in_bytes_to_allocate_p);
@@ -180,7 +148,7 @@ protected:
 	}
 
 	template <typename T>
-	_FORCE_INLINE_ static void __log_heap_memory_reallocation(uint64 prev_size_in_bytes_p, uint64 new_size_in_bytes_to_allocate_p, void* const realloc_target_p) noexcept
+	_FE_FORCE_INLINE_ static void __log_heap_memory_reallocation(uint64 prev_size_in_bytes_p, uint64 new_size_in_bytes_to_allocate_p, void* const realloc_target_p) noexcept
 	{
 		uint64 l_this_thread_id = std::this_thread::get_id();
 
@@ -192,7 +160,7 @@ protected:
 	}
 
 	template <typename T>
-	_FORCE_INLINE_ static void __log_heap_memory_deallocation(uint64 size_in_bytes_to_deallocate_p, void* const address_to_be_freed_p) noexcept
+	_FE_FORCE_INLINE_ static void __log_heap_memory_deallocation(uint64 size_in_bytes_to_deallocate_p, void* const address_to_be_freed_p) noexcept
 	{
 		uint64 l_this_thread_id = std::this_thread::get_id();
 
@@ -204,7 +172,7 @@ protected:
 #endif
 
 public:
-	_FORCE_INLINE_ static memory_utilization query_all_data() noexcept
+	_FE_FORCE_INLINE_ static memory_utilization query_all_data() noexcept
 	{
 #ifdef _ENABLE_MEMORY_TRACKER_
 		memory_utilization l_data
@@ -220,7 +188,7 @@ public:
 	}
 
 	template<typename T, class Alignment = typename FE::SIMD_auto_alignment>
-	_FORCE_INLINE_ T* trackable_alloc(size bytes_p) noexcept
+	_FE_FORCE_INLINE_ T* trackable_alloc(size bytes_p) noexcept
 	{
 		T* const l_result = (T*)FE_ALIGNED_ALLOC(bytes_p, Alignment::size);
 		FE_ASSERT(l_result == nullptr, "${%s@0}: Failed to allocate memory from scalable_aligned_malloc()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
@@ -236,7 +204,7 @@ public:
 	}
 
 	template<typename T, class Alignment = typename FE::SIMD_auto_alignment>
-	_FORCE_INLINE_ void trackable_free(T* const ptr_to_memory_p, _MAYBE_UNUSED_ size bytes_p) noexcept
+	_FE_FORCE_INLINE_ void trackable_free(T* const ptr_to_memory_p, _FE_MAYBE_UNUSED_ size bytes_p) noexcept
 	{
 		FE_ASSERT((reinterpret_cast<uintptr>(ptr_to_memory_p) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
 
@@ -248,12 +216,12 @@ public:
 	}
 
 	template<typename T, class Alignment = typename FE::SIMD_auto_alignment>
-	_FORCE_INLINE_ T* trackable_realloc(T* const ptr_to_memory_p, size prev_bytes_p, size new_bytes_p) noexcept
+	_FE_FORCE_INLINE_ T* trackable_realloc(T* const ptr_to_memory_p, size prev_bytes_p, size new_bytes_p) noexcept
 	{
 #ifdef _WINDOWS_X86_64_
 		T* l_realloc_result = (T*)::_aligned_realloc(ptr_to_memory_p, new_bytes_p, Alignment::size);
 
-		if (l_realloc_result == nullptr) _UNLIKELY_
+		if (l_realloc_result == nullptr) _FE_UNLIKELY_
 		{
 			l_realloc_result = (T*)FE_ALIGNED_ALLOC(new_bytes_p, Alignment::size);
 			FE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
@@ -261,7 +229,7 @@ public:
 			FE_ALIGNED_MEMSET(l_realloc_result, null, new_bytes_p);
 	#endif
 			FE::memcpy<ADDRESS::_ALIGNED, ADDRESS::_ALIGNED>(l_realloc_result, new_bytes_p, ptr_to_memory_p, prev_bytes_p);
-			if (l_realloc_result != ptr_to_memory_p) _LIKELY_
+			if (l_realloc_result != ptr_to_memory_p) _FE_LIKELY_
 			{
 				FE_ALIGNED_FREE(ptr_to_memory_p);
 			}
@@ -289,11 +257,11 @@ public:
 	}
 
 
-	template<class Resource>
-	_FORCE_INLINE_ boost::intrusive_ptr<FE::resource<Resource>> get_default_allocator() const noexcept
+	template<class Pool>
+	_FE_FORCE_INLINE_ Pool* get_default_pool() const noexcept
 	{
-		thread_local static boost::intrusive_ptr<FE::resource<Resource>> tl_s_shared_resource = FE::make_resource<Resource>();
-		return tl_s_shared_resource;
+		static Pool s_pool;
+		return &s_pool;
 	} 
 };
 

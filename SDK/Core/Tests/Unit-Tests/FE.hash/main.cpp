@@ -65,7 +65,7 @@ int main(int argc_p, char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
@@ -81,7 +81,7 @@ int main(int argc_p, char** argv_p)
 void std_hash_benchmark(benchmark::State& state_p)
 {
 	std::hash<std::string> l_hasher;
-	static std::string l_string = "_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
+	static std::string l_string = "_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
 
 	for (auto _ : state_p)
 	{
@@ -95,7 +95,7 @@ BENCHMARK(std_hash_benchmark);
 
 void city_hash_benchmark(benchmark::State& state_p)
 {
-	auto l_content = "_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
+	auto l_content = "_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
 	size_t l_length = strlen(l_content);
 
 
@@ -111,7 +111,7 @@ BENCHMARK(city_hash_benchmark);
 
 void robin_hood_hash_benchmark(benchmark::State& state_p)
 {
-	const char* l_content = "_NODISCARD_ _FORCE_INLINE_ _CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
+	const char* l_content = "_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
 	size_t l_length = strlen(l_content);
 
 	for (auto _ : state_p)

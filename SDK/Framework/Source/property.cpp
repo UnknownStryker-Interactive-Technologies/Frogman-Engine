@@ -7,12 +7,13 @@
 
 BEGIN_NAMESPACE(FE::framework::reflection)
 
-typename property:: property_meta_data_map_type*    property::s_property_map = nullptr;
-thread_local typename property::class_layer_stack   property::tl_s_class_layer;
+typename property::property_meta_data_map_type::mapped_type::allocator_type::pool_type property::s_node_pool;
+typename property::property_meta_data_map_type*		property::s_property_map = nullptr;
+typename property::class_layer_stack				property::s_class_layer;
 
-typename property::lock_type                                 property::s_lock;
-thread_local typename property::file_handler                 property::tl_s_fstream; 
-thread_local typename property::input_buffer_type            property::tl_s_input_buffer;
-thread_local typename property::input_buffer_iterator_type   property::tl_s_position;
+typename property::lock_type                    property::s_lock;
+typename property::file_handler                 property::s_fstream; 
+typename property::input_buffer_type            property::s_input_buffer;
+typename property::input_buffer_iterator_type   property::s_position;
 
 END_NAMESPACE

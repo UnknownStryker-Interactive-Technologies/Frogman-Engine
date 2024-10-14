@@ -68,7 +68,7 @@ int main(int argc_p, char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();

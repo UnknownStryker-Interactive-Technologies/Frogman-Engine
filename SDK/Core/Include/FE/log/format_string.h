@@ -23,7 +23,7 @@ BEGIN_NAMESPACE(FE::log)
 // %c - char
 // %s - string
 // %p - hexadecimal 64bit pointer
-void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAYBE_UNUSED_ size buffer_size_p, const void** arguments_pointer_p, _MAYBE_UNUSED_ count_t arguments_count_p) noexcept;
+void format_string(char* out_buffer_pointer_p, const char* string_format_p, size buffer_size_p, const void** arguments_pointer_p, count_t arguments_count_p) noexcept;
 
 // %d - int32
 // %u - uint32
@@ -35,7 +35,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAY
 // %c - char
 // %s - string
 // %p - hexadecimal 64bit pointer
-_FORCE_INLINE_ const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept
+_FE_FORCE_INLINE_ const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept
 {
     static constexpr auto skip_string_format = 1;
 

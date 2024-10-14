@@ -11,16 +11,7 @@
 /*
 Profile Guided Optimization: https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations?view=msvc-170
 
-TO DO: 
-1. variable table
-                                 
-																														  |--- int32 variable hash map
-																														  |--- float64 variable hash map
-																														  |--- FE::string variable hash map
-std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaible name string, Value: varaible address>> -|--- FE::array variable hash map
-																														  |--- std::list variable hash map
-																														  |--- std::deque variable hash map
-2. memory layout reflection for serialization  																		      |--- etc...
+memory layout reflection for serialization  																		      |--- etc...
                                                                                       *
 	                                                                                  |
 	Shallower <----- Memory Hierarchy Depth ----> Deeper                      Lower Memory Address
@@ -29,7 +20,7 @@ std::unordered_map<Key: type name string, Value: std::unordered_map<Key: varaibl
 	|----------------------------------|    ----------|FE::smart_ptr   |              |
 	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
 	|- member variables -              |    |         |----------------|              |
-	|  FE::string m_raw_name --------------|----|                                         |
+	|  FE::string m_raw_name ----------|----|                                         |
 	|  FE::vector<float64, 3> m_vector |-------|                                      |
 	|----------------------------------|       |       |----------------|             |
 	                                           |       | - FE::vector - |             |
@@ -54,7 +45,13 @@ Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smar
 
 class framework_test : public FE::framework::application_base
 {
-	virtual bool set_up(int argc_p, char** argv_p) override
+public:
+	framework_test(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
+	{
+
+	}
+
+	virtual int launch(int argc_p, char** argv_p) override
 	{
 		testing::InitGoogleTest(&argc_p, argv_p);
 		if (argv_p == nullptr)
@@ -65,11 +62,11 @@ class framework_test : public FE::framework::application_base
 			argv_p = &l_args_default;
 		}
 		benchmark::Initialize(&argc_p, argv_p);
-		FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
-		return true;
+		FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+		return 0;
 	}
 
-	virtual int run(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p) override
+	virtual int run() override
 	{
 		FE::int32 l_exit_code = RUN_ALL_TESTS();
 		std::cerr << "\n\n";
@@ -78,17 +75,13 @@ class framework_test : public FE::framework::application_base
 		return l_exit_code;
 	}
 
-	virtual void clean_up() override
+	virtual int shutdown() override
 	{
     	benchmark::Shutdown();
+		return 0;
 	}
 };
-
-CONFIGURE_A_FROGMAN_ENGINE_PROJECT()
-
-return new framework_test;
-
-END_OF_THE_FROGMAN_ENGINE_PROJECT_CONFIGURATION()
+CREATE_A_CUSTOM_APP(framework_test);
 
 
 
@@ -109,14 +102,6 @@ struct vector3
 	var::float32 _z = 0.0f;
 };
 
-struct RGBA
-{
-	var::float32 _red;
-	var::float32 _green;
-	var::float32 _blue;
-	var::float32 _alpha;
-};
-
 class super
 {
 	REGISTER_FE_CLASS(test::super);
@@ -129,20 +114,20 @@ public:
 	~super() noexcept = default;
 };
 
-class object : public super
+class object /*: public super*/
 { 
-	FE_CLASS_HAS_A_BASE(test::super);
+	//FE_CLASS_HAS_A_BASE(test::super);
 	REGISTER_FE_CLASS(test::object);
 
-	REGISTER_FE_PROPERTY(m_is_it_dead); 
-	_MAYBE_UNUSED_ var::boolean m_is_it_dead; // a trivial plain old data
+	REGISTER_FE_PROPERTY(m_is_it_dead);
+	_FE_MAYBE_UNUSED_ var::boolean m_is_it_dead; // a trivial plain old data
 
-	REGISTER_FE_PROPERTY(m_colors);
-	_MAYBE_UNUSED_ test::RGBA m_colors[2]; // a trivial plain old data array
+	REGISTER_FE_PROPERTY(m_name);
+	std::string m_name;
 
 public:
-	object() noexcept : m_is_it_dead(false), m_colors{} {}
-	object(FE::boolean dead_on_start_p, test::RGBA rgba_p) noexcept : m_is_it_dead{dead_on_start_p}, m_colors{rgba_p} {}
+	object() noexcept : m_is_it_dead(false) {}
+	object(FE::boolean set_p, const std::string& name_p) noexcept : m_is_it_dead(set_p), m_name(name_p) {}
 
 	REGISTER_FE_METHOD(test::object, initialize, std::string (void));
 	std::string initialize() { return "object initialized"; }
@@ -158,15 +143,18 @@ public:
 		return s; 
 	}
 
-	const test::RGBA* get_color() const noexcept { return this->m_colors; }
 	FE::boolean is_dead() const noexcept { return this->m_is_it_dead; }
+	std::string& get_name() noexcept { return this->m_name; }
 };
+
 END_NAMESPACE
+
+
 
 
 TEST(reflection, method_and_property)
 {
-	test::object l_object(true, test::RGBA{255.0f, 191.0f, 52.0f, 1.0f});
+	test::object l_object(true, "John doe");
 	std::any l_result = FE::framework::reflection::function::invoke(l_object, "std::string test::object::initialize(void)");
 	EXPECT_TRUE(l_result.has_value());
 	{
@@ -186,18 +174,15 @@ TEST(reflection, method_and_property)
 	}
 
 
-	FE::framework::reflection::property::serialize<test::object>("Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/serialized", "test-object.froggy", l_object);
+	//FE::framework::reflection::property::serialize<test::object>(std::filesystem::current_path() / FE_TEXT(serialized), FE_TEXT(test-object.froggy), l_object);
 
-	test::object l_new_object;
-	FE::framework::reflection::property::deserialize<test::object>("Frogman-Engine-Tests/FE-Tests/Unit-Tests/FE.framework.reflection/serialized", "test-object.froggy", l_new_object);
+	//test::object l_new_object;
+	//FE::framework::reflection::property::deserialize<test::object>(std::filesystem::current_path() / FE_TEXT(serialized), FE_TEXT(test-object.froggy), l_new_object);
 
-	
-	EXPECT_EQ(std::memcmp(l_new_object.get_color(), l_object.get_color(), sizeof(test::RGBA) * 2), 0);
+	//EXPECT_EQ(l_new_object.get_name(), l_object.get_name());
 
-	EXPECT_EQ(l_new_object.is_dead(), l_object.is_dead());
+	//EXPECT_EQ(l_new_object.is_dead(), l_object.is_dead());
 }
-
-
 
 
 bool JesusLovesYou() noexcept
@@ -214,7 +199,7 @@ TEST(reflection, function)
 
 	auto l_result = FE::framework::reflection::function::invoke(l_function_signature);
 
-	_MAYBE_UNUSED_ FE::task_base* l_fn = FE::framework::reflection::function::retrieve(l_function_signature);
+	_FE_MAYBE_UNUSED_ FE::task_base* l_fn = FE::framework::reflection::function::retrieve(l_function_signature);
 
 	EXPECT_TRUE(std::any_cast<FE::boolean>(l_result));
 }

@@ -2,7 +2,7 @@
 #define _FE_CORE_PAIR_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/prerequisites.h>
-#include <FE/attributes.h>
+#include <FE/definitions.h>
 #include <utility>
 
 
@@ -21,15 +21,15 @@ public:
 	First _first;
 	Second _second;
 
-	_FORCE_INLINE_ pair() noexcept = default;
-	_FORCE_INLINE_ pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
-	_FORCE_INLINE_ pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
-	_FORCE_INLINE_ ~pair() noexcept = default;
+	_FE_FORCE_INLINE_ pair() noexcept = default;
+	_FE_FORCE_INLINE_ pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
+	_FE_FORCE_INLINE_ pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
+	_FE_FORCE_INLINE_ ~pair() noexcept = default;
 
-	_FORCE_INLINE_ pair(const pair&) noexcept = default;
-	_FORCE_INLINE_ pair(pair&&) noexcept = default;
+	_FE_FORCE_INLINE_ pair(const pair&) noexcept = default;
+	_FE_FORCE_INLINE_ pair(pair&&) noexcept = default;
 
-	_FORCE_INLINE_ pair& operator=(const pair& other_p) noexcept
+	_FE_FORCE_INLINE_ pair& operator=(const pair& other_p) noexcept
 	{
 		this->_first = other_p._first;
 		this->_second = other_p._second;
@@ -37,7 +37,7 @@ public:
 		return *this;
 	}
 
-	_FORCE_INLINE_ pair& operator=(pair&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ pair& operator=(pair&& rvalue_p) noexcept
 	{
 		this->_first = std::move(rvalue_p._first);
 		this->_second = std::move(rvalue_p._second);
@@ -47,7 +47,7 @@ public:
 };
 
 
-#ifdef _HAS_CXX20_
+#ifdef _FE_HAS_CXX20_
 template<typename First, typename Second>
 class compressed_pair final
 {
@@ -56,8 +56,8 @@ public:
 	using second_type = Second;
 
 private:
-	_NO_UNIQUE_ADDRESS_ First m_first;
-	_NO_UNIQUE_ADDRESS_ Second m_second;
+	_FE_NO_UNIQUE_ADDRESS_ First m_first;
+	_FE_NO_UNIQUE_ADDRESS_ Second m_second;
 
 public:
 	First& get_first() noexcept { return this->m_first; }

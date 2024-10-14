@@ -19,16 +19,26 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Framework/Include)
 SET(FE_FRAMEWORK_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/framework.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/platform_information.h
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/task_scheduler.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/vulkan_renderer.hpp
 )
 
 SET(FE_FRAMEWORK_SOURCES 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/framework.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/function.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/object_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/property.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/task_scheduler.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/vulkan_renderer.cpp
 )
 
 
@@ -96,7 +106,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/vector.cpp
 
 
 SET(FE_CORE_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/attributes.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/definitions.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/prerequisites.h
 
@@ -126,7 +135,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pair.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/random.hxx
 
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/private/allocator_base.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/private/debug.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/private/memory_traits.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/private/strlen.hxx
 )

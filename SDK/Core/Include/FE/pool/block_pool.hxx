@@ -24,30 +24,27 @@ namespace internal::pool
     };
 
     template<count_t PageCapacity, class Alignment>
-    struct chunk<POOL_TYPE::_STATIC, PageCapacity, Alignment>
+    class chunk<POOL_TYPE::_BLOCK, PageCapacity, Alignment>
     {
+    public:
         static constexpr size fixed_block_size_in_bytes = Alignment::size;
         static constexpr count_t page_capacity = PageCapacity;
         static constexpr size page_capacity_in_bytes = fixed_block_size_in_bytes * page_capacity;
         using block_info_type = var::byte*;
 
     private:
-    #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
-        alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory = { 0 };
-    #else
-        alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
-    #endif
+        alignas(FE::SIMD_auto_alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory{ 0 };
 
     public:
     #if (defined(_DEBUG_) || defined(_RELWITHDEBINFO_)) && defined(_ENABLE_ASSERT_)
         robin_hood::unordered_set<block_info_type> _double_free_validator;
     #endif
         FE::fstack<block_info_type, PageCapacity> _free_blocks;
-        var::byte* const _begin = reinterpret_cast<var::byte* const>(m_memory.data());
-        var::byte* _page_iterator = _begin;
-        var::byte* const _end = _begin + page_capacity_in_bytes;
+        var::byte* const _begin = m_memory.data();
+        var::byte* _page_iterator = m_memory.data();
+        var::byte* const _end = m_memory.data() + m_memory.size();
 
-        _FORCE_INLINE_ boolean is_full() const noexcept
+        _FE_FORCE_INLINE_ boolean is_full() const noexcept
         {
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
         }
@@ -58,10 +55,10 @@ namespace internal::pool
 
 
 template<size PageCapacity, class Alignment, class Allocator>
-class pool<POOL_TYPE::_STATIC, PageCapacity, Alignment, Allocator>
+class pool<POOL_TYPE::_BLOCK, PageCapacity, Alignment, Allocator>
 {
 public:
-    using chunk_type = internal::pool::chunk<POOL_TYPE::_STATIC, PageCapacity, Alignment>;
+    using chunk_type = internal::pool::chunk<POOL_TYPE::_BLOCK, PageCapacity, Alignment>;
     FE_STATIC_ASSERT((std::is_same<chunk_type, typename Allocator::value_type>::value == false), "Static Assertion Failed: The chunk_type has to be equivalent to Allocator::value_type.");
     using block_info_type = typename chunk_type::block_info_type;
     using pool_type = std::list<chunk_type, Allocator>;
@@ -177,7 +174,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         }
     }
 
-    _FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
+    _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
     {
         FE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
 
@@ -230,8 +227,8 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 };
 
 
-template<size FixedBlockSizeInBytes = FE::SIMD_auto_alignment::size, count_t PageCapacity = 128, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_STATIC, PageCapacity, FE::align_custom_bytes<FixedBlockSizeInBytes>>>>
-using block_pool = pool<POOL_TYPE::_STATIC, PageCapacity, FE::align_custom_bytes<FixedBlockSizeInBytes>, Allocator>;
+template<size FixedBlockSizeInBytes = FE::SIMD_auto_alignment::size, count_t PageCapacity = 128, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_BLOCK, PageCapacity, FE::align_custom_bytes<FixedBlockSizeInBytes>>>>
+using block_pool = pool<POOL_TYPE::_BLOCK, PageCapacity, FE::align_custom_bytes<FixedBlockSizeInBytes>, Allocator>;
 
 
 END_NAMESPACE

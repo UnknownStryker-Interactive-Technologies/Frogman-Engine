@@ -28,7 +28,7 @@ enum struct HASH_INPUT_DATA_TYPE : uint8
 };
 
 template<typename T>
-_FORCE_INLINE_ constexpr HASH_INPUT_DATA_TYPE evaluate_hash_input_data_type()
+_FE_FORCE_INLINE_ constexpr HASH_INPUT_DATA_TYPE evaluate_hash_input_data_type()
 {
 	if constexpr (FE::is_c_style_constant_string<T>::value == true)
 	{
@@ -54,7 +54,7 @@ enum struct HASHER_TYPE : uint8
 
 class hash_base
 {
-	static inline FE::random_integer<var::uint64> s_random_integer{ 0, FE::max_value<var::uint64> };
+	static FE::random_integer<var::uint64> s_random_integer;
 protected:
 	static uint64 s_seed;
 };
@@ -69,7 +69,7 @@ public:
 	using base = hash_base;
 	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_ADDRESS;
 
-	_NODISCARD_ _FORCE_INLINE_ var::uintptr operator()(T value_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(T value_p) const noexcept
 	{
 		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
 		{
@@ -89,7 +89,7 @@ public:
 	using base = hash_base;
 	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_C_STRING;
 
-	_NODISCARD_ _FORCE_INLINE_ var::uint64 operator()(T value_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(T value_p) const noexcept
 	{
 		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
 		{
@@ -109,7 +109,7 @@ public:
 	using base = hash_base;
 	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_STRING_CLASS;
 
-	_NODISCARD_ _FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
 	{
 		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
 		{
@@ -129,7 +129,7 @@ public:
 	using base = hash_base;
 	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_BINARY;
 
-	_NODISCARD_ _FORCE_INLINE_ var::uint64 operator()(const T& value_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(const T& value_p) const noexcept
 	{
 		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
 		{

@@ -27,59 +27,102 @@ public:
 	using size_type = var::size;
 	using alignment_type = FE::align_custom_bytes<sizeof(T)>;
 
-	_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
-	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
+	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 private:
-	boost::intrusive_ptr<FE::resource<pool_type>> m_pool;
+	pool_type* m_pool;
 
 public:
-	_CONSTEXPR20_ new_delete_block_pool_allocator() noexcept : m_pool(base_type::get_default_allocator<pool_type>()) {}
-	_CONSTEXPR20_ new_delete_block_pool_allocator(const boost::intrusive_ptr<FE::resource<pool_type>>& pool_p) noexcept : m_pool(pool_p) {}
-	_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) {}
-	_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) {}
-	_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {};
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator() noexcept : m_pool() 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(pool_type* const pool_p) noexcept : m_pool(pool_p) 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {}
 
 	template <typename U>
-	_CONSTEXPR20_ new_delete_block_pool_allocator(_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< pool_type >()) {}
-
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&) noexcept = delete;
-	_FORCE_INLINE_ _CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&&) noexcept = delete;
-
-
-	_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_pool<pool_type>())
 	{
-		this->m_pool->_resource.create_pages(count_p);
-	}
-
-	_FORCE_INLINE_ void shrink_to_fit() noexcept
-	{
-		this->m_pool->_resource.shrink_to_fit();
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
 
-	_NODISCARD_ _FORCE_INLINE_ pointer allocate(_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
-	{
-		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&) noexcept = delete;
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ new_delete_block_pool_allocator& operator=(const new_delete_block_pool_allocator&&) noexcept = delete;
 
-		return this->m_pool->_resource.allocate();
+
+	_FE_FORCE_INLINE_ void set_pool(pool_type* const pool_p) noexcept
+	{
+		this->m_pool = pool_p;
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FORCE_INLINE_ void deallocate(pointer const pointer_p, _MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	_FE_FORCE_INLINE_ pool_type* get_pool() noexcept
 	{
-		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		return this->m_pool;
+	}
+
+	_FE_FORCE_INLINE_ pool_type* const get_pool() const noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		return this->m_pool;
+	}
+
+
+	_FE_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		this->m_pool->create_pages(count_p);
+	}
+
+	_FE_FORCE_INLINE_ void shrink_to_fit() noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		this->m_pool->shrink_to_fit();
+	}
+
+
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(_FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	{
+		FE_ASSERT(count_p != 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		
+		return this->m_pool->allocate();
+	}
+
+	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	{
+		FE_ASSERT(count_p != 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
-
-		this->m_pool->_resource.deallocate(pointer_p);
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		
+		this->m_pool->deallocate(pointer_p);
 	}
 
 
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator==(_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
 	{
 		return true;
 	}
-#ifndef _HAS_CXX23_
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator!=(_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
+#ifndef _FE_HAS_CXX23_
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
 	{
 		return false;
 	}
@@ -105,60 +148,102 @@ public:
 	using size_type = var::size;
 	using alignment_type = FE::align_custom_bytes<sizeof(T)>;
 
-	_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
-	_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
+	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, FE::align_custom_bytes<sizeof(T)>>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
 
 private:
-	boost::intrusive_ptr<FE::resource<pool_type>> m_pool;
+	pool_type* m_pool;
 
 public:
-	_CONSTEXPR20_ block_pool_allocator() noexcept : m_pool(base_type::get_default_allocator<pool_type>()) {}
-	_CONSTEXPR20_ block_pool_allocator(const boost::intrusive_ptr<FE::resource<pool_type>>& pool_p) noexcept : m_pool(pool_p) {}
-	_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) {}
-	_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) {}
-
-	_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
-
-	template <typename U>
-	_CONSTEXPR20_ block_pool_allocator(_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_allocator< pool_type >()) {}
-
-	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&) noexcept = delete;
-	_FORCE_INLINE_ _CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&&) noexcept = delete;
-
-
-	_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
+	_FE_CONSTEXPR20_ block_pool_allocator() noexcept : m_pool() 
 	{
-		this->m_pool->_resource.create_pages(count_p);
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FORCE_INLINE_ void shrink_to_fit() noexcept
+	_FE_CONSTEXPR20_ block_pool_allocator(pool_type* const pool_p) noexcept : m_pool(pool_p) 
 	{
-		this->m_pool->_resource.shrink_to_fit();
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
+	}
+
+	_FE_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
+
+	template <typename U = T>
+	_FE_CONSTEXPR20_ block_pool_allocator(_FE_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::get_default_pool<pool_type>())
+	{
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
 
-	_NODISCARD_ _FORCE_INLINE_ pointer allocate(_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
-	{
-		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&) noexcept = delete;
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ block_pool_allocator& operator=(const block_pool_allocator&&) noexcept = delete;
 
-		return (T*)this->m_pool->_resource.template allocate<internal::pool::uninitialized_bytes<sizeof(T)>* const>();
+
+	_FE_FORCE_INLINE_ void set_pool(pool_type* const pool_p) noexcept
+	{
+		this->m_pool = pool_p;
+		FE_LOG_IF(this->m_pool == nullptr, "Warning: the pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FORCE_INLINE_ void deallocate(pointer const pointer_p, _MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	_FE_FORCE_INLINE_ pool_type* get_pool() noexcept
 	{
-		FE_ASSERT((count_p > 1) || (count_p == 0), "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		return this->m_pool;
+	}
+
+	_FE_FORCE_INLINE_ pool_type* const get_pool() const noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		return this->m_pool;
+	}
+
+
+	_FE_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		this->m_pool->create_pages(count_p);
+	}
+
+	_FE_FORCE_INLINE_ void shrink_to_fit() noexcept
+	{
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		this->m_pool->shrink_to_fit();
+	}
+
+
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(_FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	{
+		FE_ASSERT(count_p != 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		
+		return (T*)this->m_pool->template allocate<internal::pool::uninitialized_bytes<sizeof(T)>* const>();
+	}
+
+	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
+	{
+		FE_ASSERT(count_p != 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
-		this->m_pool->_resource.template deallocate<internal::pool::uninitialized_bytes<sizeof(T)>>(reinterpret_cast<internal::pool::uninitialized_bytes<sizeof(T)>* const>(pointer_p));
+		this->m_pool->template deallocate<internal::pool::uninitialized_bytes<sizeof(T)>>(reinterpret_cast<internal::pool::uninitialized_bytes<sizeof(T)>* const>(pointer_p));
 	}
 	
 
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator==(_MAYBE_UNUSED_ const block_pool_allocator& other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const block_pool_allocator&) noexcept
 	{
 		return true;
 	}
-#ifndef _HAS_CXX23_
-	_FORCE_INLINE_ _CONSTEXPR17_ boolean operator!=(_MAYBE_UNUSED_ const block_pool_allocator& other_p) noexcept
+#ifndef _FE_HAS_CXX23_
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const block_pool_allocator&) noexcept
 	{
 		return false;
 	}
@@ -168,3 +253,4 @@ public:
 
 END_NAMESPACE
 #endif
+

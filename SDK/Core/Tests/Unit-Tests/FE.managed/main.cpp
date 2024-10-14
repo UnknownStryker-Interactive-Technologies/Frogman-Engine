@@ -72,7 +72,7 @@ int main(int argc_p, char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
@@ -81,8 +81,7 @@ int main(int argc_p, char** argv_p)
     return l_exit_code;
 }
 
-
-
+// need to be optimized
 
 TEST(exclusive_ptr, construct_by_value_assignment)
 {
@@ -405,7 +404,7 @@ TEST(std_ref, dangling_reference)
 {
 	{
 		std::unique_ptr<std::string> l_unique_string = std::make_unique<std::string>("Always dangle!");
-		_MAYBE_UNUSED_ std::string& l_reference = *l_unique_string;
+		_FE_MAYBE_UNUSED_ std::string& l_reference = *l_unique_string;
 		l_unique_string.reset(); // The unique pointer is dead, the reference is dangling now.
 
 		//l_reference = "Segmentation Fault"

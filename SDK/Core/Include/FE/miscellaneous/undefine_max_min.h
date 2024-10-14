@@ -3,7 +3,7 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/definitions.h>
 
-#ifdef _MSVC_
+#ifdef _FE_WITH_MSVC_
 #ifdef max
 #undef max
 #endif

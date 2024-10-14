@@ -10,7 +10,7 @@ namespace FE::internal
 {
 	struct do_once
 	{
-		_FORCE_INLINE_ do_once(const std::function<void()>& code_p) noexcept
+		_FE_FORCE_INLINE_ do_once(const std::function<void()>& code_p) noexcept
 		{
 			code_p();
 		}

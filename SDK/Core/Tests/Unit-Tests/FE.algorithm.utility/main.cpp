@@ -7,7 +7,6 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/algorithm/utility.hxx>
-#include <FE/private/debug.h>
 using namespace FE;
 using namespace algorithm;
 using namespace utility;
@@ -19,7 +18,7 @@ using namespace utility;
 ls: lists all folders in the current working directory
 ls filename: checks the presence of files with the specified name.
 */
-int main(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p)
+int main(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
 {
     
     testing::InitGoogleTest(&argc_p, argv_p);
@@ -33,7 +32,7 @@ int main(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
@@ -46,9 +45,9 @@ int main(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p)
 TEST(count_integral_digit_length, _)
 {
 	int l_int = 10000;
-	EXPECT_EQ(count_integral_digit_length<int>(l_int), 5);
+	EXPECT_EQ(count_int_digit_length(l_int), 5);
 
-	EXPECT_EQ(count_integral_digit_length<int>(0), 1);
+	EXPECT_EQ(count_int_digit_length(0), 1);
 }
 
 
@@ -97,175 +96,14 @@ TEST(boolean_to_string, _)
 }
 
 
-
-
-TEST(any_primitive_to_string, thread_local_buffer)
-{
-	{
-		const char* l_result_ptr = buffered_any_primitive_to_string<char>(true);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "true"));
-
-		l_result_ptr = buffered_any_primitive_to_string<char>(1024);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "1024"));
-
-		l_result_ptr = buffered_any_primitive_to_string<char>('t');
-		EXPECT_EQ(0, strcmp(l_result_ptr, "t"));
-
-		l_result_ptr = buffered_any_primitive_to_string<char>("hi, world");
-		EXPECT_EQ(0, strcmp(l_result_ptr, "hi, world"));
-
-
-		std::unique_ptr<int> l_unique_pointer = std::make_unique<int>();
-		l_result_ptr = buffered_any_primitive_to_string<char>(l_unique_pointer.get());
-
-		char l_buffer[100] = "\0";
-		std::snprintf(l_buffer, 100, "%p", l_unique_pointer.get());
-		EXPECT_EQ(0, strcmp(l_result_ptr, l_buffer));
-
-
-		l_result_ptr = buffered_any_primitive_to_string<char>(nullptr);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "nullptr"));
-	}
-
-	{
-		var::boolean l_bool = false;
-		const char* l_result_ptr = buffered_any_primitive_to_string<char>(l_bool);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "false"));
-
-		var::int32 l_int32 = 1024;
-		l_result_ptr = buffered_any_primitive_to_string<char>(l_int32);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "1024"));
-
-		var::ASCII l_character = 't';
-		l_result_ptr = buffered_any_primitive_to_string<char>(l_character);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "t"));
-
-		std::string hi_world = "hi, world";
-		l_result_ptr = buffered_any_primitive_to_string<char>(hi_world.c_str());
-		EXPECT_EQ(0, strcmp(l_result_ptr, "hi, world"));
-
-
-		std::unique_ptr<int> l_unique_pointer = std::make_unique<int>();
-		l_result_ptr = buffered_any_primitive_to_string<char>(l_unique_pointer.get());
-
-		char l_buffer[100] = "\0";
-		std::snprintf(l_buffer, 100, "%p", l_unique_pointer.get());
-		EXPECT_EQ(0, strcmp(l_result_ptr, l_buffer));
-
-
-		l_result_ptr = buffered_any_primitive_to_string<char>(nullptr);
-		EXPECT_EQ(0, strcmp(l_result_ptr, "nullptr"));
-	}
-}
-
-
-
-
-TEST(any_to_string, thread_local_buffer)
-{
-	std::vector<std::unordered_map<std::string, void*>> l_complex;
-	l_complex.emplace_back();
-	const char* l_result_ptr = buffered_any_to_string<char>(l_complex);
-
-	std::unique_ptr<var::ASCII[]> l_unqiue_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-	any_object_binary_representation(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
-
-	EXPECT_EQ(0, strcmp(l_result_ptr, l_unqiue_buffer.get()));
-}
-
-
-
-
-TEST(any_primitive_to_string, local_buffer)
-{
-	std::unique_ptr<var::ASCII[]> l_unqiue_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-
-
-	{
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, true);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "true"));
-
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, 1024);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "1024"));
-
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, 't');
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "t"));
-
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, "hi, world");
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "hi, world"));
-
-
-		std::unique_ptr<int> l_unique_pointer = std::make_unique<int>();
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_unique_pointer.get());
-
-		char l_buffer[100] = "\0";
-		std::snprintf(l_buffer, 100, "%p", l_unique_pointer.get());
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), l_buffer));
-
-
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, nullptr);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "nullptr"));
-	}
-
-
-	{
-		var::boolean l_bool = false;
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_bool);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "false"));
-
-		var::int32 l_int32 = 1024;
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_int32);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "1024"));
-
-		var::ASCII l_character = 't';
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_character);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "t"));
-
-		std::string hi_world = "hi, world";
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, hi_world.c_str());
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "hi, world"));
-
-
-		std::unique_ptr<int> l_integral_address = std::make_unique<int>();
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_integral_address.get());
-
-		char l_answer[100] = "\0";
-		std::snprintf(l_answer, 100, "%p", l_integral_address.get());
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), l_answer));
-
-
-		any_primitive_to_string<char>(l_unqiue_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, nullptr);
-		EXPECT_EQ(0, strcmp(l_unqiue_buffer.get(), "nullptr"));
-	}
-}
-
-
-
-
-TEST(any_to_string, local_buffer)
-{
-	std::unique_ptr<var::ASCII[]> l_result_buffer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-	std::vector<std::unordered_map<std::string, void*>> l_complex;
-	l_complex.emplace_back();
-	any_to_string<char>(l_result_buffer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
-
-	std::unique_ptr<var::ASCII[]> l_answer(new var::ASCII[_UTILITY_ALGORITHM_BUFER_SIZE_]{});
-	any_object_binary_representation(l_answer.get(), _UTILITY_ALGORITHM_BUFER_SIZE_, l_complex);
-
-	EXPECT_EQ(0, strcmp(l_result_buffer.get(), l_answer.get()));
-}
-
-
-
-
 TEST(string_to_uint, all)
 {
-	integral_info l_result = string_to_uint<var::uint32>("1024MB");
+	uint_info l_result = string_to_uint("1024MB");
 	EXPECT_EQ(1024, l_result._value);
 	EXPECT_EQ(4, l_result._digit_length);
 
 	char l_string[10] = "8102023";
-	l_result = string_to_uint<var::uint32>(l_string);
+	l_result = string_to_uint(l_string);
 	EXPECT_EQ(8102023, l_result._value);
 	EXPECT_EQ(7, l_result._digit_length);
 }
@@ -273,12 +111,12 @@ TEST(string_to_uint, all)
 
 TEST(string_to_int, all)
 {
-	integral_info l_result = string_to_int<var::int32>("-999HP");
+	int_info l_result = string_to_int("-999HP");
 	EXPECT_EQ(-999, l_result._value);
 	EXPECT_EQ(3, l_result._digit_length);
 
 	char l_string[10] = "-5959";
-	l_result = string_to_int<var::int32>(l_string);
+	l_result = string_to_int(l_string);
 	EXPECT_EQ(-5959, l_result._value);
 	EXPECT_EQ(4, l_result._digit_length);
 }
@@ -301,9 +139,9 @@ TEST(string_to_boolean, all)
 
 TEST(string_to_float, all)
 {
-	real_info l_result = string_to_float<var::float64>("3.14159265f");
-	EXPECT_EQ(1, l_result._integral_part_length);
-	EXPECT_EQ(8, l_result._real_part_length);
+	real_info l_result = string_to_float("3.14159265f");
+	EXPECT_EQ(1, l_result._int_digit_length);
+	EXPECT_EQ(8, l_result._floating_point_length);
 	EXPECT_EQ(10, l_result._total_length);
 	
 	EXPECT_TRUE
@@ -322,9 +160,9 @@ TEST(string_to_float, all)
 
 
 
-	l_result = string_to_float<var::float64>("-3.14159265f");
-	EXPECT_EQ(1, l_result._integral_part_length);
-	EXPECT_EQ(8, l_result._real_part_length);
+	l_result = string_to_float("-3.14159265f");
+	EXPECT_EQ(1, l_result._int_digit_length);
+	EXPECT_EQ(8, l_result._floating_point_length);
 	EXPECT_EQ(10, l_result._total_length);
 
 	EXPECT_TRUE

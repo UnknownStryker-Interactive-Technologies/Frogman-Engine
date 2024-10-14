@@ -2,10 +2,9 @@
 #include <FE/algorithm/utility.hxx>
 #include <FE/private/allocator_base.hpp>
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#define _OPEN_CURLY_BRACKET_ 1
-#define _FORMAT_SPECIFIER_PERCENT_ 2
-#define _FORMAT_SPECIFIER_VALUE_PREFIX_ 3
-#define _FORMAT_SPECIFIER_VALUE_SUFFIX_ 4
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 
 
 
@@ -13,156 +12,187 @@
 BEGIN_NAMESPACE(FE::log)
 
 
-// ${%d at n} - int32
-// ${%u at n} - uint32
-// ${%ld at n} - int64
-// ${%lu at n} - uint64
-// ${%lf at n} - float64
-// ${%f at n} - float32
-// ${%b at n} - bool
-// ${%c at n} - char
-// ${%s at n} - string
-// ${%p at n} - hexadecimal 64bit pointer
-void format_string(char* out_buffer_pointer_p, const char* string_format_p, _MAYBE_UNUSED_ size buffer_size_p, const void** arguments_pointer_p, _MAYBE_UNUSED_ count_t arguments_count_p) noexcept
+/*
+${%d@n} - int32
+${%u@n} - uint32
+${%ld@n} - int64
+${%lu@n} - uint64
+${%lf@n} - float64
+${%f@n} - float32
+${%b@n} - bool
+${%c@n} - char
+${%s@n} - string
+${%p@n} - hexadecimal 64bit pointer
+*/
+
+_FE_FORCE_INLINE_ bool __is_beginning_of_the_replacement_format(const char* string_format_p) noexcept
 {
-    FE_ABORT_IF(FE::internal::strlen(string_format_p) > buffer_size_p, "ERROR: buffer overflowed!");
-    thread_local static char tl_s_buffer[string_formatter_buffer_size] = { "\0" };
+    return (*string_format_p == '$') 
+        && (string_format_p[1] == '{')
+        && (string_format_p[2] == '%');
+}
+
+_FE_FORCE_INLINE_ char __get_the_first_letter_of_the_format_specifier(const char* string_format_p) noexcept
+{
+	return string_format_p[3];
+}
+
+_FE_FORCE_INLINE_ char __get_the_second_letter_of_the_format_specifier(const char* string_format_p) noexcept
+{
+    return string_format_p[4];
+}
+
+_FE_FORCE_INLINE_ bool __is_index_tocken(const char* string_format_p) noexcept
+{
+	return (string_format_p[4] == '@') || (string_format_p[5] == '@');
+}
+
+void format_string(char* out_buffer_pointer_p, const char* string_format_p, size buffer_size_p, const void** arguments_pointer_p, count_t arguments_count_p) noexcept
+{
+    if (std::strlen(string_format_p) > buffer_size_p) _FE_UNLIKELY_
+    {
+        std::cerr << "ERROR: buffer overflowed!";
+        std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+    }
 
     while (*string_format_p != '\0')
     {
-        if ((*string_format_p == '$') && (string_format_p[_OPEN_CURLY_BRACKET_] == '{') && (string_format_p[_FORMAT_SPECIFIER_PERCENT_] == '%'))
+        if (__is_beginning_of_the_replacement_format(string_format_p))
         {
-            std::memset(tl_s_buffer, null, string_formatter_buffer_size);
-            algorithm::utility::integral_info<var::uint32> l_index;
+            var::int64 l_args_index_converted_from_string = 0;
+            var::int64 l_index_digit_length = 0;
+            if (__is_index_tocken(string_format_p))
+            {
+                //                            "${%d at n}"
+                // The pointer below will point        ^
+                const char* l_format_specifier_value_prefix = string_format_p + ((string_format_p[4] == '@') ? 5 : 6);
+                l_args_index_converted_from_string = atoll(l_format_specifier_value_prefix); // Convert the string to a number.
+				
+                if (l_args_index_converted_from_string < 0) _FE_UNLIKELY_
+                {
+                    std::cerr << "ERROR: Detected an invalid index token. The @n value is negative.";
+                    std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+                }
+                
+                for (var::int64 i = l_args_index_converted_from_string; i >= 10; i /= 10) { ++l_index_digit_length; }
+                ++l_index_digit_length;
 
-            if (string_format_p[4] == '@')
-            {
-                static constexpr index_t _JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_ = 5;
-                l_index = algorithm::utility::string_to_uint<var::uint32>(string_format_p + _JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_);
-                FE_ABORT_IF(string_format_p[_JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_ + l_index._digit_length] != '}', "ERROR: an illegal string format detected! } is missing.");
-            }
-            else if (string_format_p[5] == '@')
-            {
-                static constexpr index_t _JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_ = 6;
-                l_index = algorithm::utility::string_to_uint<var::uint32>(string_format_p + _JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_);
-                FE_ABORT_IF(string_format_p[_JUMP_TO_FORMAT_SPECIFIER_VALUE_PREFIX_ + l_index._digit_length] != '}', "ERROR: an illegal string format detected! } is missing.");
+				// At the end of the number string, there must be a '}' character.
+                if (l_format_specifier_value_prefix[l_index_digit_length] != '}') _FE_UNLIKELY_
+                {
+                    std::cerr << "ERROR: an illegal string format detected! } is missing.";
+                    std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX));
+                }
+
+				// The index value must be less than the arguments count. Since it is an index to arguments.
+                if (static_cast<FE::count_t>(l_args_index_converted_from_string) >= arguments_count_p) _FE_UNLIKELY_
+                {
+                    std::cerr << "ERROR: Detected an invalid index token. The @n value is too large.";
+                    std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+                }
             }
             else
             {
                 continue;
             }
-         
-
-            FE_ABORT_IF(l_index._value >= arguments_count_p, "ERROR: Detected an invalid index token. The @n value is too large.");
-
-
-            switch (string_format_p[_FORMAT_SPECIFIER_VALUE_PREFIX_])
+        
+            //                                                           "${%d@n}"
+            // Would return the first letter of the current format_specifier ^
+            switch (__get_the_first_letter_of_the_format_specifier(string_format_p))
             {
             case 'd': // %d - int32
             {
-                algorithm::utility::int_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<int32*>(arguments_pointer_p[l_index._value]));
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
-                continue;
+                std::snprintf(out_buffer_pointer_p, buffer_size_p, "%d", *static_cast<int32*>( arguments_pointer_p[l_args_index_converted_from_string] ));
+                out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                string_format_p += (std::strlen("${%d@}") + l_index_digit_length);
+                continue; 
             }
 
             case 'u': // %u - uint32
             {
-                algorithm::utility::uint_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<uint32*>(arguments_pointer_p[l_index._value]));
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                std::snprintf(out_buffer_pointer_p, buffer_size_p, "%u", *static_cast<uint32*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                string_format_p += (std::strlen("${%u@}") + l_index_digit_length);
                 continue;
             }
 
             case 'l':
-                switch (string_format_p[_FORMAT_SPECIFIER_VALUE_SUFFIX_])
+                switch (__get_the_second_letter_of_the_format_specifier(string_format_p))
                 {
                 case 'd': // %ld - int64
                 {
-                    algorithm::utility::int_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<int64*>(arguments_pointer_p[l_index._value]));
-                    uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                    std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                    out_buffer_pointer_p += l_data_bytes_to_copy;
-                    string_format_p += (7llu + (uint64)l_index._digit_length);
+                    std::snprintf(out_buffer_pointer_p, buffer_size_p, "%lld", *static_cast<int64*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                    out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                    string_format_p += (std::strlen("${%ld@}") + l_index_digit_length);
                     continue;
                 }
 
                 case 'u': // %lu - uint64
                 {
-                    algorithm::utility::uint_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<uint64*>(arguments_pointer_p[l_index._value]));
-                    uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                    std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                    out_buffer_pointer_p += l_data_bytes_to_copy;
-                    string_format_p += (7llu + (uint64)l_index._digit_length);
+                    std::snprintf(out_buffer_pointer_p, buffer_size_p, "%llu", *static_cast<uint64*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                    out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                    string_format_p += (std::strlen("${%lu@}") + l_index_digit_length);
                     continue;
                 }
 
                 case 'f': // %lf - float64
                 {
-                    algorithm::utility::float_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<float64*>(arguments_pointer_p[l_index._value]));
-                    uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                    std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                    out_buffer_pointer_p += l_data_bytes_to_copy;
-                    string_format_p += (7llu + (uint64)l_index._digit_length);
+                    std::snprintf(out_buffer_pointer_p, buffer_size_p, "%lf", *static_cast<float64*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                    out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                    string_format_p += (std::strlen("${%lf@}") + l_index_digit_length);
                     continue;
                 }
 
-                default:
-                    FE_ABORT_IF(true, "ERROR: an incorrect type format option detected! The option must be %ld (int64), %lu (uint64), or %lf (float64).");
+                default: _FE_UNLIKELY_
+                    std::cerr << "ERROR: an incorrect type format option detected! The option must be one of %ld (int64), %lu (uint64), and %lf (float64).";
+					std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX));
                     return;
                 }
 
             case 'f': // %f - float32
             {
-                algorithm::utility::float_to_string(tl_s_buffer, string_formatter_buffer_size, *static_cast<float32*>(arguments_pointer_p[l_index._value]));
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                std::snprintf(out_buffer_pointer_p, buffer_size_p, "%f", *static_cast<float32*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                string_format_p += (std::strlen("${%f@}") + l_index_digit_length);
                 continue;
             }
 
             case 'b': // %b - bool
             {
-                const char* l_result = algorithm::utility::boolean_to_string<char>(*static_cast<boolean*>(arguments_pointer_p[l_index._value]));
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(l_result);
+                const char* l_result = ((*static_cast<const bool*>(arguments_pointer_p[l_args_index_converted_from_string])) == true) ? "true" : "false";;
+                uint64 l_data_bytes_to_copy = std::strlen(l_result);
                 std::memcpy(out_buffer_pointer_p, l_result, l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                string_format_p += (std::strlen("${%b@}") + l_index_digit_length);
                 continue;
             }
 
             case 'c': // %c - char
-                *out_buffer_pointer_p = *static_cast<const char*>(arguments_pointer_p[l_index._value]);
+                *out_buffer_pointer_p = *static_cast<const char*>(arguments_pointer_p[l_args_index_converted_from_string]);
                 out_buffer_pointer_p += sizeof(char);
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                string_format_p += (std::strlen("${%c@}") + l_index_digit_length);
                 continue;
 
             case 's': // %s - string
             {
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(static_cast<const char*>(arguments_pointer_p[l_index._value]));
-                std::memcpy(out_buffer_pointer_p, static_cast<const char*>(arguments_pointer_p[l_index._value]), l_data_bytes_to_copy);
+                uint64 l_data_bytes_to_copy = std::strlen(static_cast<const char*>(arguments_pointer_p[l_args_index_converted_from_string]));
+                std::memcpy(out_buffer_pointer_p, static_cast<const char*>(arguments_pointer_p[l_args_index_converted_from_string]), l_data_bytes_to_copy);
                 out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                string_format_p += (std::strlen("${%s@}") + l_index_digit_length);
                 continue;
             }
 
             case 'p': // %p - hexadecimal 64bit pointer
             {
-                std::snprintf(tl_s_buffer, string_formatter_buffer_size, "%p", arguments_pointer_p[l_index._value]);
-                uint64 l_data_bytes_to_copy = FE::internal::strlen(tl_s_buffer);
-                std::memcpy(out_buffer_pointer_p, tl_s_buffer, l_data_bytes_to_copy);
-                out_buffer_pointer_p += l_data_bytes_to_copy;
-                string_format_p += (6llu + (uint64)l_index._digit_length);
+                std::snprintf(out_buffer_pointer_p, buffer_size_p, "%p", arguments_pointer_p[l_args_index_converted_from_string]);
+                out_buffer_pointer_p += std::strlen(out_buffer_pointer_p);
+                string_format_p += (std::strlen("${%p@}") + l_index_digit_length);
                 continue;
             }
 
-            default: _UNLIKELY_
-                FE_ABORT_IF(true, "ERROR: an incorrect type format option detected!");
+            default: _FE_UNLIKELY_
+                std::cerr << "ERROR: an incorrect type format option detected!";
+                std::exit(error_code_cast(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
                 return;
             }
         }

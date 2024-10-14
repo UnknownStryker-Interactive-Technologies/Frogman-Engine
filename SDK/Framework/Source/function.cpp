@@ -7,7 +7,7 @@
 
 BEGIN_NAMESPACE(FE::framework::reflection)
 
-typename function::function_pool_type     function::s_function_pool(function::initial_size_in_bytes);
+typename function::function_pool_type     function::s_function_pool;
 typename function::underlying_container*  function::s_task_map = nullptr;
 typename function::lock_type              function::s_lock;
 

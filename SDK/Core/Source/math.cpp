@@ -1,7 +1,7 @@
 ﻿#include <FE/algorithm/math.hpp>
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 
-#ifdef _X86_64_
+#ifdef _FE_ON_X86_64_
 	#ifdef __AVX__
 		// x86-64 AVX
 		#include <immintrin.h>
@@ -30,18 +30,18 @@ uint64 to_higher_prime(uint64 number_p) noexcept
 	switch (number_p)
 	{
 	case 0:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 1:
 		return smallest_prime_number;
 
 	case 3:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 5:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 7:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 11:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 13:
 		return number_p;
 
@@ -75,18 +75,18 @@ uint64 to_lower_prime(uint64 number_p) noexcept
 	switch (number_p)
 	{
 	case 0:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 1:
 		return smallest_prime_number;
 
 	case 3:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 5:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 7:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 11:
-		_FALLTHROUGH_;
+		_FE_FALLTHROUGH_;
 	case 13:
 		return number_p;
 
@@ -138,7 +138,7 @@ FE::float64 sin(::var::float64 radian_p) noexcept
     constexpr FE::float64 factorial_of_15 = 1307674368000.0;
     constexpr FE::float64 factorial_of_17 = 355687428096000.0;
 
-#ifdef _X86_64_
+#ifdef _FE_ON_X86_64_
     // load look up tables onto ymm registers.
     static const __m256d l_s_factorial_of_11_to_17 = _mm256_set_pd(factorial_of_17, factorial_of_15, factorial_of_13, factorial_of_11);
     static const __m256d l_s_factorial_of_3_to_9 = _mm256_set_pd(factorial_of_9, factorial_of_7, factorial_of_5, factorial_of_3);
@@ -220,7 +220,7 @@ FE::float64 cos(::var::float64 radian_p) noexcept
     constexpr FE::float64 factorial_of_14 = 87178291200.0;
     constexpr FE::float64 factorial_of_16 = 20922789888000.0;
 
-#ifdef _X86_64_
+#ifdef _FE_ON_X86_64_
     // load look up tables onto ymm registers.
     static const __m256d l_s_factorial_of_10_to_16 = _mm256_set_pd(factorial_of_16, factorial_of_14, factorial_of_12, factorial_of_10);
     static const __m256d l_s_factorial_of_2_to_8 = _mm256_set_pd(factorial_of_8, factorial_of_6, factorial_of_4, factorial_of_2);

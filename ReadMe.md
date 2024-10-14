@@ -22,17 +22,10 @@ C++ 20 is highly recommended unless it is unavailable.
 All project settings can be adjusted by modifying CMakeLists.txt.
 
 # The current development status.
-| Platform     | Architecture  | Platform Support |
+| Platform     | Architecture  | Status           |
 |--------------|---------------|------------------|
-| Windows 11   | X86-64        | Suspended        |
-| Ubuntu-Linux | X86-64        | In Development   |
-
-# Frogman Engine wants to support these platforms in the future.
-| Platform     | Architecture  |   CPU Brand   |
-|--------------|---------------|---------------|
-| Windows      | X86-64        | Intel and AMD |
-|              | ARM64         |               |
-https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/
+| Windows 11   | X86-64        | In Development   |
+| Ubuntu-Linux | X86-64        | Discontinued     |
 
 # This project uses:
 - Boost Libraries
@@ -57,9 +50,4 @@ In order to build boost libraries using Microsoft Visual Studio 2022 Clang CL:
 
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug 
 
-./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release 
-
-
-# Goorm IDE GPU Reference
-https://www.techpowerup.com/gpu-specs/tesla-t4.c3316
-https://docs.nvidia.com/datacenter/tesla/pdf/tesla-release-notes-410-72.pdf
+./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release

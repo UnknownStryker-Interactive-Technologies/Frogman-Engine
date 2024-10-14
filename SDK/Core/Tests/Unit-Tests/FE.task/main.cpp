@@ -52,7 +52,7 @@ int main(int argc_p, char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+	FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
@@ -290,7 +290,7 @@ namespace performance_benchmark
 Severity	Code	Description	Project	File	Line	Suppression State	Details
 Error		variable 'l_uint' set but not used [-Werror,-Wunused-but-set-variable]	FE.core.thread_test	C:\Users\leeho\OneDrive\臾몄꽌\GitHub\Frogman-Engine-Lab\Frogman-Engine-Tests\FE-Tests\Unit-Tests\FE.core.thread\main.cpp	291
 */
-		_MAYBE_UNUSED_ static var::uint64 l_uint = 0;
+		_FE_MAYBE_UNUSED_ static var::uint64 l_uint = 0;
 
 		++l_uint;
 	}
@@ -299,7 +299,7 @@ Error		variable 'l_uint' set but not used [-Werror,-Wunused-but-set-variable]	FE
 	{
 		FE::function<void(void)> l_fn = fn;
 
-		for (_MAYBE_UNUSED_ auto _ : state_p)
+		for (_FE_MAYBE_UNUSED_ auto _ : state_p)
 		{
 			l_fn();
 		}
@@ -311,7 +311,7 @@ Error		variable 'l_uint' set but not used [-Werror,-Wunused-but-set-variable]	FE
 	{
 		FE::c_style_task<void(void)> l_task = fn;
 
-		for (_MAYBE_UNUSED_ auto _ : state_p)
+		for (_FE_MAYBE_UNUSED_ auto _ : state_p)
 		{
 			l_task(nullptr);
 		}
@@ -323,7 +323,7 @@ Error		variable 'l_uint' set but not used [-Werror,-Wunused-but-set-variable]	FE
 	{
 		std::function l_fn = fn;
 
-		for (_MAYBE_UNUSED_ auto _ : state_p)
+		for (_FE_MAYBE_UNUSED_ auto _ : state_p)
 		{
 			l_fn();
 		}

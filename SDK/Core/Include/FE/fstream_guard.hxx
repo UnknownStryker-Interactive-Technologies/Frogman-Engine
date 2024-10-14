@@ -18,9 +18,9 @@ private:
 public:
 	typedef FStream fstream_type;
 
-	_FORCE_INLINE_ basic_fstream_guard(FStream& file_io_p) noexcept : m_fstream(file_io_p) {}
+	_FE_FORCE_INLINE_ basic_fstream_guard(FStream& file_io_p) noexcept : m_fstream(file_io_p) {}
 
-	_FORCE_INLINE_ ~basic_fstream_guard() noexcept
+	_FE_FORCE_INLINE_ ~basic_fstream_guard() noexcept
 	{
 		if (this->m_fstream.is_open() == true)
 		{
@@ -28,7 +28,7 @@ public:
 		}
 	}
 
-	_FORCE_INLINE_ FStream& get_stream() const noexcept { return this->m_fstream; }
+	_FE_FORCE_INLINE_ FStream& get_stream() const noexcept { return this->m_fstream; }
 
 	basic_fstream_guard(const basic_fstream_guard& other_p) noexcept = delete;
 	basic_fstream_guard(basic_fstream_guard&& rvalue_p) noexcept = delete;

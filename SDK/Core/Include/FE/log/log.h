@@ -16,7 +16,7 @@
 
 #include <FE/log/logger.hpp>
 #include <FE/log/format_string.h>
-#include <FE/attributes.h>
+#include <FE/definitions.h>
 #include <cassert>
 #include <cstdlib>
 
@@ -28,16 +28,16 @@
 
 #ifdef _ENABLE_LOG_
 /*
-${% d at n} - int32
-${%u at n} - uint32
-${%ld at n} - int64
-${%lu at n} - uint64
-${%lf at n} - float64
-${%f at n} - float32
-${%b at n} - bool
-${%c at n} - char
-${%s at n} - string
-${%p at n} - hexadecimal 64bit pointer | * A file and console logger_base with a string formatter.
+${%d@n} - int32
+${%u@n} - uint32
+${%ld@n} - int64
+${%lu@n} - uint64
+${%lf@n} - float64
+${%f@n} - float32
+${%b@n} - bool
+${%c@n} - char
+${%s@n} - string
+${%p@n} - hexadecimal 64bit pointer
 */
 #define FE_LOG(...) ::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__)
 #else
@@ -45,19 +45,44 @@ ${%p at n} - hexadecimal 64bit pointer | * A file and console logger_base with a
 #endif
 
 
+#ifdef _ENABLE_LOG_IF_
+/*
+${%d@n} - int32
+${%u@n} - uint32
+${%ld@n} - int64
+${%lu@n} - uint64
+${%lf@n} - float64
+${%f@n} - float32
+${%b@n} - bool
+${%c@n} - char
+${%s@n} - string
+${%p@n} - hexadecimal 64bit pointer
+*/
+#define FE_LOG_IF(condition, ...) \
+if(condition) \
+{ \
+	::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+}
+#else
+#define FE_LOG_IF(condition, ...)
+#endif
+
+
 #ifdef _ENABLE_ASSERT_
-// ${%d at n} - int32
-// ${%u at n} - uint32
-// ${%ld at n} - int64
-// ${%lu at n} - uint64
-// ${%lf at n} - float64
-// ${%f at n} - float32
-// ${%b at n} - bool
-// ${%c at n} - char
-// ${%s at n} - string
-// ${%p at n} - hexadecimal 64bit pointer | *Dynamically asserts the condition, that must not be true at runtime. 
+/*
+${%d@n} - int32
+${%u@n} - uint32
+${%ld@n} - int64
+${%lu@n} - uint64
+${%lf@n} - float64
+${%f@n} - float32
+${%b@n} - bool
+${%c@n} - char
+${%s@n} - string
+${%p@n} - hexadecimal 64bit pointer
+*/
 #define FE_ASSERT(expression, ...) \
-if(FE_UNLIKELY(expression)) _UNLIKELY_ \
+if(FE_UNLIKELY(expression)) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	assert(!(expression)); \
@@ -69,15 +94,19 @@ if(FE_UNLIKELY(expression)) _UNLIKELY_ \
 
 #ifdef _ENABLE_EXIT_
 /*
-${% d at n} - int32   | ${% u at n} - uint32  
-${% ld at n} - int64  | ${%lu at n} - uint64
-${%lf at n} - float64 | ${%f at n} - float32
-${%b at n}  - bool    | ${%c at n}  - char    
-${%s at n}  - string  | ${%p at n}  - hexadecimal 64bit pointer
-*Dynamically asserts the condition, that must not be true at runtime, and exits the program with the given error code.
+${%d@n} - int32
+${%u@n} - uint32
+${%ld@n} - int64
+${%lu@n} - uint64
+${%lf@n} - float64
+${%f@n} - float32
+${%b@n} - bool
+${%c@n} - char
+${%s@n} - string
+${%p@n} - hexadecimal 64bit pointer
 */
 #define FE_EXIT(expression, error_code, ...) \
-if(FE_UNLIKELY(expression)) _UNLIKELY_ \
+if(FE_UNLIKELY(expression)) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	::std::exit(static_cast<::var::int32>(error_code)); \
@@ -87,49 +116,25 @@ if(FE_UNLIKELY(expression)) _UNLIKELY_ \
 #endif
 
 
-/*
-${% d at n} - int32   | ${% u at n} - uint32
-${% ld at n} - int64  | ${%lu at n} - uint64
-${%lf at n} - float64 | ${%f at n} - float32
-${%b at n}  - bool    | ${%c at n}  - char
-${%s at n}  - string  | ${%p at n}  - hexadecimal 64bit pointer
-*If the given function call does not return the expected value, the program will exit with an error code, retrieved from the method. 
-*/
-#define FE_EXPECT(fn_call, expected_value, ...)\
-{ \
-	auto __FE_EXPECT_RESULT__ = fn_call; \
-	if(FE_UNLIKELY(__FE_EXPECT_RESULT__ != expected_value)) _UNLIKELY_ \
-	{ \
-		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
-		if constexpr (::FE::is_boolean<decltype(__FE_EXPECT_RESULT__)>::value == true) \
-		{ \
-			::std::exit(_ERROR_FROM_FE_CORE_EXIT_CODE_); \
-		} \
-		else if constexpr (::FE::is_boolean<decltype(__FE_EXPECT_RESULT__)>::value == false) \
-		{ \
-			::std::exit((::var::int32)__FE_EXPECT_RESULT__); \
-		} \
-	} \
-}
-
-
 #define TO_STRING(p) #p
 
-#define _NODEFAULT_ default: _UNLIKELY_ FE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
+#define _NODEFAULT_ default: _FE_UNLIKELY_ FE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
 
 
 namespace FE
 {
-	enum struct ERROR_CODE
+	enum struct ERROR_CODE : FE::int32
 	{
 		_NONE = 0,
+		_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX = 1,
+
 		_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT = 100,
 		_FATAL_MEMORY_ERROR_1XX_NULLPTR = 101,
-		_FATAL_MEMORY_ERROR_ACCESS_VIOLATION = 102,
-		_FATAL_MEMORY_ERROR_HEAP_CORRUPTION = 103,
-		_FATAL_MEMORY_ERROR_DOUBLE_FREE = 104,
-		_FATAL_MEMORY_ERROR_OUT_OF_RANGE = 105,
-		_FATAL_MEMORY_ERROR_OUT_OF_CAPACITY = 106,
+		_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION = 102,
+		_FATAL_MEMORY_ERROR_1XX_HEAP_CORRUPTION = 103,
+		_FATAL_MEMORY_ERROR_1XX_DOUBLE_FREE = 104,
+		_FATAL_MEMORY_ERROR_1XX_OUT_OF_RANGE = 105,
+		_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW = 106,
 		_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE = 107,
 		_FATAL_MEMORY_ERROR_1XX_ILLEGAL_POSITIONING = 108,
 
@@ -139,6 +144,11 @@ namespace FE
 
 		_FATAL_SERIALIZATION_ERROR_3XX_TYPE_MISMATCH = 300
 	};
+
+	_FE_FORCE_INLINE_ int error_code_cast(const ERROR_CODE error_code_p) noexcept
+	{
+		return static_cast<int>(error_code_p);
+	}
 }
 
 #endif

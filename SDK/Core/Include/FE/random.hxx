@@ -25,12 +25,9 @@ public:
     using value_type = T;
 
     random_integer() noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }) {}
-    random_integer(T min_range_p, T max_range_p) noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }), m_uniform_int_distribution(::std::uniform_int_distribution<T>{ min_range_p, max_range_p }) {}
-    _CONSTEXPR20_ ~random_integer() noexcept {}
+    _FE_CONSTEXPR20_ ~random_integer() noexcept {}
 
-    _FORCE_INLINE_ T ranged_random_integer() noexcept { return (*this->m_uniform_int_distribution)(*this->m_value_generator); }
-
-    _FORCE_INLINE_ T ranged_random_integer(T min_range_p, T max_range_p) noexcept
+    _FE_FORCE_INLINE_ T ranged_random_integer(T min_range_p, T max_range_p) noexcept
     {
         this->m_uniform_int_distribution.emplace(min_range_p, max_range_p);
         return (*this->m_uniform_int_distribution)(*this->m_value_generator);
@@ -50,13 +47,9 @@ public:
     using value_type = T;
 
     random_float() noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }) {}
-    random_float(T min_range_p, T max_range_p) noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }), m_uniform_real_distribution(::std::uniform_real_distribution<T>{ min_range_p, max_range_p }) {}
-    _CONSTEXPR20_ ~random_float() noexcept {};
+    _FE_CONSTEXPR20_ ~random_float() noexcept {};
 
-
-    _FORCE_INLINE_ T ranged_random_float() noexcept { return (*this->m_uniform_real_distribution)(*this->m_value_generator); }
-
-    _FORCE_INLINE_ T ranged_random_float(T min_range_p, T max_range_p) noexcept
+    _FE_FORCE_INLINE_ T ranged_random_float(T min_range_p, T max_range_p) noexcept
     {
         this->m_uniform_real_distribution.emplace(min_range_p, max_range_p);
         return (*this->m_uniform_real_distribution)(*this->m_value_generator);

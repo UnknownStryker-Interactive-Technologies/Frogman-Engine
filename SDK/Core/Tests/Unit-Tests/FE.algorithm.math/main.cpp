@@ -15,7 +15,7 @@
 ls: lists all folders in the current working directory
 ls filename: checks the presence of files with the specified name.
 */
-int main(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p)
+int main(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
 {
 	using namespace FE;
 
@@ -30,7 +30,7 @@ int main(_MAYBE_UNUSED_ int argc_p, _MAYBE_UNUSED_ char** argv_p)
 	}
 	
     benchmark::Initialize(&argc_p, argv_p);
-	FE_ABORT_IF(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+    FE_ASSERT(benchmark::ReportUnrecognizedArguments(argc_p, argv_p) == true, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
     int32 l_exit_code = RUN_ALL_TESTS();
 	std::cerr << "\n\n";
 	benchmark::RunSpecifiedBenchmarks();
