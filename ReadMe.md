@@ -177,16 +177,12 @@ See the License for the specific language governing permissions and limitations 
 
 This project is under development and may contain some bugs and issues.
 
-# Dev Team Discord Link: https://discord.gg/jhu4vAU3Mm
-Currently, Unknown Stryker(Hojin Lee) is the only active developer for this project.
-
 # Frogman Engine Coding Conventions and Rules.
 https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413ff4f40de9204c4aa22907ffc&pvs=4
 
-# Prerequisite: CMake 3.27.0 or latest, and LLVM Clang 10 or latest [ includes LLVM (clangcl) ].
+# Prerequisite: CMake 3.26.0 or latest, and LLVM Clang 10 or latest [ includes LLVM (clangcl) ].
 
-# C++ standard version: C++ 17 or latest.
-C++ 20 is highly recommended unless it is unavailable.
+# C++ standard version: C++ 20 or latest.
 
 All project settings can be adjusted by modifying CMakeLists.txt.
 
