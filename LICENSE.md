@@ -1,4 +1,4 @@
-Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
+# Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
 Frogman Engine is licensed under the Apache License, version 2.0.  
 
 # Apache License, Version 2.0  
