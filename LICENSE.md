@@ -1,7 +1,7 @@
 Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
 Frogman Engine is licensed under the Apache License, version 2.0.  
 
-Apache License, Version 2.0  
+# Apache License, Version 2.0  
 
   
 Apache License  
@@ -100,7 +100,7 @@ See the License for the specific language governing permissions and limitations 
   
   
   
-아파치 라이선스 버전 2.0  
+# 아파치 라이선스 버전 2.0  
 
 버전 2.0, 2004년 1월  
 
