@@ -4,7 +4,9 @@
 # Frogman-Engine
 Frogman Engine License v2024.10.17
 Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+
 Frogman Engine is licensed under the Apache License, version 2.0.
+
 This project is under development and may contain some bugs and issues.
 
 # Frogman Engine Coding Conventions and Rules.
