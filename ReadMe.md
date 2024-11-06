@@ -2,8 +2,7 @@
 [![Platform](https://img.shields.io/badge/Platform-x86_64-white.svg)](PLATFORM)
 
 # Frogman-Engine
-Frogman Engine License v2024.10.17
-Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.
 
 Frogman Engine is licensed under the Apache License, version 2.0.
 
