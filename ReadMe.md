@@ -13,7 +13,7 @@ https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413f
 CMake 3.27.0 or the latest, and LLVM Clang 10 or the latest [ includes LLVM (clangcl) ].
 
 # C++ standard version: 
-C++ 20 or latest.  
+C++ 20 or the latest.  
 All project settings can be adjusted by modifying CMakeLists.txt.
 
 # The current development status.
