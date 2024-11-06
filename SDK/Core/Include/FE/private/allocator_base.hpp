@@ -4,9 +4,6 @@
 #include <FE/prerequisites.h>
 #include <FE/memory.hxx>
 
-// boost
-#include <boost/smart_ptr/intrusive_ptr.hpp>
-
 // std
 #include <cstdlib>
 #include <memory>
@@ -36,9 +33,9 @@ BEGIN_NAMESPACE(FE)
 
 _FE_MAYBE_UNUSED_ constexpr var::uint64 invalid_memory_util_query = max_value<var::uint64>;
 
-_FE_MAYBE_UNUSED_ constexpr uint64 one_kb = 1024;
-_FE_MAYBE_UNUSED_ constexpr uint64 one_mb = 1048576;
-_FE_MAYBE_UNUSED_ constexpr uint64 one_gb = 1073741824;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_kb = 1024;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_mb = 1048576;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_gb = 1073741824;
 
 enum struct HEAP_MEMORY_UTIL_INFO : FE::uint8
 {
@@ -188,11 +185,11 @@ public:
 	}
 
 	template<typename T, class Alignment = typename FE::SIMD_auto_alignment>
-	_FE_FORCE_INLINE_ T* trackable_alloc(size bytes_p) noexcept
+	_FE_FORCE_INLINE_ T* trackable_alloc(FE::size bytes_p) noexcept
 	{
 		T* const l_result = (T*)FE_ALIGNED_ALLOC(bytes_p, Alignment::size);
-		FE_ASSERT(l_result == nullptr, "${%s@0}: Failed to allocate memory from scalable_aligned_malloc()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
-		FE_ASSERT((reinterpret_cast<uintptr>(l_result) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
+		FE_NEGATIVE_ASSERT(l_result == nullptr, "${%s@0}: Failed to allocate memory from scalable_aligned_malloc()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_NEGATIVE_ASSERT((reinterpret_cast<uintptr>(l_result) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
 #ifndef _RELEASE_
 		FE_ALIGNED_MEMSET(l_result, null, bytes_p);
 #endif
@@ -206,7 +203,7 @@ public:
 	template<typename T, class Alignment = typename FE::SIMD_auto_alignment>
 	_FE_FORCE_INLINE_ void trackable_free(T* const ptr_to_memory_p, _FE_MAYBE_UNUSED_ size bytes_p) noexcept
 	{
-		FE_ASSERT((reinterpret_cast<uintptr>(ptr_to_memory_p) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
+		FE_NEGATIVE_ASSERT((reinterpret_cast<uintptr>(ptr_to_memory_p) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
 
 		FE_ALIGNED_FREE(ptr_to_memory_p);
 
@@ -224,7 +221,7 @@ public:
 		if (l_realloc_result == nullptr) _FE_UNLIKELY_
 		{
 			l_realloc_result = (T*)FE_ALIGNED_ALLOC(new_bytes_p, Alignment::size);
-			FE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+			FE_NEGATIVE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 	#ifndef _RELEASE_
 			FE_ALIGNED_MEMSET(l_realloc_result, null, new_bytes_p);
 	#endif
@@ -237,7 +234,7 @@ public:
 
 #elif defined(_LINUX_X86_64_)
 		T* l_realloc_result = (T*)FE_ALIGNED_ALLOC(new_bytes_p, Alignment::size);
-		FE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_NEGATIVE_ASSERT(l_realloc_result == nullptr, "${%s@0}: Failed to re-allocate memory from FE_ALIGNED_ALLOC()", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
 #ifndef _RELEASE_
 		FE_ALIGNED_MEMSET(l_realloc_result, null, new_bytes_p);
 #endif
@@ -252,7 +249,7 @@ public:
 #ifdef _ENABLE_MEMORY_TRACKER_
 		allocator_base::__log_heap_memory_reallocation<T>(prev_bytes_p, new_bytes_p, l_realloc_result);
 #endif
-		FE_ASSERT((reinterpret_cast<uintptr>(l_realloc_result) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
+		FE_NEGATIVE_ASSERT((reinterpret_cast<uintptr>(l_realloc_result) % Alignment::size) != 0, "${%s@0}: The allocated heap memory address not aligned by ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), &Alignment::size);
 		return l_realloc_result;
 	}
 

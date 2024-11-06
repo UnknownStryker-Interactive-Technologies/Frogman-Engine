@@ -3,22 +3,143 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/prerequisites.h>
 #include <FE/type_traits.hxx>
+#include <FE/pair.hxx>
 
 // std
 #include <bitset>
 
+// std::less{}
+#include <functional>
+
 // for strlen()
 #include <cstring>
 
-#ifdef FE_CHAR_TO_INT
-#error FE_CHAR_TO_INT is a reserved Frogman Engine macro keyword.
+#ifdef __FE_CHAR_TO_INT
+#error __FE_CHAR_TO_INT is a reserved Frogman Engine macro keyword.
 #endif
-#define FE_CHAR_TO_INT(c) (c - '0')
+#define __FE_CHAR_TO_INT(c) (c - '0')
 
 
 
 
 BEGIN_NAMESPACE(FE::algorithm::utility)
+
+
+template<class Comparator, typename T>
+_FE_FORCE_INLINE_ T& select(const T& true_p, const T& false_p) noexcept
+{
+    return Comparator()(true_p, false_p) ? true_p : false_p;
+}
+
+
+template<class Iterator, typename T, class LessThan = std::less<T>, class EqualTo = std::equal_to<T>>
+Iterator binary_search(Iterator begin_p, Iterator end_p, const T& value_p, LessThan&& less_than_p = LessThan(), EqualTo&& equal_to_p = EqualTo())
+{
+	FE_NEGATIVE_STATIC_ASSERT((std::is_same<LessThan, std::greater<T>>::value == true), "The comparator must contain < rather than other operators.");
+	FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'first' iterator is pointing after the 'last' iterator.");
+    Iterator l_mid = begin_p + ((end_p - begin_p) >> 1);
+
+#ifdef _ENABLE_ASSERT_
+    var::uint64 l_loop_counter = 0;
+	FE::uint64 l_max_loop = static_cast<FE::uint64>(std::log2(end_p - begin_p)) + 1;
+#endif
+    while ((begin_p <= l_mid) && (l_mid <= end_p))
+    {
+        FE_ASSERT(l_loop_counter <= l_max_loop, "FE::algorithm::utility::binary_search() operation timed out! Please check if the comparator is '<' operator.");
+		if (equal_to_p(*l_mid, value_p)) // A == B
+        {
+			return l_mid;
+		}
+        else if (less_than_p(*l_mid, value_p)) // A < B
+        {
+            l_mid += ((end_p - l_mid) >> 1);
+        }
+        else if (less_than_p(value_p, *l_mid)) // A < B
+        {
+            l_mid -= ((l_mid - begin_p) >> 1);
+        }
+#ifdef _ENABLE_ASSERT_
+        ++l_loop_counter;
+#endif
+    }
+
+    return Iterator{ nullptr };
+}
+
+
+enum struct EXCLUSION_SORT_MODE : var::uint8
+{
+	_PUSH_TO_RIGHT = 0,
+    _PUSH_TO_LEFT = 1
+};
+
+/* 
+- Time complexity -
+Best: O(n/2)
+Worst: O(n)
+*/
+template<EXCLUSION_SORT_MODE ExclusionSortMode, class Iterator> 
+FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+{
+    Iterator l_begin = begin_p;
+    Iterator l_end = end_p;
+    --end_p;
+    FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
+
+
+    if constexpr (ExclusionSortMode == EXCLUSION_SORT_MODE::_PUSH_TO_RIGHT)
+	{
+        while (begin_p < end_p)
+        {
+            if ((*begin_p == exclusion_target_p) && (*end_p != exclusion_target_p))
+            {
+                std::swap(*begin_p, *end_p);
+            }
+
+            if (*begin_p != exclusion_target_p)
+            {
+                ++begin_p;
+            }
+
+            if (*end_p == exclusion_target_p)
+            {
+                --end_p;
+            }
+        }
+        if (l_begin == end_p)
+        {
+			++end_p;
+        }
+        FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        return FE::pair<Iterator, Iterator>{l_begin, end_p};
+	}
+	else if constexpr (ExclusionSortMode == EXCLUSION_SORT_MODE::_PUSH_TO_LEFT)
+	{
+        while (begin_p < end_p)
+        {
+            if ((*begin_p != exclusion_target_p) && (*end_p == exclusion_target_p))
+            {
+                std::swap(*begin_p, *end_p);
+            }
+
+            if (*begin_p == exclusion_target_p)
+            {
+                ++begin_p;
+            }
+
+            if (*end_p != exclusion_target_p)
+            {
+                --end_p;
+            }
+        }
+        if (l_begin == end_p)
+        {
+            ++end_p;
+        }
+        FE_NEGATIVE_ASSERT(begin_p >= l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        return FE::pair<Iterator, Iterator>{begin_p, l_end};
+	}
+}
 
 
 _FE_MAYBE_UNUSED_ constexpr int8 ASCII_code_zero = 48;
@@ -70,7 +191,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::uint8 count_uint_digit_length(var::uint6
 template<typename CharT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const integral_string_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
 
     const CharT* l_integral_string_pointer = integral_string_p;
     var::uint64 l_result = 0;
@@ -78,7 +199,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const i
     while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
     {
         l_result *= 10;
-        l_result += static_cast<var::uint64>( FE_CHAR_TO_INT(*l_integral_string_pointer) );
+        l_result += static_cast<var::uint64>(__FE_CHAR_TO_INT(*l_integral_string_pointer) );
         ++l_integral_string_pointer;
     }
 
@@ -88,7 +209,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const i
 template<typename CharT>
 _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
 
     const CharT* l_integral_string_pointer = integral_string_p;
     var::int64 l_result = 0;
@@ -101,7 +222,7 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
         while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
         {
             l_result *= 10;
-            l_result += static_cast<FE::int64>(FE_CHAR_TO_INT(*l_integral_string_pointer));
+            l_result += static_cast<FE::int64>(__FE_CHAR_TO_INT(*l_integral_string_pointer));
             ++l_integral_string_pointer;
         }
 
@@ -112,7 +233,7 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
     while ((*l_integral_string_pointer >= FE::algorithm::utility::ASCII_code_zero) && (*l_integral_string_pointer <= FE::algorithm::utility::ASCII_code_nine))
     {
         l_result *= 10;
-        l_result += static_cast<FE::int64>(FE_CHAR_TO_INT(*l_integral_string_pointer));
+        l_result += static_cast<FE::int64>(__FE_CHAR_TO_INT(*l_integral_string_pointer));
         ++l_integral_string_pointer;
     }
 
@@ -122,9 +243,9 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
 template<typename CharT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ length_t input_string_capacity_p, var::int64 value_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
-    FE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
-    FE_ASSERT(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_ASSERT(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
 
     var::uint8 l_integral_digits = count_int_digit_length(value_p);
 
@@ -135,7 +256,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p,
         ++l_integral_digits;
     }
 
-    FE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+    FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::uint8 l_idx = l_integral_digits - 1;
     while (value_p > 0)
@@ -151,12 +272,12 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p,
 template<typename CharT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ length_t input_string_capacity_p, var::uint64 value_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
-    FE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
+    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
     var::uint8 l_integral_digits = count_uint_digit_length(value_p);
 
-    FE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+    FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::uint8 l_idx = l_integral_digits - 1;
     while (value_p > 0)
@@ -208,9 +329,9 @@ _FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
 template<typename CharT>
 _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_string_capacity_p, float64 value_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
-    FE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
     int_to_string<CharT>(string_out_p, input_string_capacity_p, static_cast<var::int64>(value_p));
 
@@ -224,7 +345,7 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_
         l_floating_point *= 10.0;
     }
 
-    FE_ASSERT(input_string_capacity_p <= (count_int_digit_length(static_cast<var::int64>(l_floating_point)) + l_integral_part_string_length), "MEMORY BOUNDRY CHECK FAILURE: the digit length of the integral part exceeds the output string buffer capacity");
+    FE_NEGATIVE_ASSERT(input_string_capacity_p <= (count_int_digit_length(static_cast<var::int64>(l_floating_point)) + l_integral_part_string_length), "MEMORY BOUNDRY CHECK FAILURE: the digit length of the integral part exceeds the output string buffer capacity");
 
     int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
 }
@@ -233,7 +354,7 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_
 template<typename CharT>
 _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
     if (((*string_p == 't') && (string_p[1] == 'r')) && ((string_p[2] == 'u') && (string_p[3] == 'e')))
     {
@@ -251,10 +372,11 @@ _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noex
 template<typename CharT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const CharT* boolean_to_string(boolean value_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 
     return (value_p == true) ? static_cast<const CharT*>("true") : static_cast <const CharT*>("false");
 }
 
 END_NAMESPACE
+#undef FE_CHAR_TO_INT
 #endif

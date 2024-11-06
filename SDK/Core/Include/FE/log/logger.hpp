@@ -25,7 +25,7 @@ class logger_base
 {
 public:
     _FE_MAYBE_UNUSED_ static constexpr uint16 line_info_buffer_size = 32;
-    _FE_MAYBE_UNUSED_ static constexpr uint32 default_buffer_size = 10240;
+    _FE_MAYBE_UNUSED_ static constexpr uint32 default_buffer_size = 1048576; // 1MB
 
     using buffer_type = std::string;
 

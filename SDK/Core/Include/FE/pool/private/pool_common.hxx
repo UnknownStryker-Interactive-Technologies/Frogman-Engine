@@ -9,12 +9,8 @@
 #include <array>
 #include <cstring>
 #include <list>
-#include <map>
 #include <memory>
 #pragma warning (push)
-
-// boost
-#include <boost/smart_ptr/intrusive_ptr.hpp>
 
 
 
@@ -34,34 +30,34 @@ namespace internal::pool
     struct block_info
     {
         var::byte* _address;
-        var::size _size_in_bytes;
+        var::int64 _size_in_bytes;
     };
 
-    template<POOL_TYPE PoolType, size PageCapacity, class Alignment>
+    template<POOL_TYPE PoolType, FE::size PageCapacity, class Alignment>
     class chunk;
 }
 
 
-template<POOL_TYPE PoolType, size PageCapacity, class Alignment, class Allocator>
+template<POOL_TYPE PoolType, FE::size PageCapacity, class Alignment, class Allocator>
 class pool;
 
 
-template<uint64 Capacity>
+template<FE::uint64 Capacity>
 struct capacity final
 {
-    _FE_MAYBE_UNUSED_ static constexpr inline size size = Capacity;
+    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = Capacity;
 };
 
-template<uint64 Count>
+template<FE::uint64 Count>
 struct object_count final
 {
-    _FE_MAYBE_UNUSED_ static constexpr inline size size = Count;
+    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = Count;
 };
 
-template<uint64 SizeInBytes>
+template<FE::uint64 SizeInBytes>
 struct size_in_bytes final
 {
-    _FE_MAYBE_UNUSED_ static constexpr inline size size = SizeInBytes;
+    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = SizeInBytes;
 };
 
 

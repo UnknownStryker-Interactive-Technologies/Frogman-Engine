@@ -1,7 +1,9 @@
-﻿#include "FE/log/format_string.h"
+﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+#include "FE/log/format_string.h"
 #include <FE/algorithm/utility.hxx>
 #include <FE/private/allocator_base.hpp>
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+
+// std
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>

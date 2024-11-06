@@ -8,13 +8,10 @@
 #error Frogman Engine requires LLVM Clang to compile.
 #endif
 
-#ifdef _MSC_VER
-#pragma message("Frogman Engine will drop MSVC++ compiler support in later updates. Please use LLVM Clang toolset instead of v143.")
-#endif
-
 #if !defined(_WINDOWS_X86_64_) && !defined(_LINUX_X86_64_)
 #error An Incompatible System Environment Detected: Frogman Engine supports Windows x86-64 and Linux(Ubuntu) x86-64. Please use one of them.
 #endif
+
 
 #ifdef FE
 #error Frogman Engine Prohibits macroizing the keyword "FE".
@@ -29,12 +26,11 @@
 #error Frogman Engine Prohibits macroizing the keyword "internal".
 #endif
 
-#ifdef const
-#error Frogman Engine Prohibits macroizing the keyword "const".
+
+#ifdef null
+#error Frogman Engine Prohibits macroizing the keyword "null".
 #endif
-#ifdef constexpr
-#error Frogman Engine Prohibits macroizing the keyword "constexpr".
-#endif
+
 
 #ifdef nodiscard
 #error Frogman Engine Prohibits macroizing the keyword "nodiscard".
@@ -58,6 +54,7 @@
 #error Frogman Engine Prohibits macroizing the keyword "deprecated".
 #endif
 
+
 #ifdef max_value
 #error Frogman Engine Prohibits macroizing the keyword "max_value".
 #endif
@@ -65,15 +62,13 @@
 #error Frogman Engine Prohibits macroizing the keyword "min_value".
 #endif
 
+
 #ifdef boolean
 #error Frogman Engine Prohibits macroizing the keyword "boolean".
 #endif
 
-#ifdef schar
-#error Frogman Engine Prohibits macroizing the keyword "schar".
-#endif
-#ifdef uchar
-#error Frogman Engine Prohibits macroizing the keyword "uchar".
+#ifdef ASCII
+#error Frogman Engine Prohibits macroizing the keyword "ASCII".
 #endif
 #ifdef wchar
 #error Frogman Engine Prohibits macroizing the keyword "wchar".
@@ -126,6 +121,22 @@
 #error Frogman Engine Prohibits macroizing the keyword "uint64".
 #endif
 
+#ifdef size
+#error Frogman Engine Prohibits macroizing the keyword "size".
+#endif
+#ifdef length_t
+#error Frogman Engine Prohibits macroizing the keyword "length_t".
+#endif
+#ifdef index_t
+#error Frogman Engine Prohibits macroizing the keyword "index_t".
+#endif
+#ifdef count_t
+#error Frogman Engine Prohibits macroizing the keyword "count_t".
+#endif
+#ifdef capacity_t
+#error Frogman Engine Prohibits macroizing the keyword "capacity_t".
+#endif
+
 #ifdef ptrdiff
 #error Frogman Engine Prohibits macroizing the keyword "ptrdiff".
 #endif
@@ -136,18 +147,15 @@
 #error Frogman Engine Prohibits macroizing the keyword "uintptr".
 #endif
 
-#ifdef size
-#error Frogman Engine Prohibits macroizing the keyword "size".
+#ifdef directory_char_t
+#error Frogman Engine Prohibits macroizing the keyword "directory_char_t".
 #endif
-#ifdef length
-#error Frogman Engine Prohibits macroizing the keyword "length".
+
+
+#ifdef lazy_const
+#error Frogman Engine Prohibits macroizing the keyword "lazy_const".
 #endif
-#ifdef index
-#error Frogman Engine Prohibits macroizing the keyword "index".
-#endif
-#ifdef count
-#error Frogman Engine Prohibits macroizing the keyword "count".
-#endif
+
 
 #ifdef T
 #error Frogman Engine Prohibits macroizing the keyword "T".

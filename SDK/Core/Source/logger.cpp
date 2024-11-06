@@ -1,7 +1,5 @@
-﻿#include <FE/log/logger.hpp>
-#pragma warning(disable: 4996)
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#define _CRT_SECURE_NO_WARNINGS
+﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+#include <FE/log/logger.hpp>
 #include <FE/algorithm/string.hxx>
 #include <FE/clock.hpp>
 
@@ -16,7 +14,8 @@
 
 BEGIN_NAMESPACE(FE::log)
 
-
+// DO NOT USE in-house library functions within this file, except for FE::algorithm::string::concatenate<CharT>().
+// The functions in this file are used to implement FE_ASSERT, FE_NEGATIVE_ASSERT, FE_EXIT, etc. Calling them within this file will result in an infinite recursive loop.
 void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
 {
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_

@@ -1,5 +1,7 @@
 ﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/framework/framework.hpp>
+#include <FE/algorithm/string.hxx>
+#include <FE/algorithm/utility.hxx>
 #include <FE/clock.hpp>
 #include <FE/do_once.hxx>
 #include <FE/fstream_guard.hxx>
@@ -13,35 +15,24 @@
 
 // std
 #include <csignal>
+#include <optional>
 #include <string>
-
-#define _DUMP_FILE_NAME_LENGTH_ 128
 
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
+framework_base* framework_base::s_framework = nullptr;
+RESTART_OR_NOT framework_base::s_restart_or_not = RESTART_OR_NOT::_NO_OPERATION;
 
-void read_program_options(_FE_MAYBE_UNUSED_ program_options& out_options_p) noexcept
+std::function<framework_base* (int, char**)>& framework_base::__allocate_framework(std::function<framework_base* (int, char**)> script_p) noexcept
 {
-}
-
-void read_runtime_configurations(_FE_MAYBE_UNUSED_ runtime_configurations& out_configs_p) noexcept
-{
-}
-
-
-application_base* application_base::s_app = nullptr;
-RESTART_OR_NOT application_base::s_restart_or_not = RESTART_OR_NOT::_NO_OPERATION;
-
-std::function<application_base* (int, char**)> application_base::create_application(std::function<application_base* (int, char**)> script_p) noexcept
-{
-	static std::function<application_base* (int, char**)> l_s_script = script_p;
+	static std::function<framework_base* (int, char**)> l_s_script = script_p;
 	return l_s_script;
 }
 
-_FE_NORETURN_ void application_base::__abnormal_shutdown_with_exit_code(int32 signal_p)
+_FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int32 signal_p)
 {
 #ifdef _RELWITHDEBINFO_
 	boost::stacktrace::stacktrace l_stack_trace_dumps;
@@ -62,35 +53,53 @@ _FE_NORETURN_ void application_base::__abnormal_shutdown_with_exit_code(int32 si
 
 	}
 #endif
-	//FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::application_base::s_app->clean_up(); FE::framework::application_base::s_app->__shutdown_main());
+	//FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::framework_base::s_framework->shutdown(); FE::framework::framework_base::s_framework->__shutdown_main());
 	std::exit(signal_p);
 }
 
 
 
 
-vulkan_application::vulkan_application(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
+game_engine::game_engine(int argc_p, char** argv_p)
 {
+	if (argv_p != nullptr)
+	{
+		this->m_program_options._exe_directory = *argv_p;
+	}
+
+	for (var::int32 i = 1; i < argc_p; ++i)
+	{
+		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first(this->m_program_options._max_concurrency._first, '=');
+		l_range->_begin = 0;
+
+		if (algorithm::string::compare_ranged(argv_p[i], *l_range, this->m_program_options._max_concurrency._first, *l_range) == true)
+		{
+			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint(argv_p[i] + l_range->_end);
+			this->m_program_options._max_concurrency._second = l_uint_info._value;
+			
+			if (l_uint_info._value < 3)
+			{
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
+				this->m_program_options._max_concurrency._second = 4;
+			}
+			break;
+		}
+	}
 }
 
-int vulkan_application::launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
+int game_engine::launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p)
 {
 	return 0;
 }
 
-int vulkan_application::run()
+int game_engine::run()
 {
-	this->m_task_scheduler.run();
-	this->m_renderer.run();
-	this->m_input_manager.run();
+
 	return 0;
 }
 
-int vulkan_application::shutdown()
+int game_engine::shutdown()
 {
-	this->m_input_manager.shutdown();
-	this->m_renderer.shutdown();
-	this->m_task_scheduler.shutdown();
 	return 0;
 }
 
@@ -104,36 +113,38 @@ int main(int argc_p, char** argv_p)
 {
 	int l_exit_code;
 
+	std::signal(SIGTERM, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
+	std::signal(SIGSEGV, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
+	std::signal(SIGILL, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
+	std::signal(SIGABRT, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
+	std::signal(SIGFPE, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
+	std::set_terminate([]() { FE::framework::framework_base::__abnormal_shutdown_with_exit_code(SIGTERM); });
+
 	do
 	{
-		FE::framework::application_base::s_restart_or_not = FE::framework::RESTART_OR_NOT::_NO_OPERATION;
+		FE::framework::framework_base::s_restart_or_not = FE::framework::RESTART_OR_NOT::_NO_OPERATION;
 
-		std::signal(SIGTERM, FE::framework::application_base::__abnormal_shutdown_with_exit_code);
-		std::signal(SIGSEGV, FE::framework::application_base::__abnormal_shutdown_with_exit_code);
-		std::signal(SIGILL, FE::framework::application_base::__abnormal_shutdown_with_exit_code);
-		std::signal(SIGABRT, FE::framework::application_base::__abnormal_shutdown_with_exit_code);
-		std::signal(SIGFPE, FE::framework::application_base::__abnormal_shutdown_with_exit_code);
-		std::set_terminate([]() { FE::framework::application_base::__abnormal_shutdown_with_exit_code(SIGTERM); });
+		FE::framework::reflection::function::__initialize();
+		FE::framework::reflection::property::__initialize();
 
-		FE::framework::application_base::s_app = FE::framework::application_base::create_application()(argc_p, argv_p);
-		FE_EXIT(FE::framework::application_base::s_app == nullptr, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Assertion Failure: An app pointer is nullptr.");
-		
-		FE::framework::reflection::initialize();
+		FE::framework::framework_base::s_framework = FE::framework::framework_base::__allocate_framework()(argc_p, argv_p);
+		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Assertion Failure: An app pointer is nullptr.");
 
-		l_exit_code = FE::framework::application_base::s_app->launch(argc_p, argv_p);
+		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
 		FE_EXIT(l_exit_code != 0, l_exit_code, "Failed to set up an app.");
 
-		l_exit_code = FE::framework::application_base::s_app->run();
+		l_exit_code = FE::framework::framework_base::s_framework->run();
 		FE_EXIT(l_exit_code != 0, l_exit_code, "There was an error during the runtime.");
 
-		FE::framework::application_base::s_app->shutdown();
+		FE::framework::framework_base::s_framework->shutdown();
 		FE_EXIT(l_exit_code != 0, l_exit_code, "Unsuccessfully cleaned up an app.");
 
-		FE::framework::reflection::clean_up();
+		delete FE::framework::framework_base::s_framework;
 
-		delete FE::framework::application_base::s_app;
+		FE::framework::reflection::property::__shutdown();
+		FE::framework::reflection::function::__shutdown();
 	}
-	while (FE::framework::application_base::s_restart_or_not == FE::framework::RESTART_OR_NOT::_HAS_TO_RESTART);
+	while (FE::framework::framework_base::s_restart_or_not == FE::framework::RESTART_OR_NOT::_HAS_TO_RESTART);
 
 	return l_exit_code;
 }

@@ -6,7 +6,7 @@
 
 BEGIN_NAMESPACE(FE::framework)
 
-void get_current_platform_information(_FE_MAYBE_UNUSED_ platform_information& out_platform_info_p) noexcept
+void get_current_platform_information(_FE_MAYBE_UNUSED_ platform_info& out_platform_info_p) noexcept
 {
 }
 

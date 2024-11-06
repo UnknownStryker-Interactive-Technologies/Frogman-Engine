@@ -37,12 +37,13 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 // %p - hexadecimal 64bit pointer
 _FE_FORCE_INLINE_ const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept
 {
-    static constexpr auto skip_string_format = 1;
-
     thread_local static char tl_s_buffer[string_formatter_buffer_size] = { "\0" };
     std::memset(tl_s_buffer, null, string_formatter_buffer_size);
 
-    format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + skip_string_format, arguments_p.size());
+    if (arguments_p.begin() != nullptr)
+    {
+        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + 1, arguments_p.size());
+    }
     return tl_s_buffer;
 }
 

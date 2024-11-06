@@ -4,9 +4,9 @@
 #include <FE/prerequisites.h>
 #include <FE/do_once.hxx>
 #include <FE/function.hxx>
-#include <FE/string.hxx>
 #include <FE/type_traits.hxx>
 
+#include <FE/framework/string.hxx>
 #include <FE/framework/reflection/function.hpp>
 #include <FE/framework/reflection/property.hpp>
 #include <FE/framework/reflection/type_info.hpp>
@@ -14,21 +14,12 @@
 
 /*
 Frogman Engine serialization & deserialization system supports:
-	1. Plain old data serialization & deserialization. O
-	2. Non-trivial object serialization & deserialization. O
-	3. Fixed-sized non-trivial instance array serialization & deserialization. O
-	4. Fixed-sized plain old data array serialization & deserialization. O
 
-	5. Serializing & deserializing plain old data pointed by FE smart array pointer O
-	6. Serializing & deserializing Non-trivial data pointed by FE smart array pointer O
+  Compatible component types: Plain old data, fixed-sized arrays, FE smart pointers, std::basic_string, std::array, and std::vector.
 
-	7. Plain old data Container serialization & deserialization. O
-	8. non-trivial Container serialization & deserialization. O
-
-    9. Base type serialization & deserialization. O
-   10. Components' base types serialization & deserialization. O
-NOTE:
-	Unregistered non Frogman Engine native types without begin() end() methods cannot be serialized nor deserialized. It will result in compilation failure.
+	* C/C++ object that might contain the chain of derivation, components, other supported types, and components' chain of derivation.
+	
+	* RAW pointers and references are not supported.
 */
 
 
@@ -47,7 +38,7 @@ private:
 #else
 #define REGISTER_FE_CLASS(class_name) \
 public: \
-using is_reflectable = decltype(true); \
+using is_reflective = decltype(true); \
 class class_meta_data \
 { \
 public: \
@@ -116,20 +107,5 @@ public: \
 _FE_NO_UNIQUE_ADDRESS_ property_reflection_##property_name property_reflection_instance_##property_name = this;
 #endif
 
-
-namespace FE::framework::reflection
-{
-	_FE_FORCE_INLINE_ void initialize() noexcept
-	{
-		FE::framework::reflection::function::initialize();
-		FE::framework::reflection::property::initialize();
-	}
-
-	_FE_FORCE_INLINE_ void clean_up() noexcept
-	{
-		FE::framework::reflection::property::clean_up();
-		FE::framework::reflection::function::clean_up();
-	}
-}
 
 #endif

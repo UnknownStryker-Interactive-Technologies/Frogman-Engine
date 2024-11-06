@@ -1,18 +1,19 @@
 ﻿#ifndef _FE_FRAMEWORK_REFLECTION_FUNCTION_HPP_
 #define _FE_FRAMEWORK_REFLECTION_FUNCTION_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+#include <FE/framework/string.hxx>
+
 #include <FE/prerequisites.h>
 #include <FE/function.hxx>
 #include <FE/hash.hpp>
 #include <FE/pool/block_pool.hxx>
-#include <FE/string.hxx>
 
 // std
 #include <mutex>
 #include <memory_resource>
 #include <shared_mutex>
 
-// boost
+// boost::shared_lock_guard
 #include <boost/thread/shared_lock_guard.hpp>
 
 // ronbin hood hash
@@ -27,17 +28,18 @@ BEGIN_NAMESPACE(FE::framework::reflection)
 It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
 by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 */
+// TO DO: needs some rework.
 class function
 {
 public:	
-	using alignment_type = FE::align_CPU_L1_cache_line;
+	using alignment_type = FE::align_32bytes;
 	using lock_type = std::shared_mutex;
 
 	static constexpr size initial_size_in_bytes = (65536);
 	static constexpr size initial_capacity = initial_size_in_bytes / alignment_type::size;
 
 	using underlying_container = robin_hood::unordered_map<FE::string, FE::task_base*, FE::hash<FE::string>>;
-	using function_pool_type = FE::block_pool< alignment_type::size, initial_capacity >;
+	using function_pool_type = FE::block_pool<alignment_type::size, initial_capacity, alignment_type>;
 
 private:
 	static lock_type s_lock;
@@ -48,10 +50,9 @@ public:
 	function() noexcept = default;
 	~function() noexcept = default;
 
-	_FE_FORCE_INLINE_ static FE::boolean initialize() noexcept
+	_FE_FORCE_INLINE_ static FE::boolean __initialize() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
-		FE_ASSERT(s_task_map != nullptr, "Assertion failure: cannot initialize FE::framework::reflection::function more than once.");
+		FE_NEGATIVE_ASSERT(s_task_map != nullptr, "Assertion failure: cannot initialize FE::framework::reflection::function more than once.");
 		if(s_task_map == nullptr)
 		{
 			s_task_map = (underlying_container*)FE_ALIGNED_ALLOC(sizeof(underlying_container), FE::align_CPU_L1_cache_line::size);
@@ -62,10 +63,9 @@ public:
 		return false;
 	}
 	
-	_FE_FORCE_INLINE_ static FE::boolean clean_up() noexcept
+	_FE_FORCE_INLINE_ static FE::boolean __shutdown() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
-		FE_ASSERT(s_task_map == nullptr, "Assertion failure: unable to clean_up() FE::framework::reflection::function. It is null.");
+		FE_NEGATIVE_ASSERT(s_task_map == nullptr, "Assertion failure: unable to clean_up() FE::framework::reflection::function. It is null.");
 		if(s_task_map != nullptr)
 		{
 			s_task_map->~underlying_container();
@@ -77,9 +77,9 @@ public:
 		return false;
 	}
 
+public:
 	_FE_FORCE_INLINE_ static FE::boolean is_available() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
 		return s_task_map != nullptr;
 	}
 
@@ -92,11 +92,11 @@ public:
 	template<class TaskType, typename FunctionPtr>
 	_FE_FORCE_INLINE_ static void register_task(const typename underlying_container::key_type& key_p, FunctionPtr function_p) noexcept
 	{	
-		FE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid function type detected.");
+		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid function type detected.");
 		std::lock_guard<lock_type> l_lock(s_lock);
 
 		TaskType* const l_task = s_function_pool.allocate<TaskType>();
-		*l_task = function_p;
+		l_task->set_task(function_p);
 		s_task_map->emplace(key_p, l_task);
 	}
 
@@ -121,7 +121,7 @@ public:
 	{
 		boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
 		auto l_result = s_task_map->find(key_p);
-		FE_ASSERT(l_result == s_task_map->end(), "Assertion failure: unable to retrieve an unregistered task object pointer.");
+		FE_NEGATIVE_ASSERT(l_result == s_task_map->end(), "Assertion failure: unable to retrieve an unregistered task object_base pointer.");
 		return l_result->second->operator()(&arguments_p);
 	}
 
@@ -129,9 +129,9 @@ public:
 	_FE_FORCE_INLINE_ static std::any invoke(C& in_out_instance_p, const typename underlying_container::key_type& key_p, Arguments arguments_p = FE::arguments<void>()) noexcept
 	{
 		boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
-		FE_STATIC_ASSERT((std::is_class<C>::value == false), "Static Assertion Failure: The template typename C is not a class type.");
+		FE_NEGATIVE_STATIC_ASSERT((std::is_class<C>::value == false), "Static Assertion Failure: The template typename C is not a class type.");
 		auto l_result = s_task_map->find(key_p);
-		FE_ASSERT(l_result == s_task_map->end(), "Assertion failure: unable to retrieve an unregistered task object pointer.");
+		FE_NEGATIVE_ASSERT(l_result == s_task_map->end(), "Assertion failure: unable to retrieve an unregistered task object_base pointer.");
 		l_result->second->set_instance(&in_out_instance_p);
 		return l_result->second->operator()(&arguments_p);
 	}

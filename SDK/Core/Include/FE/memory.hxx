@@ -28,6 +28,80 @@
 #endif
 
 
+
+
+#ifdef __FE_DIVIDE_BY_2
+	#error __FE_DIVIDE_BY_2 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_2(input) ((input) >> 1)
+
+#ifdef __FE_DIVIDE_BY_4
+	#error __FE_DIVIDE_BY_4 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_4(input) ((input) >> 2)
+
+#ifdef __FE_DIVIDE_BY_8
+	#error __FE_DIVIDE_BY_8 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_8(input) ((input) >> 3)
+
+#ifdef __FE_DIVIDE_BY_16
+	#error __FE_DIVIDE_BY_16 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_16(input) ((input) >> 4)
+
+#ifdef __FE_DIVIDE_BY_32
+	#error __FE_DIVIDE_BY_32 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_32(input) ((input) >> 5)
+
+#ifdef __FE_DIVIDE_BY_64
+	#error __FE_DIVIDE_BY_64 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_64(input) ((input) >> 6)
+
+#ifdef __FE_DIVIDE_BY_128
+	#error __FE_DIVIDE_BY_128 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_DIVIDE_BY_128(input) ((input) >> 7)
+
+
+#ifdef __FE_MODULO_BY_2
+	#error __FE_MODULO_BY_2 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_2(input) ((input) & 1)
+
+#ifdef __FE_MODULO_BY_4
+	#error __FE_MODULO_BY_4 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_4(input) ((input) & 3)
+
+#ifdef __FE_MODULO_BY_8
+	#error __FE_MODULO_BY_8 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_8(input) ((input) & 7)
+
+#ifdef __FE_MODULO_BY_16
+	#error __FE_MODULO_BY_16 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_16(input) ((input) & 15)
+
+#ifdef __FE_MODULO_BY_32
+	#error __FE_MODULO_BY_32 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_32(input) ((input) & 31)
+
+#ifdef __FE_MODULO_BY_64
+	#error __FE_MODULO_BY_64 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_64(input) ((input) & 63)
+
+#ifdef __FE_MODULO_BY_128
+	#error __FE_MODULO_BY_128 is a reserved Frogman Engine macro keyword.
+#endif
+#define __FE_MODULO_BY_128(input) ((input) & 127)
+
+
 #include <FE/prerequisites.h>
 #include <FE/algorithm/math.hpp>
 
@@ -82,6 +156,29 @@ using reserve = size;
 using resize_to = size;
 using extend = size;
 
+_FE_CONSTEXPR17_ FE::boolean is_power_of_two(FE::size value_p) noexcept
+{
+	/* Since 4 is a power of 2 and
+		0b0001 == 1
+		0b0010 == 2
+		0b0011 == 3
+		0b0100 == 4
+		...
+
+		if you can see the pattern, you can find that
+		4 - 1 is 3 and equals to 0b0011 in binary.
+
+		  0b0100
+		& 0b0011
+		--------
+		  0b0000
+
+		Therefore,
+		0b0100 AND 0b0011 == 0b0000.
+	*/
+	return (value_p & (value_p - 1)) == 0;
+}
+
 struct align_8bytes final
 {
 	_FE_MAYBE_UNUSED_ static constexpr size size = 8;
@@ -109,21 +206,7 @@ struct align_128bytes final
 
 struct align_CPU_L1_cache_line final
 {
-    /*
-    	Sixty-four bytes is commonly used CPU L1 cache line size for X86-64, but the actual size may vary.
-    	A hardcoded value is used if the current system's compiler does not support std::hardware_destructive_interference_size.
-	*/
-	#ifdef _CLANG_
-	_FE_MAYBE_UNUSED_ static constexpr size size = 64;
-	#else
-    _FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size;
-	#endif
-};
-
-template<uint64 PaddingSize>
-struct align_custom_bytes final
-{
-	_FE_MAYBE_UNUSED_ static constexpr inline uint64 size = PaddingSize;
+	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size;
 };
 
 struct SIMD_auto_alignment
@@ -151,6 +234,12 @@ struct alignas(Alignment::size) aligned final
 };
 #pragma warning(pop)
 
+template<FE::size SizeInBytes, class Alignment>
+struct align_as final
+{
+	_FE_MAYBE_UNUSED_ static constexpr inline FE::size size = sizeof(FE::aligned<FE::byte[SizeInBytes], Alignment>);
+};
+
 enum struct ADDRESS : boolean
 {
 	_NOT_ALIGNED = false,
@@ -160,11 +249,11 @@ enum struct ADDRESS : boolean
 #if defined(_AVX512F_) && defined(_AVX_) && defined(_SSE2_)
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memset_AVX512_AVX_SSE2(void* out_dest_p, int8 value_p, size bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
 
 	size l_leftover_bytes = MODULO_BY_64(bytes_p);
-	// FE_DIVIDE_BY_64(bytes_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_64(bytes_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
 	{
 		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p), _mm512_set1_epi8(value_p));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -172,23 +261,18 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memset_AVX512_AVX_SSE2(void* out_dest_
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memset(out_dest_p, value_p, l_leftover_bytes);
-#else
-	    __x86_64_unaligned_memset_AVX_SSE2(out_dest_p, value_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_unaligned_memset_AVX_SSE2(out_dest_p, value_p, l_leftover_bytes);
 	}
 }
 
 _FE_FORCE_INLINE_ void __x86_64_aligned_memset_AVX512_AVX_SSE2(void* out_dest_p, int8 value_p, size bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: The address is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: The address is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
 
 	size l_leftover_bytes = MODULO_BY_64(bytes_p);
-	// FE_DIVIDE_BY_64(bytes_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_64(bytes_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
 	{
 		_mm512_store_si512(static_cast<__m512i*>(out_dest_p), _mm512_set1_epi8(value_p));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -196,28 +280,23 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memset_AVX512_AVX_SSE2(void* out_dest_p,
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memset(out_dest_p, value_p, l_leftover_bytes);
-#else
-	    __x86_64_aligned_memset_AVX_SSE2(out_dest_p, value_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_aligned_memset_AVX_SSE2(out_dest_p, value_p, l_leftover_bytes);
 	}
 }
 
 
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
 	size l_leftover_bytes = MODULO_BY_64(bytes_to_copy_p);
-	// FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p), _mm512_loadu_si512(static_cast<const __m512i*>(source_p)));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -226,29 +305,24 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, l_leftover_bytes);
-#else
-	    __x86_64_unaligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_unaligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
 	}
 }
 
 _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@}: out_dest_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
-	FE_ASSERT(FE_MODULO_BY_64(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@}: source_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@}: out_dest_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@}: source_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	size l_leftover_bytes = FE_MODULO_BY_64(bytes_to_copy_p);
-	// FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
+	size l_leftover_bytes = __FE_MODULO_BY_64(bytes_to_copy_p);
+	// __FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm512_store_si512(static_cast<__m512i*>(out_dest_p), _mm512_load_si512(static_cast<const __m512i*>(source_p)));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -257,28 +331,23 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p,
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, l_leftover_bytes);
-#else
-	    __x86_64_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
 	}
 }
 
 _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@}: out_dest_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@}: out_dest_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	size l_leftover_bytes = FE_MODULO_BY_64(bytes_to_copy_p);
-	// FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
+	size l_leftover_bytes = __FE_MODULO_BY_64(bytes_to_copy_p);
+	// __FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm512_store_si512(static_cast<__m512i*>(out_dest_p), _mm512_loadu_si512(static_cast<const __m512i*>(source_p)));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -287,28 +356,23 @@ _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_de
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, l_leftover_bytes);
-#else
-	    __x86_64_dest_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_dest_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
 	}
 }
 
 _FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_64(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@}: source_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@}: source_p is not aligned by 64.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	size l_leftover_bytes = FE_MODULO_BY_64(bytes_to_copy_p);
-	// FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
-	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
+	size l_leftover_bytes = __FE_MODULO_BY_64(bytes_to_copy_p);
+	// __FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p), _mm512_load_si512(static_cast<const __m512i*>(source_p)));
 		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
@@ -317,25 +381,20 @@ _FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_
 
     if(l_leftover_bytes > 0)
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, l_leftover_bytes);
-#else
-	    __x86_64_source_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
-		return;
+		__x86_64_source_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
 	}
 }
 
 
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* const out_dest_p, const void* const source_p, size bytes_to_move_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
 	if (source_p < out_dest_p)
 	{
@@ -343,7 +402,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* const ou
 		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
 
 		{
-			size l_leftover_bytes_to_copy_by_byte = FE_MODULO_BY_64(bytes_to_move_p);
+			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_64(bytes_to_move_p);
 
 			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
 			{
@@ -353,7 +412,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* const ou
 			}
 		}
 
-		var::size l_operation_count = FE_DIVIDE_BY_64(bytes_to_move_p);
+		var::size l_operation_count = __FE_DIVIDE_BY_64(bytes_to_move_p);
 
 		__m512i* l_m512i_dest_ptr = reinterpret_cast<__m512i*>(l_dest_byte_ptr - 63);
 		const __m512i* l_m512i_source_ptr = reinterpret_cast<const __m512i*>(l_source_byte_ptr - 63);
@@ -369,35 +428,25 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* const ou
 
 		if (l_leftover_bytes > 0)
 		{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    		std::memmove(out_dest_p, source_p, l_leftover_bytes);
-#else
 			__x86_64_unaligned_memmove_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
 			return;
 		}
-		return;
 	}
 	else
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, bytes_to_move_p);
-#else
 		__x86_64_unaligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-#endif
-		return;
 	}
 }
 
 _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX512_AVX_SSE2(void* const out_dest_p, const void* const source_p, size bytes_to_move_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
 	if (source_p < out_dest_p)
 	{
@@ -405,7 +454,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX512_AVX_SSE2(void* const out_
 		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
 
 		{
-			size l_leftover_bytes_to_copy_by_byte = FE_MODULO_BY_64(bytes_to_move_p);
+			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_64(bytes_to_move_p);
 
 			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
 			{
@@ -415,7 +464,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX512_AVX_SSE2(void* const out_
 			}
 		}
 
-		var::size l_operation_count = FE_DIVIDE_BY_64(bytes_to_move_p);
+		var::size l_operation_count = __FE_DIVIDE_BY_64(bytes_to_move_p);
 
 		__m512i* l_m512i_dest_ptr = reinterpret_cast<__m512i*>(l_dest_byte_ptr - 63);
 		const __m512i* l_m512i_source_ptr = reinterpret_cast<const __m512i*>(l_source_byte_ptr - 63);
@@ -431,35 +480,25 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX512_AVX_SSE2(void* const out_
 
 		if (l_leftover_bytes > 0)
 		{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    		std::memmove(out_dest_p, source_p, l_leftover_bytes);
-#else
 			__x86_64_aligned_memmove_AVX_SSE2(out_dest_p, source_p, l_leftover_bytes);
-#endif
 			return;
 		}
-		return;
 	}
 	else
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, bytes_to_move_p);
-#else
 		__x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-#endif
-		return;
 	}
 }
 
 #elif defined(_AVX_) && defined(_SSE2_)
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memset_AVX_SSE2(void* out_dest_p, int8 value_p, size bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_p);
 
-	// FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
 	{
 		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p), _mm256_set1_epi8(value_p));
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
@@ -481,13 +520,13 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memset_AVX_SSE2(void* out_dest_p, int8
 
 _FE_FORCE_INLINE_ void __x86_64_aligned_memset_AVX_SSE2(void* out_dest_p, int8 value_p, size bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: The address is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: The address is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT));
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_p);
 
-	// FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
 	{
 		_mm256_store_si256(static_cast<__m256i*>(out_dest_p), _mm256_set1_epi8(value_p));
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
@@ -510,17 +549,17 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memset_AVX_SSE2(void* out_dest_p, int8 v
 
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_to_copy_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_to_copy_p);
 	
-	// FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p), _mm256_loadu_si256(static_cast<const __m256i*>(source_p)));
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
@@ -545,19 +584,19 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX_SSE2(void* out_dest_p, cons
 
 _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(source_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(source_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_to_copy_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_to_copy_p);
 
-	// FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm256_store_si256(static_cast<__m256i*>(out_dest_p), _mm256_load_si256(static_cast<const __m256i*>(source_p)));
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
@@ -582,18 +621,18 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX_SSE2(void* out_dest_p, const 
 
 _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_to_copy_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_to_copy_p);
 
-	// FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm256_store_si256(static_cast<__m256i*>(out_dest_p), _mm256_loadu_si256(static_cast<const __m256i*>(source_p)));
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
@@ -618,18 +657,18 @@ _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX_SSE2(void* out_dest_p, c
 
 _FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_copy_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(source_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(source_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(source_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
-	var::size l_leftover_bytes = FE_MODULO_BY_32(bytes_to_copy_p);
+	var::size l_leftover_bytes = __FE_MODULO_BY_32(bytes_to_copy_p);
 
-	// FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
-	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
+	// __FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_to_copy_p); out_dest_p != end;)
 	{
 		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p), _mm256_load_si256(static_cast<const __m256i*>(source_p)));
 		
@@ -670,13 +709,13 @@ Otherwise, it invokes memcpy to proceed its operation.
 */
 _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_move_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
 
 	if (source_p < out_dest_p)
 	{
@@ -684,7 +723,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, con
 		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
 
 		{
-			size l_leftover_bytes_to_copy_by_byte = FE_MODULO_BY_16(bytes_to_move_p);
+			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_16(bytes_to_move_p);
 
 			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
 			{
@@ -694,7 +733,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, con
 			}
 		}
 
-		var::size l_operation_count = FE_DIVIDE_BY_16(bytes_to_move_p);
+		var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
 
 		__m256i* l_m256i_dest_ptr = reinterpret_cast<__m256i*>(l_dest_byte_ptr - 31);
 		const __m256i* l_m256i_source_ptr = reinterpret_cast<const __m256i*>(l_source_byte_ptr  - 31);
@@ -719,11 +758,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, con
 	}
 	else
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, bytes_to_move_p);
-#else
 		__x86_64_unaligned_memcpy_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-#endif
 		return;
 	}
 }
@@ -745,14 +780,14 @@ Otherwise, it invokes memcpy to proceed its operation.
 */
 _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_move_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
-	FE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
-	if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	{
-    	return;
-	}
-	FE_ASSERT(FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(bytes_to_move_p));
+	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
+	//{
+ //   	return;
+	//}
+	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT), TO_STRING(out_dest_p));
 
 	if (source_p < out_dest_p)
 	{
@@ -760,7 +795,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
 		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
 
 		{
-			size l_leftover_bytes_to_copy_by_byte = FE_MODULO_BY_16(bytes_to_move_p);
+			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_16(bytes_to_move_p);
 
 			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
 			{
@@ -770,7 +805,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
 			}
 		}
 
-		var::size l_operation_count = FE_DIVIDE_BY_16(bytes_to_move_p);
+		var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
 
 		__m256i* l_m256i_dest_ptr = reinterpret_cast<__m256i*>(l_dest_byte_ptr - 31);
 		const __m256i* l_m256i_source_ptr = reinterpret_cast<const __m256i*>(l_source_byte_ptr + 31);
@@ -795,11 +830,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
 	}
 	else
 	{
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    	std::memcpy(out_dest_p, source_p, bytes_to_move_p);
-#else
 		__x86_64_dest_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-#endif
 		return;
 	}
 }
@@ -836,9 +867,9 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
 #endif
 
 template<typename T, class Alignment>
-_FE_FORCE_INLINE_ size calculate_aligned_memory_size_in_bytes(count_t elements_p) noexcept  
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(count_t elements_p) noexcept  
 {
-	FE_ASSERT(elements_p == 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(elements_p));
+	FE_NEGATIVE_ASSERT(elements_p == 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(elements_p));
 
 	size l_actual_size = sizeof(T) * elements_p;
 	var::size l_multiplier = l_actual_size / sizeof(FE::aligned<T, Alignment>);
@@ -848,13 +879,13 @@ _FE_FORCE_INLINE_ size calculate_aligned_memory_size_in_bytes(count_t elements_p
 }
 
 template<class ConstIterator>
-_FE_REGISTER_CALL_ boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
+_FE_REGISTER_CALL_ FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
 {
 	static_assert(std::is_class<ConstIterator>::value == true);
-	FE_ASSERT(left_iterator_begin_p == nullptr, "ERROR: left_iterator_begin_p is nullptr.");
-	FE_ASSERT(left_iterator_end_p == nullptr, "ERROR: left_iterator_end_p is nullptr.");
-	FE_ASSERT(right_iterator_begin_p == nullptr, "ERROR: right_iterator_begin_p is nullptr.");
-	FE_ASSERT(right_iterator_end_p == nullptr, "ERROR: right_iterator_end_p is nullptr.");
+	FE_NEGATIVE_ASSERT(left_iterator_begin_p == nullptr, "ERROR: left_iterator_begin_p is nullptr.");
+	FE_NEGATIVE_ASSERT(left_iterator_end_p == nullptr, "ERROR: left_iterator_end_p is nullptr.");
+	FE_NEGATIVE_ASSERT(right_iterator_begin_p == nullptr, "ERROR: right_iterator_begin_p is nullptr.");
+	FE_NEGATIVE_ASSERT(right_iterator_end_p == nullptr, "ERROR: right_iterator_end_p is nullptr.");
 
 	ConstIterator l_left_iterator_begin = left_iterator_begin_p;
 
@@ -880,12 +911,9 @@ _FE_REGISTER_CALL_ boolean memcmp(ConstIterator left_iterator_begin_p, ConstIter
 template<ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED, ADDRESS SourceAddressAlignment = ADDRESS::_NOT_ALIGNED>
 _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, count_t source_capacity_in_bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    std::memcpy(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
-#else
 	if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED && SourceAddressAlignment == ADDRESS::_ALIGNED)
 	{
 		FE_ALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
@@ -902,18 +930,14 @@ _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, c
 	{
 		FE_UNALIGNED_MEMCPY(out_dest_p, source_p, ::FE::algorithm::math::min(dest_capacity_in_bytes_p, source_capacity_in_bytes_p));
 	}
-#endif
 }
 
 template<ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED, ADDRESS SourceAddressAlignment = ADDRESS::_NOT_ALIGNED>
 _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, count_t bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
-	FE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    std::memcpy(out_dest_p, source_p, bytes_p);
-#else
 	if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED && SourceAddressAlignment == ADDRESS::_ALIGNED)
 	{
 		FE_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_p);
@@ -930,17 +954,13 @@ _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, count_t by
 	{
 		FE_UNALIGNED_MEMCPY(out_dest_p, source_p, bytes_p);
 	}
-#endif
 }
 
 template<ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED>
 _FE_FORCE_INLINE_ void memset(void* out_dest_p, int8 value_p, count_t bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    std::memset(out_dest_p, value_p, bytes_p);
-#else
 	if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED)
 	{
 		FE_ALIGNED_MEMSET(out_dest_p, (int8)value_p, bytes_p);
@@ -949,18 +969,14 @@ _FE_FORCE_INLINE_ void memset(void* out_dest_p, int8 value_p, count_t bytes_p) n
 	{
 		FE_UNALIGNED_MEMSET(out_dest_p, (int8)value_p, bytes_p);
 	}
-#endif
 }
 
 template<ADDRESS DestAddressAlignment = ADDRESS::_NOT_ALIGNED>
 _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size bytes_p) noexcept  
 {
-	FE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
-	FE_ASSERT(bytes_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(bytes_p));
+	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
+	FE_NEGATIVE_ASSERT(bytes_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(bytes_p));
 
-#if defined(_DEBUG_) && !defined(_RELWITHDEBINFO_)
-    std::memmove(out_dest_p, source_p, bytes_p);
-#else
 	if constexpr (DestAddressAlignment == ADDRESS::_ALIGNED)
 	{
 		FE_ALIGNED_MEMMOVE(out_dest_p, source_p, bytes_p);
@@ -969,9 +985,24 @@ _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size byte
 	{
 		FE_UNALIGNED_MEMMOVE(out_dest_p, source_p, bytes_p);
 	}
-#endif
 }
 
 
 END_NAMESPACE
+
+#undef __FE_DIVIDE_BY_2
+#undef __FE_DIVIDE_BY_4
+#undef __FE_DIVIDE_BY_8
+#undef __FE_DIVIDE_BY_16
+#undef __FE_DIVIDE_BY_32
+#undef __FE_DIVIDE_BY_64
+#undef __FE_DIVIDE_BY_128
+
+#undef __FE_MODULO_BY_2
+#undef __FE_MODULO_BY_4
+#undef __FE_MODULO_BY_8
+#undef __FE_MODULO_BY_16
+#undef __FE_MODULO_BY_32
+#undef __FE_MODULO_BY_64
+#undef __FE_MODULO_BY_128
 #endif

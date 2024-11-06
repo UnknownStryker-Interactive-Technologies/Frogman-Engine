@@ -10,7 +10,7 @@
 
 
 
-BEGIN_NAMESPACE(FE/fxx)
+BEGIN_NAMESPACE(FE::fxx)
 
 	
 enum struct VOCABULARY

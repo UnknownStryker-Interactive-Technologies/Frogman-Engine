@@ -2,15 +2,16 @@
 #define _FE_CORE_DO_ONCE_HXX_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 
-// std function for do once
-#include <functional>
+
 
 
 namespace FE::internal
 {
-	struct do_once
+	class do_once
 	{
-		_FE_FORCE_INLINE_ do_once(const std::function<void()>& code_p) noexcept
+	public:
+		template<typename Lambda>
+		_FE_FORCE_INLINE_ do_once(Lambda&& code_p) noexcept
 		{
 			code_p();
 		}
@@ -34,7 +35,7 @@ namespace FE::internal
 #endif
 #define FE_DO_ONCE(frequency, ...)\
 { \
-	frequency ::FE::internal::do_once __FE_DO_ONCE_INSTANCE__( [&]() { __VA_ARGS__; } ); \
+ 	_FE_MAYBE_UNUSED_ frequency ::FE::internal::do_once __FE_DO_ONCE_INSTANCE__( [&]() { __VA_ARGS__; } ); \
 }
 
 

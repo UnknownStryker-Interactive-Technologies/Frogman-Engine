@@ -4,6 +4,8 @@
 #include <FE/prerequisites.h>
 #include <FE/pool/pool.hxx>
 
+#include <FE/private/allocator_base.hpp>
+
 
 
 
@@ -13,6 +15,10 @@ BEGIN_NAMESPACE(FE)
 template <typename T, class PageCapacity = FE::size_in_bytes<8192>, class Alignment = FE::SIMD_auto_alignment>
 class pool_allocator : public FE::internal::allocator_base 
 {
+	FE_NEGATIVE_STATIC_ASSERT(PageCapacity::size == 0, "Static Assertion Failure: The PageCapacity is 0.");
+	FE_STATIC_ASSERT((PageCapacity::size % Alignment::size) == 0, "Static Assertion Failure: The PageCapacity must be a multiple of Alignment::size.");
+	FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
+
 public:
 	using base_type = FE::internal::allocator_base;
 	using pool_type = FE::scalable_pool<PageCapacity::size, Alignment>;
@@ -73,41 +79,41 @@ public:
 
 	_FE_FORCE_INLINE_ pool_type* get_pool() noexcept 
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		return this->m_pool;
 	}
 
 	_FE_FORCE_INLINE_ pool_type* const get_pool() const noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		return this->m_pool;
 	}
 
 
 	_FE_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept 
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		this->m_pool->create_pages(count_p); 
 	}
 
 	_FE_FORCE_INLINE_ void shrink_to_fit() noexcept 
 	{ 
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		this->m_pool->shrink_to_fit();
 	}
 
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(const size_type count_p) noexcept
 	{
-		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		return (T*)this->m_pool->template allocate<var::byte>(sizeof(T) * count_p);
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer reallocate(pointer const pointer_p, const size_type prev_count_p, const size_type new_count_p) noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		if (new_count_p == 0)
 		{
@@ -128,9 +134,9 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p) noexcept
 	{
-		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		this->m_pool->template deallocate<var::byte>(reinterpret_cast<var::byte* const>(pointer_p), sizeof(T) * count_p);
 	}
@@ -154,6 +160,10 @@ public:
 template <typename T, class PageCapacity = FE::size_in_bytes<8192>, class Alignment = FE::SIMD_auto_alignment>
 class new_delete_pool_allocator : public FE::internal::allocator_base 
 {
+	FE_NEGATIVE_STATIC_ASSERT(PageCapacity::size == 0, "Static Assertion Failure: The PageCapacity is 0.");
+	FE_STATIC_ASSERT((PageCapacity::size % Alignment::size) == 0, "Static Assertion Failure: The PageCapacity must be a multiple of Alignment::size.");
+	FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
+
 public:
 	using base_type = FE::internal::allocator_base;
 	using pool_type = FE::scalable_pool<PageCapacity::size, Alignment>;
@@ -214,41 +224,41 @@ public:
 
 	_FE_FORCE_INLINE_ pool_type* get_pool() noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		return this->m_pool;
 	}
 
 	_FE_FORCE_INLINE_ pool_type* const get_pool() const noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		return this->m_pool;
 	}
 
 
 	_FE_FORCE_INLINE_ void create_pages(const size_type count_p) noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		this->m_pool->create_pages(count_p);
 	}
 
 	_FE_FORCE_INLINE_ void shrink_to_fit() noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		this->m_pool->shrink_to_fit();
 	}
 
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(const size_type count_p) noexcept
 	{
-		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		return this->m_pool->template allocate<value_type>(count_p);
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer reallocate(pointer const pointer_p, const size_type prev_count_p, const size_type new_count_p) noexcept
 	{
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		if (new_count_p == 0)
 		{
 			this->m_pool->template deallocate<value_type>(pointer_p, prev_count_p);
@@ -292,9 +302,9 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p) noexcept
 	{
-		FE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
-		FE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		this->m_pool->template deallocate<value_type>(pointer_p, count_p);
 	}

@@ -2,25 +2,26 @@
 #define _FE_FRAMEWORK_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/prerequisites.h>
+#include <FE/pair.hxx>
 
 // std
 #include <functional>
 
-#ifdef CREATE_A_FROGMAN_ENGINE_APP
-	#error Frogman Engine Prohibits macroizing the keyword "CREATE_A_FROGMAN_ENGINE_APP()".
+
+#ifdef FROGMAN_ENGINE
+	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
 #else                                                                                                              // The name below does not follow the class naming convention since it is considered hidden from users.
-	#define CREATE_A_FROGMAN_ENGINE_APP() static ::std::function<::FE::framework::application_base* (int, char**)> FrogmanEngineApplication = ::FE::framework::application_base::create_application( [](int argc_p, char** argv_p) { return new ::FE::framework::vulkan_application(argc_p, argv_p); } );
+	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (int, char**)> FrogmanEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
 #endif
 
-#ifdef CREATE_A_CUSTOM_APP
-#error Frogman Engine Prohibits macroizing the keyword "CREATE_A_CUSTOM_APP()".
+#ifdef CUSTOM_ENGINE
+    #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
 #else                                                                                                                        // The name below does not follow the class naming convention since it is considered hidden from users.
-#define CREATE_A_CUSTOM_APP(application_class_name) static ::std::function<::FE::framework::application_base* (int, char**)> FrogmanEngineApplication = ::FE::framework::application_base::create_application( [](int argc_p, char** argv_p) { return new application_class_name(argc_p, argv_p); } );
+    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, char**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
 
-#include <FE/framework/input_manager.hpp>
 #include <FE/framework/platform_information.h>
-#include <FE/framework/task_scheduler.hpp>
+#include <FE/framework/game_instance.hpp>
 #include <FE/framework/vulkan_renderer.hpp>
 
 
@@ -29,23 +30,9 @@
 int main(int argc_p, char** argv_p);
 
 
+
+
 BEGIN_NAMESPACE(FE::framework)
-
-
-struct program_options
-{
-
-};
-
-void read_program_options(program_options& out_options_p) noexcept;
-
-
-struct runtime_configurations
-{
-
-};
-
-void read_runtime_configurations(runtime_configurations& out_configs_p) noexcept;
 
 
 enum struct RESTART_OR_NOT : uint8
@@ -55,11 +42,11 @@ enum struct RESTART_OR_NOT : uint8
 };
 
 
-class application_base
+class framework_base
 {
 	friend int ::main(int argc_p, char** argv_p);
 
-	static application_base* s_app;
+	static framework_base* s_framework;
 
 protected:
 	virtual int launch(int argc_p, char** argv_p) = 0;
@@ -69,35 +56,39 @@ protected:
 public:
 	static RESTART_OR_NOT s_restart_or_not;
 
-	application_base() = default;
-	virtual ~application_base() = default;
+	framework_base() = default;
+	virtual ~framework_base() = default;
 
-	static std::function<application_base* (int, char**)> create_application(std::function<application_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
+	static std::function<framework_base* (int, char**)>& __allocate_framework(std::function<framework_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
 
 private:
 	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int32 signal_p);
 
-	application_base(const application_base&) = delete;
-	application_base(application_base&&) = delete;
-	application_base& operator=(const application_base&) = delete;
-	application_base& operator=(application_base&&) = delete;
+	framework_base(const framework_base&) = delete;
+	framework_base(framework_base&&) = delete;
+	framework_base& operator=(const framework_base&) = delete;
+	framework_base& operator=(framework_base&&) = delete;
 };
 
 
-class vulkan_application : public application_base
+struct program_options
+{
+	const char* _exe_directory = nullptr;
+	FE::pair<const char*, var::uint32> _max_concurrency = { "-max-concurrency=", 4 };
+};
+
+
+class game_engine : public framework_base
 {
 protected:
-	platform_information m_platform_info;
 	program_options m_program_options;
-	runtime_configurations m_runtime_configurations;
+	game_instance m_game_instance;
 
-	input_manager m_input_manager;
-	game_thread m_task_scheduler;
 	vulkan_renderer m_renderer;
 
 public:
-	vulkan_application(int argc_p, char** argv_p);
-	~vulkan_application() = default;
+	game_engine(int argc_p, char** argv_p);
+	~game_engine() = default;
 
 private:
 	virtual int launch(int argc_p, char** argv_p) override;

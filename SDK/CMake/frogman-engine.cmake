@@ -16,42 +16,117 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Framework/Include)
 
 
 
+SET(FE_FRAMEWORK
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/framework.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_thread.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/vulkan_renderer.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
+)
+SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK})
+
+SET(FE_FRAMEWORK_REFLECTION
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
+)
+SOURCE_GROUP("Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
+
+SET(FE_FRAMEWORK_OBJECT_HIERARCHY 
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/pawn_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/character_base.hpp
+)
+SOURCE_GROUP("Object" FILES ${FE_FRAMEWORK_OBJECT_HIERARCHY})
+
+SET(FE_FRAMEWORK_CONTROLLER_HIERARCHY 
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/controller_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/player_controller_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/AI_controller_base.hpp
+)
+SOURCE_GROUP("Controller" FILES ${FE_FRAMEWORK_CONTROLLER_HIERARCHY})
+
+
+
+
 SET(FE_FRAMEWORK_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/framework.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_base.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/platform_information.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/task_scheduler.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_thread.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/vulkan_renderer.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/platform_information.h
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/string.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/string_view.hxx
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/atom_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/pawn_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/character_base.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/firearm_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/projectile_base.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_instance.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_mode_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_state_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/world.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/controller_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/player_controller_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/AI_controller_base.hpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_component_base.hpp
 )
+
+
+
 
 SET(FE_FRAMEWORK_SOURCES 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/framework.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/function.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/object_base.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/property.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/task_scheduler.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_thread.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/vulkan_renderer.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/function.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/property.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/atom_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/object_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/pawn_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/character_base.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/firearm_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/projectile_base.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_instance.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_mode_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_state_base.cpp 
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/world.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/controller_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/player_controller_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/AI_controller_base.cpp
+
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/object_component_base.cpp
 )
 
 
 
 
 SET(FE_ALGORITHM_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/algorithm/heap.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/algorithm/math.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/algorithm/string.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/algorithm/utility.hxx
-)
-
-SET(FE_ALGORITHM_SOURCES
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/algorithm/math.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/math.cpp
 )
 
@@ -72,12 +147,12 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/logger.cpp
 
 
 
-SET(FE_MANAGED_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed/exclusive_ptr.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed/ptr.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed/trackable.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed/unique_ptr.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed/private/ref_block.hxx
+SET(FE_FRAMEWORK_MANAGED_HEADERS
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/exclusive_ptr.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/ptr.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/trackable.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/unique_ptr.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/private/ref_block.hxx
 )
 
 
@@ -94,32 +169,18 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
 
 
 
-SET(FE_MATH_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/vector.hpp
-)
-
-SET(FE_MATH_SOURCES
-${CMAKE_CURRENT_LIST_DIR}/../Core/Source/vector.cpp
-)
-
-
-
-
 SET(FE_CORE_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/definitions.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/prerequisites.h
 
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/allocator.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/managed.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/memory.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/iterator.hxx
 
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/array.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/queue.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/stack.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/farray.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/fqueue.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/fstack.hxx
 
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/string.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/string_view.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/char_traits.hxx
 
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/function.hxx

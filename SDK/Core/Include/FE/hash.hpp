@@ -30,7 +30,7 @@ enum struct HASH_INPUT_DATA_TYPE : uint8
 template<typename T>
 _FE_FORCE_INLINE_ constexpr HASH_INPUT_DATA_TYPE evaluate_hash_input_data_type()
 {
-	if constexpr (FE::is_c_style_constant_string<T>::value == true)
+	if constexpr (FE::is_constant_string<T>::value == true)
 	{
 		return HASH_INPUT_DATA_TYPE::_C_STRING;
 	}

@@ -2,11 +2,13 @@
 #define _FE_FRAMEWORK_REFLECTION_PROPERTY_HPP_
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/prerequisites.h>
-#include <FE/stack.hxx>
+#include <FE/algorithm/utility.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/hash.hpp>
 #include <FE/pair.hxx>
 #include <FE/pool/block_pool_allocator.hxx>
+#include <FE/fqueue.hxx>
+#include <FE/fstack.hxx>
 #include <FE/type_traits.hxx>
 
 // FE.framework
@@ -19,7 +21,10 @@
 #include <map>
 #include <mutex>
 
-// boost 
+// boost::fast_pool_allocator
+#include <boost/pool/pool_alloc.hpp>
+
+// boost::shared_lock_guard
 #include <boost/thread/shared_lock_guard.hpp>
 
 // ronbin hood hash
@@ -28,40 +33,56 @@
 
 /*
 Frogman Engine serialization & deserialization system supports:
-	1. Plain old data serialization & deserialization. O
-	2. Non-trivial object serialization & deserialization. O
-	3. Fixed-sized non-trivial instance array serialization & deserialization. O
-	4. Fixed-sized plain old data array serialization & deserialization. O
 
-	5. Serializing & deserializing plain old data pointed by FE smart array pointer O
-	6. Serializing & deserializing Non-trivial data pointed by FE smart array pointer O
+  Compatible component types: Plain old data, fixed-sized arrays, FE smart pointers, std::basic_string, std::array, and std::vector.
 
-	7. Plain old data Container serialization & deserialization. O
-	8. non-trivial Container serialization & deserialization. O
+	* C/C++ object that might contain the chain of derivation, components, other supported types, and components' chain of derivation.
 
-    9. Base type serialization & deserialization. O
-   10. Components' base types serialization & deserialization. ^
-NOTE:
-	Unregistered non Frogman Engine native types without begin() end() methods cannot be serialized nor deserialized. It will result in compilation failure.
+	* RAW pointers and references are not supported.
 */
 BEGIN_NAMESPACE(FE::framework::reflection)
-// https://github.com/getnamo/7zip-cpp?tab=readme-ov-file
-/* serialized object data format
-3D models and assets -> 7z algorithm -> .froggy
-*/
+/*
+memory layout reflection for serialization  																		      |--- etc...
+																					  *
+																					  |
+	Shallower <----- Memory Hierarchy Depth ----> Deeper                      Lower Memory Address
+													  |----------------|              |
+													  | - FE::string - |              |
+	|----------------------------------|    ----------|  FE::smart_ptr |              |
+	|  Target Entry Non-Trivial Object |    |         |length, capacity|              |
+	|- member variables -              |    |         |----------------|              |
+	|  FE::string m_raw_name ----------|----|                                         |
+	|  FE::vector<float64, 3> m_vector |-------|                                      |
+	|----------------------------------|       |       |----------------|             |
+											   |       | - FE::vector - |             |
+											   |-------| x              |             |
+													   | y              |             |
+													   | z              |             |
+													   |----------------|     Higher Memory Address
+																					  |
+																					  *
 
-class property;
+Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smart_ptr -> FE::smart_ptr.m_smart_ptr data
+																									|
+													|-----------------------------------------------|
+													|
+													|--> FE::string.length -> FE::string.capacity
+																					   |
+																					   |
+											   |---------------------------------------|
+											   |
+											   |--> FE::vector.x -> FE::vector.y -> FE::vector.z
+*/
 
 struct property_meta_data
 {
 	FE::TYPE_TRIVIALITY _is_trivial; 
 	var::boolean _is_serializable;
-	var::uint32 _total_size; 
+	var::uint32 _size_in_byte; 
 	
 	FE::ASCII* _name;
 	FE::ASCII* _typename;
 };
-
 
 class property
 {
@@ -69,28 +90,34 @@ public:
 /* 
 It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
 by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
-*/
-	using property_meta_data_map_type = robin_hood::unordered_map<FE::ASCII*, 
-                                                        		  std::map<var::ptrdiff, property_meta_data, 
-																		   std::less<var::ptrdiff>, 
-		                                                                   FE::block_pool_allocator< std::pair<FE::ptrdiff, property_meta_data>, FE::object_count<256>>
-																           >,
-		                                                          FE::hash<FE::ASCII*>
-	                                                              >;
+*/  
+	static constexpr size optimal_number_of_component_per_instance = 256;
+	using property_reflection_map = robin_hood::unordered_map<FE::ASCII*, 
+                                                              std::map<var::ptrdiff, property_meta_data, std::less<var::ptrdiff>, 
+		                                                               boost::fast_pool_allocator< std::pair<FE::ptrdiff, property_meta_data>, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>
+															          >,
+		                                                      FE::hash<FE::ASCII*>>;
+	using class_name_type = property_reflection_map::key_type;
+	using class_property_list = property_reflection_map::mapped_type;
+	using class_property_offset_type = typename class_property_list::key_type;
+	using class_property_metadata_type = typename class_property_list::mapped_type;
 
-	using class_layer_stack = FE::fstack< FE::pair<typename  property_meta_data_map_type::mapped_type*, typename  property_meta_data_map_type::mapped_type::iterator>, 1024 >;
+	static constexpr size property_reflection_map_capacity = 1024;
+	static constexpr size max_class_hierarchy_depth = 1024;
+	using class_layer_stack = FE::fstack< FE::pair<class_property_list*, typename class_property_list::iterator>, max_class_hierarchy_depth >;
+	
+	static constexpr count_t number_of_max_container_per_instance = 4096;
+	using data_on_heap_size_recorder = FE::fqueue<var::size, number_of_max_container_per_instance>;
 
 	using lock_type = std::mutex;
 	using file_handler = std::fstream;
 	using input_buffer_type = std::string;
 	using input_buffer_iterator_type = typename input_buffer_type::iterator;
 
-	static constexpr size class_type_capacity = 1024;
-
 private:
-	static typename property_meta_data_map_type::mapped_type::allocator_type::pool_type s_node_pool;
-	static property_meta_data_map_type* s_property_map;
+	static property_reflection_map* s_property_map;
 	static class_layer_stack s_class_layer;
+	static data_on_heap_size_recorder s_scalable_container_size_recorder;
 
 	static lock_type s_lock;
 	static file_handler s_fstream;
@@ -101,27 +128,25 @@ public:
 	property() noexcept = default;
 	~property() noexcept = default;
 
-	_FE_FORCE_INLINE_ static FE::boolean initialize() noexcept
+	_FE_FORCE_INLINE_ static FE::boolean __initialize() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
-		FE_ASSERT(s_property_map != nullptr, "Assertion failure: cannot initialize FE::framework::reflection::property more than once.");
+		FE_NEGATIVE_ASSERT(s_property_map != nullptr, "Assertion failure: cannot initialize FE::framework::reflection::property more than once.");
 		if (s_property_map == nullptr)
 		{
-			s_property_map = (property_meta_data_map_type*)FE_ALIGNED_ALLOC(sizeof(property_meta_data_map_type), FE::align_CPU_L1_cache_line::size);
-			new(s_property_map) property_meta_data_map_type(class_type_capacity);
+			s_property_map = (property_reflection_map*)FE_ALIGNED_ALLOC(sizeof(property_reflection_map), FE::align_CPU_L1_cache_line::size);
+			new(s_property_map) property_reflection_map(property_reflection_map_capacity);
 			return true;
 		}
 
 		return false;
 	}
 
-	_FE_FORCE_INLINE_ static FE::boolean clean_up() noexcept
+	_FE_FORCE_INLINE_ static FE::boolean __shutdown() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
-		FE_ASSERT(s_property_map == nullptr, "Assertion failure: unable to clean_up() FE::framework::reflection::property. It is null.");
+		FE_NEGATIVE_ASSERT(s_property_map == nullptr, "Assertion failure: unable to clean_up() FE::framework::reflection::property. It is null.");
 		if (s_property_map != nullptr)
 		{
-			s_property_map->~property_meta_data_map_type();
+			s_property_map->~property_reflection_map();
 			FE_ALIGNED_FREE(s_property_map);
 			s_property_map = nullptr;
 			return true;
@@ -130,9 +155,9 @@ public:
 		return false;
 	}
 
+public:
 	_FE_FORCE_INLINE_ static FE::boolean is_available() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(s_lock);
 		return s_property_map != nullptr;
 	}
 
@@ -145,16 +170,16 @@ public:
     template<class C, typename T>
 	static void register_property(const C& host_class_instance_p, const T& property_p, FE::ASCII* const property_name_p) noexcept
 	{
-		FE_STATIC_ASSERT(std::is_class<C>::value == false, "Primitive data types cannot be registered as the host classes/structs.");
-		FE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
-		FE_ASSERT(s_property_map == nullptr, "function table not initialized: please call function::initialize() before invoking register_property().");
-		FE_ASSERT(FE::framework::reflection::property::is_available() == false, "property table not initialized: please call property::initialize() before invoking register_property().");
-		FE_ASSERT((property_name_p == nullptr) || (*property_name_p == null), "Assertion failure: property name cannot be null.");
+		FE_NEGATIVE_STATIC_ASSERT(std::is_class<C>::value == false, "Primitive data types cannot be registered as the host classes/structs.");
+		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		FE_NEGATIVE_ASSERT(s_property_map == nullptr, "function table not initialized: please call function::initialize() before invoking register_property().");
+		FE_NEGATIVE_ASSERT(FE::framework::reflection::property::is_available() == false, "property table not initialized: please call property::initialize() before invoking register_property().");
+		FE_NEGATIVE_ASSERT((property_name_p == nullptr) || (*property_name_p == null), "Assertion failure: property name cannot be null.");
 
 		property_meta_data l_property_meta_data;
 		l_property_meta_data._is_trivial = static_cast<TYPE_TRIVIALITY>(FE::is_trivial<T>::value);
 		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
-		l_property_meta_data._total_size = sizeof(T);
+		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._name = property_name_p;
 		l_property_meta_data._typename = FE::framework::reflection::type_id<T>().name();
 
@@ -165,53 +190,58 @@ public:
 		auto l_iterator = s_property_map->find(l_host_class_instance_typename);
 		if(FE_UNLIKELY(l_iterator == s_property_map->end())) _FE_UNLIKELY_
 		{
-			typename property_meta_data_map_type::mapped_type::allocator_type l_node_pool_allocator(&s_node_pool);
-			auto l_result = s_property_map->emplace(l_host_class_instance_typename, typename property_meta_data_map_type::mapped_type{ l_node_pool_allocator });
-			FE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property::register_property().");
+			auto l_result = s_property_map->emplace(l_host_class_instance_typename, class_property_list());
+			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property::register_property().");
 			l_iterator = l_result.first;
 		}
 
-		if constexpr (FE::has_iterator<T>::value == true)
+		
+		if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
 		{
-			FE::framework::reflection::function::register_task< FE::c_style_task<void(T*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property::__serialize_by_foreach_mutually_recursive<T>);
-			FE::framework::reflection::function::register_task< FE::c_style_task<void(T*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
-		}
+			// This code section for serializing and deserializing complicated multidimensional container and the third-party containers.
+			// It enables the system to serialize and deserialize the class instance without boilerplating the code with the Frogman Engine reflection macros.
+			FE::framework::reflection::function::register_task< FE::c_style_task<void(const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property::__serialize_by_foreach_mutually_recursive<T>);
+			FE::framework::reflection::function::register_task< FE::c_style_task<void(void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
 
-		if constexpr ((std::is_array<T>::value == true) && (FE::is_trivial<T>::value == false))
-		{
-			count_t l_array_size = l_property_meta_data._total_size / sizeof( std::remove_extent_t< std::remove_pointer_t<T> > );
-
-			for(var::count_t i = 0; i < l_array_size; ++i)
+			if constexpr (FE::has_value_type<T>::value == true)
 			{
-				l_iterator->second.emplace( (reinterpret_cast<FE::byte* const>(&property_p) + (i * sizeof( std::remove_extent_t< std::remove_pointer_t<T> > ))) - reinterpret_cast<FE::byte*>(&host_class_instance_p),
-				                           l_property_meta_data); // emplace fixed-sized N of a non-trivial array.
+				if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
+					          (FE::is_trivial<typename T::value_type>::value == false))
+				{
+					__push_multidimensional_container_serialization_task_recursive<T>();
+					__push_multidimensional_container_deserialization_task_recursive<T>();
+				}
 			}
-			return;
+			else if constexpr (FE::has_element_type<T>::value == true)
+			{
+				if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
+					          (FE::is_trivial<typename T::element_type>::value == false))
+				{
+					__push_multidimensional_container_serialization_task_recursive<T>();
+					__push_multidimensional_container_deserialization_task_recursive<T>();
+				}
+			}
 		}
 
 		l_iterator->second.emplace((reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p)), l_property_meta_data); 
 	}
 
- 	// component's base class iteration not implemented.
     template<typename T>
     static void serialize(std::filesystem::path path_p, directory_char_t* filename_p, const T& object_p) noexcept
 	{
 		std::lock_guard<lock_type> l_lock(s_lock);
 
-		FE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be serialized.");
-		FE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
-		FE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
-		FE_ASSERT(s_property_map == nullptr, "property table not initialized: please property::initialize() before invoking serialize().");
-		FE_ASSERT(FE::framework::reflection::function::is_available() == false, "function table not initialized: please function::initialize() before invoking serialize().");
-   		FE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
+		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be serialized.");
+		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		
+		FE_NEGATIVE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
+		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
+		FE_NEGATIVE_ASSERT(s_property_map == nullptr, "property table not initialized: please property::initialize() before invoking serialize().");
+		FE_NEGATIVE_ASSERT(FE::framework::reflection::function::is_available() == false, "function table not initialized: please function::initialize() before invoking serialize().");
 		
 		FE::ASCII* l_typename = FE::framework::reflection::type_id<T>().name();
 		auto l_search_result = s_property_map->find(l_typename);
-		if((l_search_result == s_property_map->end()) || (l_search_result->second.size() == 0)) // return if it is empty or not found.
-		{
-			FE_LOG("serialization failed: could not find the requested type information or the class/struct is empty");
-			return;
-		}
+		FE_EXIT( (l_search_result == s_property_map->end()) || (l_search_result->second.size() == 0), ERROR_CODE::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		s_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() } );
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -228,7 +258,13 @@ public:
 		l_serialization_handler.get_stream().open((path_p / filename_p).c_str(), std::ios::out | std::ios::binary);
 		l_serialization_handler.get_stream() << l_typename << "{";
 		__serialize_mutually_recursive<T>(object_p);
-		l_serialization_handler.get_stream() << "};\0";
+		l_serialization_handler.get_stream() << "};$-";
+
+		while (s_scalable_container_size_recorder.is_empty() == false)
+		{
+			l_serialization_handler.get_stream() << s_scalable_container_size_recorder.pop() << "-";
+		}
+		l_serialization_handler.get_stream() << "\0";
 	}
 
 	// TODO: add file versioning.
@@ -237,20 +273,17 @@ public:
 	{
 		std::lock_guard<lock_type> l_lock(s_lock);
 
-		FE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
-		FE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
-		FE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
-		FE_ASSERT(FE::framework::reflection::property::is_available() == false, "property table not initialized: please property::initialize() before invoking serialize().");
-		FE_ASSERT(FE::framework::reflection::function::is_available() == false, "function table not initialized: please function::initialize() before invoking deserialize().");
-		FE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
+		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
+		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		
+		FE_NEGATIVE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
+		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
+		FE_NEGATIVE_ASSERT(FE::framework::reflection::property::is_available() == false, "property table not initialized: please property::initialize() before invoking serialize().");
+		FE_NEGATIVE_ASSERT(FE::framework::reflection::function::is_available() == false, "function table not initialized: please function::initialize() before invoking deserialize().");
 
 		FE::ASCII* l_typename = FE::framework::reflection::type_id<T>().name();
 		auto l_search_result = s_property_map->find(l_typename);
-		if((l_search_result == s_property_map->end()) || (l_search_result->second.size() == 0)) // return if it is empty or not found.
-		{
-			FE_LOG("deserialization failed: could not find the requested type information or the class/struct is empty");
-			return;
-		}
+		FE_EXIT((l_search_result == s_property_map->end()) || (l_search_result->second.size() == 0), ERROR_CODE::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND, "serialization failed: could not find the requested type information or the class/struct is empty");
 		s_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -260,7 +293,7 @@ public:
 
 		FE::fstream_guard l_serialization_handler(s_fstream);
 		l_serialization_handler.get_stream().open((path_p / filename_p).c_str(), std::ios::in | std::ios::binary | std::ios::ate); // Open the file as a binary file and point at the end of the file to input to a buffer.
-		FE_ASSERT(l_serialization_handler.get_stream().is_open() == false, "Assertion failure: the target directory path to the file is invalid.");
+		FE_NEGATIVE_ASSERT(l_serialization_handler.get_stream().is_open() == false, "Assertion failure: the target directory path to the file is invalid.");
 		
 		s_input_buffer.reserve(l_serialization_handler.get_stream().tellg()); 
 		s_input_buffer.assign(s_input_buffer.capacity()-1, '\0'); // Set the buffer with null.
@@ -269,7 +302,7 @@ public:
 		
 		s_position = s_input_buffer.begin();
 		s_position += s_input_buffer.find('{');
-		FE_ASSERT(s_position == s_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
+		FE_NEGATIVE_ASSERT(s_position == s_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
 
 		// Checks the class type name
 		FE_EXIT(!algorithm::string::compare_ranged<char>(	l_typename, algorithm::string::range{0, std::strlen(l_typename)}, 
@@ -277,62 +310,125 @@ public:
 															FE::ERROR_CODE::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_MISMATCH, "Unable to deserialize an instance with a different class name.");
 		++s_position; // Point the first byte.
 
+		auto l_size_indicator = s_input_buffer.begin();
+		l_size_indicator += s_input_buffer.rfind("$-");
+		l_size_indicator += 2; // to skip the "$-" and point to the first one.
+
+		while (*l_size_indicator != '\0')
+		{
+			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
+			FE_LOG_IF(l_info._value == 0, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
+			s_scalable_container_size_recorder.push(l_info._value);
+			l_size_indicator += l_info._digit_length; // move to the next.
+			++l_size_indicator; // to skip the '-'.
+		}
+
 		__deserialize_mutually_recursive<T>(out_object_p);
 	}
 
 private:
+	template <class InnerContainer>
+	_FE_FORCE_INLINE_ static void __push_multidimensional_container_serialization_task_recursive() noexcept
+	{
+		FE::framework::reflection::function::register_task< FE::c_style_task<void(const void*)> >(__get_serialization_task_name(FE::framework::reflection::type_id<InnerContainer>().name()), &property::__serialize_by_foreach_mutually_recursive<InnerContainer>);
+		
+		if constexpr (FE::has_value_type<InnerContainer>::value == true)
+		{
+			__push_multidimensional_container_serialization_task_recursive<typename InnerContainer::value_type>();
+		}
+		else if constexpr (FE::has_element_type<InnerContainer>::value == true)
+		{
+			__push_multidimensional_container_serialization_task_recursive<typename InnerContainer::element_type>();
+		}
+	}
+
+	template <class InnerContainer>
+	_FE_FORCE_INLINE_ static void __push_multidimensional_container_deserialization_task_recursive() noexcept
+	{
+		FE::framework::reflection::function::register_task< FE::c_style_task<void(void*)> >(__get_deserialization_task_name(FE::framework::reflection::type_id<InnerContainer>().name()), &property::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
+
+		if constexpr (FE::has_value_type<InnerContainer>::value == true)
+		{
+			__push_multidimensional_container_deserialization_task_recursive<typename InnerContainer::value_type>();
+		}
+		else if constexpr (FE::has_element_type<InnerContainer>::value == true)
+		{
+			__push_multidimensional_container_deserialization_task_recursive<typename InnerContainer::element_type>();
+		}
+	}
+
+	/* 
+	I do not like short functions but this is the way to make the code readable.
+	It is hard to tell which 'first' and 'second' are which.
+	*/
+	_FE_FORCE_INLINE_ static typename class_property_list::iterator& __get_the_top_class_property_list_iterator() noexcept
+	{
+		return s_class_layer.top()._second;
+	}
+
+	_FE_FORCE_INLINE_ static FE::ptrdiff __get_memory_offset_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
+	{
+		return to_the_property_p->first;
+	}
+
+	_FE_FORCE_INLINE_ static property_meta_data& __get_metadata_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
+	{
+		return to_the_property_p->second;
+	}
+
+	_FE_FORCE_INLINE_ static class_property_list& __get_top_class_property_list() noexcept
+	{
+		return *(s_class_layer.top()._first);
+	}
 
     template<class U>
 	_FE_FORCE_INLINE_ static void __push_parent_class_layers_recursive() noexcept
 	{
 		if constexpr ( FE::has_base_type<U>::value == true )
 		{
-			thread_local static typename  property_meta_data_map_type::iterator tl_s_search_result;
-			tl_s_search_result = s_property_map->find( FE::framework::reflection::type_id<typename U::base_type>().name() );
-			if(tl_s_search_result == s_property_map->end())
+			static typename  property_reflection_map::iterator l_s_search_result;
+			l_s_search_result = s_property_map->find( FE::framework::reflection::type_id<typename U::base_type>().name() );
+			if(l_s_search_result == s_property_map->end())
 			{
 				return;
 			}
-			s_class_layer.push(typename class_layer_stack::value_type{ &(tl_s_search_result->second), tl_s_search_result->second.begin() });
+			s_class_layer.push(typename class_layer_stack::value_type{ &(l_s_search_result->second), l_s_search_result->second.begin() });
 			__push_parent_class_layers_recursive<typename U::base_type>();
 		}
 	}
 
 	_FE_FORCE_INLINE_ static void __push_parent_class_layers_by_typename_string_recursive(FE::ASCII* typename_p) noexcept
 	{
-		thread_local static typename  property_meta_data_map_type::iterator tl_s_search_result;
-		tl_s_search_result = s_property_map->find( FE::framework::reflection::type_info::get_base_name_of(typename_p) );
-		if(tl_s_search_result == s_property_map->end())
+		static typename  property_reflection_map::iterator l_s_search_result;
+		l_s_search_result = s_property_map->find( FE::framework::reflection::type_info::get_base_name_of(typename_p) );
+		if(l_s_search_result == s_property_map->end())
 		{
 			return;
 		}
-		s_class_layer.push(typename class_layer_stack::value_type{ &(tl_s_search_result->second), tl_s_search_result->second.begin() });
-		__push_parent_class_layers_by_typename_string_recursive( tl_s_search_result->first );
+		s_class_layer.push(typename class_layer_stack::value_type{ &(l_s_search_result->second), l_s_search_result->second.begin() });
+		__push_parent_class_layers_by_typename_string_recursive( l_s_search_result->first );
 	}
 
 	template<typename T>
     static void __serialize_mutually_recursive(const T& object_p) noexcept
 	{
-		var::ptrdiff l_offset_from_this = 0;
+		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while(s_class_layer.is_empty() == false)
 		{
-			switch(s_class_layer.top()._second->second._is_trivial)
+			switch(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._is_trivial)
 			{
 			case TYPE_TRIVIALITY::_TRIVIAL:
 			{
-				// Acquire an iterator to the top class layer.
-				auto l_property_meta_data = s_class_layer.top()._second; // The first is the data structure that represents the class memory layer and the second is the property meta data iterator.
-				
 				// Check if the field variable meta data is valid.
-				FE_ASSERT(l_property_meta_data->second._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
+				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
-				s_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_this + l_property_meta_data->first), l_property_meta_data->second._total_size);
+				s_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property( __get_the_top_class_property_list_iterator() )), __get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte);
 	
-				// Look for the next registered property of the class layer.
-				++(s_class_layer.top()._second);
+				// Look for the next registered property of the class.
+				++( __get_the_top_class_property_list_iterator() );
 
 				// Pop the class layer if the iterator reached the end of the property list.
-				if(s_class_layer.top()._second == s_class_layer.top()._first->end())
+				if(__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
 					s_class_layer.pop();
 				}
@@ -341,38 +437,42 @@ private:
 
 			case TYPE_TRIVIALITY::_NOT_TRIVIAL:
 				
-				if(s_class_layer.top()._second == s_class_layer.top()._first->end()) // Pop the class layer if the iterator reached the end of the property list.
+				if(__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
 					s_class_layer.pop();
 					break;
 				}
-
-				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = s_property_map->find(s_class_layer.top()._second->second._typename);
 				
-				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_serialization_task_name(s_class_layer.top()._second->second._typename)); // Load function pointer.
-				if(l_foreach_task != nullptr) // This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
+				// Find the class/struct meta data that contains its memory layer.
+				auto l_search_result = s_property_map->find(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._typename);
+				
+				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
+				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_serialization_task_name(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._typename)); // Load function pointer.
+				if(l_foreach_task != nullptr) // is serializable with foreach?
 				{ 
-					FE::arguments<void*> l_pointer_to_data; // Any containers with begin() and end() can be serialized and deserialized.
-					l_pointer_to_data._first = const_cast<T*>(&object_p) + (l_offset_from_this + s_class_layer.top()._second->first);
-					(*l_foreach_task)(&l_pointer_to_data); // The pointed task object knows what to do with the arguments type casting.
-					// std::any can be used instead of FE::arguments_base* for safer type conversion. 
+					FE::arguments<const void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
+					l_pointer_to_container._first = reinterpret_cast<FE::byte*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property( __get_the_top_class_property_list_iterator() ));
+					(*l_foreach_task)(&l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
+					
+					// Move on to the next registered property of the class layer.
+					++(__get_the_top_class_property_list_iterator());
 				}
-
-				if(l_search_result != s_property_map->end())
+				else if(l_search_result != s_property_map->end()) // push the meta data onto the stack if found.
 				{
-					l_offset_from_this = s_class_layer.top()._second->first;
+					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator());
 					
 					// Look for the next registered property of the class layer.
-					++(s_class_layer.top()._second);
+					++( __get_the_top_class_property_list_iterator() );
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
 					s_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
-				else
+
+				// if it reached the end.
+				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					++(s_class_layer.top()._second);
+					s_class_layer.pop();
 				}
 				break;
 			}
@@ -382,28 +482,25 @@ private:
     template<typename T>
 	static void __deserialize_mutually_recursive(T& out_object_p) noexcept
 	{
-		var::ptrdiff l_offset_from_this = 0;
+		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while(s_class_layer.is_empty() == false)
 		{
-			switch(s_class_layer.top()._second->second._is_trivial)
+			switch(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._is_trivial)
 			{
 			case TYPE_TRIVIALITY::_TRIVIAL:
 				{
-					// Acquire an iterator to the top class layer.
-					auto l_property_meta_data = s_class_layer.top()._second;
-				
 					// Check if the meta data is valid.
-					FE_ASSERT(l_property_meta_data->second._total_size == 0, "Assertion failed: unable to serialize a zero-byte property.");
+					FE_NEGATIVE_ASSERT(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
-					// Write the bits to the object, from a buffer.	
-					FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_this + l_property_meta_data->first), FE::iterator_cast<FE::ASCII*>(s_position), l_property_meta_data->second._total_size);
-					s_position += l_property_meta_data->second._total_size; // Iterate to the next bits.
+					// Write the bits to the object_base, from a buffer.	
+					FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property( __get_the_top_class_property_list_iterator() )), FE::iterator_cast<FE::ASCII*>(s_position), __get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte);
+					s_position += __get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte; // Iterate to the next bits.
 				
 					// Look for the next registered property of the class layer.
-					++(s_class_layer.top()._second);
+					++(__get_the_top_class_property_list_iterator());
 
 					// Pop the class layer if the iterator reached the end of the property list.
-					if(s_class_layer.top()._second == s_class_layer.top()._first->end())
+					if(__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 					{
 						s_class_layer.pop();
 					}
@@ -412,146 +509,153 @@ private:
 
 			case TYPE_TRIVIALITY::_NOT_TRIVIAL:
 				
-				if(s_class_layer.top()._second == s_class_layer.top()._first->end()) // Pop the class layer if the iterator reached the end of the property list.
+				if(__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
 					s_class_layer.pop();
 					break;
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = s_property_map->find(s_class_layer.top()._second->second._typename);
+				auto l_search_result = s_property_map->find(__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._typename);
 
-				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve(__get_deserialization_task_name(s_class_layer.top()._second->second._typename)); // Load function pointer.
-				if(l_foreach_task != nullptr) // This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
+				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
+				FE::task_base* const l_foreach_task = FE::framework::reflection::function::retrieve( __get_deserialization_task_name( __get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._typename ) ); // Load function pointer.
+				if(l_foreach_task != nullptr) // is deserializable with foreach?
 				{ 
-					FE::arguments<void*> l_pointer_to_data; // Any containers with begin() and end() can be serialized and deserialized.
-					l_pointer_to_data._first = &out_object_p + (l_offset_from_this + s_class_layer.top()._second->first);
-					(*l_foreach_task)(&l_pointer_to_data); // The pointed task object knows what to do with the arguments type casting.
-					// std::any can be used instead of FE::arguments_base* for safer type conversion. 
+					FE::arguments<void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
+					l_pointer_to_container._first = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
+					(*l_foreach_task)(&l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
+					
+					// Look for the next registered property of the class layer.
+					++(__get_the_top_class_property_list_iterator());
 				}
-
-				if(l_search_result != s_property_map->end())
+				else if(l_search_result != s_property_map->end()) // push the meta data onto the stack if found.
 				{
-					l_offset_from_this = s_class_layer.top()._second->first;
+					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property( __get_the_top_class_property_list_iterator() );
 				
 					// Look for the next registered property of the class layer.
-					++(s_class_layer.top()._second);
+					++( __get_the_top_class_property_list_iterator() );
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
 					s_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
-				else
+				
+				// if it reached the end.
+				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					// Look for the next registered property of the class layer.
-					++(s_class_layer.top()._second);
+					s_class_layer.pop();
 				}
 				break;
 			}
 		}
 	}
 
-    template<class Data>
-	_FE_FORCE_INLINE_ static void __serialize_by_foreach_mutually_recursive(Data* const data_p) noexcept
+    template<class Container>
+	_FE_FORCE_INLINE_ static void __serialize_by_foreach_mutually_recursive(const void* const data_p) noexcept
 	{
-		for(auto& element : *data_p)
+		FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
+		FE_NEGATIVE_STATIC_ASSERT(FE::is_serializable<Container>::value == false, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
+		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
+		const Container* const l_container = static_cast<const Container* const>(data_p);
+
+		if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
 		{
-			if constexpr (FE::has_value_type<Data>::value == true)
+			if constexpr (std::is_array<Container>::value == true)
 			{
-				if constexpr (FE::is_reflectable<typename Data::value_type>::value == true)
-				{
-					__serialize_mutually_recursive<typename Data::value_type>(element);
-				}
-				else if constexpr (FE::has_iterator<typename Data::value_type>::value == true)
-				{
-					__serialize_by_foreach_mutually_recursive<typename Data::value_type>(&element);
-				}
-				else if constexpr (FE::is_trivial<typename Data::value_type>::value == true)
-				{
-					s_fstream.write(reinterpret_cast<const char*>(&element), sizeof(typename Data::value_type));
-				}
+				s_fstream.write(reinterpret_cast<const char*>(l_container), sizeof(Container));
 			}
-			else if constexpr (FE::has_element_type<Data>::value == true)
+			else
 			{
-				if constexpr (FE::is_reflectable<typename Data::element_type>::value == true)
+				s_scalable_container_size_recorder.push( l_container->size() );
+				s_fstream.write(reinterpret_cast<const char*>(l_container->data()), sizeof(typename Container::value_type) * l_container->size());
+			}
+		}
+		else
+		{
+			for (auto& element : *l_container)
+			{
+				if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
 				{
-					__serialize_mutually_recursive<typename Data::element_type>(element);
+					__serialize_mutually_recursive<typename Container::value_type>(element);
 				}
-				else if constexpr (FE::has_iterator<typename Data::element_type>::value == true)
+				else if constexpr (FE::is_serializable<typename Container::value_type>::value == true)
 				{
-					__serialize_by_foreach_mutually_recursive<typename Data::element_type>(&element);
+					__serialize_by_foreach_mutually_recursive<typename Container::value_type>(&element);
 				}
-				else if constexpr (FE::is_trivial<typename Data::element_type>::value == true)
+				else
 				{
-					s_fstream.write(reinterpret_cast<const char*>(&element), sizeof(typename Data::element_type));
+					FE_LOG("Warning: could not perform __serialize_by_foreach_mutually_recursive() operation successfully.");
 				}
 			}
 		}
 	}
 
-	_FE_FORCE_INLINE_ static FE::ASCII* __get_serialization_task_name(FE::ASCII* property_typename_p) noexcept
+	static FE::ASCII* __get_serialization_task_name(FE::ASCII* property_typename_p) noexcept
 	{
-		thread_local static std::string tl_s_serialization_task_name = "FE::framework::reflection::property::__serialize_by_foreach_mutually_recursive< >";
-		tl_s_serialization_task_name.replace(	tl_s_serialization_task_name.cbegin() + (tl_s_serialization_task_name.find('<') + 1), 
-												tl_s_serialization_task_name.cbegin() + (tl_s_serialization_task_name.length() - 1),
+		static std::basic_string<char, std::char_traits<char>> l_s_serialization_task_name = "FE::framework::reflection::property::__serialize_by_foreach_mutually_recursive< >";
+		l_s_serialization_task_name.replace(	l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.find('<') + 1), 
+												l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.length() - 1),
 												property_typename_p
 												);
-		return tl_s_serialization_task_name.c_str();
+		return l_s_serialization_task_name.c_str();
 	}
 
-    template<class Data>
-	_FE_FORCE_INLINE_ static void __deserialize_by_foreach_mutually_recursive(Data* const data_p) noexcept
+    template<class Container>
+	_FE_FORCE_INLINE_ static void __deserialize_by_foreach_mutually_recursive(void* const data_p) noexcept
 	{
-		for(auto& element : *data_p)
+		FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
+		FE_NEGATIVE_STATIC_ASSERT(FE::is_serializable<Container>::value == false, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
+		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
+		Container* const l_container = static_cast<Container* const>(data_p);
+		
+		if constexpr (FE::is_array<Container>::value == false)
 		{
-			if constexpr (FE::has_value_type<Data>::value == true)
+			l_container->resize( s_scalable_container_size_recorder.pop() );
+		}
+
+		if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
+		{
+			if constexpr (std::is_array<Container>::value == true)
 			{
-				if constexpr (FE::is_reflectable<typename Data::value_type>::value == true)
-				{
-					__deserialize_mutually_recursive<typename Data::value_type>(element);
-				}
-				else if constexpr (FE::has_iterator<typename Data::value_type>::value == true)
-				{
-					__deserialize_by_foreach_mutually_recursive<typename Data::value_type>(&element);
-				}
-				else if constexpr (FE::is_trivial<typename Data::value_type>::value == true)
-				{
-					// Write the bits to the object, from a buffer.	
-					FE::memcpy(reinterpret_cast<var::byte*>(&element), FE::iterator_cast<FE::ASCII*>(s_position), sizeof(typename Data::value_type));
-					s_position += sizeof(typename Data::value_type); // Iterate to the next bits.
-				}
+				FE::memcpy(reinterpret_cast<var::byte*>(l_container), FE::iterator_cast<FE::ASCII*>(s_position), sizeof(Container));
+				s_position += sizeof(Container); // Iterate to the next bit.
 			}
-			else if constexpr (FE::has_element_type<Data>::value == true)
+			else
 			{
-				if constexpr (FE::is_reflectable<typename Data::element_type>::value == true)
+				FE::memcpy(reinterpret_cast<var::byte*>(l_container->data()), FE::iterator_cast<FE::ASCII*>(s_position), sizeof(typename Container::value_type) * l_container->size());
+				s_position += sizeof(typename Container::value_type) * l_container->size(); // Iterate to the next bit.
+			}
+		}
+		else
+		{
+			for (auto& element : *l_container)
+			{
+				if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
 				{
-					__deserialize_mutually_recursive<typename Data::element_type>(element);
+					__deserialize_mutually_recursive<typename Container::value_type>(element);
 				}
-				else if constexpr (FE::has_iterator<typename Data::element_type>::value == true)
+				else if constexpr (FE::is_serializable<typename Container::value_type>::value == true)
 				{
-					__deserialize_by_foreach_mutually_recursive<typename Data::element_type>(&element);
+					__deserialize_by_foreach_mutually_recursive<typename Container::value_type>(&element);
 				}
-				else if constexpr (FE::is_trivial<typename Data::element_type>::value == true)
+				else
 				{
-					// Write the bits to the object, from a buffer.	
-					FE::memcpy(reinterpret_cast<var::byte*>(&element), FE::iterator_cast<FE::ASCII*>(s_position), sizeof(typename Data::element_type));
-					s_position += sizeof(typename Data::element_type); // Iterate to the next bits.
+					FE_LOG("Warning: could not perform __deserialize_by_foreach_mutually_recursive() operation successfully.");
 				}
 			}
 		}
 	}
 
-	_FE_FORCE_INLINE_ static FE::ASCII* __get_deserialization_task_name(FE::ASCII* property_typename_p) noexcept
+	static FE::ASCII* __get_deserialization_task_name(FE::ASCII* property_typename_p) noexcept
 	{
-		thread_local static std::string tl_s_deserialization_task_name = "FE::framework::reflection::property::__deserialize_by_foreach_mutually_recursive<>";
-		tl_s_deserialization_task_name.replace(	tl_s_deserialization_task_name.cbegin() + (tl_s_deserialization_task_name.find('<') + 1), 
-												tl_s_deserialization_task_name.cbegin() + (tl_s_deserialization_task_name.length() - 1),
+		static std::basic_string<char, std::char_traits<char>> l_s_deserialization_task_name = "FE::framework::reflection::property::__deserialize_by_foreach_mutually_recursive<>";
+		l_s_deserialization_task_name.replace(	l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.find('<') + 1), 
+												l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.length() - 1),
 												property_typename_p
 												);
-		return tl_s_deserialization_task_name.c_str();
+		return l_s_deserialization_task_name.c_str();
 	}
-
-	static void __load_default_class_metadata() noexcept {}
 };
 
 END_NAMESPACE

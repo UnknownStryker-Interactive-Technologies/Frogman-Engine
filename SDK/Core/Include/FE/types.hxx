@@ -23,8 +23,6 @@ BEGIN_NAMESPACE(FE)
 typedef const bool boolean; // primitive types are const by default
 
 typedef const char ASCII;  // primitive types are const by default
-typedef const signed char schar; // primitive types are const by default
-typedef const unsigned char uchar; // primitive types are const by default
 typedef const wchar_t wchar; // primitive types are const by default
 
 
@@ -108,7 +106,7 @@ _FE_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>
 #define _FE_NOT_FOUND_ 0
 
 
-#define _FE_SUCCESS_ 1
+#define _FE_SUCCEEDED_ 1
 #define _FE_FAILED_ 0
 
 
@@ -168,38 +166,6 @@ public:
 
 	_FE_FORCE_INLINE_ const_reference load() const noexcept { return this->m_data; }
 };
-
-#ifdef _DEBUG_
-template<typename T>
-class buffer final // a temporary arguments buffer to be used with FE.log
-{
-	thread_local static T tl_s_rvalue_buffer;
-
-public:
-	using value_type = T;
-	using reference = T&;
-	using rvalue_reference = T&&;
-
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static void set(rvalue_reference rvalue_p) noexcept
-	{
-		tl_s_rvalue_buffer = std::move(rvalue_p);
-	}
-
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static reference set_and_get(rvalue_reference rvalue_p) noexcept
-	{
-		tl_s_rvalue_buffer = std::move(rvalue_p);
-		return tl_s_rvalue_buffer;
-	}
-
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ static reference get() noexcept
-	{
-		return tl_s_rvalue_buffer;
-	}
-};
-
-template<typename T>
-thread_local T buffer<T>::tl_s_rvalue_buffer;
-#endif
 END_NAMESPACE
 
 // variable types
@@ -212,14 +178,6 @@ namespace var
 	typedef char ASCII;
 	static_assert(::std::atomic<ASCII>::is_always_lock_free == true, "std::atomic is not compatible with ASCII.");
 	static_assert(sizeof(ASCII) == 1, "The size of ASCII must be one byte.");
-
-	typedef signed char schar;
-	static_assert(::std::atomic<schar>::is_always_lock_free == true, "std::atomic is not compatible with schar.");
-	static_assert(sizeof(schar) == 1, "The size of schar must be one byte.");
-
-	typedef unsigned char uchar;
-	static_assert(::std::atomic<uchar>::is_always_lock_free == true, "std::atomic is not compatible with uchar.");
-	static_assert(sizeof(uchar) == 1, "The size of uchar must be one byte.");
 
 	typedef wchar_t wchar;
 	static_assert(::std::atomic<wchar>::is_always_lock_free == true, "std::atomic is not compatible with wchar.");
