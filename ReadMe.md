@@ -10,7 +10,7 @@ This project is under development and may contain some bugs and issues.
 https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413ff4f40de9204c4aa22907ffc&pvs=4
 
 # Prerequisite: 
-CMake 3.27.0 or the latest, and LLVM Clang 10 or latest [ includes LLVM (clangcl) ].
+CMake 3.27.0 or the latest, and LLVM Clang 10 or the latest [ includes LLVM (clangcl) ].
 
 # C++ standard version: 
 C++ 20 or latest.  
