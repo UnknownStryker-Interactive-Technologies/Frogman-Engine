@@ -28,7 +28,7 @@ BEGIN_NAMESPACE(FE::framework)
 
 class game_instance : public atom_base
 {
-	REGISTER_FE_CLASS(game_instance);
+	FE_CLASS(game_instance);
 	FE_CLASS_HAS_A_BASE(atom_base);
 
 	game_thread m_game_thread;

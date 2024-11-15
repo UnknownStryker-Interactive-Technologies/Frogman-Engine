@@ -43,16 +43,20 @@ limitations under the License.
 
 #ifdef _ENABLE_LOG_
 /*
-${%d@n} - int32
-${%u@n} - uint32
-${%ld@n} - int64
-${%lu@n} - uint64
-${%lf@n} - float64
-${%f@n} - float32
-${%b@n} - bool
-${%c@n} - char
-${%s@n} - string
-${%p@n} - hexadecimal 64bit pointer
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
 */
 #define FE_LOG(...) ::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__)
 #else
@@ -62,16 +66,20 @@ ${%p@n} - hexadecimal 64bit pointer
 
 #ifdef _ENABLE_LOG_IF_
 /*
-${%d@n} - int32
-${%u@n} - uint32
-${%ld@n} - int64
-${%lu@n} - uint64
-${%lf@n} - float64
-${%f@n} - float32
-${%b@n} - bool
-${%c@n} - char
-${%s@n} - string
-${%p@n} - hexadecimal 64bit pointer
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
 */
 #define FE_LOG_IF(condition, ...) \
 if(condition) \
@@ -85,17 +93,22 @@ if(condition) \
 
 #ifdef _ENABLE_NEGATIVE_ASSERT_
 /*
-${%d@n} - int32
-${%u@n} - uint32
-${%ld@n} - int64
-${%lu@n} - uint64
-${%lf@n} - float64
-${%f@n} - float32
-${%b@n} - bool
-${%c@n} - char
-${%s@n} - string
-${%p@n} - hexadecimal 64bit pointer
-*/ // Negative Assertion Macro
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
+Negative Assertion Macro
+*/
 #define FE_NEGATIVE_ASSERT(expression, ...) \
 if(expression) _FE_UNLIKELY_ \
 { \
@@ -109,16 +122,20 @@ if(expression) _FE_UNLIKELY_ \
 
 #ifdef _ENABLE_ASSERT_
 /*
-${%d@n} - int32
-${%u@n} - uint32
-${%ld@n} - int64
-${%lu@n} - uint64
-${%lf@n} - float64
-${%f@n} - float32
-${%b@n} - bool
-${%c@n} - char
-${%s@n} - string
-${%p@n} - hexadecimal 64bit pointer
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
 */
 #define FE_ASSERT(expression, ...) \
 if(!(expression)) _FE_UNLIKELY_ \
@@ -133,22 +150,26 @@ if(!(expression)) _FE_UNLIKELY_ \
 
 #ifdef _ENABLE_EXIT_
 /*
-${%d@n} - int32
-${%u@n} - uint32
-${%ld@n} - int64
-${%lu@n} - uint64
-${%lf@n} - float64
-${%f@n} - float32
-${%b@n} - bool
-${%c@n} - char
-${%s@n} - string
-${%p@n} - hexadecimal 64bit pointer
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
 */
 #define FE_EXIT(expression, error_code, ...) \
 if(expression) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
-	::std::exit(static_cast<::var::int32>(error_code)); \
+	::std::exit(static_cast<::FE::int32>(error_code)); \
 }
 #else
 	#define FE_EXIT(expression, error_code, ...)
@@ -157,12 +178,12 @@ if(expression) _FE_UNLIKELY_ \
 
 #define TO_STRING(p) #p
 
-#define _NODEFAULT_ default: _FE_UNLIKELY_ FE_NEGATIVE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
+#define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_NEGATIVE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
 
 
 namespace FE
 {
-	enum struct ERROR_CODE : FE::int32
+	enum struct ErrorCode : FE::int32
 	{
 		_NONE = 0,
 		_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX = 1,
@@ -185,7 +206,7 @@ namespace FE
 		_FATAL_ERROR_DYNAMIC_CAST_FAILURE_DUE_TO_TYPE_MISMATCH = 400
 	};
 
-	_FE_FORCE_INLINE_ int error_code_cast(const ERROR_CODE error_code_p) noexcept
+	_FE_FORCE_INLINE_ int error_code_cast(const ErrorCode error_code_p) noexcept
 	{
 		return static_cast<int>(error_code_p);
 	}

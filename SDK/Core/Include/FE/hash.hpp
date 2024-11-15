@@ -19,37 +19,37 @@
 BEGIN_NAMESPACE(FE)
 
 
-enum struct HASH_INPUT_DATA_TYPE : uint8
+enum struct HashInputDataType : uint8
 {
-	_ADDRESS = 0,
-	_C_STRING = 1,
-	_STRING_CLASS = 2,	
-	_BINARY = 3
+	_Address = 0,
+	_CString = 1,
+	_StringClass = 2,	
+	_Binary = 3
 };
 
 template<typename T>
-_FE_FORCE_INLINE_ constexpr HASH_INPUT_DATA_TYPE evaluate_hash_input_data_type()
+_FE_FORCE_INLINE_ constexpr HashInputDataType evaluate_hash_input_data_type()
 {
 	if constexpr (FE::is_constant_string<T>::value == true)
 	{
-		return HASH_INPUT_DATA_TYPE::_C_STRING;
+		return HashInputDataType::_CString;
 	}
 	else if constexpr (std::is_pointer<T>::value == true)
 	{
-		return HASH_INPUT_DATA_TYPE::_ADDRESS;
+		return HashInputDataType::_Address;
 	}
 	else if constexpr (FE::is_string_class<T>::value == true)
 	{
-		return HASH_INPUT_DATA_TYPE::_STRING_CLASS;
+		return HashInputDataType::_StringClass;
 	}
 
-	return HASH_INPUT_DATA_TYPE::_BINARY;
+	return HashInputDataType::_Binary;
 }
 
-enum struct HASHER_TYPE : uint8
+enum struct HasherType : uint8
 {
-	_ROBIN_HOOD_HASH = 0,
-	_CITY_HASH = 1
+	_RobinHoodHash = 0,
+	_CityHash = 1
 };
 
 class hash_base
@@ -59,83 +59,83 @@ protected:
 	static uint64 s_seed;
 };
 
-template<typename T, HASHER_TYPE HasherType = HASHER_TYPE::_ROBIN_HOOD_HASH, HASH_INPUT_DATA_TYPE HashInputDataType = FE::evaluate_hash_input_data_type<T>()>
+template<typename T, HasherType HasherType = HasherType::_RobinHoodHash, HashInputDataType HashInputDataType = FE::evaluate_hash_input_data_type<T>()>
 class hash;
 
-template<typename T, HASHER_TYPE HasherType>
-class hash<T, HasherType, HASH_INPUT_DATA_TYPE::_ADDRESS> : public hash_base
+template<typename T, HasherType HasherType>
+class hash<T, HasherType, HashInputDataType::_Address> : public hash_base
 {
 public:
 	using base = hash_base;
-	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_ADDRESS;
+	static constexpr HashInputDataType hash_input_data_type = HashInputDataType::_Address;
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(T value_p) const noexcept
 	{
-		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
+		if constexpr (HasherType == HasherType::_RobinHoodHash)
 		{
 			return robin_hood::hash_int(reinterpret_cast<var::uintptr>(value_p));
 		}
-		else if constexpr (HasherType == HASHER_TYPE::_CITY_HASH)
+		else if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p), sizeof(T));
 		}
 	}
 };
 
-template<typename T, HASHER_TYPE HasherType>
-class hash<T, HasherType, HASH_INPUT_DATA_TYPE::_C_STRING> : public hash_base
+template<typename T, HasherType HasherType>
+class hash<T, HasherType, HashInputDataType::_CString> : public hash_base
 {
 public:
 	using base = hash_base;
-	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_C_STRING;
+	static constexpr HashInputDataType hash_input_data_type = HashInputDataType::_CString;
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(T value_p) const noexcept
 	{
-		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
+		if constexpr (HasherType == HasherType::_RobinHoodHash)
 		{
 			return robin_hood::hash_bytes(value_p, sizeof(typename std::remove_pointer<T>::type) * internal::strlen(value_p));
 		}
-		else if constexpr (HasherType == HASHER_TYPE::_CITY_HASH)
+		else if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p), sizeof(typename std::remove_pointer<T>::type) * internal::strlen(value_p));
 		}
 	}
 };
 
-template<typename T, HASHER_TYPE HasherType>
-class hash<T, HasherType, HASH_INPUT_DATA_TYPE::_STRING_CLASS> : public hash_base
+template<typename T, HasherType HasherType>
+class hash<T, HasherType, HashInputDataType::_StringClass> : public hash_base
 {
 public:
 	using base = hash_base;
-	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_STRING_CLASS;
+	static constexpr HashInputDataType hash_input_data_type = HashInputDataType::_StringClass;
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
 	{
-		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
+		if constexpr (HasherType == HasherType::_RobinHoodHash)
 		{
 			return robin_hood::hash_bytes(value_p.data(), value_p.length());
 		}
-		else if constexpr (HasherType == HASHER_TYPE::_CITY_HASH)
+		else if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p.data()), sizeof(typename std::remove_pointer<T>::type) * value_p.length());
 		}
 	}
 };
 
-template<typename T, HASHER_TYPE HasherType>
-class hash<T, HasherType, HASH_INPUT_DATA_TYPE::_BINARY> : public hash_base
+template<typename T, HasherType HasherType>
+class hash<T, HasherType, HashInputDataType::_Binary> : public hash_base
 {
 public:
 	using base = hash_base;
-	static constexpr HASH_INPUT_DATA_TYPE hash_input_data_type = HASH_INPUT_DATA_TYPE::_BINARY;
+	static constexpr HashInputDataType hash_input_data_type = HashInputDataType::_Binary;
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(const T& value_p) const noexcept
 	{
-		if constexpr (HasherType == HASHER_TYPE::_ROBIN_HOOD_HASH)
+		if constexpr (HasherType == HasherType::_RobinHoodHash)
 		{
 			return robin_hood::hash_bytes(&value_p, sizeof(T));
 		}
-		else if constexpr (HasherType == HASHER_TYPE::_CITY_HASH)
+		else if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(&value_p), sizeof(T));
 		}

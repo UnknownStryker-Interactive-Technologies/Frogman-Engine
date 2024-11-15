@@ -38,7 +38,7 @@ namespace internal::pool
     };
 
     template<FE::count_t PageCapacity, class Alignment>
-    class chunk<POOL_TYPE::_BLOCK, PageCapacity, Alignment>
+    class chunk<PoolType::_Block, PageCapacity, Alignment>
     {
         FE_STATIC_ASSERT((Alignment::size * PageCapacity) >= 32, "Static Assertion Failure: The PageCapacity is too small.");
         FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
@@ -50,28 +50,38 @@ namespace internal::pool
         using block_info_type = var::byte*;
 
     private:
-        alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
+        alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory{ 0 };
 
     public:
-    #if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
-        robin_hood::unordered_set<block_info_type> _double_free_detector;
-    #endif
         alignas(Alignment::size) FE::fstack<block_info_type, PageCapacity> _free_blocks;
-        var::byte* const _begin;
-        var::byte* _page_iterator;
-        var::byte* const _end;
-
-        chunk() noexcept : m_memory{0}, 
-#if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
-            _double_free_detector(page_capacity),
-#endif
-            _free_blocks(), _begin(m_memory.data()), _page_iterator(m_memory.data()), _end(m_memory.data() + m_memory.size())
-        {}
+        var::byte* const _begin = m_memory.data();
+        var::byte* _page_iterator = m_memory.data();
+        var::byte* const _end = m_memory.data() + m_memory.size();
 
         _FE_FORCE_INLINE_ boolean is_out_of_memory() const noexcept
         {
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
         }
+
+#ifdef _ENABLE_ASSERT_
+    private:
+        var::uint32 m_double_free_tracker[page_capacity]{};
+
+    public:
+        _FE_FORCE_INLINE_ void check_double_allocation(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
+        {
+            FE::index_t l_idx = (address_p - _begin) / Alignment::size;
+            FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
+            this->m_double_free_tracker[l_idx] = of_type_p;
+        }
+
+        _FE_FORCE_INLINE_ void check_double_free(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
+        {
+            FE::index_t l_idx = (address_p - _begin) / Alignment::size;
+            FE_ASSERT(m_double_free_tracker[l_idx] == of_type_p, "Double free detected: cannot dealloate the same address twice.");
+            this->m_double_free_tracker[l_idx] = 0;
+        }
+#endif
     };
 }
 
@@ -79,12 +89,12 @@ namespace internal::pool
 
 
 template<FE::size PageCapacity, class Alignment, class Allocator>
-class pool<POOL_TYPE::_BLOCK, PageCapacity, Alignment, Allocator>
+class pool<PoolType::_Block, PageCapacity, Alignment, Allocator>
 {
     FE_STATIC_ASSERT((Alignment::size* PageCapacity) >= 32, "Static Assertion Failure: The PageCapacity is too small.");
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
-    using chunk_type = internal::pool::chunk<POOL_TYPE::_BLOCK, PageCapacity, Alignment>;
+    using chunk_type = internal::pool::chunk<PoolType::_Block, PageCapacity, Alignment>;
     FE_NEGATIVE_STATIC_ASSERT((std::is_same<chunk_type, typename Allocator::value_type>::value == false), "Static Assertion Failed: The chunk_type has to be equivalent to Allocator::value_type.");
     
     using block_info_type = typename chunk_type::block_info_type;
@@ -131,7 +141,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         {
             if (iterator->is_out_of_memory() == true) _FE_UNLIKELY_
             {
-                create_pages(1);
                 continue;
             }
 
@@ -146,21 +155,9 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                 iterator->_page_iterator += fixed_block_size_in_bytes;
             }
 
-#if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdynamic-class-memaccess" // This is to avoid -Werror causing build failure and to suppress the -Wdynamic-class-memaccess.
-            /*
-            clang says:
-            /workspace/Frogman-Engine-Lab/Source/CMakeLists/../FE/core/block_pool.hxx:113:41: error: first operand of this 'memcmp' call is a pointer to dynamic class 'c_style_task<void (const std::vector<int> &), FE::arguments<const std::vector<int>>>'; vtable pointer will be compared [-Werror,-Wdynamic-class-memaccess]
-            FE_NEGATIVE_ASSERT(( std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) != 0 ), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
-
-            However, the bits of *l_allocation_result must be to 0.
-            */
-            FE_NEGATIVE_ASSERT((std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) != 0), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
-#pragma clang diagnostic pop
-
-            // erase from the list of free-ed blocks.
-            iterator->_double_free_detector.erase(static_cast<block_info_type>(l_allocation_result));
+#ifdef _ENABLE_ASSERT_
+            FE_ASSERT((std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) == 0), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
+            iterator->check_double_allocation(static_cast<block_info_type>(l_allocation_result), sizeof(U));
 #endif    
 
             if constexpr (FE::is_trivial<U>::value == false)
@@ -195,17 +192,10 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                     pointer_p->~U();
                 }
 
-            #if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
+#ifdef _ENABLE_ASSERT_
                 std::memset(l_to_be_freed, null, sizeof(U));
-
-                auto l_duplicate = iterator->_double_free_detector.find(l_to_be_freed);
-                if (l_duplicate != iterator->_double_free_detector.end())
-                {
-                    FE_ASSERT(*l_duplicate != l_to_be_freed, "Critical Error in FE.pool.block_pool: double free detected! the address is ${%p@0}.", pointer_p);
-                }
-                iterator->_double_free_detector.emplace(l_to_be_freed);
-            #endif
-
+				iterator->check_double_free(l_to_be_freed, sizeof(U));
+#endif
                 iterator->_free_blocks.push(l_to_be_freed);
                 return;
             }
@@ -214,7 +204,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 
     _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
+        FE_NEGATIVE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
 
         for (var::size i = 0; i < chunk_count_p; ++i)
         {
@@ -268,8 +258,8 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 - allocate(): O(1)
 - deallocate(): O(1)
 */
-template<FE::size FixedBlockSizeInBytes, FE::count_t PageCapacity = 128, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_BLOCK, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>>, FE::align_as<FixedBlockSizeInBytes, Alignment>>>
-using block_pool = pool<POOL_TYPE::_BLOCK, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>, Allocator>;
+template<FE::size FixedBlockSizeInBytes, FE::count_t PageCapacity = 128, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<PoolType::_Block, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>>, FE::align_as<FixedBlockSizeInBytes, Alignment>>>
+using block_pool = pool<PoolType::_Block, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>, Allocator>;
 
 END_NAMESPACE
 #endif

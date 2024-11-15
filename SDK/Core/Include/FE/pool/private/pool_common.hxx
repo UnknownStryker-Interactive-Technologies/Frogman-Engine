@@ -32,10 +32,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-enum struct POOL_TYPE : uint8
+enum struct PoolType : uint8
 {
-    _BLOCK = 0,
-    _SCALABLE = 1,
+    _Block = 0,
+    _Scalable = 1,
 };
 
 
@@ -47,12 +47,12 @@ namespace internal::pool
         var::int64 _size_in_bytes;
     };
 
-    template<POOL_TYPE PoolType, FE::size PageCapacity, class Alignment>
+    template<PoolType PoolType, FE::size PageCapacity, class Alignment>
     class chunk;
 }
 
 
-template<POOL_TYPE PoolType, FE::size PageCapacity, class Alignment, class Allocator>
+template<PoolType PoolType, FE::size PageCapacity, class Alignment, class Allocator>
 class pool;
 
 

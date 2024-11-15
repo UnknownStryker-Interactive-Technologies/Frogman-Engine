@@ -6,19 +6,10 @@ SET(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;MinSizeRel")
 MESSAGE("
 Define a cmake macro if you want to make changes on the settings.
 Available -D macro options:
--DLEAVE_OUT_ALL_EXCEPTIONS=1 
 -DENABLE_MEMORY_TRACKER=1
--DMEMORY_POOL_FE_STRINGS=1
--DMEMORY_POOL_FE_SMART_PTR_ALLOCATION=1
 
 Frogman Engine SIMD Extension Requirements:
 an x86-64 cpu with AVX and SSE2 (AVX-512F is optional). Please Check if the x86-64 cpu has ymm and xmm vector registers.
-        or
-an ARM64 cpu with NEON
-
-The target CPU architecture is x86-64 by the default.
-The target CPU architecture can be overridden by -DTARGET_CPU_ARCHITECTURE=arm64
-NOTE: This project does not support arm64 yet.
 
 This project uses AVX and SSE2 as the default SIMD options on x86-64 CPUs.
 The intrinsics option can be added by -D
@@ -26,7 +17,6 @@ Available x86-64 -D macro SIMD options:
 -DAVX2=1
 -DAVX512F=1
 
-Overriding the cmake macro TARGET_CPU_ARCHITECTURE with arm64 automatically sets the default SIMD option as NEON.
 ")
 
 

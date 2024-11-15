@@ -107,11 +107,11 @@ thread_local var::int64 FE::internal::allocator_base::tl_s_thread_local_memory_p
 
 void* operator new(std::size_t bytes_p)
 {
-	return FE_ALIGNED_ALLOC(bytes_p, FE::SIMD_auto_alignment::size);
+	return FE_ALIGNED_ALLOC(bytes_p, FE::align_CPU_L1_cache_line::size);
 }
 void* operator new[](std::size_t bytes_p)
 {
-	return FE_ALIGNED_ALLOC(bytes_p, FE::SIMD_auto_alignment::size);
+	return FE_ALIGNED_ALLOC(bytes_p, FE::align_CPU_L1_cache_line::size);
 }
 
 void operator delete(void* ptr_p) noexcept
@@ -120,5 +120,17 @@ void operator delete(void* ptr_p) noexcept
 }
 void operator delete[](void* ptr_p) noexcept
 {
+	FE_ALIGNED_FREE(ptr_p);
+}
+
+void operator delete(void* ptr_p, std::size_t size_p) noexcept
+{
+	(void)size_p;
+	FE_ALIGNED_FREE(ptr_p);
+}
+
+void operator delete[](void* ptr_p, std::size_t size_p) noexcept
+{
+	(void)size_p;
 	FE_ALIGNED_FREE(ptr_p);
 }

@@ -213,10 +213,10 @@ struct is_function
 };
 
 
-enum struct TYPE_TRIVIALITY : boolean
+enum struct TypeTriviality : boolean
 {
-	_TRIVIAL = true,
-	_NOT_TRIVIAL = false
+	_Trivial = true,
+	_NotTrivial = false
 };
 
 template <typename T>

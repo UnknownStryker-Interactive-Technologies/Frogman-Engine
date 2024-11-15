@@ -26,7 +26,7 @@ SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK})
 
 SET(FE_FRAMEWORK_REFLECTION
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/method.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
 )
@@ -58,12 +58,9 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/platform_information.h
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/function.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/method.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
-
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/string.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/string_view.hxx
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/atom_base.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_base.hpp
@@ -96,7 +93,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
 
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/function.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/property.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
 
@@ -148,7 +144,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/logger.cpp
 
 
 SET(FE_FRAMEWORK_MANAGED_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/exclusive_ptr.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/ptr.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/trackable.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/unique_ptr.hxx
@@ -161,8 +156,8 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/private/ref_
 SET(FE_POOL_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/block_pool.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/block_pool_allocator.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/pool.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/pool_allocator.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/scalable_pool_allocator.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
 )
 
@@ -180,8 +175,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/iterator.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/farray.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/fqueue.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/fstack.hxx
-
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/char_traits.hxx
 
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/function.hxx
 

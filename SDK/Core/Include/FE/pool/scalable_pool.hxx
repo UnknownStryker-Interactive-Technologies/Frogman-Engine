@@ -1,5 +1,5 @@
-﻿#ifndef _FE_CORE_POOL_HXX_
-#define _FE_CORE_POOL_HXX_
+﻿#ifndef _FE_CORE_SCALABLE_POOL_HXX_
+#define _FE_CORE_SCALABLE_POOL_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -84,7 +84,7 @@ namespace internal::pool
     }
     
     template<FE::size PageCapacity, class Alignment>
-    class chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>
+    class chunk<PoolType::_Scalable, PageCapacity, Alignment>
     {
         FE_STATIC_ASSERT(PageCapacity >= 32, "Static Assertion Failure: The PageCapacity is too small.");
         FE_STATIC_ASSERT((PageCapacity % Alignment::size) == 0, "Static Assertion Failure: The PageCapacity must be a multiple of Alignment::size.");
@@ -100,10 +100,7 @@ namespace internal::pool
         
     private:
         alignas(Alignment::size) std::array<var::byte, PageCapacity> m_memory{ 0 };
-        /*
-         std::pair's first contains the address of the memory block.
-         std::pair's second contains the size of the memory block.
-        */
+
     public:
         alignas(16) free_list_type _free_list{ };
 
@@ -117,7 +114,6 @@ namespace internal::pool
         var::byte* const _end = m_memory.data() + m_memory.size();
 
     public:
-
         _FE_FORCE_INLINE_ FE::boolean is_page_binary_searchable() const noexcept { return this->m_is_page_binary_searchable; }
         _FE_FORCE_INLINE_ void set_page_binary_searchable() noexcept { this->m_is_page_binary_searchable = true; }
 
@@ -179,6 +175,26 @@ namespace internal::pool
 
 		_FE_FORCE_INLINE_ FE::int64 get_free_list_size() const noexcept { return this->m_free_list_size; }
         _FE_FORCE_INLINE_ void set_free_list_size(FE::int64 size_p) noexcept { this->m_free_list_size = size_p; }
+
+#ifdef _ENABLE_ASSERT_
+    private:
+        var::uint32 m_double_free_tracker[possible_address_count]{};
+
+    public:
+        _FE_FORCE_INLINE_ void check_double_allocation(const block_info& block_info_p) noexcept
+        {
+			FE::index_t l_idx = (block_info_p._address - _begin) / Alignment::size;
+            FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
+			this->m_double_free_tracker[l_idx] = block_info_p._size_in_bytes;
+        }
+
+        _FE_FORCE_INLINE_ void check_double_free(const block_info& block_info_p) noexcept
+		{
+            FE::index_t l_idx = (block_info_p._address - _begin) / Alignment::size;
+            FE_ASSERT(static_cast<FE::int64>(m_double_free_tracker[l_idx]) == block_info_p._size_in_bytes, "Double free detected: cannot dealloate the same address twice.");
+			this->m_double_free_tracker[l_idx] = 0;
+		}
+#endif
     };
 }
 
@@ -186,13 +202,13 @@ namespace internal::pool
 
 
 template<FE::size PageCapacity, class Alignment, class Allocator>
-class pool<POOL_TYPE::_SCALABLE, PageCapacity, Alignment, Allocator>
+class pool<PoolType::_Scalable, PageCapacity, Alignment, Allocator>
 {
     FE_STATIC_ASSERT(PageCapacity >= 32, "Static Assertion Failure: The PageCapacity is too small.");
     FE_STATIC_ASSERT((PageCapacity % Alignment::size) == 0, "Static Assertion Failure: The PageCapacity must be a multiple of Alignment::size.");
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
-    using chunk_type = internal::pool::chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>;
+    using chunk_type = internal::pool::chunk<PoolType::_Scalable, PageCapacity, Alignment>;
     FE_NEGATIVE_STATIC_ASSERT((std::is_same<chunk_type, typename Allocator::value_type>::value == false), "Static Assertion Failed: The chunk_type has to be equivalent to Allocator::value_type.");
     
     using free_list_type = typename chunk_type::free_list_type;
@@ -228,7 +244,7 @@ public:
         FE_STATIC_ASSERT(std::is_array<U>::value == false, "Static Assertion Failed: The T must not be an array[] type.");
 
         FE::size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
-        FE_EXIT(l_queried_allocation_size_in_bytes > PageCapacity, FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
+        FE_EXIT(l_queried_allocation_size_in_bytes > PageCapacity, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT((l_queried_allocation_size_in_bytes % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_size_in_bytes, &Alignment::size);
 
         for (typename pool_type::iterator iterator = this->m_memory_pool.begin(); iterator != this->m_memory_pool.cend(); ++iterator)
@@ -253,6 +269,9 @@ public:
                 }
             }
 
+#ifdef _ENABLE_ASSERT_
+			iterator->check_double_allocation(l_memblock_info);
+#endif
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address) % Alignment::size) == 0, "FE.pool.scalable_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_memblock_info._address, &Alignment::size);
             return reinterpret_cast<U*>(l_memblock_info._address);
         }
@@ -266,7 +285,7 @@ public:
     void deallocate(T* pointer_p, FE::count_t element_count_p) noexcept 
     {
         FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.pool.scalable_pool: Unable to deallocate() a nullptr.");
-        FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(element_count_p));
+        FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(element_count_p));
         FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_pool instance.", pointer_p, &Alignment::size);
         
         alignas(16) internal::pool::block_info l_block_to_free;
@@ -285,7 +304,9 @@ public:
                         ++pointer_p;
                     }
                 }
-
+#ifdef _ENABLE_ASSERT_
+                iterator->check_double_free(l_block_to_free);
+#endif
                 iterator->add_to_the_free_list(l_block_to_free);
                 return;
             }
@@ -294,7 +315,7 @@ public:
 
     _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
+        FE_NEGATIVE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
 
         for (var::size i = 0; i < chunk_count_p; ++i)
         {
@@ -457,7 +478,7 @@ private:
         Best - O(n/2)
 		Worst - O(n)
         */
-        auto l_binary_searchable_range = algorithm::utility::exclusion_sort<algorithm::utility::EXCLUSION_SORT_MODE::_PUSH_TO_RIGHT, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
+        auto l_binary_searchable_range = algorithm::utility::exclusion_sort<algorithm::utility::ExclusionSortMode::_PushToRight, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
                                                                                                                                      l_end, internal::pool::block_info{ nullptr, 0 });
         // Reset it.
         page_p->set_free_list_size(l_binary_searchable_range._second - l_binary_searchable_range._first);
@@ -486,8 +507,8 @@ private:
  - __retrive_from_free_list()
  O(log n)
 */
-template<FE::size PageCapacity = 8192, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<POOL_TYPE::_SCALABLE, PageCapacity, Alignment>, Alignment>>
-using scalable_pool = pool<POOL_TYPE::_SCALABLE, PageCapacity, Alignment, Allocator>;
+template<FE::size PageCapacity = 8192, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<PoolType::_Scalable, PageCapacity, Alignment>, Alignment>>
+using scalable_pool = pool<PoolType::_Scalable, PageCapacity, Alignment, Allocator>;
 
 
 END_NAMESPACE

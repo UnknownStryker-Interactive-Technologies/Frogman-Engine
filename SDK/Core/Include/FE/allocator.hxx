@@ -29,7 +29,7 @@ public:
 	using alignment_type = Alignment;
 
 	_FE_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
-	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? Address::_Aligned : Address::_NotAligned;
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ new_delete_allocator() noexcept {}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ new_delete_allocator(_FE_MAYBE_UNUSED_ const new_delete_allocator&) noexcept {}
@@ -46,7 +46,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 		
 		return new T[count_p];
 	}
@@ -96,8 +96,8 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer pointer_p, _FE_MAYBE_UNUSED_ size_type count_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
 		
 		delete[] pointer_p;
 	}
@@ -133,7 +133,7 @@ public:
 	using alignment_type = Alignment;
 
 	_FE_MAYBE_UNUSED_ static constexpr inline boolean is_trivial = FE::is_trivial<value_type>::value;
-	_FE_MAYBE_UNUSED_ static constexpr inline ADDRESS is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? ADDRESS::_ALIGNED : ADDRESS::_NOT_ALIGNED;
+	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? Address::_Aligned : Address::_NotAligned;
 
 
 	_FE_FORCE_INLINE_ constexpr aligned_allocator() noexcept {}
@@ -144,7 +144,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(size_type count_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
 
 		return base_type::trackable_alloc<value_type, Alignment>(count_p * sizeof(value_type));
 	}
@@ -211,8 +211,8 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer pointer_p, size_type count_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
+		FE_NEGATIVE_ASSERT(count_p == 0, "${%s@0}: queried deallocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete ${%p@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), pointer_p);
 		
 		base_type::trackable_free<value_type, Alignment>(pointer_p, count_p * sizeof(value_type));
 	}

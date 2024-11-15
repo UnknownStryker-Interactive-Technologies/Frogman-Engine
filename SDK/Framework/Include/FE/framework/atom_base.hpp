@@ -32,22 +32,22 @@ The class name is irrelevant to the atomic memory operation.
 */
 class atom_base
 {
-	REGISTER_FE_CLASS(atom_base);
+	FE_CLASS(atom_base);
 public:
 	atom_base() noexcept;
 	virtual ~atom_base() noexcept = default;
 
 protected:
-	virtual void on_construction() = 0;
-	virtual void on_destruction() = 0;
+	virtual void on_construction() {};
+	virtual void on_destruction() {};
 
-	REGISTER_FE_PROPERTY(m_is_tick_enabled);
+	FE_PROPERTY(m_is_tick_enabled);
 	var::boolean m_is_tick_enabled;
-	virtual void tick(FE::float64 delta_second_p) = 0;
+	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) {};
 
 public:
-	virtual void serialize() = 0;
-	virtual void deserialize() = 0;
+	virtual void serialize() {};
+	virtual void deserialize() {};
 };
 
 END_NAMESPACE

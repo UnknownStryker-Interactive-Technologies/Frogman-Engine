@@ -81,10 +81,10 @@ Iterator binary_search(Iterator begin_p, Iterator end_p, const T& value_p, LessT
 }
 
 
-enum struct EXCLUSION_SORT_MODE : var::uint8
+enum struct ExclusionSortMode : var::uint8
 {
-	_PUSH_TO_RIGHT = 0,
-    _PUSH_TO_LEFT = 1
+	_PushToRight = 0,
+    _PushToLeft = 1
 };
 
 /* 
@@ -92,7 +92,7 @@ enum struct EXCLUSION_SORT_MODE : var::uint8
 Best: O(n/2)
 Worst: O(n)
 */
-template<EXCLUSION_SORT_MODE ExclusionSortMode, class Iterator> 
+template<ExclusionSortMode ExclusionSortMode, class Iterator> 
 FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
     Iterator l_begin = begin_p;
@@ -101,7 +101,7 @@ FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, co
     FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
 
 
-    if constexpr (ExclusionSortMode == EXCLUSION_SORT_MODE::_PUSH_TO_RIGHT)
+    if constexpr (ExclusionSortMode == ExclusionSortMode::_PushToRight)
 	{
         while (begin_p < end_p)
         {
@@ -127,7 +127,7 @@ FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, co
         FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
         return FE::pair<Iterator, Iterator>{l_begin, end_p};
 	}
-	else if constexpr (ExclusionSortMode == EXCLUSION_SORT_MODE::_PUSH_TO_LEFT)
+	else if constexpr (ExclusionSortMode == ExclusionSortMode::_PushToLeft)
 	{
         while (begin_p < end_p)
         {
@@ -379,7 +379,7 @@ _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noex
         return false;
     }
 
-    std::exit(FE::error_code_cast(FE::ERROR_CODE::_FATAL_INPUT_ERROR_2XX_INVALID_ARGUMENT));
+    std::exit(FE::error_code_cast(FE::ErrorCode::_FATAL_INPUT_ERROR_2XX_INVALID_ARGUMENT));
     return false;
 }
 

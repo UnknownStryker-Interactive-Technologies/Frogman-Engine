@@ -60,9 +60,8 @@ public:
 		}
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(const trackable& other_p) noexcept : m_data(other_p.m_data), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(trackable&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_ref_block(rvalue_p.m_ref_block) { rvalue_p.m_ref_block = nullptr; }
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(const element_type& value_p) noexcept : m_data(value_p), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(element_type&& value_p) noexcept : m_data(value_p), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
 
 	template<typename... Arguments>
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(Arguments&&... values_p) noexcept : m_data(std::forward<Arguments&&>(values_p)...), m_ref_block(new ref_block_type) { this->m_ref_block->_address = &(this->m_data); }
@@ -94,14 +93,14 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable& operator=(const element_type& value_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable& operator=(element_type&& value_p) noexcept
 	{
 		if (this->m_ref_block == nullptr)
 		{
 			this->m_ref_block = new ref_block_type;
 		}
 
-		this->m_data = value_p;
+		this->m_data = std::forward<element_type&&>(value_p);
 		this->m_ref_block->_address = &(this->m_data);
 		return *this;
 	}
@@ -114,7 +113,7 @@ public:
 		}
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void reset(const element_type& value_p) noexcept { *this->operator=(value_p); }
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void reset(element_type&& value_p) noexcept { *this->operator=(value_p); }
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void swap(trackable& in_out_other_p) noexcept
 	{
@@ -125,6 +124,9 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference get() noexcept { return this->m_data; }
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference get() const noexcept { return this->m_data; }
+
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ element_type* operator->() noexcept { return &(this->m_data); }
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const element_type* operator->() const noexcept { return &(this->m_data); }
 
 private:
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __destruct() noexcept
@@ -141,6 +143,9 @@ private:
 			this->m_ref_block = nullptr;
 		}
 	}
+
+
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ trackable(const trackable& other_p) noexcept = delete;
 };
 
 END_NAMESPACE

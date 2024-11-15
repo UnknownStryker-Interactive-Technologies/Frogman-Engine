@@ -18,25 +18,28 @@ limitations under the License.
 #include <FE/prerequisites.h>
 #include <FE/pair.hxx>
 
+#include <FE/pool/scalable_pool_allocator.hxx>
+
 // std
 #include <functional>
 
 
 #ifdef FROGMAN_ENGINE
 	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
-#else                                                                                                              // The name below does not follow the class naming convention since it is considered hidden from users.
+#else                                                                                                              // The name below does not follow the naming convention since it is considered hidden from users.
 	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (int, char**)> FrogmanEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
 #endif
 
 #ifdef CUSTOM_ENGINE
     #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
-#else                                                                                                                        // The name below does not follow the class naming convention since it is considered hidden from users.
+#else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
     #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, char**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
-
+#include <FE/framework/reflection/reflection.h>
 #include <FE/framework/platform_information.h>
 #include <FE/framework/game_instance.hpp>
 #include <FE/framework/vulkan_renderer.hpp>
+#include <FE/framework/managed/unique_ptr.hxx>
 
 
 
@@ -49,10 +52,10 @@ int main(int argc_p, char** argv_p);
 BEGIN_NAMESPACE(FE::framework)
 
 
-enum struct RESTART_OR_NOT : uint8
+enum struct RestartOrNot : uint8
 {
-	_NO_OPERATION = 0,
-	_HAS_TO_RESTART = 1,
+	_NoOperation = 0,
+	_HasToRestart = 1,
 };
 
 
@@ -63,15 +66,15 @@ class framework_base
 	static framework_base* s_framework;
 
 protected:
-	virtual int launch(int argc_p, char** argv_p) = 0;
-	virtual int run() = 0;
-	virtual int shutdown() = 0;
+	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) { return 0; };
+	virtual int run() { return 0; };
+	virtual int shutdown() { return 0; };
 
 public:
-	static RESTART_OR_NOT s_restart_or_not;
+	static RestartOrNot s_restart_or_not;
 
-	framework_base() = default;
-	virtual ~framework_base() = default;
+	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept { reflection_system::initialize(8192); };
+	virtual ~framework_base() noexcept { reflection_system::shutdown(); };
 
 	static std::function<framework_base* (int, char**)>& __allocate_framework(std::function<framework_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
 
@@ -85,24 +88,39 @@ private:
 };
 
 
+
+
+FE::uint8 get_current_thread_id() noexcept;
+
+
+
+
 struct program_options
 {
-	const char* _exe_directory = nullptr;
 	FE::pair<const char*, var::uint32> _max_concurrency = { "-max-concurrency=", 4 };
 };
 
 
+
+
 class game_engine : public framework_base
 {
-protected:
 	program_options m_program_options;
+	FE::unique_ptr<FE::scalable_pool<2* FE::one_gb, FE::align_CPU_L1_cache_line>[]> m_memory;
 	game_instance m_game_instance;
-
-	vulkan_renderer m_renderer;
+	//vulkan_renderer m_renderer;
 
 public:
+
 	game_engine(int argc_p, char** argv_p);
-	~game_engine() = default;
+	~game_engine();
+
+	template<typename T>
+	FE::scalable_pool_allocator<T, FE::size_in_bytes <2 * FE::one_gb>, FE::align_CPU_L1_cache_line> get_allocator() noexcept
+	{
+		FE::scalable_pool_allocator<T, FE::size_in_bytes <2 * FE::one_gb>, FE::align_CPU_L1_cache_line> l_allocator = this->m_memory[get_current_thread_id()];
+		return l_allocator;
+	}
 
 private:
 	virtual int launch(int argc_p, char** argv_p) override;

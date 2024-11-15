@@ -25,28 +25,28 @@ BEGIN_NAMESPACE(FE::framework)
 
 class firearm_base : public object_base
 {
-	REGISTER_FE_CLASS(firearm_base);
+	FE_CLASS(firearm_base);
 	FE_CLASS_HAS_A_BASE(object_base);
 
 public:
 	firearm_base() noexcept;
-	virtual ~firearm_base() noexcept = 0;
+	virtual ~firearm_base() noexcept = default;
 
 protected:
-	virtual void on_construction() = 0;
-	virtual void on_destruction() = 0;
+	virtual void on_construction() {}
+	virtual void on_destruction() {}
 
-	virtual void on_spawn(glm::dvec3 world_coordinate_p) = 0;
-	virtual void on_despawn() = 0;
+	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p) {}
+	virtual void on_despawn() {}
 
-	virtual void on_activate() = 0;
-	virtual void on_deactivate() = 0;
+	virtual void on_activate() {}
+	virtual void on_deactivate() {}
 
-	virtual void tick(FE::float64 delta_second_p) = 0;
+	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) {}
 
 public:
-	virtual void serialize() = 0;
-	virtual void deserialize() = 0;
+	virtual void serialize() {}
+	virtual void deserialize() {}
 };
 END_NAMESPACE
 #endif

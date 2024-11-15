@@ -189,7 +189,7 @@ public:
 		return static_cast<pointer>(this->m_ref_block->_address);
 	}
 
-	// this function 'get()' returns nullptr if the current smart pointer is null.
+	// this method 'get()' returns nullptr if the current smart pointer is null.
 	_FE_FORCE_INLINE_ pointer get() noexcept { return (this->m_ref_block == nullptr) ? nullptr : this->m_ref_block->_address; }
 	_FE_FORCE_INLINE_ const_pointer get() const noexcept { return (this->m_ref_block == nullptr) ? nullptr : this->m_ref_block->_address; }
 
@@ -355,7 +355,7 @@ public:
 		return static_cast<pointer>(this->m_ref_block->_address);
 	}
 
-	// this function 'get()' returns nullptr if the current smart pointer is null.
+	// this method 'get()' returns nullptr if the current smart pointer is null.
 	_FE_FORCE_INLINE_ pointer get() noexcept { return (this->m_ref_block == nullptr) ? nullptr : this->m_ref_block->_address; }
 	_FE_FORCE_INLINE_ const_pointer get() const noexcept { return (this->m_ref_block == nullptr) ? nullptr : this->m_ref_block->_address; }
 

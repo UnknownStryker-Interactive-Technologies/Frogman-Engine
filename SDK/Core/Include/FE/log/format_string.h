@@ -27,39 +27,41 @@ constexpr inline FE::uint32 string_formatter_buffer_size = 4096;
 
 BEGIN_NAMESPACE(FE::log)
 
-// %d - int32
-// %u - uint32
-// %ld - int64
-// %lu - uint64
-// %lf - float64
-// %f - float32
-// %b - bool
-// %c - char
-// %s - string
-// %p - hexadecimal 64bit pointer
+/*
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
+*/
 void format_string(char* out_buffer_pointer_p, const char* string_format_p, size buffer_size_p, const void** arguments_pointer_p, count_t arguments_count_p) noexcept;
 
-// %d - int32
-// %u - uint32
-// %ld - int64
-// %lu - uint64
-// %lf - float64
-// %f - float32
-// %b - bool
-// %c - char
-// %s - string
-// %p - hexadecimal 64bit pointer
-_FE_FORCE_INLINE_ const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept
-{
-    thread_local static char tl_s_buffer[string_formatter_buffer_size] = { "\0" };
-    std::memset(tl_s_buffer, null, string_formatter_buffer_size);
-
-    if (arguments_p.begin() != nullptr)
-    {
-        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + 1, arguments_p.size());
-    }
-    return tl_s_buffer;
-}
+/*
+%i8 - int8
+%u8 - uint8
+%i16 - int16
+%u16 - uint16
+%d, %i32 - int32
+%u, %u32 - uint32
+%ld, %i64 - int64
+%lu, %u64 - uint64
+%f, %f32 - float32
+%lf, %f64 - float64
+%b - bool
+%c - char
+%s - string
+%p - hexadecimal 64-bit pointer
+*/
+const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept;
 
 END_NAMESPACE;
 #endif

@@ -305,7 +305,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
 		if constexpr (std::is_same<R, void>::value == true)
         {
 			this->m_function_pointer(arguments_p...);
@@ -318,7 +318,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             this->m_function_pointer(arguments_p...);
@@ -390,7 +390,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -403,7 +403,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -472,7 +472,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -485,7 +485,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -543,7 +543,7 @@ public:
     virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
 
     // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
-	virtual void set_instance(const std::any& target_instance_p) noexcept = 0;
+	virtual void set_instance(void* target_instance_p) noexcept = 0;
 
 	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
@@ -577,7 +577,7 @@ public:
 
     virtual std::any operator()(argument_base* const arguments_p) noexcept override
     {
-        FE_NEGATIVE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
+        FE_NEGATIVE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
 
         arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
@@ -733,9 +733,9 @@ public:
         }
     }
 
-    virtual void set_instance(const std::any& host_class_instance_p) noexcept override
+    virtual void set_instance(void* host_class_instance_p) noexcept override
     {
-		this->m_instance = std::any_cast<class_type*>(host_class_instance_p);
+		this->m_instance = static_cast<class_type*>(host_class_instance_p);
     }
 
     virtual boolean is_null(void) const noexcept override
@@ -942,7 +942,7 @@ public:
         return false;
     }
 
-    virtual void set_instance(const std::any&) noexcept override {};
+    virtual void set_instance(void*) noexcept override {};
 };
 
 END_NAMESPACE

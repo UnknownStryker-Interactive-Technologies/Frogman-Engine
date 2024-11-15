@@ -78,7 +78,7 @@ class type_info
     typename internal::type_info::name::string_type m_name;
 
     static table_type s_type_information;
-    static lock_type s_lock;
+    static lock_type m_lock;
    
 
     template<class String>
@@ -104,7 +104,7 @@ class type_info
     }
 
 public:
-    template<typename T> // Do not manually call this function!
+    template<typename T> // Do not manually call this method!
     _FE_FORCE_INLINE_ void set() noexcept
     {
         internal::type_info::name l_info; 
@@ -114,70 +114,70 @@ public:
             l_info._base_typename = __demangle_type_name<typename internal::type_info::name::string_type>( typeid(typename T::base_type).name() );
         }
 
-        std::lock_guard<lock_type> l_lock(s_lock);
+        std::lock_guard<lock_type> l_lock(m_lock);
         this->m_name = l_info._typename;
         type_info::s_type_information.emplace(this->m_name, std::move(l_info));
     }
 
     _FE_FORCE_INLINE_ FE::ASCII* name() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
         auto l_result = type_info::s_type_information.find(this->m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI name() function is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI name() method is returning nullptr. Please check if the type is registered to this RTTI system.");
         return nullptr;
     }
 
     _FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
         auto l_result = type_info::s_type_information.find(this->m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return robin_hood::hash_bytes(l_result->second._typename.data(), l_result->second._typename.length());
         }
-        FE_LOG("Warning: Frogman Engine RTTI hash_code() function is returning ZERO. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI hash_code() method is returning ZERO. Please check if the type is registered to this RTTI system.");
         return 0;
     }
 
     _FE_FORCE_INLINE_ FE::ASCII* base_name() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
         auto l_result = type_info::s_type_information.find(this->m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._base_typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI base_name() function is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI base_name() method is returning nullptr. Please check if the type is registered to this RTTI system.");
         return nullptr;
     }
 
     _FE_FORCE_INLINE_ FE::uint64 base_hash_code() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
         auto l_result = type_info::s_type_information.find(this->m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return robin_hood::hash_bytes(l_result->second._base_typename.data(), l_result->second._base_typename.length());
         }
-        FE_LOG("Warning: Frogman Engine RTTI base_hash_code() function is returning ZERO. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI base_hash_code() method is returning ZERO. Please check if the type is registered to this RTTI system.");
         return 0;
     }
 
     _FE_FORCE_INLINE_ static FE::ASCII* get_base_name_of(FE::ASCII* this_type_name_p) noexcept
     {
         static typename internal::type_info::name::string_type l_s_typename;
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
         l_s_typename = this_type_name_p;
         auto l_result = type_info::s_type_information.find(l_s_typename);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._base_typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() function is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() method is returning nullptr. Please check if the type is registered to this RTTI system.");
         return nullptr;
     }
 };

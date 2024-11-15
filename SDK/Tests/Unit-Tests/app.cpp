@@ -10,18 +10,12 @@
 ls: lists all folders in the current working directory
 ls filename: checks the presence of files with the specified name.
 */
-/*
-* 0. Debug and optimze string algorithms
-* 1. write more of serializarion tests.
-* 2. migrate FE.string and FE.string_view to the framework module.
-* 3. Remove FE.exclusive_ptr and memory framentation issue from the reference tracker.
-* 4. optimize FE.pool.scalable_pool.
-*/
+
 
 class test_engine : public FE::framework::framework_base
 {
 public:
-	test_engine(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept {};
+	test_engine(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p) {};
 	~test_engine() noexcept = default;
 
 	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) override
@@ -56,3 +50,5 @@ public:
 	}
 };
 CUSTOM_ENGINE(test_engine);
+
+//FROGMAN_ENGINE();

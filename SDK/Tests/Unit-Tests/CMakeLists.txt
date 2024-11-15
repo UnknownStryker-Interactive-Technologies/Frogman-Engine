@@ -58,8 +58,6 @@ ${CMAKE_CURRENT_SOURCE_DIR}/FE.algorithm.utility.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.fcontainer.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.framework.managed.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.framework.reflection.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/FE.framework.string.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/FE.framework.string_view.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.hash.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.iterator.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.log.cpp

@@ -46,7 +46,7 @@ public:
 	_FE_CONSTEXPR20_ fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
 
 		Traits::move_construct(this->m_absolute_begin_pointer, const_cast<value_type*>(initializer_list_p.begin()), initializer_list_p.size());
 	}
@@ -57,8 +57,8 @@ public:
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<InputIterator>::value == false, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value == false), "Static Assertion Failure: InputIterator's value_type has to be the same as fstack's value_type.");
 
-		FE_NEGATIVE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than the iterator ${%s@2}.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_ITERATOR), TO_STRING(first_p), TO_STRING(last_p));
-		FE_NEGATIVE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fstack capacity.", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+		FE_NEGATIVE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than the iterator ${%s@2}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_ITERATOR), TO_STRING(first_p), TO_STRING(last_p));
+		FE_NEGATIVE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fstack capacity.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
 
 		Traits::copy_construct(InputIterator{ this->m_absolute_begin_pointer }, first_p, last_p - first_p);
 	}
@@ -91,7 +91,7 @@ public:
 	_FE_CONSTEXPR20_ fstack& operator=(std::initializer_list<value_type> initializer_list_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
 
 		if (this->is_empty())
 		{
@@ -154,13 +154,13 @@ public:
 
 	_FE_FORCE_INLINE_ void push(const value_type& value_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
+		FE_NEGATIVE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
 
-		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
 			new(this->m_top_ptr) T(value_p);
 		}
-		else if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_TRIVIAL)
+		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
 		{
 			*this->m_top_ptr = value_p;
 		}
@@ -170,12 +170,12 @@ public:
 
 	_FE_CONSTEXPR20_ value_type pop() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_empty() == true, "${%s@0}: The fstack top index reached zero. The index value_p must be greater than zero", TO_STRING(ERROR_CODE::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
+		FE_NEGATIVE_ASSERT(this->is_empty() == true, "${%s@0}: The fstack top index reached zero. The index value_p must be greater than zero", TO_STRING(ErrorCode::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
 
 		--this->m_top_ptr;
 		T l_return_value_buffer = std::move(*this->m_top_ptr);
 
-		if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
 			this->m_top_ptr->~T();
 		}
@@ -187,7 +187,7 @@ public:
 	{
 		if (this->is_empty() == false)
 		{
-			if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL) 
+			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial) 
 			{
 				Traits::destruct(this->m_absolute_begin_pointer, this->m_top_ptr);
 			}
@@ -291,7 +291,7 @@ private:
 		{
 			FE::size l_count_to_destruct = l_this_size - source_size_p;
 
-			if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 			{
 				Traits::destruct(this->m_top_ptr - l_count_to_destruct, this->m_top_ptr);
 			}
@@ -319,7 +319,7 @@ private:
 		{
 			FE::size l_count_to_destruct = l_this_size - source_size_p;
 
-			if constexpr (Traits::is_trivial == TYPE_TRIVIALITY::_NOT_TRIVIAL)
+			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 			{
 				Traits::destruct(this->m_top_ptr - l_count_to_destruct, this->m_top_ptr);
 			}

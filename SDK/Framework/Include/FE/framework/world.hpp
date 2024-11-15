@@ -25,7 +25,7 @@ BEGIN_NAMESPACE(FE::framework)
 
 class world final : public atom_base
 {
-	REGISTER_FE_CLASS(world);
+	FE_CLASS(world);
 	FE_CLASS_HAS_A_BASE(atom_base);
 
 public:
