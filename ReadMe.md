@@ -9,7 +9,7 @@ This project is under development and may contain some bugs and issues.
 # Frogman Engine Coding Conventions and Rules.
 https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413ff4f40de9204c4aa22907ffc&pvs=4
 
-# Prerequisite: 
+# Prerequisites: 
 1. CMake 3.27.0 or the latest  
 2. The latest Visual Studio 2022 with Windows SDK version 10.0.26100.0 
 
