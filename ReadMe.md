@@ -11,8 +11,7 @@ https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413f
 
 # Prerequisite: 
 1. CMake 3.27.0 or the latest  
-2. The latest Visual Studio 2022 with Windows SDK version 10.0.26100.0
-3. The latest Visual Studio 2022 Clang CL  
+2. The latest Visual Studio 2022 with Windows SDK version 10.0.26100.0 
 
 # C++ standard version: 
 C++ 20 or the latest.  
