@@ -2,7 +2,7 @@
 #include <benchmark/benchmark.h>
 
 #include <FE/function.hxx>
-#include <FE/framework/reflection/reflection.h>
+#include <FE/framework/reflection.hpp>
 
 #include <FE/framework/atom_base.hpp>
 
@@ -78,10 +78,10 @@ TEST(reflection, POD_serialization)
 	l_pod._b = 2.0f;
 	l_pod._c = 3;
 
-	FE::framework::reflection_system::access()._property_reflection.serialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_pod);
+	FE::framework::reflection::system::access_property_reflection()->serialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_pod);
 
 	plain_old_data l_new_pod;
-	FE::framework::reflection_system::access()._property_reflection.deserialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_new_pod);
+	FE::framework::reflection::system::access_property_reflection()->deserialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_new_pod);
 
 	EXPECT_EQ(l_pod._a, l_new_pod._a);
 	EXPECT_EQ(l_pod._b, l_new_pod._b);
@@ -93,10 +93,10 @@ TEST(reflection, object_with_string_serialization)
 	object_with_string l_str;
 	l_str._a = "Hello World";
 
-	FE::framework::reflection_system::access()._property_reflection.serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_str);
+	FE::framework::reflection::system::access_property_reflection()->serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_str);
 
 	object_with_string l_new_str;
-	FE::framework::reflection_system::access()._property_reflection.deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_str);
+	FE::framework::reflection::system::access_property_reflection()->deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_str);
 
 	EXPECT_STREQ(l_str._a.data(), l_new_str._a.data());
 }
@@ -107,10 +107,10 @@ TEST(reflection, object_with_vector_serialization)
 	l_strs._a.push_back("Hello World");
 	l_strs._a.push_back("Bye World");
 
-	FE::framework::reflection_system::access()._property_reflection.serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_strs);
+	FE::framework::reflection::system::access_property_reflection()->serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_strs);
 
 	object_with_vector l_new_strs;
-	FE::framework::reflection_system::access()._property_reflection.deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_strs);
+	FE::framework::reflection::system::access_property_reflection()->deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_strs);
 
 	EXPECT_STREQ(l_strs._a[0].data(), l_new_strs._a[0].data());
 	EXPECT_STREQ(l_strs._a[1].data(), l_new_strs._a[1].data());
@@ -119,6 +119,6 @@ TEST(reflection, object_with_vector_serialization)
 TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
-	FE::ASCII* l_msg = FE::framework::reflection_system::access()._method_reflection.invoke<FE::ASCII*>(l_object, "FE::ASCII* object::get_text(void) const");
+	FE::ASCII* l_msg = FE::framework::reflection::system::access_method_reflection()->invoke<FE::ASCII*>(l_object, "FE::ASCII* object::get_text(void) const");
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 }

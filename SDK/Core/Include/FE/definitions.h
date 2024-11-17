@@ -47,7 +47,6 @@
 #endif
 
 #define _FE_VECTOR_CALL_ __vectorcall
-#define _FE_REGISTER_CALL_ __regcall
 #define _FE_CDECL_ __cdecl
 
 

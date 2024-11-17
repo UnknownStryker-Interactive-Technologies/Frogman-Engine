@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
-#include <FE/framework/reflection/reflection.h>
+#include <FE/framework/reflection.hpp>
 
 
 
@@ -33,6 +33,7 @@ The class name is irrelevant to the atomic memory operation.
 class atom_base
 {
 	FE_CLASS(atom_base);
+
 public:
 	atom_base() noexcept;
 	virtual ~atom_base() noexcept = default;

@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/City-Hash
 FILE(GLOB THIRD_PARTY_CITY_HASH "${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/City-Hash/*.cc" "${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/City-Hash/*.h")
 
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/include)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/include)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/Robin-Hood-Hash)
@@ -26,8 +26,6 @@ SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK})
 
 SET(FE_FRAMEWORK_REFLECTION
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/method.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
 )
 SOURCE_GROUP("Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
@@ -57,9 +55,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/platform_information.h
 
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/reflection.h
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/method.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/property.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/atom_base.hpp
@@ -93,7 +89,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
 
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/property.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/reflection.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/atom_base.cpp
@@ -213,93 +209,34 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/undefine_max_min.h
 
 
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
+IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 
     SET(BOOST_STACKTRACE 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/debug/libboost_stacktrace_addr2line.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_stacktrace_addr2line.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_stacktrace_noop.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_stacktrace_noop.a>
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_stacktrace_windbg_cached-vc143-mt-sgd-x64-1_86.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_windbg_cached-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
     )
 
     SET(BOOST_CHRONO 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/debug/libboost_chrono.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_chrono.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_chrono.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_chrono.a>
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_chrono-vc143-mt-sgd-x64-1_86.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
     )
 
     SET(BOOST_THREAD 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/debug/libboost_thread.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/linux/clang-10/release/libboost_thread.a>
-    )
-
-    SET(GLM
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Debug/libglm.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Release/libglm.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/Release/libglm.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/linux/clang++-12/RelWithDebInfo/libglm.a>
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_thread-vc143-mt-sgd-x64-1_86.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_thread-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_thread-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_thread-vc143-mt-s-x64-1_86.lib>
     )
 
     SET(GLFW
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Debug/libglfw3.a>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Release/libglfw3.a>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/Release/libglfw3.a>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/linux/clang++-12/RelWithDebInfo/libglfw3.a>
-    )
-
-    SET(FE_CORE
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/Debug/libFE.Core.a>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/RelWithDebInfo/libFE.Core.a>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/Release/libFE.Core.a>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Core/Binaries/X86-64/Linux/MinSizeRel/libFE.Core.a>
-    )
-
-    SET(FE_FRAMEWORK
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/Debug/libFE.Framework.a>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/RelWithDebInfo/libFE.Framework.a>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/Release/libFE.Framework.a>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Framework/Binaries/X86-64/Linux/MinSizeRel/libFE.Framework.a>
-    )
-
-    
-ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
-
-    SET(BOOST_STACKTRACE 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/debug/libboost_stacktrace_windbg_cached-clangw17-mt-sgd-x64-1_85.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_stacktrace_windbg_cached-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_stacktrace_noop-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_stacktrace_noop-clangw17-mt-s-x64-1_85.lib>
-    )
-
-    SET(BOOST_CHRONO 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/debug/libboost_chrono-clangw17-mt-sgd-x64-1_85.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_chrono-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_chrono-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_chrono-clangw17-mt-s-x64-1_85.lib>
-    )
-
-    SET(BOOST_THREAD 
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/debug/libboost_thread-clangw17-mt-sgd-x64-1_85.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.85.0/lib/windows/clangw17-mt-x64/release/libboost_thread-clangw17-mt-s-x64-1_85.lib>
-    )
-
-    SET(GLM
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/Debug/glm.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/MinSizeRel/glm.lib>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/Release/glm.lib>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1/lib/windows/clangw17-mt-x64/RelWithDebInfo/glm.lib>
-    )
-
-    SET(GLFW
-    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/Debug/glfw3.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/MinSizeRel/glfw3.lib>
-    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/Release/glfw3.lib>
-    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib/windows/clangw17-mt-x64/RelWithDebInfo/glfw3.lib>
+    $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
+    $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
+    $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
     )
 
     SET(FE_CORE

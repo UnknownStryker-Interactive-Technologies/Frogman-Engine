@@ -22,9 +22,6 @@ limitations under the License.
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hpp>
 
-// FE.framework
-#include <FE/framework/reflection/reflection.h>
-
 // boost
 #include <boost/stacktrace.hpp>
 
@@ -37,15 +34,26 @@ limitations under the License.
 // Windows
 #include <processthreadsapi.h>
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+
+
+
+//extern "C"
+//{
+//	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+//	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
+//}
+
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
+
 framework_base* framework_base::s_framework = nullptr;
 RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
-
-FE::framework::reflection_system* reflection_system::s_instance = nullptr;
 
 
 std::function<framework_base* (int, char**)>& framework_base::__allocate_framework(std::function<framework_base* (int, char**)> script_p) noexcept
@@ -138,7 +146,7 @@ game_engine::game_engine(int argc_p, char** argv_p) : framework_base(argc_p, arg
 		if (algorithm::string::compare_ranged(argv_p[i], *l_range, this->m_program_options._max_concurrency._first, *l_range) == true)
 		{
 			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint(argv_p[i] + l_range->_end);
-			this->m_program_options._max_concurrency._second = l_uint_info._value;
+			this->m_program_options._max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 			
 			if (l_uint_info._value < 3)
 			{
@@ -153,7 +161,7 @@ game_engine::game_engine(int argc_p, char** argv_p) : framework_base(argc_p, arg
 			break;
 		}
 	}
-	this->m_memory = FE::make_unique<FE::scalable_pool<2 * FE::one_gb, FE::align_CPU_L1_cache_line>[]>(this->m_program_options._max_concurrency._second);
+	this->m_memory = FE::make_unique<FE::scalable_pool<FE::one_gb, FE::align_CPU_L1_cache_line>[]>(this->m_program_options._max_concurrency._second);
 
 }
 

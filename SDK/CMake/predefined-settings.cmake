@@ -83,7 +83,7 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
 	# /GR: Enable RTTI
 
 	# Common Compile Options
-	ADD_COMPILE_OPTIONS(/D_CLANG_=1 /D_CLANG_CL_=1 /std:c17 /Zc:__cplusplus /WX /W4 /MP /GF /Gy /GL /Oi /Gr /GR)
+	ADD_COMPILE_OPTIONS(/D_V143_=1 /std:c17 /Zc:__cplusplus /WX /W4 /MP /GF /Gy /Oi /Gr /GR /utf-8)
 
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:/D_DEBUG_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/D_RELWITHDEBINFO_;/D_DEBUG_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
@@ -164,7 +164,7 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "
 
 
 	# Common Compile Options.
-	ADD_COMPILE_OPTIONS(-D_CLANG_=1 -march=x86-64 -msse2 -mavx -frtti -ffunction-sections)
+	ADD_COMPILE_OPTIONS(-D_CLANG_=1 -march=x86-64 -msse2 -mavx -frtti -ffunction-sections -finput-charset=UTF-8 -fexec-charset=UTF-8)
 
 	# Options for compile-time checks
 	ADD_COMPILE_OPTIONS(-Werror -Wpedantic -Wall -Wextra -Wdivision-by-zero -Wstack-exhausted -Wbuiltin-memcpy-chk-size -Wfree-nonheap-object -Wnull-dereference -Wnull-pointer-arithmetic)

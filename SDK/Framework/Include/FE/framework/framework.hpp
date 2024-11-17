@@ -35,8 +35,7 @@ limitations under the License.
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
     #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, char**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
-#include <FE/framework/reflection/reflection.h>
-#include <FE/framework/platform_information.h>
+#include <FE/framework/reflection.hpp>
 #include <FE/framework/game_instance.hpp>
 #include <FE/framework/vulkan_renderer.hpp>
 #include <FE/framework/managed/unique_ptr.hxx>
@@ -73,8 +72,8 @@ protected:
 public:
 	static RestartOrNot s_restart_or_not;
 
-	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept { reflection_system::initialize(8192); };
-	virtual ~framework_base() noexcept { reflection_system::shutdown(); };
+	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept { reflection::system::initialize(8192); };
+	virtual ~framework_base() noexcept { reflection::system::shutdown(); };
 
 	static std::function<framework_base* (int, char**)>& __allocate_framework(std::function<framework_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
 
@@ -106,7 +105,7 @@ struct program_options
 class game_engine : public framework_base
 {
 	program_options m_program_options;
-	FE::unique_ptr<FE::scalable_pool<2* FE::one_gb, FE::align_CPU_L1_cache_line>[]> m_memory;
+	FE::unique_ptr<FE::scalable_pool<FE::one_gb, FE::align_CPU_L1_cache_line>[]> m_memory;
 	game_instance m_game_instance;
 	//vulkan_renderer m_renderer;
 
@@ -116,9 +115,9 @@ public:
 	~game_engine();
 
 	template<typename T>
-	FE::scalable_pool_allocator<T, FE::size_in_bytes <2 * FE::one_gb>, FE::align_CPU_L1_cache_line> get_allocator() noexcept
+	FE::scalable_pool_allocator<T, FE::size_in_bytes <FE::one_gb>, FE::align_CPU_L1_cache_line> get_allocator() noexcept
 	{
-		FE::scalable_pool_allocator<T, FE::size_in_bytes <2 * FE::one_gb>, FE::align_CPU_L1_cache_line> l_allocator = this->m_memory[get_current_thread_id()];
+		FE::scalable_pool_allocator<T, FE::size_in_bytes <FE::one_gb>, FE::align_CPU_L1_cache_line> l_allocator = this->m_memory[get_current_thread_id()];
 		return l_allocator;
 	}
 

@@ -364,7 +364,7 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_
     int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
 }
 
-
+#pragma warning (disable: 4702)
 template<typename CharT>
 _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noexcept
 {

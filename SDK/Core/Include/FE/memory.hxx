@@ -110,13 +110,9 @@
 	// AVX, , _mm_malloc, and _mm_free
 	#include <immintrin.h>
 
-	#ifdef __SSE__
-		#define _SSE_
-	#endif
-
-	#ifdef __SSE2__
-		#define _SSE2_
-	#endif
+// You won't be able to run any modern game softwares if your CPU is too old to support SSE and SSE2.
+#define _SSE_
+#define _SSE2_
 
 	#ifdef __AVX__
 		#define _AVX_
@@ -1014,7 +1010,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(c
 }
 
 template<class ConstIterator>
-_FE_REGISTER_CALL_ FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
+FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
 {
 	static_assert(std::is_class<ConstIterator>::value == true);
 	FE_NEGATIVE_ASSERT(left_iterator_begin_p == nullptr, "ERROR: left_iterator_begin_p is nullptr.");

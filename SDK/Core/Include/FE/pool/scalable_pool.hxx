@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/algorithm/utility.hxx>
 #include <FE/pool/private/pool_common.hxx>
 #include <FE/iterator.hxx>
 #include <FE/memory.hxx>
@@ -178,14 +179,14 @@ namespace internal::pool
 
 #ifdef _ENABLE_ASSERT_
     private:
-        var::uint32 m_double_free_tracker[possible_address_count]{};
+        var::int64 m_double_free_tracker[possible_address_count]{};
 
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(const block_info& block_info_p) noexcept
         {
 			FE::index_t l_idx = (block_info_p._address - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
-			this->m_double_free_tracker[l_idx] = block_info_p._size_in_bytes;
+			this->m_double_free_tracker[l_idx] = static_cast<FE::int64>(block_info_p._size_in_bytes);
         }
 
         _FE_FORCE_INLINE_ void check_double_free(const block_info& block_info_p) noexcept
@@ -238,7 +239,7 @@ public:
     pool& operator=(pool&&) noexcept = delete;
 
     template<typename U>
-    U* allocate(FE::count_t size_p = 1) noexcept
+    U* allocate(FE::uint64 size_p = 1) noexcept
     {
         FE_NEGATIVE_STATIC_ASSERT((Alignment::size % 2) != 0, "Static Assertion Failed: The Alignment::size must be an even number.");
         FE_STATIC_ASSERT(std::is_array<U>::value == false, "Static Assertion Failed: The T must not be an array[] type.");

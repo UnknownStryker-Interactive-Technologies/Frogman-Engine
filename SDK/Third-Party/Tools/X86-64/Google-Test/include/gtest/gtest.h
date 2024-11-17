@@ -48,8 +48,10 @@
 
 #ifndef GOOGLETEST_INCLUDE_GTEST_GTEST_H_
 #define GOOGLETEST_INCLUDE_GTEST_GTEST_H_
+#if defined(_CLANG_)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsign-compare" // This is to avoid -Werror causing build failure and to suppress the -Wsign-compare warning from Google Test code.
+#endif
 
 #include <cstddef>
 #include <cstdint>
@@ -2320,5 +2322,7 @@ inline int RUN_ALL_TESTS() { return ::testing::UnitTest::GetInstance()->Run(); }
 
 GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
 
+#if defined(_CLANG_)
 #pragma clang diagnostic pop
+#endif
 #endif  // GOOGLETEST_INCLUDE_GTEST_GTEST_H_

@@ -17,11 +17,11 @@
 TEST(std_smart_ptrs, dangling_pointer)
 {
 	using namespace FE;
-	std::shared_ptr<var::int16> l_shared = std::make_shared<var::int16>(std::size_t(16));
+	std::shared_ptr<var::int16> l_shared = std::make_shared<var::int16>(var::int16(16));
 	std::weak_ptr<var::int16>l_watcher = l_shared; // The weak pointer is pointing to the sixteen bytes sized memory.
 
 	{
-		std::shared_ptr<var::int16> l_new_capacity = std::make_shared<var::int16>(std::size_t(64));
+		std::shared_ptr<var::int16> l_new_capacity = std::make_shared<var::int16>(var::int16(64));
 		l_shared.swap(l_new_capacity); // It swaps to extend the size.
 	}
 

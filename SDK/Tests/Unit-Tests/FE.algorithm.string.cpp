@@ -87,7 +87,7 @@ void std_capitalize(benchmark::State& state_p) noexcept
 	{
 		for (var::uint32 i = 0; i < 20; ++i)
 		{
-			l_buffer[i] = std::toupper(l_buffer[i]);
+			l_buffer[i] = (char)std::toupper(l_buffer[i]);
 		}
 	}
 }
@@ -121,7 +121,7 @@ void std_capitalize_char(benchmark::State& state_p) noexcept
 	for (auto _ : state_p)
 	{
 		char l_buffer = 'a';
-		l_buffer = std::toupper(l_buffer);
+		l_buffer = (char)std::toupper(l_buffer);
 	}
 }
 BENCHMARK(std_capitalize_char);

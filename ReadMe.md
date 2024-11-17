@@ -10,7 +10,9 @@ This project is under development and may contain some bugs and issues.
 https://savory-moth-a00.notion.site/5cef12dd2c9b43588f22045405e80cff?v=86ea5413ff4f40de9204c4aa22907ffc&pvs=4
 
 # Prerequisite: 
-CMake 3.27.0 or the latest, and LLVM Clang 10 or the latest [ includes LLVM (clangcl) ].
+1. CMake 3.27.0 or the latest  
+2. The latest Visual Studio 2022 with Windows SDK version 10.0.26100.0
+3. The latest Visual Studio 2022 Clang CL  
 
 # C++ standard version: 
 C++ 20 or the latest.  
@@ -23,13 +25,19 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 | Ubuntu-Linux | X86-64        | Discontinued     |
 
 # This project uses:
-- Boost Libraries
-https://github.com/boostorg/boost/releases/tag/boost-1.85.0
+- GLFW 3.4
+https://www.glfw.org/download.html
 
-- Google Test
+- GLM 1.0.1
+https://github.com/g-truc/glm/releases/tag/1.0.1
+
+- Boost Libraries 1.86.0
+https://github.com/boostorg/boost/releases/tag/boost-1.86.0
+
+- Google Test 1.14.0
 https://github.com/google/googletest/releases/tag/v1.14.0
 
-- Google Benchmark
+- Google Benchmark 1.8.4
 https://github.com/google/benchmark/releases/tag/v1.8.4
 
 # Help:
