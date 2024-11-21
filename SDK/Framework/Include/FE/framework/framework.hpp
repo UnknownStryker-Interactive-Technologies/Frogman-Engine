@@ -18,7 +18,7 @@ limitations under the License.
 #include <FE/prerequisites.h>
 #include <FE/pair.hxx>
 
-#include <FE/pool/scalable_pool_allocator.hxx>
+#include <FE/pool/memory_resource.hpp>
 
 // std
 #include <functional>
@@ -37,8 +37,6 @@ limitations under the License.
 #endif
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/game_instance.hpp>
-#include <FE/framework/vulkan_renderer.hpp>
-#include <FE/framework/managed/unique_ptr.hxx>
 
 
 
@@ -57,6 +55,13 @@ enum struct RestartOrNot : uint8
 	_HasToRestart = 1,
 };
 
+struct program_options
+{
+	FE::pair<const char*, var::uint32> _max_concurrency = { "-max-concurrency=", 4 };
+};
+
+FE::uint8 get_current_thread_id() noexcept;
+
 
 class framework_base
 {
@@ -65,16 +70,21 @@ class framework_base
 	static framework_base* s_framework;
 
 protected:
+	static RestartOrNot s_restart_or_not;
+
+	program_options m_program_options;
+	std::unique_ptr<FE::scalable_pool_resource[]> m_memory;
+
 	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) { return 0; };
 	virtual int run() { return 0; };
 	virtual int shutdown() { return 0; };
 
 public:
-	static RestartOrNot s_restart_or_not;
+	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept;
+	virtual ~framework_base() noexcept;
 
-	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept { reflection::system::initialize(8192); };
-	virtual ~framework_base() noexcept { reflection::system::shutdown(); };
-
+	static void request_restart() noexcept;
+	std::pmr::memory_resource* get_memory_resource() noexcept;
 	static std::function<framework_base* (int, char**)>& __allocate_framework(std::function<framework_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
 
 private:
@@ -89,37 +99,14 @@ private:
 
 
 
-FE::uint8 get_current_thread_id() noexcept;
-
-
-
-
-struct program_options
-{
-	FE::pair<const char*, var::uint32> _max_concurrency = { "-max-concurrency=", 4 };
-};
-
-
-
-
 class game_engine : public framework_base
 {
-	program_options m_program_options;
-	FE::unique_ptr<FE::scalable_pool<FE::one_gb, FE::align_CPU_L1_cache_line>[]> m_memory;
 	game_instance m_game_instance;
-	//vulkan_renderer m_renderer;
+	//d3d11_renderer m_renderer;
 
 public:
-
 	game_engine(int argc_p, char** argv_p);
 	~game_engine();
-
-	template<typename T>
-	FE::scalable_pool_allocator<T, FE::size_in_bytes <FE::one_gb>, FE::align_CPU_L1_cache_line> get_allocator() noexcept
-	{
-		FE::scalable_pool_allocator<T, FE::size_in_bytes <FE::one_gb>, FE::align_CPU_L1_cache_line> l_allocator = this->m_memory[get_current_thread_id()];
-		return l_allocator;
-	}
 
 private:
 	virtual int launch(int argc_p, char** argv_p) override;

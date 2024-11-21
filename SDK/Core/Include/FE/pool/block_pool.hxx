@@ -19,10 +19,6 @@ limitations under the License.
 #include <FE/pool/private/pool_common.hxx>
 #include <FE/fstack.hxx>
 
-#if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
-    #include <robin_hood.h> // a hash map for checking double free.
-#endif
-
 
 
 
@@ -37,23 +33,22 @@ namespace internal::pool
         var::byte m_memory[InBytes];
     };
 
-    template<FE::count_t PageCapacity, class Alignment>
-    class chunk<PoolType::_Block, PageCapacity, Alignment>
+    template<class Alignment>
+    class chunk<PoolType::_Block, Alignment>
     {
-        FE_STATIC_ASSERT((Alignment::size * PageCapacity) >= 32, "Static Assertion Failure: The PageCapacity is too small.");
         FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
     public:
         static constexpr size fixed_block_size_in_bytes = Alignment::size;
-        static constexpr count_t page_capacity = PageCapacity;
+        static constexpr count_t page_capacity = 81920;
         static constexpr size page_capacity_in_bytes = fixed_block_size_in_bytes * page_capacity;
         using block_info_type = var::byte*;
 
-    private:
-        alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory{ 0 };
+    private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
+        alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
 
     public:
-        alignas(Alignment::size) FE::fstack<block_info_type, PageCapacity> _free_blocks;
+        alignas(Alignment::size) FE::fstack<block_info_type, page_capacity> _free_blocks;
         var::byte* const _begin = m_memory.data();
         var::byte* _page_iterator = m_memory.data();
         var::byte* const _end = m_memory.data() + m_memory.size();
@@ -65,7 +60,7 @@ namespace internal::pool
 
 #ifdef _ENABLE_ASSERT_
     private:
-        var::uint32 m_double_free_tracker[page_capacity]{};
+        var::uint32 m_double_free_tracker[page_capacity];
 
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
@@ -88,23 +83,20 @@ namespace internal::pool
 
 
 
-template<FE::size PageCapacity, class Alignment, class Allocator>
-class pool<PoolType::_Block, PageCapacity, Alignment, Allocator>
+template<class Alignment>
+class pool<PoolType::_Block, Alignment>
 {
-    FE_STATIC_ASSERT((Alignment::size* PageCapacity) >= 32, "Static Assertion Failure: The PageCapacity is too small.");
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
-    using chunk_type = internal::pool::chunk<PoolType::_Block, PageCapacity, Alignment>;
-    FE_NEGATIVE_STATIC_ASSERT((std::is_same<chunk_type, typename Allocator::value_type>::value == false), "Static Assertion Failed: The chunk_type has to be equivalent to Allocator::value_type.");
-    
+    using chunk_type = internal::pool::chunk<PoolType::_Block, Alignment>;
     using block_info_type = typename chunk_type::block_info_type;
-    using pool_type = std::list<chunk_type, Allocator>;
+    using pool_type = std::list<chunk_type>;
 
 public:
     using alignment_type = Alignment;
 
     static constexpr size fixed_block_size_in_bytes = Alignment::size;
-    static constexpr count_t page_capacity = PageCapacity;
+    static constexpr count_t page_capacity = chunk_type::page_capacity;
     static constexpr count_t maximum_list_node_count = 3;
 
 private:
@@ -133,9 +125,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
     {
         FE_NEGATIVE_STATIC_ASSERT((sizeof(U) > fixed_block_size_in_bytes), "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         FE_STATIC_ASSERT(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
-    #if defined(_ENABLE_ASSERT_) || defined(_ENABLE_NEGATIVE_ASSERT_)
-        _FE_MAYBE_UNUSED_ static FE::byte s_clean_bits[sizeof(U)] { 0 };
-    #endif
 
         for (typename pool_type::iterator iterator = this->m_memory_pool.begin(); iterator != this->m_memory_pool.cend(); ++iterator)
         {
@@ -153,12 +142,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
             {
                 l_allocation_result = iterator->_page_iterator;
                 iterator->_page_iterator += fixed_block_size_in_bytes;
-            }
-
-#ifdef _ENABLE_ASSERT_
-            FE_ASSERT((std::memcmp(l_allocation_result, s_clean_bits, sizeof(U)) == 0), "Frogman Engine Block Memory Pool Debug Information: Detected memory corruption!");
-            iterator->check_double_allocation(static_cast<block_info_type>(l_allocation_result), sizeof(U));
-#endif    
+            } 
 
             if constexpr (FE::is_trivial<U>::value == false)
             {
@@ -192,10 +176,6 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
                     pointer_p->~U();
                 }
 
-#ifdef _ENABLE_ASSERT_
-                std::memset(l_to_be_freed, null, sizeof(U));
-				iterator->check_double_free(l_to_be_freed, sizeof(U));
-#endif
                 iterator->_free_blocks.push(l_to_be_freed);
                 return;
             }
@@ -230,14 +210,14 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         {
             var::size l_unused_element_size = l_list_iterator->_free_blocks.size();
 
-            FE_NEGATIVE_ASSERT((l_list_iterator->_end - l_list_iterator->_begin) != PageCapacity, "The chunk range is invalid.");
+            FE_NEGATIVE_ASSERT((l_list_iterator->_end - l_list_iterator->_begin) != page_capacity, "The chunk range is invalid.");
 
             if (l_list_iterator->_page_iterator < l_list_iterator->_end)
             {
                 l_unused_element_size += (l_list_iterator->_end - l_list_iterator->_page_iterator);
             }
 
-            if (l_unused_element_size == PageCapacity)
+            if (l_unused_element_size == page_capacity)
             {
                 this->m_memory_pool.erase(l_list_iterator);
 
@@ -258,8 +238,8 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 - allocate(): O(1)
 - deallocate(): O(1)
 */
-template<FE::size FixedBlockSizeInBytes, FE::count_t PageCapacity = 128, class Alignment = FE::SIMD_auto_alignment, class Allocator = FE::aligned_allocator<internal::pool::chunk<PoolType::_Block, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>>, FE::align_as<FixedBlockSizeInBytes, Alignment>>>
-using block_pool = pool<PoolType::_Block, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>, Allocator>;
+template<FE::size FixedBlockSizeInBytes, class Alignment = FE::SIMD_auto_alignment>
+using block_pool = pool<PoolType::_Block, FE::align_as<FixedBlockSizeInBytes, Alignment>>;
 
 END_NAMESPACE
 #endif

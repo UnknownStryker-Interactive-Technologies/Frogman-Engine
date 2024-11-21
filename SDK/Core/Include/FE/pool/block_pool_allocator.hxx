@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/private/allocator_base.hpp>
 #include <FE/pool/block_pool.hxx>
 #include <FE/pool/private/pool_common.hxx>
 
@@ -25,27 +26,26 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template <typename T, class PageCapacity = FE::object_count<128>, class Alignment = FE::SIMD_auto_alignment>
+template <typename T>
 class new_delete_block_pool_allocator : public FE::internal::allocator_base
 {
-	FE_NEGATIVE_STATIC_ASSERT((PageCapacity::size == 0), "Static Assertion Failure: The PageCapacity is 0.");
-	FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
-
 public:
 	using base_type = FE::internal::allocator_base;
-	using page_capacity = PageCapacity;
-	using pool_type = FE::block_pool<sizeof(T), PageCapacity::size, Alignment>;
+	using alignment_type = FE::SIMD_auto_alignment;
+	using pool_type = pool<PoolType::_Block, FE::align_as<sizeof(T), alignment_type>>;
+	using page_capacity = pool_type::page_capacity;
 	using value_type = T;
 	using pointer = value_type*;
-	using const_pointer = const pointer;
+	using const_pointer = const value_type*;
 	using reference = value_type&;
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
-	using alignment_type = Alignment;
+
+	FE_STATIC_ASSERT(FE::is_power_of_two(alignment_type::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
 	_FE_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
-	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? Address::_Aligned : Address::_NotAligned;
+	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, alignment_type>::value == true) ? Address::_Aligned : Address::_NotAligned;
 
 private:
 	pool_type* m_pool;
@@ -61,12 +61,12 @@ public:
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T>& other_p) noexcept : m_pool(other_p.m_pool) 
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T>&& other_p) noexcept : m_pool(other_p.m_pool) 
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -74,7 +74,7 @@ public:
 	_FE_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {}
 
 	template <typename U>
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -149,27 +149,26 @@ public:
 
 
 
-template <typename T, class PageCapacity = FE::object_count<128>, class Alignment = FE::SIMD_auto_alignment>
+template <typename T>
 class block_pool_allocator : public FE::internal::allocator_base
 {
-	FE_NEGATIVE_STATIC_ASSERT((PageCapacity::size == 0), "Static Assertion Failure: The PageCapacity is 0.");
-	FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
-
 public:
 	using base_type = FE::internal::allocator_base;
-	using page_capacity = PageCapacity;
-	using pool_type = FE::block_pool<sizeof(T), PageCapacity::size, Alignment>;
+	using alignment_type = FE::SIMD_auto_alignment;
+	using pool_type = pool<PoolType::_Block, FE::align_as<sizeof(T), alignment_type>>;
+	using page_capacity = pool_type::page_capacity;
 	using value_type = T;
 	using pointer = value_type*;
-	using const_pointer = const pointer;
+	using const_pointer = const value_type*;
 	using reference = value_type&;
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
-	using alignment_type = Alignment;
+
+	FE_STATIC_ASSERT(FE::is_power_of_two(alignment_type::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
 	_FE_MAYBE_UNUSED_ static constexpr inline auto is_trivial = FE::is_trivial<value_type>::value;
-	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, Alignment>::value == true) ? Address::_Aligned : Address::_NotAligned;
+	_FE_MAYBE_UNUSED_ static constexpr inline Address is_address_aligned = (std::is_same<FE::SIMD_auto_alignment, alignment_type>::value == true) ? Address::_Aligned : Address::_NotAligned;
 
 private:
 	pool_type* m_pool;
@@ -185,12 +184,12 @@ public:
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T>& other_p) noexcept : m_pool(other_p.m_pool) 
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T>&& other_p) noexcept : m_pool(other_p.m_pool) 
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -198,7 +197,7 @@ public:
 	_FE_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
 
 	template <typename U = T>
-	_FE_CONSTEXPR20_ block_pool_allocator(_FE_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
+	_FE_CONSTEXPR20_ block_pool_allocator(_FE_MAYBE_UNUSED_ const block_pool_allocator<U>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}

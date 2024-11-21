@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/allocator.hxx>
 #include <FE/type_traits.hxx>
 
 // std
@@ -47,12 +46,12 @@ namespace internal::pool
         var::int64 _size_in_bytes;
     };
 
-    template<PoolType PoolType, FE::size PageCapacity, class Alignment>
+    template<PoolType PoolType, class Alignment>
     class chunk;
 }
 
 
-template<PoolType PoolType, FE::size PageCapacity, class Alignment, class Allocator>
+template<PoolType PoolType, class Alignment>
 class pool;
 
 

@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <limits>
 #include <typeinfo>
+#include <typeindex>
 #include <type_traits>
 #include <utility>
 #pragma warning(disable: 4530) // disable no-exception warnings
@@ -166,6 +167,110 @@ public:
 
 	_FE_FORCE_INLINE_ const_reference load() const noexcept { return this->m_data; }
 };
+
+
+class void_ptr
+{
+	void* m_ptr;
+	std::type_index m_info;
+
+public:
+	_FE_FORCE_INLINE_ void_ptr() noexcept : m_ptr(), m_info(typeid(void*)) {}
+	_FE_FORCE_INLINE_ ~void_ptr() noexcept {}
+
+
+	_FE_FORCE_INLINE_ void_ptr(const void_ptr& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+	_FE_FORCE_INLINE_ void_ptr(void_ptr&& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+
+
+	_FE_FORCE_INLINE_ void_ptr& operator=(const void_ptr& other_p) noexcept
+	{
+		this->m_ptr = other_p.m_ptr;
+		this->m_info = other_p.m_info;
+		return *this;
+	}
+
+	_FE_FORCE_INLINE_ void_ptr& operator=(void_ptr&& other_p) noexcept
+	{
+		this->m_ptr = other_p.m_ptr;
+		this->m_info = other_p.m_info;
+		return *this;
+	}
+
+
+	_FE_FORCE_INLINE_ void_ptr(_FE_MAYBE_UNUSED_ std::nullptr_t value_p) noexcept : m_ptr(nullptr), m_info(typeid(std::nullptr_t)) {}
+
+	_FE_FORCE_INLINE_ void_ptr& operator=(_FE_MAYBE_UNUSED_ std::nullptr_t value_p) noexcept
+	{
+		this->m_ptr = nullptr;
+		this->m_info = typeid(std::nullptr_t);
+		return *this;
+	}
+
+
+	_FE_FORCE_INLINE_ void_ptr(auto value_p) noexcept : m_ptr(value_p), m_info(typeid(decltype(value_p)))
+	{
+		static_assert(std::is_pointer<decltype(value_p)>::value == true);
+	}
+
+	_FE_FORCE_INLINE_ void_ptr& operator=(auto value_p) noexcept
+	{
+		this->m_ptr = value_p;
+		this->m_info = typeid(decltype(value_p));
+		return *this;
+	}
+
+
+	template<typename T>
+	_FE_FORCE_INLINE_ T get() noexcept
+	{
+		static_assert(std::is_pointer<T>::value == true);
+		assert(this->m_info == typeid(T));
+		return static_cast<T>(this->m_ptr);
+	}
+
+	template<typename BaseOfT, typename T>
+	_FE_FORCE_INLINE_ T polymorphic_get() noexcept
+	{
+		static_assert(std::is_pointer<T>::value == true);
+		static_assert(std::is_pointer<BaseOfT>::value == true);
+		static_assert((std::is_base_of<BaseOfT, T>::value == true) || (std::is_base_of<T, BaseOfT>::value == true));
+
+		return static_cast<T>(this->m_ptr);
+	}
+
+
+	_FE_FORCE_INLINE_ bool operator==(void* ptr_p) const noexcept
+	{
+		return this->m_ptr == ptr_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(void* ptr_p) const noexcept
+	{
+		return this->m_ptr != ptr_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>(void* ptr_p) const noexcept
+	{
+		return this->m_ptr > ptr_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>=(void* ptr_p) const noexcept
+	{
+		return this->m_ptr >= ptr_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<(void* ptr_p) const noexcept
+	{
+		return this->m_ptr < ptr_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<=(void* ptr_p) const noexcept
+	{
+		return this->m_ptr <= ptr_p;
+	}
+};
+
 END_NAMESPACE
 
 // variable types

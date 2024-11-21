@@ -1,0 +1,7 @@
+﻿  Building Custom Rule C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/CMakeLists.txt
+  Scanning sources for module dependencies...
+  main.cpp
+  Compiling...
+  main.cpp
+     Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/MinSizeRel/FE.HeaderTool.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/MinSizeRel/FE.HeaderTool.exp
+  FE.HeaderTool.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Binaries\MinSizeRel\FE.HeaderTool.exe

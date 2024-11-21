@@ -91,9 +91,15 @@ public:
 
 
 template<typename T>
-_FE_FORCE_INLINE_ void construct_object(void* const address_p) noexcept
+_FE_FORCE_INLINE_ void construct_object(void* address_p) noexcept
 {
-	new(static_cast<T*>(address_p)) T();
+	new( static_cast<T*>(address_p) ) T();
+}
+
+template<typename T>
+_FE_FORCE_INLINE_ void destruct_object(void* address_p) noexcept
+{
+	static_cast<T*>(address_p)->~T();
 }
 
 class method
@@ -103,17 +109,16 @@ public:
 
 private:
 	using lock_type = std::shared_mutex;
-	using reflection_map_type = robin_hood::unordered_map<std::string, FE::task_base*, FE::hash<std::string>>;
+	using reflection_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*, FE::hash<std::pmr::string>>;
 
 	lock_type m_lock;
 	reflection_map_type m_task_map;
-	std::pmr::monotonic_buffer_resource m_function_pool;
+	std::pmr::unsynchronized_pool_resource m_pool;
 
 public:
 	method(FE::size reflection_map_capacity_p) noexcept
-		: m_lock(), m_task_map(reflection_map_capacity_p), m_function_pool(alignment_type::size* reflection_map_capacity_p)
-	{
-	}
+		: m_lock(), m_task_map(reflection_map_capacity_p), m_pool()
+	{}
 	~method() noexcept = default;
 
 	method(const method&) = delete;
@@ -129,14 +134,22 @@ public:
 	}
 
 	template<class TaskType, typename FunctionPtr>
-	_FE_FORCE_INLINE_ void register_task(const typename reflection_map_type::key_type& key_p, FunctionPtr function_p) noexcept
+	_FE_FORCE_INLINE_ void register_task(const char* task_name_p, FunctionPtr function_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
+
+		std::pmr::polymorphic_allocator<TaskType> l_allocator(&m_pool);
+		std::pmr::polymorphic_allocator<const char*> l_string_allocator(&m_pool);
+
 		std::lock_guard<lock_type> l_lock(m_lock);
-		std::pmr::polymorphic_allocator<TaskType> l_allocator(&m_function_pool);
+
 		TaskType* const l_task = l_allocator.allocate(1);
 		new(l_task) TaskType(function_p);
-		this->m_task_map.emplace(key_p, l_task);
+
+		typename reflection_map_type::key_type l_key(l_string_allocator);
+		l_key = task_name_p;
+
+		this->m_task_map.emplace(l_key, l_task);
 	}
 
 	_FE_FORCE_INLINE_ FE::boolean check_presence(const typename reflection_map_type::key_type& key_p) noexcept
@@ -153,45 +166,6 @@ public:
 		std::lock_guard<lock_type> l_lock(this->m_lock);
 		auto l_result = this->m_task_map.find(key_p);
 		return (l_result == this->m_task_map.end()) ? nullptr : l_result->second;
-	}
-
-	template<typename ReturnType = void, class Arguments = FE::arguments<void>>
-	_FE_FORCE_INLINE_ ReturnType invoke(const typename reflection_map_type::key_type& key_p, Arguments arguments_p = FE::arguments<void>()) noexcept
-	{
-		boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-
-		auto l_result = this->m_task_map.find(key_p);
-		FE_ASSERT(l_result != this->m_task_map.end(), "Assertion failure: unable to retrieve an unregistered task object_base pointer.");
-
-		if constexpr (std::is_same<ReturnType, void>::value == true)
-		{
-			l_result->second->operator()(&arguments_p);
-		}
-		else
-		{
-			return std::any_cast<ReturnType>(l_result->second->operator()(&arguments_p));
-		}
-	}
-
-	template<typename ReturnType = void, class C, class Arguments = FE::arguments<void>>
-	_FE_FORCE_INLINE_ ReturnType invoke(C& in_out_instance_p, const typename reflection_map_type::key_type& key_p, Arguments arguments_p = FE::arguments<void>()) noexcept
-	{
-		FE_NEGATIVE_STATIC_ASSERT((std::is_class<C>::value == false), "Static Assertion Failure: The template typename C is not a class type.");
-		boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-
-		auto l_result = this->m_task_map.find(key_p);
-		FE_ASSERT(l_result != this->m_task_map.end(), "Assertion failure: unable to retrieve an unregistered task object_base pointer.");
-
-		l_result->second->set_instance(&in_out_instance_p);
-
-		if constexpr (std::is_same<ReturnType, void>::value == true)
-		{
-			l_result->second->operator()(&arguments_p);
-		}
-		else
-		{
-			return std::any_cast<ReturnType>(l_result->second->operator()(&arguments_p));
-		}
 	}
 };
 
@@ -584,10 +558,9 @@ private:
 				FE::task_base* const l_foreach_task = system::access_method_reflection()->retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is serializable with foreach?
 				{
-					l_foreach_task->set_instance(this);
 					FE::arguments<const void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
 					l_pointer_to_container._first = reinterpret_cast<FE::byte*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
-					(*l_foreach_task)(&l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
+					(*l_foreach_task)(this, nullptr, &l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
 
 					// Move on to the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
@@ -657,10 +630,9 @@ private:
 				FE::task_base* const l_foreach_task = system::access_method_reflection()->retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is deserializable with foreach?
 				{
-					l_foreach_task->set_instance(this);
 					FE::arguments<void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
 					l_pointer_to_container._first = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
-					(*l_foreach_task)(&l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
+					(*l_foreach_task)(this, nullptr, &l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
 
 					// Look for the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
@@ -822,7 +794,8 @@ public: \
 	using type = class_name; \
 	class_meta_data() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::reflection::system::access_method_reflection()->register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(#class_name, &::FE::framework::reflection::construct_object<class_name>) ); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = #class_name; l_class_name += "()"; ::FE::framework::reflection::system::access_method_reflection()->register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name>) ); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = "~"; l_class_name += #class_name; l_class_name += "()"; ::FE::framework::reflection::system::access_method_reflection()->register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name>) ); \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ class_meta_data class_reflection_instance_##class_name;
@@ -838,7 +811,7 @@ class method_reflection_##method_name \
 public: \
 	_FE_FORCE_INLINE_ method_reflection_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::reflection::system::access_method_reflection()->register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(get_signature(), &class_meta_data::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_full_signature = get_signature(); ::FE::framework::reflection::system::access_method_reflection()->register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(l_full_signature.c_str(), &class_meta_data::type::method_name)); \
 	} \
 	static ::std::string get_signature() noexcept \
 	{ \

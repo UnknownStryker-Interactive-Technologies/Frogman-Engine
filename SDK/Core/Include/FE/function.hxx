@@ -540,10 +540,11 @@ public:
     task_base() noexcept = default;
     virtual ~task_base() noexcept = default;
 
-    virtual std::any operator()(argument_base* const arguments_p) noexcept = 0;
-
-    // Caller must ensure the class type correctness. It has no effect for c_style_tasks.
-	virtual void set_instance(void* target_instance_p) noexcept = 0;
+	// For C style tasks
+    virtual void operator()(FE::void_ptr out_ret_buffer_p, argument_base* const arguments_p) noexcept = 0;
+    
+    // For C++ style tasks
+    virtual void operator()(FE::void_ptr instance_p, FE::void_ptr out_ret_buffer_p, argument_base* const arguments_p) noexcept = 0;
 
 	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
@@ -564,194 +565,178 @@ public:
     
 private:
     typename task_type::method_type m_method;
-    class_type* m_instance;
 
 public:
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task() noexcept : m_method(), m_instance() {}
+    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task() noexcept : m_method() {}
     virtual ~cpp_style_task() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : m_method(task_p), m_instance() {}
+    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : m_method(task_p) {}
 
 	_FE_FORCE_INLINE_ void set_task(typename task_type::method_type task_p) noexcept { this->m_method = task_p; }
 	_FE_FORCE_INLINE_ typename task_type::method_type get_task() const noexcept { return this->m_method; }
 
-    virtual std::any operator()(argument_base* const arguments_p) noexcept override
+    virtual void operator()(FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        FE_NEGATIVE_ASSERT(this->m_instance == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
-
+        FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
+        C* l_object = instance_p.get<C*>();
         arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
         {
-            FE_NEGATIVE_ASSERT(arguments_p == nullptr, "Assertion Failure: the pointer to arguments is nullptr.");
-            FE_NEGATIVE_ASSERT(l_arguments == nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
+            FE_ASSERT(l_arguments != nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
         }
 
         if constexpr (std::is_same<return_type, void>::value == true)
         {
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
-            {   
-                (m_instance->*m_method)();
-                return void_t();
+            {
+                (l_object->*m_method)();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                (m_instance->*m_method)(l_arguments->_first);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh, l_arguments->_eighth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh, l_arguments->_eighth, 
-                                       l_arguments->_ninth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth, 
-                                              l_arguments->_seventh, l_arguments->_eighth, 
-                                              l_arguments->_ninth, l_arguments->_tenth);
-                return void_t();
+                (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth, l_arguments->_tenth);
             }
         }
         else if constexpr (std::is_same<return_type, void>::value == false)
         {
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                return (m_instance->*m_method)();
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                return (m_instance->*m_method)(l_arguments->_first);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth, 
-                                              l_arguments->_seventh);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth, 
-                                              l_arguments->_seventh, l_arguments->_eighth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth, 
-                                              l_arguments->_seventh, l_arguments->_eighth, 
-                                              l_arguments->_ninth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                return (m_instance->*m_method)(l_arguments->_first, l_arguments->_second, 
-                                              l_arguments->_third, l_arguments->_fourth, 
-                                              l_arguments->_fifth, l_arguments->_sixth, 
-                                              l_arguments->_seventh, l_arguments->_eighth, 
-                                              l_arguments->_ninth, l_arguments->_tenth);
+                *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth, l_arguments->_tenth);
             }
         }
     }
 
-    virtual void set_instance(void* host_class_instance_p) noexcept override
-    {
-		this->m_instance = static_cast<class_type*>(host_class_instance_p);
-    }
-
-    virtual boolean is_null(void) const noexcept override
+    virtual boolean is_null() const noexcept override
     {
         if (!this->m_method)
         {
             return true;
         }
 
-        if (this->m_instance == nullptr)
-        {
-            return true;
-        }
-
         return false;
     }
+
+    // for C style tasks
+    virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
+    {
+        FE_ASSERT(false, "Invalid FE::cpp_style_task invocation");
+    }
+
 };
 
 
@@ -776,12 +761,11 @@ public:
     _FE_FORCE_INLINE_ void set_task(typename task_type::function_type task_p) noexcept { this->m_function = task_p; }
     _FE_FORCE_INLINE_ typename task_type::function_type get_task() const noexcept { return this->m_function; }
 
-    virtual std::any operator()(argument_base* const arguments_p) noexcept override
+    virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
         arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
         {
-            FE_NEGATIVE_ASSERT(arguments_p == nullptr, "Assertion Failure: the pointer to arguments is nullptr.");
             FE_NEGATIVE_ASSERT(l_arguments == nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
         }
 
@@ -790,144 +774,133 @@ public:
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
                 this->m_function();
-                return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
                 this->m_function(l_arguments->_first);
-                return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
                 this->m_function(l_arguments->_first, l_arguments->_second);
-                return void_t();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth, l_arguments->_sixth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth, l_arguments->_sixth, 
-                                l_arguments->_seventh);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth, l_arguments->_sixth, 
-                                l_arguments->_seventh, l_arguments->_eighth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth, l_arguments->_sixth, 
-                                l_arguments->_seventh, l_arguments->_eighth, 
-                                l_arguments->_ninth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second, 
-                                l_arguments->_third, l_arguments->_fourth, 
-                                l_arguments->_fifth, l_arguments->_sixth, 
-                                l_arguments->_seventh, l_arguments->_eighth, 
-                                l_arguments->_ninth, l_arguments->_tenth);
-                return void_t();
+                this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth, l_arguments->_tenth);
             }
         }
         else if constexpr (std::is_same<return_type, void>::value == false)
         {
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                return this->m_function();
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                return this->m_function(l_arguments->_first);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh, l_arguments->_eighth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh, l_arguments->_eighth, 
-                                       l_arguments->_ninth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                return this->m_function(l_arguments->_first, l_arguments->_second, 
-                                       l_arguments->_third, l_arguments->_fourth, 
-                                       l_arguments->_fifth, l_arguments->_sixth, 
-                                       l_arguments->_seventh, l_arguments->_eighth, 
-                                       l_arguments->_ninth, l_arguments->_tenth);
+                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                    l_arguments->_third, l_arguments->_fourth,
+                    l_arguments->_fifth, l_arguments->_sixth,
+                    l_arguments->_seventh, l_arguments->_eighth,
+                    l_arguments->_ninth, l_arguments->_tenth);
             }
         }
     }
@@ -942,7 +915,11 @@ public:
         return false;
     }
 
-    virtual void set_instance(void*) noexcept override {};
+    // for C++ style tasks
+    virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
+    {
+        FE_ASSERT(false, "Invalid FE::c_style_task invocation");
+    }
 };
 
 END_NAMESPACE

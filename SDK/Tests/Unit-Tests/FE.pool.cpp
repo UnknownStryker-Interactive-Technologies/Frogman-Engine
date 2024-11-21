@@ -13,7 +13,16 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/algorithm/utility.hxx>
 #include <FE/pool/block_pool_allocator.hxx>
-#include <FE/pool/scalable_pool_allocator.hxx>
+#include <FE/pool/memory_resource.hpp>
+
+
+
+
+TEST(FE_Pool, compile)
+{
+	FE::scalable_pool_resource l_resource;
+	std::pmr::vector<std::string> l_strings(&l_resource);
+}
 
 
 
@@ -126,7 +135,7 @@ BENCHMARK(boost_fast_pool_allocator_extreme_test);
 
 void FE_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<sizeof(FE::aligned<std::string, FE::SIMD_auto_alignment>) * _MAX_ITERATION_> l_allocator;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -161,7 +170,7 @@ BENCHMARK(FE_pool_allocator_extreme_test);
 
 void FE_block_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<sizeof(std::string), _MAX_ITERATION_> l_allocator;
+	FE::block_pool<sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 

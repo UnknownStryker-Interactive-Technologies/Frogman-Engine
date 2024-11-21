@@ -1,0 +1,23 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Compiler/MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-Initialize.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.29/Modules/Platform/WindowsPaths.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/CMake/frogman-engine.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/CMake/predefined-settings.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/CMakeLists.txt
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/CMakeFiles/3.29.6/CMakeCXXCompiler.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/CMakeFiles/3.29.6/CMakeRCCompiler.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/CMakeFiles/3.29.6/CMakeSystem.cmake

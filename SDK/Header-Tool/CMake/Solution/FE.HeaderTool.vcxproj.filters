@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{DEB5C5AD-24E2-3611-B422-9E2B55118BC2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

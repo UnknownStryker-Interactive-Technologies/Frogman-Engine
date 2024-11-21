@@ -40,11 +40,11 @@ limitations under the License.
 
 
 
-//extern "C"
-//{
-//	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-//	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
-//}
+extern "C"
+{
+	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
+}
 
 
 
@@ -55,6 +55,52 @@ BEGIN_NAMESPACE(FE::framework)
 framework_base* framework_base::s_framework = nullptr;
 RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
+
+framework_base::framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept
+{
+	{
+		reflection::system::initialize(8192);
+		for (var::int32 i = 0; i < argc_p; ++i)
+		{
+			std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first(this->m_program_options._max_concurrency._first, '=');
+			l_range->_begin = 0;
+
+			if (algorithm::string::compare_ranged(argv_p[i], *l_range, this->m_program_options._max_concurrency._first, *l_range) == true)
+			{
+				algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint(argv_p[i] + l_range->_end);
+				this->m_program_options._max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
+
+				if (l_uint_info._value < 3)
+				{
+					FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
+					this->m_program_options._max_concurrency._second = 4;
+				}
+				else if (l_uint_info._value > 254)
+				{
+					FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
+					this->m_program_options._max_concurrency._second = 4;
+				}
+				break;
+			}
+		}
+		this->m_memory = std::make_unique<FE::scalable_pool_resource[]>(this->m_program_options._max_concurrency._second);
+	};
+}
+
+framework_base::~framework_base() noexcept
+{
+	reflection::system::shutdown();
+}
+
+void framework_base::request_restart() noexcept
+{
+	s_restart_or_not = RestartOrNot::_HasToRestart;
+};
+
+std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
+{
+	return this->m_memory.get() + get_current_thread_id();
+}
 
 std::function<framework_base* (int, char**)>& framework_base::__allocate_framework(std::function<framework_base* (int, char**)> script_p) noexcept
 {
@@ -138,30 +184,6 @@ FE::uint8 get_current_thread_id() noexcept
 
 game_engine::game_engine(int argc_p, char** argv_p) : framework_base(argc_p, argv_p)
 {
-	for (var::int32 i = 0; i < argc_p; ++i)
-	{
-		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first(this->m_program_options._max_concurrency._first, '=');
-		l_range->_begin = 0;
-
-		if (algorithm::string::compare_ranged(argv_p[i], *l_range, this->m_program_options._max_concurrency._first, *l_range) == true)
-		{
-			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint(argv_p[i] + l_range->_end);
-			this->m_program_options._max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
-			
-			if (l_uint_info._value < 3)
-			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
-				this->m_program_options._max_concurrency._second = 4;
-			}
-			else if (l_uint_info._value > 254)
-			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
-				this->m_program_options._max_concurrency._second = 4;
-			}
-			break;
-		}
-	}
-	this->m_memory = FE::make_unique<FE::scalable_pool<FE::one_gb, FE::align_CPU_L1_cache_line>[]>(this->m_program_options._max_concurrency._second);
 
 }
 

@@ -140,9 +140,6 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/logger.cpp
 
 
 SET(FE_FRAMEWORK_MANAGED_HEADERS
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/ptr.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/trackable.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/unique_ptr.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed/private/ref_block.hxx
 )
 
@@ -153,7 +150,7 @@ SET(FE_POOL_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/block_pool.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/block_pool_allocator.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/scalable_pool_allocator.hxx
+${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/memory_resource.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
 )
 
@@ -164,7 +161,6 @@ SET(FE_CORE_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/definitions.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/prerequisites.h
 
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/allocator.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/memory.hxx
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/iterator.hxx
 
@@ -191,6 +187,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/private/strlen.hxx
 
 SET(FE_CORE_SOURCES
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/allocator_base.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Core/Source/memory_resource.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/clock.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Source/hash.cpp
 )
@@ -202,7 +199,6 @@ SET(FE_MISC_HEADERS
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/private/macro_restrictions.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/define_max_min.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/suppress_warnings.h
-${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/forward_declare_property.h
 ${CMAKE_CURRENT_LIST_DIR}/../Core/Include/FE/miscellaneous/undefine_max_min.h
 )
 

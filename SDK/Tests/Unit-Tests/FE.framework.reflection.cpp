@@ -119,6 +119,9 @@ TEST(reflection, object_with_vector_serialization)
 TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
-	FE::ASCII* l_msg = FE::framework::reflection::system::access_method_reflection()->invoke<FE::ASCII*>(l_object, "FE::ASCII* object::get_text(void) const");
+	
+	auto l_function_pointer = FE::framework::reflection::system::access_method_reflection()->retrieve("FE::ASCII* object::get_text(void) const");
+	FE::ASCII* l_msg;
+	(*l_function_pointer)(&l_object, &l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 }

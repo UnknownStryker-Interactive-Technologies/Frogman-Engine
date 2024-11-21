@@ -15,7 +15,9 @@ ls filename: checks the presence of files with the specified name.
 class test_engine : public FE::framework::framework_base
 {
 public:
-	test_engine(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p) {};
+	test_engine(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p) 
+	{ 
+	};
 	~test_engine() noexcept = default;
 
 	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) override

@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\ONEDRIVE\문서\GITHUB\FROGMAN-ENGINE\SDK\HEADER-TOOL\CMAKE\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Header-Tool/CMake/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
