@@ -33,20 +33,16 @@ public:
 	virtual ~character_base() noexcept = default;
 
 protected:
-	virtual void on_construction() {}
-	virtual void on_destruction() {}
+	virtual void on_construction() override;
+	virtual void on_destruction() override;
 
-	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p) {}
-	virtual void on_despawn() {}
+	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p) override;
+	virtual void on_despawn() override;
 
-	virtual void on_activate() {}
-	virtual void on_deactivate() {}
+	virtual void on_activate() override;
+	virtual void on_deactivate() override;
 
-	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) {}
-
-public:
-	virtual void serialize() {}
-	virtual void deserialize() {}
+	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

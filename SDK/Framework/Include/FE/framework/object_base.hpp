@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/atom_base.hpp>
+#include <FE/framework/super_object_base.hpp>
 
 // glm
 #include <glm/vec3.hpp>
@@ -26,10 +26,10 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
-class object_base : public atom_base
+class object_base : public super_object_base
 {
 	FE_CLASS(object_base);
-	FE_CLASS_HAS_A_BASE(atom_base);
+	FE_CLASS_HAS_A_BASE(super_object_base);
 
 protected:
 	FE_PROPERTY(m_position);
@@ -40,23 +40,19 @@ public:
 	virtual ~object_base() noexcept = default;
 
 protected:
-	virtual void on_construction() {}
-	virtual void on_destruction() {}
+	virtual void on_construction() override;
+	virtual void on_destruction() override;
 
-	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p) {}
-	virtual void on_despawn() {}
+	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p);
+	virtual void on_despawn();
 
 	FE_PROPERTY(m_is_active);
 	var::boolean m_is_active;
 
-	virtual void on_activate() {}
-	virtual void on_deactivate() {}
+	virtual void on_activate();
+	virtual void on_deactivate();
 
-	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) {}
-
-public:
-	virtual void serialize() {}
-	virtual void deserialize() {}
+	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

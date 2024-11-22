@@ -28,17 +28,13 @@ class AI_controller_base : public controller_base
 
 public:
 	AI_controller_base() noexcept;
-	virtual ~AI_controller_base() noexcept = 0;
+	virtual ~AI_controller_base() noexcept = default;
 
 protected:
-	virtual void on_construction() = 0;
-	virtual void on_destruction() = 0;
+	virtual void on_construction();
+	virtual void on_destruction();
 
-	virtual void tick(FE::float64 delta_second_p) = 0;
-
-public:
-	virtual void serialize() = 0;
-	virtual void deserialize() = 0;
+	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p);
 };
 
 END_NAMESPACE

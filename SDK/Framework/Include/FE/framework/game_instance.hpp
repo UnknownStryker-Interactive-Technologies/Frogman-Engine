@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/atom_base.hpp>
+#include <FE/framework/super_object_base.hpp>
 #include <FE/framework/game_thread.hpp>
 #include <FE/framework/input_manager.hpp>
 
@@ -26,10 +26,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-class game_instance : public atom_base
+class game_instance : public super_object_base
 {
 	FE_CLASS(game_instance);
-	FE_CLASS_HAS_A_BASE(atom_base);
+	FE_CLASS_HAS_A_BASE(super_object_base);
 
 	game_thread m_game_thread;
 
@@ -42,10 +42,6 @@ protected:
 	virtual void on_destruction() override;
 
 	virtual void tick(FE::float64 delta_second_p) override;
-
-public:
-	virtual void serialize() override;
-	virtual void deserialize() override;
 };
 
 END_NAMESPACE

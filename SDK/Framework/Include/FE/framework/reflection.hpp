@@ -310,8 +310,8 @@ public:
 
 			if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
 			{
-				// This code section for serializing and deserializing complicated multidimensional container and the third-party containers.
-				// It enables the system to serialize and deserialize the class instance without boilerplating the code with the Frogman Engine reflection macros.
+				// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
+				// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
 				system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property::__serialize_by_foreach_mutually_recursive<T>);
 				system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
 

@@ -27,13 +27,13 @@ limitations under the License.
 #ifdef FROGMAN_ENGINE
 	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
 #else                                                                                                              // The name below does not follow the naming convention since it is considered hidden from users.
-	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (int, char**)> FrogmanEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
+	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (int, FE::tchar**)> FrogmanEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, FE::tchar** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
 #endif
 
 #ifdef CUSTOM_ENGINE
     #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
-    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, char**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, char** argv_p) { return new framework_class_name(argc_p, argv_p); } );
+    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, FE::tchar**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, FE::tchar** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/game_instance.hpp>
@@ -41,7 +41,7 @@ limitations under the License.
 
 
 
-int main(int argc_p, char** argv_p);
+int _tmain(int argc_p, FE::tchar** argv_p);
 
 
 
@@ -57,15 +57,14 @@ enum struct RestartOrNot : uint8
 
 struct program_options
 {
-	FE::pair<const char*, var::uint32> _max_concurrency = { "-max-concurrency=", 4 };
+	FE::pair<const FE::tchar*, var::uint32> _max_concurrency = { (FE::tchar*)"-max-concurrency=", 4 };
 };
 
-FE::uint8 get_current_thread_id() noexcept;
 
 
 class framework_base
 {
-	friend int ::main(int argc_p, char** argv_p);
+	friend int ::main(int argc_p, FE::tchar** argv_p);
 
 	static framework_base* s_framework;
 
@@ -75,17 +74,17 @@ protected:
 	program_options m_program_options;
 	std::unique_ptr<FE::scalable_pool_resource[]> m_memory;
 
-	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) { return 0; };
+	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p) { return 0; };
 	virtual int run() { return 0; };
 	virtual int shutdown() { return 0; };
 
 public:
-	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ char** argv_p) noexcept;
+	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p) noexcept;
 	virtual ~framework_base() noexcept;
 
 	static void request_restart() noexcept;
 	std::pmr::memory_resource* get_memory_resource() noexcept;
-	static std::function<framework_base* (int, char**)>& __allocate_framework(std::function<framework_base* (int, char**)> script_p = [](int, char**) { return nullptr; }) noexcept;
+	static std::function<framework_base* (int, FE::tchar**)>& __allocate_framework(std::function<framework_base* (int, FE::tchar**)> script_p = [](int, FE::tchar**) { return nullptr; }) noexcept;
 
 private:
 	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int32 signal_p);
@@ -105,11 +104,11 @@ class game_engine : public framework_base
 	//d3d11_renderer m_renderer;
 
 public:
-	game_engine(int argc_p, char** argv_p);
+	game_engine(int argc_p, FE::tchar** argv_p);
 	~game_engine();
 
 private:
-	virtual int launch(int argc_p, char** argv_p) override;
+	virtual int launch(int argc_p, FE::tchar** argv_p) override;
 	virtual int run() override;
 	virtual int shutdown() override;
 };

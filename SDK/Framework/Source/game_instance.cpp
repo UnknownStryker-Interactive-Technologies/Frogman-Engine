@@ -25,12 +25,5 @@ void game_instance::tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p)
 {
 }
 
-void game_instance::serialize()
-{
-}
-
-void game_instance::deserialize()
-{
-}
 
 END_NAMESPACE

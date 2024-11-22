@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <tchar.h>
 #include <typeinfo>
 #include <typeindex>
 #include <type_traits>
@@ -23,6 +24,7 @@ BEGIN_NAMESPACE(FE)
 
 typedef const bool boolean; // primitive types are const by default
 
+typedef const TCHAR tchar; // primitive types are const by default
 typedef const char ASCII;  // primitive types are const by default
 typedef const wchar_t wchar; // primitive types are const by default
 
@@ -39,7 +41,6 @@ typedef const float float32; // primitive types are const by default
 typedef const double float64; // primitive types are const by default
 
 
-typedef const bool binary; // primitive types are const by default
 typedef const ::std::uint8_t byte; // primitive types are const by default
 typedef const ::std::uint16_t word; // primitive types are const by default
 typedef const ::std::uint32_t dword; // primitive types are const by default
@@ -65,11 +66,13 @@ typedef const ::std::ptrdiff_t ptrdiff; // primitive types are const by default
 typedef const ::std::intptr_t intptr; // primitive types are const by default
 typedef const ::std::uintptr_t uintptr; // primitive types are const by default
 
+
 #ifdef _WINDOWS_X86_64_
 typedef const wchar_t directory_char_t;
 #elif defined(_LINUX_X86_64_)
 typedef const char directory_char_t;
 #endif
+
 
 template <typename T>
 constexpr inline auto max_value = ::std::numeric_limits<T>::max();
@@ -276,6 +279,9 @@ END_NAMESPACE
 // variable types
 namespace var 
 {
+	typedef TCHAR tchar;
+	static_assert(::std::atomic<tchar>::is_always_lock_free == true, "std::atomic is not compatible with boolean.");
+
 	typedef bool boolean;
 	static_assert(::std::atomic<boolean>::is_always_lock_free == true, "std::atomic is not compatible with boolean.");
 	static_assert(sizeof(boolean) == 1, "The size of boolean must be one byte.");
@@ -286,7 +292,6 @@ namespace var
 
 	typedef wchar_t wchar;
 	static_assert(::std::atomic<wchar>::is_always_lock_free == true, "std::atomic is not compatible with wchar.");
-	static_assert(sizeof(wchar) <= 4, "The size of wchar must be less than or equal to four bytes.");
 
 #ifdef _FE_HAS_CXX20_
 	typedef char8_t UTF8;
@@ -309,9 +314,6 @@ namespace var
 	typedef double float64;
 	static_assert(::std::atomic<float64>::is_always_lock_free == true, "std::atomic is not compatible with float64.");
 	static_assert(sizeof(float64) == 8, "The size of float64 must be eight bytes.");
-
-	typedef bool binary;
-	static_assert(sizeof(binary) == 1, "The size of binary must be one byte.");
 
 	typedef ::std::uint8_t byte;
 	typedef ::std::uint16_t word; // primitive types are const by default

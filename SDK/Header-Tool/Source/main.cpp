@@ -26,42 +26,37 @@ limitations under the License.
 
 
 
-enum struct FE_HeaderToolError : FE::int32
+enum struct FrogmanEngineHeaderToolError : FE::int32
 {
-	_FatalInputError_InvalidDirectory = 1000,
+	_CmdInputError_FilesAreNotGiven = 1000,
+	_Error_FailedToOpenFile = 1001
 };
 
 
 
-
+// sample data - C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\super_object_base.hpp
 class header_tool_engine : public FE::framework::framework_base
 {
-	using directory_list = std::vector<std::pmr::string>;
-	directory_list m_directory_list;
-	std::pmr::string m_copyright_notice;
+	using string_type = std::pmr::basic_string<var::tchar>;
+	using directory_list = std::pmr::vector<string_type>;
 
-	std::unique_ptr<std::thread[]> m_threads;
-	std::unique_ptr<typename directory_list::value_type[]> m_mapped_files;
+	std::pmr::vector<std::thread> m_threads;
+	string_type m_copyright_notice;
+	
+	directory_list m_directory_list;
+	std::pmr::vector<string_type> m_mapped_files;
 
 public:
-	header_tool_engine(int argc_p, char** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p), m_copyright_notice(this->get_memory_resource())
+	header_tool_engine(int argc_p, FE::tchar** argv_p) noexcept 
+		: FE::framework::framework_base(argc_p, argv_p), m_threads(this->get_memory_resource()), m_copyright_notice(this->get_memory_resource()), m_directory_list(this->get_memory_resource()), m_mapped_files(this->get_memory_resource())
 	{
-		this->m_threads = std::make_unique<std::thread[]>(this->m_program_options._max_concurrency._second);
-		this->m_directory_list = __make_list(argc_p, argv_p);
-
-		for (auto it = m_directory_list.cbegin(); it != m_directory_list.cend(); ++it)
-		{
-			FE_EXIT(it->find("/") == typename directory_list::value_type::npos, FE_HeaderToolError::_FatalInputError_InvalidDirectory, "Please check if the paths to files are correctly formatted.");
-		}
+		this->m_threads.resize(this->m_program_options._max_concurrency._second);
+		this->m_directory_list = __make_directory_list(argc_p, argv_p);
 		this->m_mapped_files = __map_files(this->m_directory_list);
 	}
+	~header_tool_engine() noexcept override = default;
 
-	~header_tool_engine() noexcept
-	{
-
-	}
-
-	virtual int launch(int argc_p, char** argv_p) override
+	virtual int launch(int argc_p, FE::tchar** argv_p) override
 	{
 		(void)argc_p;
 		(void)argv_p;
@@ -97,32 +92,76 @@ public:
 	}
 
 private:
-	directory_list __make_list(int argc_p, char** argv_p) noexcept
+	directory_list __make_directory_list(int argc_p, FE::tchar** argv_p) noexcept
 	{
-		directory_list l_list;
-		l_list.reserve(argc_p);
+		string_type l_raw_directories(this->get_memory_resource());
 
 		for (int i = 0; i < argc_p; ++i)
 		{
-			if (argv_p[i] != this->m_program_options._max_concurrency._first)
+			auto l_h = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".h");
+			auto l_hpp = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hpp");
+			auto l_hxx = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hxx");
+			if (	(argv_p[i] != this->m_program_options._max_concurrency._first) &&
+					((l_h != std::nullopt) || 
+					(l_hpp != std::nullopt) || 
+					(l_hxx != std::nullopt))
+				)
 			{
-				l_list.emplace_back(this->get_memory_resource());
-				l_list.back().assign(argv_p[i]);
+				l_raw_directories = argv_p[i];
+
+				var::count_t l_number_of_files = FE::algorithm::string::count_chars<var::tchar>(l_raw_directories.c_str(), ';')._match_count;
+				++l_number_of_files; // CMake does not put ';' to indicate the end of the last directory of the list. So, we need to add 1 to the count.
+
+				directory_list l_list;
+				l_list.reserve(l_number_of_files);
+
+				FE::tchar* l_iterator = l_raw_directories.c_str();
+				auto l_result = FE::algorithm::string::find_the_first<var::tchar>(l_iterator, ';');
+
+				while (l_result != std::nullopt)
+				{
+					FE::index_t l_index_of_it = l_iterator - l_raw_directories.c_str();
+					l_list.emplace_back(l_raw_directories.substr(l_index_of_it, l_result->_begin));
+					l_iterator += l_result->_end;
+					l_result = FE::algorithm::string::find_the_first<var::tchar>(l_iterator, ';');
+				}
+
+				l_result = FE::algorithm::string::find_the_last<var::tchar>(l_raw_directories.c_str(), ';');
+
+				if (l_result.has_value() == true)
+				{
+					l_list.emplace_back(l_raw_directories.substr(l_result->_end, l_raw_directories.length() - l_result->_end));
+
+					return l_list;
+				}
+
+				l_list.emplace_back(l_raw_directories.substr(0, l_raw_directories.length()));
+				return l_list;
 			}
 		}
-		return l_list;
+
+		return directory_list();
 	}
 
-	std::unique_ptr<typename directory_list::value_type[]> __map_files(const directory_list& file_list_p) noexcept
+	std::pmr::vector<string_type> __map_files(const directory_list& file_list_p) noexcept
 	{
-		std::unique_ptr<typename directory_list::value_type[]> l_files = std::make_unique<typename directory_list::value_type[]>(file_list_p.size());
+		std::pmr::vector<string_type> l_files(file_list_p.size(), this->get_memory_resource());
 
 		size_t l_index = 0;
 		for (auto& path_to_file : file_list_p)
 		{
-			std::fstream l_file_handler;
-			l_file_handler.open(path_to_file, std::ios::in);
-			l_file_handler >> l_files[l_index];
+			auto l_h = path_to_file.find(".h");
+			auto l_hpp = path_to_file.find(".hpp");
+			auto l_hxx = path_to_file.find(".hxx");
+			if ((l_h == std::string::npos) && (l_hpp == std::string::npos) && (l_hxx == std::string::npos))
+			{
+				continue;
+			}
+
+			std::basic_fstream<var::tchar> l_file_handler;
+			l_file_handler.open(path_to_file.c_str(), std::ios::in | std::ios::binary);
+			FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_Error_FailedToOpenFile, "Frogman Engine Header Tool: Failed to open a file");
+			//l_file_handler >> l_files[l_index];
 			++l_index;
 			l_file_handler.close();
 		}

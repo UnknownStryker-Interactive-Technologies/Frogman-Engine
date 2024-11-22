@@ -10,4 +10,16 @@ player_controller_base::player_controller_base() noexcept
 {
 }
 
+void player_controller_base::on_construction()
+{
+}
+
+void player_controller_base::on_destruction()
+{
+}
+
+void player_controller_base::tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p)
+{
+}
+
 END_NAMESPACE

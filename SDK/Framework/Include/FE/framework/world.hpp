@@ -16,17 +16,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/atom_base.hpp>
+#include <FE/framework/super_object_base.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
-class world final : public atom_base
+class world final : public super_object_base
 {
 	FE_CLASS(world);
-	FE_CLASS_HAS_A_BASE(atom_base);
+	FE_CLASS_HAS_A_BASE(super_object_base);
 
 public:
 	world() noexcept;
@@ -37,10 +37,6 @@ protected:
 	virtual void on_destruction() override;
 
 	virtual void tick(FE::float64 delta_second_p) override;
-
-public:
-	virtual void serialize() override;
-	virtual void deserialize() override;
 };
 
 END_NAMESPACE
