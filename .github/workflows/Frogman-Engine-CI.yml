@@ -3,8 +3,7 @@ name: Frogman-Engine-CI.yml
 on:
   push:
     branches:
-      - main
-      - in-dev
+      - release
       - chaos
 
 jobs:
@@ -20,56 +19,21 @@ jobs:
 
     - name: Build and run debug version of Google Benchmarks and Tests.
       run: |
-        cd SDK/Core/Tests/Unit-Tests
+        cd SDK/Tests/Unit-Tests
 
         chmod +x build.bat
         ./build.bat
 
-        chmod +x FE.algorithm.math\Debug\FE.algorithm.math_test.exe
-        ./FE.algorithm.math\Debug\FE.algorithm.math_test.exe
+        chmod +x Test-App/Debug/FE_UNIT_TEST.exe
+        ./Test-App/Debug/FE_UNIT_TEST.exe
 
-        chmod +x FE.algorithm.string\Debug\FE.algorithm.string_test.exe
-        ./FE.algorithm.string\Debug\FE.algorithm.string_test.exe
+        chmod +x Test-App/Release/FE_UNIT_TEST.exe
+        ./Test-App/Release/FE_UNIT_TEST.exe
 
-        chmod +x FE.algorithm.utility\Debug\FE.algorithm.utility_test.exe
-        ./FE.algorithm.utility\Debug\FE.algorithm.utility_test.exe
+        chmod +x Test-App/MinSizeRel/FE_UNIT_TEST.exe
+        ./Test-App/MinSizeRel/FE_UNIT_TEST.exe
 
-        chmod +x FE.containers\Debug\FE.containers.exe
-        ./FE.containers\Debug\FE.containers.exe
-
-        chmod +x FE.hash\Debug\FE.hash.exe
-        ./FE.hash\Debug\FE.hash.exe
-
-        chmod +x FE.iterator\Debug\FE.iterator.exe
-        ./FE.iterator\Debug\FE.iterator.exe
-        
-        chmod +x FE.log\Debug\FE.log.exe
-        ./FE.log\Debug\FE.log.exe
-        
-        chmod +x FE.managed\Debug\FE.managed.exe
-        ./FE.managed\Debug\FE.managed.exe
-        
-        chmod +x FE.memory\Debug\FE.memory.exe
-        ./FE.memory\Debug\FE.memory.exe
-        
-        chmod +x FE.pool\Debug\FE.pool.exe
-        ./FE.pool\Debug\FE.pool.exe
-        
-        chmod +x FE.string\Debug\FE.string.exe
-        ./FE.string\Debug\FE.string.exe
-        
-        chmod +x FE.string_view\Debug\FE.string_view.exe
-        ./FE.string_view\Debug\FE.string_view.exe
-        
-        chmod +x FE.task\Debug\FE.task.exe
-        ./FE.task\Debug\FE.task.exe
-
-        chmod +x FE.framework.predefined_main\Debug\FE.framework.predefined_main.exe
-        ./FE.framework.predefined_main\Debug\FE.framework.predefined_main.exe
-
-        chmod +x FE.framework.reflection\Debug\FE.framework.reflection.exe
-        ./FE.framework.reflection\Debug\FE.framework.reflection.exe
-
-
+        chmod +x Test-App/RelWithDeb/FE_UNIT_TEST.exe
+        ./Test-App/RelWithDeb/FE_UNIT_TEST.exe
 
 
