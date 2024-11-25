@@ -17,6 +17,12 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 #include <FE/framework/super_object_base.hpp>
+#include <FE/framework/object_base.hpp>
+
+#include <FE/pair.hxx>
+
+#include <string>
+#include <vector>
 
 
 
@@ -27,6 +33,12 @@ class world final : public super_object_base
 {
 	FE_CLASS(world);
 	FE_CLASS_HAS_A_BASE(super_object_base);
+
+	FE_PROPERTY(m_objects_to_allocate);
+	std::pmr::vector<std::pmr::string> m_objects_to_allocate;
+
+	// Do Not Attempt to Serialize it. Raw pointers are not serializable.
+	std::pmr::vector<FE::pair<FE::framework::object_base*, std::pmr::string>> m_objects_on_world;
 
 public:
 	world() noexcept;

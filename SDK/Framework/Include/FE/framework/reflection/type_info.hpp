@@ -51,7 +51,7 @@ namespace internal::type_info
     class name
     {
     public:
-        using string_type = std::pmr::basic_string<char, std::char_traits<char>>;
+        using string_type = std::pmr::string;
 
 		static std::pmr::monotonic_buffer_resource s_resource;
 

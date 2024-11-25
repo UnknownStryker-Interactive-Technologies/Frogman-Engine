@@ -18,8 +18,6 @@ limitations under the License.
 #include <FE/prerequisites.h>
 #include <FE/pair.hxx>
 
-#include <FE/pool/memory_resource.hpp>
-
 // std
 #include <functional>
 
@@ -27,16 +25,19 @@ limitations under the License.
 #ifdef FROGMAN_ENGINE
 	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
 #else                                                                                                              // The name below does not follow the naming convention since it is considered hidden from users.
-	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (int, FE::tchar**)> FrogmanEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, FE::tchar** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
+	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (FE::int32, FE::tchar**)> FrogmanEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::tchar** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
 #endif
 
 #ifdef CUSTOM_ENGINE
     #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
-    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (int, FE::tchar**)> CustomEngine = ::FE::framework::framework_base::__allocate_framework( [](int argc_p, FE::tchar** argv_p) { return new framework_class_name(argc_p, argv_p); } );
+    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (FE::int32, FE::tchar**)> CustomEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::tchar** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
+#include <FE/pool/memory_resource.hpp>
+
+#include <FE/framework/managed.hpp>
 #include <FE/framework/reflection.hpp>
-#include <FE/framework/game_instance.hpp>
+#include <FE/framework/task.hpp>
 
 
 
@@ -55,39 +56,57 @@ enum struct RestartOrNot : uint8
 	_HasToRestart = 1,
 };
 
-struct program_options
+class program_options
 {
-	FE::pair<const FE::tchar*, var::uint32> _max_concurrency = { (FE::tchar*)"-max-concurrency=", 4 };
-};
+	FE::pair<FE::tchar*, var::uint32> m_max_concurrency;
 
+public:
+	program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
+	~program_options() noexcept = default;
+
+	FE::uint32 get_max_concurrency() const noexcept;
+	FE::tchar* view_max_concurrency_option_title() const noexcept;
+};
 
 
 class framework_base
 {
-	friend int ::main(int argc_p, FE::tchar** argv_p);
+	friend int ::_tmain(int argc_p, FE::tchar** argv_p);
 
-	static framework_base* s_framework;
-
-protected:
 	static RestartOrNot s_restart_or_not;
-
+	static framework_base* s_framework;
+	
+protected:
 	program_options m_program_options;
 	std::unique_ptr<FE::scalable_pool_resource[]> m_memory;
-
-	virtual int launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p) { return 0; };
-	virtual int run() { return 0; };
-	virtual int shutdown() { return 0; };
+	framework::managed m_reference_manager;
+	reflection::method m_method_reflection;
+	reflection::property m_property_reflection;
+	framework::task_scheduler m_cpu;
 
 public:
-	framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p) noexcept;
+	framework_base(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
 	virtual ~framework_base() noexcept;
 
 	static void request_restart() noexcept;
-	std::pmr::memory_resource* get_memory_resource() noexcept;
-	static std::function<framework_base* (int, FE::tchar**)>& __allocate_framework(std::function<framework_base* (int, FE::tchar**)> script_p = [](int, FE::tchar**) { return nullptr; }) noexcept;
+	static framework_base& get_engine() noexcept;
 
-private:
-	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int32 signal_p);
+	std::pmr::memory_resource* get_memory_resource() noexcept;
+	framework::managed& access_reference_manager() noexcept;
+	reflection::method& access_method_reflection() noexcept;
+	reflection::property& access_property_reflection() noexcept;
+	framework::task_scheduler& access_task_scheduler() noexcept;
+
+protected:
+	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p);
+	virtual FE::int32 run();
+	virtual FE::int32 shutdown();
+
+public:
+	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int signal_p);
+
+	// Do not call this function directly.
+	static std::function<framework_base* (FE::int32, FE::tchar**)>& allocate_framework(std::function<framework_base* (FE::int32, FE::tchar**)> script_p = [](FE::int32, FE::tchar**) { return nullptr; }) noexcept;
 
 	framework_base(const framework_base&) = delete;
 	framework_base(framework_base&&) = delete;
@@ -96,21 +115,21 @@ private:
 };
 
 
-
+class game_instance;
 
 class game_engine : public framework_base
 {
-	game_instance m_game_instance;
+	std::unique_ptr<game_instance> m_game_instance;
 	//d3d11_renderer m_renderer;
 
 public:
-	game_engine(int argc_p, FE::tchar** argv_p);
+	game_engine(FE::int32 argc_p, FE::tchar** argv_p);
 	~game_engine();
 
 private:
-	virtual int launch(int argc_p, FE::tchar** argv_p) override;
-	virtual int run() override;
-	virtual int shutdown() override;
+	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override;
+	virtual FE::int32 run() override;
+	virtual FE::int32 shutdown() override;
 };
 
 

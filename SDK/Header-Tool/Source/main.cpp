@@ -40,46 +40,36 @@ class header_tool_engine : public FE::framework::framework_base
 	using string_type = std::pmr::basic_string<var::tchar>;
 	using directory_list = std::pmr::vector<string_type>;
 
-	std::pmr::vector<std::thread> m_threads;
 	string_type m_copyright_notice;
 	
 	directory_list m_directory_list;
 	std::pmr::vector<string_type> m_mapped_files;
 
 public:
-	header_tool_engine(int argc_p, FE::tchar** argv_p) noexcept 
-		: FE::framework::framework_base(argc_p, argv_p), m_threads(this->get_memory_resource()), m_copyright_notice(this->get_memory_resource()), m_directory_list(this->get_memory_resource()), m_mapped_files(this->get_memory_resource())
+	header_tool_engine(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+		: FE::framework::framework_base(argc_p, argv_p), m_copyright_notice(this->get_memory_resource()), m_directory_list(this->get_memory_resource()), m_mapped_files(this->get_memory_resource())
 	{
-		this->m_threads.resize(this->m_program_options._max_concurrency._second);
 		this->m_directory_list = __make_directory_list(argc_p, argv_p);
 		this->m_mapped_files = __map_files(this->m_directory_list);
 	}
 	~header_tool_engine() noexcept override = default;
 
-	virtual int launch(int argc_p, FE::tchar** argv_p) override
+	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override
 	{
 		(void)argc_p;
 		(void)argv_p;
 		// launch threads
-		for (var::size i = 0; i < this->m_program_options._max_concurrency._second; ++i)
-		{
-			this->m_threads[i] = std::thread(&header_tool_engine::__process_files, this);
-		}
-
-		for (var::size i = 0; i < this->m_program_options._max_concurrency._second; ++i)
-		{
-			this->m_threads[i].join();
-		}
+		// framework_base::get_engine().access_task_scheduler();
 		return 0;
 	}
 
-	virtual int run() override
+	virtual FE::int32 run() override
 	{
 		// report errors
 		return 0;
 	}
 
-	virtual int shutdown() override
+	virtual FE::int32 shutdown() override
 	{
 		// write to files
 		return 0;
@@ -92,7 +82,7 @@ public:
 	}
 
 private:
-	directory_list __make_directory_list(int argc_p, FE::tchar** argv_p) noexcept
+	directory_list __make_directory_list(FE::int32 argc_p, FE::tchar** argv_p) noexcept
 	{
 		string_type l_raw_directories(this->get_memory_resource());
 
@@ -101,7 +91,7 @@ private:
 			auto l_h = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".h");
 			auto l_hpp = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hpp");
 			auto l_hxx = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hxx");
-			if (	(argv_p[i] != this->m_program_options._max_concurrency._first) &&
+			if (	(argv_p[i] != this->m_program_options.view_max_concurrency_option_title()) &&
 					((l_h != std::nullopt) || 
 					(l_hpp != std::nullopt) || 
 					(l_hxx != std::nullopt))

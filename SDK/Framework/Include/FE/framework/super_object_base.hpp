@@ -17,8 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
-#include <FE/framework/reflection.hpp>
-#include <FE/framework/managed.hpp>
+#include <FE/framework/framework.hpp>
 
 
 
@@ -28,7 +27,7 @@ BEGIN_NAMESPACE(FE::framework)
 /*
 The top class for all game objects in Frogman Engine.
 */
-class super_object_base : public FE::framework::managed
+class super_object_base
 {
 	FE_CLASS(super_object_base);
 public:
@@ -47,13 +46,13 @@ public:
 	template<typename T>
 	void serialize(std::filesystem::path path_p, directory_char_t* filename_p, const T& object_p) noexcept
 	{
-		FE::framework::reflection::system::access_property_reflection()->serialize(path_p, filename_p, object_p);
+		framework_base::get_engine().access_property_reflection().serialize(path_p, filename_p, object_p);
 	}
 
 	template<typename T>
 	void deserialize(std::filesystem::path path_p, directory_char_t* filename_p, T& out_object_p) noexcept
 	{
-		FE::framework::reflection::system::access_property_reflection()->deserialize(path_p, filename_p, out_object_p);
+		framework_base::get_engine().access_property_reflection().deserialize(path_p, filename_p, out_object_p);
 	}
 
 	operator FE::framework::weak_ptr<super_object_base>() const noexcept;

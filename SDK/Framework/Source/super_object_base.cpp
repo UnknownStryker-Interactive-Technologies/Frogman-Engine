@@ -23,13 +23,17 @@ BEGIN_NAMESPACE(FE::framework)
 
 super_object_base::super_object_base() noexcept : m_is_tick_enabled(false)
 {
-    this->m_ref_block = FE::framework::managed::allocate_ref_block<super_object_base>();
+    this->m_ref_block = framework_base::get_engine().access_reference_manager().allocate_ref_block<super_object_base>();
 	this->m_ref_block->_reference.store(this, std::memory_order_relaxed);
 }
 
 super_object_base::~super_object_base() noexcept
 {
     this->m_ref_block->_reference.store(nullptr, std::memory_order_release);
+	if (this->m_ref_block->_ref_count.load(std::memory_order_acquire) <= 0)
+	{
+		framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ref_block);
+	}
 }
 
 void super_object_base::on_construction()
@@ -48,6 +52,7 @@ super_object_base::operator FE::framework::weak_ptr<super_object_base>() const n
 {
 	FE::framework::weak_ptr<super_object_base> l_weak_ptr;
 	l_weak_ptr.m_ptr = this->m_ref_block;
+	l_weak_ptr.m_ptr->_ref_count.fetch_add(1, std::memory_order_relaxed);
 	return l_weak_ptr;
 }
 

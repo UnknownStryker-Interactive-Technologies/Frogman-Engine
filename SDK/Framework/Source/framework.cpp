@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/framework.hpp>
+
 #include <FE/algorithm/string.hxx>
 #include <FE/algorithm/utility.hxx>
 #include <FE/clock.hpp>
@@ -21,8 +22,7 @@ limitations under the License.
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hpp>
 
-// get_current_thread_id()
-#include <FE/framework/managed.hpp>
+#include <FE/framework/game_instance.hpp>
 
 // boost
 #include <boost/stacktrace.hpp>
@@ -47,65 +47,116 @@ extern "C"
 BEGIN_NAMESPACE(FE::framework)
 
 
-framework_base* framework_base::s_framework = nullptr;
-RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
-
-
-framework_base::framework_base(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p) noexcept
+program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept : m_max_concurrency{ (FE::tchar*)"-max-concurrency=", 4 }
 {
-	std::setlocale(LC_ALL, std::setlocale(LC_ALL, ""));
-	reflection::system::initialize(81920);
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
-		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::tchar>(this->m_program_options._max_concurrency._first, '=');
+		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::tchar>(this->m_max_concurrency._first, '=');
 		l_range->_begin = 0;
 
-		if (algorithm::string::compare_ranged<var::tchar>(argv_p[i], *l_range, this->m_program_options._max_concurrency._first, *l_range) == true)
+		if (algorithm::string::compare_ranged<var::tchar>(argv_p[i], *l_range, this->m_max_concurrency._first, *l_range) == true)
 		{
 			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::tchar>(argv_p[i] + l_range->_end);
-			this->m_program_options._max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
+			this->m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
 			if (l_uint_info._value < 3)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
-				this->m_program_options._max_concurrency._second = 4;
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
+				this->m_max_concurrency._second = 4;
 			}
 			else if (l_uint_info._value > 254)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", this->m_program_options._max_concurrency._first, &l_uint_info._value);
-				this->m_program_options._max_concurrency._second = 4;
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
+				this->m_max_concurrency._second = 4;
 			}
 			break;
 		}
 	}
-	managed::initialize(this->m_program_options._max_concurrency._second);
-	this->m_memory = std::make_unique<FE::scalable_pool_resource[]>(this->m_program_options._max_concurrency._second);
+}
+
+FE::uint32 program_options::get_max_concurrency() const noexcept
+{
+	return this->m_max_concurrency._second;
+}
+
+FE::tchar* program_options::view_max_concurrency_option_title() const noexcept
+{
+	return this->m_max_concurrency._first;
+}
+
+
+
+
+framework_base* framework_base::s_framework = nullptr;
+RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
+
+
+framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+	: m_program_options(argc_p, argv_p), m_memory(std::make_unique<FE::scalable_pool_resource[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() )
+{
+	std::setlocale(LC_ALL, std::setlocale(LC_ALL, ""));
 }
 
 framework_base::~framework_base() noexcept
 {
-	reflection::system::shutdown();
-	managed::shutdown();
 	this->m_memory.reset();
 }
+
+
+FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+{
+	return 0;
+}
+
+FE::int32 framework_base::run()
+{
+	return 0;
+}
+
+FE::int32 framework_base::shutdown()
+{
+	return 0;
+}
+
 
 void framework_base::request_restart() noexcept
 {
 	s_restart_or_not = RestartOrNot::_HasToRestart;
-};
+}
+
+framework_base& framework_base::get_engine() noexcept
+{
+	return *s_framework;
+}
+
 
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
 	return this->m_memory.get() + get_current_thread_id();
 }
 
-std::function<framework_base* (int, FE::tchar**)>& framework_base::__allocate_framework(std::function<framework_base* (int, FE::tchar**)> script_p) noexcept
+framework::managed& framework_base::access_reference_manager() noexcept
 {
-	static std::function<framework_base* (int, FE::tchar**)> l_s_script = script_p;
-	return l_s_script;
+	return this->m_reference_manager;
 }
 
-_FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int32 signal_p)
+reflection::method& framework_base::access_method_reflection() noexcept
+{
+	return this->m_method_reflection;
+}
+
+reflection::property& framework_base::access_property_reflection() noexcept
+{
+	return this->m_property_reflection;
+}
+
+framework::task_scheduler& framework_base::access_task_scheduler() noexcept
+{
+	return this->m_cpu;
+}
+
+
+_FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal_p)
 {
 #ifdef _RELWITHDEBINFO_
 	boost::stacktrace::stacktrace l_stack_trace_dumps;
@@ -130,10 +181,17 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int32 sign
 	std::exit(signal_p);
 }
 
+std::function<framework_base* (FE::int32, FE::tchar**)>& framework_base::allocate_framework(std::function<framework_base* (FE::int32, FE::tchar**)> script_p) noexcept
+{
+	static std::function<framework_base* (FE::int32, FE::tchar**)> l_s_script = script_p;
+	return l_s_script;
+}
 
 
 
-game_engine::game_engine(int argc_p, FE::tchar** argv_p) : framework_base(argc_p, argv_p)
+
+game_engine::game_engine(FE::int32 argc_p, FE::tchar** argv_p)
+	: framework_base(argc_p, argv_p), m_game_instance(std::make_unique<game_instance>())
 {
 
 }
@@ -144,19 +202,19 @@ game_engine::~game_engine()
 }
 
 
-int game_engine::launch(_FE_MAYBE_UNUSED_ int argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+FE::int32 game_engine::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
 {
 
 	return 0;
 }
 
-int game_engine::run()
+FE::int32 game_engine::run()
 {
 
 	return 0;
 }
 
-int game_engine::shutdown()
+FE::int32 game_engine::shutdown()
 {
 	return 0;
 }
@@ -169,7 +227,7 @@ END_NAMESPACE
 
 int _tmain(int argc_p, FE::tchar** argv_p)
 {
-	int l_exit_code;
+	var::int32 l_exit_code;
 
 	std::signal(SIGTERM, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
 	std::signal(SIGSEGV, FE::framework::framework_base::__abnormal_shutdown_with_exit_code);
@@ -182,7 +240,7 @@ int _tmain(int argc_p, FE::tchar** argv_p)
 	{
 		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
-		FE::framework::framework_base::s_framework = FE::framework::framework_base::__allocate_framework()(argc_p, argv_p);
+		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
 		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Assertion Failure: An app pointer is a nullptr.");
 		
 		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
@@ -200,3 +258,4 @@ int _tmain(int argc_p, FE::tchar** argv_p)
 
 	return l_exit_code;
 }
+

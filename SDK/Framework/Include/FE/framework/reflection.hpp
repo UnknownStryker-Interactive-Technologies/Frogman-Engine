@@ -53,41 +53,14 @@ limitations under the License.
 #include <robin_hood.h>
 
 
+
+
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
 
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
-
-class method;
-class property;
-
-class system
-{
-	friend class ::FE::framework::framework_base;
-
-	 static method* s_method_reflection;
-	 static property* s_property_reflection;
-
-	 static void initialize(FE::size reflection_map_capacity_p) noexcept;
-	 static void shutdown() noexcept;
-
-public:
-	static method* access_method_reflection() noexcept
-	{
-		FE_ASSERT(s_method_reflection != nullptr, "Reflection system is not initialized.");
-		return s_method_reflection;
-	}
-
-	static property* access_property_reflection() noexcept
-	{
-		FE_ASSERT(s_property_reflection != nullptr, "Reflection system is not initialized.");
-		return s_property_reflection;
-	}
-};
-
-
 
 
 template<typename T>
@@ -104,6 +77,7 @@ _FE_FORCE_INLINE_ void destruct_object(void* address_p) noexcept
 
 class method
 {
+	friend class ::FE::framework::framework_base;
 public:
 	using alignment_type = FE::align_8bytes;
 
@@ -113,14 +87,15 @@ private:
 
 	lock_type m_lock;
 	reflection_map_type m_task_map;
-	std::pmr::unsynchronized_pool_resource m_pool;
+	std::pmr::monotonic_buffer_resource m_pool;
 
-public:
+private:
 	method(FE::size reflection_map_capacity_p) noexcept
 		: m_lock(), m_task_map(reflection_map_capacity_p), m_pool()
 	{}
 	~method() noexcept = default;
 
+public:
 	method(const method&) = delete;
 	method(method&&) = delete;
 
@@ -163,7 +138,7 @@ public:
 	*/
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ FE::task_base* retrieve(const typename reflection_map_type::key_type& key_p) noexcept
 	{
-		std::lock_guard<lock_type> l_lock(this->m_lock);
+		std::lock_guard<lock_type> l_lock(m_lock);
 		auto l_result = this->m_task_map.find(key_p);
 		return (l_result == this->m_task_map.end()) ? nullptr : l_result->second;
 	}
@@ -226,6 +201,7 @@ struct property_meta_data
 
 class property
 {
+	friend class ::FE::framework::framework_base;
 public:
 	/*
 	It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
@@ -262,12 +238,13 @@ private:
 	input_buffer_type m_input_buffer;
 	input_buffer_iterator_type m_position;
 
-public:
+private:
 	property(FE::size reflection_map_capacity_p) noexcept
 		: m_property_map(reflection_map_capacity_p), m_class_layer(), m_scalable_container_size_recorder(), m_lock(), m_fstream(), m_input_buffer(), m_position() {
 	}
 	~property() noexcept = default;
 
+public:
 	property(const property&) = delete;
 	property(property&&) = delete;
 
@@ -293,10 +270,10 @@ public:
 		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._name = property_name_p;
-		l_property_meta_data._typename = FE::framework::reflection::type_id<T>().name();
+		l_property_meta_data._typename = reflection::type_id<T>().name();
 
 		// Find or register its host class.
-		FE::ASCII* l_host_class_instance_typename = FE::framework::reflection::type_id<C>().name();
+		FE::ASCII* l_host_class_instance_typename = reflection::type_id<C>().name();
 
 		std::lock_guard<lock_type> l_lock(m_lock);
 		auto l_iterator = m_property_map.find(l_host_class_instance_typename);
@@ -312,8 +289,8 @@ public:
 			{
 				// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
 				// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-				system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property::__serialize_by_foreach_mutually_recursive<T>);
-				system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
+				framework_base::get_engine().access_method_reflection().register_task< FE::cpp_style_task<property, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property::__serialize_by_foreach_mutually_recursive<T>);
+				framework_base::get_engine().access_method_reflection().register_task< FE::cpp_style_task<property, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property::__deserialize_by_foreach_mutually_recursive<T>);
 
 				if constexpr (FE::has_value_type<T>::value == true)
 				{
@@ -349,7 +326,7 @@ public:
 		FE_NEGATIVE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		FE::ASCII* l_typename = FE::framework::reflection::type_id<T>().name();
+		FE::ASCII* l_typename = reflection::type_id<T>().name();
 		auto l_search_result = m_property_map.find(l_typename);
 		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
@@ -389,7 +366,7 @@ public:
 		FE_NEGATIVE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		FE::ASCII* l_typename = FE::framework::reflection::type_id<T>().name();
+		FE::ASCII* l_typename = reflection::type_id<T>().name();
 		auto l_search_result = this->m_property_map.find(l_typename);
 		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND, "serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
@@ -438,7 +415,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_serialization_task_recursive() noexcept
 	{
-		system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(const void*)> >(__get_serialization_task_name(FE::framework::reflection::type_id<InnerContainer>().name()), &property::__serialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_engine().access_method_reflection().register_task< FE::cpp_style_task<property, void(const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property::__serialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -453,7 +430,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_deserialization_task_recursive() noexcept
 	{
-		system::access_method_reflection()->register_task< FE::cpp_style_task<property, void(void*)> >(__get_deserialization_task_name(FE::framework::reflection::type_id<InnerContainer>().name()), &property::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_engine().access_method_reflection().register_task< FE::cpp_style_task<property, void(void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -495,7 +472,7 @@ private:
 		if constexpr (FE::has_base_type<U>::value == true)
 		{
 			static typename  reflection_map_type::iterator l_s_search_result;
-			l_s_search_result = this->m_property_map.find(FE::framework::reflection::type_id<typename U::base_type>().name());
+			l_s_search_result = this->m_property_map.find(reflection::type_id<typename U::base_type>().name());
 			if (l_s_search_result == this->m_property_map.end())
 			{
 				return;
@@ -508,7 +485,7 @@ private:
 	void __push_parent_class_layers_by_typename_string_recursive(FE::ASCII* typename_p) noexcept
 	{
 		static typename  reflection_map_type::iterator l_s_search_result;
-		l_s_search_result = this->m_property_map.find(FE::framework::reflection::type_info::get_base_name_of(typename_p));
+		l_s_search_result = this->m_property_map.find(reflection::type_info::get_base_name_of(typename_p));
 		if (l_s_search_result == this->m_property_map.end())
 		{
 			return;
@@ -555,7 +532,7 @@ private:
 				auto l_search_result = this->m_property_map.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = system::access_method_reflection()->retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_engine().access_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is serializable with foreach?
 				{
 					FE::arguments<const void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
@@ -627,7 +604,7 @@ private:
 				auto l_search_result = this->m_property_map.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = system::access_method_reflection()->retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_engine().access_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is deserializable with foreach?
 				{
 					FE::arguments<void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
@@ -794,8 +771,8 @@ public: \
 	using type = class_name; \
 	class_meta_data() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = #class_name; l_class_name += "()"; ::FE::framework::reflection::system::access_method_reflection()->register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name>) ); \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = "~"; l_class_name += #class_name; l_class_name += "()"; ::FE::framework::reflection::system::access_method_reflection()->register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name>) ); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_engine().access_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name>) ); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = "~"; l_class_name += #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_engine().access_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name>) ); \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ class_meta_data class_reflection_instance_##class_name;
@@ -811,7 +788,7 @@ class method_reflection_##method_name \
 public: \
 	_FE_FORCE_INLINE_ method_reflection_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_full_signature = get_signature(); ::FE::framework::reflection::system::access_method_reflection()->register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(l_full_signature.c_str(), &class_meta_data::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_full_signature = get_signature(); ::FE::framework::framework_base::get_engine().access_method_reflection().register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(l_full_signature.c_str(), &class_meta_data::type::method_name)); \
 	} \
 	static ::std::string get_signature() noexcept \
 	{ \
@@ -841,7 +818,7 @@ class property_reflection_##property_name \
 public: \
 	_FE_FORCE_INLINE_ property_reflection_##property_name(typename class_meta_data::type* const this_p) noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::reflection::system::access_property_reflection()->register_property<typename class_meta_data::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_engine().access_property_reflection().register_property<typename class_meta_data::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_reflection_##property_name property_reflection_instance_##property_name = this;

@@ -26,7 +26,7 @@ public:
 private:
     boost::chrono::steady_clock::time_point m_starting_point;
     boost::chrono::steady_clock::time_point m_ending_point;
-    boost::chrono::duration<var::float64> m_delta_time;
+    boost::chrono::duration<var::float64, boost::milli> m_delta_time;
 
 public:
     _FE_CONSTEXPR17_ clock() noexcept : m_starting_point(), m_ending_point(), m_delta_time() {}

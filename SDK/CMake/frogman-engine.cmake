@@ -10,6 +10,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/boost-1.8
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glfw-3.4/include)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/glm-1.0.1)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/Robin-Hood-Hash)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Third-Party/Libraries/taskflow-3.8.0/taskflow)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Core/Include)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Framework/Include)
 
@@ -18,10 +19,9 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/../Framework/Include)
 
 SET(FE_FRAMEWORK_HEADER
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/framework.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_thread.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/renderer.hpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/input_manager.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/managed.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/task.hpp
 )
 SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK_HEADER})
 
@@ -43,7 +43,10 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/projectile_base.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_instance.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_mode_base.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/game_state_base.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/player_state_base.hpp
+
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/world.hpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/world_context.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Include/FE/framework/object_component_base.hpp
 )
 SOURCE_GROUP("Object" FILES ${FE_FRAMEWORK_OBJECT_HIERARCHY})
@@ -60,14 +63,10 @@ SOURCE_GROUP("Controller" FILES ${FE_FRAMEWORK_CONTROLLER_HIERARCHY})
 
 SET(FE_FRAMEWORK_SOURCES 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/framework.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_thread.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/renderer.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/input_manager.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/managed.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/task.cpp
 
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/platform_information.cpp
-
-${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/reflection.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/type_info.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/super_object_base.cpp
@@ -81,7 +80,9 @@ ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/projectile_base.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_instance.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_mode_base.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/game_state_base.cpp 
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/player_state_base.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/world.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/world_context.cpp
 
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/controller_base.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Framework/Source/player_controller_base.cpp

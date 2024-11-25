@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classtf_1_1Semaphore" kind="class" language="C++" prot="public">
+    <compoundname>tf::Semaphore</compoundname>
+    <includes refid="semaphore_8hpp" local="no">taskflow/core/semaphore.hpp</includes>
+      <sectiondef kind="friend">
+      <memberdef kind="friend" id="classtf_1_1Semaphore_1a6db9d28bd448a131448276ee03de1e6d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>class</type>
+        <definition>friend class Node</definition>
+        <argsstring></argsstring>
+        <name>Node</name>
+        <param>
+          <type>Node</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="68" column="3" bodyfile="taskflow/core/semaphore.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classtf_1_1Semaphore_1abe01d3cb3ccb1b59d816f5bec36d5cc8" prot="private" static="no" mutable="no">
+        <type><ref refid="cpp/atomic/atomic" kindref="compound" external="/home/thuang295/Code/taskflow/doxygen/cppreference-doxygen-web.tag.xml">std::atomic</ref>&lt; size_t &gt;</type>
+        <definition>std::atomic&lt;size_t&gt; tf::Semaphore::_count</definition>
+        <argsstring></argsstring>
+        <name>_count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="152" column="17" bodyfile="taskflow/core/semaphore.hpp" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classtf_1_1Semaphore_1a9f019c0fdcd9b1bbf1d7f46760878d2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>tf::Semaphore::Semaphore</definition>
+        <argsstring>()</argsstring>
+        <name>Semaphore</name>
+        <briefdescription>
+<para>constructs a default semaphore with count equal to zero </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Application can use <ref refid="classtf_1_1Semaphore_1a6d0481c1a39eddc6497aad21695c0e8e" kindref="member">tf::Semaphore::reset</ref> to reset the counter of the semaphore later. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="78" column="5" bodyfile="taskflow/core/semaphore.hpp" bodystart="78" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classtf_1_1Semaphore_1aafbb7c98f5e510f2ba053b3e9fd2cb25" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>tf::Semaphore::Semaphore</definition>
+        <argsstring>(size_t count)</argsstring>
+        <name>Semaphore</name>
+        <param>
+          <type>size_t</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+<para>constructs a semaphore with the given count </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A semaphore creates a constraint that limits the maximum concurrency, i.e., the number of workers, in a set of tasks.</para>
+<para><programlisting filename=".cpp"><codeline><highlight class="normal"><ref refid="classtf_1_1Semaphore" kindref="compound">tf::Semaphore</ref><sp/>semaphore(4);<sp/><sp/></highlight><highlight class="comment">//<sp/>a<sp/>semaphore<sp/>initialized<sp/>with<sp/>4</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="90" column="14" bodyfile="taskflow/core/semaphore.hpp" bodystart="90" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="classtf_1_1Semaphore_1aa3d4f0f1930f5d5ec6238a9d1460b06b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t tf::Semaphore::count</definition>
+        <argsstring>(std::memory_order memory_order=std::memory_order_seq_cst) const</argsstring>
+        <name>count</name>
+        <param>
+          <type>std::memory_order</type>
+          <declname>memory_order</declname>
+          <defval>std::memory_order_seq_cst</defval>
+        </param>
+        <briefdescription>
+<para>queries the current value of the associated counter </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>memory_order</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the memory order of this load (default std::memory_order_seq_cst)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Queries the current value of the associated counter. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="100" column="12" bodyfile="taskflow/core/semaphore.hpp" bodystart="100" bodyend="102"/>
+      </memberdef>
+      <memberdef kind="function" id="classtf_1_1Semaphore_1a2bbcb0be1e7e767d5911ad79d63b59f0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool tf::Semaphore::try_acquire</definition>
+        <argsstring>()</argsstring>
+        <name>try_acquire</name>
+        <briefdescription>
+<para>tries to atomically decrement the internal counter by <computeroutput>1</computeroutput> if it is greater than <computeroutput>0</computeroutput> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para><computeroutput>true</computeroutput> if it decremented the internal counter, otherwise <computeroutput>false</computeroutput> </para>
+</simplesect>
+Tries to atomically decrement the internal counter by <computeroutput>1</computeroutput>. If the operation succeeds, returns <computeroutput>true</computeroutput>, otherwise <computeroutput>false</computeroutput>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="112" column="10" bodyfile="taskflow/core/semaphore.hpp" bodystart="112" bodyend="120"/>
+      </memberdef>
+      <memberdef kind="function" id="classtf_1_1Semaphore_1a495348aa6280a4d2756a42fbf23fbe20" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void tf::Semaphore::release</definition>
+        <argsstring>(size_t n=1)</argsstring>
+        <name>release</name>
+        <param>
+          <type>size_t</type>
+          <declname>n</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+<para>atomically increment the internal counter by <computeroutput>n</computeroutput> </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>n</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the value by which the internal counter will be incremented</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+The release operation always succeeds as it simply increments the counter of this semaphore. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="130" column="10" bodyfile="taskflow/core/semaphore.hpp" bodystart="130" bodyend="132"/>
+      </memberdef>
+      <memberdef kind="function" id="classtf_1_1Semaphore_1a6d0481c1a39eddc6497aad21695c0e8e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void tf::Semaphore::reset</definition>
+        <argsstring>(size_t count, std::memory_order memory_order=std::memory_order_seq_cst)</argsstring>
+        <name>reset</name>
+        <param>
+          <type>size_t</type>
+          <declname>count</declname>
+        </param>
+        <param>
+          <type>std::memory_order</type>
+          <declname>memory_order</declname>
+          <defval>std::memory_order_seq_cst</defval>
+        </param>
+        <briefdescription>
+<para>resets the semaphore to the given count </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>count</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the new count value </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>memory_order</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>memory order to which this operation will be applied (default std::memory_order_seq_cst)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Calling <ref refid="classtf_1_1Semaphore_1a6d0481c1a39eddc6497aad21695c0e8e" kindref="member">tf::Semaphore::reset</ref> will immediately change the underlying counter to the given <computeroutput>count</computeroutput> value, regardless other threads acquiring or releasing the semaphore. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="taskflow/core/semaphore.hpp" line="146" column="10" bodyfile="taskflow/core/semaphore.hpp" bodystart="146" bodyend="148"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>class to create a semophore object for building a concurrency constraint </para>
+    </briefdescription>
+    <detaileddescription>
+<para>A semaphore creates a constraint that limits the maximum concurrency, i.e., the number of workers, in a set of tasks. You can let a task acquire/release one or multiple semaphores before/after executing its work. A task can acquire and release a semaphore, or just acquire or just release it. A <ref refid="classtf_1_1Semaphore" kindref="compound">tf::Semaphore</ref> object starts with an initial count. As long as that count is above 0, tasks can acquire the semaphore and do their work. If the count is 0 or less, a task trying to acquire the semaphore will not run but goes to a waiting list of that semaphore. When the semaphore is released by another task, it reschedules all tasks on that waiting list.</para>
+<para><programlisting filename=".cpp"><codeline><highlight class="normal"><ref refid="classtf_1_1Executor" kindref="compound">tf::Executor</ref><sp/>executor(8);<sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>create<sp/>an<sp/>executor<sp/>of<sp/>8<sp/>workers</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="classtf_1_1Taskflow" kindref="compound">tf::Taskflow</ref><sp/>taskflow;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="classtf_1_1Semaphore" kindref="compound">tf::Semaphore</ref><sp/>semaphore(1);<sp/></highlight><highlight class="comment">//<sp/>create<sp/>a<sp/>semaphore<sp/>with<sp/>initial<sp/>count<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>i=0;<sp/>i&lt;1000;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>taskflow.<ref refid="classtf_1_1FlowBuilder_1a60d7a666cab71ecfa3010b2efb0d6b57" kindref="member">emplace</ref>([&amp;](<ref refid="classtf_1_1Runtime" kindref="compound">tf::Runtime</ref>&amp;<sp/>rt){<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>rt.<ref refid="classtf_1_1Runtime_1ada6b02ea097968de011bb3825a7ec48b" kindref="member">acquire</ref>(semaphore);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="cpp/io/basic_ostream" kindref="compound" external="/home/thuang295/Code/taskflow/doxygen/cppreference-doxygen-web.tag.xml">std::cout</ref><sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;critical<sp/>section<sp/>here<sp/>(one<sp/>worker<sp/>at<sp/>any<sp/>time)\n&quot;</highlight><highlight class="normal">;<sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>critical_section();</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>rt.<ref refid="classtf_1_1Runtime_1acc36e4d62a17e19e07f0c82a4c5f1d95" kindref="member">release</ref>(semaphore);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>});</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">executor.run(taskflow).wait();</highlight></codeline>
+</programlisting></para>
+<para>The above example creates a taskflow of 1000 independent tasks while only one worker will run <computeroutput>critical_section</computeroutput> at any time due to the semaphore constraint. This arrangement limits the parallelism of <computeroutput>critical_section</computeroutput> to just one.</para>
+<para><simplesect kind="note"><para>Taskflow use a non-blocking algorithm to implement the acquisition of semaphores and thus is deadlock-free. </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <location file="taskflow/core/semaphore.hpp" line="66" column="1" bodyfile="taskflow/core/semaphore.hpp" bodystart="66" bodyend="153"/>
+    <listofallmembers>
+      <member refid="classtf_1_1Semaphore_1abe01d3cb3ccb1b59d816f5bec36d5cc8" prot="private" virt="non-virtual"><scope>tf::Semaphore</scope><name>_count</name></member>
+      <member refid="classtf_1_1Semaphore_1aa3d4f0f1930f5d5ec6238a9d1460b06b" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>count</name></member>
+      <member refid="classtf_1_1Semaphore_1a6db9d28bd448a131448276ee03de1e6d" prot="private" virt="non-virtual"><scope>tf::Semaphore</scope><name>Node</name></member>
+      <member refid="classtf_1_1Semaphore_1a495348aa6280a4d2756a42fbf23fbe20" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>release</name></member>
+      <member refid="classtf_1_1Semaphore_1a6d0481c1a39eddc6497aad21695c0e8e" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>reset</name></member>
+      <member refid="classtf_1_1Semaphore_1a9f019c0fdcd9b1bbf1d7f46760878d2a" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>Semaphore</name></member>
+      <member refid="classtf_1_1Semaphore_1aafbb7c98f5e510f2ba053b3e9fd2cb25" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>Semaphore</name></member>
+      <member refid="classtf_1_1Semaphore_1a2bbcb0be1e7e767d5911ad79d63b59f0" prot="public" virt="non-virtual"><scope>tf::Semaphore</scope><name>try_acquire</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

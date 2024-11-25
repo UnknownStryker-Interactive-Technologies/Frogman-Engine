@@ -26,21 +26,26 @@ limitations under the License.
 // std::pmr::polymorphic_allocator
 #include <memory_resource>
 
+// get_current_thread_id()
+#include <FE/framework/task.hpp>
+
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
 
-FE::uint8 get_current_thread_id() noexcept;
-
 class framework_base;
+
+class super_object_base;
 
 template<typename T, class Allocator>
 class unique_ptr;
 
 template<typename T>
 class weak_ptr;
+
+
 
 
 template<typename T>
@@ -54,6 +59,7 @@ struct ref_block
 class managed
 {
 	friend class framework_base;
+	friend class super_object_base;
 
 	template<typename T, class Allocator>
 	friend class unique_ptr;
@@ -61,29 +67,26 @@ class managed
 	template<typename T>
 	friend class weak_ptr;
 
-public:
-	managed() noexcept = default;
+protected:
+	constexpr static FE::size ref_block_size = sizeof(ref_block<void>);
+
+	managed(FE::uint32 max_concurrency_p) noexcept;
 	virtual ~managed() noexcept = default;
 
-protected:
 	template<typename T>
-	static ref_block<T>* allocate_ref_block() noexcept
+	ref_block<T>* allocate_ref_block() noexcept
 	{
-		return managed::s_thread_local_ref_tables[get_current_thread_id()].allocate<ref_block<T>>();
+		return this->m_thread_local_ref_tables[get_current_thread_id()].allocate<ref_block<T>>();
 	}
 
 	template<typename T>
-	static void deallocate_ref_block(ref_block<T>* block_p) noexcept
+	void deallocate_ref_block(ref_block<T>* block_p) noexcept
 	{
-		return managed::s_thread_local_ref_tables[get_current_thread_id()].deallocate<ref_block<T>>(block_p);
+		return this->m_thread_local_ref_tables[get_current_thread_id()].deallocate<ref_block<T>>(block_p);
 	}
 
 private:
-	constexpr static FE::size ref_block_size = sizeof(ref_block<void>);
-	static std::unique_ptr<FE::block_pool<ref_block_size, FE::SIMD_auto_alignment>[]> s_thread_local_ref_tables;
-
-	static void initialize(var::uint32 max_concurrency_p) noexcept;
-	static void shutdown() noexcept;
+	std::unique_ptr<FE::block_pool<ref_block_size, FE::SIMD_auto_alignment>[]> m_thread_local_ref_tables;
 };
 
 
@@ -107,7 +110,7 @@ public:
 	unique_ptr(const Allocator& allocator_p = Allocator(), Arguments&&... arguments) noexcept
 		: m_ptr(), m_allocator(allocator_p)
 	{
-		this->m_ptr = managed::allocate_ref_block<T>();
+		this->m_ptr = framework_base::get_engine().access_reference_manager().allocate_ref_block<T>();
 
 		this->m_ptr->_reference.store(this->m_allocator.allocate(1), std::memory_order_relaxed);
 		this->m_ptr->_ref_count.store(0, std::memory_order_relaxed);
@@ -138,7 +141,7 @@ public:
 
 		if (this->m_ptr->_ref_count.load(std::memory_order_acquire) <= 0)
 		{
-			managed::deallocate_ref_block(this->m_ptr);
+			framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ptr);
 		}
 	}
 
@@ -146,7 +149,7 @@ public:
 	{
 		if (this->m_ptr == nullptr)
 		{
-			this->m_ptr = managed::allocate_ref_block<T>();
+			this->m_ptr = framework_base::get_engine().access_reference_manager().allocate_ref_block<T>();
 		}
 
 		if (this->m_ptr->_reference.load(std::memory_order_relaxed) == nullptr)
@@ -275,7 +278,7 @@ public:
 		{
 			if (this->m_ptr->_reference.load(std::memory_order_acquire) == nullptr)
 			{
-				managed::deallocate_ref_block(this->m_ptr);
+				framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ptr);
 			}
 		}
 	}

@@ -20,7 +20,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
-world::world() noexcept
+world::world() noexcept : m_objects_to_allocate(), m_objects_on_world()
 {
 }
 
