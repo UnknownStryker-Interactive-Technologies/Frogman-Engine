@@ -32,10 +32,10 @@ limitations under the License.
 #ifdef FE_ALIGNED_FREE
 	#error FE_ALIGNED_FREE is a reserved Frogman Engine macro function.
 #endif
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
 	#define FE_ALIGNED_ALLOC(size_p, alignment_p) ::_aligned_malloc(size_p, alignment_p)
 	#define FE_ALIGNED_FREE(ptr_to_memory_p) ::_aligned_free(ptr_to_memory_p)
-#elif defined(_LINUX_X86_64_)
+#elif defined(_FE_ON_LINUX_X86_64_)
 	#define FE_ALIGNED_ALLOC(size_p, alignment_p) _mm_malloc(size_p, alignment_p)
 	#define FE_ALIGNED_FREE(ptr_to_memory_p) _mm_free(ptr_to_memory_p)
 #endif

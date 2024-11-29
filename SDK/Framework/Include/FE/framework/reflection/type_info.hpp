@@ -34,9 +34,10 @@ limitations under the License.
 #include <robin_hood.h>
 
 // windows
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#undef WIN32_LEAN_AND_MEAN
 #include <DbgHelp.h>
 #endif
 

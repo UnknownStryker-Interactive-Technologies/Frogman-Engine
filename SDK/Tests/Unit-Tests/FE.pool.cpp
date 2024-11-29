@@ -20,14 +20,14 @@
 
 TEST(FE_Pool, compile)
 {
-	FE::scalable_pool_resource l_resource;
+	FE::scalable_pool_resource<FE::PoolPageCapacity::_4KB> l_resource;
 	std::pmr::vector<std::string> l_strings(&l_resource);
 }
 
 
 
 
-#define _MAX_ITERATION_ 1000
+#define _MAX_ITERATION_ 10000
 
 
 void boost_object_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
@@ -135,7 +135,7 @@ BENCHMARK(boost_fast_pool_allocator_extreme_test);
 
 void FE_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::PoolPageCapacity::_64MB, FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -170,7 +170,7 @@ BENCHMARK(FE_pool_allocator_extreme_test);
 
 void FE_block_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
+	FE::block_pool<FE::PoolPageCapacity::_64MB, sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -204,7 +204,7 @@ void FE_block_pool_allocator_extreme_test(benchmark::State& state_p) noexcept
 BENCHMARK(FE_block_pool_allocator_extreme_test);
 
 
-void cpp_new_delete_extreme_test(benchmark::State& state_p) noexcept
+void _mm_malloc_mm_free_extreme_test(benchmark::State& state_p) noexcept
 {
 	std::string* l_strings[_MAX_ITERATION_];
 	benchmark::DoNotOptimize(l_strings);
@@ -233,5 +233,67 @@ void cpp_new_delete_extreme_test(benchmark::State& state_p) noexcept
 		}
 	}
 }
-BENCHMARK(cpp_new_delete_extreme_test);
+BENCHMARK(_mm_malloc_mm_free_extreme_test);
+
+
+void std_pmr_unsynchronized_pool_resource_extreme_test(benchmark::State& state_p) noexcept
+{
+	std::pmr::unsynchronized_pool_resource l_resource;
+	std::pmr::list<std::string> l_strings(&l_resource);
+	benchmark::DoNotOptimize(l_strings);
+
+	for (auto _ : state_p)
+	{
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			l_strings.push_back(std::string());
+		}
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			if (i % 2 == 0)
+			{
+				l_strings.pop_back();
+			}
+		}
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			if (i % 2 == 1)
+			{
+				l_strings.pop_back();
+			}
+		}
+	}
+}
+BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_test);
+
+
+void scalable_pool_resource_extreme_test(benchmark::State& state_p) noexcept
+{
+	FE::scalable_pool_resource<FE::PoolPageCapacity::_64MB> l_resource;
+	std::pmr::list<std::string> l_strings(&l_resource);
+	benchmark::DoNotOptimize(l_strings);
+
+	for (auto _ : state_p)
+	{
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			l_strings.push_back(std::string());
+		}
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			if (i % 2 == 0)
+			{
+				l_strings.pop_back();
+			}
+		}
+		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
+		{
+			if (i % 2 == 1)
+			{
+				l_strings.pop_back();
+			}
+		}
+	}
+}
+BENCHMARK(scalable_pool_resource_extreme_test);
 #undef _MAX_ITERATION_

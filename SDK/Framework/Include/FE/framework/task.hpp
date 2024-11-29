@@ -32,6 +32,11 @@ limitations under the License.
 
 #include <taskflow.hpp>
 
+// boost::function
+#include <boost/function.hpp>
+
+#include <FE/synchronized_access.hxx>
+
 
 
 
@@ -41,21 +46,18 @@ BEGIN_NAMESPACE(FE::framework)
 FE::uint8 get_current_thread_id() noexcept;
 
 
-enum class TaskType : FE::int32
-{
-	_FireAndForget,
-	_FireAndWait
-};
-
-
 class latent_event
 {
-	std::function<void()> m_event;
+public:
+	using function_type = std::function<void()>;
+
+private:
+    function_type m_event;
 	var::float64 m_delay_in_milliseconds;
 	FE::clock m_timer;
 
 public:
-	latent_event(std::function<void()> task_p, FE::float64 delay_in_milliseconds_p) noexcept;
+	latent_event(const function_type& task_p, FE::float64 delay_in_milliseconds_p) noexcept;
 	latent_event(const latent_event& other_p) noexcept;
 	latent_event(latent_event&& other_p) noexcept;
 
@@ -84,15 +86,17 @@ class task_scheduler
 	std::mutex m_latent_event_lock;
 	std::thread m_latent_event_thread;
 
+	tf::Executor m_executor;
+	std::mutex m_executor_lock;
+
 	task_scheduler(uint32 max_concurrency_p) noexcept;
 	~task_scheduler() noexcept;
 
 public:
-	tf::Executor _executor;
+	FE::unique_access<std::mutex, tf::Executor> access_executor() noexcept;
 
 	void interrupt() noexcept;
-	void launch_latent_event(std::function<void()> task_p, FE::float64 delay_in_milliseconds_p) noexcept;
-
+	void launch_latent_event(const typename latent_event::function_type& task_p, FE::float64 delay_in_milliseconds_p) noexcept;
 };
 
 

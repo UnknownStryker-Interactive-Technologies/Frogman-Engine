@@ -71,7 +71,7 @@ FE::uint8 get_current_thread_id() noexcept
 
 
 
-latent_event::latent_event(std::function<void()> task_p, FE::float64 delay_p) noexcept : m_event(task_p), m_delay_in_milliseconds(delay_p), m_timer()
+latent_event::latent_event(const function_type& task_p, FE::float64 delay_p) noexcept : m_event(task_p), m_delay_in_milliseconds(delay_p), m_timer()
 {
 	this->m_timer.start_clock();
 }
@@ -117,7 +117,7 @@ void latent_event::operator()()
 task_scheduler::task_scheduler(uint32 max_concurrency_p) noexcept 
 	: m_is_inturrupted(false), m_game_thread(),
 	  m_latent_event_pool(std::pmr::pool_options{1024, sizeof(std::function<void()>)}), m_latent_events(&m_latent_event_pool), m_latent_event_lock(), m_latent_event_thread(),
-	  _executor(max_concurrency_p - 3) // excluding game thread, render thread, and latent event producer thread.
+	  m_executor(max_concurrency_p - 3), m_executor_lock() // excluding game thread, render thread, and latent event producer thread.
 {
 	this->m_latent_event_thread = std::thread
 	(
@@ -148,6 +148,11 @@ task_scheduler::~task_scheduler() noexcept
 	this->interrupt();
 }
 
+FE::unique_access<std::mutex, tf::Executor> task_scheduler::access_executor() noexcept
+{
+	return FE::unique_access<std::mutex, tf::Executor>(this->m_executor_lock, this->m_executor);
+}
+
 void task_scheduler::interrupt() noexcept
 {
 	this->m_is_inturrupted.store(true, std::memory_order_release);
@@ -162,10 +167,10 @@ void task_scheduler::interrupt() noexcept
 		this->m_latent_event_thread.join();
 	}
 
-	this->_executor.wait_for_all();
+	this->m_executor.wait_for_all();
 }
 
-void task_scheduler::launch_latent_event(std::function<void()> task_p, FE::float64 delay_in_milliseconds_p) noexcept
+void task_scheduler::launch_latent_event(const typename latent_event::function_type& task_p, FE::float64 delay_in_milliseconds_p) noexcept
 {
 	std::lock_guard<std::mutex> l_lock(this->m_latent_event_lock);
 	this->m_latent_events.emplace_back(task_p, delay_in_milliseconds_p);

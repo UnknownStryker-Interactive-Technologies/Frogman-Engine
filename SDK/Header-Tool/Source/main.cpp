@@ -33,58 +33,93 @@ enum struct FrogmanEngineHeaderToolError : FE::int32
 };
 
 
+struct code_style_guide
+{
+	/*define struct*/
+	FE::UTF8* _;
+};
+
 
 // sample data - C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\super_object_base.hpp
 class header_tool_engine : public FE::framework::framework_base
 {
-	using string_type = std::pmr::basic_string<var::tchar>;
-	using directory_list = std::pmr::vector<string_type>;
+	using directory_t = std::pmr::basic_string<var::tchar>;
+	using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 
-	string_type m_copyright_notice;
+	file_buffer_t m_copyright_notice;
+	file_buffer_t m_code_style_guide;
 	
-	directory_list m_directory_list;
-	std::pmr::vector<string_type> m_mapped_files;
+	std::pmr::vector<directory_t> m_header_file_list;
+	std::pmr::vector<file_buffer_t> m_mapped_header_files;
 
 public:
 	header_tool_engine(FE::int32 argc_p, FE::tchar** argv_p) noexcept
-		: FE::framework::framework_base(argc_p, argv_p), m_copyright_notice(this->get_memory_resource()), m_directory_list(this->get_memory_resource()), m_mapped_files(this->get_memory_resource())
+		: FE::framework::framework_base(argc_p, argv_p), m_copyright_notice(this->get_memory_resource()), m_code_style_guide(this->get_memory_resource()),
+		  m_header_file_list(this->get_memory_resource()), m_mapped_header_files(this->get_memory_resource())
 	{
-		this->m_directory_list = __make_directory_list(argc_p, argv_p);
-		this->m_mapped_files = __map_files(this->m_directory_list);
+
 	}
 	~header_tool_engine() noexcept override = default;
 
 	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override
 	{
-		(void)argc_p;
-		(void)argv_p;
-		// launch threads
-		// framework_base::get_engine().access_task_scheduler();
+		this->m_copyright_notice = __read_copyright_notice(argc_p, argv_p);
+		this->m_code_style_guide = __read_code_style_guide(argc_p, argv_p);
+
+		this->m_header_file_list = __make_header_file_list(argc_p, argv_p);
+		this->m_mapped_header_files = __map_header_files(this->m_header_file_list);
 		return 0;
 	}
 
 	virtual FE::int32 run() override
 	{
-		// report errors
+		/* Jobs to do:
+		1. Check the presence of the given copyright notice.
+		2. Check if the contents of the header files are conforming to the code style guide.
+		3. Auto-generate the reflection macro function arguments.
+		4. Report the issues found in the header files.
+
+		Those jobs can be done in parallel by considering the header fiiles as jobs.
+		*/
+
+		// Define the tasks.
+		tf::Taskflow l_taskflow;
+		l_taskflow.emplace
+		(
+			[]()
+			{
+				std::cout << "Hi, World!";
+			}
+		);
+
+		// Now, run it.
+		get_engine().access_task_scheduler().access_executor()->run(l_taskflow).wait(); // The number of threads can be scaled via the '-max-concurrency=n' option.
 		return 0;
 	}
 
 	virtual FE::int32 shutdown() override
 	{
-		// write to files
 		return 0;
 	}
 
-	static void __process_files(header_tool_engine* this_p) noexcept
+private:
+	file_buffer_t __read_copyright_notice(FE::int32 argc_p, FE::tchar** argv_p) noexcept
 	{
-		// process files
-		(void)this_p;
+		(void)argc_p;
+		(void)argv_p;
+		return file_buffer_t();
 	}
 
-private:
-	directory_list __make_directory_list(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+	file_buffer_t __read_code_style_guide(FE::int32 argc_p, FE::tchar** argv_p) noexcept
 	{
-		string_type l_raw_directories(this->get_memory_resource());
+		(void)argc_p;
+		(void)argv_p;
+		return file_buffer_t();
+	}
+
+	std::pmr::vector<directory_t> __make_header_file_list(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+	{
+		directory_t l_raw_directories(this->get_memory_resource());
 
 		for (int i = 0; i < argc_p; ++i)
 		{
@@ -102,7 +137,7 @@ private:
 				var::count_t l_number_of_files = FE::algorithm::string::count_chars<var::tchar>(l_raw_directories.c_str(), ';')._match_count;
 				++l_number_of_files; // CMake does not put ';' to indicate the end of the last directory of the list. So, we need to add 1 to the count.
 
-				directory_list l_list;
+				std::pmr::vector<directory_t> l_list;
 				l_list.reserve(l_number_of_files);
 
 				FE::tchar* l_iterator = l_raw_directories.c_str();
@@ -130,14 +165,14 @@ private:
 			}
 		}
 
-		return directory_list();
+		return std::pmr::vector<directory_t>();
 	}
 
-	std::pmr::vector<string_type> __map_files(const directory_list& file_list_p) noexcept
+	std::pmr::vector<file_buffer_t> __map_header_files(const std::pmr::vector<directory_t>& file_list_p) noexcept
 	{
-		std::pmr::vector<string_type> l_files(file_list_p.size(), this->get_memory_resource());
+		std::pmr::vector<file_buffer_t> l_files(this->get_memory_resource());
+		l_files.reserve(file_list_p.size());
 
-		size_t l_index = 0;
 		for (auto& path_to_file : file_list_p)
 		{
 			auto l_h = path_to_file.find(".h");
@@ -148,11 +183,10 @@ private:
 				continue;
 			}
 
-			std::basic_fstream<var::tchar> l_file_handler;
-			l_file_handler.open(path_to_file.c_str(), std::ios::in | std::ios::binary);
+			std::basic_ifstream<var::UTF8> l_file_handler;
+			l_file_handler.open(path_to_file.c_str(), std::ios::binary);
 			FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_Error_FailedToOpenFile, "Frogman Engine Header Tool: Failed to open a file");
-			//l_file_handler >> l_files[l_index];
-			++l_index;
+			l_files.emplace_back(std::istreambuf_iterator<var::UTF8>(l_file_handler), std::istreambuf_iterator<var::UTF8>());
 			l_file_handler.close();
 		}
 		return l_files;

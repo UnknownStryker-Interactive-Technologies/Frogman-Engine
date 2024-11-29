@@ -30,7 +30,7 @@ limitations under the License.
 #include <FE/hash.hpp>
 #include <FE/type_traits.hxx>
 #include <FE/pair.hxx>
-#include <FE/pool/block_pool.hxx>
+#include <FE/pool/block_pool_allocator.hxx>
 
 #include <FE/framework/reflection/type_info.hpp>
 
@@ -58,6 +58,27 @@ limitations under the License.
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
 
+namespace FE::framework::serialization
+{
+	enum struct FileExtension : FE::int8
+	{
+		_Froggy,
+		_Toc,
+		_Aar,
+		_Ao,
+		_Fassetpack,
+		_Fasset,
+		Fdata
+	};
+
+	constexpr FE::pair<FileExtension, FE::ASCII*> froggy_file_extension{ FileExtension::_Froggy, ".froggy" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> toc_file_extension{ FileExtension::_Toc, ".toc" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> aar_file_extension{ FileExtension::_Aar, ".aar" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> ao_file_extension{ FileExtension::_Ao, ".ao" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> fassetpack_file_extension{ FileExtension::_Fassetpack, ".fassetpack" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> fasset_file_extension{ FileExtension::_Fasset, ".fasset" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> fdata_file_extension{ FileExtension::Fdata, ".fdata" };
+}
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
@@ -208,10 +229,10 @@ public:
 	by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 	*/
 	using reflection_map_type = robin_hood::unordered_map<FE::ASCII*,
-		std::map<var::ptrdiff, property_meta_data, std::less<var::ptrdiff>,
-		boost::fast_pool_allocator< std::pair<FE::ptrdiff, property_meta_data>, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>
-		>,
-		FE::hash<FE::ASCII*>>;
+														  std::map<var::ptrdiff, property_meta_data, std::less<var::ptrdiff>,
+		                                                           FE::block_pool_allocator<std::pair<FE::ptrdiff, property_meta_data>, FE::PoolPageCapacity::_64MB>
+		                                                           >,
+		                                                  FE::hash<FE::ASCII*>>;
 	using class_name_type = reflection_map_type::key_type;
 	using class_property_list = reflection_map_type::mapped_type;
 	using class_property_offset_type = typename class_property_list::key_type;
@@ -229,6 +250,8 @@ public:
 	using input_buffer_iterator_type = typename input_buffer_type::iterator;
 
 private:
+	FE::block_pool<FE::PoolPageCapacity::_64MB, sizeof(std::pair<FE::ptrdiff, property_meta_data>), FE::SIMD_auto_alignment> m_pool;
+	FE::block_pool_allocator<std::pair<FE::ptrdiff, property_meta_data>, FE::PoolPageCapacity::_64MB> m_allocator;
 	reflection_map_type m_property_map;
 	class_layer_stack m_class_layer;
 	data_on_heap_size_recorder m_scalable_container_size_recorder;
@@ -240,9 +263,9 @@ private:
 
 private:
 	property(FE::size reflection_map_capacity_p) noexcept
-		: m_property_map(reflection_map_capacity_p), m_class_layer(), m_scalable_container_size_recorder(), m_lock(), m_fstream(), m_input_buffer(), m_position() {
+		: m_pool(), m_allocator(&m_pool), m_property_map(reflection_map_capacity_p), m_class_layer(), m_scalable_container_size_recorder(), m_lock(), m_fstream(), m_input_buffer(), m_position() {
 	}
-	~property() noexcept = default;
+	~property() noexcept {};
 
 public:
 	property(const property&) = delete;
@@ -279,7 +302,7 @@ public:
 		auto l_iterator = m_property_map.find(l_host_class_instance_typename);
 		if (FE_UNLIKELY(l_iterator == m_property_map.end())) _FE_UNLIKELY_
 		{
-			auto l_result = m_property_map.emplace(l_host_class_instance_typename, class_property_list());
+			auto l_result = m_property_map.emplace(l_host_class_instance_typename, class_property_list(m_allocator));
 			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property::register_property().");
 			l_iterator = l_result.first;
 		}
@@ -369,7 +392,7 @@ public:
 		FE::ASCII* l_typename = reflection::type_id<T>().name();
 		auto l_search_result = this->m_property_map.find(l_typename);
 		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND, "serialization failed: could not find the requested type information or the class/struct is empty");
-		m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
+		this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
 
 		if constexpr (FE::has_base_type<T>::value == true)
 		{

@@ -32,6 +32,12 @@ limitations under the License.
 #include <optional>
 #include <string>
 
+#ifdef _FE_ON_WINDOWS_X86_64_
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef WIN32_LEAN_AND_MEAN
+#endif
+
 
 
 
@@ -72,6 +78,16 @@ program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept 
 			break;
 		}
 	}
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+	SYSTEM_INFO l_system_info;
+	GetSystemInfo(&l_system_info);
+	if (this->m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
+	{
+		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with the default value ${%u@2}.", this->m_max_concurrency._first, &this->m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
+		this->m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
+	}
+#endif
 }
 
 FE::uint32 program_options::get_max_concurrency() const noexcept
@@ -92,7 +108,7 @@ RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p) noexcept
-	: m_program_options(argc_p, argv_p), m_memory(std::make_unique<FE::scalable_pool_resource[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() )
+	: m_program_options(argc_p, argv_p), m_memory(std::make_unique<FE::scalable_pool_resource<FE::PoolPageCapacity::_Max>[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() )
 {
 	std::setlocale(LC_ALL, std::setlocale(LC_ALL, ""));
 }
@@ -165,7 +181,7 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal
 	{
 		std::string l_dump_filename = "Crashed Thread Stack Trace Report from ";
 		l_dump_filename += FE::clock::get_current_local_time();
-		l_dump_filename += ".txt";
+		l_dump_filename += ".aar";
 		FE::ofstream_guard l_release_build_crash_report_guard(l_release_build_crash_report);
 		l_release_build_crash_report_guard.get_stream().open(l_dump_filename.c_str());
 		l_release_build_crash_report << "Compilation Date: " << " " << __DATE__ << " - " << __TIME__ << "\n\n";

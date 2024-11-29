@@ -26,11 +26,11 @@ const FE::clock::char_type* FE::clock::get_current_local_time() noexcept
     std::time_t l_current_time_t = std::chrono::system_clock::to_time_t(l_current_time);
     tm l_time;
 
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
     localtime_s(&l_time, &l_current_time_t);
     std::strftime(tl_s_local_time_string_buffer, current_local_time_buffer_size, "%Y-%B-%d-%A  %p %Ih.%Mm.%Ss", &l_time);
 
-#elif defined(_LINUX_X86_64_) 
+#elif defined(_FE_ON_LINUX_X86_64_) 
     std::strftime(tl_s_local_time_string_buffer, current_local_time_buffer_size, "%Y-%B-%d-%A  %p %Ih.%Mm.%Ss", localtime_r(&l_current_time_t, &l_time));
 #endif
     return tl_s_local_time_string_buffer;

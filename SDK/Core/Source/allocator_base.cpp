@@ -17,12 +17,12 @@ limitations under the License.
 #include <FE/clock.hpp>
 
 
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
     #include <psapi.h>
     #undef WIN32_LEAN_AND_MEAN
-#elif defined(_LINUX_X86_64_)
+#elif defined(_FE_ON_LINUX_X86_64_)
     #include <sys/types.h>
     #include <sys/sysinfo.h>
 #endif
@@ -32,7 +32,7 @@ limitations under the License.
 
 var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept
 {
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
 	MEMORYSTATUSEX l_memory_information;
 	l_memory_information.dwLength = sizeof(MEMORYSTATUSEX);
 	GlobalMemoryStatusEx(&l_memory_information);
@@ -66,7 +66,7 @@ var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO selec
 	}
 
 #else
-	#ifdef _LINUX_X86_64_
+	#ifdef _FE_ON_LINUX_X86_64_
 	struct sysinfo l_memory_information;
 	sysinfo(&l_memory_information);
 

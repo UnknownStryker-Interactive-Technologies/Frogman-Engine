@@ -28,10 +28,11 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+template<PoolPageCapacity PageCapacity>
 class scalable_pool_resource : public std::pmr::memory_resource, public FE::internal::allocator_base
 {
 public:
-	using pool_type = FE::pool<FE::PoolType::_Scalable, FE::SIMD_auto_alignment>;
+	using pool_type = FE::pool<FE::PoolType::_Scalable, PageCapacity, FE::SIMD_auto_alignment>;
 
 	pool_type m_pool;
 
@@ -39,38 +40,86 @@ public:
 	scalable_pool_resource() noexcept = default;
 	virtual ~scalable_pool_resource() noexcept = default;
 
-	scalable_pool_resource(scalable_pool_resource&& other_p) noexcept;
-	scalable_pool_resource& operator=(scalable_pool_resource&& other_p) noexcept;
+	scalable_pool_resource(scalable_pool_resource&& other_p) noexcept 
+		: m_pool(std::move(other_p.m_pool)) {}
+
+	scalable_pool_resource& operator=(scalable_pool_resource&& other_p) noexcept
+	{
+		this->m_pool = std::move(other_p.m_pool);
+		return *this;
+	}
 
 protected:
-	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
-	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
-	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
+	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
+	{
+		return this->m_pool.allocate<std::byte>(bytes_p);
+	}
+
+	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
+	{
+		this->m_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
+	}
+
+	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+	{
+		const scalable_pool_resource* l_other = dynamic_cast<const scalable_pool_resource*>(&other_p);
+		if (l_other == nullptr)
+		{
+			return false;
+		}
+
+		return &(this->m_pool) == &(l_other->m_pool);
+	}
 
 private:
 	scalable_pool_resource(const scalable_pool_resource&) = delete;
 	scalable_pool_resource& operator=(const scalable_pool_resource&) = delete;
 };
 
-// thread-unsafe!
+
+template<PoolPageCapacity PageCapacity>
 class cache_aligned_pool_resource : public std::pmr::memory_resource, public FE::internal::allocator_base
 {
 public:
-	using pool_type = FE::pool<FE::PoolType::_Scalable, FE::align_CPU_L1_cache_line>;
+	using pool_type = FE::pool<FE::PoolType::_Scalable, PageCapacity, FE::align_CPU_L1_cache_line>;
 
 	pool_type m_pool;
+	std::mutex m_lock;
 
 public:
 	cache_aligned_pool_resource() noexcept = default;
 	virtual ~cache_aligned_pool_resource() noexcept = default;
 
-	cache_aligned_pool_resource(cache_aligned_pool_resource&& other_p) noexcept;
-	cache_aligned_pool_resource& operator=(cache_aligned_pool_resource&& other_p) noexcept;
+	cache_aligned_pool_resource(cache_aligned_pool_resource&& other_p) noexcept 
+		: m_pool(std::move(other_p.m_pool)), m_lock() {}
+
+	cache_aligned_pool_resource& operator=(cache_aligned_pool_resource&& other_p) noexcept
+	{
+		this->m_pool = std::move(other_p.m_pool);
+		return *this;
+	}
 
 protected:
-	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
-	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
-	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
+	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
+	{
+		return this->m_pool.allocate<std::byte>(bytes_p);
+	}
+
+	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
+	{
+		this->m_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
+	}
+
+	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+	{
+		const cache_aligned_pool_resource* l_other = dynamic_cast<const cache_aligned_pool_resource*>(&other_p);
+		if (l_other == nullptr)
+		{
+			return false;
+		}
+
+		return &(this->m_pool) == &(l_other->m_pool);
+	}
 
 private:
 	cache_aligned_pool_resource(const cache_aligned_pool_resource&) = delete;

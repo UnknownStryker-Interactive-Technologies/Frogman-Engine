@@ -39,6 +39,9 @@ limitations under the License.
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/task.hpp>
 
+// boost::function
+#include <boost/functional.hpp>
+
 
 
 
@@ -78,7 +81,7 @@ class framework_base
 	
 protected:
 	program_options m_program_options;
-	std::unique_ptr<FE::scalable_pool_resource[]> m_memory;
+	std::unique_ptr<FE::scalable_pool_resource<FE::PoolPageCapacity::_Max>[]> m_memory;
 	framework::managed m_reference_manager;
 	reflection::method m_method_reflection;
 	reflection::property m_property_reflection;

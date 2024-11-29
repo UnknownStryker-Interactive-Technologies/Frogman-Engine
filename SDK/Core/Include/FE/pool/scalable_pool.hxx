@@ -32,6 +32,12 @@ limitations under the License.
 // std::sort()
 #include <algorithm>
 
+// std::execution::par
+#include <execution>
+
+// std::unique_ptr
+#include <memory>
+
 // std thread for parallel sorting.
 #include <thread>
 
@@ -80,15 +86,15 @@ namespace internal::pool
         return lhs_p._address != rhs_p._address;
     }
     
-    template<class Alignment>
-    class chunk<PoolType::_Scalable, Alignment>
+    template<PoolPageCapacity PageCapacity, class Alignment>
+    class chunk<PoolType::_Scalable, PageCapacity, Alignment>
     {
         FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
     public:
-		static FE::size page_capacity_in_bytes = FE::one_gb;
-        static count_t possible_address_count = (page_capacity_in_bytes / Alignment::size);
-        static count_t free_list_capacity = possible_address_count;
+		static FE::size page_capacity_in_bytes = static_cast<FE::size>(PageCapacity);
+        static FE::size possible_address_count = (page_capacity_in_bytes / Alignment::size);
+        static FE::size free_list_capacity = possible_address_count;
 
         using free_list_type = block_info[free_list_capacity];
         using free_list_iterator = block_info*;
@@ -197,40 +203,55 @@ namespace internal::pool
 
 
 
-template<class Alignment>
-class pool<PoolType::_Scalable, Alignment>
+template<PoolPageCapacity PageCapacity, class Alignment>
+class pool<PoolType::_Scalable, PageCapacity, Alignment>
 {
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
-    using chunk_type = internal::pool::chunk<PoolType::_Scalable, Alignment>;
+    using chunk_type = internal::pool::chunk<PoolType::_Scalable, PageCapacity, Alignment>;
     using free_list_type = typename chunk_type::free_list_type;
     using free_list_iterator = typename chunk_type::free_list_iterator;
-    using pool_type = std::list<chunk_type>;
-    using pool_iterator = typename pool_type::iterator;
 
 public:
 	using alignment_type = Alignment;
 
-    constexpr static size page_capacity = chunk_type::page_capacity_in_bytes;
-    constexpr static count_t possible_address_count = (page_capacity / Alignment::size);
-    constexpr static count_t free_list_capacity = chunk_type::free_list_capacity;
-    constexpr static count_t maximum_list_node_count = 3;
+    constexpr static FE::size page_capacity = chunk_type::page_capacity_in_bytes;
+    constexpr static FE::size possible_address_count = (page_capacity / Alignment::size);
+    constexpr static FE::size free_list_capacity = chunk_type::free_list_capacity;
+
+    constexpr static FE::size maximum_page_count = 3;
+
+	constexpr static FE::size auto_defragmentation_denominator = 2;
+    constexpr static FE::size auto_defragmentation_point = possible_address_count / auto_defragmentation_denominator;
 
 private:
-    pool_type m_memory_pool;
+    using page_pointer = std::unique_ptr<chunk_type>;
+
+    page_pointer m_memory_pool[maximum_page_count];
+    var::uint32 m_page_count;
 
 public:
-    pool() noexcept = default;
+    pool() noexcept : m_memory_pool{}, m_page_count() {};
     ~pool() noexcept = default;
 
-    _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept : m_memory_pool( std::move(other_p.m_memory_pool) ) {}
+    _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept
+    {
+        for (var::size i = 0; i < maximum_page_count; ++i)
+        {
+            this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+        }
+    }
+
     _FE_FORCE_INLINE_ pool& operator=(pool&& other_p) noexcept
 	{
-		this->m_memory_pool = std::move(other_p.m_memory_pool);
+        for (var::size i = 0; i < maximum_page_count; ++i)
+        {
+            this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+        }
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return this->m_memory_pool == other_p.m_memory_pool; }
+	_FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return this->m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -238,23 +259,27 @@ public:
     template<typename U>
     U* allocate(FE::uint64 size_p = 1) noexcept
     {
-        (void)size_p;
         FE_STATIC_ASSERT(std::is_array<U>::value == false, "Static Assertion Failed: The T must not be an array[] type.");
 
         FE::size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
         FE_EXIT(l_queried_allocation_size_in_bytes > page_capacity, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT((l_queried_allocation_size_in_bytes % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_size_in_bytes, &Alignment::size);
 
-        for (typename pool_type::iterator iterator = this->m_memory_pool.begin(); iterator != this->m_memory_pool.cend(); ++iterator)
+        for (page_pointer& page_ptr : m_memory_pool)
         {
+            if (page_ptr == nullptr) _FE_UNLIKELY_
+            {
+                page_ptr = std::make_unique<chunk_type>();
+            }
+
             internal::pool::block_info l_memblock_info{};
            
-            if (__try_allocation_from_page(iterator, l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
+            if (__try_allocation_from_page(page_ptr, l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
             { 
 #ifdef _ENABLE_LOG_
-				FE::size l_page_count = this->m_memory_pool.size();
+				//FE::size l_page_count = this->m_memory_pool.size();
 #endif 
-                FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u64@1}.", this, &l_page_count);
+                //FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u64@1}.", this, &l_page_count);
                 continue; // It will eventually create a new page if the next pages are not available.
             }
 
@@ -268,14 +293,14 @@ public:
             }
 
 #ifdef _ENABLE_ASSERT_
-			iterator->check_double_allocation(l_memblock_info);
+            page_ptr->check_double_allocation(l_memblock_info);
 #endif
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address) % Alignment::size) == 0, "FE.pool.scalable_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_memblock_info._address, &Alignment::size);
             return reinterpret_cast<U*>(l_memblock_info._address);
         }
-        FE_LOG("Warning: failed to allocate memory from this FE.pool.scalable_pool instance located at '${%p@0}'.", this);
-		create_pages(1); // Failed to find a page that fits the requested size; allocate a new page.
-        return allocate<U>(size_p); // Retry the allocation.
+        
+        FE_LOG("Frogman Engine scalable pool warning: the allocation failed because the pool instance is out of its capacity. A nullptr has been returned.");
+        return nullptr;
     }
 
     // Incorrect type will cause a critical runtime error.
@@ -290,9 +315,14 @@ public:
         l_block_to_free._address = reinterpret_cast<var::byte*>(pointer_p);
         l_block_to_free._size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(element_count_p);
         
-        for (typename pool_type::iterator iterator = this->m_memory_pool.begin(); iterator != this->m_memory_pool.cend(); ++iterator)
+        for (page_pointer& page_ptr : m_memory_pool)
         {
-            if ((iterator->_begin <= reinterpret_cast<var::byte*>(pointer_p)) && (reinterpret_cast<var::byte*>(pointer_p) < iterator->_end))
+            if (page_ptr == nullptr) _FE_UNLIKELY_
+            {
+                continue;
+            }
+
+            if ((page_ptr->_begin <= l_block_to_free._address) && (l_block_to_free._address < page_ptr->_end))
             {
                 if constexpr (FE::is_trivial<T>::value == false)
                 {
@@ -303,73 +333,66 @@ public:
                     }
                 }
 #ifdef _ENABLE_ASSERT_
-                iterator->check_double_free(l_block_to_free);
+                page_ptr->check_double_free(l_block_to_free);
 #endif
-                iterator->add_to_the_free_list(l_block_to_free);
+                page_ptr->add_to_the_free_list(l_block_to_free);
+
+                //if constexpr (PageCapacity > PoolPageCapacity::_16KB)
+                //{
+                //    if (page_ptr->get_free_list_size() >= auto_defragmentation_point)
+                //    {
+                //        __defragment(page_ptr);
+                //    }
+                //}
                 return;
             }
         }
+
+        FE_EXIT(true, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_FALSE_DEALLOCATION, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_block_to_free._address);
     }
 
     _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(chunk_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(chunk_count_p));
+        FE_ASSERT(this->m_page_count < maximum_page_count, "The pool instance is out of its page table capacity: unable to create new pages for the pool instance.");
 
-        for (var::size i = 0; i < chunk_count_p; ++i)
+        for (; this->m_page_count < chunk_count_p; ++m_page_count)
         {
-            this->m_memory_pool.emplace_back();
-
-            FE_ASSERT((reinterpret_cast<FE::uintptr>(this->m_memory_pool.back()._begin) % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the memory page address '${%p@0}' is not aligned by ${%lu@1}.", this->m_memory_pool.back()._begin, &Alignment::size);
+            this->m_memory_pool[m_page_count] = std::make_unique<chunk_type>();
         }
-
-        FE_NEGATIVE_ASSERT(this->m_memory_pool.size() == maximum_list_node_count, "Maximum chunk count of a memory chunk list is limited to ${%lu@0} for some performance reasons.", &maximum_list_node_count);
     }
 
-    FE::boolean shrink_to_fit() noexcept
+    void shrink_to_fit() noexcept
     {
-        typename pool_type::iterator  l_list_iterator = this->m_memory_pool.begin();
-        typename pool_type::const_iterator l_cend = this->m_memory_pool.cend();
-
-        if (l_list_iterator == l_cend)
+        for (page_pointer& page_ptr : m_memory_pool)
         {
-            FE_LOG("Unable to shrink_to_fit() an empty pool.");
-            return false;
-        }
+            if (page_ptr == nullptr)
+            {
+                continue;
+            }
 
-        for (; l_list_iterator != l_cend; ++l_list_iterator)
-        {
             var::size l_unused_memory_size_in_bytes = 0;
-            for (auto block : l_list_iterator->_free_list)
+            for (auto block : page_ptr->_free_list)
             {
                 l_unused_memory_size_in_bytes += block.second;
             }
 
-            if (l_list_iterator->_page_iterator < l_list_iterator->_end)
+            if (page_ptr->_page_iterator < page_ptr->_end)
             {
-                l_unused_memory_size_in_bytes += l_list_iterator->_end - l_list_iterator->_page_iterator;
+                l_unused_memory_size_in_bytes += page_ptr->_end - page_ptr->_page_iterator;
             }
 
             if (l_unused_memory_size_in_bytes == page_capacity)
             {
-                this->m_memory_pool.erase(l_list_iterator);
-
-                if (this->m_memory_pool.size() == 0)
-                {
-                    break;
-                }
-
-                l_list_iterator = this->m_memory_pool.begin();
+				page_ptr.reset();
             }
         }
-
-        return true;
     }
 
 private:
     /* Time complexity: 
 	Best - O(1)
     */
-    static FE::boolean __try_allocation_from_page(pool_iterator page_p, internal::pool::block_info& out_result_p, FE::size bytes_p) noexcept
+    static FE::boolean __try_allocation_from_page(page_pointer& page_p, internal::pool::block_info& out_result_p, FE::size bytes_p) noexcept
     {
         FE_ASSERT((bytes_p % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &bytes_p, &Alignment::size);
         if (page_p->is_page_binary_searchable() == true)
@@ -414,37 +437,37 @@ private:
     }
 
 	// Time complexity: O(3n + n log n).
-    static void __defragment(pool_iterator page_p) noexcept
+    static void __defragment(page_pointer& page_p) noexcept
     {
-        if (2 > page_p->get_free_list_size())
+		if (2 > page_p->get_free_list_size()) // Nah, it's not worth it.
         {
 			return;
         }
 
-		// Sort the array to merge the adjacent blocks. Time complexity: O(n log n)
-        if (page_p->get_free_list_size() > 512)
+        if constexpr (PageCapacity == PoolPageCapacity::_4KB)
         {
-            index_t l_mid = page_p->get_free_list_size() >> 1;
-            std::jthread l_thread = std::jthread(
-                [=]()
-                {
-                    std::sort<free_list_iterator, internal::pool::from_low_address>(
-                        static_cast<free_list_iterator>(page_p->_free_list) + l_mid,
-                        static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
-                        internal::pool::from_low_address{});
-                }
-            );
-
             std::sort<free_list_iterator, internal::pool::from_low_address>(
                 static_cast<free_list_iterator>(page_p->_free_list),
-                static_cast<free_list_iterator>(page_p->_free_list) + l_mid,
+                static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
                 internal::pool::from_low_address{});
         }
-
-        std::sort<free_list_iterator, internal::pool::from_low_address>(
-            static_cast<free_list_iterator>(page_p->_free_list),
-            static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
-            internal::pool::from_low_address{});
+        else
+        {
+            if (page_p->get_free_list_size() >= 256)
+            {
+                std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(std::execution::parallel_unsequenced_policy{},
+                    static_cast<free_list_iterator>(page_p->_free_list),
+                    static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
+                    internal::pool::from_low_address{});
+            }
+            else
+            {
+                std::sort<free_list_iterator, internal::pool::from_low_address>(
+                    static_cast<free_list_iterator>(page_p->_free_list),
+                    static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
+                    internal::pool::from_low_address{});
+            }
+        }
 
 		// Merge the free list.
 		free_list_iterator l_iterator = static_cast<free_list_iterator>(page_p->_free_list);
@@ -505,8 +528,8 @@ private:
  - __retrive_from_free_list()
  O(log n)
 */
-template<class Alignment = FE::SIMD_auto_alignment>
-using scalable_pool = pool<PoolType::_Scalable, Alignment>;
+template<PoolPageCapacity PageCapacity, class Alignment = FE::SIMD_auto_alignment>
+using scalable_pool = pool<PoolType::_Scalable, PageCapacity, Alignment>;
 
 
 END_NAMESPACE

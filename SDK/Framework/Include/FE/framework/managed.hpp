@@ -86,7 +86,7 @@ protected:
 	}
 
 private:
-	std::unique_ptr<FE::block_pool<ref_block_size, FE::SIMD_auto_alignment>[]> m_thread_local_ref_tables;
+	std::unique_ptr<FE::block_pool<FE::PoolPageCapacity::_256KB, ref_block_size, FE::SIMD_auto_alignment>[]> m_thread_local_ref_tables;
 };
 
 

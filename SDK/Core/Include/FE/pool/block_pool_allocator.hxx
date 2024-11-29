@@ -26,14 +26,13 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template <typename T>
+template <typename T, PoolPageCapacity PageCapacity>
 class new_delete_block_pool_allocator : public FE::internal::allocator_base
 {
 public:
 	using base_type = FE::internal::allocator_base;
 	using alignment_type = FE::SIMD_auto_alignment;
-	using pool_type = pool<PoolType::_Block, FE::align_as<sizeof(T), alignment_type>>;
-	using page_capacity = pool_type::page_capacity;
+	using pool_type = FE::block_pool<PageCapacity, sizeof(T), alignment_type>;
 	using value_type = T;
 	using pointer = value_type*;
 	using const_pointer = const value_type*;
@@ -41,6 +40,12 @@ public:
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
+
+	template <typename U>
+	struct rebind 
+	{
+		using other = new_delete_block_pool_allocator<U, PageCapacity>;
+	};
 
 	FE_STATIC_ASSERT(FE::is_power_of_two(alignment_type::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -61,12 +66,12 @@ public:
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T>& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool)
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(new_delete_block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool)
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -74,7 +79,7 @@ public:
 	_FE_FORCE_INLINE_ ~new_delete_block_pool_allocator() noexcept {}
 
 	template <typename U>
-	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
+	_FE_CONSTEXPR20_ new_delete_block_pool_allocator(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the new_delete_block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -134,14 +139,14 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept
 	{
-		return true;
+		return this->m_pool == other_p.m_pool;
 	}
 #ifndef _FE_HAS_CXX23_
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator& other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const new_delete_block_pool_allocator<T, PageCapacity>& other_p) noexcept
 	{
-		return false;
+		return this->m_pool != other_p.m_pool;
 	}
 #endif
 };
@@ -149,14 +154,13 @@ public:
 
 
 
-template <typename T>
+template <typename T, PoolPageCapacity PageCapacity>
 class block_pool_allocator : public FE::internal::allocator_base
 {
 public:
 	using base_type = FE::internal::allocator_base;
 	using alignment_type = FE::SIMD_auto_alignment;
-	using pool_type = pool<PoolType::_Block, FE::align_as<sizeof(T), alignment_type>>;
-	using page_capacity = pool_type::page_capacity;
+	using pool_type = FE::block_pool<PageCapacity, sizeof(T), alignment_type>;
 	using value_type = T;
 	using pointer = value_type*;
 	using const_pointer = const value_type*;
@@ -164,6 +168,13 @@ public:
 	using const_reference = const value_type&;
 	using difference_type = var::ptrdiff;
 	using size_type = var::size;
+
+	template <typename U>
+	struct rebind
+	{
+		using other = block_pool_allocator<U, PageCapacity>;
+	};
+
 
 	FE_STATIC_ASSERT(FE::is_power_of_two(alignment_type::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -184,12 +195,12 @@ public:
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T>& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ block_pool_allocator(const block_pool_allocator<T, PageCapacity>& other_p) noexcept : m_pool(other_p.m_pool)
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
 
-	_FE_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T>&& other_p) noexcept : m_pool(other_p.m_pool) 
+	_FE_CONSTEXPR20_ block_pool_allocator(block_pool_allocator<T, PageCapacity>&& other_p) noexcept : m_pool(other_p.m_pool)
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -197,7 +208,7 @@ public:
 	_FE_FORCE_INLINE_ ~block_pool_allocator() noexcept {};
 
 	template <typename U = T>
-	_FE_CONSTEXPR20_ block_pool_allocator(_FE_MAYBE_UNUSED_ const block_pool_allocator<U>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
+	_FE_CONSTEXPR20_ block_pool_allocator(_FE_MAYBE_UNUSED_ const block_pool_allocator<U, PageCapacity>& other_p) noexcept : m_pool(base_type::__get_default_pool<pool_type>())
 	{
 		FE_LOG_IF(this->m_pool == nullptr, "Warning: the block_pool_allocator has no address to a memory pool instance.");
 	}
@@ -257,14 +268,14 @@ public:
 	}
 	
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const block_pool_allocator&) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator==(_FE_MAYBE_UNUSED_ const block_pool_allocator<T, PageCapacity>& other_p) noexcept
 	{
-		return true;
+		return this->m_pool == other_p.m_pool;
 	}
 #ifndef _FE_HAS_CXX23_
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const block_pool_allocator&) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean operator!=(_FE_MAYBE_UNUSED_ const block_pool_allocator<T, PageCapacity>& other_p) noexcept
 	{
-		return false;
+		return this->m_pool != other_p.m_pool;
 	}
 #endif
 };

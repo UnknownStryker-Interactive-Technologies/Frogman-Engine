@@ -22,7 +22,7 @@ BEGIN_NAMESPACE(FE::framework)
 
 
 managed::managed(FE::uint32 max_concurrency_p) noexcept
-	: m_thread_local_ref_tables(std::make_unique<FE::block_pool<managed::ref_block_size, FE::SIMD_auto_alignment>[]>(max_concurrency_p))
+	: m_thread_local_ref_tables(std::make_unique<FE::block_pool<FE::PoolPageCapacity::_256KB, managed::ref_block_size, FE::SIMD_auto_alignment>[]>(max_concurrency_p))
 {
 }
 

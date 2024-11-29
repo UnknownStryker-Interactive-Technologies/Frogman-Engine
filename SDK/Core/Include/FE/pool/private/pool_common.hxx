@@ -23,7 +23,12 @@ limitations under the License.
 #include <cstring>
 #include <list>
 #include <memory>
-#pragma warning (push)
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+#define WIN32_LEAN_AND_MEAN
+// to use VirtualAlloc and VirtualFree
+#include <Windows.h>
+#endif
 
 
 
@@ -35,6 +40,23 @@ enum struct PoolType : uint8
 {
     _Block = 0,
     _Scalable = 1,
+	_ConcurrentBlock = 2
+};
+
+
+enum struct PoolPageCapacity : FE::uint64
+{
+    _4KB = 4096,
+	_16KB = 16384,
+	_64KB = 65536,
+	_256KB = 262144,
+	_1MB = 1048576,
+	_4MB = 4194304,
+	_16MB = 16777216,
+	_64MB = 67108864,
+	_256MB = 268435456,
+	_1GB = 1073741824,
+    _Max = (0x7fffffff - 31)
 };
 
 
@@ -46,34 +68,37 @@ namespace internal::pool
         var::int64 _size_in_bytes;
     };
 
-    template<PoolType PoolType, class Alignment>
+    template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
     class chunk;
+
+	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
+	//struct page_deleter
+	//{
+	//	_FE_FORCE_INLINE_ void operator()(chunk<PoolType, PageCapacity, Alignment>* ptr_p) const noexcept
+	//	{
+	//		ptr_p->~chunk<PoolType, PageCapacity, Alignment>();
+	//		FE_EXIT(VirtualUnlock(ptr_p, sizeof(chunk<PoolType, PageCapacity, Alignment>)) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_UNLOCK_FAILURE, "Failed to VirtualUnlock() a memory page.");
+	//		FE_EXIT(VirtualFree(ptr_p, 0, MEM_RELEASE) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_FREE_FAILURE, "Failed to VirtualFree() a memory page.");
+	//	}
+	//};
+
+	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
+	//using page_ptr = std::unique_ptr<chunk<PoolType, PageCapacity, Alignment>, page_deleter<PoolType, PageCapacity, Alignment>>;
+
+	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
+	//_FE_FORCE_INLINE_ page_ptr<PoolType, PageCapacity, Alignment> make_page() noexcept
+	//{
+	//	typename page_ptr<PoolType, PageCapacity, Alignment>::pointer l_virtual_alloc_result = (typename page_ptr<PoolType, PageCapacity, Alignment>::pointer)VirtualAlloc(nullptr, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	//	FE_EXIT(VirtualLock( l_virtual_alloc_result, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type) ) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_LOCK_FAILURE, "Failed to VirtualLock() a memory page.");
+	//	new(l_virtual_alloc_result) typename page_ptr<PoolType, PageCapacity, Alignment>::element_type();
+	//	return page_ptr<PoolType, PageCapacity, Alignment>(l_virtual_alloc_result);
+	//}
 }
 
 
-template<PoolType PoolType, class Alignment>
+template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
 class pool;
 
 
-template<FE::uint64 Capacity>
-struct capacity final
-{
-    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = Capacity;
-};
-
-template<FE::uint64 Count>
-struct object_count final
-{
-    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = Count;
-};
-
-template<FE::uint64 SizeInBytes>
-struct size_in_bytes final
-{
-    _FE_MAYBE_UNUSED_ static constexpr inline FE::size size = SizeInBytes;
-};
-
-
 END_NAMESPACE
-#pragma warning (pop)
 #endif

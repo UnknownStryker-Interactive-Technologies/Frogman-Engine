@@ -1,6 +1,20 @@
 ﻿#ifndef _FE_CORE_MACRO_DEFINITIONS_H_
 #define _FE_CORE_MACRO_DEFINITIONS_H_
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+/*
+Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 
 #ifdef _MSC_VER
@@ -16,7 +30,7 @@
 #endif
 
 
-#if defined(_WINDOWS_X86_64_) || defined(_LINUX_X86_64_)
+#if defined(_FE_ON_WINDOWS_X86_64_) || defined(_FE_ON_LINUX_X86_64_)
     #define _FE_ON_X86_64_
 #elif defined(__aarch64__)
     #define _FE_ON_ARM64_
@@ -73,9 +87,9 @@
 #endif
 
 
-#ifdef _WINDOWS_X86_64_
+#ifdef _FE_ON_WINDOWS_X86_64_
     #define FE_TEXT(s) L#s
-#elif defined(_LINUX_X86_64_)
+#elif defined(_FE_ON_LINUX_X86_64_)
     #define FE_TEXT(s) #s
 #endif
 
@@ -97,7 +111,7 @@
 	#define _FE_NO_UNIQUE_ADDRESS_ //[[no_unique_address]]
 
 #else
-	#ifdef _LINUX_X86_64_
+	#ifdef _FE_ON_LINUX_X86_64_
 		#define FE_LIKELY(c) __builtin_expect((c), 1)
 		#define FE_UNLIKELY(c) __builtin_expect((c), 0)
 	#else
