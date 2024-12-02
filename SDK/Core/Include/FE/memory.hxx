@@ -1012,7 +1012,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
 #endif
 
 template<typename T, class Alignment>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(count_t elements_p) noexcept  
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(uint64 elements_p) noexcept  
 {
 	FE_NEGATIVE_ASSERT(elements_p == 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(elements_p));
 
@@ -1054,7 +1054,7 @@ FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_itera
 }
 
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, count_t source_capacity_in_bytes_p) noexcept  
+_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, uint64 source_capacity_in_bytes_p) noexcept  
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -1078,7 +1078,7 @@ _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, c
 }
 
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, count_t bytes_p) noexcept  
+_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, uint64 bytes_p) noexcept  
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -1102,7 +1102,7 @@ _FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, count_t by
 }
 
 template<Address DestAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memset(void* out_dest_p, int8 value_p, count_t bytes_p) noexcept  
+_FE_FORCE_INLINE_ void memset(void* out_dest_p, int8 value_p, uint64 bytes_p) noexcept  
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 

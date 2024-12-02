@@ -65,14 +65,14 @@ namespace internal::pool
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
         {
-            FE::index_t l_idx = (address_p - _begin) / Alignment::size;
+            FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
             this->m_double_free_tracker[l_idx] = of_type_p;
         }
 
         _FE_FORCE_INLINE_ void check_double_free(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
         {
-            FE::index_t l_idx = (address_p - _begin) / Alignment::size;
+            FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == of_type_p, "Double free detected: cannot dealloate the same address twice.");
             this->m_double_free_tracker[l_idx] = 0;
         }
@@ -95,8 +95,8 @@ public:
     using alignment_type = Alignment;
 
     static constexpr size fixed_block_size_in_bytes = Alignment::size;
-    static constexpr count_t possible_address_count = chunk_type::possible_address_count;
-    static constexpr count_t maximum_page_count = 3;
+    static constexpr uint64 possible_address_count = chunk_type::possible_address_count;
+    static constexpr uint64 maximum_page_count = 3;
 
 private:
     using page_pointer = std::unique_ptr<chunk_type>;

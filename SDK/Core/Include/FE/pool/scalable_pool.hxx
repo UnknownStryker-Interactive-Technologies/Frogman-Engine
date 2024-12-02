@@ -185,14 +185,14 @@ namespace internal::pool
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(const block_info& block_info_p) noexcept
         {
-			FE::index_t l_idx = (block_info_p._address - _begin) / Alignment::size;
+			FE::uint64 l_idx = (block_info_p._address - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
 			this->m_double_free_tracker[l_idx] = static_cast<FE::int64>(block_info_p._size_in_bytes);
         }
 
         _FE_FORCE_INLINE_ void check_double_free(const block_info& block_info_p) noexcept
 		{
-            FE::index_t l_idx = (block_info_p._address - _begin) / Alignment::size;
+            FE::uint64 l_idx = (block_info_p._address - _begin) / Alignment::size;
             FE_ASSERT(static_cast<FE::int64>(m_double_free_tracker[l_idx]) == block_info_p._size_in_bytes, "Double free detected: cannot dealloate the same address twice.");
 			this->m_double_free_tracker[l_idx] = 0;
 		}
@@ -305,7 +305,7 @@ public:
 
     // Incorrect type will cause a critical runtime error.
     template <typename T> 
-    void deallocate(T* pointer_p, FE::count_t element_count_p) noexcept 
+    void deallocate(T* pointer_p, FE::uint64 element_count_p) noexcept 
     {
         FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.pool.scalable_pool: Unable to deallocate() a nullptr.");
         FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(element_count_p));
@@ -326,7 +326,7 @@ public:
             {
                 if constexpr (FE::is_trivial<T>::value == false)
                 {
-                    for (var::count_t i = 0; i < element_count_p; ++i)
+                    for (var::uint64 i = 0; i < element_count_p; ++i)
                     {
                         pointer_p->~T();
                         ++pointer_p;

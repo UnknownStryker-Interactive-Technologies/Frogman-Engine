@@ -14,11 +14,11 @@ TEST(memmove, string_insertion)
 {
 	std::unique_ptr<char[]> l_string(new char[64] {"Freddy's Pizza\0"});
 	 ASCII l_string2[] = " Fazbear";
-	 length_t l_string2_len = algorithm::string::length(l_string2);
+	 uint64 l_string2_len = algorithm::string::length(l_string2);
 
-	 index_t l_target_location = algorithm::string::find_the_first(l_string.get(), "'")->_begin;
+	 uint64 l_target_location = algorithm::string::find_the_first(l_string.get(), "'")->_begin;
 	auto l_rest = algorithm::string::find_the_first(l_string.get(), "'s Pizza");
-	 length_t l_rest_length = l_rest->_end - l_rest->_begin;
+	uint64 l_rest_length = l_rest->_end - l_rest->_begin;
 
 	FE::memmove(l_string.get() + l_target_location + l_string2_len, l_string.get() + l_target_location, l_rest_length);
 

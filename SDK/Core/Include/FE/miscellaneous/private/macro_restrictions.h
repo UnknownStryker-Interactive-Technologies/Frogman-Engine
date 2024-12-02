@@ -135,22 +135,6 @@ limitations under the License.
 #error Frogman Engine Prohibits macroizing the keyword "uint64".
 #endif
 
-#ifdef size
-#error Frogman Engine Prohibits macroizing the keyword "size".
-#endif
-#ifdef length_t
-#error Frogman Engine Prohibits macroizing the keyword "length_t".
-#endif
-#ifdef index_t
-#error Frogman Engine Prohibits macroizing the keyword "index_t".
-#endif
-#ifdef count_t
-#error Frogman Engine Prohibits macroizing the keyword "count_t".
-#endif
-#ifdef capacity_t
-#error Frogman Engine Prohibits macroizing the keyword "capacity_t".
-#endif
-
 #ifdef ptrdiff
 #error Frogman Engine Prohibits macroizing the keyword "ptrdiff".
 #endif

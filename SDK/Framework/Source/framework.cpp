@@ -257,16 +257,34 @@ int _tmain(int argc_p, FE::tchar** argv_p)
 		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
 		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
-		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Assertion Failure: An app pointer is a nullptr.");
+		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Error: An app pointer is a nullptr.");
 		
 		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
-		FE_EXIT(l_exit_code != 0, l_exit_code, "Failed to set up an app.");
+
+		if (l_exit_code != 0)
+		{
+			std::cerr << "Failed to set up an app.";
+			delete FE::framework::framework_base::s_framework;
+			return l_exit_code;
+		}
 
 		l_exit_code = FE::framework::framework_base::s_framework->run();
-		FE_EXIT(l_exit_code != 0, l_exit_code, "There was an error during the runtime.");
 
-		FE::framework::framework_base::s_framework->shutdown();
-		FE_EXIT(l_exit_code != 0, l_exit_code, "Unsuccessfully cleaned up an app.");
+		if (l_exit_code != 0)
+		{
+			std::cerr << "There was an error during the runtime.";
+			delete FE::framework::framework_base::s_framework;
+			return l_exit_code;
+		}
+
+		l_exit_code = FE::framework::framework_base::s_framework->shutdown();
+
+		if (l_exit_code != 0)
+		{
+			std::cerr << "Unsuccessfully cleaned up an app.";
+			delete FE::framework::framework_base::s_framework;
+			return l_exit_code;
+		}
 
 		delete FE::framework::framework_base::s_framework;
 	}

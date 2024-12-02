@@ -42,8 +42,7 @@ class fqueue final
 
 public:
 	using value_type = T;
-	using length_type = var::count_t;
-	using size_type = var::count_t;
+	using size_type = var::uint64;
 	using reference = T&;
 	using const_reference = const T&;
 	using pointer = T*;

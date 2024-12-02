@@ -241,7 +241,7 @@ public:
 	static constexpr size max_class_hierarchy_depth = 1024;
 	using class_layer_stack = FE::fstack< FE::pair<class_property_list*, typename class_property_list::iterator>, max_class_hierarchy_depth >;
 
-	static constexpr count_t number_of_max_container_per_instance = 1024;
+	static constexpr uint64 number_of_max_container_per_instance = 1024;
 	using data_on_heap_size_recorder = FE::fqueue<var::size, number_of_max_container_per_instance>;
 
 	using lock_type = std::mutex;
@@ -414,7 +414,7 @@ public:
 
 		// Checks the class type name
 		FE_EXIT(!algorithm::string::compare_ranged<char>(l_typename, algorithm::string::range{ 0, std::strlen(l_typename) },
-			m_input_buffer.c_str(), algorithm::string::range{ 0, static_cast<index_t>(m_position - m_input_buffer.begin()) }),
+			m_input_buffer.c_str(), algorithm::string::range{ 0, static_cast<uint64>(m_position - m_input_buffer.begin()) }),
 			FE::ErrorCode::_FATAL_SERIALIZATION_ERROR_3XX_TYPE_MISMATCH, "Unable to deserialize an instance with a different class name.");
 		++m_position; // Point the first byte.
 

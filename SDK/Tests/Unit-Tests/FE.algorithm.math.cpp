@@ -118,7 +118,7 @@ TEST(math, calculate_index_of_a_matrix)
 	};
 	/* Three by three matrix. The row and the column of the matrix above is three. */
 
-	FE::index_t l_matrix_idx = FE::algorithm::math::calculate_index_of_a_matrix(3, 1, 1);
+	FE::uint64 l_matrix_idx = FE::algorithm::math::calculate_index_of_a_matrix(3, 1, 1);
 	EXPECT_EQ(l_matrix[l_matrix_idx], 1.0f);
 }
 

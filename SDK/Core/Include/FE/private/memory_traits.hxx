@@ -78,7 +78,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -99,8 +99,8 @@ public:
 			}
 			else
 			{
-				count_t l_max_count = ::FE::algorithm::math::min(dest_capacity_p, source_count_p);
-				for (var::count_t i = 0; i < l_max_count; ++i)
+				uint64 l_max_count = ::FE::algorithm::math::min(dest_capacity_p, source_count_p);
+				for (var::uint64 i = 0; i < l_max_count; ++i)
 				{
 					*out_dest_p = *source_p;
 					++out_dest_p;
@@ -111,7 +111,7 @@ public:
 	}
 	
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -129,7 +129,7 @@ public:
 			}
 			else
 			{
-				for (var::count_t i = 0; i < count_to_copy_p; ++i)
+				for (var::uint64 i = 0; i < count_to_copy_p; ++i)
 				{
 					*out_dest_p = *source_p;
 					++out_dest_p;
@@ -141,7 +141,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -152,7 +152,7 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -162,7 +162,7 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -173,7 +173,7 @@ public:
 	}
 	
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -184,7 +184,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, count_t dest_count_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, uint64 dest_count_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -195,7 +195,7 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -245,7 +245,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -255,7 +255,7 @@ public:
 
 		if (dest_capacity_p <= source_count_p)
 		{
-			for (var::count_t i = 0; i < dest_capacity_p; ++i)
+			for (var::uint64 i = 0; i < dest_capacity_p; ++i)
 			{
 				new(iterator_cast<T*>(out_dest_p)) T(*source_p);
 				++out_dest_p;
@@ -277,14 +277,14 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_construct(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
 		FE_NEGATIVE_ASSERT(count_to_copy_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(count_to_copy_p));
 
-		for (var::count_t i = 0; i < count_to_copy_p; ++i)
+		for (var::uint64 i = 0; i < count_to_copy_p; ++i)
 		{
 			new(iterator_cast<T*>(out_dest_p)) T(*source_p);
 			++out_dest_p;
@@ -294,7 +294,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -315,7 +315,7 @@ public:
 		}
 		else
 		{
-			for (var::count_t i = 0; i < source_count_p; ++i)
+			for (var::uint64 i = 0; i < source_count_p; ++i)
 			{
 				new(iterator_cast<T*>(out_dest_p)) T(std::move(*source_p));
 				++out_dest_p;
@@ -326,14 +326,14 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void move_construct(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
 		FE_NEGATIVE_ASSERT(count_to_copy_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(count_to_copy_p));
 
-		for (var::count_t i = 0; i < count_to_copy_p; ++i)
+		for (var::uint64 i = 0; i < count_to_copy_p; ++i)
 		{
 			new(iterator_cast<T*>(out_dest_p)) T(std::move(*source_p));
 			++out_dest_p;
@@ -358,7 +358,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -368,7 +368,7 @@ public:
 
 		if (dest_capacity_p <= source_count_p)
 		{
-			for (var::count_t i = 0; i < dest_capacity_p; ++i)
+			for (var::uint64 i = 0; i < dest_capacity_p; ++i)
 			{
 				*out_dest_p = *source_p;
 				++out_dest_p;
@@ -378,7 +378,7 @@ public:
 		}
 		else
 		{
-			for (var::count_t i = 0; i < source_count_p; ++i)
+			for (var::uint64 i = 0; i < source_count_p; ++i)
 			{
 				*out_dest_p = *source_p;
 				++out_dest_p;
@@ -389,14 +389,14 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void copy_assign(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
 		FE_NEGATIVE_ASSERT(count_to_copy_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(count_to_copy_p));
 
-		for (var::count_t i = 0; i < count_to_copy_p; ++i)
+		for (var::uint64 i = 0; i < count_to_copy_p; ++i)
 		{
 			*out_dest_p = *source_p;
 			++out_dest_p;
@@ -406,7 +406,7 @@ public:
 
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, count_t dest_capacity_p, InputIterator source_p, count_t source_count_p) noexcept
+	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, uint64 dest_capacity_p, InputIterator source_p, uint64 source_count_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
@@ -416,7 +416,7 @@ public:
 
 		if (dest_capacity_p <= source_count_p)
 		{
-			for (var::count_t i = 0; i < dest_capacity_p; ++i)
+			for (var::uint64 i = 0; i < dest_capacity_p; ++i)
 			{
 				*out_dest_p = std::move(*source_p);
 				++out_dest_p;
@@ -426,7 +426,7 @@ public:
 		}
 		else
 		{
-			for (var::count_t i = 0; i < source_count_p; ++i)
+			for (var::uint64 i = 0; i < source_count_p; ++i)
 			{
 				*out_dest_p = std::move(*source_p);
 				++out_dest_p;
@@ -437,14 +437,14 @@ public:
 	}
 
 	template<class Iterator, class InputIterator>
-	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, InputIterator source_p, count_t count_to_copy_p) noexcept
+	_FE_FORCE_INLINE_ static void move_assign(Iterator out_dest_p, InputIterator source_p, uint64 count_to_copy_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(out_dest_p));
 		FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(source_p));
 
 		FE_NEGATIVE_ASSERT(count_to_copy_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(count_to_copy_p));
 
-		for (var::count_t i = 0; i < count_to_copy_p; ++i)
+		for (var::uint64 i = 0; i < count_to_copy_p; ++i)
 		{
 			*out_dest_p = std::move(*source_p);
 			++out_dest_p;

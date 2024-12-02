@@ -255,7 +255,7 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ length_t input_string_capacity_p, var::int64 value_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
@@ -284,7 +284,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p,
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ length_t input_string_capacity_p, var::uint64 value_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
@@ -341,7 +341,7 @@ _FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, length_t input_string_capacity_p, float64 value_p) noexcept
+_FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, uint64 input_string_capacity_p, float64 value_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
 

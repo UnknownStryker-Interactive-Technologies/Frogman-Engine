@@ -43,7 +43,7 @@ BEGIN_NAMESPACE(FE::log)
 %s - string
 %p - hexadecimal 64-bit pointer
 */
-void format_string(char* out_buffer_pointer_p, const char* string_format_p, size buffer_size_p, const void** arguments_pointer_p, count_t arguments_count_p) noexcept;
+void format_string(char* out_buffer_pointer_p, const char* string_format_p, size buffer_size_p, const void** arguments_pointer_p, uint64 arguments_count_p) noexcept;
 
 /*
 %i8 - int8

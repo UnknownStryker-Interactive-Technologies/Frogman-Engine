@@ -72,10 +72,6 @@ typedef const ::std::uint64_t uint64; // primitive types are const by default
 
 
 typedef const ::std::size_t size; // primitive types are const by default 
-typedef const ::std::size_t length_t; // primitive types are const by default 
-typedef const ::std::size_t index_t; // primitive types are const by default
-typedef const ::std::size_t count_t; // primitive types are const by default
-typedef const ::std::size_t capacity_t; // primitive types are const by default
 typedef const ::std::ptrdiff_t ptrdiff; // primitive types are const by default
 typedef const ::std::intptr_t intptr; // primitive types are const by default
 typedef const ::std::uintptr_t uintptr; // primitive types are const by default
@@ -367,10 +363,6 @@ namespace var
 	static_assert(sizeof(uint64) == 8, "The size of uint64 must be eight bytes.");
 
 	typedef ::std::size_t size;
-	typedef ::std::size_t length_t;
-	typedef ::std::size_t index_t;
-	typedef ::std::size_t count_t;
-	typedef ::std::size_t capacity_t;
 	typedef ::std::ptrdiff_t ptrdiff;
 	typedef ::std::intptr_t intptr;
 	typedef ::std::uintptr_t uintptr;
