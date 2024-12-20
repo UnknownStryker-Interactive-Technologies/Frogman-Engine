@@ -148,7 +148,9 @@ if(!(expression)) _FE_UNLIKELY_ \
 #endif
 
 
-#ifdef _ENABLE_EXIT_
+#ifdef FE_EXIT
+	#error FE_EXIT is a reserved Frogman Engine macro keyword.
+#endif
 /*
 %i8 - int8
 %u8 - uint8
@@ -171,9 +173,6 @@ if(expression) _FE_UNLIKELY_ \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	::std::exit(static_cast<::FE::int32>(error_code)); \
 }
-#else
-	#define FE_EXIT(expression, error_code, ...)
-#endif
 
 
 #define TO_STRING(p) #p
@@ -181,35 +180,35 @@ if(expression) _FE_UNLIKELY_ \
 #define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_NEGATIVE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
 
 
-namespace FE // The enum values are written before the enum code styling guide revision.
+namespace FE
 {
-	// Only the enum struct type name has been revised.
 	enum struct ErrorCode : FE::int32
 	{
-		_NONE = 0,
-		_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX = 1,
+		_None = 0,
+		_FatalHardwareResourceError_CPU_HasNotEnoughThreads = 1,
+		_FatalError_DynamicCastFailure_TypeMismatch = 2,
+		_FatalLoggerError_IncorrectStringFormatterSyntex = 3,
+		_FatalError_FailedToLoadReflectionDataFromDLL = 4,
 
-		_FATAL_MEMORY_ERROR_1XX_ILLEGAL_ADDRESS_ALIGNMENT = 100,
-		_FATAL_MEMORY_ERROR_1XX_NULLPTR = 101,
-		_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION = 102,
-		_FATAL_MEMORY_ERROR_1XX_HEAP_CORRUPTION = 103,
-		_FATAL_MEMORY_ERROR_1XX_DOUBLE_FREE = 104,
-		_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW = 105,
-		_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE = 106,
-		_FATAL_MEMORY_ERROR_1XX_INVALID_ITERATOR = 107,
-		_FATAL_MEMORY_ERROR_1XX_VIRTUAL_ALLOC_FAILURE = 108,
-		_FATAL_MEMORY_ERROR_1XX_VIRTUAL_LOCK_FAILURE = 109,
-		_FATAL_MEMORY_ERROR_1XX_VIRTUAL_UNLOCK_FAILURE = 110,
-		_FATAL_MEMORY_ERROR_1XX_VIRTUAL_FREE_FAILURE = 110,
-		_FATAL_MEMORY_ERROR_1XX_FALSE_DEALLOCATION = 111,
+		_FatalMemoryError_1XX_IllegalAddressAlignment = 100,
+		_FatalMemoryError_1XX_NullPtr = 101,
+		_FatalMemoryError_1XX_AccessViolation = 102,
+		_FatalMemoryError_1XX_HeapCorruption = 103,
+		_FatalMemoryError_1XX_DoubleFree = 104,
+		_FatalMemoryError_1XX_BufferOverflow = 105,
+		_FatalMemoryError_1XX_InvalidSize = 106,
+		_FatalMemoryError_1XX_InvalidIterator = 107,
+		_FatalMemoryError_1XX_VirtualAllocFailure = 108,
+		_FatalMemoryError_1XX_VirtualLockFailure = 109,
+		_FatalMemoryError_1XX_VirtualUnlockFailure = 110,
+		_FatalMemoryError_1XX_VirtualFreeFailure = 110,
+		_FatalMemoryError_1XX_FalseDeallocation = 111,
 
-		_FATAL_INPUT_ERROR_2XX_INVALID_ARGUMENT = 200,
-		_FATAL_INPUT_ERROR_2XX_NULL = 202,
+		_FatalInputError_2XX_InvalidArgument = 200,
+		_FatalInputError_2XX_Null = 202,
 
-		_FATAL_SERIALIZATION_ERROR_3XX_TYPE_MISMATCH = 300,
-		_FATAL_SERIALIZATION_ERROR_3XX_TYPE_NOT_FOUND = 301,
-
-		_FATAL_ERROR_DYNAMIC_CAST_FAILURE_TYPE_MISMATCH = 400
+		_FatalSerializationError_3XX_TypeMismatch = 300,
+		_FatalSerializationError_3XX_TypeNotFound = 301
 	};
 
 	_FE_FORCE_INLINE_ int error_code_cast(const ErrorCode error_code_p) noexcept

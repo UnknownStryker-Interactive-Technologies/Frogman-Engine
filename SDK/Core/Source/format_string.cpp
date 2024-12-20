@@ -209,7 +209,7 @@ FormatSpecifier __identify_format_specifier(const char* const string_format_p) n
 
 	default: // Of course, the code has to be unreachable. What r u talking about MSVC?
 		std::cerr << "Invalid format specifier detected: the format specifier is not correctly formatted.";
-        std::exit((int)FE::ErrorCode::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX);
+        std::exit((int)FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex);
 		return FormatSpecifier::_Invalid;
     }
 }
@@ -301,13 +301,13 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 		if (l_idx == -1)
 		{
 			std::cerr << "Invalid format specifier detected: the format specifier is not correctly formatted.";
-			std::exit((int)FE::ErrorCode::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX);
+			std::exit((int)FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex);
 		}
 
 		if (static_cast<FE::uint64>(l_idx) >= arguments_count_p)
 		{
 			std::cerr << "The message log format is not correctly written: the index is out of range.";
-			std::exit((int)FE::ErrorCode::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX);
+			std::exit((int)FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex);
 		}
 
         switch (l_format_specifier)
@@ -409,7 +409,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 
 		default:
 			std::cerr << "Invalid format specifier detected: the format specifier is not correctly formatted.";
-			std::exit((int)FE::ErrorCode::_FATAL_LOGGER_ERROR_0XX_INCORRECT_STRING_FORMATTER_SYNTEX);
+			std::exit((int)FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex);
 			break;
         }
     }

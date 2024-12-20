@@ -23,7 +23,7 @@ BEGIN_NAMESPACE(FE::framework)
 
 super_object_base::super_object_base() noexcept : m_is_tick_enabled(false)
 {
-    this->m_ref_block = framework_base::get_engine().access_reference_manager().allocate_ref_block<super_object_base>();
+    this->m_ref_block = framework_base::get_engine().get_reference_manager().allocate_ref_block<super_object_base>();
 	this->m_ref_block->_reference.store(this, std::memory_order_relaxed);
 }
 
@@ -32,7 +32,7 @@ super_object_base::~super_object_base() noexcept
     this->m_ref_block->_reference.store(nullptr, std::memory_order_release);
 	if (this->m_ref_block->_ref_count.load(std::memory_order_acquire) <= 0)
 	{
-		framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ref_block);
+		framework_base::get_engine().get_reference_manager().deallocate_ref_block(this->m_ref_block);
 	}
 }
 

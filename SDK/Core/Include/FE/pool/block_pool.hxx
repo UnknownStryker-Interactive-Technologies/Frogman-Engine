@@ -208,7 +208,7 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
             }
         }
 
-		FE_EXIT(true, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_FALSE_DEALLOCATION, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_to_be_freed);
+		FE_EXIT(true, FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_to_be_freed);
     }
 
     _FE_FORCE_INLINE_ void create_pages(FE::size chunk_count_p) noexcept

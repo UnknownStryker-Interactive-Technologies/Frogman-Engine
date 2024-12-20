@@ -64,8 +64,8 @@ public:
 
 	_FE_CONSTEXPR20_ fqueue(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_front_ptr(reinterpret_cast<pointer>(m_memory)), m_back_ptr(m_front_ptr + initializer_list_p.size()), m_absolute_begin_pointer(m_front_ptr), m_indirected_element_count(initializer_list_p.size())
 	{
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 
 		Traits::move_construct(this->m_front_ptr, const_cast<value_type*>(initializer_list_p.begin()), initializer_list_p.size());
 	}
@@ -76,8 +76,8 @@ public:
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<InputIterator>::value == false, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value == false), "Static Assertion Failure: InputIterator's value_type has to be the same as fqueue's value_type.");
 
-		FE_NEGATIVE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than ${%s@2}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_ITERATOR), TO_STRING(first_p), TO_STRING(last_p));
-		FE_NEGATIVE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fqueue capacity.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+		FE_NEGATIVE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than ${%s@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator), TO_STRING(first_p), TO_STRING(last_p));
+		FE_NEGATIVE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fqueue capacity.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
 
 		Traits::copy_construct(InputIterator{ this->m_absolute_begin_pointer }, first_p, last_p - first_p);
 	}
@@ -112,8 +112,8 @@ public:
 
 	_FE_CONSTEXPR20_ fqueue& operator=(std::initializer_list<value_type>&& initializer_list_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
-		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
+		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 
 		this->~fqueue();
 		new(this) fqueue(std::move(initializer_list_p));
@@ -149,7 +149,7 @@ public:
 		if (this->m_back_ptr >= this->m_absolute_begin_pointer + Capacity)
 		{
 			this->__set_back_pointer_to_zero();
-			FE_NEGATIVE_ASSERT(this->m_back_ptr >= this->m_front_ptr, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
+			FE_NEGATIVE_ASSERT(this->m_back_ptr >= this->m_front_ptr, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 		}
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
@@ -170,7 +170,7 @@ public:
 		if ((this->m_absolute_begin_pointer + Capacity) == this->m_front_ptr)
 		{
 			this->m_front_ptr = this->m_absolute_begin_pointer;
-			FE_NEGATIVE_ASSERT(this->is_empty() == true, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_ACCESS_VIOLATION));
+			FE_NEGATIVE_ASSERT(this->is_empty() == true, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 		}
 
 		T l_return_value_buffer = std::move(*this->m_front_ptr);

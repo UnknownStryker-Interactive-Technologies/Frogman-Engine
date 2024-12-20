@@ -379,7 +379,7 @@ _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noex
         return false;
     }
 
-    std::exit(FE::error_code_cast(FE::ErrorCode::_FATAL_INPUT_ERROR_2XX_INVALID_ARGUMENT));
+    std::exit(FE::error_code_cast(FE::ErrorCode::_FatalInputError_2XX_InvalidArgument));
     return false;
 }
 

@@ -79,24 +79,16 @@ class task_scheduler
 
 	std::atomic_bool m_is_inturrupted;
 
-	std::thread m_game_thread;
-
-	std::pmr::unsynchronized_pool_resource m_latent_event_pool;
-	std::pmr::list<latent_event> m_latent_events;
-	std::mutex m_latent_event_lock;
-	std::thread m_latent_event_thread;
-
 	tf::Executor m_executor;
-	std::mutex m_executor_lock;
 
 	task_scheduler(uint32 max_concurrency_p) noexcept;
 	~task_scheduler() noexcept;
 
 public:
-	FE::unique_access<std::mutex, tf::Executor> access_executor() noexcept;
+	tf::Executor& access_executor() noexcept;
 
 	void interrupt() noexcept;
-	void launch_latent_event(const typename latent_event::function_type& task_p, FE::float64 delay_in_milliseconds_p) noexcept;
+	void launch_latent_event(const typename latent_event::function_type& task_p, FE::uint64 delay_in_milliseconds_p) noexcept;
 };
 
 

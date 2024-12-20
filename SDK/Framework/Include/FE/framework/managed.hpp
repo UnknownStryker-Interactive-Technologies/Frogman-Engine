@@ -110,7 +110,7 @@ public:
 	unique_ptr(const Allocator& allocator_p = Allocator(), Arguments&&... arguments) noexcept
 		: m_ptr(), m_allocator(allocator_p)
 	{
-		this->m_ptr = framework_base::get_engine().access_reference_manager().allocate_ref_block<T>();
+		this->m_ptr = framework_base::get_engine().get_reference_manager().allocate_ref_block<T>();
 
 		this->m_ptr->_reference.store(this->m_allocator.allocate(1), std::memory_order_relaxed);
 		this->m_ptr->_ref_count.store(0, std::memory_order_relaxed);
@@ -141,7 +141,7 @@ public:
 
 		if (this->m_ptr->_ref_count.load(std::memory_order_acquire) <= 0)
 		{
-			framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ptr);
+			framework_base::get_engine().get_reference_manager().deallocate_ref_block(this->m_ptr);
 		}
 	}
 
@@ -149,7 +149,7 @@ public:
 	{
 		if (this->m_ptr == nullptr)
 		{
-			this->m_ptr = framework_base::get_engine().access_reference_manager().allocate_ref_block<T>();
+			this->m_ptr = framework_base::get_engine().get_reference_manager().allocate_ref_block<T>();
 		}
 
 		if (this->m_ptr->_reference.load(std::memory_order_relaxed) == nullptr)
@@ -278,7 +278,7 @@ public:
 		{
 			if (this->m_ptr->_reference.load(std::memory_order_acquire) == nullptr)
 			{
-				framework_base::get_engine().access_reference_manager().deallocate_ref_block(this->m_ptr);
+				framework_base::get_engine().get_reference_manager().deallocate_ref_block(this->m_ptr);
 			}
 		}
 	}

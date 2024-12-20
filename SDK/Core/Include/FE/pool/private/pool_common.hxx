@@ -77,8 +77,8 @@ namespace internal::pool
 	//	_FE_FORCE_INLINE_ void operator()(chunk<PoolType, PageCapacity, Alignment>* ptr_p) const noexcept
 	//	{
 	//		ptr_p->~chunk<PoolType, PageCapacity, Alignment>();
-	//		FE_EXIT(VirtualUnlock(ptr_p, sizeof(chunk<PoolType, PageCapacity, Alignment>)) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_UNLOCK_FAILURE, "Failed to VirtualUnlock() a memory page.");
-	//		FE_EXIT(VirtualFree(ptr_p, 0, MEM_RELEASE) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_FREE_FAILURE, "Failed to VirtualFree() a memory page.");
+	//		FE_EXIT(VirtualUnlock(ptr_p, sizeof(chunk<PoolType, PageCapacity, Alignment>)) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualUnlockFailure, "Failed to VirtualUnlock() a memory page.");
+	//		FE_EXIT(VirtualFree(ptr_p, 0, MEM_RELEASE) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualFreeFailure, "Failed to VirtualFree() a memory page.");
 	//	}
 	//};
 
@@ -89,7 +89,7 @@ namespace internal::pool
 	//_FE_FORCE_INLINE_ page_ptr<PoolType, PageCapacity, Alignment> make_page() noexcept
 	//{
 	//	typename page_ptr<PoolType, PageCapacity, Alignment>::pointer l_virtual_alloc_result = (typename page_ptr<PoolType, PageCapacity, Alignment>::pointer)VirtualAlloc(nullptr, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	//	FE_EXIT(VirtualLock( l_virtual_alloc_result, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type) ) == _FE_FAILED_, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_VIRTUAL_LOCK_FAILURE, "Failed to VirtualLock() a memory page.");
+	//	FE_EXIT(VirtualLock( l_virtual_alloc_result, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type) ) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualLockFailure, "Failed to VirtualLock() a memory page.");
 	//	new(l_virtual_alloc_result) typename page_ptr<PoolType, PageCapacity, Alignment>::element_type();
 	//	return page_ptr<PoolType, PageCapacity, Alignment>(l_virtual_alloc_result);
 	//}

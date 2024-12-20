@@ -25,7 +25,7 @@ limitations under the License.
 #ifdef FROGMAN_ENGINE
 	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
 #else                                                                                                              // The name below does not follow the naming convention since it is considered hidden from users.
-	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (FE::int32, FE::tchar**)> FrogmanEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::tchar** argv_p) { return new ::FE::framework::game_engine(argc_p, argv_p); } );
+	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (FE::int32, FE::tchar**)> FrogmanEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::tchar** argv_p) { return new ::FE::framework::game_framework_base(argc_p, argv_p); } );
 #endif
 
 #ifdef CUSTOM_ENGINE
@@ -81,29 +81,32 @@ class framework_base
 	
 protected:
 	program_options m_program_options;
-	std::unique_ptr<FE::scalable_pool_resource<FE::PoolPageCapacity::_Max>[]> m_memory;
+	std::locale m_current_system_locale;
+	std::unique_ptr<FE::scalable_pool_resource<FE::PoolPageCapacity::_256MB>[]> m_memory;
 	framework::managed m_reference_manager;
 	reflection::method m_method_reflection;
 	reflection::property m_property_reflection;
 	framework::task_scheduler m_cpu;
 
 public:
-	framework_base(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
+	framework_base(FE::int32 argc_p, FE::tchar** argv_p, FE::uint32 concurrency_decrement_value_p = 1) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
 	virtual ~framework_base() noexcept;
 
 	static void request_restart() noexcept;
 	static framework_base& get_engine() noexcept;
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
-	framework::managed& access_reference_manager() noexcept;
-	reflection::method& access_method_reflection() noexcept;
-	reflection::property& access_property_reflection() noexcept;
-	framework::task_scheduler& access_task_scheduler() noexcept;
+	framework::managed& get_reference_manager() noexcept;
+	reflection::method& get_method_reflection() noexcept;
+	reflection::property& get_property_reflection() noexcept;
+	framework::task_scheduler& get_task_scheduler() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p);
 	virtual FE::int32 run();
 	virtual FE::int32 shutdown();
+
+	void __load_all_class_reflection_data_from_dll() noexcept;
 
 public:
 	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int signal_p);
@@ -120,14 +123,13 @@ public:
 
 class game_instance;
 
-class game_engine : public framework_base
+class game_framework_base : public framework_base
 {
 	std::unique_ptr<game_instance> m_game_instance;
-	//d3d11_renderer m_renderer;
 
 public:
-	game_engine(FE::int32 argc_p, FE::tchar** argv_p);
-	~game_engine();
+	game_framework_base(FE::int32 argc_p, FE::tchar** argv_p);
+	~game_framework_base();
 
 private:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override;

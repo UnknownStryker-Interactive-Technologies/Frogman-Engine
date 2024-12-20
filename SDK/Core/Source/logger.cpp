@@ -28,6 +28,14 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::log)
 
+
+logger_base::logger_base() noexcept : m_log_buffer()
+{
+    this->m_log_buffer.reserve(default_buffer_size);
+    std::memset(this->m_log_buffer.data(), null, this->m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
+}
+
+
 // DO NOT USE in-house library functions within this file, except for FE::algorithm::string::concatenate<CharT>().
 // The functions in this file are used to implement FE_ASSERT, FE_NEGATIVE_ASSERT, FE_EXIT, etc. Calling them within this file will result in an infinite recursive loop.
 void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
@@ -35,7 +43,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
     {
         std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
-        std::exit(FE::error_code_cast(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+        std::exit(FE::error_code_cast(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
     }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
@@ -73,7 +81,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
     {
         std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
-        std::exit(FE::error_code_cast(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW));
+        std::exit(FE::error_code_cast(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
     }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
@@ -90,10 +98,11 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
             }
     );
 
-    std::cerr << this->m_log_buffer.data();
+    std::cout << this->m_log_buffer.data();
 
     std::memset(this->m_log_buffer.data(), null, default_buffer_size * sizeof(typename buffer_type::value_type));
 }
 
 
 END_NAMESPACE
+

@@ -63,11 +63,11 @@ TEST(memset, General)
 	constexpr auto l_length = 10;
 	var::byte l_arr[l_length];
 	
-	FE::memset(l_arr, 100, l_length * sizeof(var::byte));
+	FE::memset(l_arr, 0, l_length * sizeof(var::byte));
 		
 	for ( var::int32 i = 0; i < l_length; ++i)
 	{
-		EXPECT_EQ(l_arr[i], 100);
+		EXPECT_EQ(l_arr[i], 0);
 	}
 }
 
@@ -289,6 +289,97 @@ void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept
 }
 BENCHMARK(FE_aligned_memcpy_benchmark);
 
+
+#include <immintrin.h> // For SIMD intrinsics
+#include <cstddef> // For size_t
+#include <cstdint> // For uintptr_t
+// This is a port from Frogman-Engine\SDK\Experimental\asm\__x86_64_memcpy.asm.
+__forceinline void __x86_64_memcpy(void* dest_p, const void* source_p, size_t bytes_to_copy_p) noexcept {
+	const uint8_t* src = static_cast<const uint8_t*>(source_p);
+	uint8_t* dest = static_cast<uint8_t*>(dest_p);
+
+	// SIMD case for larger sizes
+	while (bytes_to_copy_p >= 32) {
+		_mm256_store_si256(reinterpret_cast<__m256i*>(dest), _mm256_load_si256(reinterpret_cast<const __m256i*>(src)));
+		src += 32;
+		dest += 32;
+		bytes_to_copy_p -= 32;
+	}
+
+	// Handle remaining bytes with a jump table
+	switch (bytes_to_copy_p) {
+	case 31: dest[30] = src[30];
+	case 30: dest[29] = src[29];
+	case 29: dest[28] = src[28];
+	case 28: dest[27] = src[27];
+	case 27: dest[26] = src[26];
+	case 26: dest[25] = src[25];
+	case 25: dest[24] = src[24];
+	case 24: dest[23] = src[23];
+	case 23: dest[22] = src[22];
+	case 22: dest[21] = src[21];
+	case 21: dest[20] = src[20];
+	case 20: dest[19] = src[19];
+	case 19: dest[18] = src[18];
+	case 18: dest[17] = src[17];
+	case 17: dest[16] = src[16];
+	case 16:
+		_mm_store_si128(reinterpret_cast<__m128i*>(dest), _mm_load_si128(reinterpret_cast<const __m128i*>(src)));
+		src += 16;
+		dest += 16;
+		bytes_to_copy_p -= 16;
+		break;
+	case 15: dest[14] = src[14];
+	case 14: dest[13] = src[13];
+	case 13: dest[12] = src[12];
+	case 12: dest[11] = src[11];
+	case 11: dest[10] = src[10];
+	case 10: dest[9] = src[9];
+	case 9: dest[8] = src[8];
+	case 8:
+		*reinterpret_cast<uint64_t*>(dest) = *reinterpret_cast<const uint64_t*>(src);
+		src += 8;
+		dest += 8;
+		bytes_to_copy_p -= 8;
+		break;
+	case 7: dest[6] = src[6];
+	case 6: dest[5] = src[5];
+	case 5: dest[4] = src[4];
+	case 4:
+		*reinterpret_cast<uint32_t*>(dest) = *reinterpret_cast<const uint32_t*>(src);
+		src += 4;
+		dest += 4;
+		bytes_to_copy_p -= 4;
+		break;
+	case 3: dest[2] = src[2];
+	case 2:
+		*reinterpret_cast<uint16_t*>(dest) = *reinterpret_cast<const uint16_t*>(src);
+		src += 2;
+		dest += 2;
+		bytes_to_copy_p -= 2;
+		break;
+	case 1:
+		*dest = *src;
+		break;
+	case 0:
+		return;
+	}
+}
+void FE_memcpy_v2_benchmark(benchmark::State& state_p) noexcept
+{
+	alignas(64) static std::byte l_dest[_MAGICAL_SIZE_];
+	benchmark::DoNotOptimize(l_dest);
+	alignas(64) static std::byte l_source[_MAGICAL_SIZE_];
+	benchmark::DoNotOptimize(l_source);
+
+	for (auto _ : state_p)
+	{
+		__x86_64_memcpy(l_dest, l_source, _MAGICAL_SIZE_);
+		__x86_64_memcpy(l_source, l_dest, _MAGICAL_SIZE_);
+	}
+}
+BENCHMARK(FE_memcpy_v2_benchmark);
+
 void std_memcpy_benchmark(benchmark::State& state_p) noexcept
 {
 	alignas(64) static std::byte l_dest[_MAGICAL_SIZE_];
@@ -355,5 +446,6 @@ void std_memset_benchmark(benchmark::State& state_p) noexcept
 	}
 }
 BENCHMARK(std_memset_benchmark);
+
 
 #undef _MAGICAL_SIZE_ 

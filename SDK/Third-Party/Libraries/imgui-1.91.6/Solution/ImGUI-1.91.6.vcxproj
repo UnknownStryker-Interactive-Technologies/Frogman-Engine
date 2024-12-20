@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{153EE06B-DB94-37CF-B905-87DD9459C6E2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ImGUI-1.91.6</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Binaries\X86-64\Windows\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ImGUI-1.91.6.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ImGUI-1.91.6</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Binaries\X86-64\Windows\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ImGUI-1.91.6.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ImGUI-1.91.6</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Binaries\X86-64\Windows\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ImGUI-1.91.6.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ImGUI-1.91.6</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Binaries\X86-64\Windows\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ImGUI-1.91.6.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ImGUI-1.91.6</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CallingConvention>FastCall</CallingConvention>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <CallingConvention>FastCall</CallingConvention>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELWITHDEBINFO_;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELWITHDEBINFO_;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <CallingConvention>FastCall</CallingConvention>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Full</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_ENABLE_EXIT_;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_ENABLE_EXIT_;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <CallingConvention>FastCall</CallingConvention>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MinimalRebuild></MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_MINSIZEREL_;_ENABLE_EXIT_;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_MINSIZEREL_;_ENABLE_EXIT_;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\city-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\boost-1.86.0\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\glm-1.0.1;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\imgui-1.91.6;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\robin-hood-hash;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Third-Party\Libraries\taskflow-3.8.0\taskflow;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Core\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\..\Framework\Include;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6 -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\frogman-engine.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\predefined-settings.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeCXXCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeRCCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6 -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\frogman-engine.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\predefined-settings.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeCXXCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeRCCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6 -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\frogman-engine.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\predefined-settings.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeCXXCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeRCCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6 -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\frogman-engine.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\CMake\predefined-settings.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeCXXCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeRCCompiler.cmake;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imconfig.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui.cpp" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui_demo.cpp" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui_draw.cpp" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui_internal.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui_tables.cpp" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imgui_widgets.cpp" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imstb_rectpack.h" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imstb_textedit.h" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\imstb_truetype.h" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_dx11.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_dx11.cpp" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_glfw.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_glfw.cpp" />
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_win32.h" />
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\backends\imgui_impl_win32.cpp" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\ZERO_CHECK.vcxproj">
+      <Project>{10131278-2FC7-3FED-AA15-E3D0B442B568}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

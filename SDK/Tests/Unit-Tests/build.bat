@@ -6,7 +6,7 @@ cd /d "%SCRIPT_DIRECTORY%"
 mkdir Solution
 cd Solution
 
-cmake -DTARGET_CPU_ARCHITECTURE="x86-64" -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_CXX_STANDARD=20 .. -G "Visual Studio 17 2022" -T "v143"
+cmake -DTARGET_CPU_ARCHITECTURE="x86-64" -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_CXX_STANDARD=20  -DFROGMAN_ENGINE_DIR=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK  .. -G "Visual Studio 17 2022" -T "v143"
 cmake --build . --config Debug -j8
 ::cmake --build . --config RelWithDebInfo -j8
 ::cmake --build . --config MinSizeRel -j8

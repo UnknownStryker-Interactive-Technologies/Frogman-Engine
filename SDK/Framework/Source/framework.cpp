@@ -30,6 +30,7 @@ limitations under the License.
 // std
 #include <csignal>
 #include <optional>
+#include <filesystem>
 #include <string>
 
 #ifdef _FE_ON_WINDOWS_X86_64_
@@ -53,10 +54,15 @@ extern "C"
 BEGIN_NAMESPACE(FE::framework)
 
 
-program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept : m_max_concurrency{ (FE::tchar*)"-max-concurrency=", 4 }
+program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", 4 }
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
+		if (algorithm::string::find_the_first<var::tchar>(argv_p[i], this->m_max_concurrency._first) == std::nullopt)
+		{
+			continue;
+		}
+
 		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::tchar>(this->m_max_concurrency._first, '=');
 		l_range->_begin = 0;
 
@@ -65,9 +71,9 @@ program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept 
 			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::tchar>(argv_p[i] + l_range->_end);
 			this->m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
-			if (l_uint_info._value < 3)
+			if (l_uint_info._value < 4)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 3.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
 				this->m_max_concurrency._second = 4;
 			}
 			else if (l_uint_info._value > 254)
@@ -82,9 +88,11 @@ program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept 
 #ifdef _FE_ON_WINDOWS_X86_64_
 	SYSTEM_INFO l_system_info;
 	GetSystemInfo(&l_system_info);
+	
+	FE_EXIT(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
 	if (this->m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
 	{
-		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with the default value ${%u@2}.", this->m_max_concurrency._first, &this->m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
+		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", this->m_max_concurrency._first, &this->m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
 		this->m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
 	}
 #endif
@@ -107,10 +115,10 @@ framework_base* framework_base::s_framework = nullptr;
 RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
-framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p) noexcept
-	: m_program_options(argc_p, argv_p), m_memory(std::make_unique<FE::scalable_pool_resource<FE::PoolPageCapacity::_Max>[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() )
+framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
+	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::scalable_pool_resource<FE::PoolPageCapacity::_256MB>[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
 {
-	std::setlocale(LC_ALL, std::setlocale(LC_ALL, ""));
+	std::locale::global(this->m_current_system_locale);
 }
 
 framework_base::~framework_base() noexcept
@@ -134,6 +142,52 @@ FE::int32 framework_base::shutdown()
 	return 0;
 }
 
+void framework_base::__load_all_class_reflection_data_from_dll() noexcept
+{
+	std::array<var::wchar, _ALLOWED_DIRECTORY_LENGTH_> l_path_to_dll;
+	auto l_path_length = GetModuleFileNameW(NULL, l_path_to_dll.data(), _ALLOWED_DIRECTORY_LENGTH_);
+	FE_EXIT(l_path_length == FE::null, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
+	{
+		auto l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
+		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
+		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
+
+		l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
+		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
+		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
+
+		l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
+		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
+		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
+	}
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Generated\\Binaries" });
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\X86-64\\Windows" });
+#elif defined(_FE_ON_WINDOWS_ARM64_)
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\ARM64\\Windows" });
+#endif
+
+#if defined(_DEBUG_)
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Debug" });
+#elif defined(_RELWITHDEBINFO_)
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\RelWithDebInfo" });
+#elif defined(_RELEASE_)
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Release" });
+#elif defined(_MINSIZEREL_)  
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\MinSizeRel" });
+#endif
+
+	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\FE.ClassReflectionDataLoader.dll" });
+
+	HMODULE l_dll = LoadLibraryW(l_path_to_dll.data());
+	FE_EXIT(l_dll == nullptr, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
+	FARPROC l_load_all_class_reflection_data_from_dll = GetProcAddress(l_dll, "load_all_class_reflection_data_from_dll");
+	FE_EXIT(l_load_all_class_reflection_data_from_dll == nullptr, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Could not locate the function");
+	l_load_all_class_reflection_data_from_dll();
+	FreeLibrary(l_dll);
+}
+
 
 void framework_base::request_restart() noexcept
 {
@@ -151,22 +205,22 @@ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 	return this->m_memory.get() + get_current_thread_id();
 }
 
-framework::managed& framework_base::access_reference_manager() noexcept
+framework::managed& framework_base::get_reference_manager() noexcept
 {
 	return this->m_reference_manager;
 }
 
-reflection::method& framework_base::access_method_reflection() noexcept
+reflection::method& framework_base::get_method_reflection() noexcept
 {
 	return this->m_method_reflection;
 }
 
-reflection::property& framework_base::access_property_reflection() noexcept
+reflection::property& framework_base::get_property_reflection() noexcept
 {
 	return this->m_property_reflection;
 }
 
-framework::task_scheduler& framework_base::access_task_scheduler() noexcept
+framework::task_scheduler& framework_base::get_task_scheduler() noexcept
 {
 	return this->m_cpu;
 }
@@ -206,31 +260,33 @@ std::function<framework_base* (FE::int32, FE::tchar**)>& framework_base::allocat
 
 
 
-game_engine::game_engine(FE::int32 argc_p, FE::tchar** argv_p)
-	: framework_base(argc_p, argv_p), m_game_instance(std::make_unique<game_instance>())
+game_framework_base::game_framework_base(FE::int32 argc_p, FE::tchar** argv_p)
+	: framework_base(argc_p, argv_p, 2), /* Exclude main thread and the render thread from counting the number of the task scheduler threads. */ 
+	m_game_instance()
 {
 
 }
 
-game_engine::~game_engine()
+game_framework_base::~game_framework_base()
 {
 
 }
 
 
-FE::int32 game_engine::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+FE::int32 game_framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+{
+	__load_all_class_reflection_data_from_dll();
+
+	return 0;
+}
+
+FE::int32 game_framework_base::run()
 {
 
 	return 0;
 }
 
-FE::int32 game_engine::run()
-{
-
-	return 0;
-}
-
-FE::int32 game_engine::shutdown()
+FE::int32 game_framework_base::shutdown()
 {
 	return 0;
 }
@@ -257,7 +313,7 @@ int _tmain(int argc_p, FE::tchar** argv_p)
 		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
 		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
-		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR, "Error: An app pointer is a nullptr.");
+		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "Error: An app pointer is a nullptr.");
 		
 		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
 

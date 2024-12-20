@@ -45,6 +45,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+
 _FE_MAYBE_UNUSED_ constexpr var::uint64 invalid_memory_util_query = max_value<var::uint64>;
 
 _FE_MAYBE_UNUSED_ constexpr FE::uint64 one_kb = 1024;
@@ -84,6 +85,7 @@ _FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexce
 
 var::uint64 request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept;
 
+
 END_NAMESPACE
 
 
@@ -94,6 +96,7 @@ END_NAMESPACE
 
 
 BEGIN_NAMESPACE(FE::internal)
+
 
 struct memory_utilization
 {
@@ -139,7 +142,7 @@ protected:
 		tl_s_thread_local_memory_pool_util -= size_bytes_p;
 	}
 
-#ifdef _ENABLE_MEMORY_TRACKER_
+#if defined(_ENABLE_MEMORY_TRACKER_) && defined(_ENABLE_LOG_)
 	template <typename T>
 	_FE_FORCE_INLINE_ static void __log_heap_memory_allocation(uint64 size_in_bytes_to_allocate_p, void* const allocated_address_p) noexcept
 	{
@@ -177,7 +180,7 @@ protected:
 public:
 	_FE_FORCE_INLINE_ static memory_utilization query_all_data() noexcept
 	{
-#ifdef _ENABLE_MEMORY_TRACKER_
+#if defined(_ENABLE_MEMORY_TRACKER_) && defined(_ENABLE_LOG_)
 		memory_utilization l_data
 		{
 			s_total_memory_util.load(std::memory_order_relaxed), tl_s_thread_local_memory_util,

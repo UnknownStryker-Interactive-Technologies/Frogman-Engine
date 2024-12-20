@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\ONEDRIVE\문서\GITHUB\FROGMAN-ENGINE\SDK\THIRD-PARTY\LIBRARIES\IMGUI-1.91.6\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6 -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution --check-stamp-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,27 @@
+# CMake generation dependency list for this directory.
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeCXXInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeGenericSystem.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeLanguageInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeRCInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Compiler/MSVC.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Internal/CMakeCXXLinkerInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Internal/CMakeCommonLinkerInformation.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Linker/Windows-MSVC-CXX.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Linker/Windows-MSVC.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Windows-Initialize.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/Windows.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.31/Modules/Platform/WindowsPaths.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/CMake/frogman-engine.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/CMake/predefined-settings.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/CMakeLists.txt
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.2/CMakeCXXCompiler.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.2/CMakeRCCompiler.cmake
+C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.2/CMakeSystem.cmake

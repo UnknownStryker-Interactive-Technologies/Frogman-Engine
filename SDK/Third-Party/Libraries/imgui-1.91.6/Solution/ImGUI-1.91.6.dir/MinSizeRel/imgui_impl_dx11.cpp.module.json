@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "ImGUI-1.91.6.dir\\MinSizeRel\\imgui_impl_dx11.obj",
+            "outputs": [
+                "ImGUI-1.91.6.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

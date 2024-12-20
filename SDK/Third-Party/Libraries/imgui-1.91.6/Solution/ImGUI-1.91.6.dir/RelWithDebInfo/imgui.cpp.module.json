@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "ImGUI-1.91.6.dir\\RelWithDebInfo\\imgui.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Third-Party\\Libraries\\imgui-1.91.6\\Binaries\\X86-64\\Windows\\RelWithDebInfo\\ImGUI-1.91.6.pdb",
+                "ImGUI-1.91.6.dir\\RelWithDebInfo\\"
+            ],
+            "requires": []
+        }
+    ]
+}

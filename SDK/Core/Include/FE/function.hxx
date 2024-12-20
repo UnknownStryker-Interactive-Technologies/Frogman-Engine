@@ -319,7 +319,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_function_pointer));
 		if constexpr (std::is_same<R, void>::value == true)
         {
 			this->m_function_pointer(arguments_p...);
@@ -332,7 +332,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_function_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             this->m_function_pointer(arguments_p...);
@@ -404,7 +404,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -417,7 +417,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -486,7 +486,7 @@ public:
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -499,7 +499,7 @@ public:
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
             (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
@@ -591,7 +591,7 @@ public:
 
     virtual void operator()(FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR), TO_STRING(this->m_instance));
+        FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_instance));
         C* l_object = instance_p.get<C*>();
         arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)

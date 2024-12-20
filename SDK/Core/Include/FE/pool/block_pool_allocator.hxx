@@ -123,7 +123,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(_FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
 	{
-		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), &count_p);
 		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		
 		return this->m_pool->allocate();
@@ -131,8 +131,8 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
 	{
-		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		
 		this->m_pool->deallocate(pointer_p);
@@ -252,7 +252,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ pointer allocate(_FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
 	{
-		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
+		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), &count_p);
 		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 		
 		return (T*)this->m_pool->template allocate<internal::pool::uninitialized_bytes<sizeof(T)>* const>();
@@ -260,8 +260,8 @@ public:
 
 	_FE_FORCE_INLINE_ void deallocate(pointer const pointer_p, _FE_MAYBE_UNUSED_ const size_type count_p = 1) noexcept
 	{
-		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), &count_p);
-		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_NULLPTR));
+		FE_ASSERT(count_p == 1, "${%s@0}: queried allocation size is ${%lu@1}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), &count_p);
+		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "${%s@0}: attempted to delete nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		FE_NEGATIVE_ASSERT(this->m_pool == nullptr, "Assertion failure: Unable to dereference a null pointer.");
 
 		this->m_pool->template deallocate<internal::pool::uninitialized_bytes<sizeof(T)>>(reinterpret_cast<internal::pool::uninitialized_bytes<sizeof(T)>* const>(pointer_p));

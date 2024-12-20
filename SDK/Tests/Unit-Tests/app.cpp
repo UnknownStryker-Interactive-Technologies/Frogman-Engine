@@ -22,6 +22,7 @@ public:
 
 	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override
 	{
+		//__load_all_class_reflection_data_from_dll();
 		var::int32 l_argc = argc_p;
 		testing::InitGoogleTest(&l_argc, (var::tchar**)argv_p);
 		if (argv_p == nullptr)

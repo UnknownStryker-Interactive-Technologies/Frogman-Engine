@@ -7,7 +7,7 @@
 
 TEST(async_task, latent_task)
 {
-	FE::framework::framework_base::get_engine().access_task_scheduler().launch_latent_event(
+	FE::framework::framework_base::get_engine().get_task_scheduler().launch_latent_event(
 		[]()
 		{
 			std::cerr << "\nHello Latent Event!\n"; 

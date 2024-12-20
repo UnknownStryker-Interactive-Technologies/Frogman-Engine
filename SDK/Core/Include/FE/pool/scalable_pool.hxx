@@ -262,7 +262,7 @@ public:
         FE_STATIC_ASSERT(std::is_array<U>::value == false, "Static Assertion Failed: The T must not be an array[] type.");
 
         FE::size l_queried_allocation_size_in_bytes = FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
-        FE_EXIT(l_queried_allocation_size_in_bytes > page_capacity, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_BUFFER_OVERFLOW, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
+        FE_EXIT(l_queried_allocation_size_in_bytes > page_capacity, FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT((l_queried_allocation_size_in_bytes % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_size_in_bytes, &Alignment::size);
 
         for (page_pointer& page_ptr : m_memory_pool)
@@ -308,7 +308,7 @@ public:
     void deallocate(T* pointer_p, FE::uint64 element_count_p) noexcept 
     {
         FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.pool.scalable_pool: Unable to deallocate() a nullptr.");
-        FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_INVALID_SIZE), TO_STRING(element_count_p));
+        FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(element_count_p));
         FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_pool instance.", pointer_p, &Alignment::size);
         
         alignas(16) internal::pool::block_info l_block_to_free;
@@ -348,7 +348,7 @@ public:
             }
         }
 
-        FE_EXIT(true, FE::ErrorCode::_FATAL_MEMORY_ERROR_1XX_FALSE_DEALLOCATION, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_block_to_free._address);
+        FE_EXIT(true, FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_block_to_free._address);
     }
 
     _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept
