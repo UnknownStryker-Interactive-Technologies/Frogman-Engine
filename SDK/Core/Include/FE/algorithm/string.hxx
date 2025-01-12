@@ -240,13 +240,17 @@ _FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean compare(const CharT* c
 	const CharT* l_lstr_iterator = lstr_p;
 	const CharT* l_rstr_iterator = rstr_p;
 
-    while ((*l_lstr_iterator != null) && (*l_lstr_iterator == *l_rstr_iterator))
+    while ((*l_lstr_iterator != FE::null) || (*l_rstr_iterator != FE::null))
     {
+        if (*l_lstr_iterator != *l_rstr_iterator)
+        {
+            return false;
+        }
         ++l_lstr_iterator;
         ++l_rstr_iterator;
     }
 
-    return ((l_lstr_iterator - lstr_p) == (l_rstr_iterator - rstr_p));
+    return true;
 }
 
 
@@ -283,19 +287,19 @@ _FE_NODISCARD_ _FE_CONSTEXPR17_ boolean compare_ranged(const CharT* const lstr_p
 	const CharT* l_lstr_iterator = lstr_p + lstr_range_p._begin;
 	const CharT* l_rstr_iterator = rstr_p + rstr_range_p._begin;
 	const CharT* const l_end_of_lstr = lstr_p + lstr_range_p._end;
+    const CharT* const l_end_of_rstr = rstr_p + rstr_range_p._end;
 
-    while ((*l_lstr_iterator == *l_rstr_iterator) && (l_lstr_iterator != l_end_of_lstr))
+    while ((l_lstr_iterator < l_end_of_lstr) || (l_rstr_iterator < l_end_of_rstr))
     {
+        if (*l_lstr_iterator != *l_rstr_iterator)
+        {
+            return false;
+        }
         ++l_lstr_iterator;
         ++l_rstr_iterator;
     }
 
-    if (l_lstr_iterator == lstr_p + lstr_range_p._begin)
-    {
-        return false;
-    }
-
-    return ((l_lstr_iterator - lstr_p) == (l_rstr_iterator - rstr_p));
+    return true;
 }
 
 
@@ -305,17 +309,21 @@ _FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean insensitive_comparison
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "CharT is not a valid character type");
     FE_NEGATIVE_ASSERT(lstr_p == nullptr, "${%s@0}: ${%s@1} is ${%p@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(lstr_ptr_p), nullptr);
     FE_NEGATIVE_ASSERT(rstr_p == nullptr, "${%s@0}: ${%s@1} is ${%p@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(rstr_ptr_p), nullptr);
-    
+
     const CharT* l_lstr_iterator = lstr_p;
     const CharT* l_rstr_iterator = rstr_p;
 
-    while ((string::capitalize(*l_lstr_iterator) == string::capitalize(*l_rstr_iterator)) && (*l_lstr_iterator != null))
+    while ((*l_lstr_iterator != FE::null) || (*l_rstr_iterator != FE::null))
     {
+        if (string::capitalize(*l_lstr_iterator) != string::capitalize(*l_rstr_iterator))
+        {
+            return false;
+        }
         ++l_lstr_iterator;
         ++l_rstr_iterator;
     }
 
-    return ((l_lstr_iterator - lstr_p) == (l_rstr_iterator - rstr_p));
+    return true;
 }
 
 
@@ -334,22 +342,22 @@ _FE_NODISCARD_ _FE_CONSTEXPR17_ boolean insensitive_ranged_comparison(const Char
         return false;
     }
 
-	const CharT* l_lstr_iterator = lstr_p + lstr_range_p._begin;
-	const CharT* l_rstr_iterator = rstr_p + rstr_range_p._begin;
+    const CharT* l_lstr_iterator = lstr_p + lstr_range_p._begin;
+    const CharT* l_rstr_iterator = rstr_p + rstr_range_p._begin;
     const CharT* const l_end_of_lstr = lstr_p + lstr_range_p._end;
+    const CharT* const l_end_of_rstr = rstr_p + rstr_range_p._end;
 
-    while ((l_lstr_iterator != l_end_of_lstr) && (string::capitalize(*l_lstr_iterator) == string::capitalize(*l_rstr_iterator)))
+    while ((l_lstr_iterator < l_end_of_lstr) || (l_rstr_iterator < l_end_of_rstr))
     {
+        if (string::capitalize(*l_lstr_iterator) != string::capitalize(*l_rstr_iterator))
+        {
+            return false;
+        }
         ++l_lstr_iterator;
         ++l_rstr_iterator;
     }
 
-    if (l_lstr_iterator == lstr_p + lstr_range_p._begin)
-    {
-        return false;
-    }
-
-    return ( (l_lstr_iterator - lstr_p) == (l_rstr_iterator - rstr_p) );
+    return true;
 }
 
 
@@ -415,7 +423,7 @@ _FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ std::optional<range> find_the_
         ++l_iterator;
     }
 
-return std::nullopt;
+    return std::nullopt;
 }
 
 
@@ -673,6 +681,15 @@ _FE_NODISCARD_ _FE_CONSTEXPR17_ std::optional<range> find_the_last_within_range(
 
 
 
+template<typename CharT>
+FE::boolean compare_except_for(const CharT* lhs_p, const CharT* rhs_p, std::initializer_list<const CharT*> to_ignore_p) noexcept
+{
+    return false;
+}
+
+
+
+
 template<typename CharT, typename IntT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ IntT char_to_integer(const CharT value_p) noexcept
 {
@@ -761,7 +778,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::uint64 space_insensitive_length(const Cha
 
 
 template<typename CharT> // This is an alpha version of the implementation. It need some adjustments. 
-FE::boolean space_insensitive_comparison(const CharT* const lhs_p, FE::size lhs_len_p, const CharT* const rhs_p, FE::size rhs_len_p) noexcept
+_FE_CONSTEXPR17_ FE::boolean space_insensitive_comparison(const CharT* const lhs_p, FE::size lhs_len_p, const CharT* const rhs_p, FE::size rhs_len_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == true, "CharT is not a valid character type");
     FE_ASSERT(lhs_p != nullptr, "Assertion failure: the left hand string is a nullptr.");
@@ -847,7 +864,7 @@ FE::boolean space_insensitive_comparison(const CharT* const lhs_p, FE::size lhs_
 
 
 template<typename CharT>
-FE::boolean space_insensitive_contains(const CharT* const str_p, const std::size_t str_len_p, const CharT* const target_substr_p) noexcept
+_FE_CONSTEXPR17_ FE::boolean space_insensitive_contains(const CharT* const str_p, const std::size_t str_len_p, const CharT* const target_substr_p) noexcept
 {
     FE_STATIC_ASSERT(FE::is_char<CharT>::value == true, "CharT is not a valid character type");
     FE_ASSERT(str_p != nullptr, "Assertion failure: the string is a nullptr.");
@@ -936,6 +953,8 @@ FE::boolean space_insensitive_contains(const CharT* const str_p, const std::size
 }
 
 
+
+
 /*
 The murmurhash implementation is auto generated by copliot.
 */
@@ -997,7 +1016,7 @@ _FE_CONSTEXPR17_ FE::uint64 hash(const CharT* string_p, FE::uint64 length_p)
 
 
 template<typename UTF>
-_FE_FORCE_INLINE_ UTF* BOM_cast(UTF* string_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ UTF* skip_BOM(UTF* string_p) noexcept
 {
 	FE_STATIC_ASSERT(((std::is_same_v<UTF, var::UTF8> == true) || (std::is_same_v<UTF, FE::UTF8> == true) 
                     || (std::is_same_v<UTF, var::UTF16> == true) || (std::is_same_v<UTF, FE::UTF16> == true)

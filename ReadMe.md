@@ -37,6 +37,9 @@ https://www.glfw.org/download.html
 - GLM 1.0.1  
 https://github.com/g-truc/glm/releases/tag/1.0.1  
 
+- HAT Trie 0.6.0  
+https://github.com/Tessil/hat-trie  
+
 - Dear ImGUI 1.91.6  
 https://github.com/ocornut/imgui/releases/tag/v1.91.6  
 
@@ -57,12 +60,20 @@ Issues with Frogman Engine Header Tool:
 - It is highly probable that the file or path string encoding issue is causing the problem.  
 - The header tool requires header files and the copy of a license text file to be encoded with UTF8 with BOM(Byte Order Mark) signature.  
 
-To run the header tool with CMake, call the CMake function:
+To run the header tool with CMake, call this CMake function:
 ```CMake
-# The first argument is the header file paths, and the second argument is the options to the tool. 
-# The tool will not properly work without wrapping " " around the each argument.  
-# The each header file path and the each option must be seperated with a semi-colon ';'.  
-RUN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" "-max-concurrency=8;-path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt;-fno-reflection-helper")  
+# The first argument is the header files paths, and the later ones the options to the tool. 
+# The tool will not properly work without wrapping " " around the header files paths argument.  
+# The each header file path must be seperated with a semi-colon ';'.  
+RUN_FROGMAN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt -fno-reflection-helper)  
+```
+
+How to build an application with Frogman Engine using CMake?
+```CMake
+ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+
+# To use ADD_EXECUTABLE() instead of the function above, generated.cpp has to be added to the source files list.
+ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/generated.cpp)
 ```
 
 Microsoft Visual Studio C++ Runtime Library:

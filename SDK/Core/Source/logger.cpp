@@ -43,7 +43,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
     {
         std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
-        std::exit(FE::error_code_cast(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
+        std::exit(FE::error_code_to_int(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
     }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
@@ -81,7 +81,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
     {
         std::cerr << "The message is too long, the string must be shorter than the default_buffer_size.";
-        std::exit(FE::error_code_cast(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
+        std::exit(FE::error_code_to_int(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
     }
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 

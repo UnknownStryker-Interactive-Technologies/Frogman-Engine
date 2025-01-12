@@ -24,6 +24,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+/*
+The FE::iterator<Implementation> class template provides a type-safe iterator that extends a specified implementation
+enforcing non-null assertions and supporting various iterator operations such as dereferencing, incrementing, and arithmetic.
+*/
 template <class Implementation>
 class iterator final : public Implementation
 {
@@ -38,11 +42,11 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator() noexcept : base_type() {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ iterator(const pointer value_p) noexcept : base_type(value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR23_ ~iterator() noexcept {}
+	iterator() noexcept : base_type() {}
+	iterator(const pointer value_p) noexcept : base_type(value_p) {}
+	iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
+	~iterator() noexcept {}
 	
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
@@ -206,11 +210,11 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator() noexcept : base_type() {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ reverse_iterator(const pointer value_p) noexcept : base_type(value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR23_ ~reverse_iterator() noexcept {}
+	reverse_iterator() noexcept : base_type() {}
+	reverse_iterator(const pointer value_p) noexcept : base_type(value_p) {}
+	reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	reverse_iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
+	~reverse_iterator() noexcept {}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
@@ -373,11 +377,11 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator() noexcept : base_type() {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_iterator(const_pointer const value_p) noexcept : base_type(value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator(base_type&& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR23_ ~const_iterator() noexcept {}
+	const_iterator() noexcept : base_type() {}
+	const_iterator(const_pointer const value_p) noexcept : base_type(value_p) {}
+	const_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	const_iterator(base_type&& other_p) noexcept : base_type(other_p) {}
+	~const_iterator() noexcept {}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
@@ -532,11 +536,11 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator() noexcept : base_type() {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reverse_iterator(const_pointer const value_p) noexcept : base_type(value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator(base_type&& other_p) noexcept : base_type(other_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR23_ ~const_reverse_iterator() noexcept {}
+	const_reverse_iterator() noexcept : base_type() {}
+	const_reverse_iterator(const_pointer const value_p) noexcept : base_type(value_p) {}
+	const_reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	const_reverse_iterator(base_type&& other_p) noexcept : base_type(other_p) {}
+	~const_reverse_iterator() noexcept {}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
@@ -669,7 +673,10 @@ public:
 
 
 
-
+/*
+The contiguous_iterator class template in the FE namespace provides an iterator for traversing contiguous memory
+supporting various operations such as dereferencing, pointer arithmetic, and comparison, while ensuring safety against null pointers.
+*/
 template <typename T>
 class contiguous_iterator
 {
@@ -686,11 +693,11 @@ protected:
 	pointer m_iterator;
 
 public:
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator() noexcept : m_iterator() {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ contiguous_iterator(const_pointer const value_p) noexcept : m_iterator(const_cast<pointer>(value_p)) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator(const contiguous_iterator& other_p) noexcept : m_iterator(other_p.m_iterator) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator(contiguous_iterator&& other_p) noexcept : m_iterator(other_p.m_iterator) { other_p.m_iterator = nullptr; }
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR23_ ~contiguous_iterator() noexcept {}
+	_FE_CONSTEXPR17_ contiguous_iterator() noexcept : m_iterator() {}
+	_FE_CONSTEXPR17_ contiguous_iterator(const_pointer const value_p) noexcept : m_iterator(const_cast<pointer>(value_p)) {}
+	_FE_CONSTEXPR17_ contiguous_iterator(const contiguous_iterator& other_p) noexcept : m_iterator(other_p.m_iterator) {}
+	_FE_CONSTEXPR17_ contiguous_iterator(contiguous_iterator&& other_p) noexcept : m_iterator(other_p.m_iterator) { other_p.m_iterator = nullptr; }
+	_FE_CONSTEXPR20_ ~contiguous_iterator() noexcept {}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_null() const noexcept { return this->m_iterator == nullptr; }
 
@@ -841,6 +848,9 @@ template <typename Impl>
 struct is_const_reverse_iterator<FE::const_reverse_iterator<Impl>> : std::true_type {};
 
 
+/*
+The FE::is_in_house_iterator<T> struct is a type trait that determines if a given type T is considered an "in-house" iterator by checking if it is an iterator, const iterator, reverse iterator, or const reverse iterator.
+*/
 template <typename T>
 struct is_in_house_iterator
 {
@@ -860,9 +870,10 @@ struct is_in_house_iterator
 * 4. Frogman Engine Iterator type -> Frogman Engine Iterator type
 * 5. STL Iterator type -> Pointer type (The opposite direction is not allowed).
 * 6. STL Iterator type -> Frogman Engine Iterator type (The opposite direction is not allowed).
+
 */
 template<class To, class From>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ To iterator_cast(From ptr_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ To iterator_cast(From ptr_p) noexcept
 {
 	FE_NEGATIVE_STATIC_ASSERT(((std::is_class<From>::value == false) && (std::is_pointer<From>::value == false)), "Static assertion failure: template arguments must be a pointer type or an iterator type.");
 	FE_NEGATIVE_STATIC_ASSERT(((std::is_class<To>::value == false) && (std::is_pointer<To>::value == false)), "Static assertion failure: template arguments must be a pointer type or an iterator type.");
@@ -893,7 +904,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ To iterator_cast(From ptr_p) noexcept
 	{
 		if constexpr (std::is_pointer<To>::value == true)
 		{
-			return const_cast<To>(ptr_p);
+			return (To)(ptr_p);
 		}
 		else if constexpr (std::is_class<To>::value == true)
 		{

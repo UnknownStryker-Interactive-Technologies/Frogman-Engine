@@ -72,6 +72,11 @@ public:
 };
 
 
+/*
+The framework_base class serves as a foundational component for a framework
+managing program options, memory resources, and task scheduling, while providing mechanisms for launching, running, and shutting down the framework
+along with reflection capabilities for methods and properties.
+*/
 class framework_base
 {
 	friend int ::_tmain(int argc_p, FE::tchar** argv_p);
@@ -82,10 +87,10 @@ class framework_base
 protected:
 	program_options m_program_options;
 	std::locale m_current_system_locale;
-	std::unique_ptr<FE::scalable_pool_resource<FE::PoolPageCapacity::_256MB>[]> m_memory;
+	std::unique_ptr<class FE::memory_resource[]> m_memory;
 	framework::managed m_reference_manager;
-	reflection::method m_method_reflection;
-	reflection::property m_property_reflection;
+	reflection::method_map m_method_reflection;
+	reflection::property_map m_property_reflection;
 	framework::task_scheduler m_cpu;
 
 public:
@@ -97,8 +102,8 @@ public:
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
 	framework::managed& get_reference_manager() noexcept;
-	reflection::method& get_method_reflection() noexcept;
-	reflection::property& get_property_reflection() noexcept;
+	reflection::method_map& get_method_reflection() noexcept;
+	reflection::property_map& get_property_reflection() noexcept;
 	framework::task_scheduler& get_task_scheduler() noexcept;
 
 protected:
@@ -106,7 +111,8 @@ protected:
 	virtual FE::int32 run();
 	virtual FE::int32 shutdown();
 
-	void __load_all_class_reflection_data_from_dll() noexcept;
+protected:
+	void __load_reflection_data() noexcept;
 
 public:
 	_FE_NORETURN_ static void __abnormal_shutdown_with_exit_code(int signal_p);

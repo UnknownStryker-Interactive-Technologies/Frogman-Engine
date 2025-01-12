@@ -107,7 +107,10 @@ struct memory_utilization
 	var::int64 _thread_local_pool_bytes = 0;
 };
 
-
+/*
+The allocator_base class in the FE::internal namespace serves as a base class for memory allocation management
+providing static methods to track and log memory usage across threads, as well as manage memory pools.
+*/
 class allocator_base
 {
 protected:
@@ -204,6 +207,10 @@ protected:
 
 END_NAMESPACE
 
+/*
+The operator new function allocates a specified number of bytes of memory
+aligned to the size of the CPU's L1 cache line, using a custom memory allocation function FE_ALIGNED_ALLOC.
+*/
 void* operator new(std::size_t bytes_p);
 void* operator new[](std::size_t bytes_p);
 

@@ -15,6 +15,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+#include <robin_hood.h>
+
+// std::is_same_v
+#include <type_traits>
+
+// std::cerr
+#include <iostream>
+
+
+
+
 #ifdef FE_LOG
 #error FE_LOG is a reserved Frogman Engine macro keyword.
 #endif 
@@ -57,6 +69,8 @@ limitations under the License.
 %c - char
 %s - string
 %p - hexadecimal 64-bit pointer
+
+FE_LOG is a macro that facilitates logging messages by formatting them with a buffered string formatter and including the current file name, function signature, and line number for better traceability in the log output.
 */
 #define FE_LOG(...) ::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__)
 #else
@@ -80,6 +94,9 @@ limitations under the License.
 %c - char
 %s - string
 %p - hexadecimal 64-bit pointer
+
+FE_LOG_IF is a macro that logs messages conditionally based on a specified condition
+utilizing a logger to format and output the message along with the file name and line number where the log was triggered.
 */
 #define FE_LOG_IF(condition, ...) \
 if(condition) \
@@ -108,6 +125,9 @@ if(condition) \
 %s - string
 %p - hexadecimal 64-bit pointer
 Negative Assertion Macro
+
+FE_NEGATIVE_ASSERT is a macro that triggers a fatal error log and aborts the program if the given expression evaluates to true
+logging a formatted message along with the file name and line number.
 */
 #define FE_NEGATIVE_ASSERT(expression, ...) \
 if(expression) _FE_UNLIKELY_ \
@@ -136,6 +156,8 @@ if(expression) _FE_UNLIKELY_ \
 %c - char
 %s - string
 %p - hexadecimal 64-bit pointer
+
+FE_ASSERT is a macro that checks a given expression and logs a fatal error message along with the file name, function signature, and line number before terminating the program if the expression evaluates to false.
 */
 #define FE_ASSERT(expression, ...) \
 if(!(expression)) _FE_UNLIKELY_ \
@@ -166,18 +188,20 @@ if(!(expression)) _FE_UNLIKELY_ \
 %c - char
 %s - string
 %p - hexadecimal 64-bit pointer
+
+The FE_EXIT macro logs a fatal error message and terminates the program with a specified error code if a given expression evaluates to true.
 */
 #define FE_EXIT(expression, error_code, ...) \
 if(expression) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 	::std::exit(static_cast<::FE::int32>(error_code)); \
-}
+} 
 
 
 #define TO_STRING(p) #p
 
-#define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_NEGATIVE_ASSERT(true, "Reached Default Case: This switch has no default."); break;
+#define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_EXIT(true, ::FE::ErrorCode::_FatalSwitchCaseError_ReachedNoDefault, "Reached Default Case: This switch has no default."); break;
 
 
 namespace FE
@@ -188,7 +212,7 @@ namespace FE
 		_FatalHardwareResourceError_CPU_HasNotEnoughThreads = 1,
 		_FatalError_DynamicCastFailure_TypeMismatch = 2,
 		_FatalLoggerError_IncorrectStringFormatterSyntex = 3,
-		_FatalError_FailedToLoadReflectionDataFromDLL = 4,
+		_FatalSwitchCaseError_ReachedNoDefault = 4,
 
 		_FatalMemoryError_1XX_IllegalAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,
@@ -211,9 +235,40 @@ namespace FE
 		_FatalSerializationError_3XX_TypeNotFound = 301
 	};
 
-	_FE_FORCE_INLINE_ int error_code_cast(const ErrorCode error_code_p) noexcept
+	_FE_FORCE_INLINE_ int error_code_to_int(const FE::ErrorCode error_code_p) noexcept
 	{
 		return static_cast<int>(error_code_p);
+	}
+
+	_FE_FORCE_INLINE_ FE::ASCII* error_code_to_string(const FE::ErrorCode code_p) noexcept
+	{
+		static const robin_hood::unordered_map<FE::ErrorCode, FE::ASCII*>  l_s_message_table =
+		{	
+			{ FE::ErrorCode::_None, "Frogman Engine Error: Not an Error." },
+			{ FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Frogman Engine Fatal Hardware Resource Error: CPU Has Not Enough Threads." },
+			{ FE::ErrorCode::_FatalError_DynamicCastFailure_TypeMismatch, "Frogman Engine Fatal Error: Dynamic Cast Failed." },
+			{ FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex, "Frogman Engine Fatal Logger Error: Incorrect String Formatter Syntex." },
+			{ FE::ErrorCode::_FatalSwitchCaseError_ReachedNoDefault, "Frogman Engine Fatal Switch Case Error: Reached No Default." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_IllegalAddressAlignment, "Frogman Engine Fatal Memory Error: The Address is Not Properly Aligned." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "Frogman Engine Fatal Memory Error: Cannot Dereference a Null Pointer." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation, "Frogman Engine Fatal Memory Error: The Program is Attempting to Access an Undesired Location." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_HeapCorruption, "Frogman Engine Fatal Memory Error: The Program Heap Corruption Detected." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_DoubleFree, "Frogman Engine Fatal Memory Error: Double Free Detected." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow, "Frogman Engine Fatal Memory Error: The Buffer Overflow Detected." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize, "Frogman Engine Fatal Memory Error: Detected an Invalid Memory Size Argument." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator, "Frogman Engine Fatal Memory Error: The Iterator is Pointing to an Invalid Address." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualAllocFailure, "Frogman Engine Fatal Memory Error: Virtual Alloc Failed." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualLockFailure, "Frogman Engine Fatal Memory Error: Virtual Lock Failed." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualUnlockFailure, "Frogman Engine Fatal Memory Error: Virtual Unlock Failed." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualFreeFailure, "Frogman Engine Fatal Memory Error: Virtual Free Failed." },
+			{ FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Frogman Engine Fatal Memory Error: False Deallocation Detected." },
+			{ FE::ErrorCode::_FatalInputError_2XX_InvalidArgument, "Frogman Engine Fatal Input Error: an Invalid Argument Detected." },
+			{ FE::ErrorCode::_FatalInputError_2XX_Null, "Frogman Engine Fatal Input Error: The Value is a Null." },
+			{ FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Frogman Engine Fatal Serialization Error: Serialization of Mismatching Type." },
+			{ FE::ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Frogman Engine Fatal Serialization Error: The Instance Memory Layout is Not Known to the Engine's Reflection System." }
+		};
+
+		return l_s_message_table.at(code_p);
 	}
 }
 #endif

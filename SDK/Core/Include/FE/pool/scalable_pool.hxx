@@ -219,7 +219,7 @@ public:
     constexpr static FE::size possible_address_count = (page_capacity / Alignment::size);
     constexpr static FE::size free_list_capacity = chunk_type::free_list_capacity;
 
-    constexpr static FE::size maximum_page_count = 3;
+    constexpr static FE::size maximum_page_count = 7;
 
 	constexpr static FE::size auto_defragmentation_denominator = 2;
     constexpr static FE::size auto_defragmentation_point = possible_address_count / auto_defragmentation_denominator;
@@ -499,7 +499,7 @@ private:
         Best - O(n/2)
 		Worst - O(n)
         */
-        auto l_binary_searchable_range = algorithm::utility::exclusion_sort<algorithm::utility::ExclusionSortMode::_PushToRight, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
+        auto l_binary_searchable_range = algorithm::utility::exclude<algorithm::utility::IsolationVector::_Right, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
                                                                                                                                      l_end, internal::pool::block_info{ nullptr, 0 });
         // Reset it.
         page_p->set_free_list_size(l_binary_searchable_range._second - l_binary_searchable_range._first);
@@ -527,6 +527,9 @@ private:
 
  - __retrive_from_free_list()
  O(log n)
+
+ The scalable_pool class template in the Frogman Engine provides a scalable memory pool for efficient allocation and deallocation of memory blocks with a specified alignment and page capacity
+ ensuring that allocations are properly aligned and managed within a limited number of memory pages.
 */
 template<PoolPageCapacity PageCapacity, class Alignment = FE::SIMD_auto_alignment>
 using scalable_pool = pool<PoolType::_Scalable, PageCapacity, Alignment>;

@@ -61,16 +61,16 @@ class object : public object_with_vector
 	FE_PROPERTY(m_text);
 	std::string m_text;
 public:
-	object() {  };
+	object() {};
 	object(const std::string& text_p) : m_text(text_p) {/* std::cerr << method_reflection_instance_get_text.get_signature();*/ }
 
-	FE_METHOD(object, get_text, FE::ASCII* (void) const);
+	FE_METHOD(get_text, FE::ASCII* (void) const);
 	FE::ASCII* get_text() const
 	{
 		return this->m_text.c_str();
 	}
 	
-	FE_STATIC_METHOD(object, greet, FE::ASCII*(void));
+	FE_STATIC_METHOD(greet, FE::ASCII*(void));
 	static FE::ASCII* greet()
 	{
 		return "Hello, reflection system!";
@@ -125,14 +125,13 @@ TEST(reflection, object_with_vector_serialization)
 TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
-	
-	auto l_function_pointer = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* object::get_text(void) const");
+	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
+	auto l_function_pointer = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* class object::get_text(void) const");
 	FE::ASCII* l_msg;
 	(*l_function_pointer)(&l_object, &l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 
-
-	auto l_greeter = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* object::greet(void)");
+	auto l_greeter = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* class object::greet(void)");
 	(*l_greeter)(&l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Hello, reflection system!");
 }

@@ -745,8 +745,8 @@ inline size_t hash_bytes(void const* ptr, size_t len) noexcept {
     h ^= h >> r;
 
     // not doing the final step here, because this will be done by keyToIdx anyways
-    // h *= m;
-    // h ^= h >> r;
+     //h *= m;
+     //h ^= h >> r;
     return static_cast<size_t>(h);
 }
 

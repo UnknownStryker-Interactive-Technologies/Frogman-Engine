@@ -32,26 +32,11 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
         $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/windows/MinSizeRel/benchmark.lib>
     )
 
-    SET(FE_CORE
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Binaries/X86-64/Windows/Debug/FE.Core.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Binaries/X86-64/Windows//RelWithDebInfo/FE.Core.lib>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Binaries/X86-64/Windows/Release/FE.Core.lib>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Binaries/X86-64/Windows/MinSizeRel/FE.Core.lib>
-    )
-
-    SET(FE_FRAMEWORK
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Framework/Binaries/X86-64/Windows/Debug/FE.Framework.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Framework/Binaries/X86-64/Windows//RelWithDebInfo/FE.Framework.lib>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Framework/Binaries/X86-64/Windows/Release/FE.Framework.lib>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Framework/Binaries/X86-64/Windows/MinSizeRel/FE.Framework.lib>
-    )
-
 ENDIF()
 
 
-
-
-ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/app.cpp
+SET(SOURCE_FILES
+${CMAKE_CURRENT_SOURCE_DIR}/app.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.algorithm.math.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.algorithm.string.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.algorithm.utility.cpp
@@ -66,5 +51,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/FE.pool.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.task.cpp
 )
 
+
+ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${FROGMAN_ENGINE_SDK} ${UNIT_TEST} ${BENCHMARK_TEST})
 SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Test-App")
-TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${BOOST_THREAD} ${UNIT_TEST} ${BENCHMARK_TEST} ${FE_CORE} ${FE_FRAMEWORK}) 

@@ -47,6 +47,10 @@ namespace FE::internal
 #ifdef FE_DO_ONCE
     #error FE_DO_ONCE is a reserved Frogman Engine macro keyword.
 #endif
+/*
+The FE_DO_ONCE macro is used to execute a block of code exactly once within a specified frequency context
+leveraging a lambda function to encapsulate the code to be executed.
+*/
 #define FE_DO_ONCE(frequency, ...)\
 { \
  	_FE_MAYBE_UNUSED_ frequency ::FE::internal::do_once __FE_DO_ONCE_INSTANCE__( [&]() { __VA_ARGS__; } ); \

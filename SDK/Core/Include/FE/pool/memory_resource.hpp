@@ -21,6 +21,7 @@ limitations under the License.
 #include <FE/pool/scalable_pool.hxx>
 
 #include <memory_resource>
+#include <mutex>
 
 
 
@@ -28,102 +29,51 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template<PoolPageCapacity PageCapacity>
-class scalable_pool_resource : public std::pmr::memory_resource, public FE::internal::allocator_base
+namespace internal
 {
-public:
-	using pool_type = FE::pool<FE::PoolType::_Scalable, PageCapacity, FE::SIMD_auto_alignment>;
+	constexpr FE::size double_zmmword_size = 128;
+	constexpr FE::size quad_zmmword_size = 256;
+	constexpr FE::size octa_zmmword_size = 512;
 
-	pool_type m_pool;
-
-public:
-	scalable_pool_resource() noexcept = default;
-	virtual ~scalable_pool_resource() noexcept = default;
-
-	scalable_pool_resource(scalable_pool_resource&& other_p) noexcept 
-		: m_pool(std::move(other_p.m_pool)) {}
-
-	scalable_pool_resource& operator=(scalable_pool_resource&& other_p) noexcept
+	enum struct AllocatorType
 	{
-		this->m_pool = std::move(other_p.m_pool);
-		return *this;
-	}
+		_DoubleZMMWordAllocator = 1,
+		_QuadZMMWordAllocator = 2,
+		_OctaZMMWordAllocator = 3
+	};
+}
+
+
+/*
+The FE::memory_resource is a class template provides a memory resource that utilizes a bunch of pool allocators for efficient memory management
+inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
+*/
+class memory_resource : virtual public std::pmr::memory_resource, virtual public FE::internal::allocator_base
+{
+	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::double_zmmword_size, FE::align_CPU_L1_cache_line> m_dzmmword_block_pool;
+	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::quad_zmmword_size, FE::align_CPU_L1_cache_line> m_qzmmword_block_pool;
+	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::octa_zmmword_size, FE::align_CPU_L1_cache_line> m_ozmmword_block_pool;
+	FE::scalable_pool<FE::PoolPageCapacity::_256MB, FE::align_CPU_L1_cache_line> m_scalable_pool;
+
+public:
+	memory_resource() noexcept = default;
+	virtual ~memory_resource() noexcept = default;
+
+	memory_resource(memory_resource&& other_p) noexcept;
+	memory_resource& operator=(memory_resource&& other_p) noexcept;
 
 protected:
-	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
-	{
-		return this->m_pool.allocate<std::byte>(bytes_p);
-	}
+	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
+	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
 
-	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
-	{
-		this->m_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
-	}
-
-	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-	{
-		const scalable_pool_resource* l_other = dynamic_cast<const scalable_pool_resource*>(&other_p);
-		if (l_other == nullptr)
-		{
-			return false;
-		}
-
-		return &(this->m_pool) == &(l_other->m_pool);
-	}
+	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
 
 private:
-	scalable_pool_resource(const scalable_pool_resource&) = delete;
-	scalable_pool_resource& operator=(const scalable_pool_resource&) = delete;
-};
-
-
-template<PoolPageCapacity PageCapacity>
-class cache_aligned_pool_resource : public std::pmr::memory_resource, public FE::internal::allocator_base
-{
-public:
-	using pool_type = FE::pool<FE::PoolType::_Scalable, PageCapacity, FE::align_CPU_L1_cache_line>;
-
-	pool_type m_pool;
-	std::mutex m_lock;
-
-public:
-	cache_aligned_pool_resource() noexcept = default;
-	virtual ~cache_aligned_pool_resource() noexcept = default;
-
-	cache_aligned_pool_resource(cache_aligned_pool_resource&& other_p) noexcept 
-		: m_pool(std::move(other_p.m_pool)), m_lock() {}
-
-	cache_aligned_pool_resource& operator=(cache_aligned_pool_resource&& other_p) noexcept
-	{
-		this->m_pool = std::move(other_p.m_pool);
-		return *this;
-	}
-
-protected:
-	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
-	{
-		return this->m_pool.allocate<std::byte>(bytes_p);
-	}
-
-	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override
-	{
-		this->m_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
-	}
-
-	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-	{
-		const cache_aligned_pool_resource* l_other = dynamic_cast<const cache_aligned_pool_resource*>(&other_p);
-		if (l_other == nullptr)
-		{
-			return false;
-		}
-
-		return &(this->m_pool) == &(l_other->m_pool);
-	}
+	internal::AllocatorType __select_allocator(std::size_t bytes_p) const noexcept;
 
 private:
-	cache_aligned_pool_resource(const cache_aligned_pool_resource&) = delete;
-	cache_aligned_pool_resource& operator=(const cache_aligned_pool_resource&) = delete;
+	memory_resource(const memory_resource&) = delete;
+	memory_resource& operator=(const memory_resource&) = delete;
 };
 
 

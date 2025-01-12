@@ -31,7 +31,7 @@
 #include <city.h>
 
 #include <algorithm>
-#include <string.h>  // for memcpy and memset
+#include <string.h>  // for memcpy and memzero
 
 using namespace std;
 
@@ -597,7 +597,7 @@ static inline void CityHashCrc256Long(const char *s, size_t len,
 static inline void CityHashCrc256Short(const char *s, size_t len, uint64 *result) {
   char buf[240];
   memcpy(buf, s, len);
-  memset(buf + len, 0, 240 - len);
+  memzero(buf + len, 0, 240 - len);
   CityHashCrc256Long(buf, 240, ~static_cast<uint32>(len), result);
 }
 

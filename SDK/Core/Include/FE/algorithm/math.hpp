@@ -28,35 +28,59 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::math)
 
 
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::int64 approx_log2(FE::float64 value_p) noexcept
+{
+	var::int64 l_exponent = 0;
+	var::float64 l_value = value_p;
+
+	if (1.0 < value_p)
+	{
+		while (1.0 < l_value)
+		{
+			l_value /= 2.0;
+			++l_exponent;
+		}
+		return l_exponent;
+	}
+
+	while (1.0 > l_value)
+	{
+		l_value *= 2.0;
+		--l_exponent;
+	}
+	return l_exponent;
+}
+
+
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T abs(const T& x_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ T abs(const T& x_p) noexcept
 {
 	return (x_p < 0) ? (x_p * -1) : x_p;
 }
 
 
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T max(const T& lhs_p, const T& rhs_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ T max(const T& lhs_p, const T& rhs_p) noexcept
 {
 	return (lhs_p >= rhs_p) ? lhs_p : rhs_p;
 }
 
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T min(const T& lhs_p, const T& rhs_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ T min(const T& lhs_p, const T& rhs_p) noexcept
 {
 	return (lhs_p <= rhs_p) ? lhs_p : rhs_p;
 }
 
 
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T clamp(const T& value_p, const T& min_p, const T& max_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ T clamp(const T& value_p, const T& min_p, const T& max_p) noexcept
 {
 	return ((min_p > value_p) ? min_p : ((value_p > max_p) ? max_p : value_p));
 }
 
 
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ FE::boolean is_nearly_equal(const T& lhs_p, const T& rhs_p, const T& offset_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::boolean is_nearly_equal(const T& lhs_p, const T& rhs_p, const T& offset_p) noexcept
 {
 	return  ::FE::algorithm::math::abs(lhs_p - rhs_p) <= offset_p;
 }
@@ -102,7 +126,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean is_prime(uint64 number_p) noexcept
 	return l_count == number_p;
 }
 
-uint64 to_higher_prime(uint64 number_p) noexcept;
+uint64 to_upper_prime(uint64 number_p) noexcept;
 
 uint64 to_lower_prime(uint64 number_p) noexcept;
 

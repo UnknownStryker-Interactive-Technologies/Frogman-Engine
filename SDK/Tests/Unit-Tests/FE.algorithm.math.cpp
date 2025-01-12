@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
@@ -204,7 +204,7 @@ TEST(math, to_highter_prime)
 {
 	var::uint64 l_num = 4;
 	EXPECT_FALSE(FE::algorithm::math::is_prime(l_num));
-	l_num = FE::algorithm::math::to_higher_prime(l_num);
+	l_num = FE::algorithm::math::to_upper_prime(l_num);
 	EXPECT_TRUE(FE::algorithm::math::is_prime(l_num));
 }
 

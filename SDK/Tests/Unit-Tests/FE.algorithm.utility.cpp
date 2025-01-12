@@ -19,24 +19,115 @@ TEST(FE_algorithm_utility, binary_search)
 {
 	std::array<int, 10> l_array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-	std::array<int, 10>::iterator l_result = FE::algorithm::utility::binary_search(l_array.begin(), l_array.end(), 3);
-	EXPECT_EQ(*l_result, 3);
+	for (int i = 1; i <= l_array.size(); ++i)
+	{
+		std::array<int, 10>::iterator l_result = FE::algorithm::utility::binary_search(l_array.begin(), l_array.end(), i);
+		EXPECT_EQ(*l_result, i);
+	}
 }
+void frogman_binary_search_benchmark(benchmark::State& state_p)
+{
+	std::array<int, 20> l_array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+	for (auto _ : state_p)
+	{
+		for (int i = 1; i <= l_array.size(); ++i)
+		{
+			EXPECT_EQ( *(FE::algorithm::utility::binary_search(l_array.begin(), l_array.end(), i)), i );
+		}
+	}
+}
+BENCHMARK(frogman_binary_search_benchmark);
 
-TEST(FE_algorithm_utility, exclusion_sort)
+void std_binary_search_benchmark(benchmark::State& state_p)
+{
+	std::array<int, 20> l_array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+	for (auto _ : state_p)
+	{
+		for (int i = 1; i <= l_array.size(); ++i)
+		{
+			EXPECT_EQ( *(std::lower_bound(l_array.begin(), l_array.end(), i)), i );
+		}
+	}
+}
+BENCHMARK(std_binary_search_benchmark);
+
+
+
+
+TEST(FE_algorithm_utility, binary_insertion_sort)
+{
+	std::array<int, 32> l_array = 
+	{ 
+		42, 17, 93, 8, 55, 23, 76, 34, 
+		89, 12, 3, 66, 28, 51, 78, 95, 
+		1, 37, 81, 40, 61, 11, 25, 99, 
+		2, 70, 47, 84, 19, 5, 91, 63
+	};
+	FE::algorithm::utility::binary_insertion_sort(l_array.begin(), l_array.end());
+
+	for (int i = 0; i < l_array.size() - 1; ++i)
+	{
+		EXPECT_LE(l_array[i], l_array[i + 1]);
+	}
+}
+void small_array_binary_insertion_sort_benchmark(benchmark::State& state)
+{
+	for (auto _ : state)
+	{
+		std::array<std::size_t, 16> l_array =
+		{
+			42, 17, 93, 8, 55, 23, 76, 34,
+			89, 12, 3, 66, 28, 51, 78, 95
+		};
+
+		FE::algorithm::utility::binary_insertion_sort(l_array.begin(), l_array.end());
+	}
+}
+BENCHMARK(small_array_binary_insertion_sort_benchmark);
+
+void small_array_std_sort_benchmark(benchmark::State& state)
+{
+	for (auto _ : state)
+	{
+		std::array<std::size_t, 16> l_array =
+		{
+			42, 17, 93, 8, 55, 23, 76, 34,
+			89, 12, 3, 66, 28, 51, 78, 95
+		};
+		std::sort(l_array.begin(), l_array.end());
+	}
+}
+BENCHMARK(small_array_std_sort_benchmark);
+
+
+
+
+TEST(FE_algorithm_utility, exclude)
 {
 	FE::int32 l_value_to_exclude = 0;
 	std::array<int, 10> l_array = { 1, 2, 0, 0, 5, 0, 7, 8, 0, 10 };
 
-	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::exclusion_sort<FE::algorithm::utility::ExclusionSortMode::_PushToRight>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::exclude<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
 
 	while (l_result._first != l_result._second)
 	{
 		EXPECT_NE(*(l_result._first), l_value_to_exclude);
 		++(l_result._first);
 	}
-	++(l_result._first);
-	EXPECT_EQ(*(l_result._first), l_value_to_exclude);
+}
+
+TEST(FE_algorithm_utility, cherry_pick)
+{
+	FE::int32 l_value_to_exclude = 0;
+	std::array<int, 10> l_array = { 1, 2, 0, 0, 5, 0, 7, 8, 0, 10 };
+
+	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::cherry_pick<FE::algorithm::utility::IsolationVector::_Left>(l_array.begin(), l_array.end(), l_value_to_exclude);
+
+	while (l_result._first != l_result._second)
+	{
+		EXPECT_NE(*(l_result._first), l_value_to_exclude);
+		++(l_result._first);
+	}
 }
 
 // count_int_digit_length

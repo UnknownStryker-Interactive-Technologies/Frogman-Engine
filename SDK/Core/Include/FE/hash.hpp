@@ -73,6 +73,11 @@ protected:
 	static uint64 s_seed;
 };
 
+/*
+The FE::hash class template provides a hashing mechanism for objects of type T
+allowing the use of different hashing algorithms (such as Robin Hood Hashing or CityHash) based on the specified HasherType
+and is specialized for handling address-based hashing with the HashInputDataType::_Address type.
+*/
 template<typename T, HasherType HasherType = HasherType::_RobinHoodHash, HashInputDataType HashInputDataType = FE::evaluate_hash_input_data_type<T>()>
 class hash;
 

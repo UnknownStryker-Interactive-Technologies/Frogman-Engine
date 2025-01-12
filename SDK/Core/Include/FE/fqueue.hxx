@@ -33,7 +33,10 @@ BEGIN_NAMESPACE(FE)
 
 
 
-
+/*
+The FE::fqueue class template is a fixed-capacity queue that utilizes custom memory traits for managing its elements
+providing various constructors and assignment operators for initialization and element manipulation.
+*/
 template<class T, size Capacity, class Traits = internal::memory_traits<T>>
 class fqueue final
 {
@@ -59,8 +62,8 @@ protected:
 	size_type m_indirected_element_count;
 
 public:
-	_FE_FORCE_INLINE_ fqueue() noexcept : m_memory(), m_front_ptr(reinterpret_cast<pointer>(m_memory)), m_back_ptr(m_front_ptr), m_absolute_begin_pointer(m_front_ptr), m_indirected_element_count() {}
-	_FE_FORCE_INLINE_ ~fqueue() noexcept { this->pop_all(); }
+	_FE_CONSTEXPR20_ fqueue() noexcept : m_memory(), m_front_ptr(reinterpret_cast<pointer>(m_memory)), m_back_ptr(m_front_ptr), m_absolute_begin_pointer(m_front_ptr), m_indirected_element_count() {}
+	_FE_CONSTEXPR20_ ~fqueue() noexcept { this->pop_all(); }
 
 	_FE_CONSTEXPR20_ fqueue(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_front_ptr(reinterpret_cast<pointer>(m_memory)), m_back_ptr(m_front_ptr + initializer_list_p.size()), m_absolute_begin_pointer(m_front_ptr), m_indirected_element_count(initializer_list_p.size())
 	{
@@ -208,103 +211,103 @@ public:
 		}
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reference front() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference front() const noexcept
 	{
 		return *this->m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reference back() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference back() const noexcept
 	{
 		return *(this->m_back_ptr - 1);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ reference front() noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference front() noexcept
 	{
 		return *this->m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ reference back() noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference back() noexcept
 	{
 		return *(this->m_back_ptr - 1);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean is_empty() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_empty() const noexcept
 	{
 		return this->m_indirected_element_count == 0;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type count() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type count() const noexcept
 	{
 		return this->m_indirected_element_count;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type size() const noexcept
 	{
 		return this->m_indirected_element_count;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type max_size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type max_size() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type capacity() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type capacity() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cbegin() const noexcept
 	{
 		return this->m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cend() const noexcept
 	{
 		return this->m_front_ptr + Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crbegin() const noexcept
 	{
 		return (this->m_front_ptr + Capacity) - 1;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crend() const noexcept
 	{
 		return this->m_front_ptr - 1;
 	}
 
-	_FE_FORCE_INLINE_ void swap(fqueue& in_out_other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void swap(fqueue& in_out_other_p) noexcept
 	{
 		std::swap(*this, in_out_other_p);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator==(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(fqueue& other_p) const noexcept
 	{
 		return FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator!=(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(fqueue& other_p) const noexcept
 	{
 		return !FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
 protected:
-	_FE_FORCE_INLINE_ void __jump_front_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __jump_front_pointer(difference_type ptrdiff_p) noexcept
 	{
 		this->m_front_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ void __set_front_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __set_front_pointer_to_zero() noexcept
 	{
 		this->m_front_ptr = this->m_absolute_begin_pointer;
 	}
 
-	_FE_FORCE_INLINE_ void __jump_back_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __jump_back_pointer(difference_type ptrdiff_p) noexcept
 	{
 		this->m_back_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ void __set_back_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __set_back_pointer_to_zero() noexcept
 	{
 		this->m_back_ptr = this->m_absolute_begin_pointer;
 	}

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/framework.hpp>
+#include <FE/framework/reflection/private/load_reflection_data.h>
 
 #include <FE/algorithm/string.hxx>
 #include <FE/algorithm/utility.hxx>
@@ -116,7 +117,7 @@ RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
-	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::scalable_pool_resource<FE::PoolPageCapacity::_256MB>[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
+	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
 {
 	std::locale::global(this->m_current_system_locale);
 }
@@ -142,50 +143,9 @@ FE::int32 framework_base::shutdown()
 	return 0;
 }
 
-void framework_base::__load_all_class_reflection_data_from_dll() noexcept
+void framework_base::__load_reflection_data() noexcept
 {
-	std::array<var::wchar, _ALLOWED_DIRECTORY_LENGTH_> l_path_to_dll;
-	auto l_path_length = GetModuleFileNameW(NULL, l_path_to_dll.data(), _ALLOWED_DIRECTORY_LENGTH_);
-	FE_EXIT(l_path_length == FE::null, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
-	{
-		auto l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
-		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
-		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
-
-		l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
-		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
-		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
-
-		l_result = FE::algorithm::string::find_the_last(l_path_to_dll.data(), L'\\');
-		FE_EXIT(l_result == std::nullopt, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
-		std::memset(l_path_to_dll.data() + l_result->_begin, FE::null, l_path_to_dll.size() - l_result->_begin);
-	}
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Generated\\Binaries" });
-
-#ifdef _FE_ON_WINDOWS_X86_64_
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\X86-64\\Windows" });
-#elif defined(_FE_ON_WINDOWS_ARM64_)
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\ARM64\\Windows" });
-#endif
-
-#if defined(_DEBUG_)
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Debug" });
-#elif defined(_RELWITHDEBINFO_)
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\RelWithDebInfo" });
-#elif defined(_RELEASE_)
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\Release" });
-#elif defined(_MINSIZEREL_)  
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\MinSizeRel" });
-#endif
-
-	FE::algorithm::string::concatenate(l_path_to_dll.data(), l_path_to_dll.size(), { L"\\FE.ClassReflectionDataLoader.dll" });
-
-	HMODULE l_dll = LoadLibraryW(l_path_to_dll.data());
-	FE_EXIT(l_dll == nullptr, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Frogman Engine: Failed to load the reflection data for this application.");
-	FARPROC l_load_all_class_reflection_data_from_dll = GetProcAddress(l_dll, "load_all_class_reflection_data_from_dll");
-	FE_EXIT(l_load_all_class_reflection_data_from_dll == nullptr, FE::ErrorCode::_FatalError_FailedToLoadReflectionDataFromDLL, "Could not locate the function");
-	l_load_all_class_reflection_data_from_dll();
-	FreeLibrary(l_dll);
+	load_reflection_data();
 }
 
 
@@ -210,12 +170,12 @@ framework::managed& framework_base::get_reference_manager() noexcept
 	return this->m_reference_manager;
 }
 
-reflection::method& framework_base::get_method_reflection() noexcept
+reflection::method_map& framework_base::get_method_reflection() noexcept
 {
 	return this->m_method_reflection;
 }
 
-reflection::property& framework_base::get_property_reflection() noexcept
+reflection::property_map& framework_base::get_property_reflection() noexcept
 {
 	return this->m_property_reflection;
 }
@@ -275,8 +235,7 @@ game_framework_base::~game_framework_base()
 
 FE::int32 game_framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
 {
-	__load_all_class_reflection_data_from_dll();
-
+	__load_reflection_data();
 	return 0;
 }
 

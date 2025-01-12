@@ -25,7 +25,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::math)
 
 
-uint64 to_higher_prime(uint64 number_p) noexcept
+uint64 to_upper_prime(uint64 number_p) noexcept
 {
 	constexpr uint64 l_magical_seven = 7;
 

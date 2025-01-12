@@ -96,7 +96,7 @@ public:
 
     static constexpr size fixed_block_size_in_bytes = Alignment::size;
     static constexpr uint64 possible_address_count = chunk_type::possible_address_count;
-    static constexpr uint64 maximum_page_count = 3;
+    static constexpr uint64 maximum_page_count = 7;
 
 private:
     using page_pointer = std::unique_ptr<chunk_type>;
@@ -249,6 +249,9 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 /*
 - allocate(): O(1)
 - deallocate(): O(1)
+
+The FE::block_pool class template implements a memory pool allocator for managing fixed-size blocks of memory with a specified alignment and page capacity
+ensuring efficient allocation and deallocation while providing mechanisms for free-list corruption detection.
 */
 template<PoolPageCapacity PageCapacity, FE::size FixedBlockSizeInBytes, class Alignment = FE::SIMD_auto_alignment>
 using block_pool = pool<PoolType::_Block, PageCapacity, FE::align_as<FixedBlockSizeInBytes, Alignment>>;

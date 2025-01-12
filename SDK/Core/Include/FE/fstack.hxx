@@ -30,6 +30,12 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+
+
+/*
+The FE::fstack class template is a fixed-capacity stack implementation that utilizes custom memory traits for managing its elements
+providing various constructors and assignment operators for initialization and manipulation of the stack's contents.
+*/
 template<class T, size Capacity, class Traits = FE::internal::memory_traits<T>>
 class fstack final
 {
@@ -54,8 +60,8 @@ private:
 	pointer const m_absolute_begin_pointer;
 
 public:
-	_FE_FORCE_INLINE_ fstack() noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr) {}
-	_FE_FORCE_INLINE_ ~fstack() noexcept { this->pop_all(); }
+	_FE_CONSTEXPR20_ fstack() noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory)), m_absolute_begin_pointer(m_top_ptr) {}
+	_FE_CONSTEXPR20_ ~fstack() noexcept { this->pop_all(); }
 
 	_FE_CONSTEXPR20_ fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept : m_memory(), m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
 	{
@@ -166,7 +172,7 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ void push(const value_type& value_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void push(const value_type& value_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(this->m_top_ptr >= this->m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 
@@ -197,7 +203,7 @@ public:
 		return l_return_value_buffer;
 	}
 	
-	_FE_FORCE_INLINE_ void pop_all() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void pop_all() noexcept
 	{
 		if (this->is_empty() == false)
 		{
@@ -209,83 +215,83 @@ public:
 		}
 	}
 
-	_FE_FORCE_INLINE_ const_reference top() const noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference top() const noexcept
 	{
 		return *(this->m_top_ptr - 1);
 	}
 
-	_FE_FORCE_INLINE_ reference top() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference top() noexcept
 	{
 		return *(this->m_top_ptr - 1);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::boolean is_empty() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::boolean is_empty() const noexcept
 	{
 		return (this->m_top_ptr == this->m_absolute_begin_pointer) ? true : false;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type count() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type count() const noexcept
 	{
 		return this->m_top_ptr - this->m_absolute_begin_pointer;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type size() const noexcept
 	{
 		return this->m_top_ptr - this->m_absolute_begin_pointer;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type max_size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type max_size() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ size_type capacity() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type capacity() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cbegin() const noexcept
 	{
 		return this->m_absolute_begin_pointer;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_iterator cend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cend() const noexcept
 	{
 		return this->m_top_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crbegin() const noexcept
 	{
 		return this->m_top_ptr - 1;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ const_reverse_iterator crend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crend() const noexcept
 	{
 		return this->m_absolute_begin_pointer - 1;
 	}
 
-	_FE_FORCE_INLINE_ void swap(fstack& in_out_other_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void swap(fstack& in_out_other_p) noexcept
 	{
 		std::swap(*this, in_out_other_p);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator==(const fstack& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const fstack& other_p) const noexcept
 	{
 		return FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ boolean operator!=(const fstack& other_p) const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const fstack& other_p) const noexcept
 	{
 		return !FE::memcmp(this->cbegin(), this->cend(), other_p.cbegin(), other_p.cend());
 	}
 
 private:
-	_FE_FORCE_INLINE_ void __jump_top_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __jump_top_pointer(difference_type ptrdiff_p) noexcept
 	{
 		this->m_top_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ void __set_top_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __set_top_pointer_to_zero() noexcept
 	{
 		this->m_top_ptr = this->m_absolute_begin_pointer;
 	}

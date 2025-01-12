@@ -26,7 +26,10 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-
+/*
+The FE::farray class template is a fixed-size array container that extends std::array
+providing additional functionalities such as dynamic element addition and iterator support while maintaining a specified capacity.
+*/
 template <typename T, size Capacity>
 class farray : public std::array<T, Capacity>
 {

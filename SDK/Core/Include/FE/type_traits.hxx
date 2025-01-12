@@ -35,7 +35,7 @@ BEGIN_NAMESPACE(FE)
 template <typename T>
 struct remove_const_reference 
 {
-	using type = typename std::remove_const<typename std::remove_reference<T>::type>::type; 
+	using type = typename std::remove_const_t< std::remove_reference_t<T> >; 
 };
 
 
@@ -203,9 +203,9 @@ struct is_primitive
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (
 			(FE::is_boolean<T>::value == true) || (FE::is_char<T>::value == true) ||
-			(std::is_integral<T>::value == true) || (std::is_floating_point<T>::value == true) ||
-			(FE::is_constant_string<T>::value == true) || (std::is_pointer<T>::value == true) || 
-			(std::is_null_pointer<T>::value == true)
+			(std::is_integral_v<T> == true) || (std::is_floating_point_v<T> == true) ||
+			(FE::is_constant_string<T>::value == true) || (std::is_pointer_v<T> == true) || 
+			(std::is_null_pointer_v<T> == true)
 		);
 };
 
@@ -223,7 +223,7 @@ struct is_numeric
 template<typename T>
 struct is_function
 {
-	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (std::is_function<T>::value == true) || (std::is_member_function_pointer<T>::value == true);
+	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_function_v<T> || std::is_member_function_pointer_v<T>;
 };
 
 
@@ -236,14 +236,14 @@ enum struct TypeTriviality : boolean
 template <typename T>
 struct is_trivial
 {
-	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (std::is_trivially_constructible<T>::value == true) && (std::is_trivially_destructible<T>::value == true);
+	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T> && std::is_trivially_copyable_v<T>;
 };
 
 
 template<typename T>
 struct is_const_reference
 {
-	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (std::is_const< std::remove_reference_t<T> >::value == true) && (std::is_reference< std::remove_const_t<T> >::value == true);
+	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_const_v< std::remove_reference_t<T> > && std::is_reference_v< std::remove_const_t<T> >;
 };
 
 

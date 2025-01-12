@@ -16,8 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/type_traits.hxx>
+#include <FE/algorithm/math.hpp>
+#include <FE/iterator.hxx>
 #include <FE/pair.hxx>
+#include <FE/type_traits.hxx>
+
 
 // std
 #include <bitset>
@@ -39,61 +42,226 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::utility)
 
 
+template <typename T>
+using value_type_of = std::conditional_t<std::is_pointer_v<T>, std::remove_pointer_t<T>, typename T::value_type>;
+
+template <typename T>
+using pointer_of = std::conditional_t<std::is_pointer_v<T>, T, typename T::pointer>;
+
 template<class Comparator, typename T>
-_FE_FORCE_INLINE_ T& select(const T& true_p, const T& false_p) noexcept
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T& select(const T& true_p, const T& false_p) noexcept
 {
     return Comparator()(true_p, false_p) ? true_p : false_p;
 }
 
-
-template<class Iterator, typename T, class LessThan = std::less<T>, class EqualTo = std::equal_to<T>>
-Iterator binary_search(Iterator begin_p, Iterator end_p, const T& value_p, LessThan&& less_than_p = LessThan(), EqualTo&& equal_to_p = EqualTo())
+template <class Iterator>
+_FE_CONSTEXPR20_ Iterator binary_search(Iterator begin_p, Iterator end_p, const value_type_of<Iterator>& target_p) noexcept
 {
-	FE_NEGATIVE_STATIC_ASSERT((std::is_same<LessThan, std::greater<T>>::value == true), "The comparator must contain < rather than other operators.");
-	FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'first' iterator is pointing after the 'last' iterator.");
-    Iterator l_mid = begin_p + ((end_p - begin_p) >> 1);
+    static_assert(std::is_class_v<Iterator> || std::is_pointer_v<Iterator>);
 
-#ifdef _ENABLE_ASSERT_
-    var::uint64 l_loop_counter = 0;
-	FE::uint64 l_max_loop = static_cast<FE::uint64>(std::log2(end_p - begin_p)) + 1;
-#endif
-    while ((begin_p <= l_mid) && (l_mid <= end_p))
+    FE::size l_size = (end_p - begin_p);
+    Iterator l_mid = begin_p + l_size / 2;
+
+    for (var::int64 n = algorithm::math::approx_log2(static_cast<var::float64>(l_size)); n >= 0; --n)
     {
-        FE_ASSERT(l_loop_counter <= l_max_loop, "FE::algorithm::utility::binary_search() operation timed out! Please check if the comparator is '<' operator.");
-		if (equal_to_p(*l_mid, value_p)) // A == B
+        if (*l_mid == target_p)
         {
-			return l_mid;
-		}
-        else if (less_than_p(*l_mid, value_p)) // A < B
-        {
-            l_mid += ((end_p - l_mid) >> 1);
+            return l_mid;
         }
-        else if (less_than_p(value_p, *l_mid)) // A < B
+
+        //const std::size_t l_move = (end_p - begin_p) / 2;
+        l_mid = begin_p + (end_p - begin_p) / 2;
+
+        if (target_p < *l_mid)
         {
-            l_mid -= ((l_mid - begin_p) >> 1);
+            end_p = l_mid;
+            continue;
         }
-#ifdef _ENABLE_ASSERT_
-        ++l_loop_counter;
-#endif
+
+        if (*l_mid < target_p)
+        {
+            begin_p = l_mid;
+            continue;
+        }
     }
 
-    return Iterator{ nullptr };
+    return end_p;
 }
 
-
-enum struct ExclusionSortMode : var::uint8
+namespace internal::insertion_sort
 {
-	_PushToRight = 0,
-    _PushToLeft = 1
+    template <class Iterator>
+    _FE_CONSTEXPR20_ void __insert(Iterator dest_p, Iterator source_p) noexcept
+    {
+        static_assert(std::is_trivially_copyable_v<value_type_of<Iterator>> == true);
+        FE_ASSERT(dest_p < source_p, "Assertion failed: the given iterators are an invalid range.");
+
+        // set the buffer
+        alignas(16) value_type_of<Iterator> l_buffer;
+        std::memcpy(&l_buffer, iterator_cast<pointer_of<Iterator>>(source_p), sizeof(value_type_of<Iterator>));
+
+        // migrate the rest.
+        std::memmove(   (iterator_cast<pointer_of<Iterator>>(dest_p) + 1),
+                        iterator_cast<pointer_of<Iterator>>(dest_p),
+                        (source_p - dest_p) * sizeof(value_type_of<Iterator>));
+
+        // insert the target
+        std::memcpy(iterator_cast<pointer_of<Iterator>>(dest_p), &l_buffer, sizeof(value_type_of<Iterator>));
+    }
+}
+
+template <class Iterator>
+_FE_CONSTEXPR20_ void binary_insertion_sort(Iterator begin_p, Iterator end_p) noexcept
+{
+    static_assert(std::is_trivially_copyable_v<value_type_of<Iterator>> == true);
+    FE_ASSERT(begin_p < end_p, "Assertion failed: the given iterators are an invalid range.");
+
+    for (Iterator it = begin_p, target = begin_p + 1; target < end_p; ++target)
+    {
+        Iterator l_insertion_pos = algorithm::utility::binary_search(it, target, *target);
+        if (l_insertion_pos != target)
+        {
+            internal::insertion_sort::__insert(l_insertion_pos, target);
+        }
+    }
+}
+
+enum struct IsolationVector : var::uint8
+{
+	_Right = 0,
+    _Left = 1
 };
+/*
+    - Time complexity -
+    O(n)
+*/
+template<IsolationVector IsolationVector, class Iterator, class Predicate>
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
+{
+    if constexpr (IsolationVector == IsolationVector::_Right)
+    {
+        Iterator l_end = end_p;
+        Iterator l_begin = begin_p;
+        Iterator l_tmp_it = begin_p;
+        while (l_tmp_it != l_end)
+        {
+            if (predicate_p(*l_begin))
+            {
+                if (!predicate_p(*l_tmp_it))
+                {
+                    std::swap(*l_begin, *l_tmp_it);
+                    ++l_begin;
+                    ++l_tmp_it;
+                    continue;
+                }
+                ++l_tmp_it;
+                continue;
+            }
+            ++l_begin;
+            ++l_tmp_it;
+        }
+        return FE::pair<Iterator, Iterator>{begin_p, l_tmp_it};
+    }
+    else if constexpr (IsolationVector == IsolationVector::_Left)
+    {
+        Iterator l_rend = begin_p;
+        Iterator l_rbegin = begin_p + ((end_p - begin_p) - 1);
+        Iterator l_rtmp_it = l_rbegin;
+        while (l_rtmp_it > l_rend)
+        {
+            if (predicate_p(*l_rbegin))
+            {
+                if (!predicate_p(*l_rtmp_it))
+                {
+                    std::swap(*l_rbegin, *l_rtmp_it);
+                    --l_rbegin;
+                    --l_rtmp_it;
+                    continue;
+                }
+                --l_rtmp_it;
+                continue;
+            }
+            --l_rbegin;
+            --l_rtmp_it;
+        }
+        std::swap(*l_rbegin, *l_rtmp_it);
+        return FE::pair<Iterator, Iterator>{l_rbegin, end_p};
+    }
+}
+/*
+    - Time complexity -
+    O(n)
+*/
+template<IsolationVector IsolationVector, class Iterator>
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+{
+    if constexpr (IsolationVector == IsolationVector::_Right)
+    {
+        Iterator l_end = end_p;
+        Iterator l_begin = begin_p;
+        Iterator l_tmp_it = begin_p;
+
+        while (l_tmp_it != l_end)
+        {
+            if (*l_begin == exclusion_target_p)
+            {
+                if (*l_tmp_it != exclusion_target_p)
+                {
+                    std::swap(*l_begin, *l_tmp_it);
+                    ++l_begin;
+                    ++l_tmp_it;
+                    continue;
+                }
+
+                ++l_tmp_it;
+                continue;
+            }
+
+            ++l_begin;
+            ++l_tmp_it;
+        }
+        return FE::pair<Iterator, Iterator>{begin_p, l_tmp_it};
+    }
+    else if constexpr (IsolationVector == IsolationVector::_Left)
+    {
+        Iterator l_rend = begin_p;
+        Iterator l_rbegin = begin_p + ((end_p - begin_p) - 1);
+        Iterator l_rtmp_it = l_rbegin;
+
+        while (l_rtmp_it > l_rend)
+        {
+            if (*l_rbegin == exclusion_target_p)
+            {
+                if (*l_rtmp_it != exclusion_target_p)
+                {
+                    std::swap(*l_rbegin, *l_rtmp_it);
+                    --l_rbegin;
+                    --l_rtmp_it;
+                    continue;
+                }
+
+                --l_rtmp_it;
+                continue;
+            }
+
+            --l_rbegin;
+            --l_rtmp_it;
+        }
+        std::swap(*l_rbegin, *l_rtmp_it);
+        return FE::pair<Iterator, Iterator>{l_rbegin, end_p};
+    }
+}
 
 /* 
-- Time complexity -
-Best: O(n/2)
-Worst: O(n)
+    - Time complexity -
+    Best: O(n/2)
+    Worst: O(n)
+
+    The exclude function template sorts a range of elements defined by two iterators based on a specified predicate
+    partitioning the elements into two groups according to the provided IsolationVector strategy.
 */
-template<ExclusionSortMode ExclusionSortMode, class Iterator> 
-FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+template<IsolationVector IsolationVector, class Iterator, class Predicate> 
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> exclude_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
 {
     Iterator l_begin = begin_p;
     Iterator l_end = end_p;
@@ -101,8 +269,78 @@ FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, co
     FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
 
 
-    if constexpr (ExclusionSortMode == ExclusionSortMode::_PushToRight)
+    if constexpr (IsolationVector == IsolationVector::_Right)
 	{
+        while (begin_p < end_p)
+        {
+            if (predicate_p(*begin_p) && !predicate_p(*end_p))
+            {
+                std::swap(*begin_p, *end_p);
+            }
+
+            if (!predicate_p(*begin_p))
+            {
+                ++begin_p;
+            }
+
+            if (predicate_p(*end_p))
+            {
+                --end_p;
+            }
+        }
+        if (l_begin == end_p)
+        {
+			++end_p;
+        }
+        FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        return FE::pair<Iterator, Iterator>{l_begin, end_p};
+	}
+	else if constexpr (IsolationVector == IsolationVector::_Left)
+	{
+        while (begin_p < end_p)
+        {
+            if (!predicate_p(*begin_p) && predicate_p(*end_p))
+            {
+                std::swap(*begin_p, *end_p);
+            }
+
+            if (predicate_p(*begin_p))
+            {
+                ++begin_p;
+            }
+
+            if (!predicate_p(*end_p))
+            {
+                --end_p;
+            }
+        }
+        if (l_begin == end_p)
+        {
+            ++end_p;
+        }
+        FE_NEGATIVE_ASSERT(begin_p >= l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        return FE::pair<Iterator, Iterator>{begin_p, l_end};
+	}
+}
+/*
+    - Time complexity -
+    Best: O(n/2)
+    Worst: O(n)
+
+    The exclude function template sorts a range of elements defined by two iterators
+    moving elements equal to a specified exclusion target to one end of the range based on the specified isolation vector direction (either left or right).
+*/
+template<IsolationVector IsolationVector, class Iterator>
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> exclude(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+{
+    Iterator l_begin = begin_p;
+    Iterator l_end = end_p;
+    --end_p;
+    FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
+
+
+    if constexpr (IsolationVector == IsolationVector::_Right)
+    {
         while (begin_p < end_p)
         {
             if ((*begin_p == exclusion_target_p) && (*end_p != exclusion_target_p))
@@ -122,13 +360,13 @@ FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, co
         }
         if (l_begin == end_p)
         {
-			++end_p;
+            ++end_p;
         }
         FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
         return FE::pair<Iterator, Iterator>{l_begin, end_p};
-	}
-	else if constexpr (ExclusionSortMode == ExclusionSortMode::_PushToLeft)
-	{
+    }
+    else if constexpr (IsolationVector == IsolationVector::_Left)
+    {
         while (begin_p < end_p)
         {
             if ((*begin_p != exclusion_target_p) && (*end_p == exclusion_target_p))
@@ -152,7 +390,7 @@ FE::pair<Iterator, Iterator> exclusion_sort(Iterator begin_p, Iterator end_p, co
         }
         FE_NEGATIVE_ASSERT(begin_p >= l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
         return FE::pair<Iterator, Iterator>{begin_p, l_end};
-	}
+    }
 }
 
 
@@ -255,13 +493,13 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
+_FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
     FE_NEGATIVE_ASSERT(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
 
-    var::uint8 l_integral_digits = count_int_digit_length(value_p);
+    var::uint8 l_integral_digits = algorithm::utility::count_int_digit_length(value_p);
 
     if (value_p < 0)
     {
@@ -289,7 +527,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
-    var::uint8 l_integral_digits = count_uint_digit_length(value_p);
+    var::uint8 l_integral_digits = algorithm::utility::count_uint_digit_length(value_p);
 
     FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
@@ -314,7 +552,7 @@ _FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
     {
         ++float_string_p;
         float_string_p += (l_integral_part_info._digit_length + 1);
-        uint_info l_real_part_info = string_to_uint(float_string_p);
+        uint_info l_real_part_info = algorithm::utility::string_to_uint(float_string_p);
 
         var::float64 l_integral_part = static_cast<var::float64>(l_integral_part_info._value);
         var::float64 l_real_part = static_cast<var::float64>(l_real_part_info._value);
@@ -328,7 +566,7 @@ _FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
 
 
     float_string_p += (1llu + static_cast<uint64>(l_integral_part_info._digit_length));
-    uint_info l_real_part_info = string_to_uint(float_string_p);
+    uint_info l_real_part_info = algorithm::utility::string_to_uint(float_string_p);
 
     var::float64 l_integral_part = static_cast<var::float64>(l_integral_part_info._value);
     var::float64 l_real_part = static_cast<var::float64>(l_real_part_info._value);
@@ -347,9 +585,9 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, uint64 input_st
 
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
-    int_to_string<CharT>(string_out_p, input_string_capacity_p, static_cast<var::int64>(value_p));
+    algorithm::utility::int_to_string<CharT>(string_out_p, input_string_capacity_p, static_cast<var::int64>(value_p));
 
-    var::uint64 l_integral_part_string_length = internal::strlen<CharT>(string_out_p);
+    var::uint64 l_integral_part_string_length = FE::internal::strlen<CharT>(string_out_p);
     string_out_p[l_integral_part_string_length] = '.';
     ++l_integral_part_string_length;
 
@@ -361,7 +599,7 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, uint64 input_st
 
     FE_NEGATIVE_ASSERT(input_string_capacity_p <= (count_int_digit_length(static_cast<var::int64>(l_floating_point)) + l_integral_part_string_length), "MEMORY BOUNDRY CHECK FAILURE: the digit length of the integral part exceeds the output string buffer capacity");
 
-    int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
+    algorithm::utility::int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
 }
 
 #pragma warning (disable: 4702)
@@ -379,7 +617,7 @@ _FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noex
         return false;
     }
 
-    std::exit(FE::error_code_cast(FE::ErrorCode::_FatalInputError_2XX_InvalidArgument));
+    std::exit(FE::error_code_to_int(FE::ErrorCode::_FatalInputError_2XX_InvalidArgument));
     return false;
 }
 
@@ -390,6 +628,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const CharT* boolean_to_string(boolean value_
 
     return (value_p == true) ? static_cast<const CharT*>("true") : static_cast <const CharT*>("false");
 }
+
 
 END_NAMESPACE
 #undef FE_CHAR_TO_INT

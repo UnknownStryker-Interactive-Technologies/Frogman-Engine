@@ -52,7 +52,11 @@ public:
     virtual ~argument_base() noexcept = default;
 };
 
-
+/*
+The arguments class template in the _FE namespace is designed to hold up to ten template parameters
+providing a way to manage and access a collection of types and their corresponding values
+with the last type being customizable through the Tenth template parameter.
+*/
 template<typename First = void, typename Second = void, typename Third = void, typename Fourth = void, typename Fifth = void, typename Sixth = void, typename Seventh = void, typename Eighth = void, typename Ninth = void, typename Tenth = void>
 class arguments;
 
@@ -287,14 +291,22 @@ public:
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p, ninth_p), _tenth(tenth_p) {}
 };
 
-
+/*
+The cpp_style_task class template in the FE namespace encapsulates a callable task that can invoke a member function of a specified class type with a variable number of arguments
+ensuring type safety and supporting both void and non-void return types.
+*/
 template<class C, typename TaskImpl, class ArgumentsBufferType>
 class cpp_style_task;
+
 
 template<typename TaskImpl, class ArgumentsBufferType>
 class c_style_task;
 
 
+/*
+The FE::function<R, Arguments...> class template is a lightweight wrapper for function pointers that allows invoking functions with specified return and argument types
+supporting both copy and move semantics.
+*/
 template<typename R, typename ...Arguments>
 class function;
 
@@ -311,8 +323,8 @@ public:
     using return_type = R;
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
 
-    function() noexcept = default;
-    ~function() noexcept = default;
+    _FE_CONSTEXPR20_ function() noexcept = default;
+    _FE_CONSTEXPR20_ ~function() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
@@ -379,6 +391,10 @@ public:
 };
 
 
+/*
+The FE::method class template is a utility that encapsulates a pointer to a const member function of a specified class
+allowing for invocation with a given set of arguments while providing type safety and convenience.
+*/
 template<class C, typename R, typename ...Arguments>
 class method;
 
@@ -396,8 +412,8 @@ public:
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
     using class_type = C;
 
-    method() noexcept = default;
-    ~method() noexcept = default;
+    _FE_CONSTEXPR20_ method() noexcept = default;
+    _FE_CONSTEXPR20_ ~method() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
@@ -478,8 +494,8 @@ public:
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
     using class_type = C;
 
-    method() noexcept = default;
-    ~method() noexcept = default;
+    _FE_CONSTEXPR20_ method() noexcept = default;
+    _FE_CONSTEXPR20_ ~method() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
@@ -547,7 +563,10 @@ public:
 
 
 
-
+/*
+The FE::task_base class is an abstract base class designed for defining tasks that can be executed with both C and C++ style function calls
+providing a virtual function interface to check for null function pointers.
+*/
 class task_base
 {
 public:
@@ -581,7 +600,7 @@ private:
     typename task_type::method_type m_method;
 
 public:
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task() noexcept : m_method() {}
+    cpp_style_task() noexcept : m_method() {}
     virtual ~cpp_style_task() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : m_method(task_p) {}
@@ -754,6 +773,10 @@ public:
 };
 
 
+/*
+The FE::c_style_task class template encapsulates a callable task with a specified implementation type and an optional arguments buffer type
+allowing for flexible execution of functions with varying numbers of arguments and return types.
+*/
 template<typename TaskImpl, class ArgumentsBufferType = typename FE::function<TaskImpl>::arguments_type>
 class c_style_task : public task_base
 {
@@ -767,7 +790,7 @@ private:
     typename task_type::function_type m_function;
 
 public:
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task() noexcept : m_function() {}
+    c_style_task() noexcept : m_function() {}
     virtual ~c_style_task() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task(typename task_type::function_type task_p) noexcept : m_function(task_p) {}
