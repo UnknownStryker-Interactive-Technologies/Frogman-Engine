@@ -89,8 +89,10 @@ limitations under the License.
 
 #ifdef _FE_ON_WINDOWS_X86_64_
     #define FE_TEXT(s) L#s
+    #define FE_CHAR(s) (*(static_cast<const wchar_t*>( FE_TEXT(s) )))
 #elif defined(_FE_ON_LINUX_X86_64_)
     #define FE_TEXT(s) #s
+    #define FE_CHAR(s) (*(static_cast<const char*>( FE_TEXT(s) )))
 #endif
 
 

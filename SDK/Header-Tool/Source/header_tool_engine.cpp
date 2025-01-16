@@ -13,20 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#define _CRT_SECURE_NO_WARNINGS
 #include "header_tool_engine.hpp"
 
+// std::mbstowcs
+#include <cstdlib>
 
 
 
-header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+
+header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	: FE::framework::framework_base(argc_p, argv_p),
 	  m_UTF8_with_BOM{ 0xEF, 0xBB, 0xBF },
 	  m_UTF8_locale("en_US.UTF-8"),
-	  m_header_tool_options(argc_p, argv_p),
-	  m_copyright_notice(this->get_memory_resource()),
-	  m_code_style_guide(this->get_memory_resource()),
-	  m_header_file_list(this->get_memory_resource()),
-	  m_mapped_header_files(this->get_memory_resource())
+	  m_header_tool_options(argc_p, argv_p)
 {
 	std::cout << "Frogman Engine Header Tool: the given program options are - ";
 	for (var::int32 i = 0; i < argc_p; ++i)
@@ -34,15 +34,20 @@ header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::tchar** argv_p) noe
 		std::cout << argv_p[i] << ' ';
 	}
 	std::cout << '\n';
+
+	std::cout << "Frogman Engine Header Tool: the current locale is " << std::locale().name() << '\n';
 }
 
 
-FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::tchar** argv_p)
+FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
+	this->m_code_style_guide = file_buffer_t(this->get_memory_resource());
+	this->m_reflection_metadata_set = reflection_metadata_set_t(this->get_memory_resource());
+
 	if (this->m_header_tool_options.is_fno_op_defined() == true)
 	{
 		std::cerr << "\n\nFrogman Engine Header Tool: No operation will be done. Exiting the program.\n\n";
-		exit(0);
+		std::exit(0);
 	}
 
 	if (*(this->m_header_tool_options.get_path_to_copyright_notice()) != '\0')
@@ -81,13 +86,13 @@ FE::int32 header_tool_engine::run()
 					file_buffer_t& l_file = this->m_mapped_header_files[i];
 
 					// Check the presence of the given copy right notice.
-					FE::boolean l_result = FE::algorithm::string::space_insensitive_contains(FE::algorithm::string::skip_BOM(l_file.c_str()), l_file.size(), FE::algorithm::string::skip_BOM(this->m_copyright_notice.c_str()));
+					FE::boolean l_result = algorithm::string::space_insensitive_contains(algorithm::string::skip_BOM(l_file.c_str()), l_file.size(), algorithm::string::skip_BOM(this->m_copyright_notice.c_str()));
 					directory_t& l_path = this->m_header_file_list[i];
 
 					if (l_result == false) // The given copy right notice is not found.
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						std::cerr << "\n\nFrogman Engine Header Tool WARNING:\n\tThe file located at '" << l_path.c_str() << "' has no copy of the specified copyright notice.\n\n";
+						std::wcerr << L"\n\nFrogman Engine Header Tool WARNING:\n\tThe file located at '" << l_path.c_str() << L"' has no copy of the specified copyright notice.\n\n";
 						l_exit_code = -1; // Reserve the error report.
 					}
 				}
@@ -98,7 +103,7 @@ FE::int32 header_tool_engine::run()
 		get_task_scheduler().access_executor().run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
 
-		if (l_exit_code == -1)
+		if (-1 == l_exit_code)
 		{
 			return l_exit_code;
 		}
@@ -122,18 +127,18 @@ FE::int32 header_tool_engine::run()
 					if (l_tokens == std::nullopt)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						std::cerr << "\n\nFrogman Engine Header Tool Error:\n\tUnable to parse the file located at '" << l_path.c_str();
+						std::wcerr << L"\n\nFrogman Engine Header Tool Error:\n\tUnable to parse the file located at '" << l_path.c_str();
 						l_exit_code = -2;
 					}
 
 					// literally removes /**/ and // comments.
 					__purge_comments(*l_tokens);
-					FE::algorithm::utility::cherry_pick_if<FE::algorithm::utility::IsolationVector::_Right>(l_tokens->begin(), l_tokens->end(), [](const token& token_p) { return token_p._vocabulary == Vocabulary::_LineEnd; });
+					algorithm::utility::cherry_pick_if<algorithm::utility::IsolationVector::_Right>(l_tokens->begin(), l_tokens->end(), [](const token& token_p) { return token_p._vocabulary == Vocabulary::_LineEnd; });
 
 					header_file_root l_reflection_tree = __build_reflection_tree(l_path, *l_tokens);
 
-					// generate the reflection code in the generated.cpp file.
-					__generate_reflection_code(l_reflection_tree);
+					// generate the reflection metadata set.
+					this->m_reflection_metadata_set.push_back( __generate_reflection_metadata(l_reflection_tree) );
 				}
 			);
 		}
@@ -141,7 +146,19 @@ FE::int32 header_tool_engine::run()
 		// Now, run it.
 		get_task_scheduler().access_executor().run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
+
+		if (-2 == l_exit_code)
+		{
+			return l_exit_code;
+		}
+
+		// generate the reflection code in the generated.cpp file.
+		if (this->m_header_tool_options.is_fno_write_defined() == false)
+		{
+			__generate_reflection_code(this->m_reflection_metadata_set);
+		}
 	}
+
 	return l_exit_code; // CMake or the current build system has to abort the compliation if the exit code is -1.
 }
 
@@ -150,7 +167,7 @@ FE::int32 header_tool_engine::shutdown()
 	return 0;
 }
 
-FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::tchar* directory_p) const noexcept
+FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::wchar* directory_p) const noexcept
 {
 	std::basic_ifstream<var::ASCII> l_BOM_validator;
 	l_BOM_validator.open(directory_p);
@@ -160,39 +177,42 @@ FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::tchar* d
 	return ((l_BOM[0] == this->m_UTF8_with_BOM[0]) && (l_BOM[1] == this->m_UTF8_with_BOM[1]) && (l_BOM[2] == this->m_UTF8_with_BOM[2]));
 }
 
-std::pmr::vector<directory_t> header_tool_engine::__make_header_file_list(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+std::pmr::vector<directory_t> header_tool_engine::__make_header_file_list(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 {
-	directory_t l_raw_directories(this->get_memory_resource());
+	directory_t l_raw_directories(get_memory_resource());
 
 	for (int i = 0; i < argc_p; ++i)
 	{
-		auto l_h = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".h");
-		auto l_hpp = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hpp");
-		auto l_hxx = FE::algorithm::string::find_the_first<var::tchar>(argv_p[i], ".hxx");
+		auto l_h = FE::algorithm::string::find_the_first<var::ASCII>(argv_p[i], ".h");
+		auto l_hpp = FE::algorithm::string::find_the_first<var::ASCII>(argv_p[i], ".hpp");
+		auto l_hxx = FE::algorithm::string::find_the_first<var::ASCII>(argv_p[i], ".hxx");
 		if ((l_h != std::nullopt) ||
 			(l_hpp != std::nullopt) ||
 			(l_hxx != std::nullopt))
 		{
-			l_raw_directories = argv_p[i];
+			FE::int64 l_directory_length = FE::algorithm::string::length(argv_p[i]);
+			l_raw_directories.resize(l_directory_length + 1);
+			std::mbstowcs(l_raw_directories.data(), argv_p[i], l_directory_length);
+			l_raw_directories = l_raw_directories.c_str();
 
-			var::uint64 l_number_of_files = FE::algorithm::string::count_chars<var::tchar>(l_raw_directories.c_str(), ';')._match_count;
+			var::uint64 l_number_of_files = FE::algorithm::string::count_chars<var::wchar>(l_raw_directories.c_str(), L';')._match_count;
 			++l_number_of_files; // CMake does not put ';' to indicate the end of the last directory of the list. So, we need to add 1 to the count.
 
 			std::pmr::vector<directory_t> l_list;
 			l_list.reserve(l_number_of_files);
 
-			FE::tchar* l_end_of_path = l_raw_directories.c_str();
-			auto l_path_seperator = FE::algorithm::string::find_the_first<var::tchar>(l_end_of_path, ';');
+			FE::wchar* l_end_of_path = l_raw_directories.c_str();
+			auto l_path_seperator = FE::algorithm::string::find_the_first<var::wchar>(l_end_of_path, L';');
 
 			while (l_path_seperator != std::nullopt)
 			{
 				FE::uint64 l_path = l_end_of_path - l_raw_directories.c_str();
 				l_list.emplace_back(l_raw_directories.substr(l_path, l_path_seperator->_begin));
 				l_end_of_path += l_path_seperator->_end;
-				l_path_seperator = FE::algorithm::string::find_the_first<var::tchar>(l_end_of_path, ';');
+				l_path_seperator = FE::algorithm::string::find_the_first<var::wchar>(l_end_of_path, L';');
 			}
 
-			l_path_seperator = FE::algorithm::string::find_the_last<var::tchar>(l_raw_directories.c_str(), ';');
+			l_path_seperator = FE::algorithm::string::find_the_last<var::wchar>(l_raw_directories.c_str(), L';');
 
 			if (l_path_seperator != std::nullopt)
 			{
@@ -210,14 +230,14 @@ std::pmr::vector<directory_t> header_tool_engine::__make_header_file_list(FE::in
 
 std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std::pmr::vector<directory_t>& file_list_p) noexcept
 {
-	std::pmr::vector<file_buffer_t> l_files(this->get_memory_resource());
+	std::pmr::vector<file_buffer_t> l_files(get_memory_resource());
 	l_files.reserve(file_list_p.size());
 
 	for (auto& path_to_file : file_list_p)
 	{
-		auto l_h = path_to_file.find(".h");
-		auto l_hpp = path_to_file.find(".hpp");
-		auto l_hxx = path_to_file.find(".hxx");
+		auto l_h = path_to_file.find(L".h");
+		auto l_hpp = path_to_file.find(L".hpp");
+		auto l_hxx = path_to_file.find(L".hxx");
 		if ((l_h == std::string::npos) && (l_hpp == std::string::npos) && (l_hxx == std::string::npos))
 		{
 			continue;

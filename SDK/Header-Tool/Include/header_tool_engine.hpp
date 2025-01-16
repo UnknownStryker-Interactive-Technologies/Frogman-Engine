@@ -33,10 +33,13 @@ limitations under the License.
 #include <string_view> // std::basic_string_view
 #include <vector> // std::pmr::vector
 
+// Microsoft Parallel Patterns Library. This header is specific to the Microsoft Visual Studio.
+#include <concurrent_vector.h>
 
 
 
-using directory_t = std::pmr::basic_string<var::tchar>;
+
+using directory_t = std::pmr::basic_string<var::wchar>;
 using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 
 
@@ -47,12 +50,12 @@ struct token
 	Vocabulary _vocabulary;
 	file_buffer_t _code;
 
-	FE::boolean operator==(const token& rhs_p) const noexcept
+	_FE_NODISCARD_ FE::boolean operator==(const token& rhs_p) const noexcept
 	{
 		return (this->_vocabulary == rhs_p._vocabulary);
 	}
 
-	FE::boolean operator!=(const token& rhs_p) const noexcept
+	_FE_NODISCARD_ FE::boolean operator!=(const token& rhs_p) const noexcept
 	{
 		return (this->_vocabulary != rhs_p._vocabulary);
 	}
@@ -79,20 +82,20 @@ class header_tool_engine : public FE::framework::framework_base
 	std::pmr::vector<file_buffer_t> m_mapped_header_files;
 
 public:
-	header_tool_engine(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
+	header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
 	~header_tool_engine() noexcept override = default;
 
-	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override;
+	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
 	virtual FE::int32 run() override;
 	virtual FE::int32 shutdown() override;
 
 private:
-	FE::boolean __is_the_file_encoded_with_UTF8_BOM(FE::tchar* directory_p) const noexcept;
-	std::pmr::vector<directory_t> __make_header_file_list(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
-	std::pmr::vector<file_buffer_t> __map_header_files(const std::pmr::vector<directory_t>& file_list_p) noexcept;
+	_FE_NODISCARD_ FE::boolean __is_the_file_encoded_with_UTF8_BOM(FE::wchar* directory_p) const noexcept;
+	_FE_NODISCARD_ std::pmr::vector<directory_t> __make_header_file_list(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+	_FE_NODISCARD_ std::pmr::vector<file_buffer_t> __map_header_files(const std::pmr::vector<directory_t>& file_list_p) noexcept;
 
 private:
-	file_buffer_t __read_copyright_notice(FE::int32 argc_p, FE::tchar** argv_p) noexcept;
+	_FE_NODISCARD_ file_buffer_t __read_copyright_notice(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
 
 private:
 	struct symbol_count
@@ -101,29 +104,29 @@ private:
 		var::uint16 _classes;
 		var::uint16 _structs;
 	};
-	symbol_count __count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	symbol_count __count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ symbol_count __count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ symbol_count __count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
 
 	struct member_symbol_count
 	{
 		var::uint16 _methods;
 		var::uint16 _properties;
 	};
-	member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
 
 private:
-	std::optional<std::pmr::vector<token>> __parse_header(const file_buffer_t& file_p) noexcept;
+	_FE_NODISCARD_ std::optional<std::pmr::vector<token>> __parse_header(const file_buffer_t& file_p) noexcept;
 	void __purge_comments(std::pmr::vector<token>& out_list_p) noexcept;
-	token __tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
-	token __tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
-	token __tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
-	token __tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
-	token __tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 
-	_FE_FORCE_INLINE_ FE::boolean __verify_if_subject_is_equal_to_key(typename file_buffer_t::const_pointer subject_p, FE::tchar* key_p) noexcept
+	_FE_FORCE_INLINE_ _FE_NODISCARD_ FE::boolean __verify_if_subject_is_equal_to_key(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p) noexcept
 	{
 		FE::uint64 l_length = FE::algorithm::string::length(key_p);
-		if (FE::algorithm::string::compare_ranged<var::tchar>(FE::iterator_cast<FE::tchar*>(subject_p), FE::algorithm::string::range{ 0, l_length },
+		if (FE::algorithm::string::compare_ranged<var::ASCII>(FE::iterator_cast<FE::ASCII*>(subject_p), FE::algorithm::string::range{ 0, l_length },
 			key_p, FE::algorithm::string::range{ 0, l_length }))
 		{
 			return true;
@@ -132,25 +135,32 @@ private:
 	}
 
 private:
-	header_file_root __build_reflection_tree(const directory_t& file_path_p, const std::pmr::vector<token>& token_list_p) noexcept;
-	namespace_node __build_namespace_node_recursive(typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	class_node __build_class_node_mutually_recursive(typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	struct_node __build_struct_node_mutually_recursive(typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
-	{
-		(void)out_token_iterator_p;
-		(void)end_p;
-		return struct_node();
-	}
+	_FE_NODISCARD_ header_file_root __build_reflection_tree(const directory_t& file_path_p, const std::pmr::vector<token>& token_list_p) noexcept;
+	_FE_NODISCARD_ namespace_node __build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ class_node __build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ struct_node __build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
 
-	void __handle_template_args(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept;
+	void __handle_template(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept;
 	void __handle_enum(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept;
 
 private:
-	void __generate_reflection_code(const header_file_root& tree_p) noexcept;
-	void __traverse_reflection_tree(const header_file_root& tree_p) noexcept;
-	void __traverse_namespace_node(const namespace_node& node_p) noexcept;
-	void __traverse_class_node(const class_node& node_p) noexcept;
-	void __traverse_struct_node(const struct_node& node_p) noexcept;
+	struct reflection_metadata
+	{
+		directory_t _header_file_path;
+		std::pmr::vector<std::pmr::wstring> _class_and_struct_identifiers;
+		std::pmr::vector<std::pmr::wstring> _method_identifiers;
+		std::pmr::vector<std::pmr::wstring> _property_identifiers;
+	};
+	using reflection_metadata_set_t = concurrency::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;
+	reflection_metadata_set_t m_reflection_metadata_set;
+
+	_FE_NODISCARD_ reflection_metadata __generate_reflection_metadata(const header_file_root& tree_p) noexcept;
+	void __output_namespace_metadata_recursive(reflection_metadata& out_return_p, const namespace_node& node_p) noexcept;
+	void __output_class_metadata(reflection_metadata& out_return_p, const class_node& node_p) noexcept;
+	void __output_struct_metadata(reflection_metadata& out_return_p, const struct_node& node_p) noexcept;
+
+private:
+	void __generate_reflection_code(const reflection_metadata_set_t& metadata_set_p) noexcept;
 };
 
 

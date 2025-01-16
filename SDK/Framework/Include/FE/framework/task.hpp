@@ -43,13 +43,13 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-FE::uint8 get_current_thread_id() noexcept;
+FE::uint16 get_current_thread_id() noexcept;
 
 
 class latent_event
 {
 public:
-	using function_type = std::function<void()>;
+	using function_type = boost::function<void()>;
 
 private:
     function_type m_event;

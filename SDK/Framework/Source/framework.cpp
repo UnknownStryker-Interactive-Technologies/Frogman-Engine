@@ -45,7 +45,7 @@ limitations under the License.
 
 extern "C"
 {
-	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
 }
 
@@ -55,21 +55,21 @@ extern "C"
 BEGIN_NAMESPACE(FE::framework)
 
 
-program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", 4 }
+program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", 4 }
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
-		if (algorithm::string::find_the_first<var::tchar>(argv_p[i], this->m_max_concurrency._first) == std::nullopt)
+		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], this->m_max_concurrency._first) == std::nullopt)
 		{
 			continue;
 		}
 
-		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::tchar>(this->m_max_concurrency._first, '=');
+		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::ASCII>(this->m_max_concurrency._first, '=');
 		l_range->_begin = 0;
 
-		if (algorithm::string::compare_ranged<var::tchar>(argv_p[i], *l_range, this->m_max_concurrency._first, *l_range) == true)
+		if (algorithm::string::compare_ranged<var::ASCII>(argv_p[i], *l_range, this->m_max_concurrency._first, *l_range) == true)
 		{
-			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::tchar>(argv_p[i] + l_range->_end);
+			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::ASCII>(argv_p[i] + l_range->_end);
 			this->m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
 			if (l_uint_info._value < 4)
@@ -104,7 +104,7 @@ FE::uint32 program_options::get_max_concurrency() const noexcept
 	return this->m_max_concurrency._second;
 }
 
-FE::tchar* program_options::view_max_concurrency_option_title() const noexcept
+FE::ASCII* program_options::view_max_concurrency_option_title() const noexcept
 {
 	return this->m_max_concurrency._first;
 }
@@ -116,7 +116,7 @@ framework_base* framework_base::s_framework = nullptr;
 RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
-framework_base::framework_base(FE::int32 argc_p, FE::tchar** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
+framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
 	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
 {
 	std::locale::global(this->m_current_system_locale);
@@ -128,7 +128,7 @@ framework_base::~framework_base() noexcept
 }
 
 
-FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
 {
 	return 0;
 }
@@ -162,7 +162,7 @@ framework_base& framework_base::get_engine() noexcept
 
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
-	return this->m_memory.get() + get_current_thread_id();
+	return &(this->m_memory[ get_current_thread_id() ]);
 }
 
 framework::managed& framework_base::get_reference_manager() noexcept
@@ -211,16 +211,16 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal
 	std::exit(signal_p);
 }
 
-std::function<framework_base* (FE::int32, FE::tchar**)>& framework_base::allocate_framework(std::function<framework_base* (FE::int32, FE::tchar**)> script_p) noexcept
+std::function<framework_base* (FE::int32, FE::ASCII**)>& framework_base::allocate_framework(std::function<framework_base* (FE::int32, FE::ASCII**)> script_p) noexcept
 {
-	static std::function<framework_base* (FE::int32, FE::tchar**)> l_s_script = script_p;
+	static std::function<framework_base* (FE::int32, FE::ASCII**)> l_s_script = script_p;
 	return l_s_script;
 }
 
 
 
 
-game_framework_base::game_framework_base(FE::int32 argc_p, FE::tchar** argv_p)
+game_framework_base::game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p)
 	: framework_base(argc_p, argv_p, 2), /* Exclude main thread and the render thread from counting the number of the task scheduler threads. */ 
 	m_game_instance()
 {
@@ -233,7 +233,7 @@ game_framework_base::~game_framework_base()
 }
 
 
-FE::int32 game_framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::tchar** argv_p)
+FE::int32 game_framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
 {
 	__load_reflection_data();
 	return 0;
@@ -256,7 +256,7 @@ END_NAMESPACE
 
 
 
-int _tmain(int argc_p, FE::tchar** argv_p)
+int main(FE::int32 argc_p, FE::ASCII** argv_p)
 {
 	var::int32 l_exit_code;
 

@@ -133,13 +133,13 @@ BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_test);
 
 void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_256MB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::PoolPageCapacity::_256KB, FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::string* l_strings[_MAX_ITERATION_];
 	benchmark::DoNotOptimize(l_strings);
-
+	(void)state_p;
 	for (auto _ : state_p)
 	{
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
@@ -168,7 +168,7 @@ BENCHMARK(FE_pool_allocator_extreme_fixed_sized_test);
 
 void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<FE::PoolPageCapacity::_256MB, sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
+	FE::block_pool<FE::PoolPageCapacity::_256KB, sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -319,7 +319,7 @@ BENCHMARK(aligned_malloc_aligned_free_random_size_test);
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_256MB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::PoolPageCapacity::_64MB, FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 

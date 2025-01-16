@@ -145,9 +145,10 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
 
         for (page_pointer& page_ptr : m_memory_pool)
         {
-			if (page_ptr == nullptr) _FE_UNLIKELY_
+			if (page_ptr.get() == nullptr) _FE_UNLIKELY_
             {
 				page_ptr = std::make_unique<chunk_type>();
+                ++this->m_page_count;
             }
 
             if (page_ptr->is_out_of_memory() == true) _FE_UNLIKELY_

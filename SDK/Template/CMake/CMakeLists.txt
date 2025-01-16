@@ -8,8 +8,7 @@ PROJECT(FrogmanEngineTemplate
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/predefined-settings.cmake")
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/frogman-engine.cmake")
 
-
-#RUN_FROGMAN_HEADER_TOOL("${CMAKE_CURRENT_SOURCE_DIR}/../../Tests/FE-HT-Test/HeaderWithCopyright.hpp" -fno-reflection-helper -path-to-copyright-notice=${CMAKE_CURRENT_SOURCE_DIR}/../../Tests/FE-HT-Test/LICENSE.txt)
+RUN_FROGMAN_HEADER_TOOL("C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/FE-HT-Test/HeaderWithoutCopyright.hpp" -path-to-copyright-notice=C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/FE-HT-Test/LICENSE.txt)
 
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/../Source/main.cpp
 )

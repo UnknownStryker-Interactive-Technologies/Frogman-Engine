@@ -1,27 +1,22 @@
 ﻿#ifndef FROGMAN_ENGINE_HEADER_H
 #define FROGMAN_ENGINE_HEADER_H
 /*
-The MIT License
+The Apache License 2.0
 
-Copyright (c) <2077> <Uniform Sierra>
+Copyright (c) <year> by <author name>, all rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    http://www.apache.org/licenses/LICENSE-2.0
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 */
 
 #include <iostream>
@@ -41,12 +36,12 @@ namespace FrogmanEngine
     {
         class Vector2 
         {
-            FE_CLASS()
+            FE_CLASS(Vector2)
         public:
-            FE_PROPERTY()
+            FE_PROPERTY(x)
                 float x;
 
-            FE_PROPERTY()
+            FE_PROPERTY(y)
                 float y;
 
             Vector2(float _x = 0, float _y = 0)
@@ -76,26 +71,26 @@ namespace FrogmanEngine
     template<typename T>
     class Entity 
     {
-        FE_CLASS()
+        FE_CLASS(Entity)
     public:
         Entity(const std::string& name) : name(name) {}
 
-        FE_METHOD()
-            void update(float deltaTime);
+        FE_METHOD(update, void (float))
+            void update(float deltaTime) {}
 
-        FE_METHOD()
-            void render();
+        FE_METHOD(render, void (void))
+            void render() {}
 
-        FE_METHOD()
-            T getComponent();
+        FE_METHOD(getComponent, T (void))
+            T getComponent() {}
 
-        FE_METHOD()
-            void addComponent(const T& component);
+        FE_METHOD(addComponent, void (const T&))
+            void addComponent(const T& component) {}
 
     private:
-        FE_PROPERTY()
+        FE_PROPERTY(name)
             std::string name;
-        FE_PROPERTY()
+        FE_PROPERTY(components)
             std::vector<T> components;
     };
 
@@ -103,10 +98,10 @@ namespace FrogmanEngine
     {
         class Renderer
         {
-            FE_CLASS()
+            FE_CLASS(Renderer)
         public:
-            FE_METHOD()
-                void render();
+            FE_METHOD(render, void (void))
+                void render() {}
         };
     }
 }

@@ -183,18 +183,25 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/undefine_max_min.h
 
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 
-    SET(BOOST_STACKTRACE 
-    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_stacktrace_windbg_cached-vc143-mt-sgd-x64-1_86.lib>
-    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_windbg_cached-vc143-mt-s-x64-1_86.lib>
-    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
-    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
-    )
-
     SET(BOOST_CHRONO 
     $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_chrono-vc143-mt-sgd-x64-1_86.lib>
     $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
     $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
     $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_chrono-vc143-mt-s-x64-1_86.lib>
+    )
+
+    SET(BOOST_LOCALE
+    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_locale-vc143-mt-sgd-x64-1_86.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_locale-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_locale-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_locale-vc143-mt-s-x64-1_86.lib>
+    )
+
+    SET(BOOST_STACKTRACE 
+    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/debug/libboost_stacktrace_windbg_cached-vc143-mt-sgd-x64-1_86.lib>
+    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_windbg_cached-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
+    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.86.0/lib/windows/v143/release/libboost_stacktrace_noop-vc143-mt-s-x64-1_86.lib>
     )
 
     SET(BOOST_THREAD 
@@ -238,7 +245,7 @@ ENDIF()
 
 
 FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
-    CMAKE_PARSE_ARGUMENTS(ARG "" "HEADER_TOOL_OPTIONS" "HEADER_TOOL_OPTIONS")
+    CMAKE_PARSE_ARGUMENTS(ARG "" "HEADER_TOOL_OPTION" "HEADER_TOOL_OPTIONS")
     SET(RETURN_VALUE_FROM_TOOL)
     SET(TOOL_STDOUT)
     SET(TOOL_STDERR)
@@ -266,9 +273,9 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
         ENDFOREACH()
 
 
-        # Execute the header tool.
+        # Execute the header tool.${CMAKE_COMMAND} -E env LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 &&
         EXECUTE_PROCESS(
-            COMMAND ${CMAKE_COMMAND} -E env LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ${PATH_TO_HEADER_TOOL} 
+            COMMAND  ${PATH_TO_HEADER_TOOL} 
             ARGS "${TARGET_HEADER_FILES}" ${HEADER_TOOL_OPTIONS} "-path-to-project=${CMAKE_CURRENT_SOURCE_DIR}" "-fno-code-style-guide"
             RESULT_VARIABLE RETURN_VALUE_FROM_TOOL
             OUTPUT_VARIABLE TOOL_STDOUT
@@ -277,7 +284,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
 
     ENDIF()
 
-    MESSAGE(STATUS "Frogman Engine Header Tool:\n${TOOL_STDOUT}")
+    MESSAGE(STATUS "Frogman Engine Header Tool: ${TOOL_STDOUT}")
 
     # Print tool output and error for debugging
     MESSAGE(STATUS "Frogman Engine Header Tool: returned exit code '${RETURN_VALUE_FROM_TOOL}'.")
@@ -287,8 +294,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
         IF(RETURN_VALUE_FROM_TOOL EQUAL -1)
             MESSAGE(STATUS "Compilation failed: The header files must retain a copy of the specified license text.")
         ENDIF()
-            
-        MESSAGE(STATUS "Frogman Engine Header Tool:\n${TOOL_STDERR}")
+
         MESSAGE(FATAL_ERROR "Frogman Engine Build System: Aborting the compilation process! Please check out the messages above.")
     ENDIF()
 
@@ -300,4 +306,4 @@ ADD_EXECUTABLE(${TARGET_PROJECT_NAME} ${ARGN} ${CMAKE_CURRENT_SOURCE_DIR}/genera
 ENDFUNCTION()
 
 
-SET(FROGMAN_ENGINE_SDK ${BOOST_STACKTRACE} ${BOOST_CHRONO} ${BOOST_THREAD} ${GLM} ${GLFW} ${IMGUI} ${FE_CORE} ${FE_FRAMEWORK})
+SET(FROGMAN_ENGINE_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${GLM} ${GLFW} ${IMGUI} ${FE_CORE} ${FE_FRAMEWORK})

@@ -19,12 +19,14 @@ ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/program_options.hpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/reflection_tree.hpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/vocabulary.hpp
 
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/__read_copyright_notice.cpp
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/read_copyright_notice.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/header_tool_engine.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/main.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/parser.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/program_options.cpp
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/reflection_code_generator.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/symbol_counter.cpp
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/tree_builder.cpp
 )
 
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${FHT_SOURCE_FILES})

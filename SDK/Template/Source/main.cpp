@@ -54,7 +54,7 @@ class D3D11 : public FE::framework::game_framework_base
 	GLFWwindow* m_window;
 
 public:
-	D3D11(FE::int32 argc_p, FE::tchar** agrv_p) noexcept
+	D3D11(FE::int32 argc_p, FE::ASCII** agrv_p) noexcept
 		: FE::framework::game_framework_base(argc_p, agrv_p), m_device(), m_device_context(), m_dxgi_factory(), m_swap_chain(), m_render_target(), m_title("LearnD3D11 - Hello Window")
 	{
 		FE_EXIT(glfwInit() == GLFW_FALSE, RendererErrorCode::_FatalError_GLFW_InitFailure, "GLFW: Unable to initialize");
@@ -78,7 +78,7 @@ public:
 		glfwTerminate();
 	}
 
-	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** agrv_p) override
+	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** agrv_p) override
 	{
 		(void)argc_p;
 		(void)agrv_p;

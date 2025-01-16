@@ -15,26 +15,26 @@ ls filename: checks the presence of files with the specified name.
 class test_engine : public FE::framework::framework_base
 {
 public:
-	test_engine(FE::int32 argc_p, FE::tchar** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p)
+	test_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p)
 	{ 
 	};
 	~test_engine() noexcept = default;
 
-	virtual FE::int32 launch(FE::int32 argc_p, FE::tchar** argv_p) override
+	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override
 	{
 		//__load_all_class_reflection_data_from_dll();
 		var::int32 l_argc = argc_p;
-		testing::InitGoogleTest(&l_argc, (var::tchar**)argv_p);
+		testing::InitGoogleTest(&l_argc, (var::ASCII**)argv_p);
 		if (argv_p == nullptr)
 		{
-			FE::tchar l_arg0_default[] = "benchmark";
-			FE::tchar* l_args_default = l_arg0_default;
+			FE::ASCII l_arg0_default[] = "benchmark";
+			FE::ASCII* l_args_default = l_arg0_default;
 			l_argc = 1;
 			argv_p = &l_args_default;
 		}
-		benchmark::Initialize(&l_argc, (var::tchar**)argv_p);
+		benchmark::Initialize(&l_argc, (var::ASCII**)argv_p);
 
-		FE_EXIT(benchmark::ReportUnrecognizedArguments(l_argc, (var::tchar**)argv_p) == true, -1, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+		FE_EXIT(benchmark::ReportUnrecognizedArguments(l_argc, (var::ASCII**)argv_p) == true, -1, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
 		return 0;
 	}
 

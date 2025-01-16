@@ -23,19 +23,20 @@ limitations under the License.
 enum struct FrogmanEngineHeaderToolError : FE::int32
 {
 	_CmdInputError_NoProgramOptionsAreGiven = 1000,
-	_CmdInputError_FilesAreNotGiven = 1001,
-	_Error_FailedToOpenFile = 1002,
-	_Error_NoCopyRightNoticeIsGiven = 1003,
-	_Error_TargetFileIsNotEncodedIn_UTF8_BOM = 1004,
-	_Error_IncorrectCppSyntex = 1005,
-	_FatalError_InvalidToken = 1006,
+	_CmdInputError_NoFilesAreGiven = 1001,
+	_CmdInputError_InvalidPathToCMakeProject = 1002,
+	_Error_FailedToOpenFile = 1003,
+	_Error_NoCopyRightNoticeIsGiven = 1004,
+	_Error_TargetFileIsNotEncodedIn_UTF8_BOM = 1005,
+	_Error_IncorrectCppSyntex = 1006
 };
 
 #define REPORT_CPP_SYNTEX_ERROR(expr, msg) \
 if (expr) _FE_UNLIKELY_ \
 { \
-	std::cerr << msg; \
-	std::exit((int)FrogmanEngineHeaderToolError::_Error_IncorrectCppSyntex); \
+	::std::cerr << msg; \
+	::std::exit((int)FrogmanEngineHeaderToolError::_Error_IncorrectCppSyntex); \
 }
+
 
 #endif

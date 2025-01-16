@@ -270,16 +270,19 @@ public:
             if (page_ptr == nullptr) _FE_UNLIKELY_
             {
                 page_ptr = std::make_unique<chunk_type>();
+                ++this->m_page_count;
             }
 
             internal::pool::block_info l_memblock_info{};
            
             if (__try_allocation_from_page(page_ptr, l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
             { 
-#ifdef _ENABLE_LOG_
-				//FE::size l_page_count = this->m_memory_pool.size();
-#endif 
-                //FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u64@1}.", this, &l_page_count);
+                if (this->m_page_count == maximum_page_count)
+                {
+                    FE_DEBUG_BREAK();
+                    return nullptr;
+                }
+                //FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
                 continue; // It will eventually create a new page if the next pages are not available.
             }
 
@@ -388,6 +391,8 @@ public:
         }
     }
 
+	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return this->m_page_count; }
+
 private:
     /* Time complexity: 
 	Best - O(1)
@@ -444,30 +449,10 @@ private:
 			return;
         }
 
-        if constexpr (PageCapacity == PoolPageCapacity::_4KB)
-        {
-            std::sort<free_list_iterator, internal::pool::from_low_address>(
-                static_cast<free_list_iterator>(page_p->_free_list),
-                static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
-                internal::pool::from_low_address{});
-        }
-        else
-        {
-            if (page_p->get_free_list_size() >= 256)
-            {
-                std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(std::execution::parallel_unsequenced_policy{},
-                    static_cast<free_list_iterator>(page_p->_free_list),
-                    static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
-                    internal::pool::from_low_address{});
-            }
-            else
-            {
-                std::sort<free_list_iterator, internal::pool::from_low_address>(
-                    static_cast<free_list_iterator>(page_p->_free_list),
-                    static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
-                    internal::pool::from_low_address{});
-            }
-        }
+        std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(std::execution::parallel_unsequenced_policy{},
+            static_cast<free_list_iterator>(page_p->_free_list),
+            static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
+            internal::pool::from_low_address{});
 
 		// Merge the free list.
 		free_list_iterator l_iterator = static_cast<free_list_iterator>(page_p->_free_list);
@@ -505,7 +490,7 @@ private:
         page_p->set_free_list_size(l_binary_searchable_range._second - l_binary_searchable_range._first);
 
 		// Heapify the free list. Time complexity: O(n)
-		std::make_heap(l_binary_searchable_range._first, l_binary_searchable_range._second, internal::pool::less_than{});
+		std::make_heap(l_binary_searchable_range._first, l_binary_searchable_range._second, internal::pool::less_than{}); // To do: consider parallelizing the heapification.
 
 		page_p->set_page_binary_searchable(); // Switch the allocation strategy to binary search.
     }

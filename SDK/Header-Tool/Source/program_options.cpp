@@ -21,7 +21,7 @@ limitations under the License.
 
 
 
-program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept
+program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	: m_path_options({
 		{ "-path-to-copyright-notice=", "\0" },
 		{ "-path-to-code-style-guide=", "\0" },
@@ -48,9 +48,9 @@ program_options::program_options(FE::int32 argc_p, FE::tchar** argv_p) noexcept
 	}
 }
 
-void program_options::__parse_path_options(FE::tchar* non_fno_option_p) noexcept
+void program_options::__parse_path_options(FE::ASCII* non_fno_option_p) noexcept
 {
-	auto l_symbol = FE::algorithm::string::find_the_first<var::tchar>(non_fno_option_p, '=');
+	auto l_symbol = FE::algorithm::string::find_the_first<var::ASCII>(non_fno_option_p, '=');
 	if (l_symbol == std::nullopt)
 	{
 		return;

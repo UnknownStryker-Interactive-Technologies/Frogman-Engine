@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-std::optional<std::pmr::vector<token>> header_tool_engine::__parse_header(const file_buffer_t& file_p) noexcept
+_FE_NODISCARD_ std::optional<std::pmr::vector<token>> header_tool_engine::__parse_header(const file_buffer_t& file_p) noexcept
 {
 	std::pmr::vector<token> l_list(get_memory_resource());
 	l_list.reserve(2048);
@@ -95,7 +95,7 @@ void header_tool_engine::__purge_comments(std::pmr::vector<token>& out_list_p) n
 	}
 }
 
-token header_tool_engine::__tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
@@ -118,7 +118,7 @@ token header_tool_engine::__tokenize(typename file_buffer_t::const_pointer code_
 		return l_token;
 	}
 
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::tchar*>(code_iterator_p), 1);
+	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 
 	for (auto it = l_char.first; it != l_char.second; ++it)
 	{
@@ -160,7 +160,7 @@ token header_tool_engine::__tokenize(typename file_buffer_t::const_pointer code_
 	return l_token;
 }
 
-token header_tool_engine::__tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
@@ -189,12 +189,12 @@ token header_tool_engine::__tokenize_undefined(typename file_buffer_t::const_poi
 	return l_token;
 }
 
-token header_tool_engine::__tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
 	// Check if the string is a comment.
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::tchar*>(code_iterator_p), 1);
+	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 
 	for (auto it = l_char.first; it != l_char.second; ++it)
 	{
@@ -240,11 +240,11 @@ token header_tool_engine::__tokenize_comment(typename file_buffer_t::const_point
 	return l_token;
 }
 
-token header_tool_engine::__tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::tchar*>(code_iterator_p), 1);
+	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 
 	for (auto it = l_char.first; it != l_char.second; ++it)
 	{
@@ -505,11 +505,11 @@ token header_tool_engine::__tokenize_reflection_relevant(typename file_buffer_t:
 	return l_token;
 }
 
-token header_tool_engine::__tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::tchar*>(code_iterator_p), 1);
+	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 
 	for (auto it = l_char.first; it != l_char.second; ++it)
 	{

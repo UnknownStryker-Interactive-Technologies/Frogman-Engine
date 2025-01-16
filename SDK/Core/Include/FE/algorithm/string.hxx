@@ -681,15 +681,6 @@ _FE_NODISCARD_ _FE_CONSTEXPR17_ std::optional<range> find_the_last_within_range(
 
 
 
-template<typename CharT>
-FE::boolean compare_except_for(const CharT* lhs_p, const CharT* rhs_p, std::initializer_list<const CharT*> to_ignore_p) noexcept
-{
-    return false;
-}
-
-
-
-
 template<typename CharT, typename IntT>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ IntT char_to_integer(const CharT value_p) noexcept
 {

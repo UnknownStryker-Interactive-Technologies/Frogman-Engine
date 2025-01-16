@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-header_tool_engine::symbol_count header_tool_engine::__count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
 {
 	symbol_count l_count{ 0, 0, 0 };
 
@@ -56,7 +56,7 @@ Return:
 	return l_count;
 }
 
-header_tool_engine::symbol_count header_tool_engine::__count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
 {
 	std::pmr::vector<Vocabulary> l_scope_stack(this->get_memory_resource());
 	symbol_count l_count{ 0, 0, 0 };
@@ -135,7 +135,9 @@ Return:
 	return l_count;
 }
 
-header_tool_engine::member_symbol_count header_tool_engine::__count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::member_symbol_count header_tool_engine::__count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
 {
+	(void)begin_p;
+	(void)end_p;
 	return member_symbol_count();
 }

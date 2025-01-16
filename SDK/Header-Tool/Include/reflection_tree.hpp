@@ -28,7 +28,8 @@ limitations under the License.
 
 
 
-using identifier_node = std::basic_string_view<var::UTF8>;
+using identifier_node = std::basic_string<var::UTF8>;
+using identifier_t = identifier_node;
 
 
 struct frogman_engine_property_macro_node
@@ -41,8 +42,8 @@ struct frogman_engine_method_macro_node
 {
 	identifier_node _return_type;
 	identifier_node _method_name;
-	std::vector<identifier_node> _parameter_types;
-	std::vector<identifier_node> _specifiers;
+	std::pmr::vector<identifier_node> _parameter_types;
+	std::pmr::vector<identifier_node> _specifiers;
 };
 
 
@@ -50,8 +51,8 @@ struct frogman_engine_static_method_macro_node
 {
 	identifier_node _return_type;
 	identifier_node _method_name;
-	std::vector<identifier_node> _parameter_types;
-	std::vector<identifier_node> _specifiers;
+	std::pmr::vector<identifier_node> _parameter_types;
+	std::pmr::vector<identifier_node> _specifiers;
 };
 
 
@@ -79,14 +80,14 @@ struct frogman_engine_struct_macro_node
 
 struct class_node
 {
-	std::pmr::vector<frogman_engine_class_has_a_base_macro_node> _base_class_reflection_macro;
-	std::pmr::vector<frogman_engine_class_macro_node> _class_reflection_macro;
+	std::unique_ptr<frogman_engine_class_has_a_base_macro_node> _base_class_reflection_macro;
+	std::unique_ptr<frogman_engine_class_macro_node> _class_reflection_macro;
 };
 
 
 struct struct_node
 {
-	std::pmr::vector<frogman_engine_struct_macro_node> _struct_reflection_macro;
+	std::unique_ptr<frogman_engine_struct_macro_node> _struct_reflection_macro;
 };
 
 
@@ -101,7 +102,7 @@ struct namespace_node
 
 struct header_file_root
 {
-	std::basic_string_view<var::tchar> _path_to_the_header_file;
+	std::wstring_view _path_to_the_header_file;
 	std::pmr::vector<namespace_node> _namespaces;
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;

@@ -30,15 +30,21 @@ limitations under the License.
 #ifdef FE_LOG
 #error FE_LOG is a reserved Frogman Engine macro keyword.
 #endif 
-#ifdef FE_NEGATIVE_ASSERT
+#ifdef FE_LOG_IF
+#error FE_LOG_IF is a reserved Frogman Engine macro keyword.
+#endif 
+#ifdef FE_ASSERT
 #error FE_ASSERT is a reserved Frogman Engine macro keyword.
+#endif 
+#ifdef FE_NEGATIVE_ASSERT
+#error FE_NEGATIVE_ASSERT is a reserved Frogman Engine macro keyword.
 #endif 
 #ifdef FE_EXIT
 #error FE_EXIT is a reserved Frogman Engine macro keyword.
 #endif
-#ifdef FE_EXPECT
-#error FE_EXPECT is a reserved Frogman Engine macro keyword.
-#endif 
+#ifdef FE_DEBUG_BREAK
+#error FE_DEBUG_BREAK is a reserved Frogman Engine macro keyword.
+#endif
 
 #include <FE/log/logger.hpp>
 #include <FE/log/format_string.h>
@@ -46,10 +52,17 @@ limitations under the License.
 
 // std
 #include <cassert>
-#include <cstdlib>
+#include <cstdlib> // std::abort, std::exit
 
 #ifndef __FUNCSIG__
 #define __FUNCSIG__ __func__
+#endif
+
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#define FE_DEBUG_BREAK() _CrtDbgBreak()
+#else
+#define FE_DEBUG_BREAK()
 #endif
 
 
