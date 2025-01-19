@@ -66,7 +66,7 @@ FE::int32 header_tool_engine::run()
 	using namespace FE;
 	/* Jobs to do:
 	1. Check the presence of the given copyright notice.
-	2.
+
 	Those jobs can be done in parallel by considering the header fiiles as jobs.
 	*/
 
@@ -103,7 +103,7 @@ FE::int32 header_tool_engine::run()
 		get_task_scheduler().access_executor().run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
 
-		if (-1 == l_exit_code)
+		if (0 != l_exit_code)
 		{
 			return l_exit_code;
 		}
@@ -129,15 +129,41 @@ FE::int32 header_tool_engine::run()
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
 						std::wcerr << L"\n\nFrogman Engine Header Tool Error:\n\tUnable to parse the file located at '" << l_path.c_str();
 						l_exit_code = -2;
+						return;
 					}
 
-					// literally removes /**/ and // comments.
-					__purge_comments(*l_tokens);
+					try // The exceptions must be thrown if the input header files have C++ syntex errors.
+					{
+						// literally removes /**/ and // comments.
+						__purge_comments(*l_tokens); // throws if */ is missing.
+
+						// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
+						__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
+					}
+					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
+					{
+						std::wcerr << "\n\nFrogman Engine Header Tool: failed to parse the header file. Skipping the file located at '" << l_path.c_str() << "'.\n\n";
+						std::wcerr << error_p._second;
+						l_exit_code = (int)error_p._first;
+						return;
+					}
+
 					algorithm::utility::cherry_pick_if<algorithm::utility::IsolationVector::_Right>(l_tokens->begin(), l_tokens->end(), [](const token& token_p) { return token_p._vocabulary == Vocabulary::_LineEnd; });
 
-					header_file_root l_reflection_tree = __build_reflection_tree(l_path, *l_tokens);
+					header_file_root l_reflection_tree;
+					try // The exceptions must be thrown if the input header files have C++ syntex errors.
+					{
+						l_reflection_tree = __build_reflection_tree(l_path, *l_tokens); // throws if C++ syntex is incorrect.
+					}
+					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
+					{
+						std::wcerr << "\n\nFrogman Engine Header Tool: failed to parse the header file. Skipping the file located at '" << l_path.c_str() << "'.\n\n";
+						std::wcerr << error_p._second;
+						l_exit_code = (int)error_p._first;
+						return; 
+					}
 
-					// generate the reflection metadata set.
+					// generate the reflection metadata set. m_reflection_metadata_set is a concurrent vector. 
 					this->m_reflection_metadata_set.push_back( __generate_reflection_metadata(l_reflection_tree) );
 				}
 			);
@@ -147,7 +173,7 @@ FE::int32 header_tool_engine::run()
 		get_task_scheduler().access_executor().run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
 
-		if (-2 == l_exit_code)
+		if (0 != l_exit_code)
 		{
 			return l_exit_code;
 		}
@@ -171,7 +197,7 @@ FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::wchar* d
 {
 	std::basic_ifstream<var::ASCII> l_BOM_validator;
 	l_BOM_validator.open(directory_p);
-	FE_EXIT(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_Error_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
+	FE_EXIT(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
 	var::uint8 l_BOM[3];
 	l_BOM_validator.read(reinterpret_cast<char*>(l_BOM), 3);
 	return ((l_BOM[0] == this->m_UTF8_with_BOM[0]) && (l_BOM[1] == this->m_UTF8_with_BOM[1]) && (l_BOM[2] == this->m_UTF8_with_BOM[2]));
@@ -242,12 +268,12 @@ std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std
 		{
 			continue;
 		}
-		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Error_TargetFileIsNotEncodedIn_UTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
+		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileIsNotEncodedIn_UTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
 
 		std::basic_ifstream<var::UTF8> l_file_handler;
 		l_file_handler.imbue(this->m_UTF8_locale);
 		l_file_handler.open(path_to_file.c_str());
-		FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_Error_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
+		FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
 
 		l_files.emplace_back(std::istreambuf_iterator<var::UTF8>(l_file_handler), std::istreambuf_iterator<var::UTF8>());
 		l_file_handler.close();

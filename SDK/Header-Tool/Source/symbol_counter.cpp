@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	symbol_count l_count{ 0, 0, 0 };
 
@@ -33,16 +33,30 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_all_
 			break;
 
 		case Vocabulary::_Class:
+			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			{
+				__skip_code_block(begin_p, end_p);
+				break;
+			}
 			++l_count._classes;
 			break;
 
 		case Vocabulary::_Struct:
+			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			{
+				__skip_code_block(begin_p, end_p);
+				break;
+			}
 			++l_count._structs;
 			break;
 
 		case Vocabulary::_Enum:
-			begin_p += 2;
+			std::advance(begin_p, 2);
 			continue;
+
+		case Vocabulary::_Template:
+			__handle_template(begin_p);
+			break;
 
 		case Vocabulary::_LineEnd:
 			goto Return;
@@ -56,9 +70,9 @@ Return:
 	return l_count;
 }
 
-_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 {
-	std::pmr::vector<Vocabulary> l_scope_stack(this->get_memory_resource());
+	std::pmr::list<Vocabulary> l_scope_stack(this->get_memory_resource());
 	symbol_count l_count{ 0, 0, 0 };
 
 	while (begin_p != end_p)
@@ -66,16 +80,27 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__count_the_
 		switch (begin_p->_vocabulary)
 		{
 		case Vocabulary::_Namespace:
-			_FE_FALLTHROUGH_;
+			l_scope_stack.push_back(begin_p->_vocabulary);
+			break;
+
 		case Vocabulary::_Class:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_Struct:
+			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			{
+				__skip_code_block(begin_p, end_p);
+				break;
+			}
 			l_scope_stack.push_back(begin_p->_vocabulary);
 			break;
 
 		case Vocabulary::_Enum:
-			begin_p += 2;
+			std::advance(begin_p, 2);
 			continue;
+
+		case Vocabulary::_Template:
+			__handle_template(begin_p);
+			break;
 
 
 		case Vocabulary::_BeginNamespace:
@@ -135,7 +160,7 @@ Return:
 	return l_count;
 }
 
-_FE_NODISCARD_ header_tool_engine::member_symbol_count header_tool_engine::__count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ header_tool_engine::member_symbol_count header_tool_engine::__count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept
 {
 	(void)begin_p;
 	(void)end_p;

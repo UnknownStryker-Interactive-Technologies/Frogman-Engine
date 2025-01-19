@@ -47,7 +47,7 @@ enum struct Vocabulary : FE::uint16
 	_Virtual, _Override, _Final,
 	_Private, _Protected, _Public,
 	_Static, _ThreadLocal,
-	_Const,
+	_Const, _Volatile,
 	_Reference, _Pointer,
 	_Noexcept,
 	_Constexpr, _Consteval, _Constinit,
@@ -63,6 +63,7 @@ enum struct Vocabulary : FE::uint16
 	_FrogmanEnginePropertyReflectionMacro,
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
+	_PreprocessorDirective, _PreprocessorNextLine
 };
 
 
@@ -90,9 +91,10 @@ const tsl::htrie_map<char, Vocabulary> g_vocabulary =
 	{"virtual", Vocabulary::_Virtual}, {"override", Vocabulary::_Override}, {"final", Vocabulary::_Final},
 	{ "private", Vocabulary::_Private }, { "public", Vocabulary::_Public }, { "protected", Vocabulary::_Protected },
 	{ "static", Vocabulary::_Static }, { "thread_local", Vocabulary::_ThreadLocal },
-	{ "const", Vocabulary::_Const },
+	{ "const", Vocabulary::_Const }, {"volatile", Vocabulary::_Volatile},
 	{ "&", Vocabulary::_Reference }, { "*", Vocabulary::_Pointer },
 	{ "noexcept", Vocabulary::_Noexcept },
+	{ "constexpr", Vocabulary::_Constexpr }, { "consteval", Vocabulary::_Consteval }, { "constinit", Vocabulary::_Constinit },
 	{ "(", Vocabulary::_LeftParen }, { ")", Vocabulary::_RightParen },
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
@@ -102,6 +104,7 @@ const tsl::htrie_map<char, Vocabulary> g_vocabulary =
 	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
+	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine }
 };
 
 

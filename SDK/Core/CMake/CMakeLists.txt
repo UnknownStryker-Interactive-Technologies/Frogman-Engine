@@ -10,7 +10,7 @@ INCLUDE("${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../CMake/predefined-settings.cmake
 INCLUDE("${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../CMake/frogman-engine.cmake")
 
 
-#RUN_FROGMAN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt -fno-reflection-helper)
+RUN_FROGMAN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" -fno-reflection-helper -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt)
 
 
 ADD_LIBRARY(${CMAKE_PROJECT_NAME} STATIC ${FE_ALGORITHM_HEADERS}

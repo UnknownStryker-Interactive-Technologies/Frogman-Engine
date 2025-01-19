@@ -20,7 +20,6 @@ Available x86-64 -D macro SIMD options:
 
 ")
 
-
 IF(NOT ((CMAKE_CXX_STANDARD EQUAL 17) OR (CMAKE_CXX_STANDARD EQUAL 20) OR (CMAKE_CXX_STANDARD EQUAL 23)))
     MESSAGE("Frogman Engine supports C++ 17, C++ 20, and C++ 23.")
 	MESSAGE(WARNING "No C++ standard version has been specified: this project will use C++17 as the standard.")
@@ -28,7 +27,7 @@ IF(NOT ((CMAKE_CXX_STANDARD EQUAL 17) OR (CMAKE_CXX_STANDARD EQUAL 20) OR (CMAKE
 ENDIF()
 
 IF(NOT ((TARGET_CPU_ARCHITECTURE STREQUAL "x86-64") OR (TARGET_CPU_ARCHITECTURE STREQUAL "arm64")))
-	MESSAGE("Frogman Engine supports x86-64 and arm64.")
+	MESSAGE("Frogman Engine supports x86-64.")
 	MESSAGE(WARNING "No CPU architecture has been specified: this project will set the target cpu architecture as x86-64.")
 	SET(TARGET_CPU_ARCHITECTURE "x86-64")
 ENDIF()
@@ -36,16 +35,14 @@ ENDIF()
 FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR)
 
 
-
-
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
-	MESSAGE("Configurating The Build Environment for Windows X86-64.")
+	MESSAGE(STATUS "Configurating The Build Environment for Windows X86-64.")
 	STRING(REPLACE "\\" "\\\\" OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR "${OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR}")
 	ADD_COMPILE_OPTIONS(/D_FE_ON_WINDOWS_X86_64_ /D_ALLOWED_DIRECTORY_LENGTH_=256)
 
 
 	IF(ENABLE_MEMORY_TRACKER STREQUAL "yes")
-		MESSAGE("Enabled the option: ENABLE_MEMORY_TRACKER")
+		MESSAGE(STATUS "Enabled the option: ENABLE_MEMORY_TRACKER")
 		ADD_COMPILE_OPTIONS(/D_ENABLE_MEMORY_TRACKER_)
 	ENDIF()
 
@@ -93,65 +90,50 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
 
 	IF(DEFINED AVX2)
 		ADD_COMPILE_OPTIONS(/arch:AVX2)
-		MESSAGE("AVX-2 has been selected.")
+		MESSAGE(STATUS "AVX-2 has been selected.")
 
 	ELSEIF(DEFINED AVX512F)
 		ADD_COMPILE_OPTIONS(/arch:AVX512)
-		MESSAGE("AVX-512F has been selected.")
+		MESSAGE(STATUS "AVX-512F has been selected.")
 
 	ELSE()
 		ADD_COMPILE_OPTIONS(/arch:AVX)
-		MESSAGE("AVX has been selected.")
+		MESSAGE(STATUS "AVX has been selected.")
 	ENDIF()
 
 
 	IF(CMAKE_CXX_STANDARD EQUAL 17)
 		ADD_COMPILE_OPTIONS(/std:c++17)
-		MESSAGE("C++17 has been selected.")
+		MESSAGE(STATUS "C++17 has been selected.")
 
 	ELSEIF(CMAKE_CXX_STANDARD EQUAL 20)
 		ADD_COMPILE_OPTIONS(/std:c++20)
-		MESSAGE("C++20 has been selected.")
+		MESSAGE(STATUS "C++20 has been selected.")
 
 	ELSEIF(CMAKE_CXX_STANDARD EQUAL 23)
 		ADD_COMPILE_OPTIONS(/std:c++23)
-		MESSAGE("C++23 has been selected.")
+		MESSAGE(STATUS "C++23 has been selected.")
 	ENDIF()
 
 
 
-# Not maintained.
+# Not maintained anymore. The linux development is cancelled.
 ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
-	MESSAGE("Configurating The Build Environment for Linux X86-64 Distributions.")
+	MESSAGE(STATUS "Configurating The Build Environment for Linux X86-64 Distributions.")
 	ADD_COMPILE_OPTIONS(-D_FE_ON_LINUX_X86_64_ -D_ALLOWED_DIRECTORY_LENGTH_=4096)
-	MESSAGE("CMake detected a C++ compiler at: ${CMAKE_CXX_COMPILER}.")
+	MESSAGE(STATUS "CMake detected a C++ compiler at: ${CMAKE_CXX_COMPILER}.")
 	STRING(FIND "${CMAKE_CXX_COMPILER}" "clang" CLANG_COMPILER)
 
     IF(CLANG_COMPILER GREATER -1)
-		MESSAGE("The detected C++ compiler is clang++.")
+		MESSAGE(STATUS "The detected C++ compiler is clang++.")
     ELSE()
         MESSAGE(FATAL_ERROR "Could Not Find Any of Executable Clang C++ compilers.")
     ENDIF()
 
 
-	IF(DEFINED LEAVE_OUT_ALL_EXCEPTIONS)
-		MESSAGE("Enabled the option: LEAVE_OUT_ALL_EXCEPTIONS")
-		ADD_COMPILE_OPTIONS(-D_HAS_EXCEPTIONS=0 -DBOOST_NO_EXCEPTIONS)
-	ENDIF()
-
 	IF(DEFINED ENABLE_MEMORY_TRACKER)
-		MESSAGE("Enabled the option: ENABLE_MEMORY_TRACKER")
+		MESSAGE(STATUS "Enabled the option: ENABLE_MEMORY_TRACKER")
 		ADD_COMPILE_OPTIONS(-D_ENABLE_MEMORY_TRACKER_)
-	ENDIF()
-
-	IF(DEFINED MEMORY_POOL_FE_STRINGS)
-		MESSAGE("Enabled the option: MEMORY_POOL_FE_STRINGS")
-		ADD_COMPILE_OPTIONS(-D_MEMORY_POOL_FE_STRINGS_)
-	ENDIF()
-
-	IF(DEFINED MEMORY_POOL_FE_SMART_PTR_ALLOCATION)
-		MESSAGE("Enabled the option: MEMORY_POOL_FE_SMART_PTR_ALLOCATION")
-		ADD_COMPILE_OPTIONS(-D_MEMORY_POOL_FE_UNIQUE_PTR_ALLOCATION_ -D_MEMORY_POOL_FE_EXCLUSIVE_PTR_ALLOCATION_)
 	ENDIF()
 
 
@@ -180,25 +162,25 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "
 
 	IF(DEFINED AVX2)
 		ADD_COMPILE_OPTIONS(-mavx2)
-		MESSAGE("AVX-2 has been added to the SIMD intrinsic extension list.")
+		MESSAGE(STATUS "AVX-2 has been added to the SIMD intrinsic extension list.")
 
 	ELSEIF(DEFINED AVX512F)
 		ADD_COMPILE_OPTIONS(-mavx512f)
-		MESSAGE("AVX-512F has been added to the SIMD intrinsic extension list.")
+		MESSAGE(STATUS "AVX-512F has been added to the SIMD intrinsic extension list.")
 	ENDIF()
 
 
 	IF(CMAKE_CXX_STANDARD EQUAL 17)
 		ADD_COMPILE_OPTIONS(-std=c++17)
-		MESSAGE("C++17 has been selected.")
+		MESSAGE(STATUS "C++17 has been selected.")
 
 	ELSEIF(CMAKE_CXX_STANDARD EQUAL 20)
 		ADD_COMPILE_OPTIONS(-std=c++20)
-		MESSAGE("C++20 has been selected.")
+		MESSAGE(STATUS "C++20 has been selected.")
 
 	ELSEIF(CMAKE_CXX_STANDARD EQUAL 23)
 		ADD_COMPILE_OPTIONS(-std=c++23)
-		MESSAGE("C++23 has been selected.")
+		MESSAGE(STATUS "C++23 has been selected.")
 	ENDIF()
 
 

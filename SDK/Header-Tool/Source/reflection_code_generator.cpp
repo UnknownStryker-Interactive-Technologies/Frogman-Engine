@@ -33,6 +33,11 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 
 	for (const class_node& node : tree_p._classes)
 	{
+		if (node._class_reflection_macro == nullptr)
+		{
+			continue;
+		}
+
 		std::pmr::wstring l_identifier(get_memory_resource());
 		l_identifier.resize(node._class_reflection_macro->_target_class_name.size() + 1);
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node._class_reflection_macro->_target_class_name.data()), node._class_reflection_macro->_target_class_name.size());
@@ -43,6 +48,11 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 
 	for (const struct_node& node : tree_p._structs)
 	{
+		if (node._struct_reflection_macro == nullptr)
+		{
+			continue;
+		}
+
 		std::pmr::wstring l_identifier(get_memory_resource());
 		l_identifier.resize(node._struct_reflection_macro->_target_struct_name.size() + 1);
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node._struct_reflection_macro->_target_struct_name.data()), node._struct_reflection_macro->_target_struct_name.size());
@@ -64,6 +74,11 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 {
 	for (const class_node& node : node_p._classes)
 	{
+		if (node._class_reflection_macro == nullptr)
+		{
+			continue;
+		}
+		
 		std::pmr::wstring l_identifier(get_memory_resource());
 		l_identifier.resize(node._class_reflection_macro->_target_class_name.size() + 1);
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node._class_reflection_macro->_target_class_name.data()), node._class_reflection_macro->_target_class_name.size());
@@ -74,6 +89,11 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 
 	for (const struct_node& node : node_p._structs)
 	{
+		if (node._struct_reflection_macro == nullptr)
+		{
+			continue;
+		}
+
 		std::pmr::wstring l_identifier(get_memory_resource());
 		l_identifier.resize(node._struct_reflection_macro->_target_struct_name.size() + 1);
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node._struct_reflection_macro->_target_struct_name.data()), node._struct_reflection_macro->_target_struct_name.size());
@@ -141,6 +161,8 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 
 	std::pmr::wstring l_path_to_generated(get_memory_resource());
 	FE::size l_path_length = FE::algorithm::string::length( this->m_header_tool_options.get_path_to_project() );
+	FE_EXIT(l_path_length == 0, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: the directory value for -path-to-project= is not given or specified to this header tool program. \nThe string length of the path to the desired folder to create the generated.cpp file is ZERO.");
+	
 	l_path_to_generated.resize(l_path_length + 1);
 	std::mbstowcs(l_path_to_generated.data(), this->m_header_tool_options.get_path_to_project(), l_path_length);
 	l_path_to_generated = l_path_to_generated.c_str();
@@ -148,7 +170,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 
 	std::wofstream l_generated_file;
 	l_generated_file.open(l_path_to_generated);
-	FE_EXIT(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_CmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
+	FE_EXIT(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 	l_generated_file << l_generated_code;
 	l_generated_file.close();
 } 

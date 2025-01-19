@@ -18,10 +18,9 @@ limitations under the License.
 
 
 
-_FE_NODISCARD_ std::optional<std::pmr::vector<token>> header_tool_engine::__parse_header(const file_buffer_t& file_p) noexcept
+_FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__parse_header(const file_buffer_t& file_p) noexcept
 {
-	std::pmr::vector<token> l_list(get_memory_resource());
-	l_list.reserve(2048);
+	std::pmr::list<token> l_list(get_memory_resource());
 
 	if (10 > file_p.size())
 	{
@@ -62,10 +61,10 @@ _FE_NODISCARD_ std::optional<std::pmr::vector<token>> header_tool_engine::__pars
 	}
 
 	l_list.emplace_back(Vocabulary::_EndOfCode, u8"\0");
-	return std::make_optional<std::pmr::vector<token>>(l_list);
+	return std::make_optional<std::pmr::list<token>>(l_list);
 }
 
-void header_tool_engine::__purge_comments(std::pmr::vector<token>& out_list_p) noexcept
+void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p)
 {
 	const auto l_is_comment_begin = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentBegin; };
 	const auto l_is_comment_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentEnd; };
@@ -75,7 +74,8 @@ void header_tool_engine::__purge_comments(std::pmr::vector<token>& out_list_p) n
 
 	while ((l_comment_begin != out_list_p.end()) && (l_comment_end != out_list_p.end()))
 	{
-		out_list_p.erase(l_comment_begin, l_comment_end + 1 /* + 1 includes the last element to be deleted. */);
+		//FE_ASSERT(l_comment_begin <= l_comment_end, "Assertion failure: the token iterators are transposed.");
+		out_list_p.erase(l_comment_begin, std::next(l_comment_end, 1) /* + 1 includes the last element to be deleted. */);
 		l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_begin);
 		l_comment_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_end);
 	}
@@ -89,9 +89,34 @@ void header_tool_engine::__purge_comments(std::pmr::vector<token>& out_list_p) n
 
 	while ((l_comment_begin != out_list_p.end()) && (l_comment_end != out_list_p.end()))
 	{
+		//FE_ASSERT(l_comment_begin <= l_comment_end, "Assertion failure: the token iterators are transposed.");
 		out_list_p.erase(l_comment_begin, l_comment_end);
 		l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_comment);
 		l_comment_end = std::find_if(l_comment_begin, out_list_p.end(), l_is_line_end);
+	}
+}
+
+void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& out_list_p)
+{
+	const auto l_is_preprocessor_directive = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorDirective; };
+	const auto l_is_line_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; };
+
+	auto l_preprocessor_directive = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_preprocessor_directive);
+	auto l_line_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_end);
+
+	try
+	{
+		while ((l_preprocessor_directive != out_list_p.end()))
+		{
+			out_list_p.erase(l_preprocessor_directive, l_line_end/* + 1 includes the last element to be deleted. */);
+			l_preprocessor_directive = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_preprocessor_directive);
+			l_line_end = std::find_if(l_preprocessor_directive, out_list_p.end(), l_is_line_end);
+		}
+	}
+	catch (const std::exception& error_p)
+	{
+		FE_LOG(error_p.what());
+		throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>(FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "Frogman Engine Header Tool: failed to parse the header file.\nSkipping...");
 	}
 }
 
@@ -142,14 +167,59 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 			}
 			break;
 
+		case Vocabulary::_Constexpr:
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constexpr") == true)
+			{
+				l_token._vocabulary = it.value();
+				l_token._code = u8"constexpr";
+				return l_token;
+			}
+			break;
+
+		case Vocabulary::_Consteval:
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "consteval") == true)
+			{
+				l_token._vocabulary = it.value();
+				l_token._code = u8"consteval";
+				return l_token;
+			}
+			break;
+
+		case Vocabulary::_Constinit:
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constinit") == true)
+			{
+				l_token._vocabulary = it.value();
+				l_token._code = u8"constinit";
+				return l_token;
+			}
+			break;
+
+		case Vocabulary::_PreprocessorNextLine:
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "\\") == true)
+			{
+				auto l_iterator = std::next(code_iterator_p, 1);
+				if (*l_iterator == '\n')
+				{
+					l_token._vocabulary = it.value();
+					l_token._code = u8"\\";
+					return l_token;
+				}
+			}
+			break;
+
 		case Vocabulary::_CharLiteral:
-			l_token._vocabulary = Vocabulary::_CharLiteral;
+			l_token._vocabulary = it.value();
 			l_token._code = '\'';
 			return l_token;
 
 		case Vocabulary::_StringLiteral:
-			l_token._vocabulary = Vocabulary::_StringLiteral;
+			l_token._vocabulary = it.value();
 			l_token._code = '\"';
+			return l_token;
+
+		case Vocabulary::_PreprocessorDirective:
+			l_token._vocabulary = it.value();
+			l_token._code = '#';
 			return l_token;
 
 		default:
@@ -251,7 +321,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 		switch (it.value())
 		{
 		case Vocabulary::_BeginNamespace:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "BEGIN_NAMESPACFE") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "BEGIN_NAMESPACE") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"BEGIN_NAMESPACE";
@@ -381,6 +451,15 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"const";
+				return l_token;
+			}
+			break;
+
+		case Vocabulary::_Volatile:
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "volatile") == true)
+			{
+				l_token._vocabulary = it.value();
+				l_token._code = u8"volatile";
 				return l_token;
 			}
 			break;

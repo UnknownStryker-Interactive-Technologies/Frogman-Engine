@@ -24,6 +24,7 @@ limitations under the License.
 #include <memory>
 #include <memory_resource>
 #include <string>
+#include <string_view>
 #include <shared_mutex>
 #include <typeinfo>
 
@@ -129,7 +130,7 @@ public:
             return l_result->second._typename.c_str();
         }
         FE_LOG("Warning: Frogman Engine RTTI name() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
-        return nullptr;
+        return "\0";
     }
 
     _FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
@@ -153,7 +154,7 @@ public:
             return l_result->second._base_typename.c_str();
         }
         FE_LOG("Warning: Frogman Engine RTTI base_name() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
-        return nullptr;
+        return "\0";
     }
 
     _FE_FORCE_INLINE_ FE::uint64 base_hash_code() const noexcept
@@ -168,7 +169,7 @@ public:
         return 0;
     }
 
-    _FE_FORCE_INLINE_ static FE::ASCII* get_base_name_of(FE::ASCII* this_type_name_p) noexcept
+    _FE_FORCE_INLINE_ static FE::ASCII* get_base_name_of(const std::string_view& this_type_name_p) noexcept
     {
         static typename internal::type_info::name::string_type l_s_typename;
         boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
@@ -179,7 +180,7 @@ public:
             return l_result->second._base_typename.c_str();
         }
         FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
-        return nullptr;
+        return "\0";
     }
 
     template<typename T>

@@ -10,9 +10,13 @@ INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/frogman-engine.cmake")
 
 RUN_FROGMAN_HEADER_TOOL("C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/FE-HT-Test/HeaderWithoutCopyright.hpp" -path-to-copyright-notice=C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/FE-HT-Test/LICENSE.txt)
 
+
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/../Source/main.cpp
 )
 
 TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME} ${FROGMAN_ENGINE_SDK})
 
 SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../Binaries")
+
+
+

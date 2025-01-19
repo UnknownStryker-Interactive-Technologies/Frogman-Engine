@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-void __skip_code_block(typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE::clock l_loop_timer;
 	l_loop_timer.start_clock();
@@ -26,7 +26,7 @@ void __skip_code_block(typename std::pmr::vector<token>::const_iterator& out_tok
 	{
 		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightCurlyBracket)
 		{
-			auto l_next = out_token_iterator_p + 1;
+			auto l_next = std::next(out_token_iterator_p, 1);
 			if ((l_next != end_p) &&
 				(l_next->_vocabulary == Vocabulary::_Semicolon))
 			{
@@ -35,11 +35,11 @@ void __skip_code_block(typename std::pmr::vector<token>::const_iterator& out_tok
 			}
 		}
 		++out_token_iterator_p;
-		REPORT_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Parser Timed Out: the C++ class/struct code syntex is incorrect; check if the class/struct code block is correctly formatted.");
+		THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: '{': no matching token found.");
 	}
 }
 
-_FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(const directory_t& file_path_p, const std::pmr::vector<token>& token_list_p) noexcept
+_FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p)
 {
 	{
 		static std::mutex l_s_log_lock;
@@ -72,7 +72,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 			break;
 
 		case Vocabulary::_Class:
-			if (((iterator - 1)->_vocabulary == Vocabulary::_EndTemplateArgs))
+			if (std::prev(iterator, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
 			{
 				__skip_code_block(iterator, token_list_p.end());
 				break;
@@ -81,7 +81,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 			break;
 
 		case Vocabulary::_Struct:
-			if (((iterator - 1)->_vocabulary == Vocabulary::_EndTemplateArgs))
+			if (std::prev(iterator, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
 			{
 				__skip_code_block(iterator, token_list_p.end());
 				break;
@@ -101,7 +101,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 	return l_root;
 }
 
-_FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	namespace_node l_node;
 	l_node._namespace_name = file_buffer_t(parent_namespace_p, get_memory_resource());
@@ -111,23 +111,40 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 	switch (out_token_iterator_p->_vocabulary)
 	{
 	case Vocabulary::_Namespace:
-		++out_token_iterator_p;
-		l_node._namespace_name += out_token_iterator_p->_code;
-		l_node._namespace_name += u8"::";
-		++out_token_iterator_p;
-		REPORT_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'namespace Identifier {'. ");
-		++out_token_iterator_p;
+		{
+			++out_token_iterator_p;
+			FE::clock l_loop_timer;
+			l_loop_timer.start_clock();
+			while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
+			{
+				l_node._namespace_name += out_token_iterator_p->_code;
+				l_node._namespace_name += u8"::";
+				++out_token_iterator_p;
+				l_loop_timer.end_clock();
+				THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'namespace Identifier {'.");
+			}
+			THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'namespace Identifier {'.");
+			++out_token_iterator_p;
+		}
 		break;
 
 	case Vocabulary::_BeginNamespace:
-		++out_token_iterator_p;
-		REPORT_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '(' is missing from 'BEGIN_NAMESPACE(Identifier)'. ");
-		++out_token_iterator_p;
-		l_node._namespace_name += out_token_iterator_p->_code;
-		l_node._namespace_name += u8"::";
-		++out_token_iterator_p;
-		REPORT_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_RightParen, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ')' is missing from 'BEGIN_NAMESPACE(Identifier)'. ");
-		++out_token_iterator_p;
+		{
+			++out_token_iterator_p;
+			THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '(' is missing from 'BEGIN_NAMESPACE(Identifier)'.");
+			++out_token_iterator_p;
+			FE::clock l_loop_timer;
+			l_loop_timer.start_clock();
+			while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
+			{
+				l_node._namespace_name += out_token_iterator_p->_code;
+				l_node._namespace_name += u8"::";
+				++out_token_iterator_p;
+				l_loop_timer.end_clock();
+				THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ')' is missing from 'BEGIN_NAMESPACE(Identifier)'.");
+			}
+			++out_token_iterator_p;
+		}
 		break;
 
 	_FE_NODEFAULT_;
@@ -160,7 +177,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 				This line of code checks if it is a template class and skips the code.
 				(out_token_iterator_p - 1)->_vocabulary technically is unsafe, but it won't read the memory before 'begin' since everybody uses the header guard or #pragma once to avoid header collisions.
 			*/
-			if (((out_token_iterator_p - 1)->_vocabulary == Vocabulary::_EndTemplateArgs))
+			if (std::prev(out_token_iterator_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
 			{
 				__skip_code_block(out_token_iterator_p, end_p);
 				break;
@@ -173,7 +190,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 				This line of code checks if it is a template class and skips the code.
 				(out_token_iterator_p - 1)->_vocabulary technically is unsafe, but it won't read the memory before 'begin' since everybody uses the header guard or #pragma once to avoid header collisions.
 			*/
-			if (((out_token_iterator_p - 1)->_vocabulary == Vocabulary::_EndTemplateArgs))
+			if (std::prev(out_token_iterator_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
 			{
 				__skip_code_block(out_token_iterator_p, end_p);
 				break;
@@ -193,7 +210,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 	return l_node;
 }
 
-_FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Class, "Frogman Engine Header Tool Assertion Failure: the 'class' keyword is missing from the current token, but the header tool is attempting to build a class node.");
 	++out_token_iterator_p; // move to the class name.
@@ -204,7 +221,7 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 
 	// Check if the class has a base class, and it is reflective.
 	if ((out_token_iterator_p->_vocabulary == Vocabulary::_Colon) &&
-		(std::find_if(out_token_iterator_p, out_token_iterator_p + 5, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineBaseClassReflectionMacro; }) != out_token_iterator_p + 5))
+		(std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineBaseClassReflectionMacro; }) != std::next(out_token_iterator_p, 5)))
 	{
 		++out_token_iterator_p; // skip the ':'.
 		l_node._base_class_reflection_macro = std::make_unique<frogman_engine_class_has_a_base_macro_node>();
@@ -222,18 +239,25 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 		default: // the base class name found.
 			l_node._base_class_reflection_macro->_target_base_class_name = out_token_iterator_p->_code;
 			++out_token_iterator_p; // skip the base class name.
+			THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'class Identifier {'.");
 			break;
 		}
 	}
 
-	auto l_class_reflection_macro_search_result = std::find_if(out_token_iterator_p, out_token_iterator_p + 5, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineClassReflectionMacro; });
-	if (l_class_reflection_macro_search_result != out_token_iterator_p + 5)
+	// the class has a base but reflection unenabled.
+	if (out_token_iterator_p->_vocabulary != Vocabulary::_Colon)
+	{
+		THROW_CPP_SYNTEX_ERROR((out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket), "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'class Identifier {'.");
+	}
+
+	auto l_class_reflection_macro_search_result = std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineClassReflectionMacro; });
+	if (l_class_reflection_macro_search_result != std::next(out_token_iterator_p, 5))
 	{
 		l_node._class_reflection_macro = std::make_unique<frogman_engine_class_macro_node>();
 		l_node._class_reflection_macro->_target_class_name = parent_namespace_p;
 		l_node._class_reflection_macro->_target_class_name += l_class_name;
 		out_token_iterator_p = l_class_reflection_macro_search_result;
-		out_token_iterator_p += 3;
+		std::advance(out_token_iterator_p, 3);
 
 		// build n
 		l_node._class_reflection_macro->_property_reflection_macros;
@@ -264,7 +288,7 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 
 			case Vocabulary::_RightCurlyBracket:
 				{
-					auto l_next = out_token_iterator_p + 1;
+					auto l_next = std::next(out_token_iterator_p, 1);
 					if ((l_next != end_p) && 
 						(l_next->_vocabulary == Vocabulary::_Semicolon))
 					{
@@ -275,7 +299,7 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 				break;
 			}
 			++out_token_iterator_p;
-			REPORT_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Parser Timed Out: the C++ class code syntex is incorrect; check if the class code is correctly formatted.");
+			THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing, '{': no matching token found.");
 		}
 	}
 
@@ -283,23 +307,24 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 	return l_node;
 }
 
-_FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept
+_FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Struct, "Frogman Engine Header Tool Assertion Failure: the 'struct' keyword is missing from the current token, but the header tool is attempting to build a struct node.");
-	++out_token_iterator_p; // move to the class name.
-	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the class name.
-	++out_token_iterator_p; // skip the class name.
+	++out_token_iterator_p; // move to the struct name.
+	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the struct name.
+	++out_token_iterator_p; // skip the struct name.
+	THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'struct Identifier {'.");
 
 	struct_node l_node;
 
-	auto l_struct_reflection_macro_search_result = std::find_if(out_token_iterator_p, out_token_iterator_p + 5, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineStructReflectionMacro; });
-	if (l_struct_reflection_macro_search_result != out_token_iterator_p + 5)
+	auto l_struct_reflection_macro_search_result = std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineStructReflectionMacro; });
+	if (l_struct_reflection_macro_search_result != std::next(out_token_iterator_p, 5))
 	{
 		l_node._struct_reflection_macro = std::make_unique<frogman_engine_struct_macro_node>();
 		l_node._struct_reflection_macro->_target_struct_name = parent_namespace_p;
 		l_node._struct_reflection_macro->_target_struct_name += l_class_name;
 		out_token_iterator_p = l_struct_reflection_macro_search_result;
-		out_token_iterator_p += 3;
+		std::advance(out_token_iterator_p, 3);
 
 		// build n
 		l_node._struct_reflection_macro->_property_reflection_macros;
@@ -316,7 +341,7 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 
 			case Vocabulary::_RightCurlyBracket:
 			{
-				auto l_next = out_token_iterator_p + 1;
+				auto l_next = std::next(out_token_iterator_p, 1);
 				if ((l_next != end_p) &&
 					(l_next->_vocabulary == Vocabulary::_Semicolon))
 				{
@@ -327,7 +352,7 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 			break;
 			}
 			++out_token_iterator_p;
-			REPORT_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Parser Timed Out: the C++ class code syntex is incorrect; check if the struct code is correctly formatted.");
+			THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing struct, '{': no matching token found.");
 		}
 	}
 
@@ -335,10 +360,10 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 	return l_node;
 }
 
-void header_tool_engine::__handle_template(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept
+void header_tool_engine::__handle_template(typename std::pmr::list<token>::const_iterator& iterator_p)
 {
 	++iterator_p;
-	REPORT_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '<' is missing from 'template<...>'. ");
+	THROW_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs, "Frogman Engine Header Tool C++ syntex error: '<' is missing from 'template<...>'.");
 	++iterator_p;
 	FE::clock l_loop_timer;
 	l_loop_timer.start_clock();
@@ -346,21 +371,21 @@ void header_tool_engine::__handle_template(typename std::pmr::vector<token>::con
 	{
 		++iterator_p;
 		l_loop_timer.end_clock();
-		REPORT_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Parser Timed Out: the C++ code syntex is incorrect; '>' is missing from 'template<...>'. ");
+		THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error: '>' is missing from 'template<...>'. ");
 	}
 }
 
-void header_tool_engine::__handle_enum(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept
+void header_tool_engine::__handle_enum(typename std::pmr::list<token>::const_iterator& iterator_p)
 {
-	iterator_p += 2;
+	std::advance(iterator_p, 2);
 	FE::clock l_loop_timer;
 	l_loop_timer.start_clock();
 	while (iterator_p->_vocabulary != Vocabulary::_RightCurlyBracket)
 	{
 		++iterator_p;
 		l_loop_timer.end_clock();
-		REPORT_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Parser Timed Out: the C++ code syntex is incorrect; '}' is missing from 'enum struct Identifier {...};'. ");
+		THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing enum, '{': no matching token found.");
 	}
 	++iterator_p;
-	REPORT_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_Semicolon, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ';' is missing from 'enum struct Identifier {...};'. ");
+	THROW_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_Semicolon, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ';' is missing from 'enum struct Identifier {...};'.");
 }

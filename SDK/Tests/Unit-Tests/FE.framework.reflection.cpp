@@ -135,3 +135,15 @@ TEST(reflection, method_call)
 	(*l_greeter)(&l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Hello, reflection system!");
 }
+
+TEST(reflection, property)
+{
+	object l_object;
+	auto l_obj_mem_layout = FE::framework::framework_base::get_engine().get_property_reflection().get_instance_layout<object>();
+	EXPECT_TRUE(l_obj_mem_layout != std::nullopt);
+
+	std::string* const l_property = l_obj_mem_layout->get_property_of<std::string>(l_object, "m_text");
+	EXPECT_TRUE(l_property != nullptr);
+	l_property->assign("Jesus Loves You!");
+	EXPECT_STREQ(l_property->c_str(), "Jesus Loves You!");
+}

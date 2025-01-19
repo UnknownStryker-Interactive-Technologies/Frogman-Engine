@@ -23,40 +23,40 @@ limitations under the License.
 
 // FE.Core
 #include <FE/do_once.hxx>
-#include <FE/fqueue.hxx>
 #include <FE/function.hxx>
-#include <FE/fstack.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/hash.hpp>
 #include <FE/type_traits.hxx>
 #include <FE/pair.hxx>
-#include <FE/pool/block_pool_allocator.hxx>
 
 #include <FE/framework/reflection/type_info.hpp>
 
 // std
+#include <deque>
 #include <filesystem>
 #include <fstream>
 #include <map>
 #include <memory_resource>
 #include <mutex>
+#include <optional>
 #include <shared_mutex>
 #include <string>
+#include <string_view>
+#include <vector>
 
 // boost::shared_lock_guard
 #include <boost/thread/shared_lock_guard.hpp>
 
-// boost::fast_pool_allocator
-#include <boost/pool/pool_alloc.hpp>
-
 // ronbin hood hash map
 #include <robin_hood.h>
+
+// array hash map
+#include <tsl/array-hash/array_map.h>
 
 
 
 
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
-
 
 namespace FE::framework::serialization
 {
@@ -81,20 +81,23 @@ namespace FE::framework::serialization
 }
 
 
+
+
 BEGIN_NAMESPACE(FE::framework::reflection)
 
 
 template<typename T>
-_FE_FORCE_INLINE_ void construct_object(void* address_p) noexcept
+_FE_FORCE_INLINE_ void construct_object(void* address_p)
 {
 	new( static_cast<T*>(address_p) ) T();
 }
 
 template<typename T>
-_FE_FORCE_INLINE_ void destruct_object(void* address_p) noexcept
+_FE_FORCE_INLINE_ void destruct_object(void* address_p)
 {
 	static_cast<T*>(address_p)->~T();
 }
+
 
 class method_map
 {
@@ -104,15 +107,15 @@ public:
 
 private:
 	using lock_type = std::shared_mutex;
-	using reflection_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*, FE::hash<std::pmr::string>>;
+	using internal_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*>;
 
 	lock_type m_lock;
-	reflection_map_type m_task_map;
-	std::pmr::monotonic_buffer_resource m_pool;
+	internal_map_type m_task_map;
+	std::pmr::synchronized_pool_resource m_pool;
 
 private:
-	method_map(FE::size reflection_map_capacity_p) noexcept
-		: m_lock(), m_task_map(reflection_map_capacity_p), m_pool()
+	method_map(FE::size map_capacity_p) noexcept
+		: m_lock(), m_task_map(map_capacity_p), m_pool()
 	{}
 	~method_map() noexcept = default;
 
@@ -130,42 +133,48 @@ public:
 	}
 
 	template<class TaskType, typename FunctionPtr>
-	_FE_FORCE_INLINE_ void register_task(const char* task_name_p, FunctionPtr function_p) noexcept
+	_FE_FORCE_INLINE_ void register_task(const std::string_view& task_name_p, FunctionPtr function_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
 
-		std::pmr::polymorphic_allocator<TaskType> l_allocator(&m_pool);
-		std::pmr::polymorphic_allocator<const char*> l_string_allocator(&m_pool);
-
-		std::lock_guard<lock_type> l_lock(m_lock);
-
-		TaskType* const l_task = l_allocator.allocate(1);
+		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
-
-		typename reflection_map_type::key_type l_key(l_string_allocator);
-		l_key = task_name_p;
-
-		this->m_task_map.emplace(l_key, l_task);
+		typename internal_map_type::key_type l_key(task_name_p, &m_pool);
+		std::lock_guard<lock_type> l_lock(m_lock);
+		this->m_task_map.emplace(std::move(l_key), l_task);
 	}
 
-	_FE_FORCE_INLINE_ FE::boolean check_presence(const typename reflection_map_type::key_type& key_p) noexcept
+	_FE_FORCE_INLINE_ FE::boolean check_presence(const std::string_view& key_p) noexcept
 	{
+		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		return this->m_task_map.find(key_p) != this->m_task_map.end();
+		for (auto it = this->m_task_map.find(l_key); it != this->m_task_map.end(); ++it)
+		{
+			if (it->first == key_p)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*
 		This method may return nullptr.
 	*/
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ FE::task_base* retrieve(const typename reflection_map_type::key_type& key_p) noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ FE::task_base* retrieve(const std::string_view& key_p) noexcept
 	{
+		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		auto l_result = this->m_task_map.find(key_p);
-		return (l_result == this->m_task_map.end()) ? nullptr : l_result->second;
+		for (auto it = this->m_task_map.find(l_key); it != this->m_task_map.end(); ++it)
+		{
+			if (it->first == key_p)
+			{
+				return it->second;
+			}
+		}
+		return nullptr;
 	}
 };
-
-
 
 
 /*
@@ -209,17 +218,52 @@ Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smar
 											   |
 											   |--> FE::vector.x -> FE::vector.y -> FE::vector.z
 */
-
-struct property_meta_data
+struct property_metadata
 {
 	FE::TypeTriviality _is_trivial;
 	var::boolean _is_serializable;
 	var::uint32 _size_in_byte;
+	var::ptrdiff _offset_from_this;
 
 	FE::ASCII* _name;
 	FE::ASCII* _typename;
 };
 
+
+class instance_layout
+{
+	tsl::array_map<var::ASCII, property_metadata> m_property_map;
+
+public:
+	instance_layout(const std::pmr::map<var::ptrdiff, property_metadata>& layout_p) noexcept
+		: m_property_map()
+	{
+		for (auto [key, value] : layout_p)
+		{
+			this->m_property_map.emplace(value._name, value);
+		}
+	}
+	~instance_layout() noexcept = default;
+
+
+	template<typename T, class C>
+	_FE_FORCE_INLINE_ T* get_property_of(C& instance_p, const std::string_view& property_name_p) noexcept
+	{
+		FE_STATIC_ASSERT(std::is_class<C>::value == true, "Static assertion failure: the typename 'class C' must be a class type.");
+		for (auto it = this->m_property_map.find(property_name_p); it != this->m_property_map.end(); ++it)
+		{
+			if (property_name_p == it->_name)
+			{
+				FE_ASSERT(sizeof(T) == it->_size_in_byte, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+				FE_ASSERT(algorithm::string::compare(it->_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+
+				var::byte* l_address = reinterpret_cast<var::byte*>(&instance_p) + it->_offset_from_this;
+				return reinterpret_cast<T*>(l_address);
+			}
+		}
+		return nullptr;
+	}
+};
 /*
 The property_map class in the FE::framework::reflection namespace manages the registration and metadata of properties associated with host class instances
 utilizing a custom memory pool and thread-safe operations for efficient reflection and serialization.
@@ -232,33 +276,26 @@ public:
 	It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
 	by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 	*/
-	using reflection_map_type = robin_hood::unordered_map<FE::ASCII*,
-														  std::map<var::ptrdiff, property_meta_data, std::less<var::ptrdiff>,
-		                                                           FE::block_pool_allocator<std::pair<FE::ptrdiff, property_meta_data>, FE::PoolPageCapacity::_64MB>
-		                                                           >,
-		                                                  FE::hash<FE::ASCII*>>;
-	using class_name_type = reflection_map_type::key_type;
-	using class_property_list = reflection_map_type::mapped_type;
+	using internal_map_type = robin_hood::unordered_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>>;
+	using class_name_type = internal_map_type::key_type;
+	using class_property_list = internal_map_type::mapped_type;
 	using class_property_offset_type = typename class_property_list::key_type;
 	using class_property_metadata_type = typename class_property_list::mapped_type;
 
-	static constexpr size max_class_hierarchy_depth = 1024;
-	using class_layer_stack = FE::fstack< FE::pair<class_property_list*, typename class_property_list::iterator>, max_class_hierarchy_depth >;
-
-	static constexpr uint64 number_of_max_container_per_instance = 1024;
-	using data_on_heap_size_recorder = FE::fqueue<var::size, number_of_max_container_per_instance>;
+	using class_layer_stack = std::pmr::vector< FE::pair<class_property_list*, typename class_property_list::iterator> >;
+	using data_on_heap_size_record = std::pmr::deque<var::size>; // Used std::pmr::deque beause std::queue does not support pmr.
 
 	using lock_type = std::mutex;
 	using file_handler = std::fstream;
-	using input_buffer_type = std::string;
+	using input_buffer_type = std::pmr::string;
 	using input_buffer_iterator_type = typename input_buffer_type::iterator;
 
 private:
-	FE::block_pool<FE::PoolPageCapacity::_64MB, sizeof(std::pair<FE::ptrdiff, property_meta_data>), FE::SIMD_auto_alignment> m_pool;
-	FE::block_pool_allocator<std::pair<FE::ptrdiff, property_meta_data>, FE::PoolPageCapacity::_64MB> m_allocator;
-	reflection_map_type m_property_map;
+	internal_map_type m_property_map;
+
+	std::pmr::synchronized_pool_resource m_pool;
 	class_layer_stack m_class_layer;
-	data_on_heap_size_recorder m_scalable_container_size_recorder;
+	data_on_heap_size_record m_scalable_container_size_record;
 
 	lock_type m_lock;
 	file_handler m_fstream;
@@ -267,9 +304,11 @@ private:
 
 private:
 	property_map(FE::size reflection_map_capacity_p) noexcept
-		: m_pool(), m_allocator(&m_pool), m_property_map(reflection_map_capacity_p), m_class_layer(), m_scalable_container_size_recorder(), m_lock(), m_fstream(), m_input_buffer(), m_position() {
+		: m_property_map(reflection_map_capacity_p), 
+		  m_pool(), m_class_layer(&m_pool), m_scalable_container_size_record(&m_pool),
+		  m_lock(), m_fstream(), m_input_buffer(&m_pool), m_position() {
 	}
-	~property_map() noexcept {};
+	~property_map() noexcept = default;
 
 public:
 	property_map(const property_map&) = delete;
@@ -285,61 +324,62 @@ public:
 	}
 
 	template<class C, typename T>
-	void register_property(const C& host_class_instance_p, const T& property_p, FE::ASCII* const property_name_p) noexcept
+	void register_property(const C& host_class_instance_p, const T& property_p, const std::string_view& property_name_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<C>::value == false, "Primitive data types cannot be registered as the host classes/structs.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "Static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 		FE_NEGATIVE_STATIC_ASSERT((FE::is_trivial<T>::value == false) && (std::is_array<T>::value == true), "Static assertion failure: fixed-sized non-trivial arrays are not serializable nor deserializable.");
-		FE_NEGATIVE_ASSERT((property_name_p == nullptr) || (*property_name_p == null), "Assertion failure: property name cannot be null.");
-
-		property_meta_data l_property_meta_data;
+		FE_ASSERT(property_name_p.empty() != true, "Assertion failure: property name cannot be null.");
+		
+		property_metadata l_property_meta_data;
 		l_property_meta_data._is_trivial = static_cast<TypeTriviality>(FE::is_trivial<T>::value);
 		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
+		FE_STATIC_ASSERT(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
 		l_property_meta_data._size_in_byte = sizeof(T);
-		l_property_meta_data._name = property_name_p;
+		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
+		l_property_meta_data._name = property_name_p.data();
 		l_property_meta_data._typename = reflection::type_id<T>().name();
 
 		// Find or register its host class.
-		FE::ASCII* l_host_class_instance_typename = reflection::type_id<C>().name();
-
+		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
 		auto l_iterator = m_property_map.find(l_host_class_instance_typename);
 		if (FE_UNLIKELY(l_iterator == m_property_map.end())) _FE_UNLIKELY_
 		{
-			auto l_result = m_property_map.emplace(l_host_class_instance_typename, class_property_list(m_allocator));
+			auto l_result = m_property_map.emplace(l_host_class_instance_typename, class_property_list(&m_pool));
 			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property_map::register_property().");
 			l_iterator = l_result.first;
 		}
 
 
-			if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
-			{
-				// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
-				// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-				framework_base::get_engine().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property_map::__serialize_by_foreach_mutually_recursive<T>);
-				framework_base::get_engine().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property_map::__deserialize_by_foreach_mutually_recursive<T>);
+		if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
+		{
+			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
+			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
+			framework_base::get_engine().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property_map::__serialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_engine().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property_map::__deserialize_by_foreach_mutually_recursive<T>);
 
-				if constexpr (FE::has_value_type<T>::value == true)
+			if constexpr (FE::has_value_type<T>::value == true)
+			{
+				if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
+					(FE::is_trivial<typename T::value_type>::value == false))
 				{
-					if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
-						(FE::is_trivial<typename T::value_type>::value == false))
-					{
-						__push_multidimensional_container_serialization_task_recursive<T>();
-						__push_multidimensional_container_deserialization_task_recursive<T>();
-					}
-				}
-				else if constexpr (FE::has_element_type<T>::value == true)
-				{
-					if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
-						(FE::is_trivial<typename T::element_type>::value == false))
-					{
-						__push_multidimensional_container_serialization_task_recursive<T>();
-						__push_multidimensional_container_deserialization_task_recursive<T>();
-					}
+					__push_multidimensional_container_serialization_task_recursive<T>();
+					__push_multidimensional_container_deserialization_task_recursive<T>();
 				}
 			}
+			else if constexpr (FE::has_element_type<T>::value == true)
+			{
+				if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
+					(FE::is_trivial<typename T::element_type>::value == false))
+				{
+					__push_multidimensional_container_serialization_task_recursive<T>();
+					__push_multidimensional_container_deserialization_task_recursive<T>();
+				}
+			}
+		}
 
-		l_iterator->second.emplace((reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p)), l_property_meta_data);
+		l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
 	}
 
 	/*
@@ -347,20 +387,19 @@ public:
 	enforcing constraints on the type to ensure it is neither a class nor a struct, and disallowing raw pointers and references.
 	*/
 	template<typename T>
-	void serialize(std::filesystem::path path_p, directory_char_t* filename_p, const T& object_p) noexcept
+	void serialize(const std::filesystem::path& path_p, directory_char_t* filename_p, const T& object_p) noexcept
 	{
-		std::lock_guard<lock_type> l_lock(m_lock);
-
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be serialized.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 
 		FE_NEGATIVE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		FE::ASCII* l_typename = reflection::type_id<T>().name();
+		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
+		std::lock_guard<lock_type> l_lock(m_lock);
 		auto l_search_result = m_property_map.find(l_typename);
 		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
-		this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
+		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
 		{
@@ -378,29 +417,29 @@ public:
 		__serialize_mutually_recursive<T>(object_p);
 		l_serialization_handler.get_stream() << "};$-";
 
-		while (this->m_scalable_container_size_recorder.is_empty() == false)
+		while (this->m_scalable_container_size_record.empty() == false)
 		{
-			l_serialization_handler.get_stream() << this->m_scalable_container_size_recorder.pop() << "-";
+			l_serialization_handler.get_stream() << this->m_scalable_container_size_record.front() << "-";
+			this->m_scalable_container_size_record.pop_front();
 		}
 		l_serialization_handler.get_stream() << "\0";
 	}
 
 	// TODO: add file versioning.
 	template<typename T>
-	void deserialize(std::filesystem::path path_p, directory_char_t* filename_p, T& out_object_p) noexcept
+	void deserialize(const std::filesystem::path& path_p, directory_char_t* filename_p, T& out_object_p) noexcept
 	{
-		std::lock_guard<lock_type> l_lock(m_lock);
-
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 
 		FE_NEGATIVE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		FE::ASCII* l_typename = reflection::type_id<T>().name();
+		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
+		std::lock_guard<lock_type> l_lock(m_lock);
 		auto l_search_result = this->m_property_map.find(l_typename);
 		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
-		this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
+		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
 		{
@@ -421,7 +460,7 @@ public:
 		FE_NEGATIVE_ASSERT(m_position == m_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
 
 		// Checks the class type name
-		FE_EXIT(!algorithm::string::compare_ranged<char>(l_typename, algorithm::string::range{ 0, std::strlen(l_typename) },
+		FE_EXIT(!algorithm::string::compare_ranged<char>(l_typename.data(), algorithm::string::range{0, std::strlen(l_typename.data())},
 			m_input_buffer.c_str(), algorithm::string::range{ 0, static_cast<uint64>(m_position - m_input_buffer.begin()) }),
 			FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
 		++m_position; // Point the first byte.
@@ -434,12 +473,27 @@ public:
 		{
 			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
 			FE_LOG_IF(l_info._value == 0, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
-			this->m_scalable_container_size_recorder.push(l_info._value);
+			this->m_scalable_container_size_record.push_back(l_info._value);
 			l_size_indicator += l_info._digit_length; // move to the next.
 			++l_size_indicator; // to skip the '-'.
 		}
 
 		__deserialize_mutually_recursive<T>(out_object_p);
+	}
+
+	template<typename T>
+	_FE_FORCE_INLINE_ std::optional<instance_layout> get_instance_layout() noexcept
+	{
+		std::pmr::string l_class_name(reflection::type_id<T>().name(), &m_pool);
+		std::lock_guard<lock_type> l_lock(m_lock);
+		for (auto it = m_property_map.find(l_class_name); it != m_property_map.end(); ++it)
+		{
+			if (l_class_name == it->first)
+			{
+				return instance_layout(it->second);
+			}
+		}
+		return std::nullopt;
 	}
 
 private:
@@ -479,7 +533,7 @@ private:
 	*/
 	_FE_FORCE_INLINE_ typename class_property_list::iterator& __get_the_top_class_property_list_iterator() noexcept
 	{
-		return this->m_class_layer.top()._second;
+		return this->m_class_layer.back()._second;
 	}
 
 	_FE_FORCE_INLINE_ FE::ptrdiff __get_memory_offset_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
@@ -487,14 +541,14 @@ private:
 		return to_the_property_p->first;
 	}
 
-	_FE_FORCE_INLINE_ property_meta_data& __get_metadata_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
+	_FE_FORCE_INLINE_ property_metadata& __get_metadata_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
 	{
 		return to_the_property_p->second;
 	}
 
 	_FE_FORCE_INLINE_ class_property_list& __get_top_class_property_list() noexcept
 	{
-		return *(this->m_class_layer.top()._first);
+		return *(this->m_class_layer.back()._first);
 	}
 
 	template<class U>
@@ -502,26 +556,30 @@ private:
 	{
 		if constexpr (FE::has_base_type<U>::value == true)
 		{
-			static typename  reflection_map_type::iterator l_s_search_result;
-			l_s_search_result = this->m_property_map.find(reflection::type_id<typename U::base_type>().name());
+			static typename  internal_map_type::iterator l_s_search_result;
+			static typename  internal_map_type::key_type l_s_typename;
+			l_s_typename = reflection::type_id<typename U::base_type>().name();
+			l_s_search_result = this->m_property_map.find(l_s_typename);
 			if (l_s_search_result == this->m_property_map.end())
 			{
 				return;
 			}
-			this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_s_search_result->second), l_s_search_result->second.begin() });
+			this->m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
 			__push_parent_class_layers_recursive<typename U::base_type>();
 		}
 	}
 
-	void __push_parent_class_layers_by_typename_string_recursive(FE::ASCII* typename_p) noexcept
+	void __push_parent_class_layers_by_typename_string_recursive(const std::string_view& typename_p) noexcept
 	{
-		static typename  reflection_map_type::iterator l_s_search_result;
-		l_s_search_result = this->m_property_map.find(reflection::type_info::get_base_name_of(typename_p));
+		static typename  internal_map_type::iterator l_s_search_result;
+		static typename  internal_map_type::key_type l_s_typename;
+		l_s_typename = reflection::type_info::get_base_name_of(typename_p);
+		l_s_search_result = this->m_property_map.find(l_s_typename);
 		if (l_s_search_result == this->m_property_map.end())
 		{
 			return;
 		}
-		this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_s_search_result->second), l_s_search_result->second.begin() });
+		this->m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
 		__push_parent_class_layers_by_typename_string_recursive(l_s_search_result->first);
 	}
 
@@ -529,7 +587,7 @@ private:
 	void __serialize_mutually_recursive(const T& object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (this->m_class_layer.is_empty() == false)
+		while (this->m_class_layer.empty() == false)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
 			{
@@ -546,7 +604,7 @@ private:
 				// Pop the class layer if the iterator reached the end of the property list.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -555,7 +613,7 @@ private:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 					break;
 				}
 
@@ -581,14 +639,14 @@ private:
 					++(__get_the_top_class_property_list_iterator());
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
-					this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
+					this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
 
 				// if it reached the end.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -599,7 +657,7 @@ private:
 	void __deserialize_mutually_recursive(T& out_object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (this->m_class_layer.is_empty() == false)
+		while (this->m_class_layer.empty() == false)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
 			{
@@ -618,7 +676,7 @@ private:
 				// Pop the class layer if the iterator reached the end of the property list.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -627,7 +685,7 @@ private:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 					break;
 				}
 
@@ -653,14 +711,14 @@ private:
 					++(__get_the_top_class_property_list_iterator());
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
-					this->m_class_layer.push(typename class_layer_stack::value_type{ &(l_search_result->second), l_search_result->second.begin() });
+					this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
 
 				// if it reached the end.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop();
+					this->m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -685,13 +743,13 @@ private:
 				}
 				else
 				{
-					this->m_scalable_container_size_recorder.push(l_container->size());
+					this->m_scalable_container_size_record.push_back(l_container->size());
 					this->m_fstream.write(reinterpret_cast<const char*>(l_container->data()), sizeof(typename Container::value_type) * l_container->size());
 				}
 			}
 			else
 			{
-				this->m_scalable_container_size_recorder.push(l_container->size());
+				this->m_scalable_container_size_record.push_back(l_container->size());
 				for (auto& element : *l_container)
 				{
 					if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
@@ -711,9 +769,9 @@ private:
 		}
 	}
 
-	FE::ASCII* __get_serialization_task_name(FE::ASCII* property_typename_p) noexcept
+	std::string_view __get_serialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::basic_string<char, std::char_traits<char>> l_s_serialization_task_name = "FE::framework::reflection::property_map::__serialize_by_foreach_mutually_recursive< >";
+		static std::string l_s_serialization_task_name("FE::framework::reflection::property_map::__serialize_by_foreach_mutually_recursive< >");
 		l_s_serialization_task_name.replace(l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.find('<') + 1),
 			l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.length() - 1),
 			property_typename_p
@@ -731,7 +789,8 @@ private:
 
 		if constexpr (FE::is_trivial<Container>::value == false)
 		{
-			l_container->resize(this->m_scalable_container_size_recorder.pop());
+			l_container->resize(this->m_scalable_container_size_record.front());
+			this->m_scalable_container_size_record.pop_front();
 
 			if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
 			{
@@ -767,9 +826,9 @@ private:
 		}
 	}
 
-	FE::ASCII* __get_deserialization_task_name(FE::ASCII* property_typename_p) noexcept
+	std::string_view __get_deserialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::basic_string<char, std::char_traits<char>> l_s_deserialization_task_name = "FE::framework::reflection::property_map::__deserialize_by_foreach_mutually_recursive< >";
+		static std::string l_s_deserialization_task_name("FE::framework::reflection::property_map::__deserialize_by_foreach_mutually_recursive< >");
 		l_s_deserialization_task_name.replace(l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.find('<') + 1),
 			l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.length() - 1),
 			property_typename_p
@@ -800,17 +859,17 @@ enabling reflection capabilities by registering construction and destruction tas
 */
 #define FE_CLASS(class_name) \
 using is_reflective = decltype(true); \
-class class_meta_data \
+class class_metadata \
 { \
 public: \
 	using type = class_name; \
-	class_meta_data() noexcept \
+	class_metadata() noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name>) ); \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = "~"; l_class_name += #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name>) ); \
 	} \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ class_meta_data class_name##_class_meta;
+_FE_NO_UNIQUE_ADDRESS_ class_metadata class_name##_class_meta;
 #endif
 
 #ifdef FE_STRUCT
@@ -828,14 +887,14 @@ The FE_METHOD macro defines a class for method reflection in a specified namespa
 automatically registering the method's signature and its associated metadata upon instantiation.
 */
 #define FE_METHOD(method_name, ...) \
-class method_reflection_##method_name \
+class method_metadata_##method_name \
 { \
 public: \
-	_FE_FORCE_INLINE_ method_reflection_##method_name() noexcept \
+	_FE_FORCE_INLINE_ method_metadata_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_full_signature = get_signature(); ::FE::framework::framework_base::get_engine().get_method_reflection().register_task<::FE::cpp_style_task<class_meta_data::type, __VA_ARGS__, typename FE::method<class_meta_data::type, __VA_ARGS__>::arguments_type>>(l_full_signature.c_str(), &class_meta_data::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_engine().get_method_reflection().register_task<::FE::cpp_style_task<class_metadata::type, __VA_ARGS__, typename FE::method<class_metadata::type, __VA_ARGS__>::arguments_type>>(get_signature(), &class_metadata::type::method_name)); \
 	} \
-	static ::std::string get_signature() noexcept \
+	static ::std::string& get_signature() noexcept \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
@@ -845,7 +904,7 @@ public: \
 			{ \
 				l_full_signature.insert(l_result->_begin, " "); \
 			} \
-			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_meta_data::type>().name(); \
+			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
 			l_signature += "::"; l_signature += #method_name; \
 			l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
 			l_full_signature.insert(l_result->_begin, l_signature.c_str()); \
@@ -854,7 +913,7 @@ public: \
 		return l_s_full_signature; \
 	} \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ method_reflection_##method_name method_name##_method_meta;
+_FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta;
 #endif
 
 #ifdef FE_STATIC_METHOD
@@ -865,14 +924,14 @@ The FE_STATIC_METHOD macro defines a class that registers a static method for re
 capturing its signature and associating it with a task for runtime method invocation.
 */
 #define FE_STATIC_METHOD(method_name, ...) \
-class static_method_reflection_##method_name \
+class static_method_metadata_##method_name \
 { \
 public: \
-	_FE_FORCE_INLINE_ static_method_reflection_##method_name() noexcept \
+	_FE_FORCE_INLINE_ static_method_metadata_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_full_signature = get_signature(); ::FE::framework::framework_base::get_engine().get_method_reflection().register_task<::FE::c_style_task<__VA_ARGS__, typename FE::function<__VA_ARGS__>::arguments_type>>(l_full_signature.c_str(), &class_meta_data::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_engine().get_method_reflection().register_task<::FE::c_style_task<__VA_ARGS__, typename FE::function<__VA_ARGS__>::arguments_type>>(get_signature(), &class_metadata::type::method_name)); \
 	} \
-	static ::std::string get_signature() noexcept \
+	static ::std::string& get_signature() noexcept \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
@@ -882,7 +941,7 @@ public: \
 			{ \
 				l_full_signature.insert(l_result->_begin, " "); \
 			} \
-			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_meta_data::type>().name(); \
+			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
 			l_signature += "::"; l_signature += #method_name; \
 			l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
 			l_full_signature.insert(l_result->_begin, l_signature.c_str()); \
@@ -891,7 +950,7 @@ public: \
 		return l_s_full_signature; \
 	} \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ static_method_reflection_##method_name method_name##_static_method_meta;
+_FE_NO_UNIQUE_ADDRESS_ static_method_metadata_##method_name method_name##_static_method_meta;
 #endif
 
 
@@ -903,15 +962,15 @@ The FE_PROPERTY macro defines a class for property reflection that registers a s
 ensuring it is only registered once during the application's execution.
 */
 #define FE_PROPERTY(property_name)  \
-class property_reflection_##property_name \
+class property_metadata_##property_name \
 { \
 public: \
-	_FE_FORCE_INLINE_ property_reflection_##property_name(typename class_meta_data::type* const this_p) noexcept \
+	_FE_FORCE_INLINE_ property_metadata_##property_name(typename class_metadata::type* const this_p) noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_engine().get_property_reflection().register_property<typename class_meta_data::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_engine().get_property_reflection().register_property<typename class_metadata::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
 	} \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ property_reflection_##property_name property_name##_property_meta = this;
+_FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this;
 #endif
 
 

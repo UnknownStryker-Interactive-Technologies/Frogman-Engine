@@ -279,10 +279,9 @@ public:
             { 
                 if (this->m_page_count == maximum_page_count)
                 {
-                    FE_DEBUG_BREAK();
                     return nullptr;
                 }
-                //FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
+                FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
                 continue; // It will eventually create a new page if the next pages are not available.
             }
 

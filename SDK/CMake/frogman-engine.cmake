@@ -244,39 +244,49 @@ ENDIF()
 
 
 
-FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
-    CMAKE_PARSE_ARGUMENTS(ARG "" "HEADER_TOOL_OPTION" "HEADER_TOOL_OPTIONS")
+FUNCTION(RUN_FROGMAN_HEADER_TOOL)
+    SET(HEADER_TOOL_PROGRAM_OPTIONS)
+    SET(HEADER_FILES_PATHS)
+
+    FOREACH(ARGUMENT IN LISTS ARGV)
+        IF(ARGUMENT MATCHES "^-")
+            LIST(APPEND HEADER_TOOL_PROGRAM_OPTIONS ${ARGUMENT})
+        ELSE()
+            LIST(APPEND HEADER_FILES_PATHS ${ARGUMENT})
+        ENDIF()
+    ENDFOREACH()
+
     SET(RETURN_VALUE_FROM_TOOL)
     SET(TOOL_STDOUT)
     SET(TOOL_STDERR)
         
+    MESSAGE("========== Frogman Engine Header Tool ==========")
+
     IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 
         # Print paths for debugging
         SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/RelWithDebInfo/FE.HeaderTool.exe)
 
-        MESSAGE(STATUS "Path to Frogman Engine Header Tool: ${PATH_TO_HEADER_TOOL}")
-        MESSAGE(STATUS "Target header files: ${TARGET_HEADER_FILES}")
-        
+        MESSAGE(STATUS "The path to Frogman Engine Header Tool is: ${PATH_TO_HEADER_TOOL}")
+        MESSAGE(STATUS "The target header files are: ${HEADER_FILES_PATHS}")
+        MESSAGE(STATUS "The Header Tool program options are: ${HEADER_TOOL_PROGRAM_OPTIONS}")
 
         # Verify the existence of the header tool executable
         IF(NOT EXISTS "${PATH_TO_HEADER_TOOL}")
             MESSAGE(FATAL_ERROR "Frogman Engine Header Tool executable not found at ${PATH_TO_HEADER_TOOL}")
         ENDIF()
 
-
         # Verify the existence of the target header files
-        FOREACH(HEADER_FILE IN LISTS TARGET_HEADER_FILES)
+        FOREACH(HEADER_FILE IN LISTS HEADER_FILES_PATHS)
             IF(NOT EXISTS "${HEADER_FILE}")
                 MESSAGE(FATAL_ERROR "Target header file not found: ${HEADER_FILE}")
             ENDIF()
         ENDFOREACH()
 
-
-        # Execute the header tool.${CMAKE_COMMAND} -E env LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 &&
+        # Execute the header tool. 
         EXECUTE_PROCESS(
-            COMMAND  ${PATH_TO_HEADER_TOOL} 
-            ARGS "${TARGET_HEADER_FILES}" ${HEADER_TOOL_OPTIONS} "-path-to-project=${CMAKE_CURRENT_SOURCE_DIR}" "-fno-code-style-guide"
+            COMMAND ${CMAKE_COMMAND} -E env LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 ${PATH_TO_HEADER_TOOL} 
+            ARGS ${HEADER_TOOL_PROGRAM_OPTIONS} "-path-to-project=${CMAKE_CURRENT_SOURCE_DIR}" "-fno-code-style-guide" "${HEADER_FILES_PATHS}"
             RESULT_VARIABLE RETURN_VALUE_FROM_TOOL
             OUTPUT_VARIABLE TOOL_STDOUT
             ERROR_VARIABLE TOOL_STDERR
@@ -284,19 +294,21 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL TARGET_HEADER_FILES)
 
     ENDIF()
 
-    MESSAGE(STATUS "Frogman Engine Header Tool: ${TOOL_STDOUT}")
+    MESSAGE("${TOOL_STDOUT}")
 
     # Print tool output and error for debugging
-    MESSAGE(STATUS "Frogman Engine Header Tool: returned exit code '${RETURN_VALUE_FROM_TOOL}'.")
+    MESSAGE("Frogman Engine Header Tool returned the exit code '${RETURN_VALUE_FROM_TOOL}'.")
 
     IF(NOT RETURN_VALUE_FROM_TOOL EQUAL 0)
 
         IF(RETURN_VALUE_FROM_TOOL EQUAL -1)
-            MESSAGE(STATUS "Compilation failed: The header files must retain a copy of the specified license text.")
+            MESSAGE(STATUS "Frogman Engine Header Tool: The header files must retain a copy of the specified license text.")
         ENDIF()
 
-        MESSAGE(FATAL_ERROR "Frogman Engine Build System: Aborting the compilation process! Please check out the messages above.")
+        MESSAGE(FATAL_ERROR "------ FE HT: compilation failed! Please, check the messages above! ------")
     ENDIF()
+
+    MESSAGE("========== Frogman Engine Header Tool Successfully Processed the Target Header Files ==========")
 
 ENDFUNCTION()
 

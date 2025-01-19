@@ -29,6 +29,7 @@ limitations under the License.
 // std
 #include <algorithm> // std::find_if
 #include <fstream> // std::basic_ifstream
+#include <list> // std::pmr::pmr::list
 #include <string> // std::pmr::basic_string
 #include <string_view> // std::basic_string_view
 #include <vector> // std::pmr::vector
@@ -64,7 +65,8 @@ struct token
 
 
 
-// sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp
+// sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp
+//  C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
 /*
 The header_tool_engine class is a specialized component of the Frogman Engine that manages header file processing, including copyright notice verification and reflection code generation
 while utilizing parallel task execution for efficiency.
@@ -104,19 +106,21 @@ private:
 		var::uint16 _classes;
 		var::uint16 _structs;
 	};
-	_FE_NODISCARD_ symbol_count __count_all_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	_FE_NODISCARD_ symbol_count __count_the_current_scope_level_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ symbol_count __count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ symbol_count __count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	struct member_symbol_count
 	{
 		var::uint16 _methods;
 		var::uint16 _properties;
 	};
-	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::vector<token>::const_iterator begin_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
 
 private:
-	_FE_NODISCARD_ std::optional<std::pmr::vector<token>> __parse_header(const file_buffer_t& file_p) noexcept;
-	void __purge_comments(std::pmr::vector<token>& out_list_p) noexcept;
+	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __parse_header(const file_buffer_t& file_p) noexcept;
+	void __purge_comments(std::pmr::list<token>& out_list_p);
+	void __purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
+
 	_FE_NODISCARD_ token __tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 	_FE_NODISCARD_ token __tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 	_FE_NODISCARD_ token __tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
@@ -135,13 +139,14 @@ private:
 	}
 
 private:
-	_FE_NODISCARD_ header_file_root __build_reflection_tree(const directory_t& file_path_p, const std::pmr::vector<token>& token_list_p) noexcept;
-	_FE_NODISCARD_ namespace_node __build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	_FE_NODISCARD_ class_node __build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
-	_FE_NODISCARD_ struct_node __build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::vector<token>::const_iterator& out_token_iterator_p, typename std::pmr::vector<token>::const_iterator end_p) noexcept;
+	_FE_NODISCARD_ header_file_root __build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
+	_FE_NODISCARD_ namespace_node __build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ class_node __build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ struct_node __build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
-	void __handle_template(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept;
-	void __handle_enum(typename std::pmr::vector<token>::const_iterator& iterator_p) noexcept;
+	void __handle_template(typename std::pmr::list<token>::const_iterator& iterator_p);
+	void __handle_enum(typename std::pmr::list<token>::const_iterator& iterator_p);
+	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 private:
 	struct reflection_metadata
