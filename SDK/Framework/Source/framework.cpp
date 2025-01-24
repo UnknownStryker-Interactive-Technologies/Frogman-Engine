@@ -117,7 +117,11 @@ RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
-	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
+	: m_program_options(argc_p, argv_p), 
+	  m_current_system_locale(std::setlocale(LC_ALL, "")), 
+	  m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
+	  m_method_reflection(81920), m_property_reflection(81920), 
+	  m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
 {
 	std::locale::global(this->m_current_system_locale);
 }
@@ -217,6 +221,7 @@ std::function<framework_base* (FE::int32, FE::ASCII**)>& framework_base::allocat
 
 game_framework_base::game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p)
 	: framework_base(argc_p, argv_p, 2), /* Exclude main thread and the render thread from counting the number of the task scheduler threads. */ 
+	m_entity_component_system(m_program_options.get_max_concurrency()),
 	m_game_instance()
 {
 
@@ -267,13 +272,13 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
 		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
-		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "Error: An app pointer is a nullptr.");
+		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "\nError: An app pointer is a nullptr.\n");
 		
 		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
 
 		if (l_exit_code != 0)
 		{
-			std::cerr << "Failed to set up an app.";
+			std::cerr << "\nFailed to set up an app.\n";
 			delete FE::framework::framework_base::s_framework;
 			return l_exit_code;
 		}
@@ -282,7 +287,7 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 		if (l_exit_code != 0)
 		{
-			std::cerr << "There was an error during the runtime.";
+			std::cerr << "\nThere was an error during the runtime.\n";
 			delete FE::framework::framework_base::s_framework;
 			return l_exit_code;
 		}
@@ -291,7 +296,7 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 		if (l_exit_code != 0)
 		{
-			std::cerr << "Unsuccessfully cleaned up an app.";
+			std::cerr << "\nUnsuccessfully cleaned up an app.\n";
 			delete FE::framework::framework_base::s_framework;
 			return l_exit_code;
 		}

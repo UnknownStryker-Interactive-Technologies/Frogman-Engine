@@ -1,6 +1,4 @@
-﻿#ifndef _FE_FRAMEWORK_COMPONENT_BASE_HPP_
-#define _FE_FRAMEWORK_COMPONENT_BASE_HPP_
-/*
+﻿/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,26 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/prerequisites.h>
-#include <FE/framework/reflection.hpp>
-#include <FE/framework/super_base.hpp>
-	
+#include <FE/framework/archetype_base.hpp>
+#include <FE/framework/framework.hpp>
+
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
 
-class component_base : public super_base
+archetype_base::archetype_base() noexcept
 {
-public:
-	component_base() noexcept;
-	virtual ~component_base() noexcept = default;
+}
 
-protected:
-	virtual void on_construction() override;
-	virtual void on_destruction() override;
-};
+void archetype_base::on_construction()
+{
+}
+
+void archetype_base::on_destruction()
+{
+}
 
 END_NAMESPACE
-#endif

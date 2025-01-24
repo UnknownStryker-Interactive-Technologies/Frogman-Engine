@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/framework/framework.hpp>
+#include <FE/framework/reflection.hpp>
 #include <FE/framework/super_base.hpp>
 
 

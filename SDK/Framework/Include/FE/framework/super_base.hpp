@@ -16,8 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-
-#include <FE/framework/framework.hpp>
+#include <FE/framework/reflection.hpp>
 
 
 
@@ -29,7 +28,6 @@ The top class for all game objects in Frogman Engine.
 */
 class super_base
 {
-	FE_CLASS(super_base);
 public:
 	super_base() noexcept;
 	virtual ~super_base() noexcept;

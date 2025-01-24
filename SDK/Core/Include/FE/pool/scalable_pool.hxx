@@ -38,6 +38,8 @@ limitations under the License.
 // std::unique_ptr
 #include <memory>
 
+#include <memory_resource>
+
 // std thread for parallel sorting.
 #include <thread>
 
@@ -204,7 +206,7 @@ namespace internal::pool
 
 
 template<PoolPageCapacity PageCapacity, class Alignment>
-class pool<PoolType::_Scalable, PageCapacity, Alignment>
+class pool<PoolType::_Scalable, PageCapacity, Alignment> : public std::pmr::memory_resource
 {
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -232,7 +234,7 @@ private:
 
 public:
     pool() noexcept : m_memory_pool{}, m_page_count() {};
-    ~pool() noexcept = default;
+    virtual ~pool() noexcept override = default;
 
     _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept
     {
@@ -396,6 +398,27 @@ public:
 
 	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return this->m_page_count; }
 
+protected:
+    inline virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+    {
+		return this->allocate<std::byte>(bytes_p);
+    }
+
+	inline virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+	{
+		this->deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
+	}
+
+    inline virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+    {
+		if (dynamic_cast<const pool*>(&other_p) == nullptr)
+		{
+			return false;
+		}
+
+		return this->operator==(dynamic_cast<const pool&>(other_p));
+    }
+
 private:
     /* Time complexity: 
 	Best - O(1)
@@ -516,7 +539,7 @@ private:
  - __retrive_from_free_list()
  O(log n)
 
- The scalable_pool class template in the Frogman Engine provides a scalable memory pool for efficient allocation and deallocation of memory blocks with a specified alignment and page capacity
+ The scalable_pool class template in the Frogman Engine provides a scalable memory pool for efficient allocation and deallocation of memory blocks with a specified alignment_p and page capacity
  ensuring that allocations are properly aligned and managed within a limited number of memory pages.
 */
 template<PoolPageCapacity PageCapacity, class Alignment = FE::SIMD_auto_alignment>

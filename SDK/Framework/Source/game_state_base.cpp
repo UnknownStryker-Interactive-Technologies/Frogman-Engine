@@ -6,6 +6,7 @@
 
 BEGIN_NAMESPACE(FE::framework)
 
+
 game_state_base::game_state_base() noexcept
 {
 }

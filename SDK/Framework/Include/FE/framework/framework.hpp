@@ -35,6 +35,7 @@ limitations under the License.
 #endif
 #include <FE/pool/memory_resource.hpp>
 
+#include <FE/framework/ECS.hpp>
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/task.hpp>
 
@@ -129,6 +130,7 @@ class game_instance;
 class game_framework_base : public framework_base
 {
 	std::unique_ptr<game_instance> m_game_instance;
+	framework::ECS m_entity_component_system;
 
 public:
 	game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p);

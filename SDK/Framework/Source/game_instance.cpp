@@ -5,6 +5,7 @@
 
 BEGIN_NAMESPACE(FE::framework)
 
+
 game_instance::game_instance() noexcept
 {
 }

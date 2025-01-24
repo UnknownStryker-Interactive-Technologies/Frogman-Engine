@@ -38,6 +38,7 @@ SET(FE_FRAMEWORK_OBJECT_HIERARCHY
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/super_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_instance.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_mode_base.hpp
@@ -61,6 +62,7 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/super_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/system_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_instance.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_mode_base.cpp

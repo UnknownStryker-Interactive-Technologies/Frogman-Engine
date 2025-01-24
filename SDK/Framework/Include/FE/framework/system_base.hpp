@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/framework/reflection.hpp>
 #include <FE/framework/super_base.hpp>
 	
 
@@ -26,9 +27,6 @@ BEGIN_NAMESPACE(FE::framework)
 
 class system_base : public super_base
 {
-	FE_CLASS_HAS_A_BASE(super_base);
-	FE_CLASS(system_base);
-
 public:
 	system_base() noexcept;
 	virtual ~system_base() noexcept = default;
