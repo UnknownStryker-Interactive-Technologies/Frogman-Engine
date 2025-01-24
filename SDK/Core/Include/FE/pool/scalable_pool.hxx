@@ -265,17 +265,21 @@ public:
         FE_EXIT(l_queried_allocation_size_in_bytes > page_capacity, FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow, "Fatal Error: Unable to allocate ${%lu@0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT((l_queried_allocation_size_in_bytes % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_size_in_bytes, &Alignment::size);
 
-        for (page_pointer& page_ptr : m_memory_pool)
+        for (var::size i = 0; i < maximum_page_count; ++i)
         {
-            if (page_ptr == nullptr) _FE_UNLIKELY_
+            if (this->m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                page_ptr = std::make_unique<chunk_type>();
+                this->m_memory_pool[i] = std::make_unique<chunk_type>();
                 ++this->m_page_count;
+
+				// Swap the new page to the front of the array for faster access.
+                std::swap(this->m_memory_pool[0], this->m_memory_pool[i]);
+                i = 0;
             }
 
             internal::pool::block_info l_memblock_info{};
            
-            if (__try_allocation_from_page(page_ptr, l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
+            if (__try_allocation_from_page(this->m_memory_pool[i], l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
             { 
                 if (this->m_page_count == maximum_page_count)
                 {
@@ -295,7 +299,7 @@ public:
             }
 
 #ifdef _ENABLE_ASSERT_
-            page_ptr->check_double_allocation(l_memblock_info);
+            this->m_memory_pool[i]->check_double_allocation(l_memblock_info);
 #endif
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address) % Alignment::size) == 0, "FE.pool.scalable_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_memblock_info._address, &Alignment::size);
             return reinterpret_cast<U*>(l_memblock_info._address);

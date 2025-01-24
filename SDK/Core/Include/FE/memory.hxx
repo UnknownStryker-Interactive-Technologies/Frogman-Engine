@@ -821,54 +821,36 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, con
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
 	FE_NEGATIVE_ASSERT(bytes_to_move_p == 0, "${%s@0}: ${%s@1} is 0.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(bytes_to_move_p));
-	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	//{
- //   	return;
-	//}
 
-	if (source_p < out_dest_p)
+	out_dest_p = static_cast<var::byte*>(out_dest_p) + (bytes_to_move_p - 1);
+	source_p = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
+
+	for (var::size n = __FE_MODULO_BY_16(bytes_to_move_p); n > 0; --n)
 	{
-		var::byte* l_dest_byte_ptr = static_cast<var::byte*>(out_dest_p) + (bytes_to_move_p - 1);
-		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
-
-		{
-			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_16(bytes_to_move_p);
-
-			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
-			{
-				*l_dest_byte_ptr = *l_source_byte_ptr;
-				--l_dest_byte_ptr;
-				--l_source_byte_ptr;
-			}
-		}
-
-		var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
-
-		__m256i* l_m256i_dest_ptr = reinterpret_cast<__m256i*>(l_dest_byte_ptr - 31);
-		const __m256i* l_m256i_source_ptr = reinterpret_cast<const __m256i*>(l_source_byte_ptr  - 31);
-	
-		for (; l_operation_count > 1; l_operation_count -= 2)
-		{
-			_mm256_storeu_si256(l_m256i_dest_ptr, _mm256_loadu_si256(l_m256i_source_ptr));
-			--l_m256i_dest_ptr;
-			--l_m256i_source_ptr;
-		}
-
-		__m128i* l_m128i_dest_ptr = reinterpret_cast<__m128i*>(l_m256i_dest_ptr) + 1;
-		const __m128i* l_m128i_source_ptr = reinterpret_cast<const __m128i*>(l_m256i_source_ptr) + 1;
-
-		for (; l_operation_count > 0; --l_operation_count)
-		{
-			_mm_storeu_si128(l_m128i_dest_ptr, _mm_loadu_si128(l_m128i_source_ptr));
-			--l_m128i_dest_ptr;
-			--l_m128i_source_ptr;
-		}
-		return;
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<FE::byte*>(source_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) - 1;
+		source_p = static_cast<byte*>(source_p) - 1;
 	}
-	else
+
+	out_dest_p = reinterpret_cast<__m256i*>(static_cast<var::byte*>(out_dest_p) - 31);
+	source_p = reinterpret_cast<const __m256i*>(static_cast<byte*>(source_p) - 31);
+
+	var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
+	for (; l_operation_count > 1; l_operation_count -= 2)
 	{
-		__x86_64_unaligned_memcpy_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-		return;
+		_mm256_storeu_si256(reinterpret_cast<__m256i*>(out_dest_p), _mm256_loadu_si256(reinterpret_cast<const __m256i*>(source_p)));
+		out_dest_p = reinterpret_cast<__m256i*>(out_dest_p) - 1;
+		source_p = reinterpret_cast<const __m256i*>(source_p) - 1;
+	}
+
+	out_dest_p = reinterpret_cast<__m128i*>(out_dest_p) + 1;
+	source_p = reinterpret_cast<const __m128i*>(source_p) + 1;
+
+	for (; l_operation_count > 0; --l_operation_count)
+	{
+		_mm_storeu_si128(reinterpret_cast<__m128i*>(out_dest_p), _mm_loadu_si128(reinterpret_cast<const __m128i*>(source_p)));
+		out_dest_p = reinterpret_cast<__m128i*>(out_dest_p) - 1;
+		source_p = reinterpret_cast<const __m128i*>(source_p) - 1;
 	}
 }
 
@@ -897,51 +879,47 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memmove_AVX_SSE2(void* out_dest_p, const
  //   	return;
 	//}
 	FE_NEGATIVE_ASSERT(__FE_MODULO_BY_32(reinterpret_cast<uintptr>(out_dest_p)) != 0, "${%s@0}: ${%s@1} is not aligned by 32.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_IllegalAddressAlignment), TO_STRING(out_dest_p));
+	//if (source_p < out_dest_p)
+	//{
 
-	if (source_p < out_dest_p)
+	//}
+	//else
+	//{
+	//	__x86_64_dest_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
+	//	return;
+	//}
+
+	out_dest_p = static_cast<var::byte*>(out_dest_p) + (bytes_to_move_p - 1);
+	source_p = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
+
+	for (var::size n = __FE_MODULO_BY_16(bytes_to_move_p); n > 0; --n)
 	{
-		var::byte* l_dest_byte_ptr = static_cast<var::byte*>(out_dest_p) + (bytes_to_move_p - 1);
-		byte* l_source_byte_ptr = static_cast<byte*>(source_p) + (bytes_to_move_p - 1);
-
-		{
-			size l_leftover_bytes_to_copy_by_byte = __FE_MODULO_BY_16(bytes_to_move_p);
-
-			for (var::size i = 0; i != l_leftover_bytes_to_copy_by_byte; ++i)
-			{
-				*l_dest_byte_ptr = *l_source_byte_ptr;
-				--l_dest_byte_ptr;
-				--l_source_byte_ptr;
-			}
-		}
-
-		var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
-
-		__m256i* l_m256i_dest_ptr = reinterpret_cast<__m256i*>(l_dest_byte_ptr - 31);
-		const __m256i* l_m256i_source_ptr = reinterpret_cast<const __m256i*>(l_source_byte_ptr + 31);
-
-		for (; l_operation_count > 1; l_operation_count -= 2)
-		{
-			_mm256_store_si256(l_m256i_dest_ptr, _mm256_loadu_si256(l_m256i_source_ptr));
-			--l_m256i_dest_ptr;
-			--l_m256i_source_ptr;
-		}
-
-		__m128i* l_m128i_dest_ptr = reinterpret_cast<__m128i*>(l_m256i_dest_ptr) + 1;
-		const __m128i* l_m128i_source_ptr = reinterpret_cast<const __m128i*>(l_m256i_source_ptr) + 1;
-
-		for (; l_operation_count > 0; --l_operation_count)
-		{
-			_mm_store_si128(l_m128i_dest_ptr, _mm_loadu_si128(l_m128i_source_ptr));
-			--l_m128i_dest_ptr;
-			--l_m128i_source_ptr;
-		}
-		return;
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<FE::byte*>(source_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) - 1;
+		source_p = static_cast<byte*>(source_p) - 1;
 	}
-	else
+
+	out_dest_p = reinterpret_cast<__m256i*>(static_cast<var::byte*>(out_dest_p) - 31);
+	source_p = reinterpret_cast<const __m256i*>(static_cast<byte*>(source_p) - 31);
+
+	var::size l_operation_count = __FE_DIVIDE_BY_16(bytes_to_move_p);
+	for (; l_operation_count > 1; l_operation_count -= 2)
 	{
-		__x86_64_dest_aligned_memcpy_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p);
-		return;
+		_mm256_store_si256(reinterpret_cast<__m256i*>(out_dest_p), _mm256_loadu_si256(reinterpret_cast<const __m256i*>(source_p)));
+		out_dest_p = reinterpret_cast<__m256i*>(out_dest_p) - 1;
+		source_p = reinterpret_cast<const __m256i*>(source_p) - 1;
 	}
+
+	out_dest_p = reinterpret_cast<__m128i*>(out_dest_p) + 1;
+	source_p = reinterpret_cast<const __m128i*>(source_p) + 1;
+
+	for (; l_operation_count > 0; --l_operation_count)
+	{
+		_mm_store_si128(reinterpret_cast<__m128i*>(out_dest_p), _mm_loadu_si128(reinterpret_cast<const __m128i*>(source_p)));
+		out_dest_p = reinterpret_cast<__m128i*>(out_dest_p) - 1;
+		source_p = reinterpret_cast<const __m128i*>(source_p) - 1;
+	}
+	return;
 }
 #endif
 

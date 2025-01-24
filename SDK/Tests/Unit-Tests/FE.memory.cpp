@@ -283,6 +283,7 @@ void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept
 	
 	for (auto _ : state_p)
 	{
+		benchmark::ClobberMemory();
 		FE::memcpy<FE::Address::_Aligned, FE::Address::_Aligned>(l_dest, l_source, _MAGICAL_SIZE_);
 		FE::memcpy<FE::Address::_Aligned, FE::Address::_Aligned>(l_source, l_dest, _MAGICAL_SIZE_);
 	}
@@ -298,6 +299,7 @@ void std_memcpy_benchmark(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
+		benchmark::ClobberMemory();
 		std::memcpy(l_dest, l_source, _MAGICAL_SIZE_);
 		std::memcpy(l_source, l_dest, _MAGICAL_SIZE_);
 	}

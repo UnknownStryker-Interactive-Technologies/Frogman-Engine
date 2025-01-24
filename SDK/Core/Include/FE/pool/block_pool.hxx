@@ -143,28 +143,32 @@ It is hard to tell which corrupted memory, but very sure to say that there was a
         FE_STATIC_ASSERT((sizeof(U) <= fixed_block_size_in_bytes), "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         FE_STATIC_ASSERT(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
 
-        for (page_pointer& page_ptr : m_memory_pool)
+        for (var::size i = 0; i < maximum_page_count; ++i)
         {
-			if (page_ptr.get() == nullptr) _FE_UNLIKELY_
+			if (this->m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-				page_ptr = std::make_unique<chunk_type>();
+                this->m_memory_pool[i] = std::make_unique<chunk_type>();
                 ++this->m_page_count;
+
+                // Swap the new page to the front of the array for faster access.
+                std::swap(this->m_memory_pool[0], this->m_memory_pool[i]);
+                i = 0;
             }
 
-            if (page_ptr->is_out_of_memory() == true) _FE_UNLIKELY_
+            if (this->m_memory_pool[i]->is_out_of_memory() == true) _FE_UNLIKELY_
             {
                 continue;
             }
 
             void* l_allocation_result;
-            if (page_ptr->_free_blocks.is_empty() == false)
+            if (this->m_memory_pool[i]->_free_blocks.is_empty() == false)
             {
-                l_allocation_result = page_ptr->_free_blocks.pop();
+                l_allocation_result = this->m_memory_pool[i]->_free_blocks.pop();
             }
             else
             {
-                l_allocation_result = page_ptr->_page_iterator;
-                page_ptr->_page_iterator += fixed_block_size_in_bytes;
+                l_allocation_result = this->m_memory_pool[i]->_page_iterator;
+                this->m_memory_pool[i]->_page_iterator += fixed_block_size_in_bytes;
             }
 
             if constexpr (FE::is_trivial<U>::value == false)
