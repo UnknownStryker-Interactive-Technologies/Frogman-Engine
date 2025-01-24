@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/super_object_base.hpp>
+#include <FE/framework/super_base.hpp>
 
 
 
@@ -24,10 +24,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-class game_instance : public super_object_base
+class game_instance : public super_base
 {
+	FE_CLASS_HAS_A_BASE(super_base);
 	FE_CLASS(game_instance);
-	FE_CLASS_HAS_A_BASE(super_object_base);
 
 public:
 	game_instance() noexcept;
@@ -36,8 +36,6 @@ public:
 protected:
 	virtual void on_construction() override;
 	virtual void on_destruction() override;
-
-	virtual void tick(FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

@@ -1,4 +1,6 @@
-﻿/*
+﻿#ifndef _FE_FRAMEWORK_SYSTEM_BASE_HPP_
+#define _FE_FRAMEWORK_SYSTEM_BASE_HPP_
+/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,27 +15,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/controller_base.hpp>
-
+#include <FE/prerequisites.h>
+#include <FE/framework/super_base.hpp>
+	
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
-controller_base::controller_base() noexcept
-{
-}
 
-void controller_base::on_construction()
+class system_base : public super_base
 {
-}
+	FE_CLASS_HAS_A_BASE(super_base);
+	FE_CLASS(system_base);
 
-void controller_base::on_destruction()
-{
-}
+public:
+	system_base() noexcept;
+	virtual ~system_base() noexcept = default;
 
-void controller_base::tick(_FE_MAYBE_UNUSED_  FE::float64 delta_second_p)
-{
-}
+protected:
+	virtual void on_construction() override;
+	virtual void on_destruction() override;
+};
 
 END_NAMESPACE
+#endif

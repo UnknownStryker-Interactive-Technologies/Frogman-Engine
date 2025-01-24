@@ -1,5 +1,5 @@
-﻿#ifndef _FE_FRAMEWORK_OBJECT_BASE_HPP_
-#define _FE_FRAMEWORK_OBJECT_BASE_HPP_
+﻿#ifndef _FE_FRAMEWORK_COMPONENT_BASE_HPP_
+#define _FE_FRAMEWORK_COMPONENT_BASE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -16,43 +16,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/super_object_base.hpp>
-
-// glm
-#include <glm/vec3.hpp>
-
+#include <FE/framework/super_base.hpp>
+	
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
-class object_base : public super_object_base
-{
-	FE_CLASS(object_base);
-	FE_CLASS_HAS_A_BASE(super_object_base);
 
-protected:
-	FE_PROPERTY(m_position);
-	glm::dvec3 m_position;
+class component_base : public super_base
+{
+	FE_CLASS_HAS_A_BASE(super_base);
+	FE_CLASS(component_base);
 
 public:
-	object_base() noexcept;
-	virtual ~object_base() noexcept = default;
+	component_base() noexcept;
+	virtual ~component_base() noexcept = default;
 
 protected:
 	virtual void on_construction() override;
 	virtual void on_destruction() override;
-
-	virtual void on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p);
-	virtual void on_despawn();
-
-	FE_PROPERTY(m_is_active);
-	var::boolean m_is_active;
-
-	virtual void on_activate();
-	virtual void on_deactivate();
-
-	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

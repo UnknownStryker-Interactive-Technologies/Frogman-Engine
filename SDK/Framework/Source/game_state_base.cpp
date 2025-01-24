@@ -18,8 +18,4 @@ void game_state_base::on_destruction()
 {
 }
 
-void game_state_base::tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p)
-{
-}
-
 END_NAMESPACE

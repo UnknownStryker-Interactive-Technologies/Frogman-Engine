@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/super_object_base.hpp>
+#include <FE/framework/super_base.hpp>
 
 // glm
 #include <glm/vec3.hpp>
@@ -26,10 +26,11 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
-class game_state_base : public super_object_base
+class game_state_base : public super_base
 {
+	FE_CLASS_HAS_A_BASE(super_base);
 	FE_CLASS(game_state_base);
-	FE_CLASS_HAS_A_BASE(super_object_base);
+
 public:
 	game_state_base() noexcept;
 	virtual ~game_state_base() noexcept = default;
@@ -37,8 +38,6 @@ public:
 protected:
 	virtual void on_construction() override;
 	virtual void on_destruction() override;
-
-	virtual void tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

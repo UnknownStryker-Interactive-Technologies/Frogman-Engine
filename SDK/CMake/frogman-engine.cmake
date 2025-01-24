@@ -24,7 +24,6 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include)
 SET(FE_FRAMEWORK_HEADER
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/renderer.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/managed.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/task.hpp
 )
 SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK_HEADER})
@@ -36,31 +35,18 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection/type_in
 SOURCE_GROUP("Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
 
 SET(FE_FRAMEWORK_OBJECT_HIERARCHY 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/super_object_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/object_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/pawn_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/character_base.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/firearm_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/projectile_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/super_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_instance.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_mode_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_state_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/player_state_base.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world_context.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/object_component_base.hpp
 )
 SOURCE_GROUP("Object" FILES ${FE_FRAMEWORK_OBJECT_HIERARCHY})
-
-SET(FE_FRAMEWORK_CONTROLLER_HIERARCHY 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/controller_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/player_controller_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/AI_controller_base.hpp
-)
-SOURCE_GROUP("Controller" FILES ${FE_FRAMEWORK_CONTROLLER_HIERARCHY})
 
 
 
@@ -68,31 +54,19 @@ SOURCE_GROUP("Controller" FILES ${FE_FRAMEWORK_CONTROLLER_HIERARCHY})
 SET(FE_FRAMEWORK_SOURCES 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/renderer.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/managed.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/task.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/super_object_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/object_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/pawn_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/character_base.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/firearm_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/projectile_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/super_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/system_base.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_instance.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_mode_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_state_base.cpp 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/player_state_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world_context.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/controller_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/player_controller_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/AI_controller_base.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/object_component_base.cpp
 )
 
 

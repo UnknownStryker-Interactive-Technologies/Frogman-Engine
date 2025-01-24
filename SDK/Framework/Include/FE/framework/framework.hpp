@@ -35,7 +35,6 @@ limitations under the License.
 #endif
 #include <FE/pool/memory_resource.hpp>
 
-#include <FE/framework/managed.hpp>
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/task.hpp>
 
@@ -88,7 +87,6 @@ protected:
 	program_options m_program_options;
 	std::locale m_current_system_locale;
 	std::unique_ptr<class FE::memory_resource[]> m_memory;
-	framework::managed m_reference_manager;
 	reflection::method_map m_method_reflection;
 	reflection::property_map m_property_reflection;
 	framework::task_scheduler m_cpu;
@@ -101,7 +99,6 @@ public:
 	static framework_base& get_engine() noexcept;
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
-	framework::managed& get_reference_manager() noexcept;
 	reflection::method_map& get_method_reflection() noexcept;
 	reflection::property_map& get_property_reflection() noexcept;
 	framework::task_scheduler& get_task_scheduler() noexcept;

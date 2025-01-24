@@ -15,6 +15,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
+
+
+_FE_FORCE_INLINE_ FE::internal::AllocatorType __select_allocator(std::size_t bytes_p) noexcept
+{
+	constexpr std::size_t l_smallest_block_size = 128;
+	FE::internal::AllocatorType l_allocator_type = static_cast<FE::internal::AllocatorType>((bytes_p / l_smallest_block_size) + 1);
+
+	if (l_smallest_block_size == bytes_p) _FE_UNLIKELY_
+	{
+		return FE::internal::AllocatorType::_DoubleZMMWordAllocator;
+	}
+
+	return l_allocator_type;
+}
+
+
 FE::memory_resource::memory_resource(FE::memory_resource&& other_p) noexcept
 	: m_dzmmword_block_pool( std::move(other_p.m_dzmmword_block_pool) ),
 	  m_qzmmword_block_pool( std::move(other_p.m_qzmmword_block_pool) ),
@@ -80,17 +97,4 @@ bool FE::memory_resource::do_is_equal(const std::pmr::memory_resource& other_p) 
 	}
 
 	return &(this->m_scalable_pool) == &(l_other->m_scalable_pool);
-}
-
-FE::internal::AllocatorType FE::memory_resource::__select_allocator(std::size_t bytes_p) const noexcept
-{
-	constexpr std::size_t l_smallest_block_size = 128;
-	internal::AllocatorType l_allocator_type = static_cast<internal::AllocatorType>( (bytes_p / l_smallest_block_size) + 1 );
-
-	if (l_smallest_block_size == bytes_p) _FE_UNLIKELY_
-	{
-		return internal::AllocatorType::_DoubleZMMWordAllocator;
-	}
-
-	return l_allocator_type;
 }

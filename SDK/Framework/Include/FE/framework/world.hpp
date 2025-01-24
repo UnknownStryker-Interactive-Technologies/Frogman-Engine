@@ -16,8 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/super_object_base.hpp>
-#include <FE/framework/object_base.hpp>
+#include <FE/framework/super_base.hpp>
 
 #include <FE/pair.hxx>
 
@@ -29,16 +28,16 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
-class world final : public super_object_base
+class world final : public super_base
 {
 	FE_CLASS(world);
-	FE_CLASS_HAS_A_BASE(super_object_base);
+	FE_CLASS_HAS_A_BASE(super_base);
 
 	FE_PROPERTY(m_objects_to_allocate);
 	std::pmr::vector<std::pmr::string> m_objects_to_allocate;
 
 	// Do Not Attempt to Serialize it. Raw pointers are not serializable.
-	std::pmr::vector<FE::pair<FE::framework::object_base*, std::pmr::string>> m_objects_on_world;
+	std::pmr::vector<FE::pair<FE::framework::super_base*, std::pmr::string>> m_objects_on_world;
 
 public:
 	world() noexcept;
@@ -47,8 +46,6 @@ public:
 protected:
 	virtual void on_construction() override;
 	virtual void on_destruction() override;
-
-	virtual void tick(FE::float64 delta_second_p) override;
 };
 
 END_NAMESPACE

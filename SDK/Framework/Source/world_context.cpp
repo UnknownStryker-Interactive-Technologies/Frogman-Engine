@@ -37,10 +37,5 @@ void world_context::on_destruction()
 {
 }
 
-void world_context::tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p)
-{
-
-}
-
 
 END_NAMESPACE

@@ -13,42 +13,29 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/character_base.hpp>
+#include <FE/framework/super_base.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
-character_base::character_base() noexcept
+
+super_base::super_base() noexcept
+{
+
+}
+
+super_base::~super_base() noexcept
+{
+
+}
+
+void super_base::on_construction()
 {
 }
 
-void character_base::on_construction()
-{
-}
-
-void character_base::on_destruction()
-{
-}
-
-void character_base::on_spawn(_FE_MAYBE_UNUSED_ glm::dvec3 world_coordinate_p)
-{
-}
-
-void character_base::on_despawn()
-{
-}
-
-void character_base::on_activate()
-{
-}
-
-void character_base::on_deactivate()
-{
-}
-
-void character_base::tick(_FE_MAYBE_UNUSED_ FE::float64 delta_second_p)
+void super_base::on_destruction()
 {
 }
 

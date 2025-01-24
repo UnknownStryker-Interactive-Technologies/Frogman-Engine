@@ -36,9 +36,4 @@ void world::on_destruction()
 {
 }
 
-void world::tick(FE::float64 delta_second_p)
-{
-	(void)delta_second_p;
-}
-
 END_NAMESPACE

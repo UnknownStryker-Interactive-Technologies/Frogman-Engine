@@ -53,7 +53,7 @@ class memory_resource : virtual public std::pmr::memory_resource, virtual public
 	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::double_zmmword_size, FE::align_CPU_L1_cache_line> m_dzmmword_block_pool;
 	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::quad_zmmword_size, FE::align_CPU_L1_cache_line> m_qzmmword_block_pool;
 	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::octa_zmmword_size, FE::align_CPU_L1_cache_line> m_ozmmword_block_pool;
-	FE::scalable_pool<FE::PoolPageCapacity::_256MB, FE::align_CPU_L1_cache_line> m_scalable_pool;
+	FE::scalable_pool<FE::PoolPageCapacity::_64MB, FE::align_CPU_L1_cache_line> m_scalable_pool;
 
 public:
 	memory_resource() noexcept = default;
@@ -67,9 +67,6 @@ protected:
 	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
 
 	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
-
-private:
-	internal::AllocatorType __select_allocator(std::size_t bytes_p) const noexcept;
 
 private:
 	memory_resource(const memory_resource&) = delete;

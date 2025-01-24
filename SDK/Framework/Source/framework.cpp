@@ -117,7 +117,7 @@ RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p, FE::uint32 concurrency_decrement_value_p) noexcept
-	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), m_reference_manager(m_program_options.get_max_concurrency()), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
+	: m_program_options(argc_p, argv_p), m_current_system_locale(std::setlocale(LC_ALL, "")), m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), m_method_reflection(81920), m_property_reflection(81920), m_cpu( m_program_options.get_max_concurrency() - concurrency_decrement_value_p )
 {
 	std::locale::global(this->m_current_system_locale);
 }
@@ -163,11 +163,6 @@ framework_base& framework_base::get_engine() noexcept
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
 	return &(this->m_memory[ get_current_thread_id() ]);
-}
-
-framework::managed& framework_base::get_reference_manager() noexcept
-{
-	return this->m_reference_manager;
 }
 
 reflection::method_map& framework_base::get_method_reflection() noexcept
