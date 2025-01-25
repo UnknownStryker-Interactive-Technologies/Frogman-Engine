@@ -18,7 +18,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 #include <FE/iterator.hxx>
-#include <FE/memory.hxx>
+#include <FE/memory.hpp>
 
 // std
 #include <optional>

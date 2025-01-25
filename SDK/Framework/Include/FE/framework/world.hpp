@@ -32,8 +32,8 @@ BEGIN_NAMESPACE(FE::framework)
 
 class world final : public super_base
 {
-	FE_CLASS(world);
 	FE_CLASS_HAS_A_BASE(super_base);
+	FE_CLASS(world);
 
 	FE_PROPERTY(m_objects_to_allocate);
 	std::pmr::vector<std::pmr::string> m_objects_to_allocate;

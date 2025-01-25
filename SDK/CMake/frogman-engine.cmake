@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include)
 
 SET(FE_FRAMEWORK_HEADER
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/renderer.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/task.hpp
 )
@@ -30,7 +31,7 @@ SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK_HEADER})
 
 SET(FE_FRAMEWORK_REFLECTION
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection/type_info.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/type_info.hpp
 )
 SOURCE_GROUP("Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
 
@@ -54,6 +55,7 @@ SOURCE_GROUP("Object" FILES ${FE_FRAMEWORK_OBJECT_HIERARCHY})
 
 SET(FE_FRAMEWORK_SOURCES 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/renderer.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/task.cpp
 
@@ -100,7 +102,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/logger.cpp
 
 SET(FE_POOL_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/block_pool.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/block_pool_allocator.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/memory_resource.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
@@ -113,7 +114,7 @@ SET(FE_CORE_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/definitions.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/prerequisites.h
 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/memory.hxx
+${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/memory.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/iterator.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/farray.hxx
@@ -132,13 +133,12 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/hash.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pair.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/random.hxx
 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/allocator_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/memory_traits.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/strlen.hxx
 )
 
 SET(FE_CORE_SOURCES
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/allocator_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory_resource.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/clock.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/hash.cpp

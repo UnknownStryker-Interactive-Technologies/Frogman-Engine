@@ -115,7 +115,7 @@ void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& 
 	}
 	catch (const std::exception& error_p)
 	{
-		FE_LOG(error_p.what());
+		std::cerr << error_p.what();
 		throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>(FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "Frogman Engine Header Tool: failed to parse the header file.\nSkipping...");
 	}
 }

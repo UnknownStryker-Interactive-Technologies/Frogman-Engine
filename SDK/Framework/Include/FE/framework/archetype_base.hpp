@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/reflection.hpp>
-#include <FE/framework/super_base.hpp>
 
 
 
@@ -25,15 +23,31 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-class archetype_base : public super_base
+class archetype_base
 {
 public:
-	archetype_base() noexcept;
-	virtual ~archetype_base() noexcept = default;
+	archetype_base() noexcept = default;
+	virtual ~archetype_base() noexcept = 0;
 
 protected:
-	virtual void on_construction() override;
-	virtual void on_destruction() override;
+	virtual void on_construction() = 0;
+	virtual void on_destruction() = 0;
+
+public:
+	template<typename T>
+	void attach_component() noexcept
+	{
+	}
+
+	template<typename T>
+	void dettach_component() noexcept
+	{
+	}
+
+	template<typename T>
+	void get_component() noexcept
+	{
+	}
 };
 
 END_NAMESPACE

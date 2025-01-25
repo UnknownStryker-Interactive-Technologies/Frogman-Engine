@@ -16,24 +16,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/reflection.hpp>
-#include <FE/framework/super_base.hpp>
-	
+
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
 
-class component_base : public super_base
+class component_base
 {
 public:
-	component_base() noexcept;
-	virtual ~component_base() noexcept = default;
+	component_base() noexcept = default;
+	virtual ~component_base() noexcept = 0;
 
-protected:
-	virtual void on_construction() override;
-	virtual void on_destruction() override;
+public:
+	template<typename T>
+	void subscribe_system() noexcept
+	{
+	}
+
+	template<typename T>
+	void unsubscribe_system() noexcept
+	{
+	}
 };
 
 END_NAMESPACE

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/private/allocator_base.hpp>
+#include <FE/memory.hpp>
 #include <FE/clock.hpp>
 
 
@@ -96,13 +96,6 @@ var::uint64 FE::request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO selec
 	#endif
 #endif
 }
-
-
-std::atomic_int64_t FE::internal::allocator_base::s_total_memory_util = 0;
-thread_local var::int64 FE::internal::allocator_base::tl_s_thread_local_memory_util = 0;
-
-std::atomic_int64_t FE::internal::allocator_base::s_total_memory_pool_util = 0;
-thread_local var::int64 FE::internal::allocator_base::tl_s_thread_local_memory_pool_util = 0;
 
 
 void* operator new(std::size_t bytes_p)

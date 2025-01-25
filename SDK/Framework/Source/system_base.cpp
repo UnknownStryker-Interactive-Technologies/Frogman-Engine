@@ -14,25 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/system_base.hpp>
-#include <FE/framework/framework.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
-
-system_base::system_base() noexcept
-{
-}
-
-void system_base::on_construction()
-{
-}
-
-void system_base::on_destruction()
-{
-}
 
 
 END_NAMESPACE

@@ -19,7 +19,7 @@ limitations under the License.
 #include <FE/algorithm/utility.hxx>
 #include <FE/pool/private/pool_common.hxx>
 #include <FE/iterator.hxx>
-#include <FE/memory.hxx>
+#include <FE/memory.hpp>
 
 #ifdef _FE_ON_X86_64_
     #ifdef _SSE2_

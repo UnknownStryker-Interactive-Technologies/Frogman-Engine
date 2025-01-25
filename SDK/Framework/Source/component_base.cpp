@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/component_base.hpp>
-#include <FE/framework/framework.hpp>
 
 
 
@@ -22,16 +21,5 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-component_base::component_base() noexcept
-{
-}
-
-void component_base::on_construction()
-{
-}
-
-void component_base::on_destruction()
-{
-}
 
 END_NAMESPACE

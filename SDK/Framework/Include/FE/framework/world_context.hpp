@@ -28,8 +28,8 @@ BEGIN_NAMESPACE(FE::framework)
 
 class world_context : public super_base
 {
-	FE_CLASS(world_context);
 	FE_CLASS_HAS_A_BASE(super_base);
+	FE_CLASS(world_context);
 
 public:
 	world_context() noexcept;

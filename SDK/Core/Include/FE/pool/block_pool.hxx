@@ -84,7 +84,7 @@ namespace internal::pool
 
 
 template<PoolPageCapacity PageCapacity, class Alignment>
-class pool<PoolType::_Block, PageCapacity, Alignment>
+class pool<PoolType::_Block, PageCapacity, Alignment> : public std::pmr::memory_resource
 {
     FE_STATIC_ASSERT(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -130,13 +130,30 @@ public:
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
 
-/* - Memory pool corruption detector - 
-1. unused bits are always 0.
-2. bits are set to 0 during the deallocate() routine.
-3. if anything else rather than 0 is found within the allocation target's bitset, then something went wrong.
-It is hard to tell which corrupted memory, but very sure to say that there was an illegal memory access operation.
--- This feature is enabled if _DEBUG_ is defined. --
-*/
+protected:
+    inline virtual void* do_allocate(_FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+    {
+        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
+        return this->template allocate<std::byte>();
+    }
+
+    inline virtual void do_deallocate(_FE_MAYBE_UNUSED_ void* ptr_p, _FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+    {
+        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
+        this->template deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
+    }
+
+    inline virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+    {
+        if (dynamic_cast<const pool*>(&other_p) == nullptr)
+        {
+            return false;
+        }
+
+        return this->operator==(dynamic_cast<const pool&>(other_p));
+    }
+
+public:
     template<typename U>
     U* allocate() noexcept
     {

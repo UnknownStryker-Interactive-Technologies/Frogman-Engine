@@ -15,7 +15,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 #include <FE/prerequisites.h>
 
 #include <FE/algorithm/string.hxx>
@@ -29,7 +28,7 @@ limitations under the License.
 #include <FE/type_traits.hxx>
 #include <FE/pair.hxx>
 
-#include <FE/framework/reflection/type_info.hpp>
+#include <FE/framework/type_info.hpp>
 
 // std
 #include <deque>

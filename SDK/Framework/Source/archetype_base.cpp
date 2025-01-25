@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/archetype_base.hpp>
-#include <FE/framework/framework.hpp>
 
 
 
@@ -22,16 +21,5 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-archetype_base::archetype_base() noexcept
-{
-}
-
-void archetype_base::on_construction()
-{
-}
-
-void archetype_base::on_destruction()
-{
-}
 
 END_NAMESPACE

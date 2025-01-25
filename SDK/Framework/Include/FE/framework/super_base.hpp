@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/framework/framework.hpp>
 #include <FE/framework/reflection.hpp>
 
 
@@ -23,18 +24,19 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
+
 /*
 The top class for all game objects in Frogman Engine.
 */
 class super_base
 {
 public:
-	super_base() noexcept;
-	virtual ~super_base() noexcept;
+	super_base() noexcept = default;
+	virtual ~super_base() noexcept = 0;
 
 protected:
-	virtual void on_construction();
-	virtual void on_destruction();
+	virtual void on_construction() = 0;
+	virtual void on_destruction() = 0;
 };
 
 END_NAMESPACE

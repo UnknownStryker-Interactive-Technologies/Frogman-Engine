@@ -28,6 +28,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE::framework)
 
+
 class game_state_base : public super_base
 {
 	FE_CLASS_HAS_A_BASE(super_base);

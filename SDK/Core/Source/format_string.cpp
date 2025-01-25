@@ -15,7 +15,7 @@ limitations under the License.
 */
 #include "FE/log/format_string.h"
 #include <FE/algorithm/utility.hxx>
-#include <FE/private/allocator_base.hpp>
+#include <FE/memory.hpp>
 
 
 // std::snprintf

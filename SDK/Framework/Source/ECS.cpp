@@ -33,19 +33,32 @@ ECS::~ECS() noexcept
 }
 
 ECS::ECS(FE::size max_concurrency_p) noexcept
-    : m_archetype_arena(max_concurrency_p, FE::framework::framework_base::get_engine().get_memory_resource()),
-	  m_component_arena(max_concurrency_p, FE::framework::framework_base::get_engine().get_memory_resource())
+    : m_arena(max_concurrency_p, FE::framework::framework_base::get_engine().get_memory_resource()),
+	  m_entity_table(1048576), m_component_table(1048576), m_system_table(1048576)
 {
 }
 
-FE::scalable_pool<FE::PoolPageCapacity::_256MB>& ECS::get_archetype_arena() noexcept
+
+std::pmr::vector< FE::pair<std::pmr::string, std::weak_ptr<archetype_base> >> ECS::list_known_entities() noexcept
 {
-	return this->m_archetype_arena[get_current_thread_id()];
+	return std::pmr::vector< FE::pair<std::pmr::string, std::weak_ptr<archetype_base> >>();
 }
 
-FE::scalable_pool<FE::PoolPageCapacity::_256MB>& ECS::get_component_arena() noexcept
+std::pmr::vector<FE::pair<std::pmr::string, std::weak_ptr<component_base>>> ECS::list_known_components() noexcept
 {
-	return this->m_component_arena[get_current_thread_id()];
+	return std::pmr::vector<FE::pair<std::pmr::string, std::weak_ptr<component_base>>>();
 }
+
+std::pmr::vector<std::pmr::string> ECS::list_known_systems() noexcept
+{
+	return std::pmr::vector<std::pmr::string>();
+}
+
+
+FE::scalable_pool<FE::PoolPageCapacity::_256MB>& ECS::get_arena() noexcept
+{
+	return this->m_arena[get_current_thread_id()];
+}
+
 
 END_NAMESPACE

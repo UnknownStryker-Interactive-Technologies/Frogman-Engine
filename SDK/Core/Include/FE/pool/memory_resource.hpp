@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/private/allocator_base.hpp>
+#include <FE/memory.hpp>
 #include <FE/pool/block_pool.hxx>
 #include <FE/pool/scalable_pool.hxx>
 
@@ -48,7 +48,7 @@ namespace internal
 The FE::memory_resource is a class template provides a memory resource that utilizes a bunch of pool allocators for efficient memory management
 inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 */
-class memory_resource : virtual public std::pmr::memory_resource, virtual public FE::internal::allocator_base
+class memory_resource : public std::pmr::memory_resource
 {
 	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::double_zmmword_size, FE::SIMD_auto_alignment> m_dzmmword_block_pool;
 	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::quad_zmmword_size, FE::SIMD_auto_alignment> m_qzmmword_block_pool;

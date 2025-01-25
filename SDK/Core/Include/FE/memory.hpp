@@ -1091,6 +1091,79 @@ _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size byte
 }
 
 
+
+
+#ifdef FE_ALIGNED_ALLOC
+#error FE_ALIGNED_ALLOC is a reserved Frogman Engine macro function.
+#endif
+#ifdef FE_ALIGNED_FREE
+#error FE_ALIGNED_FREE is a reserved Frogman Engine macro function.
+#endif
+#ifdef _FE_ON_WINDOWS_X86_64_
+#define FE_ALIGNED_ALLOC(size_p, alignment_p) ::_aligned_malloc(size_p, alignment_p)
+#define FE_ALIGNED_FREE(ptr_to_memory_p) ::_aligned_free(ptr_to_memory_p)
+#elif defined(_FE_ON_LINUX_X86_64_)
+#define FE_ALIGNED_ALLOC(size_p, alignment_p) _mm_malloc(size_p, alignment_p)
+#define FE_ALIGNED_FREE(ptr_to_memory_p) _mm_free(ptr_to_memory_p)
+#endif
+
+
+_FE_MAYBE_UNUSED_ constexpr var::uint64 invalid_memory_util_query = max_value<var::uint64>;
+
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_kb = 1024;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_mb = 1048576;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_gb = 1073741824;
+
+
+enum struct HEAP_MEMORY_UTIL_INFO : FE::uint8
+{
+	_TOTAL_VIRTUAL_MEMORY_SIZE = 0,
+	_TOTAL_VIRTUAL_MEMORY_UTIL = 1,
+
+	_THIS_PROCESS_VIRTUAL_MEMORY_UTIL = 2,
+
+	_TOTAL_PHYSICAL_MEMORY_SIZE = 3,
+	_TOTAL_PHYSICAL_MEMORY_UTIL = 4,
+
+	_THIS_PROCESS_PHYSICAL_MEMORY_UTIL = 5/*,
+
+	_LIBRARY_TOTAL_HEAP_UTIL_SIZE = 6,
+
+	_LIBRARY_HEAP_UTIL_SIZE_BY_THREAD_ID = 7,
+	_LIBRARY_HEAP_UTIL_SIZE_BY_TYPE = 8*/
+};
+
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept
+{
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_kb);
+}
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_megabytes(uint64 bytes_p) noexcept
+{
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_mb);
+}
+_FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexcept
+{
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_gb);
+}
+
+var::uint64 request_app_memory_utilization(const HEAP_MEMORY_UTIL_INFO select_data_p) noexcept;
+
+/*
+The operator new function allocates a specified number of bytes of memory
+aligned to the size of the CPU's L1 cache line.
+*/
+void* ::operator new(std::size_t bytes_p);
+void* ::operator new[](std::size_t bytes_p);
+
+void ::operator delete(void* ptr_p) noexcept;
+void ::operator delete[](void* ptr_p) noexcept;
+
+void ::operator delete(void* ptr_p, std::size_t size_p) noexcept;
+void ::operator delete[](void* ptr_p, std::size_t size_p) noexcept;
+
+
+
+
 END_NAMESPACE
 
 #undef __FE_DIVIDE_BY_2

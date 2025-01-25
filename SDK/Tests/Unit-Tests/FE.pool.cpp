@@ -12,7 +12,7 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/algorithm/utility.hxx>
-#include <FE/pool/block_pool_allocator.hxx>
+#include <FE/pool/block_pool.hxx>
 #include <FE/pool/memory_resource.hpp>
 
 
