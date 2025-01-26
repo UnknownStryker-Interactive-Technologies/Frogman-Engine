@@ -53,6 +53,11 @@ namespace internal::pool
         var::byte* _page_iterator = m_memory.data();
         var::byte* const _end = m_memory.data() + m_memory.size();
 
+    public:
+		chunk() noexcept = default;
+		~chunk() noexcept = default;
+
+    public:
         _FE_FORCE_INLINE_ boolean is_out_of_memory() const noexcept
         {
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
@@ -96,31 +101,44 @@ public:
 
     static constexpr size fixed_block_size_in_bytes = Alignment::size;
     static constexpr uint64 possible_address_count = chunk_type::possible_address_count;
-    static constexpr uint64 maximum_page_count = 7;
+    static constexpr uint64 maximum_page_count = 6;
 
 private:
-    using page_pointer = std::unique_ptr<chunk_type>;
+    using page_pointer = std::shared_ptr<chunk_type>;
 
     page_pointer m_memory_pool[maximum_page_count];
+    std::pmr::memory_resource* m_upstream_resource;
     var::uint32 m_page_count;
 
 public:
-    pool() noexcept : m_memory_pool{}, m_page_count() {};
-    ~pool() noexcept = default;
-
-    pool(pool&& other_p) noexcept
+    pool() noexcept = default;
+    pool(std::pmr::memory_resource* const upstream_resource_p) noexcept 
+        : m_memory_pool{}, m_upstream_resource(upstream_resource_p), m_page_count() 
     {
+		FE_ASSERT(upstream_resource_p != nullptr, "Assertion failed: the upstream_resource_p must not be a nullptr.");
+    }
+
+    virtual ~pool() noexcept override = default;
+
+    _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept
+		: m_upstream_resource(other_p.m_upstream_resource), m_page_count(other_p.m_page_count)
+	{
 		for (var::size i = 0; i < maximum_page_count; ++i)
 		{
-			this->m_memory_pool[i] = std::move( other_p.m_memory_pool[i] );
+			this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
 		}
-    }
+        other_p.m_page_count = 0;
+	}
 
     _FE_FORCE_INLINE_ pool& operator=(pool&& other_p) noexcept
     {
+        this->m_upstream_resource = other_p.m_upstream_resource;
+        this->m_page_count = other_p.m_page_count;
+        other_p.m_page_count = 0;
+
         for (var::size i = 0; i < maximum_page_count; ++i)
         {
-            this->m_memory_pool[i] = std::move( other_p.m_memory_pool[i] );
+            this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
         }
         return *this;
     }
@@ -164,7 +182,7 @@ public:
         {
 			if (this->m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                this->m_memory_pool[i] = std::make_unique<chunk_type>();
+                this->m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
                 ++this->m_page_count;
 
                 // Swap the new page to the front of the array for faster access.
@@ -239,7 +257,7 @@ public:
 
         for (; this->m_page_count < chunk_count_p; ++m_page_count)
         {
-            this->m_memory_pool[m_page_count] = std::make_unique<chunk_type>();
+            this->m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
         }
     }
 

@@ -23,6 +23,8 @@ limitations under the License.
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <memory>
+#include <memory_resource>
 #include <typeinfo>
 #include <typeindex>
 #include <type_traits>

@@ -109,7 +109,7 @@ namespace internal::pool
         alignas(16) block_info _free_list[free_list_capacity];
 
     private:
-		var::boolean m_is_page_binary_searchable = false;
+		var::boolean m_is_page_heapified = false;
         var::int64 m_free_list_size = 0;
 
     public:
@@ -118,8 +118,12 @@ namespace internal::pool
         var::byte* const _end = m_memory.data() + m_memory.size();
 
     public:
-        _FE_FORCE_INLINE_ FE::boolean is_page_binary_searchable() const noexcept { return this->m_is_page_binary_searchable; }
-        _FE_FORCE_INLINE_ void set_page_binary_searchable() noexcept { this->m_is_page_binary_searchable = true; }
+        chunk() noexcept = default;
+        ~chunk() noexcept = default;
+
+    public:
+        _FE_FORCE_INLINE_ FE::boolean is_page_heapified() const noexcept { return this->m_is_page_heapified; }
+        _FE_FORCE_INLINE_ void set_page_heapified() noexcept { this->m_is_page_heapified = true; }
 
         void add_to_the_free_list(const block_info& block_p) noexcept
         {
@@ -130,7 +134,7 @@ namespace internal::pool
 #endif
             ++(this->m_free_list_size);
             
-            if (this->m_is_page_binary_searchable == true)
+            if (this->m_is_page_heapified == true)
             {
 				std::push_heap(static_cast<free_list_iterator>(_free_list), static_cast<free_list_iterator>(_free_list) + this->m_free_list_size, internal::pool::less_than{});
             }
@@ -139,7 +143,7 @@ namespace internal::pool
 		FE::boolean retrieve_from_the_free_list(internal::pool::block_info& out_alloc_result_p, FE::size requested_bytes_p) noexcept
 		{
             FE_ASSERT((requested_bytes_p % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &requested_bytes_p, &Alignment::size);
-            FE_ASSERT(this->m_is_page_binary_searchable == true, "Assertion Failure: The page is not binary searchable.");
+            FE_ASSERT(this->m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
             
             if (this->m_free_list_size == 0)
             {
@@ -221,37 +225,51 @@ public:
     constexpr static FE::size possible_address_count = (page_capacity / Alignment::size);
     constexpr static FE::size free_list_capacity = chunk_type::free_list_capacity;
 
-    constexpr static FE::size maximum_page_count = 7;
+    constexpr static FE::size maximum_page_count = 6;
 
 	constexpr static FE::size auto_defragmentation_denominator = 2;
     constexpr static FE::size auto_defragmentation_point = possible_address_count / auto_defragmentation_denominator;
 
 private:
-    using page_pointer = std::unique_ptr<chunk_type>;
+    using page_pointer = std::shared_ptr<chunk_type>;
 
     page_pointer m_memory_pool[maximum_page_count];
+    std::pmr::memory_resource* m_upstream_resource;
     var::uint32 m_page_count;
 
 public:
-    pool() noexcept : m_memory_pool{}, m_page_count() {};
+    pool() noexcept = default;
+    pool(std::pmr::memory_resource* const upstream_resource_p) noexcept 
+        : m_memory_pool{}, m_upstream_resource(upstream_resource_p), m_page_count() 
+    {
+        FE_ASSERT(upstream_resource_p != nullptr, "Assertion failed: the upstream_resource_p must not be a nullptr.");
+    }
+
     virtual ~pool() noexcept override = default;
 
     _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept
-    {
-        for (var::size i = 0; i < maximum_page_count; ++i)
-        {
-            this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
-        }
-    }
+        : m_upstream_resource(other_p.m_upstream_resource), m_page_count(other_p.m_page_count)
+	{
+		for (var::size i = 0; i < maximum_page_count; ++i)
+		{
+			this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+		}
+        other_p.m_page_count = 0;
+	}
 
     _FE_FORCE_INLINE_ pool& operator=(pool&& other_p) noexcept
-	{
+    {
+        this->m_upstream_resource = other_p.m_upstream_resource;
+        this->m_page_count = other_p.m_page_count;
+        other_p.m_page_count = 0;
+
         for (var::size i = 0; i < maximum_page_count; ++i)
         {
             this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
         }
-		return *this;
-	}
+        this->m_page_count = other_p.m_page_count;
+        return *this;
+    }
 
 	_FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return this->m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
 
@@ -271,7 +289,7 @@ public:
         {
             if (this->m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                this->m_memory_pool[i] = std::make_unique<chunk_type>();
+                this->m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>( (m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource );
                 ++this->m_page_count;
 
 				// Swap the new page to the front of the array for faster access.
@@ -365,7 +383,7 @@ public:
 
         for (; this->m_page_count < chunk_count_p; ++m_page_count)
         {
-            this->m_memory_pool[m_page_count] = std::make_unique<chunk_type>();
+            this->m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
         }
     }
 
@@ -426,7 +444,7 @@ private:
     static FE::boolean __try_allocation_from_page(page_pointer& page_p, internal::pool::block_info& out_result_p, FE::size bytes_p) noexcept
     {
         FE_ASSERT((bytes_p % Alignment::size) == 0, "Critical Error in FE.pool.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &bytes_p, &Alignment::size);
-        if (page_p->is_page_binary_searchable() == true)
+        if (page_p->is_page_heapified() == true)
         {
 			if(page_p->retrieve_from_the_free_list(out_result_p, bytes_p) == _FE_FAILED_)
             {
@@ -518,7 +536,7 @@ private:
 		// Heapify the free list. Time complexity: O(n)
 		std::make_heap(l_binary_searchable_range._first, l_binary_searchable_range._second, internal::pool::less_than{}); // To do: consider parallelizing the heapification.
 
-		page_p->set_page_binary_searchable(); // Switch the allocation strategy to binary search.
+		page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
     }
 };
 
