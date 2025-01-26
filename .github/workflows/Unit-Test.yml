@@ -36,4 +36,3 @@ jobs:
         chmod +x Test-App/RelWithDeb/FE_UNIT_TEST.exe
         ./Test-App/RelWithDeb/FE_UNIT_TEST.exe
 
-
