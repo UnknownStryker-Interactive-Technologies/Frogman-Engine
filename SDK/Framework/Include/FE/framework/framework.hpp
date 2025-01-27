@@ -90,7 +90,7 @@ protected:
 	std::unique_ptr<class FE::memory_resource[]> m_memory;
 	reflection::method_map m_method_reflection;
 	reflection::property_map m_property_reflection;
-	framework::task_scheduler m_cpu;
+	framework::task_scheduler m_cpu; // this may change!
 
 public:
 	framework_base(FE::int32 argc_p, FE::ASCII** argv_p, FE::uint32 concurrency_decrement_value_p = 1) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
@@ -129,12 +129,16 @@ class game_instance;
 
 class game_framework_base : public framework_base
 {
-	std::unique_ptr<game_instance> m_game_instance;
 	framework::ECS m_entity_component_system;
+	std::unique_ptr<game_instance> m_game_instance;
 
 public:
 	game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p);
 	~game_framework_base();
+
+	static game_framework_base& get_game_engine() noexcept;
+
+	framework::ECS& get_entity_component_system() noexcept;
 
 private:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;

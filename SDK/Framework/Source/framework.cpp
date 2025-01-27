@@ -221,8 +221,8 @@ std::function<framework_base* (FE::int32, FE::ASCII**)>& framework_base::allocat
 
 game_framework_base::game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p)
 	: framework_base(argc_p, argv_p, 2), /* Exclude main thread and the render thread from counting the number of the task scheduler threads. */ 
-	m_entity_component_system(m_program_options.get_max_concurrency()),
-	m_game_instance()
+	  m_entity_component_system(),
+	  m_game_instance()
 {
 
 }
@@ -230,6 +230,18 @@ game_framework_base::game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p)
 game_framework_base::~game_framework_base()
 {
 
+}
+
+
+game_framework_base& game_framework_base::get_game_engine() noexcept
+{
+	static game_framework_base& l_s_game_engine = dynamic_cast<game_framework_base&>( framework_base::get_engine() );
+	return l_s_game_engine;
+}
+
+framework::ECS& game_framework_base::get_entity_component_system() noexcept
+{
+	return this->m_entity_component_system;
 }
 
 

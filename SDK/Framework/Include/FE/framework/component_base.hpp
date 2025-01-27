@@ -27,7 +27,7 @@ class component_base
 {
 public:
 	component_base() noexcept = default;
-	virtual ~component_base() noexcept = 0;
+	virtual ~component_base() noexcept = default;
 
 public:
 	template<typename T>

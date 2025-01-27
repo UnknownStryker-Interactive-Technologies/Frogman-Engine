@@ -219,9 +219,10 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 
 	class_node l_node;
 
+	auto l_searchable_range_end = std::find_if(out_token_iterator_p, end_p, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_RightCurlyBracket; });
 	// Check if the class has a base class, and it is reflective.
 	if ((out_token_iterator_p->_vocabulary == Vocabulary::_Colon) &&
-		(std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineBaseClassReflectionMacro; }) != std::next(out_token_iterator_p, 5)))
+		(std::find_if(out_token_iterator_p, l_searchable_range_end, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineBaseClassReflectionMacro; }) != l_searchable_range_end))
 	{
 		++out_token_iterator_p; // skip the ':'.
 		l_node._base_class_reflection_macro = std::make_unique<frogman_engine_class_has_a_base_macro_node>();
@@ -250,8 +251,9 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 		THROW_CPP_SYNTEX_ERROR((out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket), "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'class Identifier {'.");
 	}
 
-	auto l_class_reflection_macro_search_result = std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineClassReflectionMacro; });
-	if (l_class_reflection_macro_search_result != std::next(out_token_iterator_p, 5))
+	l_searchable_range_end = std::find_if(out_token_iterator_p, end_p, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_RightCurlyBracket; });
+	auto l_class_reflection_macro_search_result = std::find_if(out_token_iterator_p, l_searchable_range_end, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineClassReflectionMacro; });
+	if (l_class_reflection_macro_search_result != l_searchable_range_end)
 	{
 		l_node._class_reflection_macro = std::make_unique<frogman_engine_class_macro_node>();
 		l_node._class_reflection_macro->_target_class_name = parent_namespace_p;
@@ -317,8 +319,9 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 
 	struct_node l_node;
 
-	auto l_struct_reflection_macro_search_result = std::find_if(out_token_iterator_p, std::next(out_token_iterator_p, 5), [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineStructReflectionMacro; });
-	if (l_struct_reflection_macro_search_result != std::next(out_token_iterator_p, 5))
+	auto l_searchable_range_end = std::find_if(out_token_iterator_p, end_p, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_RightCurlyBracket; });
+	auto l_struct_reflection_macro_search_result = std::find_if(out_token_iterator_p, l_searchable_range_end, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineStructReflectionMacro; });
+	if (l_struct_reflection_macro_search_result != l_searchable_range_end)
 	{
 		l_node._struct_reflection_macro = std::make_unique<frogman_engine_struct_macro_node>();
 		l_node._struct_reflection_macro->_target_struct_name = parent_namespace_p;

@@ -50,10 +50,10 @@ inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 */
 class memory_resource : public std::pmr::memory_resource
 {
-	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::double_zmmword_size, FE::SIMD_auto_alignment> m_dzmmword_block_pool;
-	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::quad_zmmword_size, FE::SIMD_auto_alignment> m_qzmmword_block_pool;
-	FE::block_pool<FE::PoolPageCapacity::_64MB, internal::octa_zmmword_size, FE::SIMD_auto_alignment> m_ozmmword_block_pool;
-	FE::scalable_pool<FE::PoolPageCapacity::_64MB, FE::SIMD_auto_alignment> m_scalable_pool;
+	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::double_zmmword_size, FE::SIMD_auto_alignment> m_dzmmword_block_pool;
+	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::quad_zmmword_size, FE::SIMD_auto_alignment> m_qzmmword_block_pool;
+	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::octa_zmmword_size, FE::SIMD_auto_alignment> m_ozmmword_block_pool;
+	FE::scalable_pool<FE::PoolPageCapacity::_16MB, FE::SIMD_auto_alignment> m_scalable_pool;
 
 public:
 	memory_resource() noexcept = default;

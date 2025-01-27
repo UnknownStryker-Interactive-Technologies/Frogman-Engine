@@ -25,39 +25,57 @@ BEGIN_NAMESPACE(FE::framework)
 
 
 ECS::ECS() noexcept
+    : m_upstream_arena(),
+	  m_entity_arena(&m_upstream_arena),
+	  m_component_arena(&m_upstream_arena),
+	  m_system_arena(&m_upstream_arena),
+	  m_entity_table(), m_component_table(), m_system_table()
 {
+	constexpr FE::size l_max_entities = 1048576;
+	m_entity_table.reserve(l_max_entities);
+	m_component_table.reserve(l_max_entities);
+	m_system_table.reserve(l_max_entities);
 }
 
 ECS::~ECS() noexcept
 {
 }
 
-ECS::ECS(FE::size max_concurrency_p) noexcept
-    : m_arena(max_concurrency_p, FE::framework::framework_base::get_engine().get_memory_resource()),
-	  m_entity_table(1048576), m_component_table(1048576), m_system_table(1048576)
+
+std::pmr::vector< FE::pair<std::string_view, std::weak_ptr<archetype_base> >> ECS::list_known_entities() noexcept
 {
+	std::pmr::vector< FE::pair<std::string_view, std::weak_ptr<archetype_base> >> l_list(FE::framework::framework_base::get_engine().get_memory_resource());
+	l_list.reserve( m_entity_table.size() );
+	for (auto entity = m_entity_table.begin(); entity != m_entity_table.end(); ++entity)
+	{
+		l_list.emplace_back(entity->first, entity->second);
+	}
+	return l_list;
 }
 
-
-std::pmr::vector< FE::pair<std::pmr::string, std::weak_ptr<archetype_base> >> ECS::list_known_entities() noexcept
+std::pmr::vector<FE::pair<std::string_view, std::weak_ptr<component_base>>> ECS::list_known_components() noexcept
 {
-	return std::pmr::vector< FE::pair<std::pmr::string, std::weak_ptr<archetype_base> >>();
+	std::pmr::vector<FE::pair<std::string_view, std::weak_ptr<component_base>>> l_list(FE::framework::framework_base::get_engine().get_memory_resource());
+	l_list.reserve( m_component_table.size() );
+	for (auto archetype = m_component_table.begin(); archetype != m_component_table.end(); ++archetype)
+	{
+		for (auto component = archetype->second.begin(); component != archetype->second.end(); ++component)
+		{
+			l_list.emplace_back(component->first, component->second);
+		}
+	}
+	return l_list;
 }
 
-std::pmr::vector<FE::pair<std::pmr::string, std::weak_ptr<component_base>>> ECS::list_known_components() noexcept
+std::pmr::vector<std::string_view> ECS::list_known_systems() noexcept
 {
-	return std::pmr::vector<FE::pair<std::pmr::string, std::weak_ptr<component_base>>>();
-}
-
-std::pmr::vector<std::pmr::string> ECS::list_known_systems() noexcept
-{
-	return std::pmr::vector<std::pmr::string>();
-}
-
-
-FE::scalable_pool<FE::PoolPageCapacity::_256MB>& ECS::get_arena() noexcept
-{
-	return this->m_arena[get_current_thread_id()];
+	std::pmr::vector<std::string_view> l_list(FE::framework::framework_base::get_engine().get_memory_resource());
+	l_list.reserve( m_system_table.size() );
+	for (auto system = m_system_table.begin(); system != m_system_table.end(); ++system)
+	{
+		l_list.emplace_back(system->first);
+	}
+	return l_list;
 }
 
 

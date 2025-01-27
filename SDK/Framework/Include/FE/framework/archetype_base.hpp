@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/framework/ECS.hpp>
+#include <FE/framework/framework.hpp>
 
 
 
@@ -23,30 +25,36 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
+class ECS;
+
+
 class archetype_base
 {
 public:
 	archetype_base() noexcept = default;
-	virtual ~archetype_base() noexcept = 0;
+	virtual ~archetype_base() noexcept = default;
 
 protected:
 	virtual void on_construction() = 0;
 	virtual void on_destruction() = 0;
 
 public:
-	template<typename T>
-	void attach_component() noexcept
+	template <class Component, class Archetype>
+	_FE_FORCE_INLINE_ component_ptr<Component> attach_component_to(Archetype* const this_p) noexcept
 	{
+		return game_framework_base::get_game_engine().get_entity_component_system().request_component_attachment<Archetype, Component>(this_p);
 	}
 
-	template<typename T>
-	void dettach_component() noexcept
+	template <class Component, class Archetype>
+	_FE_FORCE_INLINE_ void detach_component_of(Archetype* const this_p) noexcept
 	{
+		game_framework_base::get_game_engine().get_entity_component_system().request_component_detachment<Archetype, Component>(this_p);
 	}
 
-	template<typename T>
-	void get_component() noexcept
+	template <class Component, class Archetype>
+	_FE_FORCE_INLINE_ void get_component_of(Archetype* const this_p) noexcept
 	{
+		game_framework_base::get_game_engine().get_entity_component_system().request_component_retrieval<Archetype, Component>(this_p);
 	}
 };
 

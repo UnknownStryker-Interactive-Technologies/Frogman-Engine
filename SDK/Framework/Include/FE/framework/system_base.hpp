@@ -29,11 +29,11 @@ class component_base;
 class system_base
 {
 protected:
-	std::weak_ptr<system_base> m_dependancy;
+	std::weak_ptr<system_base> m_dependancies[7];
 
 public:
 	system_base() noexcept = default;
-	virtual ~system_base() noexcept = 0;
+	virtual ~system_base() noexcept = default;
 
 	virtual void operator()(component_base* const component_p) = 0;
 };

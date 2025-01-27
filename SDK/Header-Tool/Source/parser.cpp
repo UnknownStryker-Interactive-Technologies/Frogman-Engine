@@ -29,6 +29,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__parse_
 
 	auto l_end = file_p.c_str() + file_p.size();
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
+	l_list.push_back(l_token); // Begin of token
 
 	for (auto iterator = FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 	{
