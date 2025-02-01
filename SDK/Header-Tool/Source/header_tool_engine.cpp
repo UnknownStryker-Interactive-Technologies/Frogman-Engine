@@ -71,6 +71,7 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
+	tf::Executor l_executor;
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = this->m_mapped_header_files.size();
 	std::mutex l_log_lock;
@@ -100,7 +101,7 @@ FE::int32 header_tool_engine::run()
 		}
 
 		// Now, run it.
-		get_task_scheduler().access_executor().run(l_taskflow).wait();
+		l_executor.run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
 
 		if (0 != l_exit_code)
@@ -170,7 +171,7 @@ FE::int32 header_tool_engine::run()
 		}
 
 		// Now, run it.
-		get_task_scheduler().access_executor().run(l_taskflow).wait();
+		l_executor.run(l_taskflow).wait();
 		// The number of threads can be scaled via the '-max-concurrency=n' option.
 
 		if (0 != l_exit_code)

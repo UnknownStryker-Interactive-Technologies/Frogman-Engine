@@ -146,6 +146,7 @@ logging a formatted message along with the file name and line number.
 if(expression) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+	FE_DEBUG_BREAK(); \
 	std::abort(); \
 }
 #else
@@ -176,6 +177,7 @@ FE_ASSERT is a macro that checks a given expression and logs a fatal error messa
 if(!(expression)) _FE_UNLIKELY_ \
 { \
 	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+	FE_DEBUG_BREAK(); \
 	std::abort(); \
 }
 #else

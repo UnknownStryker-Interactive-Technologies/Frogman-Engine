@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.25.0...3.31.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.25.0...3.31.5)
 # Copyright © 2024 to present UNKNOWN STRYKER. All Rights Reserved.
 PROJECT(FrogmanEngineTemplate
         VERSION 0.0

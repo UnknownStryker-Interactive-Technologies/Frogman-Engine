@@ -63,7 +63,7 @@ struct token
 };
 
 
-
+// TO DO: consider intergrating LLVM clang lexer. -opt-clang-lexer
 
 // sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp
 //  C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;

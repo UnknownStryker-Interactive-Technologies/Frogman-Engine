@@ -141,7 +141,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	}
 	l_generated_code += L"\nvoid load_reflection_data()\n{\n";
 
-	constexpr FE::wchar* l_reflexpr_frame = L"    ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(\"";
+	constexpr FE::wchar* l_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(\"";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
 		for (const std::pmr::wstring& identifier : header_file._class_and_struct_identifiers)

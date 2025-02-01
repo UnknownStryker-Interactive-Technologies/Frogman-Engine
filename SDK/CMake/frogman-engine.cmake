@@ -17,60 +17,66 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-h
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/taskflow-3.8.0/taskflow)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include)
 
 
 
 
-SET(FE_FRAMEWORK_HEADER
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/renderer.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/task.hpp
+SET(FE_HEADERS
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/engine.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/ECS.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/renderer.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/archetype_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/component_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/system_base.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_instance_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_mode_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_state_base.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world_context.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/smart_ptr.hxx
 )
-SOURCE_GROUP("Framework" FILES ${FE_FRAMEWORK_HEADER})
+
+SET(FE_SOURCES
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/engine.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/ECS.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/renderer.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/archetype_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/component_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/system_base.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_instance_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_mode_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_state_base.cpp 
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/world.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/world_context.cpp
+)
+
+
+
+
+SET(FE_FRAMEWORK_HEADERS
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
+)
+SOURCE_GROUP("FE.Framework" FILES ${FE_FRAMEWORK_HEADER})
 
 SET(FE_FRAMEWORK_REFLECTION
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/type_info.hpp
 )
-SOURCE_GROUP("Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
-
-SET(FE_FRAMEWORK_OBJECT_HIERARCHY 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/super_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_instance.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_mode_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game_state_base.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world_context.hpp
-)
-SOURCE_GROUP("Object" FILES ${FE_FRAMEWORK_OBJECT_HIERARCHY})
-
-
+SOURCE_GROUP("FE.Framework.Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
 
 
 SET(FE_FRAMEWORK_SOURCES 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/renderer.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/task.cpp
-
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/thread_id.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/super_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/system_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_instance.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_mode_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game_state_base.cpp 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world_context.cpp
 )
 
 
@@ -82,8 +88,7 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/utility.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/math.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/math.cpp
 )
-
-
+SOURCE_GROUP("FE.Algorithm" FILES ${FE_ALGORITHM_HEADERS})
 
 
 SET(FE_LOG_HEADERS
@@ -91,13 +96,12 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/format_string.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/log.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/logger.hpp
 )
+SOURCE_GROUP("FE.Log" FILES ${FE_LOG_HEADERS})
 
 SET(FE_LOG_SOURCES
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/format_string.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/logger.cpp
 )
-
-
 
 
 SET(FE_POOL_HEADERS
@@ -106,11 +110,13 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/memory_resource.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
 )
-
-
+SOURCE_GROUP("FE.Pool" FILES ${FE_POOL_HEADERS})
 
 
 SET(FE_CORE_HEADERS
+${FE_ALGORITHM_HEADERS}
+${FE_LOG_HEADERS}
+${FE_POOL_HEADERS}
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/definitions.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/prerequisites.h
 
@@ -138,13 +144,12 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/strlen.hxx
 )
 
 SET(FE_CORE_SOURCES
+${FE_LOG_SOURCES}
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory_resource.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/clock.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/hash.cpp
 )
-
-
 
 
 SET(FE_MISC_HEADERS
@@ -153,6 +158,7 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/define_max_min.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/suppress_warnings.h
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/undefine_max_min.h
 )
+SOURCE_GROUP("FE.Misc" FILES ${FE_MISC_HEADERS})
 
 
 
@@ -213,6 +219,13 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
         $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/RelWithDebInfo/FE.Framework.lib>
         $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/Release/FE.Framework.lib>
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/MinSizeRel/FE.Framework.lib>
+    )
+
+    SET(FE_ENGINE
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/Debug/FE.Engine.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/RelWithDebInfo/FE.Engine.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/Release/FE.Engine.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/MinSizeRel/FE.Engine.lib>
     )
 
 ENDIF()
@@ -294,4 +307,5 @@ ADD_EXECUTABLE(${TARGET_PROJECT_NAME} ${ARGN} ${CMAKE_CURRENT_SOURCE_DIR}/genera
 ENDFUNCTION()
 
 
-SET(FROGMAN_ENGINE_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${GLM} ${GLFW} ${IMGUI} ${FE_CORE} ${FE_FRAMEWORK})
+SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK})
+SET(FROGMAN_ENGINE_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${GLFW} ${IMGUI} ${FE_CORE} ${FE_FRAMEWORK} ${FE_ENGINE})

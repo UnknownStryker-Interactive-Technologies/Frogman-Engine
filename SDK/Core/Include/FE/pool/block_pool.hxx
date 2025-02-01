@@ -111,7 +111,9 @@ private:
     var::uint32 m_page_count;
 
 public:
-    pool() noexcept = default;
+    pool() noexcept
+		: m_memory_pool{}, m_upstream_resource(std::pmr::get_default_resource()), m_page_count() {}
+
     pool(std::pmr::memory_resource* const upstream_resource_p) noexcept 
         : m_memory_pool{}, m_upstream_resource(upstream_resource_p), m_page_count() 
     {

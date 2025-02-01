@@ -2,9 +2,9 @@
 #include <FE/framework/reflection/private/load_reflection_data.h> 
 #include <FE/framework/reflection.hpp> 
 #include <FE/framework/framework.hpp> 
-#include <C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/FE.framework.ECS.hpp>
+#include <C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/FE.ECS.hpp>
 
 void load_reflection_data()
 {
-    ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::player()", &::FE::framework::reflection::construct_object<::player>); 
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::player()", &::FE::framework::reflection::construct_object<::player>); 
 }

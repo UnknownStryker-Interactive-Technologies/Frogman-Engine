@@ -22,12 +22,6 @@ limitations under the License.
 #include <functional>
 
 
-#ifdef FROGMAN_ENGINE
-	#error Frogman Engine Prohibits macroizing the keyword "FROGMAN_ENGINE()".
-#else                                                                                                              // The name below does not follow the naming convention since it is considered hidden from users.
-	#define FROGMAN_ENGINE() static ::std::function<::FE::framework::framework_base* (FE::int32, FE::ASCII**)> FrogmanEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::ASCII** argv_p) { return new ::FE::framework::game_framework_base(argc_p, argv_p); } );
-#endif
-
 #ifdef CUSTOM_ENGINE
     #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
@@ -35,9 +29,8 @@ limitations under the License.
 #endif
 #include <FE/pool/memory_resource.hpp>
 
-#include <FE/framework/ECS.hpp>
 #include <FE/framework/reflection.hpp>
-#include <FE/framework/task.hpp>
+#include <FE/framework/thread_id.hpp>
 
 // boost::function
 #include <boost/functional.hpp>
@@ -90,19 +83,17 @@ protected:
 	std::unique_ptr<class FE::memory_resource[]> m_memory;
 	reflection::method_map m_method_reflection;
 	reflection::property_map m_property_reflection;
-	framework::task_scheduler m_cpu; // this may change!
 
 public:
-	framework_base(FE::int32 argc_p, FE::ASCII** argv_p, FE::uint32 concurrency_decrement_value_p = 1) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
+	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
 	virtual ~framework_base() noexcept;
 
 	static void request_restart() noexcept;
-	static framework_base& get_engine() noexcept;
+	static framework_base& get_framework() noexcept;
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
 	reflection::method_map& get_method_reflection() noexcept;
 	reflection::property_map& get_property_reflection() noexcept;
-	framework::task_scheduler& get_task_scheduler() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);
@@ -122,28 +113,6 @@ public:
 	framework_base(framework_base&&) = delete;
 	framework_base& operator=(const framework_base&) = delete;
 	framework_base& operator=(framework_base&&) = delete;
-};
-
-
-class game_instance;
-
-class game_framework_base : public framework_base
-{
-	framework::ECS m_entity_component_system;
-	std::unique_ptr<game_instance> m_game_instance;
-
-public:
-	game_framework_base(FE::int32 argc_p, FE::ASCII** argv_p);
-	~game_framework_base();
-
-	static game_framework_base& get_game_engine() noexcept;
-
-	framework::ECS& get_entity_component_system() noexcept;
-
-private:
-	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
-	virtual FE::int32 run() override;
-	virtual FE::int32 shutdown() override;
 };
 
 

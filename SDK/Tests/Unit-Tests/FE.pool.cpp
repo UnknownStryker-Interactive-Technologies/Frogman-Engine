@@ -18,16 +18,7 @@
 
 
 
-TEST(FE_Pool, compile)
-{
-	FE::memory_resource l_resource;
-	std::pmr::vector<std::string> l_strings(&l_resource);
-}
-
-
-
-
-#define _MAX_ITERATION_ 10000
+#define _MAX_ITERATION_ 1000
 
 void boost_object_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {

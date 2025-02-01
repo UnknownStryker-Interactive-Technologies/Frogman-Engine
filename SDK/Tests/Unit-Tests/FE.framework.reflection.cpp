@@ -84,10 +84,10 @@ TEST(reflection, POD_serialization)
 	l_pod._b = 2.0f;
 	l_pod._c = 3;
 
-	FE::framework::framework_base::get_engine().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_pod);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_pod);
 
 	plain_old_data l_new_pod;
-	FE::framework::framework_base::get_engine().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_new_pod);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_new_pod);
 
 	EXPECT_EQ(l_pod._a, l_new_pod._a);
 	EXPECT_EQ(l_pod._b, l_new_pod._b);
@@ -99,10 +99,10 @@ TEST(reflection, object_with_string_serialization)
 	object_with_string l_str;
 	l_str._a = "Hello World";
 
-	FE::framework::framework_base::get_engine().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_str);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_str);
 
 	object_with_string l_new_str;
-	FE::framework::framework_base::get_engine().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_str);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_str);
 
 	EXPECT_STREQ(l_str._a.data(), l_new_str._a.data());
 }
@@ -113,10 +113,10 @@ TEST(reflection, object_with_vector_serialization)
 	l_strs._a.push_back("Hello World");
 	l_strs._a.push_back("Bye World");
 
-	FE::framework::framework_base::get_engine().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_strs);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_strs);
 
 	object_with_vector l_new_strs;
-	FE::framework::framework_base::get_engine().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_strs);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_strs);
 
 	EXPECT_STREQ(l_strs._a[0].data(), l_new_strs._a[0].data());
 	EXPECT_STREQ(l_strs._a[1].data(), l_new_strs._a[1].data());
@@ -126,12 +126,12 @@ TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
 	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
-	auto l_function_pointer = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* class object::get_text(void) const");
+	auto l_function_pointer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve("FE::ASCII* class object::get_text(void) const");
 	FE::ASCII* l_msg;
 	(*l_function_pointer)(&l_object, &l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 
-	auto l_greeter = FE::framework::framework_base::get_engine().get_method_reflection().retrieve("FE::ASCII* class object::greet(void)");
+	auto l_greeter = FE::framework::framework_base::get_framework().get_method_reflection().retrieve("FE::ASCII* class object::greet(void)");
 	(*l_greeter)(&l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Hello, reflection system!");
 }
@@ -139,7 +139,7 @@ TEST(reflection, method_call)
 TEST(reflection, property)
 {
 	object l_object;
-	auto l_obj_mem_layout = FE::framework::framework_base::get_engine().get_property_reflection().get_instance_layout<object>();
+	auto l_obj_mem_layout = FE::framework::framework_base::get_framework().get_property_reflection().get_instance_layout<object>();
 	EXPECT_TRUE(l_obj_mem_layout != std::nullopt);
 
 	std::string* const l_property = l_obj_mem_layout->get_property_of<std::string>(l_object, "m_text");

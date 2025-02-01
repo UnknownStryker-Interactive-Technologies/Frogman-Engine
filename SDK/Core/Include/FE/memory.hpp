@@ -152,10 +152,453 @@ limitations under the License.
 	#endif
 #endif
 
+// For FE::unique_ptr
+#include <memory_resource>
+#include <type_traits>
+#include <utility>
+
 
 
 
 BEGIN_NAMESPACE(FE)
+
+
+template <typename T>
+class unique_ptr
+{
+	static_assert(std::is_reference_v<T> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a reference type variable.");
+	static_assert(std::is_const_v<T> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a const type variable.");
+
+public:
+	using pointer = T*;
+	using const_pointer = const T*;
+	using element_type = T;
+
+private:
+	std::pmr::memory_resource* m_resource;
+	pointer m_ptr;
+
+public:
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ unique_ptr() noexcept
+		: m_resource(), m_ptr() {}
+
+	template <typename... Arguments>
+	_FE_FORCE_INLINE_ unique_ptr(std::pmr::polymorphic_allocator<T> allocator_p, Arguments&&... arguments_p) noexcept
+		: m_resource( allocator_p.resource() ), m_ptr( allocator_p.allocate(1) )
+	{
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: failed to allocate memory");
+		new(m_ptr) T(std::forward<Arguments>(arguments_p)...);
+	}
+
+	_FE_FORCE_INLINE_ ~unique_ptr() noexcept
+	{
+		if (this->m_ptr == nullptr)
+		{
+			return;
+		}
+
+		this->m_ptr->~T();
+		std::pmr::polymorphic_allocator<T>{m_resource}.deallocate(m_ptr, 1);
+	}
+
+	_FE_FORCE_INLINE_ unique_ptr(const unique_ptr&) = delete;
+	_FE_FORCE_INLINE_ unique_ptr& operator=(const unique_ptr&) = delete;
+
+	_FE_FORCE_INLINE_ unique_ptr(unique_ptr&& other) noexcept
+		: m_resource(other.m_resource), m_ptr(other.m_ptr)
+	{
+		other.m_resource = nullptr;
+		other.m_ptr = nullptr;
+	}
+
+	_FE_FORCE_INLINE_ unique_ptr& operator=(unique_ptr&& other_p) noexcept
+	{
+		this->reset();
+		this->m_resource = other_p.m_resource;
+		this->m_ptr = other_p.m_ptr;
+		other_p.m_resource = nullptr;
+		other_p.m_ptr = nullptr;
+		return *this;
+	}
+
+	_FE_FORCE_INLINE_ void reset() noexcept
+	{
+		if (this->m_ptr == nullptr)
+		{
+			return;
+		}
+
+		this->m_ptr->~T();
+		std::pmr::polymorphic_allocator<T>{m_resource}.deallocate(this->m_ptr, 1);
+		this->m_resource = nullptr;
+		this->m_ptr = nullptr;
+	}
+
+	_FE_FORCE_INLINE_ void swap(unique_ptr& other_p) noexcept
+	{
+		std::swap(this->m_resource, other_p.m_resource);
+		std::swap(this->m_ptr, other_p.m_ptr);
+	}
+
+	_FE_FORCE_INLINE_ T* get() noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const T* get() const noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ T* operator->() noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const T* operator->() const noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ T& operator*() noexcept
+	{
+		return *m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const T& operator*() const noexcept
+	{
+		return *m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ explicit operator bool() const noexcept
+	{
+		return this->m_ptr != nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr == other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr != other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr < other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr <= other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr > other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr >= other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(std::nullptr_t) const noexcept
+	{
+		return this->m_ptr == nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(std::nullptr_t) const noexcept
+	{
+		return this->m_ptr != nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr == rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr != rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr < rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<=(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr <= rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr > rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>=(const T* rhp_p) const noexcept
+	{
+		return this->m_ptr >= rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(T* rhp_p) const noexcept
+	{
+		return this->m_ptr == rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(T* rhp_p) const noexcept
+	{
+		return this->m_ptr != rhp_p;
+	}
+};
+
+template <typename T, typename... Arguments>
+_FE_FORCE_INLINE_ unique_ptr<std::remove_all_extents_t<T>> allocate_unique(const std::pmr::polymorphic_allocator<T>& allocator_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
+{
+	static_assert(std::is_reference_v<T> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a reference type variable.");
+	static_assert(std::is_const_v<T> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a const type variable.");
+
+	return unique_ptr<std::remove_all_extents_t<T>>(allocator_p, std::forward<Arguments>(arguments_p)...);
+}
+
+
+
+
+template <typename T>
+class unique_ptr<T[]>
+{
+	static_assert(std::is_reference_v<std::remove_all_extents_t<T>> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a reference type variable.");
+	static_assert(std::is_const_v<std::remove_all_extents_t<T>> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a const type variable.");
+
+public:
+	using pointer = std::remove_all_extents_t<T>*;
+	using const_pointer = const std::remove_all_extents_t<T>*;
+	using element_type = std::remove_all_extents_t<T>;
+
+private:
+	std::pmr::memory_resource* m_resource;
+	pointer m_ptr;
+	var::size m_length;
+
+public:
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ unique_ptr() noexcept
+		: m_resource(), m_ptr(), m_length() {}
+
+	template <typename... Arguments>
+	_FE_FORCE_INLINE_ unique_ptr(std::pmr::polymorphic_allocator<T> allocator_p, FE::size size_p, Arguments&&... arguments_p) noexcept
+		: m_resource(allocator_p.resource()), m_ptr( allocator_p.allocate(size_p) ), m_length(size_p)
+	{
+		FE_ASSERT(size_p != 0, "Assertion failed: failed to allocate memory");
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: failed to allocate memory");
+		for (var::size i = 0; i < m_length; ++i)
+		{
+			new(m_ptr + i) element_type(std::forward<Arguments>(arguments_p)...);
+		}
+	}
+
+	_FE_FORCE_INLINE_ ~unique_ptr() noexcept
+	{
+		if (this->m_ptr == nullptr)
+		{
+			return;
+		}
+
+		for (var::size i = 0; i < m_length; ++i)
+		{
+			this->m_ptr[i].~element_type();
+		}
+		std::pmr::polymorphic_allocator<T>{m_resource}.deallocate(m_ptr, m_length);
+	}
+
+	_FE_FORCE_INLINE_ unique_ptr(const unique_ptr&) = delete;
+	_FE_FORCE_INLINE_ unique_ptr& operator=(const unique_ptr&) = delete;
+
+	_FE_FORCE_INLINE_ unique_ptr(unique_ptr&& other_p) noexcept
+		: m_resource(other_p.m_resource), m_ptr(other_p.m_ptr), m_length(other_p.m_length)
+	{
+		other_p.m_resource = 0;
+		other_p.m_ptr = nullptr;
+		other_p.m_length = 0;
+	}
+
+	_FE_FORCE_INLINE_ unique_ptr& operator=(unique_ptr&& other_p) noexcept
+	{
+		this->reset();
+		this->m_resource = other_p.m_resource;
+		this->m_ptr = other_p.m_ptr;
+		this->m_length = other_p.m_length;
+		other_p.m_resource = nullptr;
+		other_p.m_ptr = nullptr;
+		other_p.m_length = 0;
+		return *this;
+	}
+
+	_FE_FORCE_INLINE_ void reset() noexcept
+	{
+		if (this->m_ptr == nullptr)
+		{
+			return;
+		}
+
+		for (var::size i = 0; i < m_length; ++i)
+		{
+			this->m_ptr[i].~element_type();
+		}
+		std::pmr::polymorphic_allocator<T>{m_resource}.deallocate(this->m_ptr, this->m_length);
+		this->m_resource = nullptr;
+		this->m_ptr = nullptr;
+		this->m_length = 0;
+	}
+
+	_FE_FORCE_INLINE_ void swap(unique_ptr& other_p) noexcept
+	{
+		std::swap(this->m_resource, other_p.m_resource);
+		std::swap(this->m_ptr, other_p.m_ptr);
+		std::swap(this->m_length, other_p.m_length);
+	}
+
+	_FE_FORCE_INLINE_ pointer get() noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const_pointer get() const noexcept
+	{
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ element_type& operator[](FE::size index_p) noexcept
+	{
+		FE_ASSERT(index_p < m_length, "Assertion failed: index out of bounds");
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return this->m_ptr[index_p];
+	}
+
+	_FE_FORCE_INLINE_ const element_type& operator[](FE::size index_p) const noexcept
+	{
+		FE_ASSERT(index_p < m_length, "Assertion failed: index out of bounds");
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return this->m_ptr[index_p];
+	}
+
+	_FE_FORCE_INLINE_ pointer operator->() noexcept
+	{
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const_pointer operator->() const noexcept
+	{
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return this->m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ element_type& operator*() noexcept
+	{
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return *m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ const element_type& operator*() const noexcept
+	{
+		FE_ASSERT(m_ptr != nullptr, "Assertion failed: pointer is null");
+		return *m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ explicit operator bool() const noexcept
+	{
+		return this->m_ptr != nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr == other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr != other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr < other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr <= other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr > other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>=(const unique_ptr& other_p) const noexcept
+	{
+		return this->m_ptr >= other_p.m_ptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(std::nullptr_t) const noexcept
+	{
+		return this->m_ptr == nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(std::nullptr_t) const noexcept
+	{
+		return this->m_ptr != nullptr;
+	}
+
+	_FE_FORCE_INLINE_ bool operator==(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr == rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator!=(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr != rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr < rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator<=(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr <= rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr > rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ bool operator>=(const_pointer const rhp_p) const noexcept
+	{
+		return this->m_ptr >= rhp_p;
+	}
+
+	_FE_FORCE_INLINE_ FE::size get_length() const noexcept
+	{
+		return m_length;
+	}
+};
+
+template <typename T, typename... Arguments>
+_FE_FORCE_INLINE_ unique_ptr<std::remove_all_extents_t<T>[]> allocate_unique(FE::size size_p, const std::pmr::polymorphic_allocator<std::remove_all_extents_t<T>[]>& allocator_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
+{
+	static_assert(std::is_reference_v<std::remove_all_extents_t<T>> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a reference type variable.");
+	static_assert(std::is_const_v<std::remove_all_extents_t<T>> == false, "Static assertion failed: unique_ptr cannot hold a pointer to a const type variable.");
+	return unique_ptr<std::remove_all_extents_t<T>[]>(allocator_p, size_p, std::forward<Arguments>(arguments_p)...);
+}
+
+
 
 
 _FE_MAYBE_UNUSED_ constexpr uint8 byte_size = 1;

@@ -1,4 +1,4 @@
-#include <FE/framework/framework.hpp>
+#include <FE/engine.hpp>
 
 #define GLM_FORCE_SIMD_AVX
 #include <glm/glm.hpp> // https://github.com/g-truc/glm/blob/master/manual.md#section2_11
@@ -38,7 +38,7 @@ enum struct RendererErrorCode : FE::int32
 
 
 // https://graphicsprogramming.github.io/learnd3d11/1-introduction/1-1-getting-started/1-1-2-hello-d3d11/
-class D3D11 : public FE::framework::game_framework_base
+class D3D11 : public FE::game_engine
 {
 	Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_device_context;
@@ -55,7 +55,7 @@ class D3D11 : public FE::framework::game_framework_base
 
 public:
 	D3D11(FE::int32 argc_p, FE::ASCII** agrv_p) noexcept
-		: FE::framework::game_framework_base(argc_p, agrv_p), m_device(), m_device_context(), m_dxgi_factory(), m_swap_chain(), m_render_target(), m_title("LearnD3D11 - Hello Window")
+		: FE::game_engine(argc_p, agrv_p), m_device(), m_device_context(), m_dxgi_factory(), m_swap_chain(), m_render_target(), m_title("LearnD3D11 - Hello Window")
 	{
 		FE_EXIT(glfwInit() == GLFW_FALSE, RendererErrorCode::_FatalError_GLFW_InitFailure, "GLFW: Unable to initialize");
 		this->m_primary_monitor = glfwGetPrimaryMonitor();

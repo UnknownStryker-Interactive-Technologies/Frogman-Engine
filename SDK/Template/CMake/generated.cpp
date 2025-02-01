@@ -6,7 +6,7 @@
 
 void load_reflection_data()
 {
-    ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngineMathVector3()", &::FE::framework::reflection::construct_object<::FrogmanEngineMathVector3>); 
-    ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngineRenderingRenderer()", &::FE::framework::reflection::construct_object<::FrogmanEngineRenderingRenderer>); 
-    ::FE::framework::framework_base::get_engine().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngineUtilityTimer()", &::FE::framework::reflection::construct_object<::FrogmanEngineUtilityTimer>); 
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngine::Math::Vector3()", &::FE::framework::reflection::construct_object<::FrogmanEngine::Math::Vector3>); 
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngine::Rendering::Renderer()", &::FE::framework::reflection::construct_object<::FrogmanEngine::Rendering::Renderer>); 
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >("FHT Gen ::FrogmanEngine::Utility::Timer()", &::FE::framework::reflection::construct_object<::FrogmanEngine::Utility::Timer>); 
 }

@@ -151,7 +151,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 		switch (it.value())
 		{
 		case Vocabulary::_Override:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "override") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " override") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"override";
@@ -160,7 +160,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 			break;
 
 		case Vocabulary::_Final:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "final") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " final") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"final";
@@ -169,7 +169,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 			break;
 
 		case Vocabulary::_Constexpr:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constexpr") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constexpr ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"constexpr";
@@ -178,7 +178,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 			break;
 
 		case Vocabulary::_Consteval:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "consteval") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "consteval ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"consteval";
@@ -187,7 +187,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 			break;
 
 		case Vocabulary::_Constinit:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constinit") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constinit ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"constinit";
@@ -235,24 +235,12 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_undefined(typename file_buff
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
-	while (__tokenize(code_iterator_p)._vocabulary == Vocabulary::_Undefined)
+	while ((*code_iterator_p != u8' ')
+		&& (*code_iterator_p != u8'\t')
+		&& (*code_iterator_p != u8'\r')
+		&& (*code_iterator_p != u8'\0')
+		&& (*code_iterator_p != u8'\n'))
 	{
-		switch (*code_iterator_p)
-		{
-		case ' ':
-			_FE_FALLTHROUGH_;
-		case '\t':
-			_FE_FALLTHROUGH_;
-		case '\r':
-			_FE_FALLTHROUGH_;
-		case '\0':
-			_FE_FALLTHROUGH_;
-		case '\n':
-			return l_token;
-
-		default:
-			break;
-		}
 		l_token._code += *code_iterator_p;
 		++code_iterator_p;
 	}
@@ -340,7 +328,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Namespace:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "namespace") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "namespace ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"namespace";
@@ -367,7 +355,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Class:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "class") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "class ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"class";
@@ -376,7 +364,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Struct:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "struct") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "struct ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"struct";
@@ -385,7 +373,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Enum:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "enum") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "enum ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"enum";
@@ -421,7 +409,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Static:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "static") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "static ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"static";
@@ -430,7 +418,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_ThreadLocal:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "thread_local") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "thread_local ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"thread_local";
@@ -439,7 +427,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Virtual:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "virtual") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "virtual ") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"virtual";
@@ -448,7 +436,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Const:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "const") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " const") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"const";
@@ -457,7 +445,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Volatile:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "volatile") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " volatile") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"volatile";
@@ -466,7 +454,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename
 			break;
 
 		case Vocabulary::_Noexcept:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "noexcept") == true)
+			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " noexcept") == true)
 			{
 				l_token._vocabulary = it.value();
 				l_token._code = u8"noexcept";
