@@ -2,7 +2,19 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< Updated upstream
+<<<<<<<< Updated upstream:SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.5/VCTargetsPath/x64/Debug/VCTargetsPath.recipe
       <FullPath>C:\Users\leeho\OneDrive\사진\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.5\x64\Debug\VCTargetsPath</FullPath>
+========
+      <FullPath>C:\Users\leeho\OneDrive\사진\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.5\CompilerIdCXX\CompilerIdCXX.exe</FullPath>
+>>>>>>>> Stashed changes:SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.5/CompilerIdCXX/Debug/CompilerIdCXX.exe.recipe
+=======
+<<<<<<<< Updated upstream:SDK/Third-Party/Tools/googletest-1.16.0/build/googlemock/gmock.dir/Release/gmock.lib.recipe
+      <FullPath>C:\Users\leeho\OneDrive\사진\문서\GitHub\Frogman-Engine\SDK\Third-Party\Tools\googletest-1.16.0\build\x64\Release\ZERO_CHECK</FullPath>
+========
+      <FullPath>C:\Users\leeho\OneDrive\사진\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\imgui-1.91.6\Solution\CMakeFiles\3.31.5\x64\Debug\VCTargetsPath</FullPath>
+>>>>>>>> Stashed changes:SDK/Third-Party/Libraries/imgui-1.91.6/Solution/CMakeFiles/3.31.5/VCTargetsPath/x64/Debug/VCTargetsPath.recipe
+>>>>>>> Stashed changes
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

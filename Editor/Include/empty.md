@@ -1,1 +1,0 @@
-This is to commit the directory structure to GitHub.

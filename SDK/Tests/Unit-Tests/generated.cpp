@@ -1,8 +1,8 @@
-// Copyright ¨Ï from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
+// Copyright Â© from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.h> 
 #include <FE/framework/reflection.hpp> 
 #include <FE/framework/framework.hpp> 
-#include <C:/Users/leeho/OneDrive/¹®¼­/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/FE.ECS.hpp>
+#include <C:/Users/leeho/OneDrive/ì‚¬ì§„/ë¬¸ì„œ/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/FE.ECS.hpp>
 
 void load_reflection_data()
 {

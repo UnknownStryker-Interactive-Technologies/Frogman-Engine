@@ -28,8 +28,8 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 
 # This project leverages:
 
-- Boost Libraries 1.86.0  
-https://github.com/boostorg/boost/releases/tag/boost-1.86.0  
+- Boost Libraries 1.87.0  
+https://github.com/boostorg/boost/releases/tag/boost-1.87.0  
 
 - City Hash  
 https://github.com/google/cityhash  
@@ -52,11 +52,11 @@ https://github.com/martinus/robin-hood-hashing
 - Task Flow 3.8.0  
 https://github.com/taskflow/taskflow/releases/tag/v3.8.0  
 
-- Google Test 1.14.0  
-https://github.com/google/googletest/releases/tag/v1.14.0  
+- Google Test 1.16.0  
+https://github.com/google/googletest/releases/tag/v1.16.0  
 
-- Google Benchmark 1.8.4  
-https://github.com/google/benchmark/releases/tag/v1.8.4  
+- Google Benchmark 1.9.1  
+https://github.com/google/benchmark/releases/tag/v1.9.1  
 
 # Help:
 Issues with Frogman Engine Header Tool:  

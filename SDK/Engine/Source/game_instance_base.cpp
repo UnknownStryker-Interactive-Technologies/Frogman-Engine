@@ -21,12 +21,11 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-
 //// read game config file!
 FE::int32 game_instance_base::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
     (void)argc_p;
-	(void)argv_p;
+    (void)argv_p;
     return FE::int32();
 }
 

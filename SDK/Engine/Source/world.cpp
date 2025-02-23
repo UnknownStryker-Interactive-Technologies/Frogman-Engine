@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,3 +31,4 @@ world::~world() noexcept
 
 
 END_NAMESPACE
+

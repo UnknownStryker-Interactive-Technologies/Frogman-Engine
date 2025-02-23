@@ -8,8 +8,8 @@ PROJECT(FE_UNIT_TEST
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/predefined-settings.cmake")
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/../../CMake/frogman-engine.cmake")
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Google-Test/include)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/benchmark-1.9.1/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/googletest-1.16.0/googletest/include)
 
 
 
@@ -17,19 +17,19 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/B
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 
     SET(UNIT_TEST			
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Google-Test/windows/Debug/gtest.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Google-Test/windows/RelWithDebInfo/gtest.lib>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Google-Test/windows/Release/gtest.lib>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Google-Test/windows/MinSizeRel/gtest.lib>
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/googletest-1.16.0/build/lib/Debug/gtest.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/googletest-1.16.0/build/lib/Release/gtest.lib>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/googletest-1.16.0/build/lib/Release/gtest.lib>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/googletest-1.16.0/build/lib/Release/gtest.lib>
     )
 
     ADD_COMPILE_OPTIONS(/DBENCHMARK_STATIC_DEFINE)
     LINK_LIBRARIES(advapi32.lib shlwapi.lib)
     SET(BENCHMARK_TEST			
-        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/windows/Debug/benchmark.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/windows/RelWithDebInfo/benchmark.lib>
-        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/windows/Release/benchmark.lib>
-        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/X86-64/Benchmark/windows/MinSizeRel/benchmark.lib>
+        $<$<CONFIG:DEBUG>:			${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/benchmark-1.9.1/build/src/Debug/benchmark.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/benchmark-1.9.1/build/src/Release/benchmark.lib>
+        $<$<CONFIG:RELEASE>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/benchmark-1.9.1/build/src/Release/benchmark.lib>
+        $<$<CONFIG:MINSIZEREL>:		${CMAKE_CURRENT_SOURCE_DIR}/../../Third-Party/Tools/benchmark-1.9.1/build/src/Release/benchmark.lib>
     )
 
 ENDIF()
@@ -52,6 +52,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/FE.pool.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FE.task.cpp
 )
 
+ADD_LINK_OPTIONS(/NODEFAULTLIB:MSVCRTD)
 RUN_FROGMAN_HEADER_TOOL("${CMAKE_CURRENT_SOURCE_DIR}/FE.ECS.hpp" -fno-copyright-notice) 
 
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${SOURCE_FILES})

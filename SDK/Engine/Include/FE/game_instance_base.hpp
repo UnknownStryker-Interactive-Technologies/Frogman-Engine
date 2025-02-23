@@ -35,9 +35,9 @@ public:
 	~game_instance_base() noexcept = default;
 
 protected:
-	FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);
-	FE::int32 run() noexcept;
-	FE::int32 shutdown() noexcept;
+	int32 launch(int32 argc_p, ASCII** argv_p);
+	int32 run() noexcept;
+	int32 shutdown() noexcept;
 };
 
 

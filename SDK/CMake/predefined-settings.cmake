@@ -4,6 +4,7 @@ SET(CMAKE_CXX_EXTENSIONS OFF)
 SET(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;MinSizeRel")
 GET_FILENAME_COMPONENT(FROGMAN_ENGINE_PREDEFINED_SETTINGS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)
 
+
 MESSAGE("
 Define a cmake macro if you want to make changes on the settings.
 Available -D macro options:

@@ -19,11 +19,6 @@ limitations under the License.
 #include <FE/framework/framework.hpp>
 #include <FE/framework/reflection.hpp>
 
-#include <FE/pair.hxx>
-
-#include <string>
-#include <vector>
-
 
 
 
@@ -41,5 +36,7 @@ public:
 protected:
 };
 
+
 END_NAMESPACE
 #endif
+

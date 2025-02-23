@@ -22,8 +22,8 @@ const FE::clock::char_type* FE::clock::get_current_local_time() noexcept
 {
     thread_local static FE::clock::char_type tl_s_local_time_string_buffer[current_local_time_buffer_size]{ (FE::clock::char_type)'\0' };
 
-    auto l_current_time = std::chrono::system_clock::now();
-    std::time_t l_current_time_t = std::chrono::system_clock::to_time_t(l_current_time);
+    auto l_current_time = boost::chrono::system_clock::now();
+    std::time_t l_current_time_t = boost::chrono::system_clock::to_time_t(l_current_time);
     tm l_time;
 
 #ifdef _FE_ON_WINDOWS_X86_64_
