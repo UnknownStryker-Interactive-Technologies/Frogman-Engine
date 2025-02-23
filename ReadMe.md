@@ -12,9 +12,11 @@ SDK guide, API documentation, etc are not available yet.
 https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
 
 # Prerequisites: 
-1. CMake 3.25.0 or the latest  
-2. The latest Visual Studio 2022 with Windows SDK version 10.0.26100.0 
-3. Microsoft Parallel Patterns Library
+1. CMake 3.25.0 or the latest.  
+2. The latest Visual Studio 2022.  
+3. Git and Git LFS.
+4. Boost Libraries 1.87.0  
+5. Microsoft Parallel Patterns Library.  
 
 # C++ standard version: 
 C++ 20 or the latest.  
