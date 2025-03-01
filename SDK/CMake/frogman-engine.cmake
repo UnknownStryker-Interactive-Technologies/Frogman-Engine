@@ -39,6 +39,9 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world_context.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/smart_ptr.hxx
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/mutex.hxx
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/concurrent_vector.hxx
 )
 
 SET(FE_SOURCES
