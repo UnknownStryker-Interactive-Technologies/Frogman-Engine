@@ -7,8 +7,8 @@ Frogman Engine is licensed under the Apache License, version 2.0.
 This project is under development and may contain some bugs and issues.
 
 # Frogman Engine Website (incomplete)
-Currently, programming convention is only available in Korean.  
-SDK guide, API documentation, etc are not available yet.  
+Currently, programming convention is only available.  
+SDK guide, API documentation, etc are unavailable yet.  
 https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
 
 # Prerequisites: 
