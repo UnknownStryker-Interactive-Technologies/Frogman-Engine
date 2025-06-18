@@ -123,8 +123,8 @@ FE::int32 header_tool_engine::run()
 					file_buffer_t& l_file = this->m_mapped_header_files[i];
 					directory_t& l_path = this->m_header_file_list[i];
 
-					// parse the header file to get the tokens.
-					auto l_tokens = __parse_header(l_file);
+					// tokenize the header file to get the tokens.
+					auto l_tokens = __tokenize_header(l_file);
 					if (l_tokens == std::nullopt)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);

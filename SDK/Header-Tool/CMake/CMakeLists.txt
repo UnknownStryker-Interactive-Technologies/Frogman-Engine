@@ -22,7 +22,7 @@ ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/vocabulary.hpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/read_copyright_notice.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/header_tool_engine.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/main.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/parser.cpp
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/tokenizer.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/program_options.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/reflection_code_generator.cpp
 ${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/symbol_counter.cpp

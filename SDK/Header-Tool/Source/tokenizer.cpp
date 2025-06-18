@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-_FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__parse_header(const file_buffer_t& file_p) noexcept
+_FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokenize_header(const file_buffer_t& file_p) noexcept
 {
 	std::pmr::list<token> l_list(get_memory_resource());
 
@@ -47,11 +47,11 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__parse_
 			break;
 		}
 
-		l_token = __tokenize(iterator);
+		l_token = __tokenize_identifiable(iterator);
 
 		if (l_token._vocabulary == Vocabulary::_Undefined)
 		{
-			l_token = __tokenize_undefined(iterator);
+			l_token = __tokenize_unidentifiable(iterator);
 			iterator += l_token._code.size();
 			l_list.push_back(std::move(l_token));
 			continue;
@@ -121,7 +121,7 @@ void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& 
 	}
 }
 
-_FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
@@ -231,7 +231,7 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize(typename file_buffer_t::cons
 	return l_token;
 }
 
-_FE_NODISCARD_ token header_tool_engine::__tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+_FE_NODISCARD_ token header_tool_engine::__tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 

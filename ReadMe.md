@@ -67,7 +67,7 @@ Issues with Frogman Engine Header Tool:
 
 To run the header tool with CMake, call this CMake function:
 ```CMake
-# The first argument is the header files paths, and the later ones the options to the tool. 
+# The first argument is the header files' paths, and the latter ones are the options to the tool. 
 # The tool will not properly work without wrapping " " around the header files paths argument.  
 # The each header file path must be seperated with a semi-colon ';'.  
 RUN_FROGMAN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt )  

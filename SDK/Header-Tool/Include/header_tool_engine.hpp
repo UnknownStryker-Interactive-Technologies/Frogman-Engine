@@ -117,12 +117,12 @@ private:
 	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
 
 private:
-	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __parse_header(const file_buffer_t& file_p) noexcept;
+	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __tokenize_header(const file_buffer_t& file_p) noexcept;
 	void __purge_comments(std::pmr::list<token>& out_list_p);
 	void __purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
 
-	_FE_NODISCARD_ token __tokenize(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
-	_FE_NODISCARD_ token __tokenize_undefined(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token __tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 	_FE_NODISCARD_ token __tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 	_FE_NODISCARD_ token __tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 	_FE_NODISCARD_ token __tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
