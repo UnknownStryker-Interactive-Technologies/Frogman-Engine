@@ -63,7 +63,7 @@ struct token
 };
 
 
-// TO DO: consider intergrating LLVM clang lexer. -opt-clang-lexer
+// TO DO: prefix try_ to function names, by the FE standards.
 
 // sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp
 //  C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
@@ -106,8 +106,8 @@ private:
 		var::uint16 _classes;
 		var::uint16 _structs;
 	};
-	_FE_NODISCARD_ symbol_count __count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ symbol_count __count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ symbol_count __try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) const;
+	_FE_NODISCARD_ symbol_count __try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	struct member_symbol_count
 	{
@@ -116,9 +116,13 @@ private:
 	};
 	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
 
+	// ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) returns std::nullopt if paren_p is not a paren nor a bracket.
+	std::optional<FE::uint32> ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept;
+	std::optional<FE::ASCII*> __validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept;
+
 private:
 	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __tokenize_header(const file_buffer_t& file_p) noexcept;
-	void __purge_comments(std::pmr::list<token>& out_list_p);
+	void __purge_comments(std::pmr::list<token>& out_list_p) noexcept;
 	void __purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
 
 	_FE_NODISCARD_ token __tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
@@ -139,14 +143,14 @@ private:
 	}
 
 private:
-	_FE_NODISCARD_ header_file_root __build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
-	_FE_NODISCARD_ namespace_node __build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ class_node __build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ struct_node __build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ header_file_root __try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
+	_FE_NODISCARD_ namespace_node __try_build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ class_node __try_build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ struct_node __try_build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
-	void __handle_template(typename std::pmr::list<token>::const_iterator& iterator_p);
-	void __handle_enum(typename std::pmr::list<token>::const_iterator& iterator_p);
-	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	void __try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
+	void __try_skip_enum_block(typename std::pmr::list<token>::const_iterator& iterator_p) const;
+	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept;
 
 private:
 	struct reflection_metadata

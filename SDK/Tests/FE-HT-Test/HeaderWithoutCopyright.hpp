@@ -14,35 +14,41 @@
    specific language governing permissions and limitations under the License.
 */
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <memory>
-#include <cmath>
-#include <map>
-#include <algorithm>
-#include <chrono>
+ #include <iostream>
+ #include <vector>
+ #include <string>
+ #include <memory>
+ #include <cmath>
+ #include <map>
+ #include <algorithm>
+ #include <chrono>
 
-// Macros
-#define MAX_ENTITIES 2000
-#define LOG_ERROR(message) std::cerr << "ERROR: " << message << std::endl
-#define LOG_DEBUG(message) std::cout << "DEBUG: " << message << std::endl
+ 
+ #define MAX_ENTITIES 2000
+ #define LOG_ERROR(message) \
+std::cerr << "ERROR: " << message << std::endl
 
-// Namespaces
+ #define LOG_DEBUG(message) \
+std::cout << "DEBUG: " \
+<< message \
+<< std::endl
+
+ 
 namespace FrogmanEngine
 {
-
+    
     namespace Math
     {
-
+        
         class Vector3
         {
-            FE_CLASS(Vector3)
+            FE_CLASS(Vector3);
+            
         public:
             FE_PROPERTY(x)
                 float x;
-
-           FE_PROPERTY(y)
+            
+            FE_PROPERTY(y)
                 float y;
 
             FE_PROPERTY(z)
@@ -67,7 +73,7 @@ namespace FrogmanEngine
             {
                 return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
             }
-
+            
             static Vector3 cross(const Vector3& v1, const Vector3& v2)
             {
                 return Vector3(
@@ -77,9 +83,9 @@ namespace FrogmanEngine
                 );
             }
         };
-
-    } // namespace Math
-
+        
+    } 
+    
     enum class GameState
     {
         MAIN_MENU,
@@ -89,52 +95,53 @@ namespace FrogmanEngine
         VICTORY
     };
 
-    template<typename T>
-    class Entity
-    {
-        FE_CLASS(Entity)
-    public:
-        Entity() : name("Unnamed Entity") {}
+    //template<typename T>
+    //class Entity
+    //{
+    //    FE_CLASS(Entity);
 
-        Entity(const std::string& name) : name(name) {}
+    //public:
+    //    Entity() : name("Unnamed Entity") {}
 
-       FE_METHOD(update, void(float));
-        virtual void update([[maybe_unused]] float deltaTime) {}
+    //    Entity(const std::string& name) : name(name) {}
 
-       FE_METHOD(render, void(void));
-        virtual void render() {}
+    //    FE_METHOD(update, void(float));
+    //    virtual void update([[maybe_unused]] float deltaTime) {}
 
-       // FE_METHOD(getComponent, T(void));
-        T getComponent() const { return T(); }
+    //    FE_METHOD(render, void(void));
+    //    virtual void render() {}
 
-        FE_METHOD(addComponent, void(const T&));
-        void addComponent([[maybe_unused]] const T& component) {}
+    //    FE_METHOD(getComponent, T(void));
+    //    T getComponent() const { return T(); }
 
-    protected:
-      FE_PROPERTY(name);
-        std::string name;
+    //    FE_METHOD(addComponent, void(const T&));
+    //    void addComponent([[maybe_unused]] const T& component) {}
 
-       FE_PROPERTY(components);
-        std::vector<T> components;
-    };
+    //protected:
+    //    FE_PROPERTY(name);
+    //    std::string name;
 
-    class Player : public Entity<int>
-    {
-    public:
-        Player() : Entity("Unnamed Player") {}
+    //    FE_PROPERTY(components);
+    //    std::vector<T> components;
+    //};
 
-        Player(const std::string& playerName) : Entity(playerName) {}
+    //class Player : public Entity<int>
+    //{
+    //public:
+    //    Player() : Entity("Unnamed Player") {}
 
-        void update([[maybe_unused]] float deltaTime) override
-        {
-            // Custom update logic for player
-        }
+    //    Player(const std::string& playerName) : Entity(playerName) {}
 
-        void render() override
-        {
-            // Custom render logic for player
-        }
-    };
+    //    void update([[maybe_unused]] float deltaTime) override
+    //    {
+    //     //    Custom update logic for player
+    //    }
+
+    //    void render() override
+    //    {
+    //       //  Custom render logic for player
+    //    }
+    //};
 
     namespace Rendering
     {
@@ -152,7 +159,7 @@ namespace FrogmanEngine
             FE_METHOD(render, void(void));
             void render()
             {
-                // Render code
+                 //Render code
             }
 
             FE_METHOD(shutdown, void(void));
@@ -206,7 +213,7 @@ namespace FrogmanEngine
         };
 
     } // namespace Utility
-
+    
 } // namespace FrogmanEngine
 
 #endif // ADVANCED_FROGMAN_ENGINE_HEADER_H

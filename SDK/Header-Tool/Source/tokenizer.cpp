@@ -33,18 +33,16 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 
 	for (auto iterator = FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 	{
-		switch (*iterator)
+		if ( static_cast<char>(*iterator) <= static_cast<char>(' ') )
 		{
-		case ' ':
-			_FE_FALLTHROUGH_;
-		case '\t':
-			_FE_FALLTHROUGH_;
-		case '\r':
+			if ( static_cast<char>(*iterator) == static_cast<char>('\n') )
+			{
+				l_token._vocabulary = Vocabulary::_LineEnd;
+			    l_token._code = u8'\n';
+				l_list.push_back(std::move(l_token));
+			}
 			++iterator;
 			continue;
-
-		default:
-			break;
 		}
 
 		l_token = __tokenize_identifiable(iterator);
@@ -65,7 +63,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 	return std::make_optional<std::pmr::list<token>>(l_list);
 }
 
-void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p)
+void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p) noexcept
 {
 	const auto l_is_comment_begin = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentBegin; };
 	const auto l_is_comment_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentEnd; };
@@ -99,27 +97,65 @@ void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p)
 
 void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& out_list_p)
 {
-	const auto l_is_preprocessor_directive = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorDirective; };
-	const auto l_is_line_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; };
-
-	auto l_preprocessor_directive = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_preprocessor_directive);
-	auto l_line_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_end);
-
-	try
+	using range = std::pair< typename std::pmr::list<token>::iterator, typename std::pmr::list<token>::iterator >;
+	(void)out_list_p;
+	std::pmr::vector<range> l_ranges(get_memory_resource());
+	
+	for (auto it = out_list_p.begin(), end = out_list_p.end(); it != end; ++it)
 	{
-		while ((l_preprocessor_directive != out_list_p.end()))
+		if (it->_vocabulary == Vocabulary::_PreprocessorDirective)
 		{
-			out_list_p.erase(l_preprocessor_directive, l_line_end/* + 1 includes the last element to be deleted. */);
-			l_preprocessor_directive = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_preprocessor_directive);
-			l_line_end = std::find_if(l_preprocessor_directive, out_list_p.end(), l_is_line_end);
+			//std::cout << "Removing the preprocessor directive:\n";
+			range l_range;
+			l_range.first = it; // Start of the preprocessor directive.
+
+			auto l_line_end_indicator = std::find_if( l_range.first, end, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; } );
+			auto l_preprocessor_nextline_indicator = std::find_if( l_range.first, end, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorNextLine; } );
+
+			if ( l_preprocessor_nextline_indicator != end )
+			{
+				var::ptrdiff l_line_end_indicator_offset = std::distance(l_range.first, l_line_end_indicator);
+				var::ptrdiff l_preprocessor_nextline_indicator_offset = std::distance(l_range.first, l_preprocessor_nextline_indicator);
+
+				// while "#directive \ \n" is true.
+				while (l_preprocessor_nextline_indicator_offset < l_line_end_indicator_offset)
+				{
+					// conttinue searching for the next preprocessor directive.
+					l_line_end_indicator = std::find_if( std::next(l_line_end_indicator, 1), end, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; } );
+					l_preprocessor_nextline_indicator = std::find_if( std::next(l_preprocessor_nextline_indicator, 1), end, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorNextLine; } );
+
+					if (l_preprocessor_nextline_indicator == end)
+					{
+						break; // No more preprocessor directives.
+					}
+
+					l_line_end_indicator_offset = std::distance(l_range.first, l_line_end_indicator);
+					l_preprocessor_nextline_indicator_offset = std::distance(l_range.first, l_preprocessor_nextline_indicator);
+				}
+			}
+
+			l_range.second = l_line_end_indicator; // End of the preprocessor directive.
+			l_ranges.push_back(l_range);
+			it = l_line_end_indicator; // Move the iterator to the end of the preprocessor directive.
+
+			// for debugging purpose.
+			//while (l_range.first != l_range.second)
+			//{
+			//	std::cout << reinterpret_cast<const char*>(l_range.first->_code.c_str()) << "\n";
+			//	++l_range.first;
+			//}
+			//std::cout << "\n";
 		}
 	}
-	catch (const std::exception& error_p)
+	
+	for (range& l_range : l_ranges)
 	{
-		std::cerr << error_p.what();
-		throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>(FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "Frogman Engine Header Tool: failed to parse the header file.\nSkipping...");
+		if (l_range.first != out_list_p.end() && l_range.second != out_list_p.end())
+		{
+			out_list_p.erase(l_range.first, l_range.second);
+		}
 	}
-}
+} 
 
 _FE_NODISCARD_ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
@@ -235,11 +271,8 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_unidentifiable(typename file
 {
 	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
 
-	while ((*code_iterator_p != u8' ')
-		&& (*code_iterator_p != u8'\t')
-		&& (*code_iterator_p != u8'\r')
-		&& (*code_iterator_p != u8'\0')
-		&& (*code_iterator_p != u8'\n'))
+	while (static_cast<char>(*code_iterator_p) > static_cast<char>(' ')
+		   && __tokenize_identifiable(code_iterator_p)._vocabulary == Vocabulary::_Undefined)
 	{
 		l_token._code += *code_iterator_p;
 		++code_iterator_p;
@@ -285,11 +318,6 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_comment(typename file_buffer
 				return l_token;
 			}
 			break;
-
-		case Vocabulary::_LineEnd:
-			l_token._vocabulary = it.value();
-			l_token._code = u8'\n';
-			return l_token;
 
 		default:
 			break;

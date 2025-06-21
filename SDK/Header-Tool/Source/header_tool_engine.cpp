@@ -133,28 +133,18 @@ FE::int32 header_tool_engine::run()
 						return;
 					}
 
-					try // The exceptions must be thrown if the input header files have C++ syntex errors.
-					{
-						// literally removes /**/ and // comments.
-						__purge_comments(*l_tokens); // throws if */ is missing.
+					// literally removes /**/ and // comments.
+					__purge_comments(*l_tokens); // throws if */ is missing.
 
-						// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
-						__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
-					}
-					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
-					{
-						std::wcerr << "\n\nFrogman Engine Header Tool: failed to parse the header file. Skipping the file located at '" << l_path.c_str() << "'.\n\n";
-						std::wcerr << error_p._second;
-						l_exit_code = (int)error_p._first;
-						return;
-					}
+					// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
+					__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
 
-					algorithm::utility::cherry_pick_if<algorithm::utility::IsolationVector::_Right>(l_tokens->begin(), l_tokens->end(), [](const token& token_p) { return token_p._vocabulary == Vocabulary::_LineEnd; });
-
+					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
+					
 					header_file_root l_reflection_tree;
 					try // The exceptions must be thrown if the input header files have C++ syntex errors.
 					{
-						l_reflection_tree = __build_reflection_tree(l_path, *l_tokens); // throws if C++ syntex is incorrect.
+						l_reflection_tree = __try_build_reflection_tree(l_path, *l_tokens); // throws if C++ syntex is incorrect.
 					}
 					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
 					{

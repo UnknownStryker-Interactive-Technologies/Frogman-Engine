@@ -18,10 +18,8 @@ limitations under the License.
 
 
 
-void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept
 {
-	FE::clock l_loop_timer;
-	l_loop_timer.start_clock();
 	while (out_token_iterator_p != end_p)
 	{
 		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightCurlyBracket)
@@ -35,15 +33,22 @@ void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const
 			}
 		}
 		++out_token_iterator_p;
-		THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: '{': no matching token found.");
 	}
 }
 
-_FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p)
+_FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p)
 {
+	// returns an optional error message object.
+	std::optional<FE::ASCII*> l_error_message = __validate_parentheses(token_list_p);
+	if (l_error_message != std::nullopt)
+	{
+		throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntex, *l_error_message};
+	}
+
 	{
 		static std::mutex l_s_log_lock;
-		symbol_count l_total_nums = __count_all_symbols(token_list_p.begin(), token_list_p.cend());
+		symbol_count l_total_nums = __try_count_all_symbols(token_list_p.begin(), token_list_p.cend());
+
 		std::lock_guard<std::mutex> l_guard(l_s_log_lock);
 		std::wcout << L"Frogman Engine Header Tool: In the file located at '" << file_path_p.c_str() << "'\n";
 		std::cout << "Frogman Engine Header Tool: the total number of namespaces is " << l_total_nums._namespaces << '\n';
@@ -64,11 +69,11 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 		case Vocabulary::_Namespace:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
-			l_root._namespaces.push_back(__build_namespace_node_recursive(u8"::", iterator, token_list_p.end()));
+			l_root._namespaces.push_back(__try_build_namespace_node_recursive(u8"::", iterator, token_list_p.end()));
 			break;
 
 		case Vocabulary::_Template:
-			__handle_template(iterator);
+			__try_skip_template_args(iterator);
 			break;
 
 		case Vocabulary::_Class:
@@ -77,7 +82,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 				__skip_code_block(iterator, token_list_p.end());
 				break;
 			}
-			l_root._classes.push_back(__build_class_node_mutually_recursive(u8"::", iterator, token_list_p.end()));
+			l_root._classes.push_back(__try_build_class_node_mutually_recursive(u8"::", iterator, token_list_p.end()));
 			break;
 
 		case Vocabulary::_Struct:
@@ -86,11 +91,11 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 				__skip_code_block(iterator, token_list_p.end());
 				break;
 			}
-			l_root._structs.push_back(__build_struct_node_mutually_recursive(u8"::", iterator, token_list_p.end()));
+			l_root._structs.push_back(__try_build_struct_node_mutually_recursive(u8"::", iterator, token_list_p.end()));
 			break;
 
 		case Vocabulary::_Enum:
-			__handle_enum(iterator);
+			__try_skip_enum_block(iterator);
 			break;
 
 		default:
@@ -101,7 +106,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__build_reflection_tree(cons
 	return l_root;
 }
 
-_FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+_FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	namespace_node l_node;
 	l_node._namespace_name = file_buffer_t(parent_namespace_p, get_memory_resource());
@@ -123,7 +128,6 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 				l_loop_timer.end_clock();
 				THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'namespace Identifier {'.");
 			}
-			THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '{' is missing from 'namespace Identifier {'.");
 			++out_token_iterator_p;
 		}
 		break;
@@ -132,16 +136,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 		{
 			++out_token_iterator_p;
 			THROW_CPP_SYNTEX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; '(' is missing from 'BEGIN_NAMESPACE(Identifier)'.");
-			++out_token_iterator_p;
-			FE::clock l_loop_timer;
-			l_loop_timer.start_clock();
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
 			{
 				l_node._namespace_name += out_token_iterator_p->_code;
 				l_node._namespace_name += u8"::";
 				++out_token_iterator_p;
-				l_loop_timer.end_clock();
-				THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ')' is missing from 'BEGIN_NAMESPACE(Identifier)'.");
 			}
 			++out_token_iterator_p;
 		}
@@ -152,7 +151,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 
 	// Allocate the necessary children nodes.
 	{
-		symbol_count l_nums = __count_the_current_scope_level_symbols(out_token_iterator_p, end_p);
+		symbol_count l_nums = __try_count_the_current_scope_level_symbols(out_token_iterator_p, end_p);
 		l_node._nested_namespaces = (0 == l_nums._namespaces) ? nullptr : std::make_unique<std::pmr::vector<namespace_node>>(l_nums._namespaces);
 		l_node._classes.reserve(l_nums._classes);
 		l_node._structs.reserve(l_nums._structs);
@@ -165,11 +164,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 		case Vocabulary::_Namespace:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
-			l_node._nested_namespaces->push_back( __build_namespace_node_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
+			l_node._nested_namespaces->push_back( __try_build_namespace_node_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Template:
-			__handle_template(out_token_iterator_p);
+			__try_skip_template_args(out_token_iterator_p);
 			break;
 
 		case Vocabulary::_Class:
@@ -182,7 +181,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 				__skip_code_block(out_token_iterator_p, end_p);
 				break;
 			}
-			l_node._classes.push_back( __build_class_node_mutually_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
+			l_node._classes.push_back( __try_build_class_node_mutually_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Struct:
@@ -195,11 +194,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 				__skip_code_block(out_token_iterator_p, end_p);
 				break;
 			}
-			l_node._structs.push_back( __build_struct_node_mutually_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
+			l_node._structs.push_back( __try_build_struct_node_mutually_recursive(l_node._namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Enum:
-			__handle_enum(out_token_iterator_p);
+			__try_skip_enum_block(out_token_iterator_p);
 			break;
 
 		default:
@@ -210,7 +209,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__build_namespace_node_recursi
 	return l_node;
 }
 
-_FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+_FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Class, "Frogman Engine Header Tool Assertion Failure: the 'class' keyword is missing from the current token, but the header tool is attempting to build a class node.");
 	++out_token_iterator_p; // move to the class name.
@@ -259,7 +258,6 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 		l_node._class_reflection_macro->_target_class_name = parent_namespace_p;
 		l_node._class_reflection_macro->_target_class_name += l_class_name;
 		out_token_iterator_p = l_class_reflection_macro_search_result;
-		std::advance(out_token_iterator_p, 3);
 
 		// build n
 		l_node._class_reflection_macro->_property_reflection_macros;
@@ -270,8 +268,6 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 		// build n
 		l_node._class_reflection_macro->_static_method_reflection_macros;
 
-		FE::clock l_loop_timer;
-		l_loop_timer.start_clock();
 		while (out_token_iterator_p != end_p)
 		{
 			switch (out_token_iterator_p->_vocabulary)
@@ -301,7 +297,6 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 				break;
 			}
 			++out_token_iterator_p;
-			THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing, '{': no matching token found.");
 		}
 	}
 
@@ -309,7 +304,7 @@ _FE_NODISCARD_ class_node header_tool_engine::__build_class_node_mutually_recurs
 	return l_node;
 }
 
-_FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+_FE_NODISCARD_ struct_node header_tool_engine::__try_build_struct_node_mutually_recursive(const identifier_t& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Struct, "Frogman Engine Header Tool Assertion Failure: the 'struct' keyword is missing from the current token, but the header tool is attempting to build a struct node.");
 	++out_token_iterator_p; // move to the struct name.
@@ -327,13 +322,10 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 		l_node._struct_reflection_macro->_target_struct_name = parent_namespace_p;
 		l_node._struct_reflection_macro->_target_struct_name += l_class_name;
 		out_token_iterator_p = l_struct_reflection_macro_search_result;
-		std::advance(out_token_iterator_p, 3);
 
 		// build n
 		l_node._struct_reflection_macro->_property_reflection_macros;
 
-		FE::clock l_loop_timer;
-		l_loop_timer.start_clock();
 		while (out_token_iterator_p != end_p)
 		{
 			switch (out_token_iterator_p->_vocabulary)
@@ -343,19 +335,18 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 				break;
 
 			case Vocabulary::_RightCurlyBracket:
-			{
-				auto l_next = std::next(out_token_iterator_p, 1);
-				if ((l_next != end_p) &&
-					(l_next->_vocabulary == Vocabulary::_Semicolon))
 				{
-					++out_token_iterator_p;
-					return l_node;
+					auto l_next = std::next(out_token_iterator_p, 1);
+					if ((l_next != end_p) &&
+						(l_next->_vocabulary == Vocabulary::_Semicolon))
+					{
+						++out_token_iterator_p;
+						return l_node;
+					}
 				}
-			}
-			break;
+				break;
 			}
 			++out_token_iterator_p;
-			THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing struct, '{': no matching token found.");
 		}
 	}
 
@@ -363,11 +354,10 @@ _FE_NODISCARD_ struct_node header_tool_engine::__build_struct_node_mutually_recu
 	return l_node;
 }
 
-void header_tool_engine::__handle_template(typename std::pmr::list<token>::const_iterator& iterator_p)
+void header_tool_engine::__try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const
 {
 	++iterator_p;
 	THROW_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs, "Frogman Engine Header Tool C++ syntex error: '<' is missing from 'template<...>'.");
-	++iterator_p;
 	FE::clock l_loop_timer;
 	l_loop_timer.start_clock();
 	while (iterator_p->_vocabulary != Vocabulary::_EndTemplateArgs)
@@ -378,16 +368,11 @@ void header_tool_engine::__handle_template(typename std::pmr::list<token>::const
 	}
 }
 
-void header_tool_engine::__handle_enum(typename std::pmr::list<token>::const_iterator& iterator_p)
+void header_tool_engine::__try_skip_enum_block(typename std::pmr::list<token>::const_iterator& iterator_p) const
 {
-	std::advance(iterator_p, 2);
-	FE::clock l_loop_timer;
-	l_loop_timer.start_clock();
 	while (iterator_p->_vocabulary != Vocabulary::_RightCurlyBracket)
 	{
 		++iterator_p;
-		l_loop_timer.end_clock();
-		THROW_CPP_SYNTEX_ERROR(l_loop_timer.get_delta_milliseconds() >= 1000.0, "Frogman Engine Header Tool C++ syntex error C1075: while parsing enum, '{': no matching token found.");
 	}
 	++iterator_p;
 	THROW_CPP_SYNTEX_ERROR(iterator_p->_vocabulary != Vocabulary::_Semicolon, "Frogman Engine Header Tool Error: the C++ code syntex is incorrect; ';' is missing from 'enum struct Identifier {...};'.");

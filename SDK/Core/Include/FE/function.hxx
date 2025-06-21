@@ -592,21 +592,22 @@ class cpp_style_task : public task_base
 public:
     using class_type = C;
     using task_impl_type = TaskImpl;
-    using task_type = FE::method<class_type, task_impl_type>;
+
+    using task_type = typename FE::method<C, TaskImpl>::method_type;
     using arguments_buffer_type = ArgumentsBufferType;
-    using return_type = typename FE::method<class_type, task_impl_type>::return_type;
+    using return_type = typename FE::method<C, TaskImpl>::return_type;
     
 private:
-    typename task_type::method_type m_method;
+    task_type m_method;
 
 public:
     cpp_style_task() noexcept : m_method() {}
     virtual ~cpp_style_task() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(typename task_type::method_type task_p) noexcept : m_method(task_p) {}
+    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
 
-	_FE_FORCE_INLINE_ void set_task(typename task_type::method_type task_p) noexcept { this->m_method = task_p; }
-	_FE_FORCE_INLINE_ typename task_type::method_type get_task() const noexcept { return this->m_method; }
+	_FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { this->m_method = task_p; }
+	_FE_FORCE_INLINE_ task_type get_task() const noexcept { return this->m_method; }
 
     virtual void operator()(FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
@@ -782,21 +783,22 @@ class c_style_task : public task_base
 {
 public:
     using task_impl_type = TaskImpl;
-    using task_type = FE::function<task_impl_type>;
+
+    using task_type = typename FE::function<TaskImpl>::function_type;
     using arguments_buffer_type = ArgumentsBufferType;
-    using return_type = typename FE::function<task_impl_type>::return_type;
+    using return_type = typename FE::function<TaskImpl>::return_type;
 
 private:
-    typename task_type::function_type m_function;
+    task_type m_function;
 
 public:
     c_style_task() noexcept : m_function() {}
     virtual ~c_style_task() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task(typename task_type::function_type task_p) noexcept : m_function(task_p) {}
+    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task(task_type task_p) noexcept : m_function(task_p) {}
 
-    _FE_FORCE_INLINE_ void set_task(typename task_type::function_type task_p) noexcept { this->m_function = task_p; }
-    _FE_FORCE_INLINE_ typename task_type::function_type get_task() const noexcept { return this->m_function; }
+    _FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { this->m_function = task_p; }
+    _FE_FORCE_INLINE_ task_type get_task() const noexcept { return this->m_function; }
 
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {

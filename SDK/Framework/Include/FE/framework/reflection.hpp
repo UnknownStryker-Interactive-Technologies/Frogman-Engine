@@ -132,8 +132,8 @@ public:
 		this->m_task_map.reserve(size_p);
 	}
 
-	template<class TaskType, typename FunctionPtr>
-	_FE_FORCE_INLINE_ void register_task(const std::string_view& task_name_p, FunctionPtr function_p) noexcept
+	template<class TaskType>
+	_FE_FORCE_INLINE_ void register_task(const std::string_view& task_name_p, typename TaskType::task_type function_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
 
@@ -864,8 +864,21 @@ public: \
 	using type = class_name; \
 	class_metadata() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name>) ); \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, std::string l_class_name = "~"; l_class_name += #class_name; l_class_name += "()"; ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name>) ); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
+                   std::string l_class_name = #class_name; \
+                   l_class_name += "()"; \
+                   ::FE::framework::framework_base::get_framework().get_method_reflection() \
+                   .register_task< ::FE::c_style_task<void(void*)> > \
+                    ( l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name> ) \
+		); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
+                   std::string l_class_name = "~"; \
+                   l_class_name += #class_name; \
+                   l_class_name += "()"; \
+                   ::FE::framework::framework_base::get_framework().get_method_reflection() \
+			       .register_task< ::FE::c_style_task<void(void*)> > \
+			        ( l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name> ) \
+		); \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ class_metadata class_name##_class_meta;
@@ -891,7 +904,10 @@ class method_metadata_##method_name \
 public: \
 	_FE_FORCE_INLINE_ method_metadata_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection().register_task<::FE::cpp_style_task<class_metadata::type, __VA_ARGS__, typename FE::method<class_metadata::type, __VA_ARGS__>::arguments_type>>(get_signature(), &class_metadata::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection() \
+                                                .register_task< ::FE::cpp_style_task<typename class_metadata::type, __VA_ARGS__> > \
+			                                     ( get_signature(), &class_metadata::type::method_name ) \
+        ); \
 	} \
 	static ::std::string& get_signature() noexcept \
 	{ \
@@ -928,7 +944,10 @@ class static_method_metadata_##method_name \
 public: \
 	_FE_FORCE_INLINE_ static_method_metadata_##method_name() noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection().register_task<::FE::c_style_task<__VA_ARGS__, typename FE::function<__VA_ARGS__>::arguments_type>>(get_signature(), &class_metadata::type::method_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection() \
+                                                .register_task< ::FE::c_style_task<__VA_ARGS__> > \
+                                                 ( get_signature(), &class_metadata::type::method_name ) \
+        ); \
 	} \
 	static ::std::string& get_signature() noexcept \
 	{ \
@@ -966,7 +985,10 @@ class property_metadata_##property_name \
 public: \
 	_FE_FORCE_INLINE_ property_metadata_##property_name(typename class_metadata::type* const this_p) noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection().register_property<typename class_metadata::type, decltype(property_name)>(*this_p, this_p->property_name, #property_name)); \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection() \
+                                                .register_property<typename class_metadata::type, decltype(property_name)> \
+                                                 ( *this_p, this_p->property_name, #property_name ) \
+		); \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this;
