@@ -81,8 +81,8 @@ protected:
 	program_options m_program_options;
 	std::locale m_current_system_locale;
 	std::unique_ptr<class FE::memory_resource[]> m_memory;
-	reflection::method_map m_method_reflection;
-	reflection::property_map m_property_reflection;
+	reflection::method_registry m_method_reflection;
+	reflection::property_registry m_property_reflection;
 
 public:
 	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
@@ -92,8 +92,8 @@ public:
 	static framework_base& get_framework() noexcept;
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
-	reflection::method_map& get_method_reflection() noexcept;
-	reflection::property_map& get_property_reflection() noexcept;
+	reflection::method_registry& get_method_reflection() noexcept;
+	reflection::property_registry& get_property_reflection() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);

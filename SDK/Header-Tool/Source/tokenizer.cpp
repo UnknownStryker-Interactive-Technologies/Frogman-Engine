@@ -20,26 +20,30 @@ limitations under the License.
 
 _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokenize_header(const file_buffer_t& file_p) noexcept
 {
-	std::pmr::list<token> l_list(get_memory_resource());
-
-	if (10 > file_p.size())
+	if (file_p.empty() == true)
 	{
 		return std::nullopt;
 	}
 
-	auto l_end = file_p.c_str() + file_p.size();
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
-	l_list.push_back(l_token); // Begin of token
+	FE_EXIT(__is_encoded_with_UTF8_BOM(file_p.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM,
+		    "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.");
 
-	for (auto iterator = FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
+	std::pmr::list<token> l_list(get_memory_resource());
+
+	auto l_end = file_p.c_str() + file_p.size();
+	l_list.emplace_back(Vocabulary::_Undefined, file_buffer_t(get_memory_resource())); // The begin of a token list
+
+	token l_token;
+	for (FE::UTF8* iterator = FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 	{
-		if ( static_cast<char>(*iterator) <= static_cast<char>(' ') )
+		if (*iterator <= ' ')
 		{
-			if ( static_cast<char>(*iterator) == static_cast<char>('\n') )
+			if (*iterator == '\n')
 			{
 				l_token._vocabulary = Vocabulary::_LineEnd;
-			    l_token._code = u8'\n';
-				l_list.push_back(std::move(l_token));
+			    l_token._code = file_buffer_t(get_memory_resource());
+				l_token._code = *iterator;
+				l_list.push_back( std::move(l_token) );
 			}
 			++iterator;
 			continue;
@@ -56,13 +60,14 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 		}
 
 		iterator += l_token._code.size();
-		l_list.push_back(std::move(l_token)); // push_back the defined vocab.
+		l_list.push_back( std::move(l_token) ); // push_back the defined vocab.
 	}
 
 	l_list.emplace_back(Vocabulary::_EndOfCode, u8"\0");
-	return std::make_optional<std::pmr::list<token>>(l_list);
+	return l_list;
 }
 
+// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT, which means that they will be purged from the token list.
 void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p) noexcept
 {
 	const auto l_is_comment_begin = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentBegin; };
@@ -78,7 +83,6 @@ void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p) noe
 		l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_begin);
 		l_comment_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_end);
 	}
-
 
 	const auto l_is_line_comment = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineComment; };
 	const auto l_is_line_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; };
@@ -157,165 +161,184 @@ void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& 
 	}
 } 
 
-_FE_NODISCARD_ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
-
+	token l_token{ Vocabulary::_Undefined, file_buffer_t(u8"\0", get_memory_resource()) };
 	// The top priority is filtering out the comments.
-	l_token = __tokenize_comment(code_iterator_p);
+	__tokenize_comment(l_token, code_iterator_p);
 	if (l_token._vocabulary != Vocabulary::_Undefined)
 	{
 		return l_token;
 	}
 
-	l_token = __tokenize_reflection_relevant(code_iterator_p);
+	__tokenize_operator(l_token, code_iterator_p);
 	if (l_token._vocabulary != Vocabulary::_Undefined)
 	{
 		return l_token;
 	}
 
-	l_token = __tokenize_operator(code_iterator_p);
-	if (l_token._vocabulary != Vocabulary::_Undefined)
-	{
-		return l_token;
-	}
+	auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+	thread_local static std::string tl_s_key_buffer;
 
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
-
-	for (auto it = l_char.first; it != l_char.second; ++it)
+	for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
 	{
+		it.key(tl_s_key_buffer);
 		switch (it.value())
 		{
+		// letter-non-contigous keywords.
 		case Vocabulary::_Override:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " override") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"override";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_Final:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " final") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"final";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_Constexpr:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constexpr ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"constexpr";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_Consteval:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "consteval ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"consteval";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_Constinit:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "constinit ") == true)
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndNamespace:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Namespace:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Class:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Struct:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Enum:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Static:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_ThreadLocal:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Virtual:
+			if (__verify_key_equivalence(code_iterator_p, tl_s_key_buffer.c_str()) == true)
 			{
 				l_token._vocabulary = it.value();
-				l_token._code = u8"constinit";
+				l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
 				return l_token;
 			}
 			break;
 
-		case Vocabulary::_PreprocessorNextLine:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "\\") == true)
+		case Vocabulary::_CallingConvention: /* __cdecl __stdcall __fastcall __thiscall __vectorcall */
 			{
-				auto l_iterator = std::next(code_iterator_p, 1);
-				if (*l_iterator == '\n')
+				constexpr static std::array<FE::ASCII*, 5> l_calling_conventions = 
 				{
-					l_token._vocabulary = it.value();
-					l_token._code = u8"\\";
-					return l_token;
+					"__cdecl", "__stdcall", "__fastcall", "__thiscall", "__vectorcall"
+				};
+
+				for (FE::ASCII* calling_convention : l_calling_conventions)
+				{
+					if (__verify_key_equivalence(code_iterator_p, calling_convention) == true)
+					{
+						l_token._vocabulary = it.value();
+						l_token._code = reinterpret_cast<FE::UTF8*>(calling_convention);
+						return l_token;
+					}
 				}
 			}
 			break;
 
+
+		// letter-contigous keywords.
+		case Vocabulary::_BeginNamespace:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_NamespaceConcatenator:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Template:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Private:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Protected:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Public:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Const:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Volatile:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Noexcept:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineClassReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineStructReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineMethodReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
+			if (FE::algorithm::string::compare_ranged( (FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+													   tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() } ) == true)
+			{
+				l_token._vocabulary = it.value();
+				l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+				return l_token;
+			}
+			break;
+
+
+		// Miscellaneous keywords.
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Comma:
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_CharLiteral:
-			l_token._vocabulary = it.value();
-			l_token._code = '\'';
-			return l_token;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_StringLiteral:
-			l_token._vocabulary = it.value();
-			l_token._code = '\"';
-			return l_token;
-
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_PreprocessorNextLine:
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_PreprocessorDirective:
 			l_token._vocabulary = it.value();
-			l_token._code = '#';
+			l_token._code = static_cast<FE::UTF8>(*tl_s_key_buffer.c_str());
 			return l_token;
 
 		default:
 			break;
 		}
 	}
+	return l_token; // Vocabulary::_Undefined
+} 
 
-	return l_token;
-}
-
-_FE_NODISCARD_ token header_tool_engine::__tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+token header_tool_engine::__tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
+	token out_token_p{ Vocabulary::_Undefined,  file_buffer_t(get_memory_resource()) };
 
-	while (static_cast<char>(*code_iterator_p) > static_cast<char>(' ')
-		   && __tokenize_identifiable(code_iterator_p)._vocabulary == Vocabulary::_Undefined)
+	while ((__tokenize_identifiable(code_iterator_p)._vocabulary == Vocabulary::_Undefined) &&
+		   (*code_iterator_p > ' '))
 	{
-		l_token._code += *code_iterator_p;
+		out_token_p._code += *code_iterator_p;
 		++code_iterator_p;
 	}
-
-	return l_token;
+	return out_token_p;
 }
 
-_FE_NODISCARD_ token header_tool_engine::__tokenize_comment(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+void header_tool_engine::__tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
-
 	// Check if the string is a comment.
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+	auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+	thread_local static std::string tl_s_key_buffer;
 
-	for (auto it = l_char.first; it != l_char.second; ++it)
+	for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
 	{
+		it.key(tl_s_key_buffer);
 		switch (it.value())
 		{
 		case Vocabulary::_CommentBegin:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "/*") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"/*";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_CommentEnd:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "*/") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"*/";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_LineComment:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "//") == true)
+			if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+				tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"//";
-				return l_token;
+				out_token_p._vocabulary = it.value();
+				out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+				return;
 			}
 			break;
 
@@ -323,447 +346,67 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_comment(typename file_buffer
 			break;
 		}
 	}
-
-	return l_token;
 }
 
-_FE_NODISCARD_ token header_tool_engine::__tokenize_reflection_relevant(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+void header_tool_engine::__tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept
 {
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
+	auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+	thread_local static std::string tl_s_key_buffer;
 
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
-
-	for (auto it = l_char.first; it != l_char.second; ++it)
+	for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
 	{
-		switch (it.value())
-		{
-		case Vocabulary::_BeginNamespace:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "BEGIN_NAMESPACE") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"BEGIN_NAMESPACE";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_EndNamespace:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "END_NAMESPACE") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"END_NAMESPACE";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Namespace:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "namespace ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"namespace";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_NamespaceConcatenator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "::") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"::";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Template:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "template") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"template";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Class:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "class ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"class";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Struct:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "struct ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"struct";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Enum:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "enum ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"enum";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Private:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "private") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"private";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Protected:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "protected") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"protected";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Public:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "public") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"public";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Static:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "static ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"static";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_ThreadLocal:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "thread_local ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"thread_local";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Virtual:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "virtual ") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"virtual";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Const:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " const") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"const";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Volatile:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " volatile") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"volatile";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Noexcept:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, " noexcept") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"noexcept";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_CLASS_HAS_A_BASE") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_CLASS_HAS_A_BASE";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEngineClassReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_CLASS") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_CLASS";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEngineStructReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_STRUCT") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_STRUCT";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_PROPERTY") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_PROPERTY";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_STATIC_METHOD") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_STATIC_METHOD";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_FrogmanEngineMethodReflectionMacro:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "FE_METHOD") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"FE_METHOD";
-				return l_token;
-			}
-			break;
-
-		case Vocabulary::_Semicolon:
-			l_token._vocabulary = it.value();
-			l_token._code = u8";";
-			return l_token;
-
-		case Vocabulary::_Comma:
-			l_token._vocabulary = it.value();
-			l_token._code = u8",";
-			return l_token;
-
-		case Vocabulary::_AssignmentOperator:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"=";
-			return l_token;
-
-		case Vocabulary::_Pointer:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"*";
-			return l_token;
-
-		case Vocabulary::_LeftParen:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"(";
-			return l_token;
-
-		case Vocabulary::_RightParen:
-			l_token._vocabulary = it.value();
-			l_token._code = u8")";
-			return l_token;
-
-		case Vocabulary::_LeftBracket:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"[";
-			return l_token;
-
-		case Vocabulary::_RightBracket:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"]";
-			return l_token;
-
-		case Vocabulary::_LeftCurlyBracket:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"{";
-			return l_token;
-
-		case Vocabulary::_RightCurlyBracket:
-			l_token._vocabulary = it.value();
-			l_token._code = u8"}";
-			return l_token;
-
-		default:
-			break;
-		}
-	}
-	return l_token;
-}
-
-_FE_NODISCARD_ token header_tool_engine::__tokenize_operator(typename file_buffer_t::const_pointer code_iterator_p) noexcept
-{
-	token l_token{ Vocabulary::_Undefined, file_buffer_t(get_memory_resource()) };
-
-	auto l_char = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
-
-	for (auto it = l_char.first; it != l_char.second; ++it)
-	{
+		it.key(tl_s_key_buffer);
 		switch (it.value())
 		{
 		case Vocabulary::_Access:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "->") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"->";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_AddAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "+=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"+=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_SubAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "-=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"-=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_MulAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "*=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"*=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_DivAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "/=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"/=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_ModAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "%=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"%=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_BitwiseAndAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "&=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"&=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_BitwiseOrAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "|=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"|=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_BitwiseXorAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "^=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"^=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_BitShiftAssignmentOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "<<=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"<<=";
-				return l_token;
-			}
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, ">>=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8">>=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_LogicalAnd:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "&&") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"&&";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_IsEqualTo:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "==") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"==";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_IsNotEqualTo:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "!=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"!=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_IsLessThanOrEqualTo:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "<=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"<=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_IsGreaterThanOrEqualTo:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, ">=") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8">=";
-				return l_token;
-			}
-			break;
-
+			_FE_FALLTHROUGH_;
 		case Vocabulary::_BitShiftOperator:
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, "<<") == true)
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftParen:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_RightParen:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_RightBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_RightCurlyBracket:
+			if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+				tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8"<<";
-				return l_token;
-			}
-			if (__verify_if_subject_is_equal_to_key(code_iterator_p, ">>") == true)
-			{
-				l_token._vocabulary = it.value();
-				l_token._code = u8">>";
-				return l_token;
+				out_token_p._vocabulary = it.value();
+				out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+				return;
 			}
 			break;
 
@@ -774,25 +417,35 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_operator(typename file_buffe
 
 	switch (*code_iterator_p)
 	{
+	case '=':
+		out_token_p._vocabulary = Vocabulary::_AssignmentOperator;
+		out_token_p._code = *code_iterator_p;
+		return;
+
+	case '*':
+		out_token_p._vocabulary = Vocabulary::_Pointer;
+		out_token_p._code = *code_iterator_p;
+		return;
+
 	case '<':
-		l_token._vocabulary = Vocabulary::_BeginTemplateArgs;
-		l_token._code = u8"<";
-		return l_token;
+		out_token_p._vocabulary = Vocabulary::_BeginTemplateArgs;
+		out_token_p._code = *code_iterator_p;
+		return;
 
 	case '>':
-		l_token._vocabulary = Vocabulary::_EndTemplateArgs;
-		l_token._code = u8">";
-		return l_token;
+		out_token_p._vocabulary = Vocabulary::_EndTemplateArgs;
+		out_token_p._code = *code_iterator_p;
+		return;
 
 	case ':':
-		l_token._vocabulary = Vocabulary::_Colon;
-		l_token._code = u8":";
-		return l_token;
+		out_token_p._vocabulary = Vocabulary::_Colon;
+		out_token_p._code = *code_iterator_p;
+		return;
 
 	case '&':
-		l_token._vocabulary = Vocabulary::_Reference;
-		l_token._code = u8"&";
-		return l_token;
+		out_token_p._vocabulary = Vocabulary::_Reference;
+		out_token_p._code = *code_iterator_p;
+		return;
 
 	case '+':
 		_FE_FALLTHROUGH_;
@@ -813,13 +466,29 @@ _FE_NODISCARD_ token header_tool_engine::__tokenize_operator(typename file_buffe
 	case '?':
 		_FE_FALLTHROUGH_;
 	case '.':
-		l_token._vocabulary = Vocabulary::_Operator;
-		l_token._code = *FE::iterator_cast<FE::UTF8*>(code_iterator_p);
-		return l_token;
+		out_token_p._vocabulary = Vocabulary::_Operator;
+		out_token_p._code = *code_iterator_p;
+		return;
 
 	default:
 		break;
 	}
+}
 
-	return l_token;
+_FE_NODISCARD_ FE::boolean header_tool_engine::__verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p) noexcept
+{
+	static_assert(std::is_same_v<typename file_buffer_t::value_type, var::UTF8>, "static assertion failure, the header files must be encoded in UTF8.");
+
+	FE::uint64 l_length = FE::algorithm::string::length(key_p);
+
+	if ((subject_p[-1] <= ' ') && (subject_p[l_length] <= ' ') ||
+		(subject_p[-1] == this->m_UTF8_with_BOM[2]) && (subject_p[l_length] <= ' '))
+	{
+		if (FE::algorithm::string::compare_ranged((FE::ASCII*)subject_p, FE::algorithm::string::range{ 0, l_length },
+			key_p, FE::algorithm::string::range{ 0, l_length }) == true)
+		{
+			return true;
+		}
+	}
+	return false;
 }

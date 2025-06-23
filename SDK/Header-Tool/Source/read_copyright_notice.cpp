@@ -29,7 +29,7 @@ _FE_NODISCARD_ file_buffer_t header_tool_engine::__read_copyright_notice(FE::int
 			FE::size l_length = FE::algorithm::string::length(argv_p[i]);
 			std::mbstowcs(l_wide_directory, this->m_header_tool_options.get_path_to_copyright_notice(), l_length);
 			l_wide_directory[l_length] = L'\0';
-			FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(l_wide_directory) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileIsNotEncodedIn_UTF8_BOM, "Frogman Engine Header Tool ERROR: the license text file '${%s@0}' is not encoded in UTF-8 BOM.", this->m_header_tool_options.get_path_to_copyright_notice());
+			FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(l_wide_directory) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the license text file '${%s@0}' is not encoded in UTF-8 BOM.", this->m_header_tool_options.get_path_to_copyright_notice());
 
 			std::basic_ifstream<var::UTF8> l_file_handler;
 			l_file_handler.imbue(this->m_UTF8_locale);

@@ -28,15 +28,15 @@ enum struct FrogmanEngineHeaderToolError : FE::int32
 	_FatalCmdInputError_InvalidPathToCMakeProject = 1002,
 	_FatalError_FailedToOpenFile = 1003,
 	_InputError_NoCopyRightNoticeIsGiven = 1004,
-	_Fatal_InputError_TargetFileIsNotEncodedIn_UTF8_BOM = 1005,
-	_InputError_IncorrectCppSyntex = 1006,
+	_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM = 1005,
+	_InputError_IncorrectCppSyntax = 1006,
 	_InputError_ParsingFailure = 1007
 };
 
-#define THROW_CPP_SYNTEX_ERROR(expr, msg) \
+#define THROW_CPP_SYNTAX_ERROR(expr, msg) \
 if (expr) _FE_UNLIKELY_ \
 { \
-	throw ::FE::pair<FrogmanEngineHeaderToolError, ::FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntex, msg}; \
+	throw ::FE::pair<FrogmanEngineHeaderToolError, ::FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, msg}; \
 }
 
 

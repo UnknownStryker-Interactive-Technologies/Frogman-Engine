@@ -28,43 +28,42 @@ limitations under the License.
 
 
 
-using identifier_node = std::basic_string<var::UTF8>;
-using identifier_t = identifier_node;
+using identifier = std::pmr::basic_string<var::UTF8>;
 
 
 struct frogman_engine_property_macro_node
 {
-	identifier_node _target_property_name;
+	identifier _target_property_name;
 };
 
 
 struct frogman_engine_method_macro_node
 {
-	identifier_node _return_type;
-	identifier_node _method_name;
-	std::pmr::vector<identifier_node> _parameter_types;
-	std::pmr::vector<identifier_node> _specifiers;
+	identifier _return_type;
+	identifier _method_name;
+	std::pmr::vector<identifier> _parameter_types;
+	std::pmr::vector<identifier> _specifiers;
 };
 
 
 struct frogman_engine_static_method_macro_node
 {
-	identifier_node _return_type;
-	identifier_node _method_name;
-	std::pmr::vector<identifier_node> _parameter_types;
-	std::pmr::vector<identifier_node> _specifiers;
+	identifier _return_type;
+	identifier _method_name;
+	std::pmr::vector<identifier> _parameter_types;
+	std::pmr::vector<identifier> _specifiers;
 };
 
 
 struct frogman_engine_class_has_a_base_macro_node
 {
-	identifier_node _target_base_class_name;
+	identifier _target_base_class_name;
 };
 
 
 struct frogman_engine_class_macro_node
 {
-	identifier_node _target_class_name;
+	identifier _target_class_name;
 	std::pmr::vector<frogman_engine_property_macro_node> _property_reflection_macros;
 	std::pmr::vector<frogman_engine_method_macro_node> _method_reflection_macros;
 	std::pmr::vector<frogman_engine_static_method_macro_node> _static_method_reflection_macros;
@@ -73,7 +72,7 @@ struct frogman_engine_class_macro_node
 
 struct frogman_engine_struct_macro_node
 {
-	identifier_node _target_struct_name;
+	identifier _target_struct_name;
 	std::pmr::vector<frogman_engine_property_macro_node> _property_reflection_macros;
 };
 
@@ -91,12 +90,20 @@ struct struct_node
 };
 
 
+struct enum_struct_node
+{
+	identifier _target_enum_struct_name;
+	std::pmr::vector<identifier> _enum_struct_fields;
+};
+
+
 struct namespace_node
 {
-	identifier_node _namespace_name;
+	identifier _target_namespace_name;
 	std::unique_ptr< std::pmr::vector<namespace_node> > _nested_namespaces;
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
+	std::pmr::vector<enum_struct_node> _enum_structs;
 };
 
 
@@ -106,6 +113,7 @@ struct header_file_root
 	std::pmr::vector<namespace_node> _namespaces;
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
+	std::pmr::vector<enum_struct_node> _enum_structs;
 };
 
 

@@ -86,13 +86,14 @@ namespace FrogmanEngine
         
     } 
     
-    enum class GameState
+    FE_ENUM_STRUCT();
+    enum struct GameState
     {
-        MAIN_MENU,
-        PLAYING,
-        PAUSED,
-        GAME_OVER,
-        VICTORY
+        _MainMenu,
+        _Playing,
+        _Paused,
+        _GameOver,
+		_Victory,
     };
 
     //template<typename T>

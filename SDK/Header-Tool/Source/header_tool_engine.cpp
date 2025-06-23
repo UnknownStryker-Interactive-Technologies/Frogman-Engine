@@ -125,6 +125,7 @@ FE::int32 header_tool_engine::run()
 
 					// tokenize the header file to get the tokens.
 					auto l_tokens = __tokenize_header(l_file);
+
 					if (l_tokens == std::nullopt)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
@@ -140,11 +141,11 @@ FE::int32 header_tool_engine::run()
 					__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
 
 					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
-					
+
 					header_file_root l_reflection_tree;
-					try // The exceptions must be thrown if the input header files have C++ syntex errors.
+					try // The exceptions must be thrown if the input header files have C++ syntax errors.
 					{
-						l_reflection_tree = __try_build_reflection_tree(l_path, *l_tokens); // throws if C++ syntex is incorrect.
+						l_reflection_tree = __try_build_reflection_tree(l_path, *l_tokens); // throws if C++ syntax is incorrect.
 					}
 					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
 					{
@@ -259,7 +260,7 @@ std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std
 		{
 			continue;
 		}
-		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileIsNotEncodedIn_UTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
+		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
 
 		std::basic_ifstream<var::UTF8> l_file_handler;
 		l_file_handler.imbue(this->m_UTF8_locale);

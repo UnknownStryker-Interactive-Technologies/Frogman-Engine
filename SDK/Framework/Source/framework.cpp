@@ -157,12 +157,12 @@ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 	return &(this->m_memory[ get_current_thread_id() ]);
 }
 
-reflection::method_map& framework_base::get_method_reflection() noexcept
+reflection::method_registry& framework_base::get_method_reflection() noexcept
 {
 	return this->m_method_reflection;
 }
 
-reflection::property_map& framework_base::get_property_reflection() noexcept
+reflection::property_registry& framework_base::get_property_reflection() noexcept
 {
 	return this->m_property_reflection;
 }

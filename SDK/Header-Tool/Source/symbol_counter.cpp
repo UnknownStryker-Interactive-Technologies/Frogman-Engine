@@ -173,7 +173,7 @@ _FE_NODISCARD_ header_tool_engine::member_symbol_count header_tool_engine::__cou
 	return member_symbol_count();
 }
 
-std::optional<FE::uint32> header_tool_engine::___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept
+_FE_NODISCARD_ std::optional<FE::uint32> header_tool_engine::___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept
 {
 	switch (paren_p)
 	{
@@ -202,7 +202,7 @@ std::optional<FE::uint32> header_tool_engine::___verify_if_token_is_a_paren_or_b
 	}
 }
 
-std::optional<FE::ASCII*> header_tool_engine::__validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept
+_FE_NODISCARD_ std::optional<FE::ASCII*> header_tool_engine::__validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept
 {
 	static const std::array< std::pair<Vocabulary, Vocabulary>, 3 > l_lookup = 
 	{ 
@@ -254,7 +254,7 @@ std::optional<FE::ASCII*> header_tool_engine::__validate_parentheses(const std::
 	
 	if (tl_s_stack.size() != 0)
 	{
-		return "Frogman Engine Header Tool C++ syntex error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
+		return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
 	}
 	tl_s_stack.clear();
 
@@ -300,7 +300,7 @@ std::optional<FE::ASCII*> header_tool_engine::__validate_parentheses(const std::
 
 	if (tl_s_stack.size() != 0)
 	{
-		return "Frogman Engine Header Tool C++ syntex error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
+		return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
 	}
 	tl_s_stack.clear();
 

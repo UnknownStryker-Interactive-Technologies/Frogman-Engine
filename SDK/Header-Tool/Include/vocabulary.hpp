@@ -26,7 +26,6 @@ limitations under the License.
 enum struct Vocabulary : FE::uint16
 {
 	_Undefined, _EndOfCode,
-	_Identifier,
 	_LineComment, _LineEnd,
 	_CommentBegin, _CommentEnd,
 	_BeginNamespace, _EndNamespace,
@@ -35,7 +34,7 @@ enum struct Vocabulary : FE::uint16
 	_Class, _Struct, _Enum,
 	_Colon, _Semicolon, _Comma,
 
-	_StringLiteral, _CharLiteral,
+	_StringLiteral, _CharLiteral, _NumericLiteral, _NumberValue, // To do:  _NumericLiteral, _NumberValue,  
 	_Access, _Operator,
 	_AssignmentOperator,
 	_LogicalAnd,
@@ -63,19 +62,20 @@ enum struct Vocabulary : FE::uint16
 	_FrogmanEnginePropertyReflectionMacro,
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
+	_FrogmanEngineEnumStructReflectionMacro,
 	_PreprocessorDirective, _PreprocessorNextLine
 };
 
 
-const tsl::htrie_map<char, Vocabulary> g_vocabulary =
+const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 {
 
 	{ "//", Vocabulary::_LineComment }, { "\n", Vocabulary::_LineEnd },
 	{ "/*", Vocabulary::_CommentBegin }, { "*/", Vocabulary::_CommentEnd },
 	{ "BEGIN_NAMESPACE", Vocabulary::_BeginNamespace }, { "END_NAMESPACE", Vocabulary::_EndNamespace },
-	{ "namespace ", Vocabulary::_Namespace }, { "::", Vocabulary::_NamespaceConcatenator },
+	{ "namespace", Vocabulary::_Namespace }, { "::", Vocabulary::_NamespaceConcatenator },
 	{ "template", Vocabulary::_Template }, { "<", Vocabulary::_BeginTemplateArgs }, { ">", Vocabulary::_EndTemplateArgs },
-	{ "class ", Vocabulary::_Class }, { "struct ", Vocabulary::_Struct }, { "enum ", Vocabulary::_Enum },
+	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_Enum },
 	{ ":", Vocabulary::_Colon }, { ";", Vocabulary::_Semicolon }, { ",", Vocabulary::_Comma },
 
 	{ "\"", Vocabulary::_StringLiteral }, { "\'", Vocabulary::_StringLiteral },
@@ -88,13 +88,13 @@ const tsl::htrie_map<char, Vocabulary> g_vocabulary =
 	{ "+=", Vocabulary::_AddAssignmentOperator }, { "-=", Vocabulary::_SubAssignmentOperator }, { "*=", Vocabulary::_MulAssignmentOperator }, { "/=", Vocabulary::_DivAssignmentOperator }, { "%=", Vocabulary::_ModAssignmentOperator },
 	{ "==", Vocabulary::_IsEqualTo }, { "!=", Vocabulary::_IsNotEqualTo }, { ">=", Vocabulary::_IsGreaterThanOrEqualTo }, { "<=", Vocabulary::_IsLessThanOrEqualTo },
 
-	{"virtual ", Vocabulary::_Virtual}, {" override", Vocabulary::_Override}, {" final", Vocabulary::_Final},
+	{ "virtual", Vocabulary::_Virtual}, { "override", Vocabulary::_Override}, { "final", Vocabulary::_Final},
 	{ "private", Vocabulary::_Private }, { "public", Vocabulary::_Public }, { "protected", Vocabulary::_Protected },
-	{ "static ", Vocabulary::_Static }, { "thread_local ", Vocabulary::_ThreadLocal },
-	{ " const", Vocabulary::_Const }, {" volatile", Vocabulary::_Volatile},
+	{ "static", Vocabulary::_Static }, { "thread_local", Vocabulary::_ThreadLocal },
+	{ "const", Vocabulary::_Const }, { "volatile", Vocabulary::_Volatile},
 	{ "&", Vocabulary::_Reference }, { "*", Vocabulary::_Pointer },
-	{ " noexcept", Vocabulary::_Noexcept },
-	{ "constexpr ", Vocabulary::_Constexpr }, { "consteval ", Vocabulary::_Consteval }, { "constinit ", Vocabulary::_Constinit },
+	{ "noexcept", Vocabulary::_Noexcept },
+	{ "constexpr", Vocabulary::_Constexpr }, { "consteval", Vocabulary::_Consteval }, { "constinit", Vocabulary::_Constinit },
 	{ "(", Vocabulary::_LeftParen }, { ")", Vocabulary::_RightParen },
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
@@ -104,7 +104,10 @@ const tsl::htrie_map<char, Vocabulary> g_vocabulary =
 	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
-	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine }
+	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
+	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine },
+
+	{ "__", Vocabulary::_CallingConvention }
 };
 
 

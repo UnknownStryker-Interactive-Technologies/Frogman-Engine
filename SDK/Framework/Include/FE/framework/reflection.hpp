@@ -68,7 +68,7 @@ namespace FE::framework::serialization
 		_Ao,
 		_Fassetpack,
 		_Fasset,
-		Fdata
+		_Fdata
 	};
 
 	constexpr FE::pair<FileExtension, FE::ASCII*> froggy_file_extension{ FileExtension::_Froggy, ".froggy" };
@@ -77,7 +77,7 @@ namespace FE::framework::serialization
 	constexpr FE::pair<FileExtension, FE::ASCII*> ao_file_extension{ FileExtension::_Ao, ".ao" };
 	constexpr FE::pair<FileExtension, FE::ASCII*> fassetpack_file_extension{ FileExtension::_Fassetpack, ".fassetpack" };
 	constexpr FE::pair<FileExtension, FE::ASCII*> fasset_file_extension{ FileExtension::_Fasset, ".fasset" };
-	constexpr FE::pair<FileExtension, FE::ASCII*> fdata_file_extension{ FileExtension::Fdata, ".fdata" };
+	constexpr FE::pair<FileExtension, FE::ASCII*> fdata_file_extension{ FileExtension::_Fdata, ".fdata" };
 }
 
 
@@ -99,7 +99,7 @@ _FE_FORCE_INLINE_ void destruct_object(void* address_p)
 }
 
 
-class method_map
+class method_registry
 {
 	friend class ::FE::framework::framework_base;
 public:
@@ -111,25 +111,25 @@ private:
 
 	lock_type m_lock;
 	std::pmr::synchronized_pool_resource m_pool;
-	internal_map_type m_task_map;
+	internal_map_type m_method_registry;
 
 private:
-	method_map(FE::size map_capacity_p) noexcept
-		: m_lock(), m_pool(), m_task_map(map_capacity_p) {}
+	method_registry(FE::size map_capacity_p) noexcept
+		: m_lock(), m_pool(), m_method_registry(map_capacity_p) {}
 
-	~method_map() noexcept = default;
+	~method_registry() noexcept = default;
 
 public:
-	method_map(const method_map&) = delete;
-	method_map(method_map&&) = delete;
+	method_registry(const method_registry&) = delete;
+	method_registry(method_registry&&) = delete;
 
-	method_map& operator=(const method_map&) = delete;
-	method_map& operator=(method_map&&) = delete;
+	method_registry& operator=(const method_registry&) = delete;
+	method_registry& operator=(method_registry&&) = delete;
 
 	_FE_FORCE_INLINE_ void reserve(FE::size size_p) noexcept
 	{
 		std::lock_guard<lock_type> l_lock(m_lock);
-		this->m_task_map.reserve(size_p);
+		this->m_method_registry.reserve(size_p);
 	}
 
 	template<class TaskType>
@@ -141,14 +141,15 @@ public:
 		new(l_task) TaskType(function_p);
 		typename internal_map_type::key_type l_key(task_name_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		this->m_task_map.emplace(std::move(l_key), l_task);
+		FE_EXIT(this->m_method_registry.emplace(std::move(l_key), l_task).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			    "FE Runtime Reflection Registration Error: failed to register a function metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 
 	_FE_FORCE_INLINE_ FE::boolean check_presence(const std::string_view& key_p) noexcept
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = this->m_task_map.find(l_key); it != this->m_task_map.end(); ++it)
+		for (auto it = this->m_method_registry.find(l_key); it != this->m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
 			{
@@ -165,7 +166,7 @@ public:
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = this->m_task_map.find(l_key); it != this->m_task_map.end(); ++it)
+		for (auto it = this->m_method_registry.find(l_key); it != this->m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
 			{
@@ -175,6 +176,8 @@ public:
 		return nullptr;
 	}
 };
+
+
 
 
 /*
@@ -232,25 +235,24 @@ struct property_metadata
 
 class instance_layout
 {
-	tsl::array_map<var::ASCII, property_metadata> m_property_map;
+	tsl::array_map<var::ASCII, property_metadata> m_property_registry;
 
 public:
 	instance_layout(const std::pmr::map<var::ptrdiff, property_metadata>& layout_p) noexcept
-		: m_property_map()
+		: m_property_registry()
 	{
 		for (auto [key, value] : layout_p)
 		{
-			this->m_property_map.emplace(value._name, value);
+			this->m_property_registry.emplace(value._name, value);
 		}
 	}
 	~instance_layout() noexcept = default;
-
 
 	template<typename T, class C>
 	_FE_FORCE_INLINE_ T* get_property_of(C& instance_p, const std::string_view& property_name_p) noexcept
 	{
 		FE_STATIC_ASSERT(std::is_class<C>::value == true, "Static assertion failure: the typename 'class C' must be a class type.");
-		for (auto it = this->m_property_map.find(property_name_p); it != this->m_property_map.end(); ++it)
+		for (auto it = this->m_property_registry.find(property_name_p); it != this->m_property_registry.end(); ++it)
 		{
 			if (property_name_p == it->_name)
 			{
@@ -268,7 +270,7 @@ public:
 The property_map class in the FE::framework::reflection namespace manages the registration and metadata of properties associated with host class instances
 utilizing a custom memory pool and thread-safe operations for efficient reflection and serialization.
 */
-class property_map
+class property_registry
 {
 	friend class ::FE::framework::framework_base;
 public:
@@ -292,7 +294,7 @@ public:
 
 private:
 	std::pmr::synchronized_pool_resource m_pool;
-	internal_map_type m_property_map;
+	internal_map_type m_property_registry;
 	class_layer_stack m_class_layer;
 	data_on_heap_size_record m_scalable_container_size_record;
 
@@ -302,24 +304,24 @@ private:
 	input_buffer_iterator_type m_position;
 
 private:
-	property_map(FE::size reflection_map_capacity_p) noexcept
-		: m_pool(), m_property_map(reflection_map_capacity_p), 
+	property_registry(FE::size reflection_map_capacity_p) noexcept
+		: m_pool(), m_property_registry(reflection_map_capacity_p), 
 		  m_class_layer(&m_pool), m_scalable_container_size_record(&m_pool),
 		  m_lock(), m_fstream(), m_input_buffer(&m_pool), m_position() {}
 
-	~property_map() noexcept = default;
+	~property_registry() noexcept = default;
 
 public:
-	property_map(const property_map&) = delete;
-	property_map(property_map&&) = delete;
+	property_registry(const property_registry&) = delete;
+	property_registry(property_registry&&) = delete;
 
-	property_map& operator=(const property_map&) = delete;
-	property_map& operator=(property_map&&) = delete;
+	property_registry& operator=(const property_registry&) = delete;
+	property_registry& operator=(property_registry&&) = delete;
 
 	_FE_FORCE_INLINE_ void reserve(size size_p) noexcept
 	{
 		std::lock_guard<lock_type> l_lock(m_lock);
-		this->m_property_map.reserve(size_p);
+		this->m_property_registry.reserve(size_p);
 	}
 
 	template<class C, typename T>
@@ -342,11 +344,11 @@ public:
 		// Find or register its host class.
 		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		auto l_iterator = m_property_map.find(l_host_class_instance_typename);
-		if (FE_UNLIKELY(l_iterator == m_property_map.end())) _FE_UNLIKELY_
+		auto l_iterator = m_property_registry.find(l_host_class_instance_typename);
+		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
 		{
-			auto l_result = m_property_map.emplace(l_host_class_instance_typename, class_property_list(&m_pool));
-			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property_map::register_property().");
+			auto l_result = m_property_registry.emplace(l_host_class_instance_typename, class_property_list(&m_pool));
+			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property_registry::register_property().");
 			l_iterator = l_result.first;
 		}
 
@@ -355,8 +357,8 @@ public:
 		{
 			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
 			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property_map::__serialize_by_foreach_mutually_recursive<T>);
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property_map::__deserialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
 
 			if constexpr (FE::has_value_type<T>::value == true)
 			{
@@ -378,7 +380,8 @@ public:
 			}
 		}
 
-		l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
+		FE_EXIT(l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 
 	/*
@@ -396,8 +399,8 @@ public:
 
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		auto l_search_result = m_property_map.find(l_typename);
-		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
+		auto l_search_result = m_property_registry.find(l_typename);
+		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -436,8 +439,8 @@ public:
 
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		auto l_search_result = this->m_property_map.find(l_typename);
-		FE_EXIT((l_search_result == m_property_map.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
+		auto l_search_result = this->m_property_registry.find(l_typename);
+		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
 		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -485,7 +488,7 @@ public:
 	{
 		std::pmr::string l_class_name(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = m_property_map.find(l_class_name); it != m_property_map.end(); ++it)
+		for (auto it = m_property_registry.find(l_class_name); it != m_property_registry.end(); ++it)
 		{
 			if (l_class_name == it->first)
 			{
@@ -499,7 +502,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_serialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_map::__serialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__serialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -514,7 +517,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_deserialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_map, void(void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_map::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -558,8 +561,8 @@ private:
 			static typename  internal_map_type::iterator l_s_search_result;
 			static typename  internal_map_type::key_type l_s_typename;
 			l_s_typename = reflection::type_id<typename U::base_type>().name();
-			l_s_search_result = this->m_property_map.find(l_s_typename);
-			if (l_s_search_result == this->m_property_map.end())
+			l_s_search_result = this->m_property_registry.find(l_s_typename);
+			if (l_s_search_result == this->m_property_registry.end())
 			{
 				return;
 			}
@@ -573,8 +576,8 @@ private:
 		static typename  internal_map_type::iterator l_s_search_result;
 		static typename  internal_map_type::key_type l_s_typename;
 		l_s_typename = reflection::type_info::get_base_name_of(typename_p);
-		l_s_search_result = this->m_property_map.find(l_s_typename);
-		if (l_s_search_result == this->m_property_map.end())
+		l_s_search_result = this->m_property_registry.find(l_s_typename);
+		if (l_s_search_result == this->m_property_registry.end())
 		{
 			return;
 		}
@@ -617,7 +620,7 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = this->m_property_map.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = this->m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
@@ -630,7 +633,7 @@ private:
 					// Move on to the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
 				}
-				else if (l_search_result != this->m_property_map.end()) // push the meta data onto the stack if found.
+				else if (l_search_result != this->m_property_registry.end()) // push the meta data onto the stack if found.
 				{
 					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator());
 
@@ -689,7 +692,7 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = this->m_property_map.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = this->m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
@@ -702,7 +705,7 @@ private:
 					// Look for the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
 				}
-				else if (l_search_result != this->m_property_map.end()) // push the meta data onto the stack if found.
+				else if (l_search_result != this->m_property_registry.end()) // push the meta data onto the stack if found.
 				{
 					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator());
 
@@ -770,7 +773,7 @@ private:
 
 	std::string_view __get_serialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::string l_s_serialization_task_name("FE::framework::reflection::property_map::__serialize_by_foreach_mutually_recursive< >");
+		static std::string l_s_serialization_task_name("FE::framework::reflection::property_registry::__serialize_by_foreach_mutually_recursive< >");
 		l_s_serialization_task_name.replace(l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.find('<') + 1),
 			l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.length() - 1),
 			property_typename_p
@@ -827,7 +830,7 @@ private:
 
 	std::string_view __get_deserialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::string l_s_deserialization_task_name("FE::framework::reflection::property_map::__deserialize_by_foreach_mutually_recursive< >");
+		static std::string l_s_deserialization_task_name("FE::framework::reflection::property_registry::__deserialize_by_foreach_mutually_recursive< >");
 		l_s_deserialization_task_name.replace(l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.find('<') + 1),
 			l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.length() - 1),
 			property_typename_p
@@ -835,6 +838,102 @@ private:
 		return l_s_deserialization_task_name.c_str();
 	}
 };
+
+
+
+
+class enum_registry;
+
+
+class enum_metadata
+{
+	friend class enum_registry;
+public:
+	constexpr static inline FE::uint32 max_size = 8;
+
+private:
+	std::string_view m_typename;
+	tsl::array_map< var::ASCII, std::array<var::byte, max_size> > m_string_to_value_map;
+	robin_hood::unordered_map< std::array<var::byte, max_size>, std::string_view > m_value_to_string_map;
+
+public:
+	_FE_FORCE_INLINE_ FE::ASCII* get_typename() const noexcept
+	{
+		return this->m_typename.data();
+	}
+
+	template<typename EnumStrut>
+	_FE_FORCE_INLINE_ std::optional<EnumStrut> string_to_enum(const std::string_view& enum_value_string_p) const noexcept
+	{
+		for (auto it = this->m_string_to_value_map.find(enum_value_string_p); it != this->m_string_to_value_map.end(); ++it)
+		{
+			if ( enum_value_string_p == it.key() )
+			{
+				std::array<var::byte, max_size> l_result = it.value();
+				EnumStrut l_ret;
+				FE::memcpy(&l_ret, sizeof(EnumStrut), l_result.data(), l_result.size());
+				return l_ret;
+			}
+		}
+		return std::nullopt;
+	}
+
+	template<typename EnumStrut>
+	_FE_FORCE_INLINE_ FE::ASCII* enum_to_string(const EnumStrut value_p) const noexcept
+	{
+		std::array<var::byte, max_size> l_enum_bits = { 0 };
+		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStrut));
+
+		for (auto it = this->m_value_to_string_map.find(l_enum_bits); it != this->m_value_to_string_map.end(); ++it)
+		{
+			std::array<var::byte, max_size> l_key = it->first;
+			if ( std::memcmp( l_enum_bits.data(), l_key.data(), l_enum_bits.size() ) == 0)
+			{
+				return it->second.data();
+			}
+		}
+		return nullptr;
+	}
+};
+
+// register enum with FHT.
+class enum_registry
+{
+	tsl::array_map< var::ASCII, enum_metadata > m_enum_registry;
+
+public:
+	template<typename EnumStrut>
+	_FE_FORCE_INLINE_ void register_enum_struct(const std::string_view& enum_struct_name_p,
+		                      std::initializer_list< FE::pair<EnumStrut, FE::ASCII*> >&& field_list_p)
+	{
+		enum_metadata l_enum_struct_metadata;
+		l_enum_struct_metadata.m_typename = enum_struct_name_p;
+		for (const FE::pair<EnumStrut, FE::ASCII*>& field : field_list_p)
+		{
+			FE_ASSERT(field.second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
+			std::array<var::byte, enum_metadata::max_size> l_enum_bits{0};
+			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field.first, sizeof(EnumStrut));
+			l_enum_struct_metadata.m_string_to_value_map.emplace(field.second, l_enum_bits);
+			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field.second);
+		}
+
+		FE_EXIT(this->m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+	}
+
+	_FE_FORCE_INLINE_ enum_metadata* retrieve_enum_struct_metadata(const std::string_view& enum_struct_name_p)
+	{
+		for (auto it = this->m_enum_registry.find(enum_struct_name_p); it != this->m_enum_registry.end(); ++it)
+		{
+			if (it.key() == enum_struct_name_p)
+			{
+				return &(it.value());
+			}
+		}
+		return nullptr;
+	}
+};
+
 
 END_NAMESPACE
 
@@ -884,6 +983,7 @@ public: \
 _FE_NO_UNIQUE_ADDRESS_ class_metadata class_name##_class_meta;
 #endif
 
+
 #ifdef FE_STRUCT
 #error FE_STRUCT is a reserved Frogman Engine macro keyword.
 #else
@@ -930,6 +1030,7 @@ public: \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta;
 #endif
+
 
 #ifdef FE_STATIC_METHOD
 	#error FE_STATIC_METHOD is a reserved Frogman Engine macro keyword.
@@ -992,6 +1093,13 @@ public: \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this;
+#endif
+
+
+#ifdef FE_ENUM_STRUCT
+	#error FE_ENUM_STRUCT is a reserved Frogman Engine macro keyword.
+#else
+	#define FE_ENUM_STRUCT()
 #endif
 
 

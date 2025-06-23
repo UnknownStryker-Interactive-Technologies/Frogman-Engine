@@ -228,6 +228,7 @@ namespace FE
 		_FatalError_DynamicCastFailure_TypeMismatch = 2,
 		_FatalLoggerError_IncorrectStringFormatterSyntex = 3,
 		_FatalSwitchCaseError_ReachedNoDefault = 4,
+		_FatalError_TableInsertionFailure = 5,
 
 		_FatalMemoryError_1XX_IllegalAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,

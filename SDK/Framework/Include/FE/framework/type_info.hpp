@@ -105,7 +105,7 @@ class type_info
     }
 
 private:
-    template<typename T> // Do not manually call this method_map!
+    template<typename T>
     _FE_FORCE_INLINE_ void set() noexcept
     {
         internal::type_info::name l_info; 
@@ -129,7 +129,7 @@ public:
         {
             return l_result->second._typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI name() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI name() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
         return "\0";
     }
 
@@ -141,7 +141,7 @@ public:
         {
             return robin_hood::hash_bytes(l_result->second._typename.data(), l_result->second._typename.length());
         }
-        FE_LOG("Warning: Frogman Engine RTTI hash_code() method_map is returning ZERO. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI hash_code() method_registry is returning ZERO. Please check if the type is registered to this RTTI system.");
         return 0;
     }
 
@@ -153,7 +153,7 @@ public:
         {
             return l_result->second._base_typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI base_name() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI base_name() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
         return "\0";
     }
 
@@ -165,7 +165,7 @@ public:
         {
             return robin_hood::hash_bytes(l_result->second._base_typename.data(), l_result->second._base_typename.length());
         }
-        FE_LOG("Warning: Frogman Engine RTTI base_hash_code() method_map is returning ZERO. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI base_hash_code() method_registry is returning ZERO. Please check if the type is registered to this RTTI system.");
         return 0;
     }
 
@@ -179,7 +179,7 @@ public:
         {
             return l_result->second._base_typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() method_map is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
         return "\0";
     }
 
