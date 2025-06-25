@@ -18,9 +18,12 @@ limitations under the License.
 #include <FE/prerequisites.h>
 #include <FE/pair.hxx>
 
+#include <FE/framework/reflection.hpp>
 
 
 
+
+FE_ENUM_STRUCT();
 enum struct FrogmanEngineHeaderToolError : FE::int32
 {
 	_FatalCmdInputError_NoProgramOptionsAreGiven = 1000,
@@ -33,10 +36,10 @@ enum struct FrogmanEngineHeaderToolError : FE::int32
 	_InputError_ParsingFailure = 1007
 };
 
-#define THROW_CPP_SYNTAX_ERROR(expr, msg) \
+#define THROW_CPP_SYNTAX_ERROR(expr, ...) \
 if (expr) _FE_UNLIKELY_ \
 { \
-	throw ::FE::pair<FrogmanEngineHeaderToolError, ::FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, msg}; \
+	throw ::FE::pair<FrogmanEngineHeaderToolError, ::FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, ::FE::log::buffered_string_formatter({ __VA_ARGS__ })}; \
 }
 
 

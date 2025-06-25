@@ -233,33 +233,31 @@ struct property_metadata
 };
 
 
-class instance_layout
+class instance_metadata
 {
-	tsl::array_map<var::ASCII, property_metadata> m_property_registry;
+	friend class property_registry;
+
+	using internal_map_type = tsl::array_map<var::ASCII, property_metadata*>;
+
+	internal_map_type m_property_lut;
 
 public:
-	instance_layout(const std::pmr::map<var::ptrdiff, property_metadata>& layout_p) noexcept
-		: m_property_registry()
-	{
-		for (auto [key, value] : layout_p)
-		{
-			this->m_property_registry.emplace(value._name, value);
-		}
-	}
-	~instance_layout() noexcept = default;
+	instance_metadata() noexcept
+		: m_property_lut() {}
+	~instance_metadata() noexcept = default;
 
 	template<typename T, class C>
 	_FE_FORCE_INLINE_ T* get_property_of(C& instance_p, const std::string_view& property_name_p) noexcept
 	{
 		FE_STATIC_ASSERT(std::is_class<C>::value == true, "Static assertion failure: the typename 'class C' must be a class type.");
-		for (auto it = this->m_property_registry.find(property_name_p); it != this->m_property_registry.end(); ++it)
+		for (typename internal_map_type::iterator it = this->m_property_lut.find(property_name_p); it != this->m_property_lut.end(); ++it)
 		{
-			if (property_name_p == it->_name)
+			if (property_name_p == it.value()->_name)
 			{
-				FE_ASSERT(sizeof(T) == it->_size_in_byte, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
-				FE_ASSERT(algorithm::string::compare(it->_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+				FE_ASSERT(sizeof(T) == it.value()->_size_in_byte, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+				FE_ASSERT(algorithm::string::compare(it.value()->_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
 
-				var::byte* l_address = reinterpret_cast<var::byte*>(&instance_p) + it->_offset_from_this;
+				var::byte* l_address = reinterpret_cast<var::byte*>(&instance_p) + it.value()->_offset_from_this;
 				return reinterpret_cast<T*>(l_address);
 			}
 		}
@@ -303,11 +301,14 @@ private:
 	input_buffer_type m_input_buffer;
 	input_buffer_iterator_type m_position;
 
+	robin_hood::unordered_map<std::string_view, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
+
 private:
 	property_registry(FE::size reflection_map_capacity_p) noexcept
 		: m_pool(), m_property_registry(reflection_map_capacity_p), 
 		  m_class_layer(&m_pool), m_scalable_container_size_record(&m_pool),
-		  m_lock(), m_fstream(), m_input_buffer(&m_pool), m_position() {}
+		  m_lock(), m_fstream(), m_input_buffer(&m_pool), m_position(),
+		  m_instance_metadata_lut(reflection_map_capacity_p) {}
 
 	~property_registry() noexcept = default;
 
@@ -380,8 +381,21 @@ public:
 			}
 		}
 
-		FE_EXIT(l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		auto l_result = l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
+		FE_EXIT(l_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+
+		//auto l_lut_it = this->m_instance_metadata_lut.find(l_host_class_instance_typename);
+		//if ( l_lut_it == this->m_instance_metadata_lut.end() )
+		//{
+		//	auto l_result2 = this->m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
+		//	FE_EXIT(l_result2.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		//		"FE Runtime Reflection Registration Error: failed to register a class instance metadata to the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+		//	l_lut_it = l_result2.first;
+		//}
+
+		//FE_EXIT(l_lut_it->second.m_property_lut.emplace(l_property_meta_data._name, &(l_result.first->second)).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		//	"FE Runtime Reflection Registration Error: failed to associate a property metadata in the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 
 	/*
@@ -484,18 +498,17 @@ public:
 	}
 
 	template<typename T>
-	_FE_FORCE_INLINE_ std::optional<instance_layout> get_instance_layout() noexcept
+	_FE_FORCE_INLINE_ instance_metadata* get_instance_metadata() noexcept
 	{
-		std::pmr::string l_class_name(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = m_property_registry.find(l_class_name); it != m_property_registry.end(); ++it)
+		for (auto it = this->m_instance_metadata_lut.find(reflection::type_id<T>().name()); it != this->m_instance_metadata_lut.end(); ++it)
 		{
-			if (l_class_name == it->first)
+			if (reflection::type_id<T>().name() == it->first)
 			{
-				return instance_layout(it->second);
+				return &(it->second);
 			}
 		}
-		return std::nullopt;
+		return nullptr;
 	}
 
 private:
@@ -854,9 +867,16 @@ public:
 private:
 	std::string_view m_typename;
 	tsl::array_map< var::ASCII, std::array<var::byte, max_size> > m_string_to_value_map;
-	robin_hood::unordered_map< std::array<var::byte, max_size>, std::string_view > m_value_to_string_map;
+	robin_hood::unordered_map< std::array<var::byte, max_size>, std::string_view, FE::hash<std::array<var::byte, max_size>> > m_value_to_string_map;
 
 public:
+	enum_metadata() noexcept
+		: m_typename()
+		, m_string_to_value_map()
+		, m_value_to_string_map()
+	{
+		// Constructor body can be empty or can initialize some default values if needed.
+	}
 	_FE_FORCE_INLINE_ FE::ASCII* get_typename() const noexcept
 	{
 		return this->m_typename.data();
@@ -902,6 +922,14 @@ class enum_registry
 	tsl::array_map< var::ASCII, enum_metadata > m_enum_registry;
 
 public:
+	enum_registry() noexcept
+		: m_enum_registry()
+	{
+		// Constructor body can be empty or can initialize some default values if needed.
+	}
+
+	~enum_registry() noexcept = default;
+
 	template<typename EnumStrut>
 	_FE_FORCE_INLINE_ void register_enum_struct(const std::string_view& enum_struct_name_p,
 		                      std::initializer_list< FE::pair<EnumStrut, FE::ASCII*> >&& field_list_p)
@@ -910,11 +938,11 @@ public:
 		l_enum_struct_metadata.m_typename = enum_struct_name_p;
 		for (const FE::pair<EnumStrut, FE::ASCII*>& field : field_list_p)
 		{
-			FE_ASSERT(field.second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
+			FE_ASSERT(field._second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
 			std::array<var::byte, enum_metadata::max_size> l_enum_bits{0};
-			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field.first, sizeof(EnumStrut));
-			l_enum_struct_metadata.m_string_to_value_map.emplace(field.second, l_enum_bits);
-			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field.second);
+			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field._first, sizeof(EnumStrut));
+			l_enum_struct_metadata.m_string_to_value_map.emplace(field._second, l_enum_bits);
+			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
 		}
 
 		FE_EXIT(this->m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
@@ -964,7 +992,7 @@ public: \
 	class_metadata() noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-                   std::string l_class_name = #class_name; \
+                   std::string l_class_name = ::FE::framework::reflection::type_id<type>().name(); \
                    l_class_name += "()"; \
                    ::FE::framework::framework_base::get_framework().get_method_reflection() \
                    .register_task< ::FE::c_style_task<void(void*)> > \
@@ -972,7 +1000,7 @@ public: \
 		); \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
                    std::string l_class_name = "~"; \
-                   l_class_name += #class_name; \
+                   l_class_name += ::FE::framework::reflection::type_id<type>().name(); \
                    l_class_name += "()"; \
                    ::FE::framework::framework_base::get_framework().get_method_reflection() \
 			       .register_task< ::FE::c_style_task<void(void*)> > \
@@ -1001,6 +1029,7 @@ automatically registering the method's signature and its associated metadata upo
 #define FE_METHOD(method_name, ...) \
 class method_metadata_##method_name \
 { \
+	static_assert(::FE::is_function<__VA_ARGS__>::value == true, "Static assertion failed: the type is not a function."); \
 public: \
 	_FE_FORCE_INLINE_ method_metadata_##method_name() noexcept \
 	{ \
@@ -1013,16 +1042,19 @@ public: \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-			::std::string l_full_signature = #__VA_ARGS__; \
-			auto l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
-			if (l_full_signature[l_result->_begin - 1] != ' ') \
+			::std::string l_signature_body = " "; \
+			l_signature_body.reserve(128); \
+			l_signature_body += ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
+			l_signature_body += "::"; \
+			l_signature_body += #method_name; \
+			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
+			auto l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
+			l_full_signature.insert( l_result->_begin, l_signature_body ); \
+			l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
+			if (l_result != std::nullopt) \
 			{ \
-				l_full_signature.insert(l_result->_begin, " "); \
+				l_full_signature.erase(l_result->_begin, l_result->_end - l_result->_begin); \
 			} \
-			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
-			l_signature += "::"; l_signature += #method_name; \
-			l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
-			l_full_signature.insert(l_result->_begin, l_signature.c_str()); \
 			l_s_full_signature = std::move(l_full_signature); \
 		); \
 		return l_s_full_signature; \
@@ -1054,16 +1086,19 @@ public: \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-			::std::string l_full_signature = #__VA_ARGS__; \
-			auto l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
-			if (l_full_signature[l_result->_begin - 1] != ' ') \
+			::std::string l_signature_body = " "; \
+			l_signature_body.reserve(128); \
+			l_signature_body += ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
+			l_signature_body += "::"; \
+			l_signature_body += #method_name; \
+			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
+			auto l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
+			l_full_signature.insert( l_result->_begin, l_signature_body ); \
+			l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
+			if (l_result != std::nullopt) \
 			{ \
-				l_full_signature.insert(l_result->_begin, " "); \
+				l_full_signature.erase(l_result->_begin, l_result->_end - l_result->_begin); \
 			} \
-			::std::string l_signature = ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
-			l_signature += "::"; l_signature += #method_name; \
-			l_result = ::FE::algorithm::string::find_the_last(l_full_signature.c_str(), '('); \
-			l_full_signature.insert(l_result->_begin, l_signature.c_str()); \
 			l_s_full_signature = std::move(l_full_signature); \
 		); \
 		return l_s_full_signature; \

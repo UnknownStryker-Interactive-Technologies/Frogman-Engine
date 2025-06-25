@@ -15,5 +15,3 @@ limitations under the License.
 */
 #include "header_tool_engine.hpp"
 CUSTOM_ENGINE(header_tool_engine);
-
-

@@ -96,53 +96,56 @@ namespace FrogmanEngine
 		_Victory,
     };
 
-    //template<typename T>
-    //class Entity
-    //{
-    //    FE_CLASS(Entity);
+    template<typename T>
+    class Entity
+    {
+        FE_CLASS(Entity);
 
-    //public:
-    //    Entity() : name("Unnamed Entity") {}
+    public:
+        Entity() : name("Unnamed Entity") {}
 
-    //    Entity(const std::string& name) : name(name) {}
+        Entity(const std::string& name) : name(name) {}
 
-    //    FE_METHOD(update, void(float));
-    //    virtual void update([[maybe_unused]] float deltaTime) {}
+        FE_METHOD(update, void(float));
+        virtual void update([[maybe_unused]] float deltaTime) {}
 
-    //    FE_METHOD(render, void(void));
-    //    virtual void render() {}
+        FE_METHOD(render, void(void));
+        virtual void render() {}
 
-    //    FE_METHOD(getComponent, T(void));
-    //    T getComponent() const { return T(); }
+        FE_METHOD(getComponent, T(void) const);
+        T getComponent() const { return T(); }
 
-    //    FE_METHOD(addComponent, void(const T&));
-    //    void addComponent([[maybe_unused]] const T& component) {}
+        FE_METHOD(addComponent, void(const T&));
+        void addComponent([[maybe_unused]] const T& component) {}
 
-    //protected:
-    //    FE_PROPERTY(name);
-    //    std::string name;
+    protected:
+        FE_PROPERTY(name);
+        std::string name;
 
-    //    FE_PROPERTY(components);
-    //    std::vector<T> components;
-    //};
+        FE_PROPERTY(components);
+        std::vector<T> components;
+    };
 
-    //class Player : public Entity<int>
-    //{
-    //public:
-    //    Player() : Entity("Unnamed Player") {}
+    class Player : public Entity<int>
+    {
+        FE_CLASS(Player);
+    public:
+        Player() : Entity("Unnamed Player") {}
 
-    //    Player(const std::string& playerName) : Entity(playerName) {}
+        Player(const std::string& playerName) : Entity(playerName) {}
 
-    //    void update([[maybe_unused]] float deltaTime) override
-    //    {
-    //     //    Custom update logic for player
-    //    }
+		FE_METHOD(update, void(float));
+        void update([[maybe_unused]] float deltaTime) override
+        {
+         //    Custom update logic for player
+        }
 
-    //    void render() override
-    //    {
-    //       //  Custom render logic for player
-    //    }
-    //};
+        FE_METHOD(render, void(void));
+        void render() override
+        {
+           //  Custom render logic for player
+        }
+    };
 
     namespace Rendering
     {

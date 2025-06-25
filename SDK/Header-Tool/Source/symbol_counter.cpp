@@ -57,8 +57,8 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Enum:
-			std::advance(begin_p, 2);
-			continue;
+			++l_count._enums;
+			break;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(begin_p);
@@ -101,8 +101,8 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Enum:
-			std::advance(begin_p, 2);
-			continue;
+			++l_count._enums;
+			break;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(begin_p);

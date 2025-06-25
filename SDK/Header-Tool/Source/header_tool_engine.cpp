@@ -41,6 +41,9 @@ header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noe
 
 FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
+	this->__load_reflection_data();
+	this->m_enum_metadata = this->get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
+
 	this->m_code_style_guide = file_buffer_t(this->get_memory_resource());
 	this->m_reflection_metadata_set = reflection_metadata_set_t(this->get_memory_resource());
 
@@ -71,7 +74,7 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor;
+	tf::Executor l_executor(this->m_program_options.get_max_concurrency());
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = this->m_mapped_header_files.size();
 	std::mutex l_log_lock;
@@ -124,7 +127,7 @@ FE::int32 header_tool_engine::run()
 					directory_t& l_path = this->m_header_file_list[i];
 
 					// tokenize the header file to get the tokens.
-					auto l_tokens = __tokenize_header(l_file);
+					auto l_tokens = __tokenize_header(l_file, l_path);
 
 					if (l_tokens == std::nullopt)
 					{

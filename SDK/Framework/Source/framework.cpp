@@ -167,6 +167,11 @@ reflection::property_registry& framework_base::get_property_reflection() noexcep
 	return this->m_property_reflection;
 }
 
+reflection::enum_registry& framework_base::get_enum_reflection() noexcept
+{
+	return this->m_enum_reflection;
+}
+
 
 _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal_p)
 {

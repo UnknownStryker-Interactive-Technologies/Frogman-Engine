@@ -15,6 +15,59 @@
 
 
 
+template<typename T>
+class generic_base
+{
+	FE_CLASS(generic_base);
+private:
+	FE_PROPERTY(m_value);
+	T m_value;
+
+public:
+	generic_base() = default;
+	~generic_base() = default;
+	generic_base(const T& value_p) : m_value(value_p) {}
+
+	FE_METHOD(get_value, T(void) const);
+	inline T get_value() const
+	{
+		return this->m_value;
+	}
+};
+
+class child_of_generic_base : public generic_base<int>
+{
+	FE_CLASS_HAS_A_BASE(generic_base<int>);
+	FE_CLASS(child_of_generic_base);
+private:
+	FE_PROPERTY(m_child_value);
+	var::int32 m_child_value;
+
+public:
+	child_of_generic_base() : generic_base<int>() {};
+	~child_of_generic_base() = default;
+	child_of_generic_base(const int& value_p, const int& child_value_p) : generic_base<int>(value_p), m_child_value(child_value_p) {}
+	
+	FE_METHOD(get_child_value, int(void) const);
+	inline int get_child_value() const
+	{
+		return this->m_child_value;
+	}
+};
+
+TEST(reflection, generic_base)
+{
+	
+	child_of_generic_base l_generic/*_base()*/;
+	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
+	::FE::framework::framework_base::get_framework().get_method_reflection() \
+		.register_task< ::FE::c_style_task<void(void*)> > 
+		("child_of_generic_base TEST", &::FE::framework::reflection::construct_object<child_of_generic_base>);
+	//
+	std::cout << l_generic.get_value_method_meta.get_signature();
+}
+
+
 struct plain_old_data
 {
 	FE_CLASS(plain_old_data);
@@ -139,8 +192,8 @@ TEST(reflection, method_call)
 TEST(reflection, property)
 {
 	object l_object;
-	auto l_obj_mem_layout = FE::framework::framework_base::get_framework().get_property_reflection().get_instance_layout<object>();
-	EXPECT_TRUE(l_obj_mem_layout != std::nullopt);
+	FE::framework::reflection::instance_metadata* l_obj_mem_layout = FE::framework::framework_base::get_framework().get_property_reflection().get_instance_metadata<object>();
+	EXPECT_TRUE(l_obj_mem_layout != nullptr);
 
 	std::string* const l_property = l_obj_mem_layout->get_property_of<std::string>(l_object, "m_text");
 	EXPECT_TRUE(l_property != nullptr);

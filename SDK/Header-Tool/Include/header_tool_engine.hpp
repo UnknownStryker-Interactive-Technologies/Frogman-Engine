@@ -49,7 +49,9 @@ using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 struct token
 {
 	Vocabulary _vocabulary;
+	var::uint32 _line_number;
 	file_buffer_t _code;
+	FE::wchar* _header_file_path;
 
 	_FE_NODISCARD_ FE::boolean operator==(const token& rhs_p) const noexcept
 	{
@@ -64,9 +66,14 @@ struct token
 
 
 // TO DO: prefix try_ to function names, by the FE standards.
+// C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
+// sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Include\error_code.hpp
 
-// sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithoutCopyright.hpp
-//  C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
+/*
+* requisite program options for building this project:
+-path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Include\error_code.hpp
+*/
+
 /*
 The header_tool_engine class is a specialized component of the Frogman Engine that manages header file processing, including copyright notice verification and reflection code generation
 while utilizing parallel task execution for efficiency.
@@ -82,7 +89,8 @@ class header_tool_engine : public FE::framework::framework_base
 
 	std::pmr::vector<directory_t> m_header_file_list;
 	std::pmr::vector<file_buffer_t> m_mapped_header_files;
-
+	FE::framework::reflection::enum_metadata* m_enum_metadata;
+	
 public:
 	header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
 	~header_tool_engine() noexcept override = default;
@@ -110,6 +118,7 @@ private:
 		var::uint16 _namespaces;
 		var::uint16 _classes;
 		var::uint16 _structs;
+		var::uint16 _enums;
 	};
 	_FE_NODISCARD_ symbol_count __try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) const;
 	_FE_NODISCARD_ symbol_count __try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
@@ -126,7 +135,7 @@ private:
 	_FE_NODISCARD_ std::optional<FE::ASCII*> __validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept;
 
 private:
-	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __tokenize_header(const file_buffer_t& file_p) noexcept;
+	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __tokenize_header(const file_buffer_t& file_p, const directory_t& path_p) noexcept;
 	// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT, which means that they will be purged from the token list.
 	void __purge_comments(std::pmr::list<token>& out_list_p) noexcept;
 	void __purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
@@ -155,6 +164,7 @@ private:
 		std::pmr::vector<std::pmr::wstring> _class_and_struct_identifiers;
 		std::pmr::vector<std::pmr::wstring> _method_identifiers;
 		std::pmr::vector<std::pmr::wstring> _property_identifiers;
+		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
 	};
 	using reflection_metadata_set_t = concurrency::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;
 	reflection_metadata_set_t m_reflection_metadata_set;
@@ -163,6 +173,7 @@ private:
 	void __output_namespace_metadata_recursive(reflection_metadata& out_return_p, const namespace_node& node_p) noexcept;
 	void __output_class_metadata(reflection_metadata& out_return_p, const class_node& node_p) noexcept;
 	void __output_struct_metadata(reflection_metadata& out_return_p, const struct_node& node_p) noexcept;
+	void __output_enum_struct_metadata(reflection_metadata& out_return_p, const enum_struct_node& node_p) noexcept;
 
 private:
 	void __generate_reflection_code(const reflection_metadata_set_t& metadata_set_p) noexcept;

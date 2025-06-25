@@ -23,7 +23,7 @@ limitations under the License.
 
 
 
-enum struct Vocabulary : FE::uint16
+enum struct Vocabulary : FE::uint32
 {
 	_Undefined, _EndOfCode,
 	_LineComment, _LineEnd,
