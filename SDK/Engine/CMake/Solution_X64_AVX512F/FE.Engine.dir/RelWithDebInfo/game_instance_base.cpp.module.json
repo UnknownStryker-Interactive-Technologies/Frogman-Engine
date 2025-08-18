@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Engine.dir\\RelWithDebInfo\\game_instance_base.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Engine\\Binaries\\X86-64\\Windows\\AVX512F\\RelWithDebInfo\\FE.Engine.pdb",
+                "FE.Engine.dir\\RelWithDebInfo\\"
+            ],
+            "requires": []
+        }
+    ]
+}

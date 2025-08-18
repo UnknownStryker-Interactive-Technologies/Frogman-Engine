@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\RelWithDebInfo\\thread_id.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\Binaries\\X86-64\\Windows\\AVX512F\\RelWithDebInfo\\FE.Framework.pdb",
+                "FE.Framework.dir\\RelWithDebInfo\\"
+            ],
+            "requires": []
+        }
+    ]
+}

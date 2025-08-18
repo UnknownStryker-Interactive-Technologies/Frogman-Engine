@@ -5,6 +5,8 @@ SET(CMAKE_CONFIGURATION_TYPES "Debug;RelWithDebInfo;Release;MinSizeRel")
 GET_FILENAME_COMPONENT(FROGMAN_ENGINE_PREDEFINED_SETTINGS_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)
 
 
+
+
 MESSAGE("
 Define a cmake macro if you want to make changes on the settings.
 Available -D macro options:
@@ -13,12 +15,11 @@ Available -D macro options:
 Frogman Engine SIMD Extension Requirements:
 an x86-64 cpu with AVX and SSE2 (AVX-512F is optional). Please Check if the x86-64 cpu has ymm and xmm vector registers.
 
-This project uses AVX and SSE2 as the default SIMD options on x86-64 CPUs.
-The intrinsics option can be added by -D
-Available x86-64 -D macro SIMD options:
--DAVX2=1
--DAVX512F=1
-
+This project uses AVX and SSE2 as the default SIMD on x86-64 CPUs.
+The intrinsics option can be added by -DSIMD=
+The available x86-64 SIMD options for this project:
+-DSIMD=AVX2
+-DSIMD=AVX512F
 ")
 
 IF(NOT ((CMAKE_CXX_STANDARD EQUAL 17) OR (CMAKE_CXX_STANDARD EQUAL 20) OR (CMAKE_CXX_STANDARD EQUAL 23)))
@@ -34,6 +35,8 @@ IF(NOT ((TARGET_CPU_ARCHITECTURE STREQUAL "x86-64") OR (TARGET_CPU_ARCHITECTURE 
 ENDIF()
 
 FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR)
+
+
 
 
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
@@ -89,11 +92,11 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
 	ADD_LINK_OPTIONS("$<$<CONFIG:MINSIZEREL>:/NODEFAULTLIB:libcmtd.lib>")
 
 
-	IF(DEFINED AVX2)
+	IF(SIMD STREQUAL AVX2)
 		ADD_COMPILE_OPTIONS(/arch:AVX2)
 		MESSAGE(STATUS "AVX-2 has been selected.")
 
-	ELSEIF(DEFINED AVX512F)
+	ELSEIF(SIMD STREQUAL AVX512F)
 		ADD_COMPILE_OPTIONS(/arch:AVX512)
 		MESSAGE(STATUS "AVX-512F has been selected.")
 
@@ -118,7 +121,8 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
 
 
 
-# Not maintained anymore. The linux development is cancelled.
+
+# Not maintained anymore. The linux development is canceled.
 ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
 	MESSAGE(STATUS "Configurating The Build Environment for Linux X86-64 Distributions.")
 	ADD_COMPILE_OPTIONS(-D_FE_ON_LINUX_X86_64_ -D_ALLOWED_DIRECTORY_LENGTH_=4096)
@@ -161,13 +165,17 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "
 	ADD_LINK_OPTIONS(-pthread -ldl)
 	
 
-	IF(DEFINED AVX2)
+	IF(SIMD STREQUAL AVX2)
 		ADD_COMPILE_OPTIONS(-mavx2)
 		MESSAGE(STATUS "AVX-2 has been added to the SIMD intrinsic extension list.")
 
-	ELSEIF(DEFINED AVX512F)
-		ADD_COMPILE_OPTIONS(-mavx512f)
+	ELSEIF(SIMD STREQUAL AVX512F)
+		ADD_COMPILE_OPTIONS(-mavx512f )
 		MESSAGE(STATUS "AVX-512F has been added to the SIMD intrinsic extension list.")
+
+	ELSE()
+		ADD_COMPILE_OPTIONS(-mavx)
+		MESSAGE(STATUS "AVX has been added to the SIMD intrinsic extension list.")
 	ENDIF()
 
 
@@ -185,6 +193,8 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET_CPU_ARCHITECTURE STREQUAL "
 	ENDIF()
 
 
+
+
 ELSE()
-	MESSAGE(FATAL_ERROR "System not selected.")
+	MESSAGE(FATAL_ERROR "System not selected or incompatible.")
 ENDIF()

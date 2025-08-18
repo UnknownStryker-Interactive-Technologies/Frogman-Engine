@@ -254,16 +254,6 @@ public:
 		return static_cast<T>(this->m_ptr);
 	}
 
-	template<typename BaseOfT, typename T>
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T polymorphic_get() noexcept
-	{
-		static_assert(std::is_pointer<T>::value == true);
-		static_assert(std::is_pointer<BaseOfT>::value == true);
-		static_assert((std::is_base_of<BaseOfT, T>::value == true) || (std::is_base_of<T, BaseOfT>::value == true));
-
-		return static_cast<T>(this->m_ptr);
-	}
-
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator==(void* ptr_p) const noexcept
 	{

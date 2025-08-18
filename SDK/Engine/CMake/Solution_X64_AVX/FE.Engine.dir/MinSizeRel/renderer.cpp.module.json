@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Engine.dir\\MinSizeRel\\renderer.obj",
+            "outputs": [
+                "FE.Engine.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

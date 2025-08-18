@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Engine.dir\\Debug\\engine.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Engine\\Binaries\\X86-64\\Windows\\AVX-SSE2\\Debug\\FE.Engine.pdb",
+                "FE.Engine.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE_UNIT_TEST.dir\\Debug\\FE.fcontainer.obj",
+            "outputs": [
+                "FE_UNIT_TEST.dir\\Debug\\FE.fcontainer.cpp.ifc.dt.module.json",
+                "FE_UNIT_TEST.dir\\Debug\\FE.fcontainer.cpp.ifc.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

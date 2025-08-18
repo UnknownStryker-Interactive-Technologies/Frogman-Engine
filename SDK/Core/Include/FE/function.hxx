@@ -388,6 +388,11 @@ public:
     {
         return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
     }
+
+    _FE_FORCE_INLINE_ function_type get_raw() const noexcept
+    {
+        return this->m_function_pointer;
+	}
 };
 
 
@@ -477,6 +482,11 @@ public:
     {
         return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
+
+    _FE_FORCE_INLINE_ method_type get_raw() const noexcept
+    {
+        return this->m_method_pointer;
+    }
 };
 
 
@@ -558,6 +568,11 @@ public:
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
     {
         return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+    }
+
+    _FE_FORCE_INLINE_ method_type get_raw() const noexcept
+    {
+        return this->m_method_pointer;
     }
 };
 

@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\Release\\thread_id.obj",
+            "outputs": [
+                "FE.Framework.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

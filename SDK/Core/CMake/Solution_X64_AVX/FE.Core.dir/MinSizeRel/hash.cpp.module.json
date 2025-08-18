@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Core.dir\\MinSizeRel\\hash.obj",
+            "outputs": [
+                "FE.Core.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

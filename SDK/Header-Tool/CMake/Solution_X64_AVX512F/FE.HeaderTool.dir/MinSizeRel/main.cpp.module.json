@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.HeaderTool.dir\\MinSizeRel\\main.obj",
+            "outputs": [
+                "FE.HeaderTool.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE_UNIT_TEST.dir\\RelWithDebInfo\\generated.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\Solution_X64_AVX\\FE_UNIT_TEST.dir\\RelWithDebInfo\\vc143.pdb",
+                "FE_UNIT_TEST.dir\\RelWithDebInfo\\"
+            ],
+            "requires": []
+        }
+    ]
+}

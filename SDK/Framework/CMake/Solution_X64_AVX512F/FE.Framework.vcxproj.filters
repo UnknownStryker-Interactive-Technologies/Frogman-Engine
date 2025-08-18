@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\framework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\thread_id.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Source\type_info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\framework.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\thread_id.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\reflection.hpp">
+      <Filter>FE.Framework.Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\type_info.hpp">
+      <Filter>FE.Framework.Reflection</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Framework\CMake\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FE.Framework.Reflection">
+      <UniqueIdentifier>{55ADC82A-0285-34C1-9420-957CF84B1C04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B9D31D39-ACB0-3CA3-B1E8-268CE8F4F6FD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7FDA0DD0-1183-3CB6-BC4A-4F346E697978}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

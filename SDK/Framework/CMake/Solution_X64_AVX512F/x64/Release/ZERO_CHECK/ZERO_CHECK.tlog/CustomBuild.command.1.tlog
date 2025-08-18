@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\ONEDRIVE\문서\GITHUB\FROGMAN-ENGINE\SDK\FRAMEWORK\CMAKE\SOLUTION_X64_AVX512F\CMAKEFILES\970B1858E61DA9AB2965A3F4524E8276\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake -BC:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/FE.Framework.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

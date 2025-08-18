@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\Release\\framework.obj",
+            "outputs": [
+                "FE.Framework.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

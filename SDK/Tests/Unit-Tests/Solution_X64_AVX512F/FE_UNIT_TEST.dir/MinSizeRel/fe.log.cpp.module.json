@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE_UNIT_TEST.dir\\MinSizeRel\\FE.log.obj",
+            "outputs": [
+                "FE_UNIT_TEST.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

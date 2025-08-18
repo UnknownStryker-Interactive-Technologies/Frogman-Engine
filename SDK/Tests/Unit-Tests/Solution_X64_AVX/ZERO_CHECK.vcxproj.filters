@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Solution_X64_AVX\CMakeFiles\aadea24a4b7258facc7b2165a1e9c0bd\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{6AAB7E6F-4640-3BAC-9680-EEE89BC30F98}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+﻿  Scanning sources for module dependencies...
+     Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/Release/FE_UNIT_TEST.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/Release/FE_UNIT_TEST.exp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 7306 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Release\FE_UNIT_TEST.exe

@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\format_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\memory_resource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Source\hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\city.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\string.hxx">
+      <Filter>FE.Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\utility.hxx">
+      <Filter>FE.Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\math.hpp">
+      <Filter>FE.Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\format_string.h">
+      <Filter>FE.Log</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\log.h">
+      <Filter>FE.Log</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\logger.hpp">
+      <Filter>FE.Log</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\block_pool.hxx">
+      <Filter>FE.Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\scalable_pool.hxx">
+      <Filter>FE.Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\memory_resource.hpp">
+      <Filter>FE.Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\private\pool_common.hxx">
+      <Filter>FE.Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\definitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\prerequisites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\memory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\iterator.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\farray.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\fqueue.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\fstack.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\function.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\type_traits.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\types.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\do_once.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\clock.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\fstream_guard.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\hash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\pair.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\random.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\private\memory_traits.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\private\strlen.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\private\macro_restrictions.h">
+      <Filter>FE.Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\define_max_min.h">
+      <Filter>FE.Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\suppress_warnings.h">
+      <Filter>FE.Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\undefine_max_min.h">
+      <Filter>FE.Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\city.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\City-Hash\citycrc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\CMake\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FE.Algorithm">
+      <UniqueIdentifier>{F1B1643E-9C42-36BE-881A-3C9939B8DC2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FE.Log">
+      <UniqueIdentifier>{F3BE5A32-B1FC-359F-8B78-1362D3B2F17D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FE.Misc">
+      <UniqueIdentifier>{34B256E6-AD2D-3C73-9191-D057B3D3357C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FE.Pool">
+      <UniqueIdentifier>{A21C1F19-FB56-33CC-B65B-5BE945E1ECB6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2802D5FA-5405-344B-A66E-B65227256DBC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{25638D85-B2A8-387C-B774-A8E784269292}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

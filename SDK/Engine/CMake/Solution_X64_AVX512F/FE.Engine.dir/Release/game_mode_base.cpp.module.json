@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Engine.dir\\Release\\game_mode_base.obj",
+            "outputs": [
+                "FE.Engine.dir\\Release\\"
+            ],
+            "requires": []
+        }
+    ]
+}

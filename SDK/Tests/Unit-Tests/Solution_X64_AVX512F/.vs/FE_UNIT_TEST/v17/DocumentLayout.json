@@ -1,0 +1,52 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\Solution_X64_AVX512F\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.framework.reflection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FE.memory.cpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp",
+              "RelativeDocumentMoniker": "..\\FE.memory.cpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp",
+              "RelativeToolTip": "..\\FE.memory.cpp",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFoAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-19T10:03:40.852Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FE.framework.reflection.cpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.framework.reflection.cpp",
+              "RelativeDocumentMoniker": "..\\FE.framework.reflection.cpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.framework.reflection.cpp",
+              "RelativeToolTip": "..\\FE.framework.reflection.cpp",
+              "ViewState": "AgIAAMgAAAAAAAAAAAAUwNQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-18T18:04:37.252Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

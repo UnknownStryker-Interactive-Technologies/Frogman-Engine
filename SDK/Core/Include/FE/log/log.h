@@ -230,7 +230,7 @@ namespace FE
 		_FatalSwitchCaseError_ReachedNoDefault = 4,
 		_FatalError_TableInsertionFailure = 5,
 
-		_FatalMemoryError_1XX_IllegalAddressAlignment = 100,
+		_FatalMemoryError_1XX_IncorrectAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,
 		_FatalMemoryError_1XX_AccessViolation = 102,
 		_FatalMemoryError_1XX_HeapCorruption = 103,
@@ -250,41 +250,5 @@ namespace FE
 		_FatalSerializationError_3XX_TypeMismatch = 300,
 		_FatalSerializationError_3XX_TypeNotFound = 301
 	};
-
-	_FE_FORCE_INLINE_ int error_code_to_int(const FE::ErrorCode error_code_p) noexcept
-	{
-		return static_cast<int>(error_code_p);
-	}
-
-	_FE_FORCE_INLINE_ FE::ASCII* error_code_to_string(const FE::ErrorCode code_p) noexcept
-	{
-		static const robin_hood::unordered_map<FE::ErrorCode, FE::ASCII*>  l_s_message_table =
-		{	
-			{ FE::ErrorCode::_None, "Frogman Engine Error: Not an Error." },
-			{ FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Frogman Engine Fatal Hardware Resource Error: CPU Has Not Enough Threads." },
-			{ FE::ErrorCode::_FatalError_DynamicCastFailure_TypeMismatch, "Frogman Engine Fatal Error: Dynamic Cast Failed." },
-			{ FE::ErrorCode::_FatalLoggerError_IncorrectStringFormatterSyntex, "Frogman Engine Fatal Logger Error: Incorrect String Formatter Syntex." },
-			{ FE::ErrorCode::_FatalSwitchCaseError_ReachedNoDefault, "Frogman Engine Fatal Switch Case Error: Reached No Default." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_IllegalAddressAlignment, "Frogman Engine Fatal Memory Error: The Address is Not Properly Aligned." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "Frogman Engine Fatal Memory Error: Cannot Dereference a Null Pointer." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation, "Frogman Engine Fatal Memory Error: The Program is Attempting to Access an Undesired Location." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_HeapCorruption, "Frogman Engine Fatal Memory Error: The Program Heap Corruption Detected." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_DoubleFree, "Frogman Engine Fatal Memory Error: Double Free Detected." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow, "Frogman Engine Fatal Memory Error: The Buffer Overflow Detected." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize, "Frogman Engine Fatal Memory Error: Detected an Invalid Memory Size Argument." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator, "Frogman Engine Fatal Memory Error: The Iterator is Pointing to an Invalid Address." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualAllocFailure, "Frogman Engine Fatal Memory Error: Virtual Alloc Failed." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualLockFailure, "Frogman Engine Fatal Memory Error: Virtual Lock Failed." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualUnlockFailure, "Frogman Engine Fatal Memory Error: Virtual Unlock Failed." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_VirtualFreeFailure, "Frogman Engine Fatal Memory Error: Virtual Free Failed." },
-			{ FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Frogman Engine Fatal Memory Error: False Deallocation Detected." },
-			{ FE::ErrorCode::_FatalInputError_2XX_InvalidArgument, "Frogman Engine Fatal Input Error: an Invalid Argument Detected." },
-			{ FE::ErrorCode::_FatalInputError_2XX_Null, "Frogman Engine Fatal Input Error: The Value is a Null." },
-			{ FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Frogman Engine Fatal Serialization Error: Serialization of Mismatching Type." },
-			{ FE::ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Frogman Engine Fatal Serialization Error: The Instance Memory Layout is Not Known to the Engine's Reflection System." }
-		};
-
-		return l_s_message_table.at(code_p);
-	}
 }
 #endif

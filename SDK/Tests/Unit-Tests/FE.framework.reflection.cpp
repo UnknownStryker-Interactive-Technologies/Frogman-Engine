@@ -178,13 +178,13 @@ TEST(reflection, object_with_vector_serialization)
 TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
-	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
-	auto l_function_pointer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve("FE::ASCII* class object::get_text(void) const");
+	//std::cout <<  << std::endl;
+	auto l_function_pointer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.get_text_method_meta.get_signature());
 	FE::ASCII* l_msg;
 	(*l_function_pointer)(&l_object, &l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 
-	auto l_greeter = FE::framework::framework_base::get_framework().get_method_reflection().retrieve("FE::ASCII* class object::greet(void)");
+	auto l_greeter = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.greet_static_method_meta.get_signature());
 	(*l_greeter)(&l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Hello, reflection system!");
 }
@@ -199,4 +199,28 @@ TEST(reflection, property)
 	EXPECT_TRUE(l_property != nullptr);
 	l_property->assign("Jesus Loves You!");
 	EXPECT_STREQ(l_property->c_str(), "Jesus Loves You!");
+}
+
+enum struct Color
+{
+	_Red,
+	Green,
+	_Blue
+};
+
+TEST(reflection, enum_struct)
+{
+	FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct<Color>("Color",
+		{
+			{Color::_Red, "Red"},
+			{Color::Green, "Green"},
+			{Color::_Blue, "Blue"}
+		}
+	);
+
+	FE::framework::reflection::enum_metadata* l_enum_struct_metadata = FE::framework::framework_base::get_framework().get_enum_reflection().retrieve_enum_struct_metadata("Color");
+	EXPECT_TRUE(l_enum_struct_metadata != nullptr);
+	EXPECT_STREQ(l_enum_struct_metadata->enum_to_string(Color::_Red), "Red"); // Should return "Red"
+	EXPECT_EQ(*l_enum_struct_metadata->string_to_enum<Color>("Green"), Color::Green); // Should return Color::Green
+	EXPECT_STREQ(l_enum_struct_metadata->get_typename(), "Color");
 }

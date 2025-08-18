@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\RelWithDebInfo\\type_info.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\Binaries\\X86-64\\Windows\\AVX-SSE2\\RelWithDebInfo\\FE.Framework.pdb",
+                "FE.Framework.dir\\RelWithDebInfo\\"
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Core.dir\\Debug\\math.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Core\\Binaries\\X86-64\\Windows\\AVX-SSE2\\Debug\\FE.Core.pdb",
+                "FE.Core.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

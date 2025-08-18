@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\Debug\\thread_id.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\Binaries\\X86-64\\Windows\\AVX512F\\Debug\\FE.Framework.pdb",
+                "FE.Framework.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

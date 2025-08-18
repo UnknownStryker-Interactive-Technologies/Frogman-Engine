@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE_UNIT_TEST.dir\\Release\\FE.framework.reflection.obj",
+            "outputs": [
+                "FE_UNIT_TEST.dir\\Release\\FE.framework.reflection.cpp.ifc.dt.module.json",
+                "FE_UNIT_TEST.dir\\Release\\FE.framework.reflection.cpp.ifc.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -110,7 +110,7 @@ private:
 	using internal_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*>;
 
 	lock_type m_lock;
-	std::pmr::synchronized_pool_resource m_pool;
+	std::pmr::unsynchronized_pool_resource m_pool;
 	internal_map_type m_method_registry;
 
 private:
@@ -137,12 +137,20 @@ public:
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
 
+		std::lock_guard<lock_type> l_lock(m_lock);
+
 		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
 		typename internal_map_type::key_type l_key(task_name_p, &m_pool);
-		std::lock_guard<lock_type> l_lock(m_lock);
-		FE_EXIT(this->m_method_registry.emplace(std::move(l_key), l_task).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-			    "FE Runtime Reflection Registration Error: failed to register a function metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+
+		std::pair<typename internal_map_type::iterator, bool> l_result = this->m_method_registry.emplace(std::move(l_key), l_task);
+		if (l_result.second == false) // If true, then the key already exists
+		{
+			// Are the keys identical? If not, then we have a collision.
+			FE_EXIT(task_name_p != l_result.first->first, FE::ErrorCode::_FatalError_TableInsertionFailure,
+				"FE Runtime Reflection Metadata Registration Failure: the function name keys have collided.");
+			std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.deallocate(l_task, 1);
+		}
 	}
 
 	_FE_FORCE_INLINE_ FE::boolean check_presence(const std::string_view& key_p) noexcept
@@ -291,7 +299,7 @@ public:
 	using input_buffer_iterator_type = typename input_buffer_type::iterator;
 
 private:
-	std::pmr::synchronized_pool_resource m_pool;
+	std::pmr::unsynchronized_pool_resource m_pool;
 	internal_map_type m_property_registry;
 	class_layer_stack m_class_layer;
 	data_on_heap_size_record m_scalable_container_size_record;
@@ -301,7 +309,7 @@ private:
 	input_buffer_type m_input_buffer;
 	input_buffer_iterator_type m_position;
 
-	robin_hood::unordered_map<std::string_view, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
+	robin_hood::unordered_map<std::pmr::string, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
 
 private:
 	property_registry(FE::size reflection_map_capacity_p) noexcept
@@ -342,9 +350,8 @@ public:
 		l_property_meta_data._name = property_name_p.data();
 		l_property_meta_data._typename = reflection::type_id<T>().name();
 
-		// Find or register its host class.
-		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
+		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
 		auto l_iterator = m_property_registry.find(l_host_class_instance_typename);
 		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
 		{
@@ -366,8 +373,8 @@ public:
 				if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
 					(FE::is_trivial<typename T::value_type>::value == false))
 				{
-					__push_multidimensional_container_serialization_task_recursive<T>();
-					__push_multidimensional_container_deserialization_task_recursive<T>();
+					__push_multidimensional_container_serialization_task_recursive<typename T::value_type>();
+					__push_multidimensional_container_deserialization_task_recursive<typename T::value_type>();
 				}
 			}
 			else if constexpr (FE::has_element_type<T>::value == true)
@@ -375,27 +382,28 @@ public:
 				if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
 					(FE::is_trivial<typename T::element_type>::value == false))
 				{
-					__push_multidimensional_container_serialization_task_recursive<T>();
-					__push_multidimensional_container_deserialization_task_recursive<T>();
+					__push_multidimensional_container_serialization_task_recursive<typename T::element_type>();
+					__push_multidimensional_container_deserialization_task_recursive<typename T::element_type>();
 				}
 			}
 		}
 
-		auto l_result = l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
-		FE_EXIT(l_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+		auto l_prop_registry_insertion_result = l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
+		FE_EXIT(l_prop_registry_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 
-		//auto l_lut_it = this->m_instance_metadata_lut.find(l_host_class_instance_typename);
-		//if ( l_lut_it == this->m_instance_metadata_lut.end() )
-		//{
-		//	auto l_result2 = this->m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
-		//	FE_EXIT(l_result2.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-		//		"FE Runtime Reflection Registration Error: failed to register a class instance metadata to the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
-		//	l_lut_it = l_result2.first;
-		//}
 
-		//FE_EXIT(l_lut_it->second.m_property_lut.emplace(l_property_meta_data._name, &(l_result.first->second)).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-		//	"FE Runtime Reflection Registration Error: failed to associate a property metadata in the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+		auto l_lut_it = this->m_instance_metadata_lut.find(l_host_class_instance_typename);
+		if ( l_lut_it == this->m_instance_metadata_lut.end() )
+		{
+			auto l_lut_insertion_result = this->m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
+			FE_EXIT(l_lut_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+				"FE Runtime Reflection Registration Error: failed to register a class instance metadata to the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
+			l_lut_it = l_lut_insertion_result.first;
+		}
+
+		FE_EXIT(l_lut_it->second.m_property_lut.emplace(l_property_meta_data._name, &(l_prop_registry_insertion_result.first->second)).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			"FE Runtime Reflection Registration Error: failed to associate a property metadata in the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 	}
 
 	/*
@@ -411,8 +419,8 @@ public:
 		FE_NEGATIVE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
+		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
@@ -451,8 +459,8 @@ public:
 		FE_NEGATIVE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
+		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		auto l_search_result = this->m_property_registry.find(l_typename);
 		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
 		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
@@ -786,11 +794,9 @@ private:
 
 	std::string_view __get_serialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::string l_s_serialization_task_name("FE::framework::reflection::property_registry::__serialize_by_foreach_mutually_recursive< >");
-		l_s_serialization_task_name.replace(l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.find('<') + 1),
-			l_s_serialization_task_name.cbegin() + (l_s_serialization_task_name.length() - 1),
-			property_typename_p
-		);
+		static std::string l_s_serialization_task_name;
+		l_s_serialization_task_name = "FE::framework::reflection::property_registry::__serialize_by_foreach_mutually_recursive< >";
+		l_s_serialization_task_name.replace(l_s_serialization_task_name.find(' '), 1, property_typename_p);
 		return l_s_serialization_task_name.c_str();
 	}
 
@@ -843,11 +849,9 @@ private:
 
 	std::string_view __get_deserialization_task_name(const std::string_view& property_typename_p) noexcept
 	{
-		static std::string l_s_deserialization_task_name("FE::framework::reflection::property_registry::__deserialize_by_foreach_mutually_recursive< >");
-		l_s_deserialization_task_name.replace(l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.find('<') + 1),
-			l_s_deserialization_task_name.cbegin() + (l_s_deserialization_task_name.length() - 1),
-			property_typename_p
-		);
+		static std::string l_s_deserialization_task_name;
+		l_s_deserialization_task_name = "FE::framework::reflection::property_registry::__deserialize_by_foreach_mutually_recursive< >";
+		l_s_deserialization_task_name.replace(l_s_deserialization_task_name.find(' '), 1, property_typename_p);
 		return l_s_deserialization_task_name.c_str();
 	}
 };
@@ -862,12 +866,12 @@ class enum_metadata
 {
 	friend class enum_registry;
 public:
-	constexpr static inline FE::uint32 max_size = 8;
+	constexpr static inline FE::uint32 field_max_size = 8;
 
 private:
 	std::string_view m_typename;
-	tsl::array_map< var::ASCII, std::array<var::byte, max_size> > m_string_to_value_map;
-	robin_hood::unordered_map< std::array<var::byte, max_size>, std::string_view, FE::hash<std::array<var::byte, max_size>> > m_value_to_string_map;
+	tsl::array_map< var::ASCII, std::array<var::byte, field_max_size> > m_string_to_value_map;
+	robin_hood::unordered_map< std::array<var::byte, field_max_size>, std::string_view, FE::hash<std::array<var::byte, field_max_size>> > m_value_to_string_map;
 
 public:
 	enum_metadata() noexcept
@@ -889,7 +893,7 @@ public:
 		{
 			if ( enum_value_string_p == it.key() )
 			{
-				std::array<var::byte, max_size> l_result = it.value();
+				std::array<var::byte, field_max_size> l_result = it.value();
 				EnumStrut l_ret;
 				FE::memcpy(&l_ret, sizeof(EnumStrut), l_result.data(), l_result.size());
 				return l_ret;
@@ -901,12 +905,12 @@ public:
 	template<typename EnumStrut>
 	_FE_FORCE_INLINE_ FE::ASCII* enum_to_string(const EnumStrut value_p) const noexcept
 	{
-		std::array<var::byte, max_size> l_enum_bits = { 0 };
+		std::array<var::byte, field_max_size> l_enum_bits = { 0 };
 		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStrut));
 
 		for (auto it = this->m_value_to_string_map.find(l_enum_bits); it != this->m_value_to_string_map.end(); ++it)
 		{
-			std::array<var::byte, max_size> l_key = it->first;
+			std::array<var::byte, field_max_size> l_key = it->first;
 			if ( std::memcmp( l_enum_bits.data(), l_key.data(), l_enum_bits.size() ) == 0)
 			{
 				return it->second.data();
@@ -939,7 +943,7 @@ public:
 		for (const FE::pair<EnumStrut, FE::ASCII*>& field : field_list_p)
 		{
 			FE_ASSERT(field._second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
-			std::array<var::byte, enum_metadata::max_size> l_enum_bits{0};
+			std::array<var::byte, enum_metadata::field_max_size> l_enum_bits{0};
 			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field._first, sizeof(EnumStrut));
 			l_enum_struct_metadata.m_string_to_value_map.emplace(field._second, l_enum_bits);
 			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
@@ -1048,12 +1052,12 @@ public: \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
 			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
-			auto l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
-			l_full_signature.insert( l_result->_begin, l_signature_body ); \
-			l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
-			if (l_result != std::nullopt) \
+			auto l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
+			l_full_signature.insert( l_prop_registry_insertion_result->_begin, l_signature_body ); \
+			l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
+			if (l_prop_registry_insertion_result != std::nullopt) \
 			{ \
-				l_full_signature.erase(l_result->_begin, l_result->_end - l_result->_begin); \
+				l_full_signature.erase(l_prop_registry_insertion_result->_begin, l_prop_registry_insertion_result->_end - l_prop_registry_insertion_result->_begin); \
 			} \
 			l_s_full_signature = std::move(l_full_signature); \
 		); \
@@ -1092,12 +1096,12 @@ public: \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
 			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
-			auto l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
-			l_full_signature.insert( l_result->_begin, l_signature_body ); \
-			l_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
-			if (l_result != std::nullopt) \
+			auto l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
+			l_full_signature.insert( l_prop_registry_insertion_result->_begin, l_signature_body ); \
+			l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
+			if (l_prop_registry_insertion_result != std::nullopt) \
 			{ \
-				l_full_signature.erase(l_result->_begin, l_result->_end - l_result->_begin); \
+				l_full_signature.erase(l_prop_registry_insertion_result->_begin, l_prop_registry_insertion_result->_end - l_prop_registry_insertion_result->_begin); \
 			} \
 			l_s_full_signature = std::move(l_full_signature); \
 		); \

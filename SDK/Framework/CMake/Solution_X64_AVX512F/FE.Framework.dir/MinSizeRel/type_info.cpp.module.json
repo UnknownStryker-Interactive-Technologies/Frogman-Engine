@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Framework.dir\\MinSizeRel\\type_info.obj",
+            "outputs": [
+                "FE.Framework.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}
