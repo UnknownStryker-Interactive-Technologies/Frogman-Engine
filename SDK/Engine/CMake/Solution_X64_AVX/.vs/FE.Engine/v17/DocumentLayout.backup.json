@@ -1,0 +1,113 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\CMake\\Solution_X64_AVX\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\engine.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\ECS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\archetype_base.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\engine.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\ECS.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{14573DF1-5B9D-3CCB-9945-6D33B4B35754}|FE.Engine.vcxproj|C:\\USERS\\LEEHO\\ONEDRIVE\\\uBB38\uC11C\\GITHUB\\FROGMAN-ENGINE\\SDK\\CORE\\INCLUDE\\FE\\POOL\\SCALABLE_POOL.HXX||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "archetype_base.hpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\archetype_base.hpp",
+              "RelativeDocumentMoniker": "..\\..\\Include\\FE\\archetype_base.hpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\archetype_base.hpp",
+              "RelativeToolTip": "..\\..\\Include\\FE\\archetype_base.hpp",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAMwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-19T19:23:15.703Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "engine.cpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\engine.cpp",
+              "RelativeDocumentMoniker": "..\\..\\Source\\engine.cpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\engine.cpp*",
+              "RelativeToolTip": "..\\..\\Source\\engine.cpp*",
+              "ViewState": "AgIAABsAAAAAAAAAAAAMwCsAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-19T19:22:18.164Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "engine.hpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\engine.hpp",
+              "RelativeDocumentMoniker": "..\\..\\Include\\FE\\engine.hpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\engine.hpp",
+              "RelativeToolTip": "..\\..\\Include\\FE\\engine.hpp",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-19T19:22:04.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ECS.cpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\ECS.cpp",
+              "RelativeDocumentMoniker": "..\\..\\Source\\ECS.cpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Source\\ECS.cpp",
+              "RelativeToolTip": "..\\..\\Source\\ECS.cpp",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-08-19T19:20:26.26Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ECS.hpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\ECS.hpp",
+              "RelativeDocumentMoniker": "..\\..\\Include\\FE\\ECS.hpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\ECS.hpp",
+              "RelativeToolTip": "..\\..\\Include\\FE\\ECS.hpp",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAcwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-19T19:19:32.107Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "scalable_pool.hxx",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Core\\Include\\FE\\pool\\scalable_pool.hxx",
+              "RelativeDocumentMoniker": "..\\..\\..\\Core\\Include\\FE\\pool\\scalable_pool.hxx",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Core\\Include\\FE\\pool\\scalable_pool.hxx",
+              "RelativeToolTip": "..\\..\\..\\Core\\Include\\FE\\pool\\scalable_pool.hxx",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAIwG8AAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-08-19T19:19:23.059Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

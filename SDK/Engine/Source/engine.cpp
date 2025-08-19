@@ -41,9 +41,8 @@ BEGIN_NAMESPACE(FE)
 
 
 game_engine::game_engine(FE::int32 argc_p, FE::ASCII** argv_p)
-	: framework_base(argc_p, argv_p), /* Exclude main thread and the render thread from counting the number of the task scheduler threads. */
-	m_entity_component_system(std::allocate_shared<FE::ECS, std::pmr::polymorphic_allocator<FE::ECS>>(this->get_memory_resource())),
-	m_game_instance()
+	: framework_base(argc_p, argv_p)
+
 {
 
 }
@@ -60,16 +59,13 @@ game_engine& game_engine::get_game_engine() noexcept
 	return l_s_game_engine;
 }
 
-FE::ECS& game_engine::get_entity_component_system() noexcept
-{
-	return *(this->m_entity_component_system);
-}
+
 
 
 FE::int32 game_engine::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
 {
 	__load_reflection_data();
-	this->m_game_instance = std::allocate_shared<game_instance_base, std::pmr::polymorphic_allocator<game_instance_base>>(this->get_memory_resource());
+
 	return 0;
 }
 

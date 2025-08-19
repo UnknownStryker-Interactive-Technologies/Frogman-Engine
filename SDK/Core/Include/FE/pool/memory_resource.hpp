@@ -31,15 +31,17 @@ BEGIN_NAMESPACE(FE)
 
 namespace internal
 {
-	constexpr FE::size double_zmmword_size = 128;
-	constexpr FE::size quad_zmmword_size = 256;
-	constexpr FE::size octa_zmmword_size = 512;
+	constexpr FE::size xmmword_size = 16;
+	constexpr FE::size ymmword_size = 32;
+	constexpr FE::size zmmword_size = 64;
+	constexpr FE::size dzmmword_size = 128;
 
 	enum struct AllocatorType
 	{
-		_DoubleZMMWordAllocator = 1,
-		_QuadZMMWordAllocator = 2,
-		_OctaZMMWordAllocator = 3
+		_XMMWordAllocator = 0,
+		_YMMWordAllocator = 1,
+		_ZMMWordAllocator = 2,
+		_DZMMWordAllocator = 3
 	};
 }
 
@@ -50,10 +52,19 @@ inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 */
 class memory_resource : public std::pmr::memory_resource
 {
-	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::double_zmmword_size, FE::SIMD_auto_alignment> m_dzmmword_block_pool;
-	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::quad_zmmword_size, FE::SIMD_auto_alignment> m_qzmmword_block_pool;
-	FE::block_pool<FE::PoolPageCapacity::_16MB, internal::octa_zmmword_size, FE::SIMD_auto_alignment> m_ozmmword_block_pool;
-	FE::scalable_pool<FE::PoolPageCapacity::_16MB, FE::SIMD_auto_alignment> m_scalable_pool;
+public:
+	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_8MiB, internal::xmmword_size, FE::align_16bytes>;
+	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_16MiB, internal::ymmword_size, FE::align_32bytes>;
+	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_32MiB, internal::zmmword_size, FE::align_64bytes>;
+	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_64MiB, internal::dzmmword_size, FE::align_128bytes>;
+	using scalable_pool_type = FE::scalable_pool<FE::PoolPageCapacity::_128MiB, FE::SIMD_auto_alignment>;
+
+private:
+	xmmword_pool_type m_xmmword_block_pool;
+	ymmword_pool_type m_ymmword_block_pool;
+	zmmword_pool_type m_zmmword_block_pool;
+	dzmmword_pool_type m_dzmmword_block_pool;
+	scalable_pool_type m_scalable_pool;
 
 public:
 	memory_resource() noexcept = default;

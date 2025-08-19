@@ -52,7 +52,7 @@ void boost_object_pool_allocator_extreme_fixed_sized_test(benchmark::State& stat
 		}
 	}
 }
-BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_test);
+BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void boost_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -86,7 +86,7 @@ void boost_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) no
 		}
 	}
 }
-BENCHMARK(boost_pool_allocator_extreme_fixed_sized_test);
+BENCHMARK(boost_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void boost_fast_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -120,11 +120,11 @@ void boost_fast_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_
 		}
 	}
 }
-BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_test);
+BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_256KB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::PoolPageCapacity::_256KiB, FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -155,11 +155,11 @@ void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexc
 		}
 	}
 }
-BENCHMARK(FE_pool_allocator_extreme_fixed_sized_test);
+BENCHMARK(FE_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<FE::PoolPageCapacity::_256KB, sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
+	FE::block_pool<FE::PoolPageCapacity::_256KiB, sizeof(std::string), FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -190,7 +190,7 @@ void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p)
 		}
 	}
 }
-BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_test);
+BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void aligned_malloc_aligned_free_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -221,7 +221,7 @@ void aligned_malloc_aligned_free_extreme_fixed_sized_test(benchmark::State& stat
 		}
 	}
 }
-BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_test);
+BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_test)->Iterations(10000);
 
 void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -251,7 +251,7 @@ void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_test(benchmark::St
 		}
 	}
 }
-BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_test);
+BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_test)->Iterations(10000);
 
 void FE_pmr_memory_resource_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -281,7 +281,7 @@ void FE_pmr_memory_resource_extreme_fixed_sized_test(benchmark::State& state_p) 
 		}
 	}
 }
-BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_test);
+BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_test)->Iterations(10000);
 
 
 
@@ -305,12 +305,12 @@ void aligned_malloc_aligned_free_random_size_test(benchmark::State& state_p) noe
 		}
 	}
 }
-BENCHMARK(aligned_malloc_aligned_free_random_size_test);
+BENCHMARK(aligned_malloc_aligned_free_random_size_test)->Iterations(1000);
 
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_64MB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::PoolPageCapacity::_64MiB, FE::SIMD_auto_alignment> l_allocator;
 	l_allocator.create_pages(1);
 	benchmark::DoNotOptimize(l_allocator);
 
@@ -331,7 +331,7 @@ void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 		}
 	}
 }
-BENCHMARK(FE_scalable_pool_random_size_test);
+BENCHMARK(FE_scalable_pool_random_size_test)->Iterations(1000);
 
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_pmr_memory_resource_random_size_test(benchmark::State& state_p) noexcept
@@ -350,7 +350,7 @@ void FE_pmr_memory_resource_random_size_test(benchmark::State& state_p) noexcept
 		}
 	}
 }
-BENCHMARK(FE_pmr_memory_resource_random_size_test);
+BENCHMARK(FE_pmr_memory_resource_random_size_test)->Iterations(1000);
 
 // Random size allocation and deallocation benchmark for boost::pool_allocator
 void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
@@ -375,7 +375,7 @@ void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 		}
 	}
 }
-BENCHMARK(boost_pool_allocator_random_size_test);
+BENCHMARK(boost_pool_allocator_random_size_test)->Iterations(1000);
 
 // Random size allocation and deallocation benchmark for boost::fast_pool_allocator
 void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
@@ -400,6 +400,6 @@ void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexc
 		}
 	}
 }
-BENCHMARK(boost_fast_pool_allocator_random_size_test);
+BENCHMARK(boost_fast_pool_allocator_random_size_test)->Iterations(100);
 
 #undef _MAX_ITERATION_

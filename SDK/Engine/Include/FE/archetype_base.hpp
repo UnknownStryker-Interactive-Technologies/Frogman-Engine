@@ -24,39 +24,6 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class ECS;
-class engine;
-
-
-class archetype_base
-{
-public:
-	archetype_base() noexcept = default;
-	virtual ~archetype_base() noexcept = default;
-
-protected:
-	virtual void on_construction() = 0;
-	virtual void on_destruction() = 0;
-
-public:
-	template <class Component, class Archetype>
-	_FE_FORCE_INLINE_ component_ptr<Component> attach_component_to(Archetype* const this_p) noexcept
-	{
-		return game_engine::get_game_engine().get_entity_component_system().request_component_attachment<Archetype, Component>(this_p);
-	}
-
-	template <class Component, class Archetype>
-	_FE_FORCE_INLINE_ void detach_component_of(Archetype* const this_p) noexcept
-	{
-		game_engine::get_game_engine().get_entity_component_system().request_component_detachment<Archetype, Component>(this_p);
-	}
-
-	template <class Component, class Archetype>
-	_FE_FORCE_INLINE_ void get_component_of(Archetype* const this_p) noexcept
-	{
-		game_engine::get_game_engine().get_entity_component_system().request_component_retrieval<Archetype, Component>(this_p);
-	}
-};
 
 
 END_NAMESPACE

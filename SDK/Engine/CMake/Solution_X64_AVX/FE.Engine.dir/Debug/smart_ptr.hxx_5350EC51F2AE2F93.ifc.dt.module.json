@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "FE.Engine.dir\\Debug\\smart_ptr.obj",
+            "outputs": [
+                "FE.Engine.dir\\Debug\\smart_ptr.hxx_5350EC51F2AE2F93.ifc.dt.module.json",
+                "FE.Engine.dir\\Debug\\smart_ptr.hxx_5350EC51F2AE2F93.ifc.dt.d.json",
+                "FE.Engine.dir\\Debug\\smart_ptr.hxx.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Engine\\Include\\FE\\smart_ptr.hxx",
+                    "source-path": "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\smart_ptr.hxx",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

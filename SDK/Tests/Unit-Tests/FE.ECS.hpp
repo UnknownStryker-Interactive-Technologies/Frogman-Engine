@@ -36,26 +36,14 @@ public:
 	}
 };
 
-class player : public FE::archetype_base
+class player 
 {
 	FE_CLASS(player);
 
-	FE::component_ptr<health_component> m_health;
-
 public:
 	player() noexcept = default;
-	virtual ~player() noexcept override {};
+	 ~player() noexcept {};
 
-	virtual void on_construction() override
-	{
-		this->m_health = this->attach_component_to<health_component>(this);
-		this->m_health.lock()->subscribe_system<damage_system>();
-	}
 
-	virtual void on_destruction() override
-	{
-		this->m_health.lock()->unsubscribe_system<damage_system>();
-		this->detach_component_of<health_component>(this);
-	}
 };
 

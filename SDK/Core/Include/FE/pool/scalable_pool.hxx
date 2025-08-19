@@ -332,7 +332,7 @@ public:
 
     // Incorrect type will cause a critical runtime error.
     template <typename T> 
-    void deallocate(T* pointer_p, FE::uint64 element_count_p) noexcept 
+    bool deallocate(T* pointer_p, FE::uint64 element_count_p) noexcept 
     {
         FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.pool.scalable_pool: Unable to deallocate() a nullptr.");
         FE_NEGATIVE_ASSERT(element_count_p == 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(element_count_p));
@@ -364,18 +364,18 @@ public:
 #endif
                 page_ptr->add_to_the_free_list(l_block_to_free);
 
-                //if constexpr (PageCapacity > PoolPageCapacity::_16KB)
+                //if constexpr (PageCapacity > PoolPageCapacity::_16KiB)
                 //{
                 //    if (page_ptr->get_free_list_size() >= auto_defragmentation_point)
                 //    {
                 //        __defragment(page_ptr);
                 //    }
                 //}
-                return;
+				return true; // The deletion was successful.
             }
         }
 
-        FE_EXIT(true, FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_block_to_free._address);
+		return false; // The pointer does not belong to this scalable_pool instance.
     }
     
     _FE_FORCE_INLINE_ void create_pages(size chunk_count_p) noexcept

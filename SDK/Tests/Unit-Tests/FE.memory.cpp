@@ -91,7 +91,7 @@ void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept
 		FE::memcpy<FE::Address::_Aligned, FE::Address::_Aligned>(l_source, l_dest, _MAGICAL_SIZE_);
 	}
 }
-BENCHMARK(FE_aligned_memcpy_benchmark);
+BENCHMARK(FE_aligned_memcpy_benchmark)->Iterations(100000);
 
 void std_memcpy_benchmark(benchmark::State& state_p) noexcept
 {
@@ -107,7 +107,7 @@ void std_memcpy_benchmark(benchmark::State& state_p) noexcept
 		std::memcpy(l_source, l_dest, _MAGICAL_SIZE_);
 	}
 }
-BENCHMARK(std_memcpy_benchmark);
+BENCHMARK(std_memcpy_benchmark)->Iterations(100000);
 
 
 void FE_aligned_memmove_benchmark(benchmark::State& state_p) noexcept
@@ -120,7 +120,7 @@ void FE_aligned_memmove_benchmark(benchmark::State& state_p) noexcept
 		FE::memmove(l_mem + 64, l_mem + 128, 10240);
 	}
 }
-BENCHMARK(FE_aligned_memmove_benchmark);
+BENCHMARK(FE_aligned_memmove_benchmark)->Iterations(100000);
 
 void std_memmove_benchmark(benchmark::State& state_p) noexcept
 {
@@ -132,7 +132,7 @@ void std_memmove_benchmark(benchmark::State& state_p) noexcept
 		std::memmove(l_mem + 64, l_mem + 128, 10240);
 	}
 }
-BENCHMARK(std_memmove_benchmark);
+BENCHMARK(std_memmove_benchmark)->Iterations(100000);
 
 
 void FE_aligned_memzero_benchmark(benchmark::State& state_p) noexcept
@@ -145,7 +145,7 @@ void FE_aligned_memzero_benchmark(benchmark::State& state_p) noexcept
 		FE::memzero<FE::Address::_Aligned>(l_dest, _MAGICAL_SIZE_);
 	}
 }
-BENCHMARK(FE_aligned_memzero_benchmark);
+BENCHMARK(FE_aligned_memzero_benchmark)->Iterations(100000);
 
 void std_memset_benchmark(benchmark::State& state_p) noexcept
 {
@@ -158,7 +158,7 @@ void std_memset_benchmark(benchmark::State& state_p) noexcept
 		std::memset(l_dest, 1, _MAGICAL_SIZE_);
 	}
 }
-BENCHMARK(std_memset_benchmark);
+BENCHMARK(std_memset_benchmark)->Iterations(100000);
 
 
 #undef _MAGICAL_SIZE_ 
@@ -304,7 +304,7 @@ void FE_allocate_unique_single_benchmark(benchmark::State& state_p) noexcept
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(FE_allocate_unique_single_benchmark);
+BENCHMARK(FE_allocate_unique_single_benchmark)->Iterations(100000);
 
 void std_allocate_unique_single_benchmark(benchmark::State& state_p) noexcept
 {
@@ -314,7 +314,7 @@ void std_allocate_unique_single_benchmark(benchmark::State& state_p) noexcept
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(std_allocate_unique_single_benchmark);
+BENCHMARK(std_allocate_unique_single_benchmark)->Iterations(100000);
 
 
 
@@ -327,7 +327,7 @@ void FE_allocate_unique_single_with_args_benchmark(benchmark::State& state_p) no
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(FE_allocate_unique_single_with_args_benchmark);
+BENCHMARK(FE_allocate_unique_single_with_args_benchmark)->Iterations(100000);
 
 void std_allocate_unique_single_with_args_benchmark(benchmark::State& state_p) noexcept
 {
@@ -337,7 +337,7 @@ void std_allocate_unique_single_with_args_benchmark(benchmark::State& state_p) n
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(std_allocate_unique_single_with_args_benchmark);
+BENCHMARK(std_allocate_unique_single_with_args_benchmark)->Iterations(100000);
 
 
 
@@ -351,7 +351,7 @@ void FE_allocate_unique_array_benchmark(benchmark::State& state_p) noexcept
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(FE_allocate_unique_array_benchmark);
+BENCHMARK(FE_allocate_unique_array_benchmark)->Iterations(100000);
 
 void std_allocate_unique_array_benchmark(benchmark::State& state_p) noexcept
 {
@@ -361,7 +361,7 @@ void std_allocate_unique_array_benchmark(benchmark::State& state_p) noexcept
 		benchmark::DoNotOptimize(l_ptr);
 	}
 }
-BENCHMARK(std_allocate_unique_array_benchmark);
+BENCHMARK(std_allocate_unique_array_benchmark)->Iterations(100000);
 
 
 

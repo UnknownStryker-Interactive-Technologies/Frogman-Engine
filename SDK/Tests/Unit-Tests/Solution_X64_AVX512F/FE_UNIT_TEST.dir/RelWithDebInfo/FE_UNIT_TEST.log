@@ -1,0 +1,6 @@
+﻿  Scanning sources for module dependencies...
+  FE.pool.cpp
+  Compiling...
+  FE.pool.cpp
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+LINK : fatal error LNK1104: cannot open file 'C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\RelWithDebInfo\FE_UNIT_TEST.exe'

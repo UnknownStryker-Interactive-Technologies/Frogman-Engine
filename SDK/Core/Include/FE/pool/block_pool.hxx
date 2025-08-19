@@ -223,7 +223,7 @@ public:
 
     // Incorrect type will cause a critical runtime error.
     template<typename U> 
-    void deallocate(U* const pointer_p) noexcept 
+    bool deallocate(U* const pointer_p) noexcept 
     {
         FE_STATIC_ASSERT((sizeof(U) <= fixed_block_size_in_bytes), "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
 		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.pool.block_pool: Unable to deallocate() a nullptr.");
@@ -246,11 +246,11 @@ public:
                 }
 
                 page_ptr->_free_blocks.push(l_to_be_freed);
-                return;
+				return true; // The deletion was successful.
             }
         }
 
-		FE_EXIT(true, FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.pool.block_pool: the pointer value '${%p@0}' does not belong to this block_pool instance.", l_to_be_freed);
+		return false; // The pointer does not belong to this block_pool instance.
     }
 
     _FE_FORCE_INLINE_ void create_pages(FE::size chunk_count_p) noexcept

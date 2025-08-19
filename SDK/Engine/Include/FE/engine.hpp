@@ -36,8 +36,6 @@ BEGIN_NAMESPACE(FE)
 
 class game_engine : public framework::framework_base
 {
-	std::shared_ptr<class ECS> m_entity_component_system;
-	std::shared_ptr<class game_instance_base> m_game_instance;
 
 public:
 	game_engine(FE::int32 argc_p, FE::ASCII** argv_p);
@@ -45,7 +43,6 @@ public:
 
 	static game_engine& get_game_engine() noexcept;
 
-	FE::ECS& get_entity_component_system() noexcept;
 
 private:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
