@@ -78,6 +78,12 @@
     <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\fstack.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\concurrent_vector.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\mutex.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Core\Include\FE\function.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>

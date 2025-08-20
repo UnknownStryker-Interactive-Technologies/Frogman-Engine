@@ -13,10 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/ECS.hpp>
-
-#include <FE/framework/framework.hpp> // FE::framework::framework_base::get_framework()
-#include <FE/framework/thread_id.hpp> // for get_current_thread_id();
+#include <FE/framework/game.hpp>
 
 
 
@@ -24,6 +21,24 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+//// read game config file!
+FE::int32 game_instance_base::launch(FE::int32 argc_p, FE::ASCII** argv_p)
+{
+    (void)argc_p;
+    (void)argv_p;
+    return FE::int32();
+}
+
+FE::int32 game_instance_base::run() noexcept
+{
+    return FE::int32();
+}
+
+FE::int32 game_instance_base::shutdown() noexcept
+{
+    return FE::int32();
+}
 
 
 END_NAMESPACE
+

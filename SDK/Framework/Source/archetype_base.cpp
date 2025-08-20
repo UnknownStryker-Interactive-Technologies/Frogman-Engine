@@ -13,17 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/game_state_base.hpp>
+#include <FE/framework/archetype_base.hpp>
+#include <FE/framework/engine.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE)
-
-
-game_state_base::game_state_base() noexcept
-{
-}
 
 
 

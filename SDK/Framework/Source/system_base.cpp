@@ -13,17 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/game_mode_base.hpp>
+#include <FE/framework/system_base.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE)
 
-
-game_mode_base::game_mode_base() noexcept
-{
-}
 
 
 END_NAMESPACE

@@ -1,8 +1,0 @@
-*.obj
-*.ipch
-*.idb
-*.pdb
-*.exe
-
-Fuzz-Tests/build/
-Unit-Tests/Solution/

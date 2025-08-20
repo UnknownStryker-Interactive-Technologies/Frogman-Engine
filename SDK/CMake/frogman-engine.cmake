@@ -21,47 +21,31 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include)
 
 
 SET(FE_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/engine.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/ECS.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/renderer.hpp
 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/archetype_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/component_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/system_base.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_instance_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_mode_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/game_state_base.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/world_context.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/smart_ptr.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/mutex.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/concurrent_vector.hxx
 )
 
 SET(FE_SOURCES
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/engine.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/ECS.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/renderer.cpp
 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/archetype_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/component_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/system_base.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_instance_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_mode_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/game_state_base.cpp 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/world.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/world_context.cpp
 )
 
 
 SET(FE_FRAMEWORK_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/engine.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/renderer.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
 )
 SOURCE_GROUP("FE.Framework" FILES ${FE_FRAMEWORK_HEADER})
 
@@ -76,6 +60,18 @@ SET(FE_FRAMEWORK_SOURCES
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/thread_id.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/engine.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/renderer.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/system_base.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game.cpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world.cpp
 )
 
 
@@ -122,6 +118,9 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/iterator.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/farray.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fqueue.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fstack.hxx
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/concurrent_vector.hxx
+${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/mutex.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/function.hxx
 

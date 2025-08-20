@@ -13,13 +13,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/archetype_base.hpp>
-#include <FE/engine.hpp>
+#include <FE/framework/ECS.hpp>
+
+#include <FE/framework/framework.hpp> // FE::framework::framework_base::get_framework()
+#include <FE/framework/thread_id.hpp> // for get_current_thread_id();
 
 
 
 
 BEGIN_NAMESPACE(FE)
+
 
 
 

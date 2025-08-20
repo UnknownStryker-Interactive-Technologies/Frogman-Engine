@@ -13,9 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/engine.hpp>
-#include <FE/ECS.hpp>
-#include <FE/game_instance_base.hpp>
+#include <FE/framework/engine.hpp>
+#include <FE/framework/ECS.hpp>
+#include <FE/framework/game.hpp>
 
 #include <FE/framework/reflection/private/load_reflection_data.h>
 

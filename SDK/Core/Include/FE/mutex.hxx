@@ -1,5 +1,5 @@
-#ifndef _FE_MUTEX_HPP_
-#define _FE_MUTEX_HPP_
+#ifndef _FE_CORE_MUTEX_HPP_
+#define _FE_CORE_MUTEX_HPP_
 /*
 Copyright 2025 Unknown Stryker
 

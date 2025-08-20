@@ -37,7 +37,6 @@ limitations under the License.
 
 // std::unique_ptr
 #include <memory>
-
 #include <memory_resource>
 
 // std thread for parallel sorting.
@@ -129,9 +128,9 @@ namespace internal::pool
         {
             FE_NEGATIVE_ASSERT(this->m_free_list_size == free_list_capacity, "Assertion Failure: The free list is full.");
             block_info* const l_position = static_cast<block_info*>(_free_list) + this->m_free_list_size;
-#if defined(_FE_ON_X86_64_) && defined(_SSE2_)
+
             _mm_store_si128( reinterpret_cast<__m128i* const>(l_position), _mm_load_si128( reinterpret_cast<const __m128i*>(&block_p) ) );
-#endif
+
             ++(this->m_free_list_size);
             
             if (this->m_is_page_heapified == true)
@@ -147,8 +146,7 @@ namespace internal::pool
             
             if (this->m_free_list_size == 0)
             {
-                out_alloc_result_p._address = nullptr;
-                out_alloc_result_p._size_in_bytes = 0;
+				_mm_store_si128(reinterpret_cast<__m128i*>(&out_alloc_result_p), _mm_setzero_si128());
                 return _FE_FAILED_;
             }
 
@@ -176,8 +174,7 @@ namespace internal::pool
                 add_to_the_free_list(_free_list[this->m_free_list_size]);
             }
 
-            out_alloc_result_p._address = nullptr;
-            out_alloc_result_p._size_in_bytes = 0;
+            _mm_store_si128(reinterpret_cast<__m128i*>(&out_alloc_result_p), _mm_setzero_si128());
             return _FE_FAILED_; // Try iterate to the next page.
 		}
 
@@ -226,9 +223,6 @@ public:
     constexpr static FE::size free_list_capacity = chunk_type::free_list_capacity;
 
     constexpr static FE::size maximum_page_count = 6;
-
-	constexpr static FE::size auto_defragmentation_denominator = 2;
-    constexpr static FE::size auto_defragmentation_point = possible_address_count / auto_defragmentation_denominator;
 
 private:
     using page_pointer = std::shared_ptr<chunk_type>;
@@ -298,7 +292,7 @@ public:
                 i = 0;
             }
 
-            internal::pool::block_info l_memblock_info{};
+            alignas(16) internal::pool::block_info l_memblock_info{};
            
             if (__try_allocation_from_page(this->m_memory_pool[i], l_memblock_info, l_queried_allocation_size_in_bytes) == _FE_FAILED_)
             { 
@@ -363,14 +357,6 @@ public:
                 page_ptr->check_double_free(l_block_to_free);
 #endif
                 page_ptr->add_to_the_free_list(l_block_to_free);
-
-                //if constexpr (PageCapacity > PoolPageCapacity::_16KiB)
-                //{
-                //    if (page_ptr->get_free_list_size() >= auto_defragmentation_point)
-                //    {
-                //        __defragment(page_ptr);
-                //    }
-                //}
 				return true; // The deletion was successful.
             }
         }
@@ -418,17 +404,17 @@ public:
 	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return this->m_page_count; }
 
 protected:
-    inline virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+    _FE_FORCE_INLINE_ virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
     {
 		return this->allocate<std::byte>(bytes_p);
     }
 
-	inline virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
+    _FE_FORCE_INLINE_ virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
 	{
 		this->deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
 	}
 
-    inline virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+    _FE_FORCE_INLINE_ virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
     {
 		if (dynamic_cast<const pool*>(&other_p) == nullptr)
 		{
@@ -436,6 +422,18 @@ protected:
 		}
 
 		return this->operator==(dynamic_cast<const pool&>(other_p));
+    }
+
+    _FE_FORCE_INLINE_ void __try_defragment() noexcept
+    {
+        for (page_pointer& page_ptr : m_memory_pool)
+        {
+            if (page_ptr == nullptr)
+            {
+                continue;
+            }
+            __defragment(page_ptr);
+        }
     }
 
 private:
@@ -466,8 +464,7 @@ private:
             if (page_p->_page_iterator > page_p->_end)
             {
                 page_p->_page_iterator -= bytes_p; // Allocation failed, unwind the stack to cancel the allocation.
-				out_result_p._address = nullptr;
-				out_result_p._size_in_bytes = 0;
+				_mm_store_si128(reinterpret_cast<__m128i*>(&out_result_p), _mm_setzero_si128());
 
                 if (page_p->get_free_list_size() > 1) // Is free list defragmentable?
                 {
@@ -513,8 +510,7 @@ private:
 				l_iterator->_size_in_bytes += l_next->_size_in_bytes;
 
 				// Nullify the block.
-                l_next->_address = nullptr;
-                l_next->_size_in_bytes = 0;
+                _mm_store_si128(reinterpret_cast<__m128i*>(l_next), _mm_setzero_si128());
 				++l_next; // Look for the next block.
             }
             else
