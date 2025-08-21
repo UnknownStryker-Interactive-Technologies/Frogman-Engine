@@ -1,5 +1,5 @@
-﻿#ifndef _FE_COMPONENT_BASE_HPP_
-#define _FE_COMPONENT_BASE_HPP_
+﻿#ifndef _FE_FRAMEWORK_COMPONENT_BASE_HPP_
+#define _FE_FRAMEWORK_COMPONENT_BASE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -28,17 +28,6 @@ class component_base
 public:
 	component_base() noexcept = default;
 	virtual ~component_base() noexcept = default;
-
-public:
-	template<typename T>
-	void subscribe_system() noexcept
-	{
-	}
-
-	template<typename T>
-	void unsubscribe_system() noexcept
-	{
-	}
 };
 
 

@@ -1,5 +1,5 @@
-﻿#ifndef _FE_GAME_INSTANCE_BASE_HPP_
-#define _FE_GAME_INSTANCE_BASE_HPP_
+﻿#ifndef _FE_FRAMEWORK_GAME_HPP_
+#define _FE_FRAMEWORK_GAME_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -26,13 +26,13 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class game_instance_base
+class game
 {
-	FE_CLASS(game_instance_base);
+	FE_CLASS(game);
 
 public:
-	game_instance_base() noexcept = default;
-	~game_instance_base() noexcept = default;
+	game() noexcept = default;
+	~game() noexcept = default;
 
 protected:
 	int32 launch(int32 argc_p, ASCII** argv_p);

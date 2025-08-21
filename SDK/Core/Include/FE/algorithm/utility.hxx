@@ -134,9 +134,14 @@ enum struct IsolationVector : var::uint8
 /*
     - Time complexity -
     O(n)
+    The partition_stable function template sorts a range of elements defined by two iterators based on a specified predicate
+    stable partitioning of elements based on exclusion_target_p.
+    Groups all elements NOT equal to exclusion_target_p at one end (based on IsolationVector).
+    Preserves relative order of retained elements.
+    Useful when element order matters (e.g., rendering, logic sequencing).
 */
 template<IsolationVector IsolationVector, class Iterator, class Predicate>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
 {
     if constexpr (IsolationVector == IsolationVector::_Right)
     {
@@ -191,9 +196,14 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick_if(Iterator begin_p, I
 /*
     - Time complexity -
     O(n)
+
+    partition_stable: Stable partitioning of elements based on exclusion_target_p.
+    Groups all elements NOT equal to exclusion_target_p at one end (based on IsolationVector).
+    Preserves relative order of retained elements.
+    Useful when element order matters (e.g., rendering, logic sequencing).
 */
 template<IsolationVector IsolationVector, class Iterator>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
     if constexpr (IsolationVector == IsolationVector::_Right)
     {
@@ -257,11 +267,15 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> cherry_pick(Iterator begin_p, Iter
     Best: O(n/2)
     Worst: O(n)
 
-    The exclude function template sorts a range of elements defined by two iterators based on a specified predicate
-    partitioning the elements into two groups according to the provided IsolationVector strategy.
+    The partition_unstable function template sorts a range of elements defined by two iterators based on a specified predicate
+    partitioning the elements into two groups according to the provided IsolationVector.
+    Unstable in-place partitioning based on exclusion_target_p.
+    Swaps elements from both ends to isolate non-excluded elements.
+    Does NOT preserve relative order.
+    Optimized for performance in large datasets or non-order-sensitive contexts.
 */
 template<IsolationVector IsolationVector, class Iterator, class Predicate> 
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> exclude_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
 {
     Iterator l_begin = begin_p;
     Iterator l_end = end_p;
@@ -327,11 +341,15 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> exclude_if(Iterator begin_p, Itera
     Best: O(n/2)
     Worst: O(n)
 
-    The exclude function template sorts a range of elements defined by two iterators
+    The partition_unstable function template sorts a range of elements defined by two iterators
     moving elements equal to a specified exclusion target to one end of the range based on the specified isolation vector direction (either left or right).
+    Unstable in-place partitioning based on exclusion_target_p.
+    Swaps elements from both ends to isolate non-excluded elements.
+    Does NOT preserve relative order.
+    Optimized for performance in large datasets or non-order-sensitive contexts.
 */
 template<IsolationVector IsolationVector, class Iterator>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> exclude(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
     Iterator l_begin = begin_p;
     Iterator l_end = end_p;

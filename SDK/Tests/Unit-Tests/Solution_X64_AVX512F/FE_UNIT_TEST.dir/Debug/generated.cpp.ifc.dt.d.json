@@ -1086,11 +1086,8 @@
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cassert",
             "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\assert.h",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\third-party\\tools\\benchmark-1.9.1\\include\\benchmark\\export.h",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\ecs.hpp",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\archetype_base.hpp",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\component_base.hpp",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\system_base.hpp",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\engine.hpp"
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\ecs.hpp",
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\archetype_base.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

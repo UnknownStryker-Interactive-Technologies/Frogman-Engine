@@ -15,9 +15,6 @@ limitations under the License.
 */
 #include <FE/framework/ECS.hpp>
 
-#include <FE/framework/framework.hpp> // FE::framework::framework_base::get_framework()
-#include <FE/framework/thread_id.hpp> // for get_current_thread_id();
-
 
 
 

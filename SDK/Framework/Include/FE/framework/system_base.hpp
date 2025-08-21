@@ -1,5 +1,5 @@
-﻿#ifndef _FE_SYSTEM_BASE_HPP_
-#define _FE_SYSTEM_BASE_HPP_
+﻿#ifndef _FE_FRAMEWORK_SYSTEM_BASE_HPP_
+#define _FE_FRAMEWORK_SYSTEM_BASE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -28,9 +28,7 @@ class component_base;
 
 class system_base
 {
-protected:
-	std::weak_ptr<system_base> m_dependancies[7];
-
+	std::pmr::vector<std::pmr::string> m_target_component_types;
 public:
 	system_base() noexcept = default;
 	virtual ~system_base() noexcept = default;

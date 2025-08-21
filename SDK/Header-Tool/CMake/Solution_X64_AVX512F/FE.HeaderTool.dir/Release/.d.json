@@ -1061,11 +1061,8 @@
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\third-party\\libraries\\boost-1.87.0\\boost\\functional.hpp",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\third-party\\libraries\\boost-1.87.0\\boost\\call_traits.hpp",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\third-party\\libraries\\boost-1.87.0\\boost\\detail\\call_traits.hpp",
-            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\concurrent_vector.h",
-            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\crtdefs.h",
-            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\concrt.h",
-            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\crtdefs.h",
-            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\shared\\guiddef.h"
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\concurrent_vector.hxx",
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\mutex.hxx"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

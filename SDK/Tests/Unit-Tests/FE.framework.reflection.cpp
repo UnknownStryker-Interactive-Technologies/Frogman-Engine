@@ -57,7 +57,6 @@ public:
 
 TEST(reflection, generic_base)
 {
-	
 	child_of_generic_base l_generic/*_base()*/;
 	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
 	::FE::framework::framework_base::get_framework().get_method_reflection() \

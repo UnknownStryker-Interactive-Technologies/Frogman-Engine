@@ -399,6 +399,24 @@ public: // Concurrently unsafe operations
     {
         return this->m_allocator;
     }
+
+    inline pointer begin() noexcept
+    {
+        return this->m_active.load(std::memory_order_acquire);
+	}
+    inline const_pointer begin() const noexcept
+    {
+        return this->m_active.load(std::memory_order_acquire);
+    }
+
+    inline pointer end() noexcept
+    {
+        return this->m_active.load(std::memory_order_acquire) + this->size();
+    }
+    inline const_pointer end() const noexcept
+    {
+        return this->m_active.load(std::memory_order_acquire) + this->size();
+    }
 };
 
 

@@ -403,6 +403,18 @@ public:
 
 	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return this->m_page_count; }
 
+    _FE_FORCE_INLINE_ void try_defragment() noexcept
+    {
+        for (page_pointer& page_ptr : m_memory_pool)
+        {
+            if (page_ptr == nullptr)
+            {
+                continue;
+            }
+            __defragment(page_ptr);
+        }
+    }
+
 protected:
     _FE_FORCE_INLINE_ virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
     {
@@ -422,18 +434,6 @@ protected:
 		}
 
 		return this->operator==(dynamic_cast<const pool&>(other_p));
-    }
-
-    _FE_FORCE_INLINE_ void __try_defragment() noexcept
-    {
-        for (page_pointer& page_ptr : m_memory_pool)
-        {
-            if (page_ptr == nullptr)
-            {
-                continue;
-            }
-            __defragment(page_ptr);
-        }
     }
 
 private:
@@ -525,7 +525,7 @@ private:
         Best - O(n/2)
 		Worst - O(n)
         */
-        auto l_binary_searchable_range = algorithm::utility::exclude<algorithm::utility::IsolationVector::_Right, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
+        auto l_binary_searchable_range = algorithm::utility::partition_unstable<algorithm::utility::IsolationVector::_Right, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
                                                                                                                                      l_end, internal::pool::block_info{ nullptr, 0 });
         // Reset it.
         page_p->set_free_list_size(l_binary_searchable_range._second - l_binary_searchable_range._first);

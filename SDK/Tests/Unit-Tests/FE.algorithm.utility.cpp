@@ -102,12 +102,12 @@ BENCHMARK(small_array_std_sort_benchmark);
 
 
 
-TEST(FE_algorithm_utility, exclude)
+TEST(FE_algorithm_utility, partition_unstable)
 {
 	FE::int32 l_value_to_exclude = 0;
 	std::array<int, 10> l_array = { 1, 2, 0, 0, 5, 0, 7, 8, 0, 10 };
 
-	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::exclude<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
 
 	while (l_result._first != l_result._second)
 	{
@@ -116,12 +116,12 @@ TEST(FE_algorithm_utility, exclude)
 	}
 }
 
-TEST(FE_algorithm_utility, cherry_pick)
+TEST(FE_algorithm_utility, partition_stable)
 {
 	FE::int32 l_value_to_exclude = 0;
 	std::array<int, 10> l_array = { 1, 2, 0, 0, 5, 0, 7, 8, 0, 10 };
 
-	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::cherry_pick<FE::algorithm::utility::IsolationVector::_Left>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::partition_stable<FE::algorithm::utility::IsolationVector::_Left>(l_array.begin(), l_array.end(), l_value_to_exclude);
 
 	while (l_result._first != l_result._second)
 	{

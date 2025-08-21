@@ -22,19 +22,19 @@ BEGIN_NAMESPACE(FE)
 
 
 //// read game config file!
-FE::int32 game_instance_base::launch(FE::int32 argc_p, FE::ASCII** argv_p)
+FE::int32 game::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
     (void)argc_p;
     (void)argv_p;
     return FE::int32();
 }
 
-FE::int32 game_instance_base::run() noexcept
+FE::int32 game::run() noexcept
 {
     return FE::int32();
 }
 
-FE::int32 game_instance_base::shutdown() noexcept
+FE::int32 game::shutdown() noexcept
 {
     return FE::int32();
 }

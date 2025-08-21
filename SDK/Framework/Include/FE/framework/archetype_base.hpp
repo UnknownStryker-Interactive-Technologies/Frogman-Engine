@@ -1,5 +1,5 @@
-﻿#ifndef _FE_ARCHETYPE_BASE_HPP_
-#define _FE_ARCHETYPE_BASE_HPP_
+﻿#ifndef _FE_FRAMEWORK_ARCHETYPE_BASE_HPP_
+#define _FE_FRAMEWORK_ARCHETYPE_BASE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/ECS.hpp>
 
 
 
@@ -24,6 +23,21 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+class component_base;
+
+using component_view = std::weak_ptr<FE::component_base>;
+
+
+class archetype_base
+{
+	using component_view_table = robin_hood::unordered_map<std::pmr::string, component_view>;
+
+	component_view_table m_component_view_table;
+
+public:
+	archetype_base() noexcept = default;
+	virtual ~archetype_base() noexcept = default;
+};
 
 
 END_NAMESPACE

@@ -215,8 +215,7 @@
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\private\\strlen.hxx",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\array",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\algorithm\\string.hxx",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\iterator.hxx",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\engine\\include\\fe\\smart_ptr.hxx"
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\iterator.hxx"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

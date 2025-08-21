@@ -45,7 +45,7 @@ FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	this->m_enum_metadata = this->get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
 	this->m_code_style_guide = file_buffer_t(this->get_memory_resource());
-	this->m_reflection_metadata_set = reflection_metadata_set_t(this->get_memory_resource());
+	this->m_reflection_metadata_set /*= reflection_metadata_set_t(this->get_memory_resource())*/;
 
 	if (this->m_header_tool_options.is_fno_op_defined() == true)
 	{

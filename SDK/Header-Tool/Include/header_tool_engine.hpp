@@ -35,7 +35,9 @@ limitations under the License.
 #include <vector> // std::pmr::vector
 
 // Microsoft Parallel Patterns Library. This header is specific to the Microsoft Visual Studio.
-#include <concurrent_vector.h>
+//#include <concurrent_vector.h>
+
+#include <FE/concurrent_vector.hxx> // This is to replace the Microsoft PPL concurrent_vector with FE's own implementation.
 
 
 
@@ -166,7 +168,7 @@ private:
 		std::pmr::vector<std::pmr::wstring> _property_identifiers;
 		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
 	};
-	using reflection_metadata_set_t = concurrency::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;
+	using reflection_metadata_set_t = FE::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;
 	reflection_metadata_set_t m_reflection_metadata_set;
 
 	_FE_NODISCARD_ reflection_metadata __generate_reflection_metadata(const header_file_root& tree_p) noexcept;

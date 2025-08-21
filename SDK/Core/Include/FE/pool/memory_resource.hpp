@@ -1,5 +1,5 @@
-﻿#ifndef _FE_POOL_MEMORY_RESOURCE_HPP_
-#define _FE_POOL_MEMORY_RESOURCE_HPP_
+﻿#ifndef _FE_CORE_POOL_MEMORY_RESOURCE_HPP_
+#define _FE_CORE_POOL_MEMORY_RESOURCE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -53,11 +53,11 @@ inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 class memory_resource : public std::pmr::memory_resource
 {
 public:
-	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_8MiB, internal::xmmword_size, FE::align_16bytes>;
-	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_16MiB, internal::ymmword_size, FE::align_32bytes>;
-	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_32MiB, internal::zmmword_size, FE::align_64bytes>;
-	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_64MiB, internal::dzmmword_size, FE::align_128bytes>;
-	using scalable_pool_type = FE::scalable_pool<FE::PoolPageCapacity::_128MiB, FE::SIMD_auto_alignment>;
+	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_64MiB, internal::xmmword_size, FE::align_16bytes>;
+	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_128MiB, internal::ymmword_size, FE::align_32bytes>;
+	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_256MiB, internal::zmmword_size, FE::align_64bytes>;
+	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_512MiB, internal::dzmmword_size, FE::align_128bytes>;
+	using scalable_pool_type = FE::scalable_pool<FE::PoolPageCapacity::_Max, FE::SIMD_auto_alignment>;
 
 private:
 	xmmword_pool_type m_xmmword_block_pool;
@@ -72,6 +72,8 @@ public:
 
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
+
+	_FE_FORCE_INLINE_ void try_defragment() noexcept { m_scalable_pool.try_defragment(); }
 
 protected:
 	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
