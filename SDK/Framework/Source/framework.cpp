@@ -48,28 +48,28 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
-		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], this->m_max_concurrency._first) == std::nullopt)
+		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_max_concurrency._first) == std::nullopt)
 		{
 			continue;
 		}
 
-		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::ASCII>(this->m_max_concurrency._first, '=');
+		std::optional<algorithm::string::range> l_range = algorithm::string::find_the_first<var::ASCII>(m_max_concurrency._first, '=');
 		l_range->_begin = 0;
 
-		if (algorithm::string::compare_ranged<var::ASCII>(argv_p[i], *l_range, this->m_max_concurrency._first, *l_range) == true)
+		if (algorithm::string::compare_ranged<var::ASCII>(argv_p[i], *l_range, m_max_concurrency._first, *l_range) == true)
 		{
 			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::ASCII>(argv_p[i] + l_range->_end);
-			this->m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
+			m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
 			if (l_uint_info._value < 4)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
-				this->m_max_concurrency._second = 4;
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				m_max_concurrency._second = 4;
 			}
 			else if (l_uint_info._value > 254)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", this->m_max_concurrency._first, &l_uint_info._value);
-				this->m_max_concurrency._second = 4;
+				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				m_max_concurrency._second = 4;
 			}
 			break;
 		}
@@ -80,22 +80,22 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	GetSystemInfo(&l_system_info);
 	
 	FE_EXIT(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
-	if (this->m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
+	if (m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
 	{
-		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", this->m_max_concurrency._first, &this->m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
-		this->m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
+		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", m_max_concurrency._first, &m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
+		m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
 	}
 #endif
 }
 
 FE::uint32 program_options::get_max_concurrency() const noexcept
 {
-	return this->m_max_concurrency._second;
+	return m_max_concurrency._second;
 }
 
 FE::ASCII* program_options::view_max_concurrency_option_title() const noexcept
 {
-	return this->m_max_concurrency._first;
+	return m_max_concurrency._first;
 }
 
 
@@ -111,12 +111,12 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	  m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
 	  m_method_reflection(81920), m_property_reflection(81920)
 {
-	std::locale::global(this->m_current_system_locale);
+	std::locale::global(m_current_system_locale);
 }
 
 framework_base::~framework_base() noexcept
 {
-	this->m_memory.reset();
+	m_memory.reset();
 }
 
 
@@ -154,22 +154,22 @@ framework_base& framework_base::get_framework() noexcept
 
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
-	return &(this->m_memory[ get_current_thread_id() ]);
+	return &(m_memory[ get_current_thread_id() ]);
 }
 
 reflection::method_registry& framework_base::get_method_reflection() noexcept
 {
-	return this->m_method_reflection;
+	return m_method_reflection;
 }
 
 reflection::property_registry& framework_base::get_property_reflection() noexcept
 {
-	return this->m_property_reflection;
+	return m_property_reflection;
 }
 
 reflection::enum_registry& framework_base::get_enum_reflection() noexcept
 {
-	return this->m_enum_reflection;
+	return m_enum_reflection;
 }
 
 

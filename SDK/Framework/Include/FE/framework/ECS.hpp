@@ -19,6 +19,8 @@ limitations under the License.
 
 // ECS Archetype
 #include <FE/framework/archetype_base.hpp>
+#include <FE/framework/component_base.hpp>
+#include <FE/framework/system_base.hpp>
 
 // game memory pool
 #include <FE/pool/memory_resource.hpp>
@@ -27,10 +29,11 @@ limitations under the License.
 #include <FE/framework/type_info.hpp>
 
 // ECS smart pointer
-#include <memory>
+#include <FE/framework/smart_ptr.hxx>
 
 // ECS data structures
 #include <forward_list>
+#include <robin_hood.h>
 #include <vector>
 
 
@@ -40,15 +43,13 @@ BEGIN_NAMESPACE(FE)
 
 
 template <class T>
-using entity = std::weak_ptr<T>;
+using entity = FE::smart_ptr<T, FE::RefType::_Observer>;
 
-using archetype = std::shared_ptr<FE::archetype_base>;
+using archetype = FE::smart_ptr<FE::archetype_base, FE::RefType::_Owner>;
 
-class component_base;
-using component = std::shared_ptr<FE::component_base>;
+using component = FE::smart_ptr<FE::component_base, FE::RefType::_Owner>;
 
-class system_base;
-using system = std::shared_ptr<FE::system_base>;
+using system = FE::smart_ptr<FE::system_base, FE::RefType::_Owner>;
 
 
 struct components
@@ -98,7 +99,7 @@ public:
 		l_entity_name = FE::framework::reflection::type_id<T>().name();
 		l_entity_name += " ";
 		l_entity_name += entity_name_p;
-		std::shared_ptr<T> l_alloc_result = std::allocate_shared< T, std::pmr::polymorphic_allocator<T> >(&m_game_memory_resource, std::forward<Arguments>(arguments_p)...);
+		FE::archetype l_alloc_result = std::allocate_shared< T, std::pmr::polymorphic_allocator<T> >(&m_game_memory_resource, std::forward<Arguments>(arguments_p)...);
 		entity<T> l_entity = l_alloc_result;
 
 		std::pair<typename archetype_table::iterator, bool> l_result = m_archetype_table.emplace( std::move(l_entity_name), std::move(l_alloc_result) );
@@ -112,6 +113,7 @@ public:
 		return entity<T>();
 	}
 };
+
 
 END_NAMESPACE
 #endif

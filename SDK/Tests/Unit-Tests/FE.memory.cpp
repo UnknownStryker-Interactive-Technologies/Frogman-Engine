@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
+#include "smart_ptr.hxx"
+#include <memory_resource>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/memory.hpp>
@@ -29,7 +31,7 @@ TEST(memmove, string_insertion)
 
 TEST(memmove, General)
 {
-	std::unique_ptr<var::int64[]> l_array(new var::int64[]{ 1, 0, 1, 2, 3, 4, 5, 1, 1, 1, 1, 1});
+	std::unique_ptr<var::int64[]> l_array(new var::int64[]{ 1, 0, 1, 2, 3, 4, 5, 1, 1, 1, 1, 1 });
 
 	FE::memmove(l_array.get() + 3, l_array.get() + 1, sizeof(int64) * 6);
 
@@ -47,12 +49,12 @@ TEST(memmove, General)
 TEST(memcpy, General)
 {
 	constexpr auto l_length = 10;
-	std::unique_ptr<int[]> l_source(new int [l_length]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
-	std::unique_ptr<int[]> l_destination(new int [l_length]{0});
+	std::unique_ptr<int[]> l_source(new int [l_length] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+	std::unique_ptr<int[]> l_destination(new int [l_length] {0});
 
 	FE::memcpy(l_destination.get(), l_source.get(), l_length * sizeof(int));
 
-	for ( var::int32 i = 0; i < l_length; ++i)
+	for (var::int32 i = 0; i < l_length; ++i)
 	{
 		EXPECT_EQ(l_destination.get()[i], 1);
 	}
@@ -62,10 +64,10 @@ TEST(memzero, General)
 {
 	constexpr auto l_length = 10;
 	var::byte l_arr[l_length];
-	
+
 	FE::memzero(l_arr, l_length * sizeof(var::byte));
-		
-	for ( var::int32 i = 0; i < l_length; ++i)
+
+	for (var::int32 i = 0; i < l_length; ++i)
 	{
 		EXPECT_EQ(l_arr[i], 0);
 	}
@@ -82,7 +84,7 @@ void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept
 	benchmark::DoNotOptimize(l_dest);
 	alignas(64) static std::byte l_source[_MAGICAL_SIZE_];
 	benchmark::DoNotOptimize(l_source);
-	
+
 	for (auto _ : state_p)
 	{
 		benchmark::ClobberMemory();
@@ -165,199 +167,361 @@ BENCHMARK(std_memset_benchmark)->Iterations(100000);
 
 
 
-
-
-
-
-// Test cases for unique_ptr<T>
-TEST(UniquePtr, DefaultConstructor)
+// A simple struct for testing allocation and construction.
+struct TestObject
 {
-	FE::unique_ptr<int> l_ptr;
-	EXPECT_EQ(l_ptr.get(), nullptr);
-}
+	int value;
+	TestObject(int v = 0) : value(v) {}
+};
 
-TEST(UniquePtr, ConstructorWithAllocator)
+// Base and Derived classes for testing polymorphism.
+struct Base
 {
-	FE::unique_ptr<int> l_ptr(std::pmr::polymorphic_allocator<int>{});
-	EXPECT_NE(l_ptr.get(), nullptr);
+	virtual ~Base() = default;
+	int base_value = 10;
+};
 
-	FE::unique_ptr<int> l_ptr2 = FE::allocate_unique<int>();
-	EXPECT_NE(l_ptr2.get(), nullptr);
-}
-
-TEST(UniquePtr, ConstructorWithAllocatorAndArgs)
+struct Derived : public Base
 {
-	FE::unique_ptr<int> l_ptr(std::pmr::polymorphic_allocator<int>{}, 42);
-	EXPECT_EQ(*l_ptr, 42);
-}
+	int derived_value = 20;
+};
 
-TEST(UniquePtr, MoveConstructor)
+// Test fixture for smart_ptr tests
+class SmartPtrTest : public ::testing::Test
 {
-	FE::unique_ptr<int> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 42);
-	FE::unique_ptr<int> l_ptr2(std::move(l_ptr1));
-	EXPECT_EQ(*l_ptr2, 42);
-	EXPECT_EQ(l_ptr1.get(), nullptr);
-}
+protected:
+	std::pmr::memory_resource* m_resource;
 
-TEST(UniquePtr, MoveAssignment)
-{
-	FE::unique_ptr<int> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 42);
-	FE::unique_ptr<int> l_ptr2;
-	l_ptr2 = std::move(l_ptr1);
-	EXPECT_EQ(*l_ptr2, 42);
-	EXPECT_EQ(l_ptr1.get(), nullptr);
-}
-
-TEST(UniquePtr, Reset)
-{
-	FE::unique_ptr<int> l_ptr(std::pmr::polymorphic_allocator<int>{}, 42);
-	l_ptr.reset();
-	EXPECT_EQ(l_ptr.get(), nullptr);
-}
-
-TEST(UniquePtr, Swap)
-{
-	FE::unique_ptr<int> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 42);
-	FE::unique_ptr<int> l_ptr2(std::pmr::polymorphic_allocator<int>{}, 24);
-	l_ptr1.swap(l_ptr2);
-	EXPECT_EQ(*l_ptr1, 24);
-	EXPECT_EQ(*l_ptr2, 42);
-}
-
-// Test cases for unique_ptr<T[]>
-TEST(UniquePtrArray, DefaultConstructor)
-{
-	FE::unique_ptr<int[]> l_ptr;
-	EXPECT_EQ(l_ptr.get(), nullptr);
-
-	FE::unique_ptr<int[]> l_ptr2 = FE::allocate_unique<int[]>(7);
-	EXPECT_NE(l_ptr2.get(), nullptr);
-}
-
-TEST(UniquePtrArray, ConstructorWithAllocator)
-{
-	FE::unique_ptr<int[]> l_ptr(std::pmr::polymorphic_allocator<int>{}, 10);
-	EXPECT_NE(l_ptr.get(), nullptr);
-}
-
-TEST(UniquePtrArray, ConstructorWithAllocatorAndArgs)
-{
-	FE::unique_ptr<int[]> l_ptr(std::pmr::polymorphic_allocator<int>{}, 10, 42);
-	for (int i = 0; i < 10; ++i)
+	void SetUp() override
 	{
-		EXPECT_EQ(l_ptr[i], 42);
+		m_resource = std::pmr::get_default_resource();
+	}
+};
+
+// Test cases for smart_ptr<T, RefType::_Owner>
+TEST_F(SmartPtrTest, Owner_DefaultConstructor)
+{
+	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner;
+	EXPECT_TRUE(owner.is_null());
+}
+
+TEST_F(SmartPtrTest, Owner_Creation)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	ASSERT_FALSE(owner.is_null());
+	EXPECT_EQ(owner->value, 42);
+}
+
+TEST_F(SmartPtrTest, Owner_MoveConstructor)
+{
+	auto owner1 = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2 = std::move(owner1);
+
+	EXPECT_TRUE(owner1.is_null());
+	ASSERT_FALSE(owner2.is_null());
+	EXPECT_EQ(owner2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Owner_MoveAssignment)
+{
+	auto owner1 = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2;
+	owner2 = std::move(owner1);
+
+	EXPECT_TRUE(owner1.is_null());
+	ASSERT_FALSE(owner2.is_null());
+	EXPECT_EQ(owner2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Owner_Reset)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	ASSERT_FALSE(owner.is_null());
+	owner.reset();
+	EXPECT_TRUE(owner.is_null());
+}
+
+TEST_F(SmartPtrTest, Owner_Swap)
+{
+	auto owner1 = FE::gcnew<TestObject>(m_resource, 10);
+	auto owner2 = FE::gcnew<TestObject>(m_resource, 20);
+
+	owner1.swap(owner2);
+
+	ASSERT_FALSE(owner1.is_null());
+	EXPECT_EQ(owner1->value, 20);
+	ASSERT_FALSE(owner2.is_null());
+	EXPECT_EQ(owner2->value, 10);
+}
+
+TEST_F(SmartPtrTest, Owner_Dereference)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 123);
+	EXPECT_EQ(owner->value, 123);
+	EXPECT_EQ((*owner).value, 123);
+}
+
+// Test cases for smart_ptr<T, RefType::_Observer>
+TEST_F(SmartPtrTest, Observer_DefaultConstructor)
+{
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer;
+	EXPECT_FALSE(observer.is_valid());
+}
+
+TEST_F(SmartPtrTest, Observer_CreateFromOwner)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
+
+	ASSERT_TRUE(observer.is_valid());
+	EXPECT_EQ(observer->value, 42);
+}
+
+TEST_F(SmartPtrTest, Observer_CopyConstructor)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2(observer1);
+
+	ASSERT_TRUE(observer1.is_valid());
+	ASSERT_TRUE(observer2.is_valid());
+	EXPECT_EQ(observer2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Observer_CopyAssignment)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2;
+
+	observer2 = observer1;
+
+	ASSERT_TRUE(observer1.is_valid());
+	ASSERT_TRUE(observer2.is_valid());
+	EXPECT_EQ(observer2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Observer_MoveConstructor)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2 = std::move(observer1);
+
+	EXPECT_FALSE(observer1.is_valid());
+	ASSERT_TRUE(observer2.is_valid());
+	EXPECT_EQ(observer2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Observer_MoveAssignment)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2;
+	observer2 = std::move(observer1);
+
+	EXPECT_FALSE(observer1.is_valid());
+	ASSERT_TRUE(observer2.is_valid());
+	EXPECT_EQ(observer2->value, 42);
+}
+
+TEST_F(SmartPtrTest, Observer_Reset)
+{
+	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
+	ASSERT_TRUE(observer.is_valid());
+
+	observer.reset();
+	EXPECT_FALSE(observer.is_valid());
+}
+
+TEST_F(SmartPtrTest, Observer_IsExpired)
+{
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer;
+	{
+		auto owner = FE::gcnew<TestObject>(m_resource, 42);
+		observer = owner;
+		ASSERT_TRUE(observer.is_valid());
+	} // owner goes out of scope and is destroyed
+	EXPECT_FALSE(observer.is_valid());
+}
+
+// Polymorphism Tests
+TEST_F(SmartPtrTest, Polymorphism_OwnerMove)
+{
+	auto derived_owner = FE::gcnew<Derived>(m_resource);
+	FE::smart_ptr<Base, FE::RefType::_Owner> base_owner = std::move(derived_owner);
+
+	EXPECT_TRUE(derived_owner.is_null());
+	ASSERT_FALSE(base_owner.is_null());
+	EXPECT_EQ(base_owner->base_value, 10);
+}
+
+TEST_F(SmartPtrTest, Polymorphism_ObserverCreate)
+{
+	auto derived_owner = FE::gcnew<Derived>(m_resource);
+	FE::smart_ptr<Base, FE::RefType::_Observer> base_observer(derived_owner);
+
+	ASSERT_TRUE(base_observer.is_valid());
+	EXPECT_EQ(base_observer->base_value, 10);
+}
+
+TEST_F(SmartPtrTest, Polymorphism_ObserverConversions)
+{
+	auto derived_owner = FE::gcnew<Derived>(m_resource);
+
+	// Test polymorphic copy assignment
+	FE::smart_ptr<Derived, FE::RefType::_Observer> derived_observer1(derived_owner);
+	FE::smart_ptr<Base, FE::RefType::_Observer> base_observer1;
+	base_observer1 = derived_observer1;
+	ASSERT_TRUE(base_observer1.is_valid());
+	EXPECT_EQ(base_observer1->base_value, 10);
+
+	// Test polymorphic move constructor
+	FE::smart_ptr<Derived, FE::RefType::_Observer> derived_observer2(derived_owner);
+	FE::smart_ptr<Base, FE::RefType::_Observer> base_observer2 = std::move(derived_observer2);
+	EXPECT_FALSE(derived_observer2.is_valid());
+	ASSERT_TRUE(base_observer2.is_valid());
+	EXPECT_EQ(base_observer2->base_value, 10);
+
+	// Test polymorphic move assignment
+	FE::smart_ptr<Derived, FE::RefType::_Observer> derived_observer3(derived_owner);
+	FE::smart_ptr<Base, FE::RefType::_Observer> base_observer3;
+	base_observer3 = std::move(derived_observer3);
+	EXPECT_FALSE(derived_observer3.is_valid());
+	ASSERT_TRUE(base_observer3.is_valid());
+	EXPECT_EQ(base_observer3->base_value, 10);
+}
+
+
+
+
+// --- Benchmarks for smart_ptr vs std::shared_ptr/weak_ptr ---
+
+// Benchmark for FE::smart_ptr owner creation
+static void FESmartPtr_OwnerCreation(benchmark::State& state)
+{
+	auto resource = std::pmr::get_default_resource();
+	for (auto _ : state)
+	{
+		auto owner = FE::gcnew<TestObject>(resource, 42);
+		benchmark::DoNotOptimize(owner);
 	}
 }
+BENCHMARK(FESmartPtr_OwnerCreation);
 
-TEST(UniquePtrArray, MoveConstructor)
+// Benchmark for std::shared_ptr creation
+static void StdSharedPtr_Creation(benchmark::State& state)
 {
-	FE::unique_ptr<int[]> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 10, 42);
-	FE::unique_ptr<int[]> l_ptr2(std::move(l_ptr1));
-	for (int i = 0; i < 10; ++i)
+	for (auto _ : state)
 	{
-		EXPECT_EQ(l_ptr2[i], 42);
-	}
-	EXPECT_EQ(l_ptr1.get(), nullptr);
-}
-
-TEST(UniquePtrArray, MoveAssignment)
-{
-	FE::unique_ptr<int[]> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 10, 42);
-	FE::unique_ptr<int[]> l_ptr2;
-	l_ptr2 = std::move(l_ptr1);
-	for (int i = 0; i < 10; ++i)
-	{
-		EXPECT_EQ(l_ptr2[i], 42);
-	}
-	EXPECT_EQ(l_ptr1.get(), nullptr);
-}
-
-TEST(UniquePtrArray, Reset)
-{
-	FE::unique_ptr<int[]> l_ptr(std::pmr::polymorphic_allocator<int>{}, 10, 42);
-	l_ptr.reset();
-	EXPECT_EQ(l_ptr.get(), nullptr);
-}
-
-TEST(UniquePtrArray, Swap)
-{
-	FE::unique_ptr<int[]> l_ptr1(std::pmr::polymorphic_allocator<int>{}, 10, 42);
-	FE::unique_ptr<int[]> l_ptr2(std::pmr::polymorphic_allocator<int>{}, 10, 24);
-	l_ptr1.swap(l_ptr2);
-	for (int i = 0; i < 10; ++i)
-	{
-		EXPECT_EQ(l_ptr1[i], 24);
-		EXPECT_EQ(l_ptr2[i], 42);
+		auto owner = std::make_shared<TestObject>(42);
+		benchmark::DoNotOptimize(owner);
 	}
 }
+BENCHMARK(StdSharedPtr_Creation);
 
-
-
-
-// Benchmark for FE::unique_ptr<int> vs std::unique_ptr<int>
-void FE_allocate_unique_single_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for FE::smart_ptr observer creation
+static void FESmartPtr_ObserverCreation(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto resource = std::pmr::get_default_resource();
+	auto owner = FE::gcnew<TestObject>(resource, 42);
+	for (auto _ : state)
 	{
-		FE::unique_ptr<int> l_ptr = FE::allocate_unique<int>();
-		benchmark::DoNotOptimize(l_ptr);
+		FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
+		benchmark::DoNotOptimize(observer);
 	}
 }
-BENCHMARK(FE_allocate_unique_single_benchmark)->Iterations(100000);
+BENCHMARK(FESmartPtr_ObserverCreation);
 
-void std_allocate_unique_single_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for std::weak_ptr creation
+static void StdWeakPtr_Creation(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto owner = std::make_shared<TestObject>(42);
+	for (auto _ : state)
 	{
-		std::unique_ptr<int> l_ptr = std::make_unique<int>();
-		benchmark::DoNotOptimize(l_ptr);
+		std::weak_ptr<TestObject> observer(owner);
+		benchmark::DoNotOptimize(observer);
 	}
 }
-BENCHMARK(std_allocate_unique_single_benchmark)->Iterations(100000);
+BENCHMARK(StdWeakPtr_Creation);
 
-
-
-
-void FE_allocate_unique_single_with_args_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for FE::smart_ptr observer copy
+static void FESmartPtr_ObserverCopy(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto resource = std::pmr::get_default_resource();
+	auto owner = FE::gcnew<TestObject>(resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
+	for (auto _ : state)
 	{
-		FE::unique_ptr<int> l_ptr = FE::allocate_unique<int>(std::pmr::get_default_resource(), 42);
-		benchmark::DoNotOptimize(l_ptr);
+		FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2 = observer1;
+		benchmark::DoNotOptimize(observer2);
 	}
 }
-BENCHMARK(FE_allocate_unique_single_with_args_benchmark)->Iterations(100000);
+BENCHMARK(FESmartPtr_ObserverCopy);
 
-void std_allocate_unique_single_with_args_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for std::weak_ptr copy
+static void StdWeakPtr_Copy(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto owner = std::make_shared<TestObject>(42);
+	std::weak_ptr<TestObject> observer1(owner);
+	for (auto _ : state)
 	{
-		std::unique_ptr<int> l_ptr = std::make_unique<int>(42);
-		benchmark::DoNotOptimize(l_ptr);
+		std::weak_ptr<TestObject> observer2 = observer1;
+		benchmark::DoNotOptimize(observer2);
 	}
 }
-BENCHMARK(std_allocate_unique_single_with_args_benchmark)->Iterations(100000);
+BENCHMARK(StdWeakPtr_Copy);
 
-
-
-
-// Benchmark for FE::unique_ptr<int[]> vs std::unique_ptr<int[]>
-void FE_allocate_unique_array_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for dereferencing FE::smart_ptr owner
+static void FESmartPtr_OwnerDereference(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto resource = std::pmr::get_default_resource();
+	auto owner = FE::gcnew<TestObject>(resource, 42);
+	for (auto _ : state)
 	{
-		FE::unique_ptr<int[]> l_ptr = FE::allocate_unique<int[]>(10);
-		benchmark::DoNotOptimize(l_ptr);
+		benchmark::DoNotOptimize(owner->value);
 	}
 }
-BENCHMARK(FE_allocate_unique_array_benchmark)->Iterations(100000);
+BENCHMARK(FESmartPtr_OwnerDereference);
 
-void std_allocate_unique_array_benchmark(benchmark::State& state_p) noexcept
+// Benchmark for dereferencing std::shared_ptr
+static void StdSharedPtr_Dereference(benchmark::State& state)
 {
-	for (auto _ : state_p)
+	auto owner = std::make_shared<TestObject>(42);
+	for (auto _ : state)
 	{
-		std::unique_ptr<int[]> l_ptr = std::make_unique<int[]>(10);
-		benchmark::DoNotOptimize(l_ptr);
+		benchmark::DoNotOptimize(owner->value);
 	}
 }
-BENCHMARK(std_allocate_unique_array_benchmark)->Iterations(100000);
+BENCHMARK(StdSharedPtr_Dereference);
+
+// Benchmark for checking validity and dereferencing FE::smart_ptr observer
+static void FESmartPtr_ObserverDereference(benchmark::State& state)
+{
+	auto resource = std::pmr::get_default_resource();
+	auto owner = FE::gcnew<TestObject>(resource, 42);
+	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
+	for (auto _ : state)
+	{
+		if (observer.is_valid())
+		{
+			benchmark::DoNotOptimize(observer->value);
+		}
+	}
+}
+BENCHMARK(FESmartPtr_ObserverDereference);
+
+// Benchmark for locking and dereferencing std::weak_ptr
+static void StdWeakPtr_LockAndDereference(benchmark::State& state)
+{
+	auto owner = std::make_shared<TestObject>(42);
+	std::weak_ptr<TestObject> observer(owner);
+	for (auto _ : state)
+	{
+		if (auto locked = observer.lock())
+		{
+			benchmark::DoNotOptimize(locked->value);
+		}
+	}
+}
+BENCHMARK(StdWeakPtr_LockAndDereference);

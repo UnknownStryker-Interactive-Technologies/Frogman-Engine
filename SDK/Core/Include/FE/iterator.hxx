@@ -51,36 +51,30 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator++() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator++();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator++(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		iterator l_temporary = *this;
 		Implementation::operator++();
 		return l_temporary;
@@ -89,13 +83,11 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator--() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator--();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator--(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		iterator l_temporary = *this;
 		Implementation::operator--();
 		return l_temporary;
@@ -104,12 +96,10 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator+(pointer_offset_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
@@ -117,32 +107,27 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(pointer_offset_p);
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(other_p);
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator[](index_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator[](index_p);
 	}
 
@@ -219,36 +204,30 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator++() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator--();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator++(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		reverse_iterator l_temporary = *this;
 		Implementation::operator--();
 		return l_temporary;
@@ -257,13 +236,11 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator--() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator++();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator--(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		reverse_iterator l_temporary = *this;
 		Implementation::operator++();
 		return l_temporary;
@@ -272,12 +249,10 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(pointer_offset_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
@@ -285,34 +260,27 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator+(pointer_offset_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		FE_NEGATIVE_ASSERT(other_p.is_null() == true, "${%s@0}: The right-hand input reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-
 		return other_p.operator-(*this);
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return *(this->operator+(index_p));
+		return *(operator+(index_p));
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return *(this->operator+(index_p));
+		return *(operator+(index_p));
 	}
 
 
@@ -386,27 +354,23 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null const_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null const_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator++() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator++();
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator++(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		iterator l_temporary = *this;
 		Implementation::operator++();
 		return l_temporary;
@@ -415,14 +379,12 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator--() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator--();
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator--(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		iterator l_temporary = *this;
 		Implementation::operator--();
 		return l_temporary;
@@ -431,13 +393,11 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator+(pointer_offset_p);
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
@@ -445,27 +405,23 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(pointer_offset_p);
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(other_p);
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator[](index_p);
 	}
 
@@ -545,25 +501,21 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to dereference a null const_reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator*();
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: Unable to access a null const_reverse_iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator->();
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator++() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator--();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator++(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		reverse_iterator l_temporary = *this;
 		Implementation::operator--();
 		return l_temporary;
@@ -572,13 +524,11 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator--() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator++();
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator--(int) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		const_reverse_iterator l_temporary = *this;
 		Implementation::operator++();
 		return l_temporary;
@@ -587,12 +537,10 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator-(pointer_offset_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
@@ -600,28 +548,22 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return Implementation::operator+(pointer_offset_p);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		FE_NEGATIVE_ASSERT(other_p.is_null() == true, "${%s@0}: The right-hand input const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-
 		return other_p.operator-(*this);
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->is_null() == true, "${%s@0}: The const_reverse_iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return *(this->operator+(index_p));
+		return *(operator+(index_p));
 	}
 
 
@@ -699,121 +641,121 @@ public:
 	_FE_CONSTEXPR17_ contiguous_iterator(contiguous_iterator&& other_p) noexcept : m_iterator(other_p.m_iterator) { other_p.m_iterator = nullptr; }
 	_FE_CONSTEXPR20_ ~contiguous_iterator() noexcept {}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_null() const noexcept { return this->m_iterator == nullptr; }
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_null() const noexcept { return m_iterator == nullptr; }
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return *(this->m_iterator);
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return *(m_iterator);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return *(this->m_iterator);
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return *(m_iterator);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator;
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator++() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		++(this->m_iterator);
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		++(m_iterator);
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator--() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		--(this->m_iterator);
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		--(m_iterator);
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator+(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator + pointer_offset_p;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator + pointer_offset_p;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator+=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		this->m_iterator += pointer_offset_p;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		m_iterator += pointer_offset_p;
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator-(const difference_type pointer_offset_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator - pointer_offset_p;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator - pointer_offset_p;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator-=(const difference_type pointer_offset_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		this->m_iterator -= pointer_offset_p;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		m_iterator -= pointer_offset_p;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const contiguous_iterator& value_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator - value_p.m_iterator;
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator - value_p.m_iterator;
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator[index_p];
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator[index_p];
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-		return this->m_iterator[index_p];
+		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+		return m_iterator[index_p];
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator& operator=(const contiguous_iterator& other_p) noexcept
 	{
-		this->m_iterator = other_p.m_iterator;
+		m_iterator = other_p.m_iterator;
 		return *this;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator& operator=(contiguous_iterator&& rvalue_p) noexcept
 	{
-		this->m_iterator = rvalue_p.m_iterator;
+		m_iterator = rvalue_p.m_iterator;
 		return *this;
 	}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator < other_p.m_iterator;
+		return m_iterator < other_p.m_iterator;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator <= other_p.m_iterator;
+		return m_iterator <= other_p.m_iterator;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator > other_p.m_iterator;
+		return m_iterator > other_p.m_iterator;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator >= other_p.m_iterator;
+		return m_iterator >= other_p.m_iterator;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator == other_p.m_iterator;
+		return m_iterator == other_p.m_iterator;
 	}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const contiguous_iterator& other_p) const noexcept
 	{
-		return this->m_iterator != other_p.m_iterator;
+		return m_iterator != other_p.m_iterator;
 	}
 };
 

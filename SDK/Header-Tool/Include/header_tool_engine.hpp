@@ -57,12 +57,12 @@ struct token
 
 	_FE_NODISCARD_ FE::boolean operator==(const token& rhs_p) const noexcept
 	{
-		return (this->_vocabulary == rhs_p._vocabulary);
+		return (_vocabulary == rhs_p._vocabulary);
 	}
 
 	_FE_NODISCARD_ FE::boolean operator!=(const token& rhs_p) const noexcept
 	{
-		return (this->_vocabulary != rhs_p._vocabulary);
+		return (_vocabulary != rhs_p._vocabulary);
 	}
 };
 
@@ -105,7 +105,7 @@ private:
 	_FE_NODISCARD_ FE::boolean __is_the_file_encoded_with_UTF8_BOM(FE::wchar* directory_p) const noexcept;
 	_FE_FORCE_INLINE_ _FE_NODISCARD_ FE::boolean __is_encoded_with_UTF8_BOM(FE::UTF8* const buffer_entry_p) const noexcept
 	{
-		return ((buffer_entry_p[0] == this->m_UTF8_with_BOM[0]) && (buffer_entry_p[1] == this->m_UTF8_with_BOM[1]) && (buffer_entry_p[2] == this->m_UTF8_with_BOM[2]));
+		return ((buffer_entry_p[0] == m_UTF8_with_BOM[0]) && (buffer_entry_p[1] == m_UTF8_with_BOM[1]) && (buffer_entry_p[2] == m_UTF8_with_BOM[2]));
 	}
 
 	_FE_NODISCARD_ std::pmr::vector<directory_t> __make_header_file_list(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;

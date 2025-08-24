@@ -65,7 +65,7 @@ public:
     // Attempting to unlock a mutex that is not locked by the current thread will result in an undefined behavior.
     _FE_FORCE_INLINE_ void unlock() noexcept
     {
-        FE_ASSERT(this->m_front != this->m_back, "Assertion Failed: attempting to unlock a mutex that is not locked by the current thread will result in an undefined behavior.");
+        FE_ASSERT(m_front != m_back, "Assertion Failed: attempting to unlock a mutex that is not locked by the current thread will result in an undefined behavior.");
         m_front.fetch_add(1, std::memory_order_acq_rel);
     }
 };
@@ -86,7 +86,7 @@ public:
 
     ~shared_mutex() noexcept {}
 
-    _FE_FORCE_INLINE_ void lock() noexcept
+    void lock() noexcept
     {
         while (m_shared_count.load(std::memory_order_acquire) != 0)
         {
@@ -102,7 +102,7 @@ public:
         }
     }
 
-    _FE_FORCE_INLINE_ FE::boolean try_lock() noexcept
+    FE::boolean try_lock() noexcept
     {
         if (m_shared_count.load(std::memory_order_acquire) != 0)
         {
@@ -121,7 +121,7 @@ public:
     // Attempting to unlock a shared_mutex that is not locked by the current thread will result in an undefined behavior.
     _FE_FORCE_INLINE_ void unlock() noexcept
     {
-        FE_ASSERT(this->m_front != this->m_back, "Assertion Failed: attempting to unlock a mutex that is not locked by the current thread will result in an undefined behavior.");
+        FE_ASSERT(m_front != m_back, "Assertion Failed: attempting to unlock a mutex that is not locked by the current thread will result in an undefined behavior.");
         m_front.fetch_add(1, std::memory_order_acq_rel);
     }
 
@@ -166,12 +166,12 @@ public:
     _FE_FORCE_INLINE_ scoped_lock(Lock& lock_p) noexcept
         : m_lock(lock_p)
     {
-        this->m_lock.lock();
+        m_lock.lock();
     }
 
     _FE_FORCE_INLINE_ ~scoped_lock() noexcept
     {
-        this->m_lock.unlock();
+        m_lock.unlock();
     }
 };
 
@@ -187,12 +187,12 @@ public:
     _FE_FORCE_INLINE_ scoped_shared_lock(SharedLock& shared_lock_p) noexcept
         : m_shared_lock(shared_lock_p)
     {
-        this->m_shared_lock.lock_shared();
+        m_shared_lock.lock_shared();
     }
 
     _FE_FORCE_INLINE_ ~scoped_shared_lock() noexcept
     {
-        this->m_shared_lock.unlock_shared();
+        m_shared_lock.unlock_shared();
     }
 };
 

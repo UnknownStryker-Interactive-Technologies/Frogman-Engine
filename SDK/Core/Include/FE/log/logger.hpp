@@ -57,7 +57,7 @@ public:
 
 
     template<class FatalErrorLogger>
-    _FE_FORCE_INLINE_ static fatal_error_logger_base& get_fatal_error_logger() noexcept
+    static fatal_error_logger_base& get_fatal_error_logger() noexcept
     {
         static_assert(!((std::is_base_of<fatal_error_logger_base, FatalErrorLogger>::value == false) && (std::is_same<fatal_error_logger_base, FatalErrorLogger>::value == false)), "FatalErrorLogger must be derived from logger_base.");
         thread_local static FatalErrorLogger tl_s_fatal_error_logger;
@@ -79,7 +79,7 @@ class fatal_error_logger_base : public logger_base
 public:
     using base_type = logger_base;
 
-    _FE_FORCE_INLINE_ fatal_error_logger_base() noexcept : base_type() {}
+    fatal_error_logger_base() noexcept : base_type() {}
     ~fatal_error_logger_base() noexcept = default;
 
     void do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept;

@@ -44,21 +44,21 @@ namespace internal::thread_id
 	public:
 		__generator() noexcept
 		{
-			if (s_thread_ids.try_pop(this->m_thread_id) == false)
+			if (s_thread_ids.try_pop(m_thread_id) == false)
 			{
 				FE_ASSERT(s_next_thread_id.load() < FE::max_value<var::uint16>);
-				this->m_thread_id = s_next_thread_id++;
+				m_thread_id = s_next_thread_id++;
 			}
 		}
 
 		~__generator() noexcept
 		{
-			s_thread_ids.push(this->m_thread_id);
+			s_thread_ids.push(m_thread_id);
 		}
 
 		FE::uint16 get_id() const noexcept
 		{
-			return this->m_thread_id;
+			return m_thread_id;
 		}
 	};
 }

@@ -43,8 +43,8 @@ public:
 
     _FE_FORCE_INLINE_ T ranged_random_integer(T min_range_p, T max_range_p) noexcept
     {
-        this->m_uniform_int_distribution.emplace(min_range_p, max_range_p);
-        return (*this->m_uniform_int_distribution)(*this->m_value_generator);
+        m_uniform_int_distribution.emplace(min_range_p, max_range_p);
+        return (*m_uniform_int_distribution)(*m_value_generator);
     }
 };
 
@@ -65,8 +65,8 @@ public:
 
     _FE_FORCE_INLINE_ T ranged_random_float(T min_range_p, T max_range_p) noexcept
     {
-        this->m_uniform_real_distribution.emplace(min_range_p, max_range_p);
-        return (*this->m_uniform_real_distribution)(*this->m_value_generator);
+        m_uniform_real_distribution.emplace(min_range_p, max_range_p);
+        return (*m_uniform_real_distribution)(*m_value_generator);
     }
 };
 

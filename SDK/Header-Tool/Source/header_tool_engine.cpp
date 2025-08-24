@@ -41,25 +41,25 @@ header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noe
 
 FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
-	this->__load_reflection_data();
-	this->m_enum_metadata = this->get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
+	__load_reflection_data();
+	m_enum_metadata = get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
-	this->m_code_style_guide = file_buffer_t(this->get_memory_resource());
-	this->m_reflection_metadata_set /*= reflection_metadata_set_t(this->get_memory_resource())*/;
+	m_code_style_guide = file_buffer_t(get_memory_resource());
+	m_reflection_metadata_set /*= reflection_metadata_set_t(get_memory_resource())*/;
 
-	if (this->m_header_tool_options.is_fno_op_defined() == true)
+	if (m_header_tool_options.is_fno_op_defined() == true)
 	{
 		std::cerr << "\n\nFrogman Engine Header Tool: No operation will be done. Exiting the program.\n\n";
 		std::exit(0);
 	}
 
-	if (*(this->m_header_tool_options.get_path_to_copyright_notice()) != '\0')
+	if (*(m_header_tool_options.get_path_to_copyright_notice()) != '\0')
 	{
-		this->m_copyright_notice = __read_copyright_notice(argc_p, argv_p);
+		m_copyright_notice = __read_copyright_notice(argc_p, argv_p);
 	}
 
-	this->m_header_file_list = __make_header_file_list(argc_p, argv_p);
-	this->m_mapped_header_files = __map_header_files(this->m_header_file_list);
+	m_header_file_list = __make_header_file_list(argc_p, argv_p);
+	m_mapped_header_files = __map_header_files(m_header_file_list);
 
 	return 0;
 }
@@ -74,12 +74,12 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor(this->m_program_options.get_max_concurrency());
+	tf::Executor l_executor(m_program_options.get_max_concurrency());
 	var::int32 l_exit_code = 0;
-	FE::uint64 l_number_of_files = this->m_mapped_header_files.size();
+	FE::uint64 l_number_of_files = m_mapped_header_files.size();
 	std::mutex l_log_lock;
 
-	if (this->m_header_tool_options.is_fno_copyright_notice_defined() == false)
+	if (m_header_tool_options.is_fno_copyright_notice_defined() == false)
 	{
 		for (var::uint64 i = 0; i < l_number_of_files; ++i)
 		{
@@ -87,11 +87,11 @@ FE::int32 header_tool_engine::run()
 			(
 				[i, &l_exit_code, &l_log_lock, this]
 				{
-					file_buffer_t& l_file = this->m_mapped_header_files[i];
+					file_buffer_t& l_file = m_mapped_header_files[i];
 
 					// Check the presence of the given copy right notice.
-					FE::boolean l_result = algorithm::string::space_insensitive_contains(algorithm::string::skip_BOM(l_file.c_str()), l_file.size(), algorithm::string::skip_BOM(this->m_copyright_notice.c_str()));
-					directory_t& l_path = this->m_header_file_list[i];
+					FE::boolean l_result = algorithm::string::space_insensitive_contains(algorithm::string::skip_BOM(l_file.c_str()), l_file.size(), algorithm::string::skip_BOM(m_copyright_notice.c_str()));
+					directory_t& l_path = m_header_file_list[i];
 
 					if (l_result == false) // The given copy right notice is not found.
 					{
@@ -115,7 +115,7 @@ FE::int32 header_tool_engine::run()
 
 	l_taskflow.clear();
 
-	if (this->m_header_tool_options.is_fno_reflection_helper_defined() == false)
+	if (m_header_tool_options.is_fno_reflection_helper_defined() == false)
 	{
 		for (var::uint64 i = 0; i < l_number_of_files; ++i)
 		{
@@ -123,8 +123,8 @@ FE::int32 header_tool_engine::run()
 			(
 				[i, &l_exit_code, &l_log_lock, this]
 				{
-					file_buffer_t& l_file = this->m_mapped_header_files[i];
-					directory_t& l_path = this->m_header_file_list[i];
+					file_buffer_t& l_file = m_mapped_header_files[i];
+					directory_t& l_path = m_header_file_list[i];
 
 					// tokenize the header file to get the tokens.
 					auto l_tokens = __tokenize_header(l_file, l_path);
@@ -159,7 +159,7 @@ FE::int32 header_tool_engine::run()
 					}
 
 					// generate the reflection metadata set. m_reflection_metadata_set is a concurrent vector. 
-					this->m_reflection_metadata_set.push_back( __generate_reflection_metadata(l_reflection_tree) );
+					m_reflection_metadata_set.push_back( __generate_reflection_metadata(l_reflection_tree) );
 				}
 			);
 		}
@@ -174,9 +174,9 @@ FE::int32 header_tool_engine::run()
 		}
 
 		// generate the reflection code in the generated.cpp file.
-		if (this->m_header_tool_options.is_fno_write_defined() == false)
+		if (m_header_tool_options.is_fno_write_defined() == false)
 		{
-			__generate_reflection_code(this->m_reflection_metadata_set);
+			__generate_reflection_code(m_reflection_metadata_set);
 		}
 	}
 
@@ -195,7 +195,7 @@ FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::wchar* d
 	FE_EXIT(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
 	var::uint8 l_BOM[3];
 	l_BOM_validator.read(reinterpret_cast<char*>(l_BOM), 3);
-	return ((l_BOM[0] == this->m_UTF8_with_BOM[0]) && (l_BOM[1] == this->m_UTF8_with_BOM[1]) && (l_BOM[2] == this->m_UTF8_with_BOM[2]));
+	return ((l_BOM[0] == m_UTF8_with_BOM[0]) && (l_BOM[1] == m_UTF8_with_BOM[1]) && (l_BOM[2] == m_UTF8_with_BOM[2]));
 }
 
 std::pmr::vector<directory_t> header_tool_engine::__make_header_file_list(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
@@ -266,7 +266,7 @@ std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std
 		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
 
 		std::basic_ifstream<var::UTF8> l_file_handler;
-		l_file_handler.imbue(this->m_UTF8_locale);
+		l_file_handler.imbue(m_UTF8_locale);
 		l_file_handler.open(path_to_file.c_str());
 		FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
 

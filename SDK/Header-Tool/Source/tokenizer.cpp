@@ -504,7 +504,7 @@ _FE_NODISCARD_ FE::boolean header_tool_engine::__verify_key_equivalence(typename
 	FE::uint64 l_length = FE::algorithm::string::length(key_p);
 
 	if ((subject_p[-1] <= ' ') && (subject_p[l_length] <= ' ') ||
-		(subject_p[-1] == this->m_UTF8_with_BOM[2]) && (subject_p[l_length] <= ' '))
+		(subject_p[-1] == m_UTF8_with_BOM[2]) && (subject_p[l_length] <= ' '))
 	{
 		if (FE::algorithm::string::compare_ranged((FE::ASCII*)subject_p, FE::algorithm::string::range{ 0, l_length },
 			key_p, FE::algorithm::string::range{ 0, l_length }) == true)

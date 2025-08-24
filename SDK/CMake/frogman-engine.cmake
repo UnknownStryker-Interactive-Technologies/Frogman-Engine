@@ -44,6 +44,8 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
+
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
 )
 SOURCE_GROUP("FE.Framework" FILES ${FE_FRAMEWORK_HEADER})
 

@@ -116,15 +116,15 @@ private:
         }
 
         std::lock_guard<lock_type> l_lock(m_lock);
-        this->m_name = l_info._typename;
-        type_info::s_type_information.emplace(this->m_name, std::move(l_info));
+        m_name = l_info._typename;
+        type_info::s_type_information.emplace(m_name, std::move(l_info));
     }
 
 public:
     _FE_FORCE_INLINE_ FE::ASCII* name() const noexcept
     {
         boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(this->m_name);
+        auto l_result = type_info::s_type_information.find(m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._typename.c_str();
@@ -136,7 +136,7 @@ public:
     _FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
     {
         boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(this->m_name);
+        auto l_result = type_info::s_type_information.find(m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return robin_hood::hash_bytes(l_result->second._typename.data(), l_result->second._typename.length());
@@ -148,7 +148,7 @@ public:
     _FE_FORCE_INLINE_ FE::ASCII* base_name() const noexcept
     {
         boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(this->m_name);
+        auto l_result = type_info::s_type_information.find(m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._base_typename.c_str();
@@ -160,7 +160,7 @@ public:
     _FE_FORCE_INLINE_ FE::uint64 base_hash_code() const noexcept
     {
         boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(this->m_name);
+        auto l_result = type_info::s_type_information.find(m_name);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return robin_hood::hash_bytes(l_result->second._base_typename.data(), l_result->second._base_typename.length());

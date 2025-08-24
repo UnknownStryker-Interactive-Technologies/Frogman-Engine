@@ -62,7 +62,7 @@ public:
         m_length_modifier_lock(),
         m_allocator()
     {
-        this->__allocate_default_sized_raw_on_construction();
+        __allocate_default_sized_raw_on_construction();
     }
 
     constexpr concurrent_vector(const allocator_type& allocator_p) noexcept
@@ -71,7 +71,7 @@ public:
         m_length_modifier_lock(),
         m_allocator(allocator_p)
     {
-        this->__allocate_default_sized_raw_on_construction();
+        __allocate_default_sized_raw_on_construction();
     }
 
     concurrent_vector(std::initializer_list<value_type> init_p,
@@ -83,43 +83,43 @@ public:
     {
         if (init_p.size() == 0)
         {
-            this->__allocate_default_sized_raw_on_construction();
+            __allocate_default_sized_raw_on_construction();
             return;
         }
-        this->try_reserve(init_p.size());
-        this->__move_construct_from_initializer_list(init_p);
+        try_reserve(init_p.size());
+        __move_construct_from_initializer_list(init_p);
     }
 
     ~concurrent_vector()
     {
-        pointer l_begin = this->m_active.load(std::memory_order_acquire);
-        pointer l_end = l_begin + this->size();
+        pointer l_begin = m_active.load(std::memory_order_acquire);
+        pointer l_end = l_begin + size();
 
         for (pointer it = l_begin; it < l_end; ++it)
         {
             it->~T();
         }
 
-        this->m_allocator.deallocate(l_begin, m_capacity.load(std::memory_order_acquire));
+        m_allocator.deallocate(l_begin, m_capacity.load(std::memory_order_acquire));
     }
 
 private: // Concurrently unsafe methods
     inline constexpr void __allocate_default_sized_raw_on_construction() noexcept
     {
-        this->m_active.store(this->m_allocator.allocate(default_size), std::memory_order_relaxed);
-        FE_ASSERT(this->m_active.load(std::memory_order_relaxed) != nullptr);
+        m_active.store(m_allocator.allocate(default_size), std::memory_order_relaxed);
+        FE_ASSERT(m_active.load(std::memory_order_relaxed) != nullptr);
 
-        this->m_capacity.store(default_size, std::memory_order_relaxed);
-        FE_ASSERT(this->m_capacity.load(std::memory_order_relaxed) == default_size);
+        m_capacity.store(default_size, std::memory_order_relaxed);
+        FE_ASSERT(m_capacity.load(std::memory_order_relaxed) == default_size);
     }
 
     inline void __move_construct_from_initializer_list(std::initializer_list<value_type>& init_p) noexcept
     {
-        FE_ASSERT(init_p.size() <= this->m_capacity.load(std::memory_order_relaxed));
+        FE_ASSERT(init_p.size() <= m_capacity.load(std::memory_order_relaxed));
 
         pointer l_list_iterator = const_cast<pointer>(init_p.begin());
         const_pointer l_list_end = init_p.end();
-        pointer l_current_array_it = this->m_active.load(std::memory_order_relaxed);
+        pointer l_current_array_it = m_active.load(std::memory_order_relaxed);
 
         while (l_list_iterator < l_list_end)
         {
@@ -181,27 +181,27 @@ public:
 
     inline void back(reference out_dest_p) noexcept
     {
-        read_at(this->size() - 1, out_dest_p);
+        read_at(size() - 1, out_dest_p);
     }
 
     inline void back(const_reference value_p) noexcept
     {
-        write_at(this->size() - 1, value_p);
+        write_at(size() - 1, value_p);
     }
 
 public:
     size_type try_push_back(const value_type& value_p) noexcept
     {
         scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
-        size_type l_idx = this->m_size.fetch_add(1, std::memory_order_acq_rel);
-        size_type l_current_capacity = this->m_capacity.load(std::memory_order_acquire);
+        size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
+        size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*
         I have spent days to figure out why the program arbitrarily crashes when try_reserve() is called concurrently.
         m_size has to be less than or equal to m_capacity. However, m_size sometimes becomes m_size+1.😭
         To explain the unpleasant situation:
 
         Step one: a thread comes here and fails to try_push_back() and sets m_size to the current capacity
-        because the given index points outside of the array range [the array ranges from 0 to the current capacity].  Note that m_size is always equal to the given index + 1 at the moment of 'size_type l_idx = this->m_size.fetch_add(1, std::memory_order_acq_rel);'.
+        because the given index points outside of the array range [the array ranges from 0 to the current capacity].  Note that m_size is always equal to the given index + 1 at the moment of 'size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);'.
 
         Step two: another thread enters try_push_back() and fails too, and post-increments one to m_size.
 
@@ -226,7 +226,7 @@ public:
         //assert(l_idx != m_capacity);
 
         // Commit the transaction.
-        new (this->m_active.load(std::memory_order_acquire) + l_idx) T(value_p);
+        new (m_active.load(std::memory_order_acquire) + l_idx) T(value_p);
         return l_idx;
     }
 
@@ -234,15 +234,15 @@ public:
     size_type try_emplace_back(Args&&... args_p) noexcept
     {
         scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
-        size_type l_idx = this->m_size.fetch_add(1, std::memory_order_acq_rel);
-        size_type l_current_capacity = this->m_capacity.load(std::memory_order_acquire);
+        size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
+        size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*
         I have spent days to figure out why the program arbitrarily crashes when try_reserve() is called concurrently.
         m_size has to be less than or equal to m_capacity. However, m_size sometimes becomes m_size+1.😭
         To explain the unpleasant situation:
 
         Step one: a thread comes here and fails to try_push_back() and sets m_size to the current capacity
-        because the given index points outside of the array range [the array ranges from 0 to the current capacity].  Note that m_size is always equal to the given index + 1 at the moment of 'size_type l_idx = this->m_size.fetch_add(1, std::memory_order_acq_rel);'.
+        because the given index points outside of the array range [the array ranges from 0 to the current capacity].  Note that m_size is always equal to the given index + 1 at the moment of 'size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);'.
 
         Step two: another thread enters try_push_back() and fails too, and post-increments one to m_size.
 
@@ -267,7 +267,7 @@ public:
         //assert(l_idx != m_capacity);
 
         // Commit the transaction.
-        new (this->m_active.load(std::memory_order_acquire) + l_idx) T(std::forward<Args>(args_p)...);
+        new (m_active.load(std::memory_order_acquire) + l_idx) T(std::forward<Args>(args_p)...);
         return l_idx;
     }
 
@@ -275,27 +275,27 @@ public:
     {
         pointer l_nullptr = nullptr;
 
-        if (new_capacity_p <= this->m_capacity.load(std::memory_order_acquire))
+        if (new_capacity_p <= m_capacity.load(std::memory_order_acquire))
         {
             return false;
         }
 
-        if (this->m_reserved.compare_exchange_strong(l_nullptr, reinterpret_cast<pointer>(this), std::memory_order_acq_rel) == true)
+        if (m_reserved.compare_exchange_strong(l_nullptr, reinterpret_cast<pointer>(this), std::memory_order_acq_rel) == true)
         {
-            this->m_reserved.store(this->m_allocator.allocate(new_capacity_p), std::memory_order_release);
+            m_reserved.store(m_allocator.allocate(new_capacity_p), std::memory_order_release);
             //std::cout << new_capacity_p << '\n';
             pointer l_retired = nullptr;
             size_type l_retired_size = 0;
             size_type l_retired_capacity = 0;
             {   // temporarily blocks other threads from reading and writing the array.
                 scoped_lock<SharedMutex> l_lock(m_length_modifier_lock);
-                l_retired = this->m_active.exchange(this->m_reserved.load(std::memory_order_relaxed), std::memory_order_relaxed);
-                l_retired_size = this->m_size.load(std::memory_order_relaxed);
-                l_retired_capacity = this->m_capacity.exchange(new_capacity_p, std::memory_order_relaxed);
-                this->__move_construct_from(l_retired, std::min(l_retired_size, l_retired_capacity) /* read the comment in the try_emplace_back() */);
+                l_retired = m_active.exchange(m_reserved.load(std::memory_order_relaxed), std::memory_order_relaxed);
+                l_retired_size = m_size.load(std::memory_order_relaxed);
+                l_retired_capacity = m_capacity.exchange(new_capacity_p, std::memory_order_relaxed);
+                __move_construct_from(l_retired, std::min(l_retired_size, l_retired_capacity) /* read the comment in the try_emplace_back() */);
             }
-            this->__tear_down(l_retired, l_retired_size, l_retired_capacity);
-            this->m_reserved.store(nullptr, std::memory_order_release);
+            __tear_down(l_retired, l_retired_size, l_retired_capacity);
+            m_reserved.store(nullptr, std::memory_order_release);
             return true;
         }
         return false;
@@ -306,7 +306,7 @@ public:
         size_type l_idx = try_push_back(value_p);
         while (l_idx == std::numeric_limits<size_type>::max())
         {
-            size_type l_new_capacity = this->m_capacity.load(std::memory_order_acquire);
+            size_type l_new_capacity = m_capacity.load(std::memory_order_acquire);
             l_new_capacity += (l_new_capacity >> 1);
             try_reserve(l_new_capacity);
             l_idx = try_push_back(value_p);
@@ -320,7 +320,7 @@ public:
         size_type l_idx = try_emplace_back(std::forward<Args>(args_p)...);
         while (l_idx == std::numeric_limits<size_type>::max())
         {
-            size_type l_new_capacity = this->m_capacity.load(std::memory_order_acquire);
+            size_type l_new_capacity = m_capacity.load(std::memory_order_acquire);
             l_new_capacity += (l_new_capacity >> 1);
             try_reserve(l_new_capacity);
             l_idx = try_emplace_back(std::forward<Args>(args_p)...);
@@ -332,9 +332,9 @@ private:
     inline void __move_construct_from(pointer source_p, size_type src_size_p) noexcept
     {
         //assert(source_p != nullptr);
-        pointer l_current_array = this->m_active.load(std::memory_order_relaxed);
+        pointer l_current_array = m_active.load(std::memory_order_relaxed);
         //assert(l_current_array != nullptr);
-        //assert(src_size_p <= this->m_capacity.load( std::memory_order_acquire ));
+        //assert(src_size_p <= m_capacity.load( std::memory_order_acquire ));
 
         for (size_type i = 0; i < src_size_p; ++i)
         {
@@ -351,7 +351,7 @@ private:
         {
             target_p[i].~T();
         }
-        this->m_allocator.deallocate(target_p, target_capacity_p);
+        m_allocator.deallocate(target_p, target_capacity_p);
     }
 
 public: /* use cas to acquire the dictatorship over the pointer.
@@ -382,40 +382,40 @@ public: /* use cas to acquire the dictatorship over the pointer.
 
     inline bool is_empty() const noexcept
     {
-        return this->m_size.load(std::memory_order_acquire) == 0;
+        return m_size.load(std::memory_order_acquire) == 0;
     }
 
     inline size_type capacity() const noexcept
     {
-        return this->m_capacity.load(std::memory_order_acquire);
+        return m_capacity.load(std::memory_order_acquire);
     }
 
 public: // Concurrently unsafe operations
     inline const allocator_type& get_allocator() const noexcept
     {
-        return this->m_allocator;
+        return m_allocator;
     }
     inline allocator_type& get_allocator() noexcept
     {
-        return this->m_allocator;
+        return m_allocator;
     }
 
     inline pointer begin() noexcept
     {
-        return this->m_active.load(std::memory_order_acquire);
+        return m_active.load(std::memory_order_acquire);
 	}
     inline const_pointer begin() const noexcept
     {
-        return this->m_active.load(std::memory_order_acquire);
+        return m_active.load(std::memory_order_acquire);
     }
 
     inline pointer end() noexcept
     {
-        return this->m_active.load(std::memory_order_acquire) + this->size();
+        return m_active.load(std::memory_order_acquire) + size();
     }
     inline const_pointer end() const noexcept
     {
-        return this->m_active.load(std::memory_order_acquire) + this->size();
+        return m_active.load(std::memory_order_acquire) + size();
     }
 };
 

@@ -1,21 +1,25 @@
 ﻿  Scanning sources for module dependencies...
-  FE.framework.reflection.cpp
+  app.cpp
+  FE.ECS.cpp
   FE.task.cpp
   FE.pool.cpp
-  FE.ECS.cpp
+  FE.memory.cpp
+  FE.framework.reflection.cpp
+  FE.fcontainer.cpp
+  FE.algorithm.string.cpp
   generated.cpp
-  app.cpp
   Compiling...
-  FE.ECS.cpp
   app.cpp
-  generated.cpp
+  FE.fcontainer.cpp
   FE.framework.reflection.cpp
-  FE.pool.cpp
+  FE.ECS.cpp
+  FE.memory.cpp
+  FE.algorithm.string.cpp
   FE.task.cpp
+  FE.pool.cpp
+  generated.cpp
+  app.obj : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
      Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/Release/FE_UNIT_TEST.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/Release/FE_UNIT_TEST.exp
   Generating code
-  267 of 6852 functions ( 3.9%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    4 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Release\FE_UNIT_TEST.exe

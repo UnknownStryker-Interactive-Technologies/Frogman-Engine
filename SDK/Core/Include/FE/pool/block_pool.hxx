@@ -72,14 +72,14 @@ namespace internal::pool
         {
             FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
-            this->m_double_free_tracker[l_idx] = of_type_p;
+            m_double_free_tracker[l_idx] = of_type_p;
         }
 
         _FE_FORCE_INLINE_ void check_double_free(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
         {
             FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == of_type_p, "Double free detected: cannot dealloate the same address twice.");
-            this->m_double_free_tracker[l_idx] = 0;
+            m_double_free_tracker[l_idx] = 0;
         }
 #endif
     };
@@ -122,30 +122,30 @@ public:
 
     virtual ~pool() noexcept override = default;
 
-    _FE_FORCE_INLINE_ pool(pool&& other_p) noexcept
+    pool(pool&& other_p) noexcept
 		: m_upstream_resource(other_p.m_upstream_resource), m_page_count(other_p.m_page_count)
 	{
 		for (var::size i = 0; i < maximum_page_count; ++i)
 		{
-			this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+			m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
 		}
         other_p.m_page_count = 0;
 	}
 
-    _FE_FORCE_INLINE_ pool& operator=(pool&& other_p) noexcept
+    pool& operator=(pool&& other_p) noexcept
     {
-        this->m_upstream_resource = other_p.m_upstream_resource;
-        this->m_page_count = other_p.m_page_count;
+        m_upstream_resource = other_p.m_upstream_resource;
+        m_page_count = other_p.m_page_count;
         other_p.m_page_count = 0;
 
         for (var::size i = 0; i < maximum_page_count; ++i)
         {
-            this->m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+            m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
         }
         return *this;
     }
 
-    _FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return this->m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
+    _FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -154,13 +154,13 @@ protected:
     inline virtual void* do_allocate(_FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
     {
         FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
-        return this->template allocate<std::byte>();
+        return allocate<std::byte>();
     }
 
     inline virtual void do_deallocate(_FE_MAYBE_UNUSED_ void* ptr_p, _FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
     {
         FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
-        this->template deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
+        deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
     }
 
     inline virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
@@ -170,7 +170,7 @@ protected:
             return false;
         }
 
-        return this->operator==(dynamic_cast<const pool&>(other_p));
+        return operator==(dynamic_cast<const pool&>(other_p));
     }
 
 public:
@@ -182,30 +182,30 @@ public:
 
         for (var::size i = 0; i < maximum_page_count; ++i)
         {
-			if (this->m_memory_pool[i] == nullptr) _FE_UNLIKELY_
+			if (m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                this->m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
-                ++this->m_page_count;
+                m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
+                ++m_page_count;
 
                 // Swap the new page to the front of the array for faster access.
-                std::swap(this->m_memory_pool[0], this->m_memory_pool[i]);
+                std::swap(m_memory_pool[0], m_memory_pool[i]);
                 i = 0;
             }
 
-            if (this->m_memory_pool[i]->is_out_of_memory() == true) _FE_UNLIKELY_
+            if (m_memory_pool[i]->is_out_of_memory() == true) _FE_UNLIKELY_
             {
                 continue;
             }
 
             void* l_allocation_result;
-            if (this->m_memory_pool[i]->_free_blocks.is_empty() == false)
+            if (m_memory_pool[i]->_free_blocks.is_empty() == false)
             {
-                l_allocation_result = this->m_memory_pool[i]->_free_blocks.pop();
+                l_allocation_result = m_memory_pool[i]->_free_blocks.pop();
             }
             else
             {
-                l_allocation_result = this->m_memory_pool[i]->_page_iterator;
-                this->m_memory_pool[i]->_page_iterator += fixed_block_size_in_bytes;
+                l_allocation_result = m_memory_pool[i]->_page_iterator;
+                m_memory_pool[i]->_page_iterator += fixed_block_size_in_bytes;
             }
 
             if constexpr (FE::is_trivial<U>::value == false)
@@ -253,13 +253,13 @@ public:
 		return false; // The pointer does not belong to this block_pool instance.
     }
 
-    _FE_FORCE_INLINE_ void create_pages(FE::size chunk_count_p) noexcept
+    void create_pages(FE::size chunk_count_p) noexcept
     {
-        FE_ASSERT(this->m_page_count < maximum_page_count, "The pool instance is out of its page table capacity: unable to create new pages for the pool instance.");
+        FE_ASSERT(m_page_count < maximum_page_count, "The pool instance is out of its page table capacity: unable to create new pages for the pool instance.");
 
-        for (; this->m_page_count < chunk_count_p; ++m_page_count)
+        for (; m_page_count < chunk_count_p; ++m_page_count)
         {
-            this->m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
+            m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
         }
     }
 

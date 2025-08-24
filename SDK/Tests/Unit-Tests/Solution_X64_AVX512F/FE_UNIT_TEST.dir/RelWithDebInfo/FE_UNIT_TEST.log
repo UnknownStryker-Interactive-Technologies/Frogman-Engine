@@ -1,12 +1,22 @@
 ﻿  Scanning sources for module dependencies...
+  FE.algorithm.string.cpp
+  FE.fcontainer.cpp
+  FE.framework.reflection.cpp
+  FE.task.cpp
   FE.ECS.cpp
   FE.memory.cpp
+  app.cpp
+  FE.pool.cpp
   generated.cpp
   Compiling...
+  app.cpp
+  FE.fcontainer.cpp
   FE.ECS.cpp
+  FE.framework.reflection.cpp
+  FE.algorithm.string.cpp
+  FE.task.cpp
+  FE.pool.cpp
   FE.memory.cpp
   generated.cpp
-LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
      Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/RelWithDebInfo/FE_UNIT_TEST.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX512F/RelWithDebInfo/FE_UNIT_TEST.exp
-  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\RelWithDebInfo\FE_UNIT_TEST.exe

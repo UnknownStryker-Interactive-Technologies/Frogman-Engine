@@ -437,7 +437,7 @@ struct real_info
 };
 
 
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::uint8 count_int_digit_length(var::int64 value_p) noexcept
+_FE_CONSTEXPR20_ var::uint8 count_int_digit_length(var::int64 value_p) noexcept
 {
     var::uint8 l_length_of_n = 0;
     if (value_p < 0)
@@ -459,7 +459,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::uint8 count_uint_digit_length(var::uint6
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const integral_string_p) noexcept
+_FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const integral_string_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
 
@@ -540,7 +540,7 @@ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
+_FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
 {
     FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");

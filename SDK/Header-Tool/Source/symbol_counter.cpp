@@ -78,7 +78,7 @@ Return:
 
 _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 {
-	std::pmr::list<Vocabulary> l_scope_stack(this->get_memory_resource());
+	std::pmr::list<Vocabulary> l_scope_stack(get_memory_resource());
 	symbol_count l_count{ 0, 0, 0 };
 
 	while (begin_p != end_p)

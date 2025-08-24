@@ -38,8 +38,8 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
-		auto l_result = this->m_fno_options.find(argv_p[i]);
-		if (l_result == this->m_fno_options.end())
+		auto l_result = m_fno_options.find(argv_p[i]);
+		if (l_result == m_fno_options.end())
 		{
 			__parse_path_options(argv_p[i]);
 			continue;
@@ -56,8 +56,8 @@ void program_options::__parse_path_options(FE::ASCII* non_fno_option_p) noexcept
 		return;
 	}
 
-	auto l_result = this->m_path_options.find_ks(non_fno_option_p, l_symbol->_end);
-	if (this->m_path_options.end() == l_result)
+	auto l_result = m_path_options.find_ks(non_fno_option_p, l_symbol->_end);
+	if (m_path_options.end() == l_result)
 	{
 		return;
 	}

@@ -17,6 +17,9 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
+#include <string>
+#include <vector>
+
 
 
 

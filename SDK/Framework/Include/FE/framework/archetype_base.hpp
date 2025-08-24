@@ -17,6 +17,11 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
+#include <FE/framework/smart_ptr.hxx>
+
+#include <robin_hood.h>
+#include <string>
+
 
 
 
@@ -25,7 +30,7 @@ BEGIN_NAMESPACE(FE)
 
 class component_base;
 
-using component_view = std::weak_ptr<FE::component_base>;
+using component_view = FE::smart_ptr<FE::component_base, FE::RefType::_Observer>;
 
 
 class archetype_base

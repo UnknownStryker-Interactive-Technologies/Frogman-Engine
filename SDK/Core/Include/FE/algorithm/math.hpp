@@ -28,7 +28,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::math)
 
 
-_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ FE::int64 approx_log2(FE::float64 value_p) noexcept
+_FE_CONSTEXPR17_ FE::int64 approx_log2(FE::float64 value_p) noexcept
 {
 	var::int64 l_exponent = 0;
 	var::float64 l_value = value_p;

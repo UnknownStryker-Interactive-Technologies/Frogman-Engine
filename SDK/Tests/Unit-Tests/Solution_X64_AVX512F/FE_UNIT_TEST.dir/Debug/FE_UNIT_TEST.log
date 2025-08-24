@@ -1,21 +1,5 @@
 ﻿  Scanning sources for module dependencies...
-  FE.algorithm.utility.cpp
-  FE.log.cpp
-  FE.ECS.cpp
-  app.cpp
-  FE.framework.reflection.cpp
-  FE.task.cpp
-  generated.cpp
-  FE.fcontainer.cpp
-  FE.pool.cpp
+  FE.memory.cpp
   Compiling...
-  FE.ECS.cpp
-  FE.task.cpp
-  app.cpp
-  FE.algorithm.utility.cpp
-  FE.fcontainer.cpp
-  FE.framework.reflection.cpp
-  FE.pool.cpp
-  FE.log.cpp
-  generated.cpp
+  FE.memory.cpp
   FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Debug\FE_UNIT_TEST.exe

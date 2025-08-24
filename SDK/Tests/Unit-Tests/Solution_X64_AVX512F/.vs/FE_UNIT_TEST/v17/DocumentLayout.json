@@ -3,13 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\Solution_X64_AVX512F\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\USERS\\LEEHO\\ONEDRIVE\\\uBB38\uC11C\\GITHUB\\FROGMAN-ENGINE\\SDK\\FRAMEWORK\\INCLUDE\\FE\\FRAMEWORK\\ECS.HPP||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.hpp||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{4C52721A-22F0-32B8-A913-D48CF7DAF800}|FE_UNIT_TEST.vcxproj|C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\smart_ptr.hxx||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,41 +20,29 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FE.ECS.hpp",
-              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.hpp",
-              "RelativeDocumentMoniker": "..\\FE.ECS.hpp",
-              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.hpp",
-              "RelativeToolTip": "..\\FE.ECS.hpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "smart_ptr.hxx",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\smart_ptr.hxx",
+              "RelativeDocumentMoniker": "..\\smart_ptr.hxx",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\smart_ptr.hxx",
+              "RelativeToolTip": "..\\smart_ptr.hxx",
+              "ViewState": "AgIAACABAAAAAAAAAAAAAMUBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-08-21T07:01:43.588Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ECS.hpp",
-              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Framework\\Include\\FE\\framework\\ECS.hpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\Framework\\Include\\FE\\framework\\ECS.hpp",
-              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Framework\\Include\\FE\\framework\\ECS.hpp",
-              "RelativeToolTip": "..\\..\\..\\Framework\\Include\\FE\\framework\\ECS.hpp",
-              "ViewState": "AgIAACsAAAAAAAAAAAAAADEAAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-08-21T14:09:14.477Z",
+              "WhenOpened": "2025-08-24T13:08:52.269Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FE.ECS.cpp",
-              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.cpp",
-              "RelativeDocumentMoniker": "..\\FE.ECS.cpp",
-              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.ECS.cpp",
-              "RelativeToolTip": "..\\FE.ECS.cpp",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAcAAAAHAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "FE.memory.cpp",
+              "DocumentMoniker": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp",
+              "RelativeDocumentMoniker": "..\\FE.memory.cpp",
+              "ToolTip": "C:\\Users\\leeho\\OneDrive\\\uBB38\uC11C\\GitHub\\Frogman-Engine\\SDK\\Tests\\Unit-Tests\\FE.memory.cpp",
+              "RelativeToolTip": "..\\FE.memory.cpp",
+              "ViewState": "AgIAAPkBAAAAAAAAAAAuwAgCAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-08-21T06:55:37.809Z"
+              "WhenOpened": "2025-08-24T12:36:29.388Z",
+              "EditorCaption": ""
             }
           ]
         }

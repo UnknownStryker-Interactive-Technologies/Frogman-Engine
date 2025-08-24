@@ -46,13 +46,13 @@ public:
     clock() noexcept = default;
     ~clock() noexcept = default;
 
-    _FE_FORCE_INLINE_ void start_clock() noexcept { this->m_starting_point = boost::chrono::steady_clock::now(); }
-    _FE_FORCE_INLINE_ void end_clock() noexcept { this->m_ending_point = boost::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void start_clock() noexcept { m_starting_point = boost::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void end_clock() noexcept { m_ending_point = boost::chrono::steady_clock::now(); }
 
     _FE_FORCE_INLINE_ float64 get_delta_milliseconds() noexcept
     {
-        this->m_delta = this->m_ending_point - this->m_starting_point;
-        return this->m_delta.count();
+        m_delta = m_ending_point - m_starting_point;
+        return m_delta.count();
     }
 
     static const char_type* get_current_local_time() noexcept;

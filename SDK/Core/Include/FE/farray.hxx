@@ -53,34 +53,34 @@ private:
 public:
 	_FE_FORCE_INLINE_ void push_back(T&& value_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to push an element to the back of the container.");
+		FE_NEGATIVE_ASSERT(m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to push an element to the back of the container.");
 
-		base_type::operator[](this->m_array_size) = std::move(value_p);
-		++this->m_array_size;
+		base_type::operator[](m_array_size) = std::move(value_p);
+		++m_array_size;
 	}
 
 	_FE_FORCE_INLINE_ void push_back(const T& value_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to push an element to the back of the container.");
+		FE_NEGATIVE_ASSERT(m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to push an element to the back of the container.");
 
-		base_type::operator[](this->m_array_size) = value_p;
-		++this->m_array_size;
+		base_type::operator[](m_array_size) = value_p;
+		++m_array_size;
 	}
 
 	template<typename... Arguments>
 	_FE_FORCE_INLINE_ reference emplace_back(Arguments&&... arguments_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to emplace an element to the back of the container.");
-		this->push_back(std::forward<Arguments&&>(arguments_p)...);
-		return this->back();
+		FE_NEGATIVE_ASSERT(m_array_size == Capacity, "${%s@0}: FE::farray is out of capacity. Unable to emplace an element to the back of the container.");
+		push_back(std::forward<Arguments&&>(arguments_p)...);
+		return back();
 	}
 
 
 	_FE_FORCE_INLINE_ void pop_back() noexcept
 	{
-		FE_NEGATIVE_ASSERT(this->m_array_size == 0, "${%s@0}: Unable to pop an empty FE::farray.");
+		FE_NEGATIVE_ASSERT(m_array_size == 0, "${%s@0}: Unable to pop an empty FE::farray.");
 
-		--this->m_array_size;
+		--m_array_size;
 	}
 
 
@@ -91,18 +91,18 @@ public:
 
 	_FE_FORCE_INLINE_ size_type size() const noexcept
 	{
-		return this->m_array_size;
+		return m_array_size;
 	}
 
 
 	_FE_FORCE_INLINE_ reference back() noexcept
 	{
-		return base_type::operator[](this->m_array_size - 1);
+		return base_type::operator[](m_array_size - 1);
 	}
 
 	_FE_FORCE_INLINE_ const_reference back() const noexcept
 	{
-		return base_type::operator[](this->m_array_size - 1);
+		return base_type::operator[](m_array_size - 1);
 	}
 	
 
@@ -118,42 +118,42 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ iterator end() noexcept 
 	{
-		return this->begin() + this->m_array_size;
+		return begin() + m_array_size;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_iterator cend() const noexcept 
 	{
-		return this->cbegin() + this->m_array_size;
+		return cbegin() + m_array_size;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ reverse_iterator rbegin() noexcept 
 	{
-		return (this->begin() + this->m_array_size) - 1;
+		return (begin() + m_array_size) - 1;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reverse_iterator rbegin() const noexcept 
 	{
-		return (this->begin() + this->m_array_size) - 1;
+		return (begin() + m_array_size) - 1;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reverse_iterator crbegin() const noexcept 
 	{
-		return (this->cbegin() + this->m_array_size) - 1;
+		return (cbegin() + m_array_size) - 1;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ reverse_iterator rend() noexcept 
 	{
-		return this->begin() - 1;
+		return begin() - 1;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reverse_iterator rend() const noexcept 
 	{
-		return this->begin() - 1;
+		return begin() - 1;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reverse_iterator crend() const noexcept 
 	{
-		return this->cbegin() - 1;
+		return cbegin() - 1;
 	}
 };
 

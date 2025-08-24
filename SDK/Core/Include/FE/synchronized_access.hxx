@@ -40,7 +40,7 @@ private:
 public:
 	_FE_FORCE_INLINE_ unique_access(lock_type& lock_p, T& data_p) noexcept : m_lock(lock_p), m_data(data_p)
 	{
-		this->m_lock.lock();
+		m_lock.lock();
 	}
 	_FE_FORCE_INLINE_ ~unique_access() noexcept
 	{
@@ -55,11 +55,11 @@ public:
 	unique_access& operator=(unique_access&&) = delete;
 
 
-	_FE_FORCE_INLINE_ reference operator*() noexcept { return this->m_data; }
-	_FE_FORCE_INLINE_ const_reference operator*() const noexcept { return this->m_data; }
+	_FE_FORCE_INLINE_ reference operator*() noexcept { return m_data; }
+	_FE_FORCE_INLINE_ const_reference operator*() const noexcept { return m_data; }
 
-	_FE_FORCE_INLINE_ pointer operator->() noexcept { return &(this->m_data); }
-	_FE_FORCE_INLINE_ const_pointer operator->() const noexcept { return &(this->m_data); }
+	_FE_FORCE_INLINE_ pointer operator->() noexcept { return &(m_data); }
+	_FE_FORCE_INLINE_ const_pointer operator->() const noexcept { return &(m_data); }
 };
 
 
@@ -80,7 +80,7 @@ private:
 public:
 	_FE_FORCE_INLINE_ shared_access(lock_type& lock_p, T& data_p) noexcept : m_lock(lock_p), m_data(data_p)
 	{
-		this->m_lock.lock_shared();
+		m_lock.lock_shared();
 	}
 	_FE_FORCE_INLINE_ ~shared_access() noexcept
 	{
@@ -95,11 +95,11 @@ public:
 	shared_access& operator=(shared_access&&) = delete;
 
 
-	_FE_FORCE_INLINE_ reference operator*() noexcept { return this->m_data; }
-	_FE_FORCE_INLINE_ const_reference operator*() const noexcept { return this->m_data; }
+	_FE_FORCE_INLINE_ reference operator*() noexcept { return m_data; }
+	_FE_FORCE_INLINE_ const_reference operator*() const noexcept { return m_data; }
 
-	_FE_FORCE_INLINE_ pointer operator->() noexcept { return &(this->m_data); }
-	_FE_FORCE_INLINE_ const_pointer operator->() const noexcept { return &(this->m_data); }
+	_FE_FORCE_INLINE_ pointer operator->() noexcept { return &(m_data); }
+	_FE_FORCE_INLINE_ const_pointer operator->() const noexcept { return &(m_data); }
 };
 
 

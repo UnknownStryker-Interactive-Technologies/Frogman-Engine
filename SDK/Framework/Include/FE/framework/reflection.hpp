@@ -129,7 +129,7 @@ public:
 	_FE_FORCE_INLINE_ void reserve(FE::size size_p) noexcept
 	{
 		std::lock_guard<lock_type> l_lock(m_lock);
-		this->m_method_registry.reserve(size_p);
+		m_method_registry.reserve(size_p);
 	}
 
 	template<class TaskType>
@@ -143,7 +143,7 @@ public:
 		new(l_task) TaskType(function_p);
 		typename internal_map_type::key_type l_key(task_name_p, &m_pool);
 
-		std::pair<typename internal_map_type::iterator, bool> l_result = this->m_method_registry.emplace(std::move(l_key), l_task);
+		std::pair<typename internal_map_type::iterator, bool> l_result = m_method_registry.emplace(std::move(l_key), l_task);
 		if (l_result.second == false) // If true, then the key already exists
 		{
 			// Are the keys identical? If not, then we have a collision.
@@ -157,7 +157,7 @@ public:
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = this->m_method_registry.find(l_key); it != this->m_method_registry.end(); ++it)
+		for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
 			{
@@ -174,7 +174,7 @@ public:
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = this->m_method_registry.find(l_key); it != this->m_method_registry.end(); ++it)
+		for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
 			{
@@ -258,7 +258,7 @@ public:
 	_FE_FORCE_INLINE_ T* get_property_of(C& instance_p, const std::string_view& property_name_p) noexcept
 	{
 		FE_STATIC_ASSERT(std::is_class<C>::value == true, "Static assertion failure: the typename 'class C' must be a class type.");
-		for (typename internal_map_type::iterator it = this->m_property_lut.find(property_name_p); it != this->m_property_lut.end(); ++it)
+		for (typename internal_map_type::iterator it = m_property_lut.find(property_name_p); it != m_property_lut.end(); ++it)
 		{
 			if (property_name_p == it.value()->_name)
 			{
@@ -330,7 +330,7 @@ public:
 	_FE_FORCE_INLINE_ void reserve(size size_p) noexcept
 	{
 		std::lock_guard<lock_type> l_lock(m_lock);
-		this->m_property_registry.reserve(size_p);
+		m_property_registry.reserve(size_p);
 	}
 
 	template<class C, typename T>
@@ -393,10 +393,10 @@ public:
 			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 
 
-		auto l_lut_it = this->m_instance_metadata_lut.find(l_host_class_instance_typename);
-		if ( l_lut_it == this->m_instance_metadata_lut.end() )
+		auto l_lut_it = m_instance_metadata_lut.find(l_host_class_instance_typename);
+		if ( l_lut_it == m_instance_metadata_lut.end() )
 		{
-			auto l_lut_insertion_result = this->m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
+			auto l_lut_insertion_result = m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
 			FE_EXIT(l_lut_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 				"FE Runtime Reflection Registration Error: failed to register a class instance metadata to the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 			l_lut_it = l_lut_insertion_result.first;
@@ -423,7 +423,7 @@ public:
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
-		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
 		{
@@ -441,10 +441,10 @@ public:
 		__serialize_mutually_recursive<T>(object_p);
 		l_serialization_handler.get_stream() << "};$-";
 
-		while (this->m_scalable_container_size_record.empty() == false)
+		while (m_scalable_container_size_record.empty() == false)
 		{
-			l_serialization_handler.get_stream() << this->m_scalable_container_size_record.front() << "-";
-			this->m_scalable_container_size_record.pop_front();
+			l_serialization_handler.get_stream() << m_scalable_container_size_record.front() << "-";
+			m_scalable_container_size_record.pop_front();
 		}
 		l_serialization_handler.get_stream() << "\0";
 	}
@@ -461,9 +461,9 @@ public:
 
 		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
-		auto l_search_result = this->m_property_registry.find(l_typename);
+		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
-		this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
 		{
@@ -474,13 +474,13 @@ public:
 		l_serialization_handler.get_stream().open((path_p / filename_p).c_str(), std::ios::in | std::ios::binary | std::ios::ate); // Open the file as a binary file and point at the end of the file to input to a buffer.
 		FE_NEGATIVE_ASSERT(l_serialization_handler.get_stream().is_open() == false, "Assertion failure: the target directory path to the file is invalid.");
 
-		this->m_input_buffer.reserve(l_serialization_handler.get_stream().tellg());
-		this->m_input_buffer.assign(this->m_input_buffer.capacity() - 1, '\0'); // Set the buffer with null.
+		m_input_buffer.reserve(l_serialization_handler.get_stream().tellg());
+		m_input_buffer.assign(m_input_buffer.capacity() - 1, '\0'); // Set the buffer with null.
 		l_serialization_handler.get_stream().seekg(0, std::ios::beg); // Set the indicator to the begining of the file.
-		l_serialization_handler.get_stream().read(this->m_input_buffer.data(), this->m_input_buffer.length()); // Load the serialized data onto the buffer.
+		l_serialization_handler.get_stream().read(m_input_buffer.data(), m_input_buffer.length()); // Load the serialized data onto the buffer.
 
-		this->m_position = this->m_input_buffer.begin();
-		this->m_position += this->m_input_buffer.find('{');
+		m_position = m_input_buffer.begin();
+		m_position += m_input_buffer.find('{');
 		FE_NEGATIVE_ASSERT(m_position == m_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
 
 		// Checks the class type name
@@ -489,15 +489,15 @@ public:
 			FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
 		++m_position; // Point the first byte.
 
-		auto l_size_indicator = this->m_input_buffer.begin();
-		l_size_indicator += this->m_input_buffer.rfind("$-");
+		auto l_size_indicator = m_input_buffer.begin();
+		l_size_indicator += m_input_buffer.rfind("$-");
 		l_size_indicator += 2; // to skip the "$-" and point to the first one.
 
 		while (*l_size_indicator != '\0')
 		{
 			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
 			FE_LOG_IF(l_info._value == 0, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
-			this->m_scalable_container_size_record.push_back(l_info._value);
+			m_scalable_container_size_record.push_back(l_info._value);
 			l_size_indicator += l_info._digit_length; // move to the next.
 			++l_size_indicator; // to skip the '-'.
 		}
@@ -509,7 +509,7 @@ public:
 	_FE_FORCE_INLINE_ instance_metadata* get_instance_metadata() noexcept
 	{
 		std::lock_guard<lock_type> l_lock(m_lock);
-		for (auto it = this->m_instance_metadata_lut.find(reflection::type_id<T>().name()); it != this->m_instance_metadata_lut.end(); ++it)
+		for (auto it = m_instance_metadata_lut.find(reflection::type_id<T>().name()); it != m_instance_metadata_lut.end(); ++it)
 		{
 			if (reflection::type_id<T>().name() == it->first)
 			{
@@ -556,7 +556,7 @@ private:
 	*/
 	_FE_FORCE_INLINE_ typename class_property_list::iterator& __get_the_top_class_property_list_iterator() noexcept
 	{
-		return this->m_class_layer.back()._second;
+		return m_class_layer.back()._second;
 	}
 
 	_FE_FORCE_INLINE_ FE::ptrdiff __get_memory_offset_of_the_property(typename class_property_list::iterator& to_the_property_p) noexcept
@@ -571,7 +571,7 @@ private:
 
 	_FE_FORCE_INLINE_ class_property_list& __get_top_class_property_list() noexcept
 	{
-		return *(this->m_class_layer.back()._first);
+		return *(m_class_layer.back()._first);
 	}
 
 	template<class U>
@@ -582,12 +582,12 @@ private:
 			static typename  internal_map_type::iterator l_s_search_result;
 			static typename  internal_map_type::key_type l_s_typename;
 			l_s_typename = reflection::type_id<typename U::base_type>().name();
-			l_s_search_result = this->m_property_registry.find(l_s_typename);
-			if (l_s_search_result == this->m_property_registry.end())
+			l_s_search_result = m_property_registry.find(l_s_typename);
+			if (l_s_search_result == m_property_registry.end())
 			{
 				return;
 			}
-			this->m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
+			m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
 			__push_parent_class_layers_recursive<typename U::base_type>();
 		}
 	}
@@ -597,12 +597,12 @@ private:
 		static typename  internal_map_type::iterator l_s_search_result;
 		static typename  internal_map_type::key_type l_s_typename;
 		l_s_typename = reflection::type_info::get_base_name_of(typename_p);
-		l_s_search_result = this->m_property_registry.find(l_s_typename);
-		if (l_s_search_result == this->m_property_registry.end())
+		l_s_search_result = m_property_registry.find(l_s_typename);
+		if (l_s_search_result == m_property_registry.end())
 		{
 			return;
 		}
-		this->m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
+		m_class_layer.emplace_back(&(l_s_search_result->second), l_s_search_result->second.begin());
 		__push_parent_class_layers_by_typename_string_recursive(l_s_search_result->first);
 	}
 
@@ -610,7 +610,7 @@ private:
 	void __serialize_mutually_recursive(const T& object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (this->m_class_layer.empty() == false)
+		while (m_class_layer.empty() == false)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
 			{
@@ -619,7 +619,7 @@ private:
 				// Check if the field variable meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
-				this->m_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte);
+				m_fstream.write(reinterpret_cast<const char*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte);
 
 				// Look for the next registered property of the class.
 				++(__get_the_top_class_property_list_iterator());
@@ -627,7 +627,7 @@ private:
 				// Pop the class layer if the iterator reached the end of the property list.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -636,12 +636,12 @@ private:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 					break;
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = this->m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
@@ -654,7 +654,7 @@ private:
 					// Move on to the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
 				}
-				else if (l_search_result != this->m_property_registry.end()) // push the meta data onto the stack if found.
+				else if (l_search_result != m_property_registry.end()) // push the meta data onto the stack if found.
 				{
 					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator());
 
@@ -662,14 +662,14 @@ private:
 					++(__get_the_top_class_property_list_iterator());
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
-					this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
 
 				// if it reached the end.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -680,7 +680,7 @@ private:
 	void __deserialize_mutually_recursive(T& out_object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (this->m_class_layer.empty() == false)
+		while (m_class_layer.empty() == false)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
 			{
@@ -691,7 +691,7 @@ private:
 
 				// Write the bits to the object_base, from a buffer.	
 				FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), FE::iterator_cast<FE::ASCII*>(m_position), __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte);
-				this->m_position += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte; // Iterate to the next bits.
+				m_position += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte; // Iterate to the next bits.
 
 				// Look for the next registered property of the class layer.
 				++(__get_the_top_class_property_list_iterator());
@@ -699,7 +699,7 @@ private:
 				// Pop the class layer if the iterator reached the end of the property list.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -708,12 +708,12 @@ private:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 					break;
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = this->m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
@@ -726,7 +726,7 @@ private:
 					// Look for the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
 				}
-				else if (l_search_result != this->m_property_registry.end()) // push the meta data onto the stack if found.
+				else if (l_search_result != m_property_registry.end()) // push the meta data onto the stack if found.
 				{
 					l_offset_from_the_upmost_base_class_instance = __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator());
 
@@ -734,14 +734,14 @@ private:
 					++(__get_the_top_class_property_list_iterator());
 
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
-					this->m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_by_typename_string_recursive(l_search_result->first);
 				}
 
 				// if it reached the end.
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end())
 				{
-					this->m_class_layer.pop_back();
+					m_class_layer.pop_back();
 				}
 				break;
 			}
@@ -762,17 +762,17 @@ private:
 			{
 				if constexpr (std::is_array<Container>::value == true)
 				{
-					this->m_fstream.write(reinterpret_cast<const char*>(l_container), sizeof(Container));
+					m_fstream.write(reinterpret_cast<const char*>(l_container), sizeof(Container));
 				}
 				else
 				{
-					this->m_scalable_container_size_record.push_back(l_container->size());
-					this->m_fstream.write(reinterpret_cast<const char*>(l_container->data()), sizeof(typename Container::value_type) * l_container->size());
+					m_scalable_container_size_record.push_back(l_container->size());
+					m_fstream.write(reinterpret_cast<const char*>(l_container->data()), sizeof(typename Container::value_type) * l_container->size());
 				}
 			}
 			else
 			{
-				this->m_scalable_container_size_record.push_back(l_container->size());
+				m_scalable_container_size_record.push_back(l_container->size());
 				for (auto& element : *l_container)
 				{
 					if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
@@ -810,20 +810,20 @@ private:
 
 		if constexpr (FE::is_trivial<Container>::value == false)
 		{
-			l_container->resize(this->m_scalable_container_size_record.front());
-			this->m_scalable_container_size_record.pop_front();
+			l_container->resize(m_scalable_container_size_record.front());
+			m_scalable_container_size_record.pop_front();
 
 			if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
 			{
 				if constexpr (std::is_array<Container>::value == true)
 				{
 					FE::memcpy(reinterpret_cast<var::byte*>(l_container), FE::iterator_cast<FE::ASCII*>(m_position), sizeof(Container));
-					this->m_position += sizeof(Container); // Iterate to the next bit.
+					m_position += sizeof(Container); // Iterate to the next bit.
 				}
 				else
 				{
 					FE::memcpy(reinterpret_cast<var::byte*>(l_container->data()), FE::iterator_cast<FE::ASCII*>(m_position), sizeof(typename Container::value_type) * l_container->size());
-					this->m_position += sizeof(typename Container::value_type) * l_container->size(); // Iterate to the next bit.
+					m_position += sizeof(typename Container::value_type) * l_container->size(); // Iterate to the next bit.
 				}
 			}
 			else
@@ -883,13 +883,13 @@ public:
 	}
 	_FE_FORCE_INLINE_ FE::ASCII* get_typename() const noexcept
 	{
-		return this->m_typename.data();
+		return m_typename.data();
 	}
 
 	template<typename EnumStrut>
 	_FE_FORCE_INLINE_ std::optional<EnumStrut> string_to_enum(const std::string_view& enum_value_string_p) const noexcept
 	{
-		for (auto it = this->m_string_to_value_map.find(enum_value_string_p); it != this->m_string_to_value_map.end(); ++it)
+		for (auto it = m_string_to_value_map.find(enum_value_string_p); it != m_string_to_value_map.end(); ++it)
 		{
 			if ( enum_value_string_p == it.key() )
 			{
@@ -908,7 +908,7 @@ public:
 		std::array<var::byte, field_max_size> l_enum_bits = { 0 };
 		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStrut));
 
-		for (auto it = this->m_value_to_string_map.find(l_enum_bits); it != this->m_value_to_string_map.end(); ++it)
+		for (auto it = m_value_to_string_map.find(l_enum_bits); it != m_value_to_string_map.end(); ++it)
 		{
 			std::array<var::byte, field_max_size> l_key = it->first;
 			if ( std::memcmp( l_enum_bits.data(), l_key.data(), l_enum_bits.size() ) == 0)
@@ -949,13 +949,13 @@ public:
 			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
 		}
 
-		FE_EXIT(this->m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		FE_EXIT(m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 
 	_FE_FORCE_INLINE_ enum_metadata* retrieve_enum_struct_metadata(const std::string_view& enum_struct_name_p)
 	{
-		for (auto it = this->m_enum_registry.find(enum_struct_name_p); it != this->m_enum_registry.end(); ++it)
+		for (auto it = m_enum_registry.find(enum_struct_name_p); it != m_enum_registry.end(); ++it)
 		{
 			if (it.key() == enum_struct_name_p)
 			{

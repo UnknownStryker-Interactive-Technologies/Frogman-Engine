@@ -112,9 +112,11 @@ FE_LOG_IF is a macro that logs messages conditionally based on a specified condi
 utilizing a logger to format and output the message along with the file name and line number where the log was triggered.
 */
 #define FE_LOG_IF(condition, ...) \
-if(condition) \
 { \
-	::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+	if(condition) \
+	{ \
+		::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+	} \
 }
 #else
 #define FE_LOG_IF(condition, ...)
@@ -143,11 +145,13 @@ FE_NEGATIVE_ASSERT is a macro that triggers a fatal error log and aborts the pro
 logging a formatted message along with the file name and line number.
 */
 #define FE_NEGATIVE_ASSERT(expression, ...) \
-if(expression) _FE_UNLIKELY_ \
 { \
-	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
-	FE_DEBUG_BREAK(); \
-	std::abort(); \
+	if(expression) _FE_UNLIKELY_ \
+	{ \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		FE_DEBUG_BREAK(); \
+		std::abort(); \
+	} \
 }
 #else
 #define FE_NEGATIVE_ASSERT(expression, ...)
@@ -174,12 +178,15 @@ if(expression) _FE_UNLIKELY_ \
 FE_ASSERT is a macro that checks a given expression and logs a fatal error message along with the file name, function signature, and line number before terminating the program if the expression evaluates to false.
 */
 #define FE_ASSERT(expression, ...) \
-if(!(expression)) _FE_UNLIKELY_ \
 { \
-	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
-	FE_DEBUG_BREAK(); \
-	std::abort(); \
+	if(!(expression)) _FE_UNLIKELY_ \
+	{ \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		FE_DEBUG_BREAK(); \
+		std::abort(); \
+	} \
 }
+
 #else
 #define FE_ASSERT(expression, ...)
 #endif
@@ -207,11 +214,13 @@ if(!(expression)) _FE_UNLIKELY_ \
 The FE_EXIT macro logs a fatal error message and terminates the program with a specified error code if a given expression evaluates to true.
 */
 #define FE_EXIT(expression, error_code, ...) \
-if(expression) _FE_UNLIKELY_ \
 { \
-	::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
-	::std::exit(static_cast<::FE::int32>(error_code)); \
-} 
+	if(expression) _FE_UNLIKELY_ \
+	{ \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		::std::exit(static_cast<::FE::int32>(error_code)); \
+	} \
+}
 
 
 #define TO_STRING(p) #p

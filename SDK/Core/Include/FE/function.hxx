@@ -76,10 +76,10 @@ public:
     First _first;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : _first() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p) noexcept
+    arguments(const First& first_p) noexcept
         : _first(first_p) {}
 };
 
@@ -94,10 +94,10 @@ public:
     second_type _second;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _second() {}
     
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p) noexcept
+    arguments(const First& first_p, const Second& second_p) noexcept
         : base_type(first_p), _second(second_p) {}
 };
 
@@ -113,10 +113,10 @@ public:
     third_type _third;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _third() {}
     
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p) noexcept
+    arguments(const First& first_p, const Second& second_p, const Third& third_p) noexcept
         : base_type(first_p, second_p), _third(third_p) {}
 };
 
@@ -133,10 +133,10 @@ public:
     fourth_type _fourth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
 
-    _FE_FORCE_INLINE_ arguments() noexcept
+    arguments() noexcept
         : base_type(), _fourth() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p) noexcept
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p) noexcept
         : base_type(first_p, second_p, third_p), _fourth(fourth_p) {}
 };
 
@@ -154,10 +154,10 @@ public:
     fifth_type _fifth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _fifth() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p, 
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p, 
                              const Fifth& fifth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p), _fifth(fifth_p) {}
 };
@@ -177,10 +177,10 @@ public:
     sixth_type _sixth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _sixth() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p), _sixth(sixth_p) {}
 };
@@ -202,10 +202,10 @@ public:
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
 
 
-    _FE_FORCE_INLINE_ arguments() noexcept
+    arguments() noexcept
         : base_type(), _seventh() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p), _seventh(seventh_p) {}
 };
@@ -227,10 +227,10 @@ public:
     eighth_type _eighth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
 
-    _FE_FORCE_INLINE_ arguments() noexcept
+    arguments() noexcept
         : base_type(), _eighth() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p)
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p), _eighth(eighth_p) {}
 };
@@ -253,10 +253,10 @@ public:
     ninth_type _ninth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _ninth() {}
 
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
                              const Ninth& ninth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p), _ninth(ninth_p) {}
@@ -282,10 +282,10 @@ public:
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;
 
 
-    _FE_FORCE_INLINE_ arguments() noexcept 
+    arguments() noexcept 
         : base_type(), _tenth() {}
         
-    _FE_FORCE_INLINE_ arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
+    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
                              const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
                              const Ninth& ninth_p, const Tenth& tenth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p, ninth_p), _tenth(tenth_p) {}
@@ -324,74 +324,74 @@ public:
     using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
 
     _FE_CONSTEXPR20_ function() noexcept = default;
-    _FE_CONSTEXPR20_ ~function() noexcept = default;
+    ~function() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_function_pointer));
 		if constexpr (std::is_same<R, void>::value == true)
         {
-			this->m_function_pointer(arguments_p...);
+			m_function_pointer(arguments_p...);
 		}
         else if constexpr (std::is_same<R, void>::value == false)
         {
-			return this->m_function_pointer(arguments_p...);
+			return m_function_pointer(arguments_p...);
 		}
     }
 
     _FE_FORCE_INLINE_ const R operator()(Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_function_pointer));
+        FE_NEGATIVE_ASSERT(m_function_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_function_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
-            this->m_function_pointer(arguments_p...);
+            m_function_pointer(arguments_p...);
         }
         else if constexpr (std::is_same<R, void>::value == false)
         {
-            return this->m_function_pointer(arguments_p...);
+            return m_function_pointer(arguments_p...);
         }
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(function_type function_p) noexcept
     {
-        this->m_function_pointer = function_p;
+        m_function_pointer = function_p;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(const function& other_p) noexcept
     {
-        this->m_function_pointer = other_p.m_function_pointer;
+        m_function_pointer = other_p.m_function_pointer;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(function&& rvalue_p) noexcept
     {
-        this->m_function_pointer = rvalue_p.m_function_pointer;
+        m_function_pointer = rvalue_p.m_function_pointer;
         rvalue_p.m_function_pointer = nullptr;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
     {
-        return this->m_function_pointer != nullptr;
+        return m_function_pointer != nullptr;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const function& other_p) const noexcept
     {
-        return (this->m_function_pointer == other_p.m_function_pointer) ? true : false;
+        return (m_function_pointer == other_p.m_function_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const function& other_p) const noexcept
     {
-        return (this->m_function_pointer != other_p.m_function_pointer) ? true : false;
+        return (m_function_pointer != other_p.m_function_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ function_type get_raw() const noexcept
     {
-        return this->m_function_pointer;
+        return m_function_pointer;
 	}
 };
 
@@ -418,74 +418,74 @@ public:
     using class_type = C;
 
     _FE_CONSTEXPR20_ method() noexcept = default;
-    _FE_CONSTEXPR20_ ~method() noexcept = default;
+    ~method() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
-            (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
         else if constexpr (std::is_same<R, void>::value == false)
         {
-            return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            return (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
     }
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
-            (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
         else if constexpr (std::is_same<R, void>::value == false)
         {
-            return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            return (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
-        this->m_method_pointer = method_p;
+        m_method_pointer = method_p;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(const method& other_p) noexcept
     {
-        this->m_method_pointer = other_p.m_method_pointer;
+        m_method_pointer = other_p.m_method_pointer;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
     {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
+        m_method_pointer = rvalue_p.m_method_pointer;
         rvalue_p.m_method_pointer = nullptr;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
     {
-        return this->m_method_pointer != nullptr;
+        return m_method_pointer != nullptr;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
     {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+        return (m_method_pointer == other_p.m_method_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
     {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+        return (m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ method_type get_raw() const noexcept
     {
-        return this->m_method_pointer;
+        return m_method_pointer;
     }
 };
 
@@ -505,74 +505,74 @@ public:
     using class_type = C;
 
     _FE_CONSTEXPR20_ method() noexcept = default;
-    _FE_CONSTEXPR20_ ~method() noexcept = default;
+    ~method() noexcept = default;
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
-            (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
 		else if constexpr (std::is_same<R, void>::value == false)
         {
-            return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            return (host_class_instance_p.*m_method_pointer)(arguments_p...);
 		}
     }
 
     _FE_FORCE_INLINE_ const R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) const noexcept
     {
-        FE_NEGATIVE_ASSERT(this->m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_method_pointer));
+        FE_NEGATIVE_ASSERT(m_method_pointer == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_method_pointer));
         if constexpr (std::is_same<R, void>::value == true)
         {
-            (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
         else if constexpr (std::is_same<R, void>::value == false)
         {
-            return (host_class_instance_p.*this->m_method_pointer)(arguments_p...);
+            return (host_class_instance_p.*m_method_pointer)(arguments_p...);
         }
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method_type method_p) noexcept
     {
-        this->m_method_pointer = method_p;
+        m_method_pointer = method_p;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(const method& other_p) noexcept
     {
-        this->m_method_pointer = other_p.m_method_pointer;
+        m_method_pointer = other_p.m_method_pointer;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
     {
-        this->m_method_pointer = rvalue_p.m_method_pointer;
+        m_method_pointer = rvalue_p.m_method_pointer;
         rvalue_p.m_method_pointer = nullptr;
         return *this;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
     {
-        return this->m_method_pointer != nullptr;
+        return m_method_pointer != nullptr;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
     {
-        return (this->m_method_pointer == other_p.m_method_pointer) ? true : false;
+        return (m_method_pointer == other_p.m_method_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
     {
-        return (this->m_method_pointer != other_p.m_method_pointer) ? true : false;
+        return (m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
 
     _FE_FORCE_INLINE_ method_type get_raw() const noexcept
     {
-        return this->m_method_pointer;
+        return m_method_pointer;
     }
 };
 
@@ -621,12 +621,12 @@ public:
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
 
-	_FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { this->m_method = task_p; }
-	_FE_FORCE_INLINE_ task_type get_task() const noexcept { return this->m_method; }
+	_FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_method = task_p; }
+	_FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_method; }
 
     virtual void operator()(FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(this->m_instance));
+        FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_instance));
         C* l_object = instance_p.get<C*>();
         arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
@@ -772,7 +772,7 @@ public:
 
     virtual boolean is_null() const noexcept override
     {
-        if (!this->m_method)
+        if (!m_method)
         {
             return true;
         }
@@ -812,8 +812,8 @@ public:
 
     _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task(task_type task_p) noexcept : m_function(task_p) {}
 
-    _FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { this->m_function = task_p; }
-    _FE_FORCE_INLINE_ task_type get_task() const noexcept { return this->m_function; }
+    _FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_function = task_p; }
+    _FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_function; }
 
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
@@ -827,55 +827,55 @@ public:
         {
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                this->m_function();
+                m_function();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                this->m_function(l_arguments->_first);
+                m_function(l_arguments->_first);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second);
+                m_function(l_arguments->_first, l_arguments->_second);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth,
@@ -883,7 +883,7 @@ public:
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                this->m_function(l_arguments->_first, l_arguments->_second,
+                m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth,
@@ -894,55 +894,55 @@ public:
         {
             if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function();
+                *(out_ret_buffer_p.get<return_type*>()) = m_function();
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first);
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second);
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth,
@@ -950,7 +950,7 @@ public:
             }
             else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
             {
-                *(out_ret_buffer_p.get<return_type*>()) = this->m_function(l_arguments->_first, l_arguments->_second,
+                *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth,
@@ -961,7 +961,7 @@ public:
 
     virtual boolean is_null() const noexcept override
     {
-        if (!this->m_function)
+        if (!m_function)
         {
             return true;
         }

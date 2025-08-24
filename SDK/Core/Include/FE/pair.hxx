@@ -45,16 +45,16 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair& operator=(const pair& other_p) noexcept
 	{
-		this->_first = other_p._first;
-		this->_second = other_p._second;
+		_first = other_p._first;
+		_second = other_p._second;
 
 		return *this;
 	}
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair& operator=(pair&& rvalue_p) noexcept
 	{
-		this->_first = std::move(rvalue_p._first);
-		this->_second = std::move(rvalue_p._second);
+		_first = std::move(rvalue_p._first);
+		_second = std::move(rvalue_p._second);
 
 		return *this;
 	}
@@ -74,8 +74,8 @@ private:
 	_FE_NO_UNIQUE_ADDRESS_ Second m_second;
 
 public:
-	_FE_FORCE_INLINE_ First& get_first() noexcept { return this->m_first; }
-	_FE_FORCE_INLINE_ Second& get_second() noexcept { return this->m_second; }
+	_FE_FORCE_INLINE_ First& get_first() noexcept { return m_first; }
+	_FE_FORCE_INLINE_ Second& get_second() noexcept { return m_second; }
 
 };
 #else
@@ -94,7 +94,7 @@ private:
 
 public:
 	_FE_FORCE_INLINE_ First& get_first() noexcept { return *this; }
-	_FE_FORCE_INLINE_ Second& get_second() noexcept { return this->m_second; }
+	_FE_FORCE_INLINE_ Second& get_second() noexcept { return m_second; }
 };
 
 template<typename First, typename Second>
@@ -108,7 +108,7 @@ private:
 	First m_first;
 
 public:
-	_FE_FORCE_INLINE_ First& get_first() noexcept { return this->m_first; }
+	_FE_FORCE_INLINE_ First& get_first() noexcept { return m_first; }
 	_FE_FORCE_INLINE_ Second& get_second() noexcept { return *this; }
 };
 #endif

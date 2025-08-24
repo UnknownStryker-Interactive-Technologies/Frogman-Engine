@@ -36,13 +36,13 @@ public:
 
 	_FE_FORCE_INLINE_ ~basic_fstream_guard() noexcept
 	{
-		if (this->m_fstream.is_open() == true)
+		if (m_fstream.is_open() == true)
 		{
-			this->m_fstream.close();
+			m_fstream.close();
 		}
 	}
 
-	_FE_FORCE_INLINE_ FStream& get_stream() const noexcept { return this->m_fstream; }
+	_FE_FORCE_INLINE_ FStream& get_stream() const noexcept { return m_fstream; }
 
 	basic_fstream_guard(const basic_fstream_guard& other_p) noexcept = delete;
 	basic_fstream_guard(basic_fstream_guard&& rvalue_p) noexcept = delete;

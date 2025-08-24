@@ -31,8 +31,8 @@ BEGIN_NAMESPACE(FE::log)
 
 logger_base::logger_base() noexcept : m_log_buffer()
 {
-    this->m_log_buffer.reserve(default_buffer_size);
-    std::memset(this->m_log_buffer.data(), null, this->m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
+    m_log_buffer.reserve(default_buffer_size);
+    std::memset(m_log_buffer.data(), null, m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
 }
 
 
@@ -51,7 +51,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
 
     FE::algorithm::string::concatenate<var::ASCII>
         (
-            this->m_log_buffer.data(),
+            m_log_buffer.data(),
             default_buffer_size,
             {
                 "[Time: ", FE::clock::get_current_local_time(), "]\t", message_p, "\n",
@@ -61,7 +61,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
             }
     );
 
-    std::cerr << this->m_log_buffer.data() << "\n\n\n\n\n";
+    std::cerr << m_log_buffer.data() << "\n\n\n\n\n";
 
 
     boost::stacktrace::stacktrace l_stack_trace_dumps;
@@ -89,7 +89,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     FE::algorithm::string::concatenate<var::ASCII>
         (
-            this->m_log_buffer.data(),
+            m_log_buffer.data(),
             default_buffer_size,
             {
                 "[Time: ", FE::clock::get_current_local_time(), " | File Directory: ", file_name_p, " | Function Name: ", function_name_p, " | Code Line Number: ", l_source_code_line_info_buffer,
@@ -98,9 +98,9 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
             }
     );
 
-    std::cout << this->m_log_buffer.data();
+    std::cout << m_log_buffer.data();
 
-    std::memset(this->m_log_buffer.data(), null, default_buffer_size * sizeof(typename buffer_type::value_type));
+    std::memset(m_log_buffer.data(), null, default_buffer_size * sizeof(typename buffer_type::value_type));
 }
 
 
