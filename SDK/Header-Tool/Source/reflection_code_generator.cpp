@@ -210,7 +210,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 
 	std::pmr::wstring l_path_to_generated(get_memory_resource());
 	FE::size l_path_length = FE::algorithm::string::length( m_header_tool_options.get_path_to_project() );
-	FE_EXIT(l_path_length == 0, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: the directory value for -path-to-project= is not given or specified to this header tool program. \nThe string length of the path to the desired folder to create the generated.cpp file is ZERO.");
+	FE_EXIT_IF(l_path_length == 0, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: the directory value for -path-to-project= is not given or specified to this header tool program. \nThe string length of the path to the desired folder to create the generated.cpp file is ZERO.");
 	
 	l_path_to_generated.resize(l_path_length + 1);
 	std::mbstowcs(l_path_to_generated.data(), m_header_tool_options.get_path_to_project(), l_path_length);
@@ -219,7 +219,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	
 	std::wofstream l_generated_file;
 	l_generated_file.open(l_path_to_generated);
-	FE_EXIT(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
+	FE_EXIT_IF(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 	l_generated_file << l_generated_code;
 	l_generated_file.close();
 } 

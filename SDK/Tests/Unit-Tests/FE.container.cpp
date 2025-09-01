@@ -6,10 +6,20 @@
 #include <FE/fqueue.hxx>
 #include <FE/fstack.hxx>
 
+#include <FE/concurrent_vector.hxx>
+
+// ms ppl
+#include <concurrent_vector.h>
+
+// taskflow for the concurrent push_back performance tests
+#include <taskflow.hpp>
+
 // std
 #include <stack>
 #include <string>
+#include <shared_mutex>
 #include <queue>
+#include <vector>
 
 
 
@@ -354,3 +364,130 @@ TEST(farray, all)
 		l_array.pop_back();
 	}
 }
+
+
+
+
+namespace
+{
+	struct TestObject
+	{
+		int _var1;
+		double _var2;
+		std::string _var3;
+
+		TestObject(const int a, const double b, const std::string& c)
+			: _var1{ a }, _var2{ b }, _var3{ c }
+		{
+		}
+	};
+}
+
+
+static void fe_concurrent_vector_push_back(benchmark::State& state)
+{
+	FE::concurrent_vector<TestObject> l_vector;
+	for (auto _ : state)
+	{
+		l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+	}
+}
+BENCHMARK(fe_concurrent_vector_push_back)->Iterations(50000);
+
+
+static void std_vector_push_back(benchmark::State& state)
+{
+	std::vector<TestObject> l_vector;
+	for (auto _ : state)
+	{
+		l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+	}
+}
+BENCHMARK(std_vector_push_back)->Iterations(50000);
+
+
+static void ppl_concurrent_vector_push_back(benchmark::State& state)
+{
+	concurrency::concurrent_vector<TestObject> l_vector;
+	for (auto _ : state)
+	{
+		l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+	}
+}
+BENCHMARK(ppl_concurrent_vector_push_back)->Iterations(50000);
+
+
+
+
+static constexpr FE::uint32 thread_count = 64;
+void fe_concurrent_vector_concurrent_push_back(benchmark::State& state)
+{
+	tf::Taskflow l_tasks;
+	FE::concurrent_vector<TestObject> l_vector;
+
+	for (var::uint32 i = 0; i < thread_count; ++i)
+	{
+		l_tasks.emplace(
+			[&]()
+			{
+				l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+			}
+		);
+	}
+
+	tf::Executor l_executor(thread_count);
+	for (auto _ : state)
+	{
+		l_executor.run(l_tasks);
+	}
+}
+BENCHMARK(fe_concurrent_vector_concurrent_push_back)->Iterations(10000);
+
+
+static void std_vector_concurrent_push_back(benchmark::State& state)
+{
+	tf::Taskflow l_tasks;
+	std::mutex l_lock;
+	std::vector<TestObject> l_vector;
+	for (var::uint32 i = 0; i < thread_count; ++i)
+	{
+		l_tasks.emplace(
+			[&]()
+			{
+				std::lock_guard<std::mutex> l_mut(l_lock);
+				l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+			}
+		);
+	}
+
+	tf::Executor l_executor(thread_count);
+	for (auto _ : state)
+	{
+		l_executor.run(l_tasks);
+	}
+}
+BENCHMARK(std_vector_concurrent_push_back)->Iterations(10000);
+
+
+static void ppl_concurrent_vector_concurrent_push_back(benchmark::State& state)
+{
+	tf::Taskflow l_tasks;
+	concurrency::concurrent_vector<TestObject> l_vector;
+
+	for (var::uint32 i = 0; i < thread_count; ++i)
+	{
+		l_tasks.emplace(
+			[&]()
+			{
+				l_vector.push_back(TestObject{ 42, 3.14, "Test" });
+			}
+		);
+	}
+
+	tf::Executor l_executor(thread_count);
+	for (auto _ : state)
+	{
+		l_executor.run(l_tasks);
+	}
+}
+BENCHMARK(ppl_concurrent_vector_concurrent_push_back)->Iterations(10000);

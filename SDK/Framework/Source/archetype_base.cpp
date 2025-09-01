@@ -22,5 +22,19 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+archetype_base::archetype_base() noexcept
+    : m_name()
+{
+}
+
+archetype_base::~archetype_base() noexcept
+{
+    //for (auto [key, value] : m_component_view_table)
+    //{
+    //   // destruct all
+    //}
+}
+
 
 END_NAMESPACE
+

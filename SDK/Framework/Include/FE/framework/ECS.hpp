@@ -22,16 +22,17 @@ limitations under the License.
 #include <FE/framework/component_base.hpp>
 #include <FE/framework/system_base.hpp>
 
-// game memory pool
-#include <FE/pool/memory_resource.hpp>
-
-// FE::reflection::type_id<T>()
-#include <FE/framework/type_info.hpp>
-
 // ECS smart pointer
 #include <FE/framework/smart_ptr.hxx>
 
+// FE::reflection::type_id<Archetype>()
+#include <FE/framework/type_info.hpp>
+
+// game memory pool
+#include <FE/pool/memory_resource.hpp>
+
 // ECS data structures
+#include <FE/farray.hxx>
 #include <forward_list>
 #include <robin_hood.h>
 #include <vector>
@@ -52,11 +53,25 @@ using component = FE::smart_ptr<FE::component_base, FE::RefType::_Owner>;
 using system = FE::smart_ptr<FE::system_base, FE::RefType::_Owner>;
 
 
-struct components
+class components
 {
+public:
 	_FE_MAYBE_UNUSED_ static constexpr FE::size max_components = 1024;
 
-	std::array<component, max_components> _components; // use FE::exclude_if()
+private:
+	component m_components[max_components]; // use FE::exclude_if()
+	var::size m_current_size = 0;
+
+public:
+	void add_component(component&& comp_p) noexcept
+	{
+		FE_ASSERT(m_current_size < max_components);
+
+		m_components[m_current_size] = std::move(comp_p);
+		++m_current_size;
+	}
+
+	_FE_FORCE_INLINE_ var::size get_size() { return m_current_size; }
 };
 
 
@@ -90,27 +105,121 @@ public:
 
 	~ECS() noexcept = default;
 
-	template <class T, typename ...Arguments>
-	entity<T> instanciate_entity(FE::ASCII* const entity_name_p, Arguments&& ...arguments_p)
+	template <class Archetype, typename ...Arguments>
+	entity<Archetype> instanciate_entity(FE::ASCII* const entity_name_p, Arguments&& ...arguments_p) noexcept
 	{
-		static_assert(std::is_base_of_v<FE::archetype_base, T>, "Static assertion failed: T must be derived from FE::archetype_base");
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: T must be derived from FE::archetype_base.");
 
-		std::pmr::string l_entity_name(&m_game_memory_resource);
-		l_entity_name = FE::framework::reflection::type_id<T>().name();
+		std::pmr::string l_entity_name( FE::framework::reflection::type_id<Archetype>().name(), &m_game_memory_resource );
 		l_entity_name += " ";
 		l_entity_name += entity_name_p;
-		FE::archetype l_alloc_result = std::allocate_shared< T, std::pmr::polymorphic_allocator<T> >(&m_game_memory_resource, std::forward<Arguments>(arguments_p)...);
-		entity<T> l_entity = l_alloc_result;
+		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_game_memory_resource, std::forward<Arguments>(arguments_p)... );
+		l_alloc_result->m_name = std::pmr::string( l_entity_name, &m_game_memory_resource );
+		entity<Archetype> l_entity = FE::down_cast_owner_to_observer<Archetype>( l_alloc_result );
 
 		std::pair<typename archetype_table::iterator, bool> l_result = m_archetype_table.emplace( std::move(l_entity_name), std::move(l_alloc_result) );
 		
-		if (l_result.second == true)
+		if (l_result.second == true) // The emplace() was successful. 
 		{
-			// Entity with the same name and the same type already exists, return null entity.
 			return l_entity;
 		}
 
-		return entity<T>();
+		return entity<Archetype>();
+	}
+
+	template <class Archetype>
+	void destruct_entity(const entity<Archetype>& entt_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: T must be derived from FE::archetype_base.");
+
+		for (typename archetype_table::iterator probe_result = m_archetype_table.find(entt_p->get_name()); probe_result != m_archetype_table.end(); ++probe_result)
+		{
+			if (probe_result->first == entt_p->get_name())
+			{
+				m_archetype_table.erase(probe_result);
+				return;
+			}
+		}
+	}
+
+	template <class Component, class Archetype, typename ...Arguments>
+	component_view<Component> add_component(entity<Archetype>& entt_p, FE::ASCII* const component_name_p, Arguments&& ...arguments_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+		
+		std::pmr::string l_typename( FE::framework::reflection::type_id<Component>().name(), &m_game_memory_resource );
+
+		typename component_table::iterator l_probe_result = m_component_table.find(l_typename);
+		if (l_probe_result == m_component_table.end())
+		{
+			/*               ( m_game_memory_resource )
+			*----------------------------------------------------------*
+			*                    ( component pool )                    *
+			*   *--------------------------------------------------*   *
+			*   *                                                  *   *
+			*   *                                                  *   *   
+			*   *                                                  *   *
+			*   *                                                  *   *
+			*   *                                                  *   *
+			*   *--------------------------------------------------*   *
+			*                                                          *
+			*----------------------------------------------------------*
+			*/
+			typename component_table::iterator l_list_and_allocator = m_component_table.emplace( l_typename, typename component_table::mapped_type{} ).first;
+			l_list_and_allocator->second._second = typename component_table::mapped_type::second_type{ &m_game_memory_resource }; // Derive the memory resource from m_game_memory_resource.
+			l_list_and_allocator->second._first = typename component_table::mapped_type::first_type{ &(l_list_and_allocator->second._second) };
+			l_list_and_allocator->second._first.emplace_front();
+			l_probe_result = l_list_and_allocator;
+		}
+
+		FE::component l_alloc_result;
+		for (auto& components : l_probe_result->second._first)
+		{
+			if (components.get_size() == components.max_components)
+			{
+				continue;
+			}
+			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
+			auto l_result = entt_p->m_component_view_table.emplace(component_name_p, l_view);
+			if (l_result.second == false)
+			{
+				FE_LOG("FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
+				return component_view<Component>();
+			}
+			components.add_component( std::move(l_alloc_result) );
+			return l_view;
+		}
+
+		if (l_alloc_result.is_null() == true) _FE_LIKELY_
+		{
+			// All components lists are full. Create a new one.
+			l_probe_result->second._first.emplace_front();
+			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
+			auto l_result = entt_p->m_component_view_table.emplace(component_name_p, l_view);
+			if (l_result.second == false)
+			{
+				FE_LOG("FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
+				return component_view<Component>();
+			}
+			l_probe_result->second._first.front().add_component( std::move(l_alloc_result) );
+			return l_view;
+		}
+
+		return component_view<Component>();
+	}
+
+	template <class Component, class Archetype>
+	void destruct_component(entity<Archetype>& entt_p, FE::ASCII* const component_name_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+		
+		auto l_probe_result = entt_p->m_component_view_table.find(component_name_p);
+		if (l_probe_result != entt_p->m_component_view_table.end())
+		{
+			entt_p->m_component_view_table.erase(l_probe_result);
+		}
 	}
 };
 

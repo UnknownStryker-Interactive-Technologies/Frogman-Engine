@@ -39,8 +39,8 @@ limitations under the License.
 #ifdef FE_NEGATIVE_ASSERT
 #error FE_NEGATIVE_ASSERT is a reserved Frogman Engine macro keyword.
 #endif 
-#ifdef FE_EXIT
-#error FE_EXIT is a reserved Frogman Engine macro keyword.
+#ifdef FE_EXIT_IF
+#error FE_EXIT_IF is a reserved Frogman Engine macro keyword.
 #endif
 #ifdef FE_DEBUG_BREAK
 #error FE_DEBUG_BREAK is a reserved Frogman Engine macro keyword.
@@ -192,8 +192,8 @@ FE_ASSERT is a macro that checks a given expression and logs a fatal error messa
 #endif
 
 
-#ifdef FE_EXIT
-	#error FE_EXIT is a reserved Frogman Engine macro keyword.
+#ifdef FE_EXIT_IF
+	#error FE_EXIT_IF is a reserved Frogman Engine macro keyword.
 #endif
 /*
 %i8 - int8
@@ -211,9 +211,9 @@ FE_ASSERT is a macro that checks a given expression and logs a fatal error messa
 %s - string
 %p - hexadecimal 64-bit pointer
 
-The FE_EXIT macro logs a fatal error message and terminates the program with a specified error code if a given expression evaluates to true.
+The FE_EXIT_IF macro logs a fatal error message and terminates the program with a specified error code if a given expression evaluates to true.
 */
-#define FE_EXIT(expression, error_code, ...) \
+#define FE_EXIT_IF(expression, error_code, ...) \
 { \
 	if(expression) _FE_UNLIKELY_ \
 	{ \
@@ -225,7 +225,7 @@ The FE_EXIT macro logs a fatal error message and terminates the program with a s
 
 #define TO_STRING(p) #p
 
-#define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_EXIT(true, ::FE::ErrorCode::_FatalSwitchCaseError_ReachedNoDefault, "Reached Default Case: This switch has no default."); break;
+#define _FE_NODEFAULT_ default: _FE_UNLIKELY_ FE_EXIT_IF(true, ::FE::ErrorCode::_FatalSwitchCaseError_ReachedNoDefault, "Reached Default Case: This switch has no default."); break;
 
 
 namespace FE

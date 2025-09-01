@@ -16,10 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/mutex.hxx>
 
 #include <atomic>
 #include <limits>
+#include <mutex>
+#include <shared_mutex>
+
+#include <boost/thread/shared_lock_guard.hpp>
 
 
 
@@ -27,11 +30,11 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template <typename T, class ConcurrentAllocator, class SharedMutex = FE::shared_mutex>
+template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>, class SharedMutex = std::shared_mutex>
 class concurrent_vector
 {
 public:
-    using allocator_type = ConcurrentAllocator;
+    using allocator_type = Allocator;
     using value_type = typename std::allocator_traits<allocator_type>::value_type;
 
     using difference_type = typename std::allocator_traits<allocator_type>::difference_type;
@@ -52,7 +55,7 @@ private:
     std::atomic<size_type> m_size;
     std::atomic<size_type> m_capacity;
     SharedMutex m_length_modifier_lock;
-    ConcurrentAllocator m_allocator;
+    Allocator m_allocator;
 
 public:
     // Constructors and destructors are concurrently unsafe.
@@ -159,13 +162,13 @@ public: // Concurrently safe methods
 public:
     inline void read_at(size_type index_p, reference out_dest_p) noexcept
     {
-        scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
+        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         out_dest_p = *(m_active.load(std::memory_order_acquire) + index_p);
     }
 
     inline void write_at(size_type index_p, const_reference value_p) noexcept
     {
-        scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
+        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         *(m_active.load(std::memory_order_acquire) + index_p) = value_p;
     }
 
@@ -192,7 +195,7 @@ public:
 public:
     size_type try_push_back(const value_type& value_p) noexcept
     {
-        scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
+        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
         size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*
@@ -233,7 +236,7 @@ public:
     template <typename... Args>
     size_type try_emplace_back(Args&&... args_p) noexcept
     {
-        scoped_shared_lock<SharedMutex> l_lock(m_length_modifier_lock);
+        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
         size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*
@@ -288,7 +291,7 @@ public:
             size_type l_retired_size = 0;
             size_type l_retired_capacity = 0;
             {   // temporarily blocks other threads from reading and writing the array.
-                scoped_lock<SharedMutex> l_lock(m_length_modifier_lock);
+                std::lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
                 l_retired = m_active.exchange(m_reserved.load(std::memory_order_relaxed), std::memory_order_relaxed);
                 l_retired_size = m_size.load(std::memory_order_relaxed);
                 l_retired_capacity = m_capacity.exchange(new_capacity_p, std::memory_order_relaxed);

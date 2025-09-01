@@ -28,20 +28,24 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+class ECS;
 class component_base;
 
-using component_view = FE::smart_ptr<FE::component_base, FE::RefType::_Observer>;
+template<class T>
+using component_view = FE::smart_ptr<T, FE::RefType::_Observer>;
 
 
 class archetype_base
 {
-	using component_view_table = robin_hood::unordered_map<std::pmr::string, component_view>;
+	friend class ECS;
 
-	component_view_table m_component_view_table;
+	std::pmr::string m_name;
 
 public:
-	archetype_base() noexcept = default;
-	virtual ~archetype_base() noexcept = default;
+	archetype_base() noexcept;
+	virtual ~archetype_base() noexcept;
+	
+	const std::pmr::string& get_name() const noexcept { return m_name; }
 };
 
 

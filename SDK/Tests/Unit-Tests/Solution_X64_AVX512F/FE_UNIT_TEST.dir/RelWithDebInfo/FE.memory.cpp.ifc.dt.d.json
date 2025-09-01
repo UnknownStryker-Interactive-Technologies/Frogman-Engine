@@ -195,7 +195,7 @@
             "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\malloc.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\zmmintrin.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\ammintrin.h",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\tests\\unit-tests\\smart_ptr.hxx",
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\smart_ptr.hxx",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\prerequisites.h",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\types.hxx",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\miscellaneous\\suppress_warnings.h",

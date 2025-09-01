@@ -97,13 +97,13 @@ public:
         FE_ASSERT(m_metadata->_sizeofT >= 0);
         FE_ASSERT(m_metadata->_is_expired == false);
 
-		// Call the destructor of T.
+		// Call the destructor of Archetype.
         m_ptr->~T();
 
 		// Nobody is observing this object, so we can safely deallocate it.
         if (m_metadata->_observer_count == 0)
         {
-			// Deallocate the T instance.
+			// Deallocate the Archetype instance.
             m_metadata->_resource->deallocate( m_ptr, m_metadata->_sizeofT );
             std::pmr::memory_resource* l_tmp = m_metadata->_resource;
             l_tmp->deallocate( m_metadata, sizeof(internal::smart_ptr::metadata) );
@@ -167,13 +167,13 @@ public:
         FE_ASSERT(m_metadata->_sizeofT >= 0);
         FE_ASSERT(m_metadata->_is_expired == false);
 
-        // Call the destructor of T.
+        // Call the destructor of Archetype.
         m_ptr->~T();
 
         // Nobody is observing this object, so we can safely deallocate it.
         if (m_metadata->_observer_count == 0)
         {
-            // Deallocate the T instance.
+            // Deallocate the Archetype instance.
             m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
             std::pmr::memory_resource* l_tmp = m_metadata->_resource;
             l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
@@ -243,7 +243,7 @@ public:
     using const_pointer = const T*;
 
 private:
-    T* m_ptr;
+    pointer m_ptr;
 	internal::smart_ptr::metadata* m_metadata;
 
 public:
@@ -351,10 +351,10 @@ public:
             // Nobody is observing this object, so we can safely deallocate it
             if (m_metadata->_observer_count == 0)
             {
-                // Call the destructor of T
-                m_ptr->~T();
+                // Call the destructor of Archetype
+                m_ptr->~element_type();
 
-                // Deallocate the T instance.
+                // Deallocate the Archetype instance.
                 m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
                 std::pmr::memory_resource* l_tmp = m_metadata->_resource;
                 l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
@@ -499,10 +499,10 @@ public:
             // Nobody is observing this object, so we can safely deallocate it
             if (m_metadata->_observer_count == 0)
             {
-                // Call the destructor of T
+                // Call the destructor of Archetype
                 m_ptr->~T();
 
-                // Deallocate the T instance.
+                // Deallocate the Archetype instance.
                 m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
                 std::pmr::memory_resource* l_tmp = m_metadata->_resource;
                 l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
@@ -562,13 +562,30 @@ public:
 };
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner> gcnew(std::pmr::memory_resource* resource_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner> make_owner(std::pmr::memory_resource* resource_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
 {
     static_assert(std::is_reference_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a reference type variable.");
     static_assert(std::is_const_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a const type variable.");
     return smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner>(resource_p, std::forward<Arguments>(arguments_p)...);
 }
 
+template <class Child, class Parent>
+_FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> down_cast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>&& other_p) noexcept
+{
+    static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
+    
+    FE::smart_ptr<Child, FE::RefType::_Observer> l_result = reinterpret_cast< FE::smart_ptr<Child, FE::RefType::_Owner>&& >(other_p);
+    return l_result;
+}
+
+template <class Child, class Parent>
+_FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> down_cast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>& other_p) noexcept
+{
+    static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
+
+    FE::smart_ptr<Child, FE::RefType::_Observer> l_result = reinterpret_cast<FE::smart_ptr<Child, FE::RefType::_Owner>&>(other_p);
+    return l_result;
+}
 
 END_NAMESPACE
 #endif

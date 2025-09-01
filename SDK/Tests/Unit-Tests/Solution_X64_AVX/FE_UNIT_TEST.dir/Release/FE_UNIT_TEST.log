@@ -1,36 +1,9 @@
 ﻿  Scanning sources for module dependencies...
-  FE.task.cpp
-  FE.algorithm.utility.cpp
-  FE.iterator.cpp
-  FE.fcontainer.cpp
-  FE.hash.cpp
-  generated.cpp
-  FE.log.cpp
-  FE.framework.reflection.cpp
-  FE.pool.cpp
-  FE.ECS.cpp
-  FE.memory.cpp
-  app.cpp
-  FE.algorithm.math.cpp
-  FE.algorithm.string.cpp
+  FE.container.cpp
   Compiling...
-  FE.algorithm.utility.cpp
-  app.cpp
-  FE.ECS.cpp
-  FE.hash.cpp
-  FE.framework.reflection.cpp
-  FE.algorithm.math.cpp
-  FE.fcontainer.cpp
-  FE.algorithm.string.cpp
-  FE.task.cpp
-  FE.log.cpp
-  FE.iterator.cpp
-  FE.memory.cpp
-  generated.cpp
-  FE.pool.cpp
+  FE.container.cpp
+  app.obj : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
      Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX/Release/FE_UNIT_TEST.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX/Release/FE_UNIT_TEST.exp
   Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 7304 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Release\FE_UNIT_TEST.exe

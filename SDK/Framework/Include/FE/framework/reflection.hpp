@@ -109,13 +109,13 @@ private:
 	using lock_type = std::shared_mutex;
 	using internal_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*>;
 
-	lock_type m_lock;
+	lock_type s_lock;
 	std::pmr::unsynchronized_pool_resource m_pool;
 	internal_map_type m_method_registry;
 
 private:
 	method_registry(FE::size map_capacity_p) noexcept
-		: m_lock(), m_pool(), m_method_registry(map_capacity_p) {}
+		: s_lock(), m_pool(), m_method_registry(map_capacity_p) {}
 
 	~method_registry() noexcept = default;
 
@@ -128,7 +128,7 @@ public:
 
 	_FE_FORCE_INLINE_ void reserve(FE::size size_p) noexcept
 	{
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		m_method_registry.reserve(size_p);
 	}
 
@@ -137,7 +137,7 @@ public:
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
 
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 
 		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
@@ -147,7 +147,7 @@ public:
 		if (l_result.second == false) // If true, then the key already exists
 		{
 			// Are the keys identical? If not, then we have a collision.
-			FE_EXIT(task_name_p != l_result.first->first, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			FE_EXIT_IF(task_name_p != l_result.first->first, FE::ErrorCode::_FatalError_TableInsertionFailure,
 				"FE Runtime Reflection Metadata Registration Failure: the function name keys have collided.");
 			std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.deallocate(l_task, 1);
 		}
@@ -156,7 +156,7 @@ public:
 	_FE_FORCE_INLINE_ FE::boolean check_presence(const std::string_view& key_p) noexcept
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
@@ -173,7 +173,7 @@ public:
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ FE::task_base* retrieve(const std::string_view& key_p) noexcept
 	{
 		typename internal_map_type::key_type l_key(key_p, &m_pool);
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 		{
 			if (it->first == key_p)
@@ -237,7 +237,7 @@ struct property_metadata
 	var::ptrdiff _offset_from_this;
 
 	FE::ASCII* _name;
-	FE::ASCII* _typename;
+	FE::ASCII* m_typename;
 };
 
 
@@ -263,7 +263,7 @@ public:
 			if (property_name_p == it.value()->_name)
 			{
 				FE_ASSERT(sizeof(T) == it.value()->_size_in_byte, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
-				FE_ASSERT(algorithm::string::compare(it.value()->_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+				FE_ASSERT(algorithm::string::compare(it.value()->m_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
 
 				var::byte* l_address = reinterpret_cast<var::byte*>(&instance_p) + it.value()->_offset_from_this;
 				return reinterpret_cast<T*>(l_address);
@@ -304,7 +304,7 @@ private:
 	class_layer_stack m_class_layer;
 	data_on_heap_size_record m_scalable_container_size_record;
 
-	lock_type m_lock;
+	lock_type s_lock;
 	file_handler m_fstream;
 	input_buffer_type m_input_buffer;
 	input_buffer_iterator_type m_position;
@@ -315,7 +315,7 @@ private:
 	property_registry(FE::size reflection_map_capacity_p) noexcept
 		: m_pool(), m_property_registry(reflection_map_capacity_p), 
 		  m_class_layer(&m_pool), m_scalable_container_size_record(&m_pool),
-		  m_lock(), m_fstream(), m_input_buffer(&m_pool), m_position(),
+		  s_lock(), m_fstream(), m_input_buffer(&m_pool), m_position(),
 		  m_instance_metadata_lut(reflection_map_capacity_p) {}
 
 	~property_registry() noexcept = default;
@@ -329,7 +329,7 @@ public:
 
 	_FE_FORCE_INLINE_ void reserve(size size_p) noexcept
 	{
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		m_property_registry.reserve(size_p);
 	}
 
@@ -348,9 +348,9 @@ public:
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
 		l_property_meta_data._name = property_name_p.data();
-		l_property_meta_data._typename = reflection::type_id<T>().name();
+		l_property_meta_data.m_typename = reflection::type_id<T>().name();
 
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
 		auto l_iterator = m_property_registry.find(l_host_class_instance_typename);
 		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
@@ -365,8 +365,8 @@ public:
 		{
 			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
 			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const void*)>>(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)>>(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const void*)>>(__get_serialization_task_name(l_property_meta_data.m_typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)>>(__get_deserialization_task_name(l_property_meta_data.m_typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
 
 			if constexpr (FE::has_value_type<T>::value == true)
 			{
@@ -389,7 +389,7 @@ public:
 		}
 
 		auto l_prop_registry_insertion_result = l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
-		FE_EXIT(l_prop_registry_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		FE_EXIT_IF(l_prop_registry_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 
 
@@ -397,17 +397,17 @@ public:
 		if ( l_lut_it == m_instance_metadata_lut.end() )
 		{
 			auto l_lut_insertion_result = m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
-			FE_EXIT(l_lut_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+			FE_EXIT_IF(l_lut_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 				"FE Runtime Reflection Registration Error: failed to register a class instance metadata to the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 			l_lut_it = l_lut_insertion_result.first;
 		}
 
-		FE_EXIT(l_lut_it->second.m_property_lut.emplace(l_property_meta_data._name, &(l_prop_registry_insertion_result.first->second)).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		FE_EXIT_IF(l_lut_it->second.m_property_lut.emplace(l_property_meta_data._name, &(l_prop_registry_insertion_result.first->second)).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 			"FE Runtime Reflection Registration Error: failed to associate a property metadata in the FE runtime reflection system lookup table.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 	}
 
 	/*
-	The serialize function template in the FE::framework::reflection::property_map class is designed to serialize an object of type T into a specified file within a given directory
+	The serialize function template in the FE::framework::reflection::property_map class is designed to serialize an object of type Archetype into a specified file within a given directory
 	enforcing constraints on the type to ensure it is neither a class nor a struct, and disallowing raw pointers and references.
 	*/
 	template<typename T>
@@ -419,10 +419,10 @@ public:
 		FE_NEGATIVE_ASSERT(path_p.empty() == true, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
-		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
+		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -459,10 +459,10 @@ public:
 		FE_NEGATIVE_ASSERT(std::filesystem::exists(path_p) == false, "Assertion failure: the target directory path to the file is nullptr.");
 		FE_NEGATIVE_ASSERT((filename_p == nullptr) || (*filename_p == null), "The file name is null.");
 
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
-		FE_EXIT((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
+		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -484,7 +484,7 @@ public:
 		FE_NEGATIVE_ASSERT(m_position == m_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
 
 		// Checks the class type name
-		FE_EXIT(!algorithm::string::compare_ranged<char>(l_typename.data(), algorithm::string::range{0, std::strlen(l_typename.data())},
+		FE_EXIT_IF(!algorithm::string::compare_ranged<char>(l_typename.data(), algorithm::string::range{0, std::strlen(l_typename.data())},
 			m_input_buffer.c_str(), algorithm::string::range{ 0, static_cast<uint64>(m_position - m_input_buffer.begin()) }),
 			FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
 		++m_position; // Point the first byte.
@@ -508,7 +508,7 @@ public:
 	template<typename T>
 	_FE_FORCE_INLINE_ instance_metadata* get_instance_metadata() noexcept
 	{
-		std::lock_guard<lock_type> l_lock(m_lock);
+		std::lock_guard<lock_type> l_lock(s_lock);
 		for (auto it = m_instance_metadata_lut.find(reflection::type_id<T>().name()); it != m_instance_metadata_lut.end(); ++it)
 		{
 			if (reflection::type_id<T>().name() == it->first)
@@ -641,10 +641,10 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is serializable with foreach?
 				{
 					FE::arguments<const void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
@@ -713,10 +713,10 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is deserializable with foreach?
 				{
 					FE::arguments<void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
@@ -949,7 +949,7 @@ public:
 			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
 		}
 
-		FE_EXIT(m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
+		FE_EXIT_IF(m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
 			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 

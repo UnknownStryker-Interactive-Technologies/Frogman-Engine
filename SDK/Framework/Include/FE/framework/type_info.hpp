@@ -50,15 +50,17 @@ BEGIN_NAMESPACE(FE::framework::reflection)
 
 namespace internal::type_info
 {
-    class name
+    class metadata
     {
     public:
         using string_type = std::pmr::string;
 
-		static std::pmr::monotonic_buffer_resource s_resource;
+		static std::shared_ptr<std::pmr::monotonic_buffer_resource> s_resource;
 
-        string_type _typename{ std::pmr::polymorphic_allocator<char>{&s_resource} };
-        string_type _base_typename{ std::pmr::polymorphic_allocator<char>{&s_resource} };
+        string_type _typename;
+        string_type _base_typename;
+        std::size_t _hashed_name = 0;
+		std::size_t _hashed_base_name = 0;
     };
 
     struct c_style_deleter
@@ -73,108 +75,80 @@ namespace internal::type_info
 
 class type_info
 {
-    using table_type = robin_hood::unordered_map<typename internal::type_info::name::string_type, internal::type_info::name>;
+    using table_type = robin_hood::unordered_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata>;
     using lock_type = std::shared_mutex;
 
-    typename internal::type_info::name::string_type m_name;
-
-    static table_type s_type_information;
-    static lock_type m_lock;
+	std::shared_ptr<std::pmr::monotonic_buffer_resource> m_resource;
+    internal::type_info::metadata m_info;
    
+    static table_type s_type_information;
+    static lock_type s_lock;
 
-    template<class String>
-    _FE_FORCE_INLINE_ static String __demangle_type_name(const char* mangled_name_p) noexcept
+public:
+    type_info() noexcept
+        : m_info()
     {
-        FE_NEGATIVE_STATIC_ASSERT(std::is_class<String>::value == false, "Static Assertion failed: the template argument String must not be a string class type.");
-
-#ifdef _FROGMAN_ENGINE_CORE_HAS_CXXABI_H_
-        // https://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.3/a01696.html
-	    int l_result = 0;
-		var::size_t l_length = 0;
-	    std::unique_ptr<char[], internal::type_info::c_style_deleter> l_buffer = abi::__cxa_demangle(mangled_name_p, nullptr, &l_length, &l_result);
-        FE_NEGATIVE_ASSERT((l_result != 0), "abi::__cxa_demangle() operation unsuccessful: abi::__cxa_demangle() returned the error code '${%d@0}'.\nNOTE:\n0: The demangling operation succeeded.\n-1: A memory allocation failiure occurred.\n-2: mangled_name is not a valid name under the C++ ABI mangling rules.\n-3: One of the arguments is invalid.", &l_result);
-        FE_NEGATIVE_ASSERT((l_length >= 1024), "abi::__cxa_demangle() operation unsuccessful: the string length exceeds the limitation. The demangled name must be shorter than 1024 characters.");
-        return l_buffer.get();
-#else
+        if (internal::type_info::metadata::s_resource == nullptr)
+        {
+			internal::type_info::metadata::s_resource = std::make_shared<std::pmr::monotonic_buffer_resource>();
+        }
+		m_resource = internal::type_info::metadata::s_resource;
+    }
+	~type_info() noexcept = default;
+   
+private:
+    void __demangle_type_name(std::pmr::string& out_ret_p, const char* mangled_name_p) noexcept
+    {
         // https://learn.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-undecoratesymbolname
         var::ASCII l_buffer[1024] = { 0 };
         _FE_MAYBE_UNUSED_ DWORD l_result = UnDecorateSymbolName(mangled_name_p, l_buffer, sizeof(l_buffer), UNDNAME_COMPLETE);
         FE_NEGATIVE_ASSERT((l_result == 0), "UnDecorateSymbolName() operation unsuccessful.");
-        return static_cast<var::ASCII*>(l_buffer);
-#endif
+        out_ret_p = typename internal::type_info::metadata::string_type( static_cast<var::ASCII*>(l_buffer), m_resource.get() );
     }
 
-private:
     template<typename T>
-    _FE_FORCE_INLINE_ void set() noexcept
+    void set() noexcept
     {
-        internal::type_info::name l_info; 
-        l_info._typename = __demangle_type_name<typename internal::type_info::name::string_type>( typeid(T).name() ); 
+        __demangle_type_name( m_info._typename, typeid(T).name() );
+		m_info._hashed_name = robin_hood::hash_bytes(m_info._typename.data(), m_info._typename.length());
+
         if constexpr (FE::has_base_type<T>::value == true)
         { 
-            l_info._base_typename = __demangle_type_name<typename internal::type_info::name::string_type>( typeid(typename T::base_type).name() );
+            __demangle_type_name( m_info._base_typename, typeid(typename T::base_type).name() );
+			m_info._hashed_base_name = robin_hood::hash_bytes(m_info._base_typename.data(), m_info._base_typename.length());
         }
 
-        std::lock_guard<lock_type> l_lock(m_lock);
-        m_name = l_info._typename;
-        type_info::s_type_information.emplace(m_name, std::move(l_info));
+        std::lock_guard<lock_type> l_lock(s_lock);
+        type_info::s_type_information.emplace(m_info._typename, m_info);
     }
 
 public:
     _FE_FORCE_INLINE_ FE::ASCII* name() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(m_name);
-        if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
-        {
-            return l_result->second._typename.c_str();
-        }
-        FE_LOG("Warning: Frogman Engine RTTI name() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
-        return "\0";
+        return m_info._typename.c_str();
     }
 
-    _FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
+    _FE_FORCE_INLINE_ std::size_t hash_code() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(m_name);
-        if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
-        {
-            return robin_hood::hash_bytes(l_result->second._typename.data(), l_result->second._typename.length());
-        }
-        FE_LOG("Warning: Frogman Engine RTTI hash_code() method_registry is returning ZERO. Please check if the type is registered to this RTTI system.");
-        return 0;
+		return m_info._hashed_name;
     }
 
     _FE_FORCE_INLINE_ FE::ASCII* base_name() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(m_name);
-        if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
-        {
-            return l_result->second._base_typename.c_str();
-        }
-        FE_LOG("Warning: Frogman Engine RTTI base_name() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
-        return "\0";
+		return m_info._base_typename.c_str();
     }
 
-    _FE_FORCE_INLINE_ FE::uint64 base_hash_code() const noexcept
+    _FE_FORCE_INLINE_ std::size_t base_hash_code() const noexcept
     {
-        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        auto l_result = type_info::s_type_information.find(m_name);
-        if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
-        {
-            return robin_hood::hash_bytes(l_result->second._base_typename.data(), l_result->second._base_typename.length());
-        }
-        FE_LOG("Warning: Frogman Engine RTTI base_hash_code() method_registry is returning ZERO. Please check if the type is registered to this RTTI system.");
-        return 0;
+		return m_info._hashed_base_name;
     }
 
-    _FE_FORCE_INLINE_ static FE::ASCII* get_base_name_of(const std::string_view& this_type_name_p) noexcept
+    static FE::ASCII* get_base_name_of(const std::string_view& this_type_name_p) noexcept
     {
-        static typename internal::type_info::name::string_type l_s_typename;
-        boost::shared_lock_guard<lock_type> l_shared_mutex(m_lock);
-        l_s_typename = this_type_name_p;
-        auto l_result = type_info::s_type_information.find(l_s_typename);
+        thread_local static typename internal::type_info::metadata::string_type tl_s_buff;
+        tl_s_buff = this_type_name_p;
+        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
+        auto l_result = type_info::s_type_information.find(tl_s_buff);
         if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._base_typename.c_str();

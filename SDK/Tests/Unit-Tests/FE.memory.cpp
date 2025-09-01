@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
-#include "smart_ptr.hxx"
+#include <FE/framework/smart_ptr.hxx>
 #include <memory_resource>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
@@ -207,14 +207,14 @@ TEST_F(SmartPtrTest, Owner_DefaultConstructor)
 
 TEST_F(SmartPtrTest, Owner_Creation)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	ASSERT_FALSE(owner.is_null());
 	EXPECT_EQ(owner->value, 42);
 }
 
 TEST_F(SmartPtrTest, Owner_MoveConstructor)
 {
-	auto owner1 = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner1 = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2 = std::move(owner1);
 
 	EXPECT_TRUE(owner1.is_null());
@@ -224,7 +224,7 @@ TEST_F(SmartPtrTest, Owner_MoveConstructor)
 
 TEST_F(SmartPtrTest, Owner_MoveAssignment)
 {
-	auto owner1 = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner1 = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2;
 	owner2 = std::move(owner1);
 
@@ -235,7 +235,7 @@ TEST_F(SmartPtrTest, Owner_MoveAssignment)
 
 TEST_F(SmartPtrTest, Owner_Reset)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	ASSERT_FALSE(owner.is_null());
 	owner.reset();
 	EXPECT_TRUE(owner.is_null());
@@ -243,8 +243,8 @@ TEST_F(SmartPtrTest, Owner_Reset)
 
 TEST_F(SmartPtrTest, Owner_Swap)
 {
-	auto owner1 = FE::gcnew<TestObject>(m_resource, 10);
-	auto owner2 = FE::gcnew<TestObject>(m_resource, 20);
+	auto owner1 = FE::make_owner<TestObject>(m_resource, 10);
+	auto owner2 = FE::make_owner<TestObject>(m_resource, 20);
 
 	owner1.swap(owner2);
 
@@ -256,7 +256,7 @@ TEST_F(SmartPtrTest, Owner_Swap)
 
 TEST_F(SmartPtrTest, Owner_Dereference)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 123);
+	auto owner = FE::make_owner<TestObject>(m_resource, 123);
 	EXPECT_EQ(owner->value, 123);
 	EXPECT_EQ((*owner).value, 123);
 }
@@ -270,7 +270,7 @@ TEST_F(SmartPtrTest, Observer_DefaultConstructor)
 
 TEST_F(SmartPtrTest, Observer_CreateFromOwner)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
 
 	ASSERT_TRUE(observer.is_valid());
@@ -279,7 +279,7 @@ TEST_F(SmartPtrTest, Observer_CreateFromOwner)
 
 TEST_F(SmartPtrTest, Observer_CopyConstructor)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2(observer1);
 
@@ -290,7 +290,7 @@ TEST_F(SmartPtrTest, Observer_CopyConstructor)
 
 TEST_F(SmartPtrTest, Observer_CopyAssignment)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2;
 
@@ -303,7 +303,7 @@ TEST_F(SmartPtrTest, Observer_CopyAssignment)
 
 TEST_F(SmartPtrTest, Observer_MoveConstructor)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2 = std::move(observer1);
 
@@ -314,7 +314,7 @@ TEST_F(SmartPtrTest, Observer_MoveConstructor)
 
 TEST_F(SmartPtrTest, Observer_MoveAssignment)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer2;
 	observer2 = std::move(observer1);
@@ -326,7 +326,7 @@ TEST_F(SmartPtrTest, Observer_MoveAssignment)
 
 TEST_F(SmartPtrTest, Observer_Reset)
 {
-	auto owner = FE::gcnew<TestObject>(m_resource, 42);
+	auto owner = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
 	ASSERT_TRUE(observer.is_valid());
 
@@ -338,7 +338,7 @@ TEST_F(SmartPtrTest, Observer_IsExpired)
 {
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer;
 	{
-		auto owner = FE::gcnew<TestObject>(m_resource, 42);
+		auto owner = FE::make_owner<TestObject>(m_resource, 42);
 		observer = owner;
 		ASSERT_TRUE(observer.is_valid());
 	} // owner goes out of scope and is destroyed
@@ -348,7 +348,7 @@ TEST_F(SmartPtrTest, Observer_IsExpired)
 // Polymorphism Tests
 TEST_F(SmartPtrTest, Polymorphism_OwnerMove)
 {
-	auto derived_owner = FE::gcnew<Derived>(m_resource);
+	auto derived_owner = FE::make_owner<Derived>(m_resource);
 	FE::smart_ptr<Base, FE::RefType::_Owner> base_owner = std::move(derived_owner);
 
 	EXPECT_TRUE(derived_owner.is_null());
@@ -358,7 +358,7 @@ TEST_F(SmartPtrTest, Polymorphism_OwnerMove)
 
 TEST_F(SmartPtrTest, Polymorphism_ObserverCreate)
 {
-	auto derived_owner = FE::gcnew<Derived>(m_resource);
+	auto derived_owner = FE::make_owner<Derived>(m_resource);
 	FE::smart_ptr<Base, FE::RefType::_Observer> base_observer(derived_owner);
 
 	ASSERT_TRUE(base_observer.is_valid());
@@ -367,7 +367,7 @@ TEST_F(SmartPtrTest, Polymorphism_ObserverCreate)
 
 TEST_F(SmartPtrTest, Polymorphism_ObserverConversions)
 {
-	auto derived_owner = FE::gcnew<Derived>(m_resource);
+	auto derived_owner = FE::make_owner<Derived>(m_resource);
 
 	// Test polymorphic copy assignment
 	FE::smart_ptr<Derived, FE::RefType::_Observer> derived_observer1(derived_owner);
@@ -403,7 +403,7 @@ static void FESmartPtr_OwnerCreation(benchmark::State& state)
 	auto resource = std::pmr::get_default_resource();
 	for (auto _ : state)
 	{
-		auto owner = FE::gcnew<TestObject>(resource, 42);
+		auto owner = FE::make_owner<TestObject>(resource, 42);
 		benchmark::DoNotOptimize(owner);
 	}
 }
@@ -424,7 +424,7 @@ BENCHMARK(StdSharedPtr_Creation);
 static void FESmartPtr_ObserverCreation(benchmark::State& state)
 {
 	auto resource = std::pmr::get_default_resource();
-	auto owner = FE::gcnew<TestObject>(resource, 42);
+	auto owner = FE::make_owner<TestObject>(resource, 42);
 	for (auto _ : state)
 	{
 		FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
@@ -449,7 +449,7 @@ BENCHMARK(StdWeakPtr_Creation);
 static void FESmartPtr_ObserverCopy(benchmark::State& state)
 {
 	auto resource = std::pmr::get_default_resource();
-	auto owner = FE::gcnew<TestObject>(resource, 42);
+	auto owner = FE::make_owner<TestObject>(resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer1(owner);
 	for (auto _ : state)
 	{
@@ -476,7 +476,7 @@ BENCHMARK(StdWeakPtr_Copy);
 static void FESmartPtr_OwnerDereference(benchmark::State& state)
 {
 	auto resource = std::pmr::get_default_resource();
-	auto owner = FE::gcnew<TestObject>(resource, 42);
+	auto owner = FE::make_owner<TestObject>(resource, 42);
 	for (auto _ : state)
 	{
 		benchmark::DoNotOptimize(owner->value);
@@ -499,7 +499,7 @@ BENCHMARK(StdSharedPtr_Dereference);
 static void FESmartPtr_ObserverDereference(benchmark::State& state)
 {
 	auto resource = std::pmr::get_default_resource();
-	auto owner = FE::gcnew<TestObject>(resource, 42);
+	auto owner = FE::make_owner<TestObject>(resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Observer> observer(owner);
 	for (auto _ : state)
 	{

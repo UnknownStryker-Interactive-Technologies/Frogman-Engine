@@ -23,8 +23,12 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+class ECS;
+
 class component_base
 {
+	friend class ECS;
+
 public:
 	component_base() noexcept = default;
 	virtual ~component_base() noexcept = default;

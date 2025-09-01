@@ -192,7 +192,7 @@ FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::wchar* d
 {
 	std::basic_ifstream<var::ASCII> l_BOM_validator;
 	l_BOM_validator.open(directory_p);
-	FE_EXIT(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
+	FE_EXIT_IF(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
 	var::uint8 l_BOM[3];
 	l_BOM_validator.read(reinterpret_cast<char*>(l_BOM), 3);
 	return ((l_BOM[0] == m_UTF8_with_BOM[0]) && (l_BOM[1] == m_UTF8_with_BOM[1]) && (l_BOM[2] == m_UTF8_with_BOM[2]));
@@ -263,12 +263,12 @@ std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std
 		{
 			continue;
 		}
-		FE_EXIT(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
+		FE_EXIT_IF(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
 
 		std::basic_ifstream<var::UTF8> l_file_handler;
 		l_file_handler.imbue(m_UTF8_locale);
 		l_file_handler.open(path_to_file.c_str());
-		FE_EXIT(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
+		FE_EXIT_IF(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
 
 		l_files.emplace_back(std::istreambuf_iterator<var::UTF8>(l_file_handler), std::istreambuf_iterator<var::UTF8>());
 		l_file_handler.close();

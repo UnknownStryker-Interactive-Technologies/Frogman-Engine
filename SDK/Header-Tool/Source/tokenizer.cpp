@@ -25,7 +25,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 		return std::nullopt;
 	}
 
-	FE_EXIT(__is_encoded_with_UTF8_BOM(file_p.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM,
+	FE_EXIT_IF(__is_encoded_with_UTF8_BOM(file_p.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM,
 		    "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.");
 
 	std::pmr::list<token> l_list(get_memory_resource());

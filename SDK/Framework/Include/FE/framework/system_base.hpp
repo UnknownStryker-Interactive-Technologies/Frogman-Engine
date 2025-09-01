@@ -32,6 +32,7 @@ class component_base;
 class system_base
 {
 	std::pmr::vector<std::pmr::string> m_target_component_types;
+
 public:
 	system_base() noexcept = default;
 	virtual ~system_base() noexcept = default;

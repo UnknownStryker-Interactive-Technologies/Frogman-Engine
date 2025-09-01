@@ -79,7 +79,7 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	SYSTEM_INFO l_system_info;
 	GetSystemInfo(&l_system_info);
 	
-	FE_EXIT(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
+	FE_EXIT_IF(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
 	if (m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
 	{
 		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", m_max_concurrency._first, &m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
@@ -226,7 +226,7 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
 		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
-		FE_EXIT(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "\nAn error from FE.Framework: An app pointer is a nullptr.\n");
+		FE_EXIT_IF(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "\nAn error from FE.Framework: An app pointer is a nullptr.\n");
 		
 		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
 

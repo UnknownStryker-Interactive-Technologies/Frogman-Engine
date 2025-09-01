@@ -41,7 +41,7 @@ public:
 	using reference = value_type&;
 	using const_reference = const value_type&;
 	using pointer = value_type*;
-	using const_pointer = const pointer;
+	using const_pointer = const value_type*;
 	using iterator = FE::iterator<FE::contiguous_iterator<T>>;
 	using const_iterator = FE::const_iterator<FE::contiguous_iterator<T>>;
 	using reverse_iterator = FE::reverse_iterator<FE::contiguous_iterator<T>>;
@@ -66,6 +66,7 @@ public:
 		base_type::operator[](m_array_size) = value_p;
 		++m_array_size;
 	}
+
 
 	template<typename... Arguments>
 	_FE_FORCE_INLINE_ reference emplace_back(Arguments&&... arguments_p) noexcept
@@ -95,6 +96,16 @@ public:
 	}
 
 
+	_FE_FORCE_INLINE_ reference front() noexcept
+	{
+		return base_type::operator[](0);
+	}
+
+	_FE_FORCE_INLINE_ const_reference front() const noexcept
+	{
+		return base_type::operator[](0);
+	}
+
 	_FE_FORCE_INLINE_ reference back() noexcept
 	{
 		return base_type::operator[](m_array_size - 1);
@@ -108,15 +119,26 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ iterator begin() noexcept 
 	{
-		return iterator{ base_type::begin().operator->() };
+		return base_type::begin().operator->();
+	}
+
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_iterator begin() const noexcept
+	{
+		return base_type::begin().operator->();
 	}
 
 	_FE_FORCE_INLINE_ const_iterator cbegin() const noexcept 
 	{
-		return const_iterator{ base_type::begin().operator->() };
+		return base_type::begin().operator->();
 	}
 
+
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ iterator end() noexcept 
+	{
+		return begin() + m_array_size;
+	}
+
+	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_iterator end() const noexcept
 	{
 		return begin() + m_array_size;
 	}
@@ -125,6 +147,7 @@ public:
 	{
 		return cbegin() + m_array_size;
 	}
+
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ reverse_iterator rbegin() noexcept 
 	{
@@ -140,6 +163,7 @@ public:
 	{
 		return (cbegin() + m_array_size) - 1;
 	}
+
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ reverse_iterator rend() noexcept 
 	{

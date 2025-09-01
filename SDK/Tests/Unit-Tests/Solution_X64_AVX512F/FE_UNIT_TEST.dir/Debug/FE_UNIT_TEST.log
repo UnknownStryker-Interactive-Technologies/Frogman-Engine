@@ -1,5 +1,11 @@
 ﻿  Scanning sources for module dependencies...
-  FE.memory.cpp
+  generated.cpp
+  app.cpp
+  FE.framework.reflection.cpp
+  FE.task.cpp
   Compiling...
-  FE.memory.cpp
+  FE.task.cpp
+  generated.cpp
+  FE.framework.reflection.cpp
+  app.cpp
   FE_UNIT_TEST.vcxproj -> C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Debug\FE_UNIT_TEST.exe

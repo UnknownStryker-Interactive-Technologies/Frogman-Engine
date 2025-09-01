@@ -37,7 +37,7 @@ logger_base::logger_base() noexcept : m_log_buffer()
 
 
 // DO NOT USE in-house library functions within this file, except for FE::algorithm::string::concatenate<CharT>().
-// The functions in this file are used to implement FE_ASSERT, FE_NEGATIVE_ASSERT, FE_EXIT, etc. Calling them within this file will result in an infinite recursive loop.
+// The functions in this file are used to implement FE_ASSERT, FE_NEGATIVE_ASSERT, FE_EXIT_IF, etc. Calling them within this file will result in an infinite recursive loop.
 void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
 {
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
