@@ -32,11 +32,17 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+
 template <typename T>
 struct remove_const_reference 
 {
 	using type = typename std::remove_const_t< std::remove_reference_t<T> >; 
 };
+
+template <typename T>
+using remove_const_reference_t = typename remove_const_reference<T>::type;
+
+
 
 
 template<typename T>
@@ -44,6 +50,9 @@ struct is_constant_string
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = false;
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_constant_string_v = is_constant_string<T>::value;
 
 template<>
 struct is_constant_string<ASCII*>
@@ -110,11 +119,16 @@ struct is_constant_string<UTF32[]>
 };
 
 
+
+
 template<typename T>
 struct is_char
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = false;
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_char_v = is_char<T>::value;
 
 template<>
 struct is_char<ASCII>
@@ -179,11 +193,16 @@ struct is_char<var::UTF32>
 };
 
 
+
+
 template<typename T>
 struct is_boolean
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = false;
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_boolean_v = is_boolean<T>::value;
 
 template<>
 struct is_boolean<var::boolean>
@@ -198,6 +217,8 @@ struct is_boolean<boolean>
 };
 
 
+
+
 template<typename T>
 struct is_primitive
 {
@@ -209,6 +230,11 @@ struct is_primitive
 		);
 };
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_primitive_v = is_primitive<T>::value;
+
+
+
 
 template<typename T>
 struct is_numeric
@@ -219,12 +245,22 @@ struct is_numeric
 		);
 };
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_numeric_v = is_numeric<T>::value;
+
+
+
 
 template<typename T>
 struct is_function
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_function_v<T> || std::is_member_function_pointer_v<T>;
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_function_v = is_function<T>::value;
+
+
 
 
 enum struct TypeTriviality : boolean
@@ -239,12 +275,22 @@ struct is_trivial
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_trivially_constructible_v<T> && std::is_trivially_destructible_v<T> && std::is_trivially_copyable_v<T>;
 };
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_trivial_v = is_trivial<T>::value;
+
+
+
 
 template<typename T>
 struct is_const_reference
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = std::is_const_v< std::remove_reference_t<T> > && std::is_reference_v< std::remove_const_t<T> >;
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_const_reference_v = is_const_reference<T>::value;
+
+
 
 
 template <typename T>
@@ -253,6 +299,10 @@ struct is_std_vector : std::false_type {};
 template <typename T, typename Allocator>
 struct is_std_vector<std::vector<T, Allocator>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_std_vector_v = is_std_vector<T>::value;
+
+
 template <typename T>
 struct is_pmr_vector : std::false_type {};
 
@@ -260,10 +310,17 @@ template <typename T>
 struct is_pmr_vector<std::pmr::vector<T>> : std::true_type {};
 
 template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_pmr_vector_v = is_pmr_vector<T>::value;
+
+
+template<typename T>
 struct is_scalable_array
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (FE::is_std_vector<T>::value == true) || (FE::is_pmr_vector<T>::value == true);
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_scalable_array_v = is_scalable_array<T>::value;
 
 
 template <typename T>
@@ -272,11 +329,19 @@ struct is_std_array : std::false_type {};
 template <typename T, std::size_t N>
 struct is_std_array<std::array<T, N>> : std::true_type {};
 
+template <typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_std_array_v = is_std_array<T>::value;
+
 template<typename T>
 struct is_array
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (std::is_array<T>::value == true) || (FE::is_std_array<T>::value == true);
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_array_v = is_array<T>::value;
+
+
 
 
 template <typename T>
@@ -285,11 +350,18 @@ struct is_std_string : std::false_type {};
 template <typename T, typename Traits, typename Allocator>
 struct is_std_string<std::basic_string<T, Traits, Allocator>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_std_string_v = is_std_string<T>::value;
+
+
 template <typename T>
 struct is_pmr_string : std::false_type {};
 
 template <typename T, typename Traits>
 struct is_pmr_string<std::pmr::basic_string<T, Traits>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_pmr_string_v = is_pmr_string<T>::value;
 
 
 template <typename T>
@@ -297,6 +369,9 @@ struct is_std_string_view : std::false_type {};
 
 template <typename T, typename Traits>
 struct is_std_string_view<std::basic_string_view<T, Traits>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_std_string_view_v = is_std_string_view<T>::value;
 
 
 template <typename T>
@@ -311,12 +386,22 @@ struct is_string_class<std::pmr::basic_string<T, Traits>> : std::true_type {};
 template <typename T, typename Traits>
 struct is_string_class<std::basic_string_view<T, Traits>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_string_class_v = is_string_class<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_base_type : std::false_type {};
 
 template <typename T>
 struct has_base_type<T, std::void_t<typename T::base_type>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_base_type_v = has_base_type<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -325,12 +410,22 @@ struct is_reflective : std::false_type {};
 template <typename T>
 struct is_reflective<T, std::void_t<typename T::is_reflective>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_reflective_v = is_reflective<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_value_type : std::false_type {};
 
 template <typename T>
 struct has_value_type<T, std::void_t<typename T::value_type>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_value_type_v = has_value_type<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -339,12 +434,22 @@ struct has_element_type : std::false_type {};
 template <typename T>
 struct has_element_type<T, std::void_t<typename T::element_type>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_element_type_v = has_element_type<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_iterator : std::false_type {};
 
 template <typename T>
 struct has_iterator<T, std::void_t<typename T::iterator>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_iterator_v = has_iterator<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -353,12 +458,22 @@ struct has_traits_type : std::false_type {};
 template <typename T>
 struct has_traits_type<T, std::void_t<typename T::traits_type>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_traits_type_v = has_traits_type<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_allocator_type : std::false_type {};
 
 template <typename T>
 struct has_allocator_type<T, std::void_t<typename T::allocator_type>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_allocator_type_v = has_allocator_type<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -367,12 +482,22 @@ struct has_size_type : std::false_type {};
 template <typename T>
 struct has_size_type<T, std::void_t<typename T::size_type>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_size_type_v = has_size_type<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_difference_type : std::false_type {};
 
 template <typename T>
 struct has_difference_type<T, std::void_t<typename T::difference_type>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_difference_type_v = has_difference_type<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -381,12 +506,22 @@ struct has_reference : std::false_type {};
 template <typename T>
 struct has_reference<T, std::void_t<typename T::reference>> : std::true_type {};
 
+template <typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_reference_v = has_reference<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_const_reference : std::false_type {};
 
 template <typename T>
 struct has_const_reference<T, std::void_t<typename T::const_reference>> : std::true_type {};
+
+template <typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_const_reference_v = has_const_reference<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -395,12 +530,22 @@ struct has_pointer : std::false_type {};
 template <typename T>
 struct has_pointer<T, std::void_t<typename T::pointer>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_pointer_v = has_pointer<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_const_pointer : std::false_type {};
 
 template <typename T>
 struct has_const_pointer<T, std::void_t<typename T::const_pointer>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_const_pointer_v = has_const_pointer<T>::value;
+
+
 
 
 template <typename T, typename = void>
@@ -409,6 +554,11 @@ struct has_const_iterator : std::false_type {};
 template <typename T>
 struct has_const_iterator<T, std::void_t<typename T::const_iterator>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_const_iterator_v = has_const_iterator<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_reverse_iterator : std::false_type {};
@@ -416,12 +566,22 @@ struct has_reverse_iterator : std::false_type {};
 template <typename T>
 struct has_reverse_iterator<T, std::void_t<typename T::reverse_iterator>> : std::true_type {};
 
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_reverse_iterator_v = has_reverse_iterator<T>::value;
+
+
+
 
 template <typename T, typename = void>
 struct has_const_reverse_iterator : std::false_type {};
 
 template <typename T>
 struct has_const_reverse_iterator<T, std::void_t<typename T::const_reverse_iterator>> : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool has_const_reverse_iterator_v = has_const_reverse_iterator<T>::value;
+
+
 
 
 template<typename T>
@@ -435,6 +595,11 @@ struct is_serializable
 		(FE::is_string_class<T>::value == true)
 		);
 };
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_serializable_v = is_serializable<T>::value;
+
+
 
 
 template<class To, class From>

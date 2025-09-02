@@ -21,5 +21,15 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+component_base::component_base() noexcept
+	:	m_identifier{}
+{
+}
+
+component_base::~component_base() noexcept
+{
+}
+
 
 END_NAMESPACE
+

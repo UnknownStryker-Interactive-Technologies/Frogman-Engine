@@ -9,7 +9,6 @@
 // std
 #include <string>
 
-
 #include <glm/vec3.hpp>
 
 
@@ -54,18 +53,6 @@ public:
 		return this->m_child_value;
 	}
 };
-
-TEST(reflection, generic_base)
-{
-	child_of_generic_base l_generic/*_base()*/;
-	//std::cout << l_object.get_text_method_meta.get_signature() << std::endl;
-	::FE::framework::framework_base::get_framework().get_method_reflection() \
-		.register_task< ::FE::c_style_task<void(void*)> > 
-		("child_of_generic_base TEST", &::FE::framework::reflection::construct_object<child_of_generic_base>);
-	//
-	std::cout << l_generic.get_value_method_meta.get_signature();
-}
-
 
 struct plain_old_data
 {
@@ -129,6 +116,7 @@ public:
 	}
 };
 
+
 TEST(reflection, POD_serialization)
 {
 	plain_old_data l_pod;
@@ -136,10 +124,11 @@ TEST(reflection, POD_serialization)
 	l_pod._b = 2.0f;
 	l_pod._c = 3;
 
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_pod);
+	std::pmr::string serialized_pod;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized_pod, l_pod);
 
 	plain_old_data l_new_pod;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_pod.bin), l_new_pod);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized_pod, l_new_pod);
 
 	EXPECT_EQ(l_pod._a, l_new_pod._a);
 	EXPECT_EQ(l_pod._b, l_new_pod._b);
@@ -151,10 +140,11 @@ TEST(reflection, object_with_string_serialization)
 	object_with_string l_str;
 	l_str._a = "Hello World";
 
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_str);
+	std::pmr::string serialized;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_str);
 
 	object_with_string l_new_str;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_str);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_str);
 
 	EXPECT_STREQ(l_str._a.data(), l_new_str._a.data());
 }
@@ -165,10 +155,11 @@ TEST(reflection, object_with_vector_serialization)
 	l_strs._a.push_back("Hello World");
 	l_strs._a.push_back("Bye World");
 
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_strs);
+	std::pmr::string serialized;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_strs);
 
 	object_with_vector l_new_strs;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(std::filesystem::current_path(), FE_TEXT(serialized_strings.bin), l_new_strs);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_strs);
 
 	EXPECT_STREQ(l_strs._a[0].data(), l_new_strs._a[0].data());
 	EXPECT_STREQ(l_strs._a[1].data(), l_new_strs._a[1].data());
@@ -199,6 +190,7 @@ TEST(reflection, property)
 	l_property->assign("Jesus Loves You!");
 	EXPECT_STREQ(l_property->c_str(), "Jesus Loves You!");
 }
+
 
 enum struct Color
 {

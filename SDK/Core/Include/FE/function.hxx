@@ -57,7 +57,16 @@ The arguments class template in the _FE namespace is designed to hold up to ten 
 providing a way to manage and access a collection of types and their corresponding values
 with the last type being customizable through the Tenth template parameter.
 */
-template<typename First = void, typename Second = void, typename Third = void, typename Fourth = void, typename Fifth = void, typename Sixth = void, typename Seventh = void, typename Eighth = void, typename Ninth = void, typename Tenth = void>
+template<   typename First = void, 
+            typename Second = void, 
+            typename Third = void, 
+            typename Fourth = void, 
+            typename Fifth = void, 
+            typename Sixth = void, 
+            typename Seventh = void, 
+            typename Eighth = void, 
+            typename Ninth = void, 
+            typename Tenth = void>
 class arguments;
 
 template<>
@@ -71,9 +80,9 @@ template<typename First>
 class arguments<First, void, void, void, void, void, void, void, void, void> : public argument_base
 {
 public:
-    using first_type = First;
+    using first_type = std::conditional_t< std::is_reference_v<First>, FE::ref<FE::remove_const_reference_t<First>>, std::remove_const_t<First> >;
 
-    First _first;
+    first_type _first;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
 
     arguments() noexcept 
@@ -89,7 +98,7 @@ class arguments<First, Second, void, void, void, void, void, void, void, void> :
 public:
     using base_type = arguments<First, void, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
-    using second_type = Second;
+    using second_type = std::conditional_t< std::is_reference_v<Second>, FE::ref<FE::remove_const_reference_t<Second>>, std::remove_const_t<Second> >;
 
     second_type _second;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
@@ -108,7 +117,7 @@ public:
     using base_type = arguments<First, Second, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::Second;
-    using third_type = Third;
+    using third_type = std::conditional_t< std::is_reference_v<Third>, FE::ref<FE::remove_const_reference_t<Third>>, std::remove_const_t<Third> >;
 
     third_type _third;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
@@ -128,7 +137,7 @@ public:
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
     using third_type = typename base_type::third_type;
-    using fourth_type = Fourth;
+    using fourth_type = std::conditional_t< std::is_reference_v<Fourth>, FE::ref<FE::remove_const_reference_t<Fourth>>, std::remove_const_t<Fourth> >;
 
     fourth_type _fourth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
@@ -149,7 +158,7 @@ public:
     using second_type = typename base_type::second_type;
     using third_type = typename base_type::third_type;
     using fourth_type = typename base_type::fourth_type;
-    using fifth_type = Fifth;
+    using fifth_type = std::conditional_t< std::is_reference_v<Fifth>, FE::ref<FE::remove_const_reference_t<Fifth>>, std::remove_const_t<Fifth> >;
 
     fifth_type _fifth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
@@ -172,7 +181,7 @@ public:
     using third_type = typename base_type::third_type;
     using fourth_type = typename base_type::fourth_type;
     using fifth_type = typename base_type::fifth_type;
-    using sixth_type = Sixth;
+    using sixth_type = std::conditional_t< std::is_reference_v<Sixth>, FE::ref<FE::remove_const_reference_t<Sixth>>, std::remove_const_t<Sixth> >;
 
     sixth_type _sixth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
@@ -196,7 +205,7 @@ public:
     using fourth_type = typename base_type::fourth_type;
     using fifth_type = typename base_type::fifth_type;
     using sixth_type = typename base_type::sixth_type;
-    using seventh_type = Seventh;
+    using seventh_type = std::conditional_t< std::is_reference_v<Seventh>, FE::ref<FE::remove_const_reference_t<Seventh>>, std::remove_const_t<Seventh> >;
 
     seventh_type _seventh;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
@@ -222,7 +231,7 @@ public:
     using fifth_type = typename base_type::fifth_type;
     using sixth_type = typename base_type::sixth_type;
     using seventh_type = typename base_type::seventh_type;
-    using eighth_type = Eighth;
+    using eighth_type = std::conditional_t< std::is_reference_v<Eighth>, FE::ref<FE::remove_const_reference_t<Eighth>>, std::remove_const_t<Eighth> >;
 
     eighth_type _eighth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
@@ -248,7 +257,7 @@ public:
     using sixth_type = typename base_type::sixth_type;
     using seventh_type = typename base_type::seventh_type;
     using eighth_type = typename base_type::eighth_type;
-    using ninth_type = Ninth;
+    using ninth_type = std::conditional_t< std::is_reference_v<Ninth>, FE::ref<FE::remove_const_reference_t<Ninth>>, std::remove_const_t<Ninth> >;
 
     ninth_type _ninth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
@@ -276,7 +285,7 @@ public:
     using seventh_type = typename base_type::seventh_type;
     using eighth_type = typename base_type::eighth_type;
     using ninth_type = typename base_type::ninth_type;
-    using tenth_type = Tenth;
+    using tenth_type = std::conditional_t< std::is_reference_v<Tenth>, FE::ref<FE::remove_const_reference_t<Tenth>>, std::remove_const_t<Tenth> >;
 
     tenth_type _tenth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;
@@ -321,7 +330,7 @@ class function<R(Arguments...)> final
 public:
     using function_type = decltype(m_function_pointer);
     using return_type = R;
-    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+    using arguments_type = FE::arguments<Arguments...>;
 
     _FE_CONSTEXPR20_ function() noexcept = default;
     ~function() noexcept = default;
@@ -414,7 +423,7 @@ class method<C, R(Arguments...) const> final
 public:
     using method_type = decltype(m_method_pointer);
     using return_type = R;
-    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+    using arguments_type = FE::arguments<Arguments...>;
     using class_type = C;
 
     _FE_CONSTEXPR20_ method() noexcept = default;
@@ -501,7 +510,7 @@ class method<C, R(Arguments...)> final
 public:
     using method_type = decltype(m_method_pointer);
     using return_type = R;
-    using arguments_type = FE::arguments<std::remove_reference_t<Arguments>...>;
+    using arguments_type = FE::arguments<Arguments...>;
     using class_type = C;
 
     _FE_CONSTEXPR20_ method() noexcept = default;
@@ -628,7 +637,7 @@ public:
     {
         FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_instance));
         C* l_object = instance_p.get<C*>();
-        arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
+        arguments_buffer_type* const l_arguments = FE::polymorphic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
         {
             FE_ASSERT(l_arguments != nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
@@ -817,7 +826,7 @@ public:
 
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        arguments_buffer_type* const l_arguments = dynamic_cast<arguments_buffer_type* const>(arguments_p);
+        arguments_buffer_type* const l_arguments = FE::polymorphic_cast<arguments_buffer_type* const>(arguments_p);
         if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
         {
             FE_NEGATIVE_ASSERT(l_arguments == nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");

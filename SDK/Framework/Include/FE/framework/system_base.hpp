@@ -17,6 +17,8 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
+#include <FE/framework/smart_ptr.hxx>
+
 #include <string>
 #include <vector>
 
@@ -26,19 +28,27 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class component_base;
+class system_base;
+
+
+using system = FE::smart_ptr<FE::system_base, FE::RefType::_Owner>;
+
+template <class System>
+using system_view = FE::smart_ptr<System, FE::RefType::_Observer>;
 
 
 class system_base
 {
+private:
 	std::pmr::vector<std::pmr::string> m_target_component_types;
 
 public:
-	system_base() noexcept = default;
-	virtual ~system_base() noexcept = default;
+	system_base() noexcept;
+	virtual ~system_base() noexcept;
 
-	virtual void operator()(component_base* const component_p) = 0;
+	virtual void operator()(class component_base* const component_p) = 0;
 };
+
 
 END_NAMESPACE
 #endif

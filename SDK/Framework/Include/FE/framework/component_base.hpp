@@ -17,21 +17,75 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
+#include <FE/framework/smart_ptr.hxx>
+
+#include <forward_list>
+
 
 
 
 BEGIN_NAMESPACE(FE)
 
 
-class ECS;
+class component_base;
+
+
+using component = FE::smart_ptr<FE::component_base, FE::RefType::_Owner>;
+
+
+class components
+{
+public:
+	_FE_MAYBE_UNUSED_ static constexpr FE::size max_components = 512;
+
+private:
+	component m_components[max_components];
+	var::size m_current_size = 0;
+
+public:
+	FE::size add_component(component&& comp_p) noexcept
+	{
+		FE_ASSERT(m_current_size < max_components);
+
+		m_components[m_current_size] = std::move(comp_p);
+		return m_current_size++;
+	}
+
+	void remove_component(FE::size index_p) noexcept
+	{
+		FE_ASSERT(index_p < m_current_size);
+
+		m_components[index_p].reset();
+		last().swap(m_components[index_p]);
+	}
+
+	_FE_FORCE_INLINE_ component& last() { return m_components[m_current_size - 1]; }
+
+	_FE_FORCE_INLINE_ var::size get_size() { return m_current_size; }
+};
+
+
+namespace internal::ECS
+{
+	struct component_identifier
+	{
+		std::pmr::forward_list<components>::iterator _group;
+		var::size _index;
+	};
+}
+
 
 class component_base
 {
+	friend class archetype_base;
 	friend class ECS;
 
+private:
+	internal::ECS::component_identifier m_identifier;
+
 public:
-	component_base() noexcept = default;
-	virtual ~component_base() noexcept = default;
+	component_base() noexcept;
+	virtual ~component_base() noexcept;
 };
 
 

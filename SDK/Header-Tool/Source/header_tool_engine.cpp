@@ -42,7 +42,6 @@ header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noe
 FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
 	__load_reflection_data();
-	m_enum_metadata = get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
 	m_code_style_guide = file_buffer_t(get_memory_resource());
 	m_reflection_metadata_set /*= reflection_metadata_set_t(get_memory_resource())*/;

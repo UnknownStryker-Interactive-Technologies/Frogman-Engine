@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/framework.hpp>
+
 #include <FE/framework/reflection/private/load_reflection_data.h>
 
 #include <FE/algorithm/string.hxx>
@@ -105,11 +106,17 @@ framework_base* framework_base::s_framework = nullptr;
 RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 
 
+
+
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	: m_program_options(argc_p, argv_p), 
-	  m_current_system_locale(std::setlocale(LC_ALL, "")), 
-	  m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
-	  m_method_reflection(81920), m_property_reflection(81920)
+	:	m_program_options(argc_p, argv_p), 
+		m_current_system_locale(std::setlocale(LC_ALL, "")), 
+		m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
+		m_method_reflection(81920), 
+		m_property_reflection(81920),
+		m_enum_reflection(81920),
+		m_game_memory(),
+		m_ecs()
 {
 	std::locale::global(m_current_system_locale);
 }
@@ -118,6 +125,8 @@ framework_base::~framework_base() noexcept
 {
 	m_memory.reset();
 }
+
+
 
 
 FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
@@ -135,22 +144,26 @@ FE::int32 framework_base::shutdown()
 	return 0;
 }
 
+
+
+
 void framework_base::__load_reflection_data() noexcept
 {
 	load_reflection_data();
 }
-
 
 void framework_base::request_restart() noexcept
 {
 	s_restart_or_not = RestartOrNot::_HasToRestart;
 }
 
+
+
+
 framework_base& framework_base::get_framework() noexcept
 {
 	return *s_framework;
 }
-
 
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
@@ -171,6 +184,18 @@ reflection::enum_registry& framework_base::get_enum_reflection() noexcept
 {
 	return m_enum_reflection;
 }
+
+FE::memory_resource* framework_base::get_game_memory() noexcept
+{
+	return m_game_memory.get();
+}
+
+FE::ECS& framework_base::get_ecs() noexcept
+{
+	return *m_ecs;
+}
+
+
 
 
 _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal_p)
@@ -197,6 +222,9 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal
 	//FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::framework_base::s_framework->shutdown(); FE::framework::framework_base::s_framework->__shutdown_main());
 	std::exit(signal_p);
 }
+
+
+
 
 std::function<framework_base* (FE::int32, FE::ASCII**)>& framework_base::allocate_framework(std::function<framework_base* (FE::int32, FE::ASCII**)> script_p) noexcept
 {
@@ -262,3 +290,11 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 	return l_exit_code;
 }
 
+
+
+
+extern "C"
+{
+	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
+}

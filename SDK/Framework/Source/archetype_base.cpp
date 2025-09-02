@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/archetype_base.hpp>
-#include <FE/framework/engine.hpp>
+#include <FE/framework/component_base.hpp>
 
 
 
@@ -29,10 +29,10 @@ archetype_base::archetype_base() noexcept
 
 archetype_base::~archetype_base() noexcept
 {
-    //for (auto [key, value] : m_component_view_table)
-    //{
-    //   // destruct all
-    //}
+    for (auto& pair : m_component_view_table)
+    {
+		pair.second->m_identifier._group->remove_component(pair.second->m_identifier._index);
+    }
 }
 
 

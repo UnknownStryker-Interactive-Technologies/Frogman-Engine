@@ -27,8 +27,11 @@ limitations under the License.
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
     #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (FE::int32, FE::ASCII**)> CustomEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::ASCII** argv_p) { return new framework_class_name(argc_p, argv_p); } );
 #endif
+
+
 #include <FE/pool/memory_resource.hpp>
 
+#include <FE/framework/ECS.hpp>
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/thread_id.hpp>
 
@@ -80,10 +83,15 @@ class framework_base
 protected:
 	program_options m_program_options;
 	std::locale m_current_system_locale;
-	std::unique_ptr<class FE::memory_resource[]> m_memory;
+
+	std::unique_ptr<class FE::memory_resource[]> m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
+
 	reflection::method_registry m_method_reflection;
 	reflection::property_registry m_property_reflection;
 	reflection::enum_registry m_enum_reflection;
+
+	std::unique_ptr<class FE::memory_resource> m_game_memory;
+	std::unique_ptr<class FE::ECS> m_ecs;
 
 public:
 	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
@@ -96,6 +104,9 @@ public:
 	reflection::method_registry& get_method_reflection() noexcept;
 	reflection::property_registry& get_property_reflection() noexcept;
 	reflection::enum_registry& get_enum_reflection() noexcept;
+
+	FE::memory_resource* get_game_memory() noexcept;
+	FE::ECS& get_ecs() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);

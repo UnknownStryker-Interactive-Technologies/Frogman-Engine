@@ -156,7 +156,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 {
 	std::pmr::wstring l_generated_code(get_memory_resource());
 	l_generated_code.reserve(10240);
-	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework/reflection.hpp> \n#include <FE/framework/framework.hpp> \n";
+	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework/framework.hpp> \n";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
 		l_generated_code += L"#include <";
@@ -164,21 +164,30 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		l_generated_code += L">\n";
 	}
 	l_generated_code += L"\nvoid load_reflection_data()\n{\n";
-
-	constexpr FE::wchar* l_class_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(void*), typename ::FE::function<void(void*)>::arguments_type> >(\"";
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::ECS::instanciate_entity<player>);
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::ECS::destruct_entity<player>);
+	constexpr FE::wchar* l_class_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, ";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
 		for (const std::pmr::wstring& identifier : header_file._class_and_struct_identifiers)
 		{
 			l_generated_code += l_class_reflexpr_frame;
-			std::pmr::wstring l_mapped_constructor_string(L"FHT Gen ", get_memory_resource());
-			l_mapped_constructor_string += identifier;
-			l_mapped_constructor_string += L"()";
-			l_generated_code += l_mapped_constructor_string;
-
-			l_generated_code += L"\", &::FE::framework::reflection::construct_object<";
+			l_generated_code += L"FE::entity<";
 			l_generated_code += identifier;
-			l_generated_code += L">); \n";
+			l_generated_code += L">(FE::ASCII* const)> >(\"";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &::FE::ECS::instanciate_entity<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+
+			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += L"void(const FE::entity<";
+			l_generated_code += identifier;
+			l_generated_code += L">&)> >(\"~";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &::FE::ECS::destruct_entity<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
 		}
 
 		constexpr FE::wchar* l_enum_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";

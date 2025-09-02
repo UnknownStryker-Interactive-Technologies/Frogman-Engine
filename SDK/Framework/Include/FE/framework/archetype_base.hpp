@@ -17,11 +17,12 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
-
-#include <FE/framework/smart_ptr.hxx>
 #include <FE/framework/component_base.hpp>
+#include <FE/framework/smart_ptr.hxx>
+#include <FE/framework/type_info.hpp>
 
 #include <robin_hood.h>
+
 #include <string>
 
 
@@ -30,14 +31,24 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template<class T>
-using component_view = FE::smart_ptr<T, FE::RefType::_Observer>;
+class archetype_base;
+
+
+template <class Archetype>
+using entity = FE::smart_ptr<Archetype, FE::RefType::_Observer>; // pointers can be though of as integers or handles
+using archetype = FE::smart_ptr<FE::archetype_base, FE::RefType::_Owner>;
+
+template<class Component>
+using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
 
 
 class archetype_base
 {
 	friend class ECS;
-	robin_hood::unordered_map<std::size_t, component_view<component_base>> m_component_view_table;
+	using component_view_table = robin_hood::unordered_map<std::size_t, component_view<component_base>>;
+
+private:
+	component_view_table m_component_view_table;
 	std::pmr::string m_name;
 
 public:
@@ -45,6 +56,18 @@ public:
 	virtual ~archetype_base() noexcept;
 	
 	const std::pmr::string& get_name() const noexcept { return m_name; }
+
+	template <class Component>
+	component_view<Component> get_component() noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+		typename component_view_table::iterator l_probe_result = m_component_view_table.find(FE::framework::reflection::type_id<Component>().hash_code());
+		if (l_probe_result != m_component_view_table.end())
+		{
+			return FE::down_cast_observer<Component>(l_probe_result->second);
+		}
+		return component_view<Component>();
+	}
 };
 
 
