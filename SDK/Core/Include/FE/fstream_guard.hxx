@@ -32,9 +32,9 @@ private:
 public:
 	typedef FStream fstream_type;
 
-	_FE_FORCE_INLINE_ basic_fstream_guard(FStream& file_io_p) noexcept : m_fstream(file_io_p) {}
+	basic_fstream_guard(FStream& file_io_p) noexcept : m_fstream(file_io_p) {}
 
-	_FE_FORCE_INLINE_ ~basic_fstream_guard() noexcept
+	~basic_fstream_guard() noexcept
 	{
 		if (m_fstream.is_open() == true)
 		{

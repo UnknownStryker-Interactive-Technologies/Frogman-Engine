@@ -20,7 +20,7 @@ limitations under the License.
 //std
 #include <cstring>
 #include <initializer_list>
-constexpr inline FE::uint32 string_formatter_buffer_size = 4096;
+constexpr inline FE::uint32 string_formatter_buffer_size = 8192;
 
 
 

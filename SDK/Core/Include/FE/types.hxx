@@ -141,14 +141,14 @@ private:
 	bool m_is_initialized;
 
 public:
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const() noexcept : m_data(), m_is_initialized(false) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ~lazy_const() noexcept {};
+	_FE_CONSTEXPR20_ lazy_const() noexcept : m_data(), m_is_initialized(false) {}
+	_FE_CONSTEXPR20_ lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
+	_FE_CONSTEXPR20_ ~lazy_const() noexcept {};
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
+	_FE_CONSTEXPR20_ lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
+	_FE_CONSTEXPR20_ lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const& operator=(value_type&& data_p) noexcept
+	_FE_CONSTEXPR20_ lazy_const& operator=(value_type&& data_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{
@@ -162,7 +162,7 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const& operator=(const lazy_const& other_p) noexcept
+	_FE_CONSTEXPR20_ lazy_const& operator=(const lazy_const& other_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{
@@ -176,7 +176,7 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ lazy_const& operator=(lazy_const&& rvalue_p) noexcept
+	_FE_CONSTEXPR20_ lazy_const& operator=(lazy_const&& rvalue_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{
@@ -200,12 +200,12 @@ class void_ptr
 	std::type_index m_info;
 
 public:
-	_FE_FORCE_INLINE_ void_ptr() noexcept : m_ptr(), m_info(typeid(void*)) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ~void_ptr() noexcept {}
+	void_ptr() noexcept : m_ptr(), m_info(typeid(void*)) {}
+	_FE_CONSTEXPR20_ ~void_ptr() noexcept {}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void_ptr(const void_ptr& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void_ptr(void_ptr&& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+	_FE_CONSTEXPR20_ void_ptr(const void_ptr& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+	_FE_CONSTEXPR20_ void_ptr(void_ptr&& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
 
 
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void_ptr& operator=(const void_ptr& other_p) noexcept
@@ -293,10 +293,10 @@ class ref
 	T* m_ptr = nullptr;
 
 public:
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref() noexcept : m_ptr(nullptr) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ~ref() noexcept {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref(const ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref(ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
+	_FE_CONSTEXPR20_ ref() noexcept : m_ptr(nullptr) {}
+	_FE_CONSTEXPR20_ ~ref() noexcept {}
+	_FE_CONSTEXPR20_ ref(const ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
+	_FE_CONSTEXPR20_ ref(ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref& operator=(const ref& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
@@ -369,10 +369,10 @@ class const_ref
 	const T* m_ptr = nullptr;
 
 public:
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref() noexcept : m_ptr(nullptr) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ~const_ref() noexcept {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref(const const_ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref(const_ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
+	_FE_CONSTEXPR20_ const_ref() noexcept : m_ptr(nullptr) {}
+	_FE_CONSTEXPR20_ ~const_ref() noexcept {}
+	_FE_CONSTEXPR20_ const_ref(const const_ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
+	_FE_CONSTEXPR20_ const_ref(const_ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref& operator=(const const_ref& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
@@ -384,7 +384,7 @@ public:
 		other_p.m_ptr = nullptr;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref(const T& value_p) noexcept : m_ptr(&value_p) {}
+	_FE_CONSTEXPR20_ const_ref(const T& value_p) noexcept : m_ptr(&value_p) {}
 	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref& operator=(const T& value_p) noexcept
 	{
 		m_ptr = &value_p;

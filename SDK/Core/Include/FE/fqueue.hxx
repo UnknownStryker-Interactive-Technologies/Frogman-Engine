@@ -307,12 +307,12 @@ public:
 		std::swap(*this, in_out_other_p);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ _FE_CONSTEXPR20_ boolean operator==(fqueue& other_p) const noexcept
 	{
 		return FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ _FE_CONSTEXPR20_ boolean operator!=(fqueue& other_p) const noexcept
 	{
 		return !FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
 	}

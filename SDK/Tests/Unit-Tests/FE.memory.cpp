@@ -202,13 +202,13 @@ protected:
 TEST_F(SmartPtrTest, Owner_DefaultConstructor)
 {
 	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner;
-	EXPECT_TRUE(owner.is_null());
+	EXPECT_TRUE(owner == nullptr);
 }
 
 TEST_F(SmartPtrTest, Owner_Creation)
 {
 	auto owner = FE::make_owner<TestObject>(m_resource, 42);
-	ASSERT_FALSE(owner.is_null());
+	ASSERT_FALSE(owner == nullptr);
 	EXPECT_EQ(owner->value, 42);
 }
 
@@ -217,8 +217,8 @@ TEST_F(SmartPtrTest, Owner_MoveConstructor)
 	auto owner1 = FE::make_owner<TestObject>(m_resource, 42);
 	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2 = std::move(owner1);
 
-	EXPECT_TRUE(owner1.is_null());
-	ASSERT_FALSE(owner2.is_null());
+	EXPECT_TRUE(owner1 == nullptr);
+	ASSERT_FALSE(owner2 == nullptr);
 	EXPECT_EQ(owner2->value, 42);
 }
 
@@ -228,17 +228,17 @@ TEST_F(SmartPtrTest, Owner_MoveAssignment)
 	FE::smart_ptr<TestObject, FE::RefType::_Owner> owner2;
 	owner2 = std::move(owner1);
 
-	EXPECT_TRUE(owner1.is_null());
-	ASSERT_FALSE(owner2.is_null());
+	EXPECT_TRUE(owner1 == nullptr);
+	ASSERT_FALSE(owner2 == nullptr);
 	EXPECT_EQ(owner2->value, 42);
 }
 
 TEST_F(SmartPtrTest, Owner_Reset)
 {
 	auto owner = FE::make_owner<TestObject>(m_resource, 42);
-	ASSERT_FALSE(owner.is_null());
+	ASSERT_FALSE(owner == nullptr);
 	owner.reset();
-	EXPECT_TRUE(owner.is_null());
+	EXPECT_TRUE(owner == nullptr);
 }
 
 TEST_F(SmartPtrTest, Owner_Swap)
@@ -248,9 +248,9 @@ TEST_F(SmartPtrTest, Owner_Swap)
 
 	owner1.swap(owner2);
 
-	ASSERT_FALSE(owner1.is_null());
+	ASSERT_FALSE(owner1 == nullptr);
 	EXPECT_EQ(owner1->value, 20);
-	ASSERT_FALSE(owner2.is_null());
+	ASSERT_FALSE(owner2 == nullptr);
 	EXPECT_EQ(owner2->value, 10);
 }
 
@@ -351,8 +351,8 @@ TEST_F(SmartPtrTest, Polymorphism_OwnerMove)
 	auto derived_owner = FE::make_owner<Derived>(m_resource);
 	FE::smart_ptr<Base, FE::RefType::_Owner> base_owner = std::move(derived_owner);
 
-	EXPECT_TRUE(derived_owner.is_null());
-	ASSERT_FALSE(base_owner.is_null());
+	EXPECT_TRUE(derived_owner == nullptr);
+	ASSERT_FALSE(base_owner == nullptr);
 	EXPECT_EQ(base_owner->base_value, 10);
 }
 

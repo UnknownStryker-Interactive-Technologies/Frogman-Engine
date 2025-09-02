@@ -191,7 +191,7 @@ public:
 			return l_view;
 		}
 
-		if (l_alloc_result.is_null() == true) _FE_LIKELY_
+		if (l_alloc_result == nullptr) _FE_LIKELY_
 		{
 			// All components lists are full. Create a new one.
 			l_probe_result->second._first.emplace_front();

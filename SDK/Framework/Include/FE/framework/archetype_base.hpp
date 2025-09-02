@@ -17,7 +17,9 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
+
 #include <FE/framework/smart_ptr.hxx>
+#include <FE/framework/component_base.hpp>
 
 #include <robin_hood.h>
 #include <string>
@@ -28,9 +30,6 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class ECS;
-class component_base;
-
 template<class T>
 using component_view = FE::smart_ptr<T, FE::RefType::_Observer>;
 
@@ -38,7 +37,7 @@ using component_view = FE::smart_ptr<T, FE::RefType::_Observer>;
 class archetype_base
 {
 	friend class ECS;
-
+	robin_hood::unordered_map<std::size_t, component_view<component_base>> m_component_view_table;
 	std::pmr::string m_name;
 
 public:

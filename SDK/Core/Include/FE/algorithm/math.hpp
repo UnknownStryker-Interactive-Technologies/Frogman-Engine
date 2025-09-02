@@ -28,29 +28,15 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::math)
 
 
-_FE_CONSTEXPR17_ FE::int64 approx_log2(FE::float64 value_p) noexcept
-{
-	var::int64 l_exponent = 0;
-	var::float64 l_value = value_p;
+/* The MSVC linker spits:
+1>LINK : C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Debug\FE_UNIT_TEST.exe not found or not built by the last incremental link; performing full link
+1>   Creating library C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX/Debug/FE_UNIT_TEST.lib and object C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/Solution_X64_AVX/Debug/FE_UNIT_TEST.exp
+1>FE.algorithm.utility.obj : error LNK2019: unresolved external symbol "__int64 const __cdecl FE::algorithm::math::approx_log2(double)" (?approx_log2@math@algorithm@FE@@YA?B_JN@Z) referenced in function "class std::_Array_iterator<int,10> __cdecl FE::algorithm::utility::binary_search<class std::_Array_iterator<int,10> >(class std::_Array_iterator<int,10>,class std::_Array_iterator<int,10>,int const &)" (??$binary_search@V?$_Array_iterator@H$09@std@@@utility@algorithm@FE@@YA?AV?$_Array_iterator@H$09@std@@V34@0AEBH@Z)
+1>C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\Test-App\Debug\FE_UNIT_TEST.exe : fatal error LNK1120: 1 unresolved externals
 
-	if (1.0 < value_p)
-	{
-		while (1.0 < l_value)
-		{
-			l_value /= 2.0;
-			++l_exponent;
-		}
-		return l_exponent;
-	}
-
-	while (1.0 > l_value)
-	{
-		l_value *= 2.0;
-		--l_exponent;
-	}
-	return l_exponent;
-}
-
+when the function body is defined within a .cpp file.
+*/
+FE::int64 approx_log2(FE::float64 value_p) noexcept;
 
 template<typename T>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ T abs(const T& x_p) noexcept
@@ -115,16 +101,7 @@ _FE_FORCE_INLINE_ FE::float64 calculate_2D_direction(FE::float64 vertical_p, FE:
 
 constexpr inline ::FE::uint64 smallest_prime_number = 2;
 
-_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ boolean is_prime(uint64 number_p) noexcept
-{
-	var::uint64 l_count = 2;
-	while ((l_count < number_p) && (number_p % l_count) != 0)
-	{
-		++l_count;
-	}
-
-	return l_count == number_p;
-}
+boolean is_prime(uint64 number_p) noexcept;
 
 uint64 to_upper_prime(uint64 number_p) noexcept;
 

@@ -216,7 +216,7 @@ FormatSpecifier __identify_format_specifier(const char* const string_format_p) n
     }
 }
 
-_FE_FORCE_INLINE_ FE::int64 __parse_index(const char* string_p) noexcept
+FE::int64 __parse_index(const char* string_p) noexcept
 {
     while (*string_p != FE::null)
     {
@@ -229,7 +229,7 @@ _FE_FORCE_INLINE_ FE::int64 __parse_index(const char* string_p) noexcept
 	return -1;
 }
 
-_FE_FORCE_INLINE_ const char* __find_bracket_token(const char* const string_format_p) noexcept
+const char* __find_bracket_token(const char* const string_format_p) noexcept
 {
 	constexpr const char* l_bracket_token = "${%";
 	const char* l_token_validator = l_bracket_token;
@@ -254,7 +254,7 @@ _FE_FORCE_INLINE_ const char* __find_bracket_token(const char* const string_form
     return l_iterator;
 }
 
-_FE_FORCE_INLINE_ const char* __find_end_of_token(const char* const string_format_p) noexcept
+const char* __find_end_of_token(const char* const string_format_p) noexcept
 {
     const char* l_iterator = string_format_p;
     while (*l_iterator != FE::null)
@@ -275,7 +275,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 	assert(string_format_p != nullptr);
     assert(buffer_size_p > 0);
 	assert(arguments_pointer_p != nullptr);
-    assert(arguments_count_p > 0);
+    assert(arguments_count_p >= 0);
     var::int64 l_buffer_size = static_cast<var::int64>(buffer_size_p);
 
     while (*string_format_p != FE::null)
@@ -424,7 +424,7 @@ const char* buffered_string_formatter(std::initializer_list<const void*> argumen
 
     if (arguments_p.begin() != nullptr)
     {
-        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + 1, arguments_p.size());
+        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + 1, arguments_p.size()-1);
     }
     return tl_s_buffer;
 }

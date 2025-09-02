@@ -1,4 +1,4 @@
-﻿
+
 //                 ______  _____                 ______                _________
 //  ______________ ___  /_ ___(_)_______         ___  /_ ______ ______ ______  /
 //  __  ___/_  __ \__  __ \__  / __  __ \        __  __ \_  __ \_  __ \_  __  /
@@ -329,29 +329,6 @@ inline T reinterpret_cast_no_cast_align_warning(void const* ptr) noexcept {
     return reinterpret_cast<T>(ptr);
 }
 
-// make sure this is not inlined as it is slow and dramatically enlarges code, thus making other
-// inlinings more difficult. Throws are also generally the slow path.
-template <typename E, typename... Args>
-[[noreturn]] ROBIN_HOOD(NOINLINE)
-#if ROBIN_HOOD(HAS_EXCEPTIONS)
-    void doThrow(Args&&... args) {
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-    throw E(std::forward<Args>(args)...);
-}
-#else
-    void doThrow(Args&&... ROBIN_HOOD_UNUSED(args) /*unused*/) {
-    abort();
-}
-#endif
-
-template <typename E, typename T, typename... Args>
-T* assertNotNull(T* t, Args&&... args) {
-    if (ROBIN_HOOD_UNLIKELY(nullptr == t)) {
-        doThrow<E>(std::forward<Args>(args)...);
-    }
-    return t;
-}
-
 template <typename T>
 inline T unaligned_load(void const* ptr) noexcept {
     // using memcpy so we don't get into unaligned load problems.
@@ -510,8 +487,11 @@ private:
         // alloc new memory: [prev |T, T, ... T]
         size_t const bytes = ALIGNMENT + ALIGNED_SIZE * numElementsToAlloc;
         ROBIN_HOOD_LOG("std::malloc " << bytes << " = " << ALIGNMENT << " + " << ALIGNED_SIZE
-                                      << " * " << numElementsToAlloc)
-        add(assertNotNull<std::bad_alloc>(std::malloc(bytes)), bytes);
+            << " * " << numElementsToAlloc)
+
+        void* mallocResult = std::malloc(bytes);
+		assert( (mallocResult != nullptr) && "malloc failed" );
+        add( mallocResult, bytes );
         return mHead;
     }
 
@@ -1455,9 +1435,9 @@ private:
     void insert_move(Node&& keyval) {
         // we don't retry, fail if overflowing
         // don't need to check max num elements
-        if (0 == mMaxNumElementsAllowed && !try_increase_info()) {
-            throwOverflowError();
-        }
+        bool result = try_increase_info();
+        (void)result;
+        assert( !(0 == mMaxNumElementsAllowed && !result) && "robin_hood::map overflow" );
 
         size_t idx{};
         InfoType info{};
@@ -1598,8 +1578,9 @@ public:
             ROBIN_HOOD_LOG("std::malloc " << numBytesTotal << " = calcNumBytesTotal("
                                           << numElementsWithBuffer << ")")
             mHashMultiplier = o.mHashMultiplier;
-            mKeyVals = static_cast<Node*>(
-                detail::assertNotNull<std::bad_alloc>(std::malloc(numBytesTotal)));
+            mKeyVals = (Node*)std::malloc(numBytesTotal);
+            assert( (mKeyVals != nullptr) && "malloc failed" );
+
             // no need for calloc because clonData does memcpy
             mInfo = reinterpret_cast<uint8_t*>(mKeyVals + numElementsWithBuffer);
             mNumElements = o.mNumElements;
@@ -1654,10 +1635,10 @@ public:
             auto const numElementsWithBuffer = calcNumElementsWithBuffer(o.mMask + 1);
             auto const numBytesTotal = calcNumBytesTotal(numElementsWithBuffer);
             ROBIN_HOOD_LOG("std::malloc " << numBytesTotal << " = calcNumBytesTotal("
-                                          << numElementsWithBuffer << ")")
-            mKeyVals = static_cast<Node*>(
-                detail::assertNotNull<std::bad_alloc>(std::malloc(numBytesTotal)));
-
+                << numElementsWithBuffer << ")")
+                mKeyVals = (Node*)std::malloc( numBytesTotal );
+            assert( (mKeyVals != nullptr) && "malloc failed" );
+            
             // no need for calloc here because cloneData performs a memcpy.
             mInfo = reinterpret_cast<uint8_t*>(mKeyVals + numElementsWithBuffer);
             // sentinel is set in cloneData
@@ -1750,7 +1731,8 @@ public:
             break;
 
         case InsertionState::overflow_error:
-            throwOverflowError();
+            assert( (false) && "robin_hood::map overflow" );
+            break;
         }
 
         return mKeyVals[idxAndState.first].getSecond();
@@ -1777,7 +1759,8 @@ public:
             break;
 
         case InsertionState::overflow_error:
-            throwOverflowError();
+            assert( (false) && "robin_hood::map overflow" );
+            break;
         }
 
         return mKeyVals[idxAndState.first].getSecond();
@@ -1817,7 +1800,7 @@ public:
 
         case InsertionState::overflow_error:
             n.destroy(*this);
-            throwOverflowError();
+            assert( (false) && "robin_hood::map overflow" );
             break;
         }
 
@@ -1932,9 +1915,7 @@ public:
     typename std::enable_if<!std::is_void<Q>::value, Q&>::type at(key_type const& key) {
         ROBIN_HOOD_TRACE(this)
         auto kv = mKeyVals + findIdx(key);
-        if (kv == reinterpret_cast_no_cast_align_warning<Node*>(mInfo)) {
-            doThrow<std::out_of_range>("key not found");
-        }
+        assert( (kv != reinterpret_cast_no_cast_align_warning<Node*>(mInfo)) && "key not found" );
         return kv->getSecond();
     }
 
@@ -1945,9 +1926,7 @@ public:
     typename std::enable_if<!std::is_void<Q>::value, Q const&>::type at(key_type const& key) const {
         ROBIN_HOOD_TRACE(this)
         auto kv = mKeyVals + findIdx(key);
-        if (kv == reinterpret_cast_no_cast_align_warning<Node*>(mInfo)) {
-            doThrow<std::out_of_range>("key not found");
-        }
+        assert( (kv != reinterpret_cast_no_cast_align_warning<Node*>(mInfo)) && "key not found" );
         return kv->getSecond();
     }
 
@@ -2094,9 +2073,7 @@ public:
         while (calcMaxNumElementsAllowed(newSize) < mNumElements && newSize != 0) {
             newSize *= 2;
         }
-        if (ROBIN_HOOD_UNLIKELY(newSize == 0)) {
-            throwOverflowError();
-        }
+        assert( (newSize != 0) && "robin_hood::map overflow" );
 
         ROBIN_HOOD_LOG("newSize > mMask + 1: " << newSize << " > " << mMask << " + 1")
 
@@ -2172,9 +2149,7 @@ public:
         auto const total64 = ne * s + infos;
         auto const total = static_cast<size_t>(total64);
 
-        if (ROBIN_HOOD_UNLIKELY(static_cast<uint64_t>(total) != total64)) {
-            throwOverflowError();
-        }
+        assert( (static_cast<uint64_t>(total) == total64) && "robin_hood::map overflow" );
         return total;
 #endif
     }
@@ -2202,9 +2177,7 @@ private:
         while (calcMaxNumElementsAllowed(newSize) < minElementsAllowed && newSize != 0) {
             newSize *= 2;
         }
-        if (ROBIN_HOOD_UNLIKELY(newSize == 0)) {
-            throwOverflowError();
-        }
+        assert( (newSize != 0) && "robin_hood::map overflow" );
 
         ROBIN_HOOD_LOG("newSize > mMask + 1: " << newSize << " > " << mMask << " + 1")
 
@@ -2253,14 +2226,6 @@ private:
         }
     }
 
-    ROBIN_HOOD(NOINLINE) void throwOverflowError() const {
-#if ROBIN_HOOD(HAS_EXCEPTIONS)
-        throw std::overflow_error("robin_hood::map overflow");
-#else
-        abort();
-#endif
-    }
-
     template <typename OtherKey, typename... Args>
     std::pair<iterator, bool> try_emplace_impl(OtherKey&& key, Args&&... args) {
         ROBIN_HOOD_TRACE(this)
@@ -2282,7 +2247,7 @@ private:
             break;
 
         case InsertionState::overflow_error:
-            throwOverflowError();
+            assert( (false) && "robin_hood::map overflow" );
             break;
         }
 
@@ -2312,7 +2277,7 @@ private:
             break;
 
         case InsertionState::overflow_error:
-            throwOverflowError();
+            assert( (false) && "robin_hood::map overflow" );
             break;
         }
 
@@ -2331,8 +2296,9 @@ private:
         auto const numBytesTotal = calcNumBytesTotal(numElementsWithBuffer);
         ROBIN_HOOD_LOG("std::calloc " << numBytesTotal << " = calcNumBytesTotal("
                                       << numElementsWithBuffer << ")")
-        mKeyVals = reinterpret_cast<Node*>(
-            detail::assertNotNull<std::bad_alloc>(std::malloc(numBytesTotal)));
+        mKeyVals = (Node*)std::malloc(numBytesTotal);
+        assert( (mKeyVals != nullptr) && "malloc failed" );
+
         mInfo = reinterpret_cast<uint8_t*>(mKeyVals + numElementsWithBuffer);
         std::memset(mInfo, 0, numBytesTotal - numElementsWithBuffer * sizeof(Node));
 

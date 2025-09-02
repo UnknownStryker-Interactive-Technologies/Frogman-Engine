@@ -326,8 +326,8 @@ public:
     _FE_CONSTEXPR20_ function() noexcept = default;
     ~function() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
+    _FE_CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
+    _FE_CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
@@ -420,8 +420,8 @@ public:
     _FE_CONSTEXPR20_ method() noexcept = default;
     ~method() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+    _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
@@ -507,8 +507,8 @@ public:
     _FE_CONSTEXPR20_ method() noexcept = default;
     ~method() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+    _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
@@ -619,7 +619,7 @@ public:
     cpp_style_task() noexcept : m_method() {}
     virtual ~cpp_style_task() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
+    _FE_CONSTEXPR20_ cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
 
 	_FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_method = task_p; }
 	_FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_method; }
@@ -810,7 +810,7 @@ public:
     c_style_task() noexcept : m_function() {}
     virtual ~c_style_task() noexcept = default;
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ c_style_task(task_type task_p) noexcept : m_function(task_p) {}
+    _FE_CONSTEXPR20_ c_style_task(task_type task_p) noexcept : m_function(task_p) {}
 
     _FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_function = task_p; }
     _FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_function; }

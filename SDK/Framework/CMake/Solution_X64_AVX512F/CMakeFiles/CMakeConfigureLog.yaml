@@ -25,7 +25,7 @@ events:
       The output was:
       0
       MSBuild version 17.14.19+164abd434 for .NET Framework
-      Build started 9/2/2025 2:35:42 AM.
+      Build started 9/2/2025 11:25:07 PM.
       
       Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\3.31.5\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -54,7 +54,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.89
+      Time Elapsed 00:00:00.32
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -73,8 +73,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-c3dqrn"
-      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-c3dqrn"
+      source: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-bda655"
+      binary: "C:/Users/leeho/OneDrive/\ubb38\uc11c/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-bda655"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od /RTC1"
@@ -84,40 +84,40 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-c3dqrn'
+        Change Dir: 'C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-bda655'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_84400.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_efc9a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.14.19+164abd434 for .NET Framework
-        Build started 9/2/2025 2:35:44 AM.
+        Build started 9/2/2025 11:25:08 PM.
         
-        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-c3dqrn\\cmTC_84400.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-bda655\\cmTC_efc9a.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_84400.dir\\Debug\\".
+          Creating directory "cmTC_efc9a.dir\\Debug\\".
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-c3dqrn\\Debug\\".
-          Creating directory "cmTC_84400.dir\\Debug\\cmTC_84400.tlog\\".
+          Creating directory "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-bda655\\Debug\\".
+          Creating directory "cmTC_efc9a.dir\\Debug\\cmTC_efc9a.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_84400.dir\\Debug\\cmTC_84400.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_84400.dir\\Debug\\cmTC_84400.tlog\\unsuccessfulbuild".
+          Creating "cmTC_efc9a.dir\\Debug\\cmTC_efc9a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_efc9a.dir\\Debug\\cmTC_efc9a.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"cmTC_84400.dir\\Debug\\\\" /Fd"cmTC_84400.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"cmTC_efc9a.dir\\Debug\\\\" /Fd"cmTC_efc9a.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35215 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"cmTC_84400.dir\\Debug\\\\" /Fd"cmTC_84400.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /Fo"cmTC_efc9a.dir\\Debug\\\\" /Fd"cmTC_efc9a.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.31\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-c3dqrn\\Debug\\cmTC_84400.exe" /INCREMENTAL /ILK:"cmTC_84400.dir\\Debug\\cmTC_84400.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-c3dqrn/Debug/cmTC_84400.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-c3dqrn/Debug/cmTC_84400.lib" /MACHINE:X64  /machine:x64 cmTC_84400.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_84400.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-c3dqrn\\Debug\\cmTC_84400.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-bda655\\Debug\\cmTC_efc9a.exe" /INCREMENTAL /ILK:"cmTC_efc9a.dir\\Debug\\cmTC_efc9a.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-bda655/Debug/cmTC_efc9a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Framework/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-bda655/Debug/cmTC_efc9a.lib" /MACHINE:X64  /machine:x64 cmTC_efc9a.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_efc9a.vcxproj -> C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-bda655\\Debug\\cmTC_efc9a.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_84400.dir\\Debug\\cmTC_84400.tlog\\unsuccessfulbuild".
-          Touching "cmTC_84400.dir\\Debug\\cmTC_84400.tlog\\cmTC_84400.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-c3dqrn\\cmTC_84400.vcxproj" (default targets).
+          Deleting file "cmTC_efc9a.dir\\Debug\\cmTC_efc9a.tlog\\unsuccessfulbuild".
+          Touching "cmTC_efc9a.dir\\Debug\\cmTC_efc9a.tlog\\cmTC_efc9a.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\OneDrive\\문서\\GitHub\\Frogman-Engine\\SDK\\Framework\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-bda655\\cmTC_efc9a.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.90
+        Time Elapsed 00:00:00.31
         
       exitCode: 0
   -

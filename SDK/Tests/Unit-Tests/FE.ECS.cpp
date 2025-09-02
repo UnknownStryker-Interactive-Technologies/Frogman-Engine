@@ -1,5 +1,5 @@
-//#include <gtest/gtest.h>
-//#include <benchmark/benchmark.h>
+#include <gtest/gtest.h>
+#include <benchmark/benchmark.h>
 //
 //#include <FE/framework/ECS.hpp>
 //#include<FE/framework/archetype_base.hpp>
@@ -42,3 +42,11 @@
 //
 //	ecs.destruct_entity(e);
 //}
+
+#include <robin_hood.h>
+
+TEST(robin_hood, int_key)
+{
+	robin_hood::unordered_map<int, const char *> map;
+	map.emplace(1, "one");
+}

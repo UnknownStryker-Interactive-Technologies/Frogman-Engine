@@ -25,6 +25,40 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::math)
 
 
+FE::int64 approx_log2(FE::float64 value_p) noexcept
+{
+	var::int64 l_exponent = 0;
+	var::float64 l_value = value_p;
+
+	if (1.0 < value_p)
+	{
+		while (1.0 < l_value)
+		{
+			l_value /= 2.0;
+			++l_exponent;
+		}
+		return l_exponent;
+	}
+
+	while (1.0 > l_value)
+	{
+		l_value *= 2.0;
+		--l_exponent;
+	}
+	return l_exponent;
+}
+
+boolean is_prime(uint64 number_p) noexcept
+{
+	var::uint64 l_count = 2;
+	while ((l_count < number_p) && (number_p % l_count) != 0)
+	{
+		++l_count;
+	}
+
+	return l_count == number_p;
+}
+
 uint64 to_upper_prime(uint64 number_p) noexcept
 {
 	constexpr uint64 l_magical_seven = 7;

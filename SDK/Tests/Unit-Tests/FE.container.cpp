@@ -14,11 +14,14 @@
 // taskflow for the concurrent push_back performance tests
 #include <taskflow.hpp>
 
+#include <robin_hood.h>
+
 // std
+#include <queue>
 #include <stack>
 #include <string>
 #include <shared_mutex>
-#include <queue>
+#include <unordered_map>
 #include <vector>
 
 
@@ -491,3 +494,59 @@ static void ppl_concurrent_vector_concurrent_push_back(benchmark::State& state)
 	}
 }
 BENCHMARK(ppl_concurrent_vector_concurrent_push_back)->Iterations(10000);
+
+
+
+
+static void robin_hood_insertion(benchmark::State& state)
+{
+	robin_hood::unordered_map<int, int> l_map;
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(robin_hood_insertion);
+
+static void std_unordered_map_insertion(benchmark::State& state)
+{
+	std::unordered_map<int, int> l_map;
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(std_unordered_map_insertion);
+
+
+
+
+static void robin_hood_lookup(benchmark::State& state)
+{
+	robin_hood::unordered_map<int, int> l_map;
+	l_map.insert({ 42, 3 });
+	for (auto _ : state)
+	{
+		auto l_iterator = l_map.find(42);
+		if (l_iterator != l_map.end())
+		{
+			benchmark::DoNotOptimize(l_iterator->second);
+		}
+	}
+}
+BENCHMARK(robin_hood_lookup);
+
+static void std_unordered_map_lookup(benchmark::State& state)
+{
+	std::unordered_map<int, int> l_map;
+	l_map.insert({ 42, 3 });
+	for (auto _ : state)
+	{
+		auto l_iterator = l_map.find(42);
+		if (l_iterator != l_map.end())
+		{
+			benchmark::DoNotOptimize(l_iterator->second);
+		}
+	}
+}
+BENCHMARK(std_unordered_map_lookup);

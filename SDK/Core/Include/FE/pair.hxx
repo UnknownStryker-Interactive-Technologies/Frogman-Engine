@@ -35,15 +35,15 @@ public:
 	First _first;
 	Second _second;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair() noexcept = default;
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ ~pair() noexcept = default;
+	_FE_CONSTEXPR17_ pair() noexcept = default;
+	_FE_CONSTEXPR17_ pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
+	_FE_CONSTEXPR17_ pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
+	_FE_CONSTEXPR17_ ~pair() noexcept = default;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair(const pair&) noexcept = default;
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair(pair&&) noexcept = default;
+	_FE_CONSTEXPR17_ pair(const pair&) noexcept = default;
+	_FE_CONSTEXPR17_ pair(pair&&) noexcept = default;
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair& operator=(const pair& other_p) noexcept
+	_FE_CONSTEXPR17_ pair& operator=(const pair& other_p) noexcept
 	{
 		_first = other_p._first;
 		_second = other_p._second;
@@ -51,7 +51,7 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ pair& operator=(pair&& rvalue_p) noexcept
+	_FE_CONSTEXPR17_ pair& operator=(pair&& rvalue_p) noexcept
 	{
 		_first = std::move(rvalue_p._first);
 		_second = std::move(rvalue_p._second);

@@ -68,14 +68,14 @@ namespace internal::pool
         var::uint32 m_double_free_tracker[possible_address_count];
 
     public:
-        _FE_FORCE_INLINE_ void check_double_allocation(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
+        void check_double_allocation(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
         {
             FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == 0, "Double allocation detected: cannot alloate the same address twice.");
             m_double_free_tracker[l_idx] = of_type_p;
         }
 
-        _FE_FORCE_INLINE_ void check_double_free(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
+        void check_double_free(FE::byte* const address_p, FE::uint32 of_type_p) noexcept
         {
             FE::uint64 l_idx = (address_p - _begin) / Alignment::size;
             FE_ASSERT(m_double_free_tracker[l_idx] == of_type_p, "Double free detected: cannot dealloate the same address twice.");

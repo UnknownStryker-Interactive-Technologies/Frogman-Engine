@@ -97,19 +97,18 @@ public:
         FE_ASSERT(m_metadata->_sizeofT >= 0);
         FE_ASSERT(m_metadata->_is_expired == false);
 
+        m_metadata->_is_expired = true; // Mark the object as expired.
+
 		// Call the destructor of Archetype.
         m_ptr->~T();
+        m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT); // Deallocate the entity.
 
 		// Nobody is observing this object, so we can safely deallocate it.
         if (m_metadata->_observer_count == 0)
         {
-			// Deallocate the Archetype instance.
-            m_metadata->_resource->deallocate( m_ptr, m_metadata->_sizeofT );
-            std::pmr::memory_resource* l_tmp = m_metadata->_resource;
-            l_tmp->deallocate( m_metadata, sizeof(internal::smart_ptr::metadata) );
-            return;
+            // Deallocate the metadata instance.
+            m_metadata->_resource->deallocate( m_metadata, sizeof(internal::smart_ptr::metadata) );
         }
-        m_metadata->_is_expired = true; // Mark the object as expired, so that it can be deallocated later.
     }
 
     smart_ptr(const smart_ptr&) = delete;
@@ -167,22 +166,18 @@ public:
         FE_ASSERT(m_metadata->_sizeofT >= 0);
         FE_ASSERT(m_metadata->_is_expired == false);
 
+        m_metadata->_is_expired = true; // Mark the object as expired.
+
         // Call the destructor of Archetype.
         m_ptr->~T();
+        m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT); // Deallocate the Archetype instance.
+        m_ptr = nullptr;
 
         // Nobody is observing this object, so we can safely deallocate it.
         if (m_metadata->_observer_count == 0)
         {
-            // Deallocate the Archetype instance.
-            m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
-            std::pmr::memory_resource* l_tmp = m_metadata->_resource;
-            l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
-            m_ptr = nullptr;
-            m_metadata = nullptr;
-            return;
+            m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
         }
-        m_metadata->_is_expired = true; // Mark the object as expired, so that it can be deallocated later.
-        m_ptr = nullptr;
 		m_metadata = nullptr;
     }
 
@@ -216,9 +211,14 @@ public:
         return *m_ptr;
     }
     
-	_FE_FORCE_INLINE_ FE::boolean is_null() const noexcept
+	_FE_FORCE_INLINE_ FE::boolean operator==(std::nullptr_t) const noexcept
 	{
 		return (m_ptr == nullptr);
+	}
+
+	_FE_FORCE_INLINE_ FE::boolean operator!=(std::nullptr_t) const noexcept
+	{
+		return (m_ptr != nullptr);
 	}
 
     _FE_FORCE_INLINE_ FE::uint64 observer_count() const noexcept
@@ -351,13 +351,7 @@ public:
             // Nobody is observing this object, so we can safely deallocate it
             if (m_metadata->_observer_count == 0)
             {
-                // Call the destructor of Archetype
-                m_ptr->~element_type();
-
-                // Deallocate the Archetype instance.
-                m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
-                std::pmr::memory_resource* l_tmp = m_metadata->_resource;
-                l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
+                m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
             }
         }
     }
@@ -399,7 +393,7 @@ public:
 
     smart_ptr& operator=(const smart_ptr& other_p) noexcept
     {
-        if (other_p.m_ptr == nullptr)
+        if ((other_p.m_ptr == nullptr) || (other_p.m_ptr == m_ptr))
         {
             return *this;
         }
@@ -422,7 +416,7 @@ public:
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
 
         const smart_ptr<T, RefType::_Observer>& l_other = reinterpret_cast<const smart_ptr<T, RefType::_Observer>&>(other_p);
-        if (l_other.m_ptr == nullptr)
+        if ((l_other.m_ptr == nullptr) || (l_other.m_ptr == m_ptr))
         {
             return *this;
         }
@@ -499,13 +493,7 @@ public:
             // Nobody is observing this object, so we can safely deallocate it
             if (m_metadata->_observer_count == 0)
             {
-                // Call the destructor of Archetype
-                m_ptr->~T();
-
-                // Deallocate the Archetype instance.
-                m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT);
-                std::pmr::memory_resource* l_tmp = m_metadata->_resource;
-                l_tmp->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
+                m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
             }
         }
         m_ptr = nullptr;
