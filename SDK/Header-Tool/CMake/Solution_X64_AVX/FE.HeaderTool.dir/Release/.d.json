@@ -1,7 +1,7 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\header-tool\\source\\header_tool_engine.cpp",
+        "Source": "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\header-tool\\source\\reflection_code_generator.cpp",
         "ProvidedModule": "",
         "Includes": [
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\header-tool\\include\\header_tool_engine.hpp",
@@ -121,6 +121,8 @@
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\algorithm",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\__msvc_heap_algorithms.hpp",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\__msvc_minmax.hpp",
+            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cassert",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\assert.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\functional",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\unordered_map",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\xhash",

@@ -206,6 +206,8 @@
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\typeindex",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\log\\log.h",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\third-party\\libraries\\robin-hood-hash\\robin_hood.h",
+            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cassert",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\assert.h",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\log\\logger.hpp",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\log\\format_string.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cassert",
@@ -1095,7 +1097,8 @@
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\cassert",
             "c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\assert.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\ranges",
-            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\__msvc_ranges_to.hpp"
+            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.44.35207\\include\\__msvc_ranges_to.hpp",
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\tests\\unit-tests\\fe.ecs.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

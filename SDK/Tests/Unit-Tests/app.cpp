@@ -16,7 +16,7 @@ class test_engine : public FE::framework::framework_base
 {
 public:
 	test_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p)
-	{ 
+	{
 	};
 	~test_engine() noexcept = default;
 
@@ -35,6 +35,9 @@ public:
 		benchmark::Initialize(&l_argc, (var::ASCII**)argv_p);
 
 		FE_EXIT_IF(benchmark::ReportUnrecognizedArguments(l_argc, (var::ASCII**)argv_p) == true, -1, "Failed to meet the expectation: Unrecognized Benchmark Arguments Detected.");
+		
+		__load_reflection_data();
+		
 		return 0;
 	}
 

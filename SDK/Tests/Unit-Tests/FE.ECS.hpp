@@ -19,8 +19,6 @@ limitations under the License.
 
 class terrorist : public FE::archetype_base
 {
-	FE_CLASS(terrorist);
-	FE_CLASS_HAS_A_BASE(FE::archetype_base);
 public:
 	terrorist() = default;
 	~terrorist() = default;
@@ -28,8 +26,6 @@ public:
 
 class AK47 : public FE::archetype_base
 {
-	FE_CLASS(AK47);
-	FE_CLASS_HAS_A_BASE(FE::archetype_base);
 public:
 	AK47() = default;
 	~AK47() = default;
@@ -37,8 +33,6 @@ public:
 
 class ak_ammo : public FE::archetype_base
 {
-	FE_CLASS(ak_ammo);
-	FE_CLASS_HAS_A_BASE(FE::archetype_base);
 public:
 	ak_ammo() = default;
 	~ak_ammo() = default;
@@ -46,10 +40,79 @@ public:
 
 class ak_magazine : public FE::component_base
 {
-	FE_CLASS(ak_magazine);
-	FE_CLASS_HAS_A_BASE(FE::archetype_base);
 	std::vector<ak_ammo> _rounds;
 public:
 	ak_magazine() = default;
 	~ak_magazine() = default;
+};
+
+
+
+
+class player : public FE::archetype_base
+{
+public:
+	player() noexcept = default;
+	virtual ~player() noexcept override = default;
+};
+
+class health : public FE::component_base
+{
+public:
+	int _health;
+
+	health() noexcept = default;
+
+	health(int health) noexcept
+		: _health(health)
+	{
+	}
+
+	virtual ~health() noexcept override = default;
+};
+
+class weapon : public FE::component_base
+{
+public:
+	var::float32 _damage;
+
+	weapon() noexcept = default;
+
+	weapon(var::float32 damage) noexcept
+		: _damage(damage)
+	{
+	}
+
+	virtual ~weapon() noexcept override = default;
+};
+
+class speed : public FE::component_base
+{
+public:
+	var::float32 _speed;
+
+	speed() noexcept = default;
+
+	speed(var::float32 speed) noexcept
+		: _speed(speed)
+	{
+	}
+
+	virtual ~speed() noexcept override = default;
+};
+
+class damage_system : public FE::system_base
+{
+public:
+	damage_system() noexcept = default;
+
+	virtual ~damage_system() noexcept override = default;
+
+	virtual void operator()(FE::component_base* const component_p) override
+	{
+		health* l_health = FE::polymorphic_cast<health*>(component_p);
+		assert(l_health != nullptr);
+
+		l_health->_health -= 10;
+	}
 };

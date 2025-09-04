@@ -164,9 +164,12 @@ private:
 	struct reflection_metadata
 	{
 		directory_t _header_file_path;
-		std::pmr::vector<std::pmr::wstring> _class_and_struct_identifiers;
-		std::pmr::vector<std::pmr::wstring> _method_identifiers;
-		std::pmr::vector<std::pmr::wstring> _property_identifiers;
+		std::pmr::vector<std::pmr::wstring> _archetypes;
+		std::pmr::vector<std::pmr::wstring> _components;
+		std::pmr::vector<std::pmr::wstring> _systems;
+		std::pmr::vector<std::pmr::wstring> _class_and_structs;
+		std::pmr::vector<std::pmr::wstring> _methods;
+		std::pmr::vector<std::pmr::wstring> _properties;
 		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
 	};
 	using reflection_metadata_set_t = FE::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;

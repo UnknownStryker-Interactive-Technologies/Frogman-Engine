@@ -28,16 +28,11 @@ limitations under the License.
 _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__generate_reflection_metadata(const header_file_root& tree_p) noexcept
 {
 	reflection_metadata l_reflection_metadata;
-	l_reflection_metadata._class_and_struct_identifiers = std::pmr::vector<std::pmr::wstring>(get_memory_resource());
+	l_reflection_metadata._class_and_structs = std::pmr::vector<std::pmr::wstring>(get_memory_resource());
 	l_reflection_metadata._header_file_path = std::pmr::wstring(tree_p._path_to_the_header_file.data(), get_memory_resource());
 
 	for (const class_node& node : tree_p._classes)
 	{
-		if (node._class_reflection_macro == nullptr)
-		{
-			continue;
-		}
-
 		__output_class_metadata(l_reflection_metadata, node);
 	}
 
@@ -70,12 +65,7 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 void header_tool_engine::__output_namespace_metadata_recursive(reflection_metadata& out_return_p, const namespace_node& node_p) noexcept
 {
 	for (const class_node& node : node_p._classes)
-	{
-		if (node._class_reflection_macro == nullptr)
-		{
-			continue;
-		}
-		
+	{	
 		__output_class_metadata(out_return_p, node);
 	}
 
@@ -109,11 +99,31 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 void header_tool_engine::__output_class_metadata(reflection_metadata& out_return_p, const class_node& node_p) noexcept
 {
 	std::pmr::wstring l_identifier(get_memory_resource());
-	l_identifier.resize( node_p._class_reflection_macro->_target_class_name.length() + 1 );
+	l_identifier.resize( node_p._this_class_name.length() + 1 );
 
-	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._class_reflection_macro->_target_class_name.data()), node_p._class_reflection_macro->_target_class_name.length() );
+	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._this_class_name.data()), node_p._this_class_name.length() );
 	l_identifier = l_identifier.c_str();
-	out_return_p._class_and_struct_identifiers.push_back( std::move(l_identifier) );
+
+	switch (node_p._class_type)
+	{
+	case ClassType::_ChildOfArchetypeBase:
+		out_return_p._archetypes.push_back( std::move(l_identifier) );
+		break;
+
+	case ClassType::_ChildOfComponentBase:
+		out_return_p._components.push_back( std::move(l_identifier) );
+		break;
+
+	case ClassType::_ChildOfSystemBase:
+		out_return_p._systems.push_back( std::move(l_identifier) );
+		break;
+
+	case ClassType::_ChildOfCppClass:
+		_FE_FALLTHROUGH_;
+	case ClassType::_None:
+		out_return_p._class_and_structs.push_back( std::move(l_identifier) );
+		break;
+	}
 }
 
 
@@ -124,7 +134,7 @@ void header_tool_engine::__output_struct_metadata(reflection_metadata& out_retur
 
 	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._struct_reflection_macro->_target_struct_name.data()), node_p._struct_reflection_macro->_target_struct_name.length() );
 	l_identifier = l_identifier.c_str();
-	out_return_p._class_and_struct_identifiers.push_back( std::move(l_identifier) );
+	out_return_p._class_and_structs.push_back( std::move(l_identifier) );
 }
 
 void header_tool_engine::__output_enum_struct_metadata(reflection_metadata& out_return_p, const enum_struct_node& node_p) noexcept
@@ -166,26 +176,47 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	l_generated_code += L"\nvoid load_reflection_data()\n{\n";
 	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::ECS::instanciate_entity<player>);
 	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::ECS::destruct_entity<player>);
-	constexpr FE::wchar* l_class_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, ";
+	constexpr FE::wchar* l_class_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
-		for (const std::pmr::wstring& identifier : header_file._class_and_struct_identifiers)
+		for (const std::pmr::wstring& identifier : header_file._archetypes)
 		{
 			l_generated_code += l_class_reflexpr_frame;
-			l_generated_code += L"FE::entity<";
+			l_generated_code += L"::FE::entity<";
 			l_generated_code += identifier;
-			l_generated_code += L">(FE::ASCII* const)> >(\"";
+			l_generated_code += L">(::FE::ASCII* const)> >(\"";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::instanciate_entity<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
 			l_generated_code += l_class_reflexpr_frame;
-			l_generated_code += L"void(const FE::entity<";
+			l_generated_code += L"void(const ::FE::entity<";
 			l_generated_code += identifier;
 			l_generated_code += L">&)> >(\"~";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::destruct_entity<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+		}
+
+		for (const std::pmr::wstring& identifier : header_file._components)
+		{
+			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += L"::FE::component_view<";
+			l_generated_code += identifier;
+			l_generated_code += L">(::FE::archetype_base* const";
+			l_generated_code += L")> >(\"";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &::FE::ECS::add_component<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+
+			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += L"void(::FE::archetype_base* const";
+			l_generated_code += L")> >(\"~";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &::FE::ECS::remove_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 		}
@@ -231,4 +262,4 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	FE_EXIT_IF(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 	l_generated_file << l_generated_code;
 	l_generated_file.close();
-} 
+}

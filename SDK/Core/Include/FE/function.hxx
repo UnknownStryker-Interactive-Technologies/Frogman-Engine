@@ -80,7 +80,7 @@ template<typename First>
 class arguments<First, void, void, void, void, void, void, void, void, void> : public argument_base
 {
 public:
-    using first_type = std::conditional_t< std::is_reference_v<First>, FE::ref<FE::remove_const_reference_t<First>>, std::remove_const_t<First> >;
+    using first_type = std::conditional_t< std::is_reference_v<First>, FE::ref<FE::remove_const_reference_t<First>>, First >;
 
     first_type _first;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
@@ -98,7 +98,7 @@ class arguments<First, Second, void, void, void, void, void, void, void, void> :
 public:
     using base_type = arguments<First, void, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
-    using second_type = std::conditional_t< std::is_reference_v<Second>, FE::ref<FE::remove_const_reference_t<Second>>, std::remove_const_t<Second> >;
+    using second_type = std::conditional_t< std::is_reference_v<Second>, FE::ref<FE::remove_const_reference_t<Second>>, Second >;
 
     second_type _second;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
@@ -117,7 +117,7 @@ public:
     using base_type = arguments<First, Second, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::Second;
-    using third_type = std::conditional_t< std::is_reference_v<Third>, FE::ref<FE::remove_const_reference_t<Third>>, std::remove_const_t<Third> >;
+    using third_type = std::conditional_t< std::is_reference_v<Third>, FE::ref<FE::remove_const_reference_t<Third>>, Third >;
 
     third_type _third;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
@@ -137,7 +137,7 @@ public:
     using first_type = typename base_type::first_type;
     using second_type = typename base_type::second_type;
     using third_type = typename base_type::third_type;
-    using fourth_type = std::conditional_t< std::is_reference_v<Fourth>, FE::ref<FE::remove_const_reference_t<Fourth>>, std::remove_const_t<Fourth> >;
+    using fourth_type = std::conditional_t< std::is_reference_v<Fourth>, FE::ref<FE::remove_const_reference_t<Fourth>>, Fourth >;
 
     fourth_type _fourth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
@@ -158,7 +158,7 @@ public:
     using second_type = typename base_type::second_type;
     using third_type = typename base_type::third_type;
     using fourth_type = typename base_type::fourth_type;
-    using fifth_type = std::conditional_t< std::is_reference_v<Fifth>, FE::ref<FE::remove_const_reference_t<Fifth>>, std::remove_const_t<Fifth> >;
+    using fifth_type = std::conditional_t< std::is_reference_v<Fifth>, FE::ref<FE::remove_const_reference_t<Fifth>>, Fifth >;
 
     fifth_type _fifth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
@@ -181,7 +181,7 @@ public:
     using third_type = typename base_type::third_type;
     using fourth_type = typename base_type::fourth_type;
     using fifth_type = typename base_type::fifth_type;
-    using sixth_type = std::conditional_t< std::is_reference_v<Sixth>, FE::ref<FE::remove_const_reference_t<Sixth>>, std::remove_const_t<Sixth> >;
+    using sixth_type = std::conditional_t< std::is_reference_v<Sixth>, FE::ref<FE::remove_const_reference_t<Sixth>>, Sixth >;
 
     sixth_type _sixth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
@@ -205,7 +205,7 @@ public:
     using fourth_type = typename base_type::fourth_type;
     using fifth_type = typename base_type::fifth_type;
     using sixth_type = typename base_type::sixth_type;
-    using seventh_type = std::conditional_t< std::is_reference_v<Seventh>, FE::ref<FE::remove_const_reference_t<Seventh>>, std::remove_const_t<Seventh> >;
+    using seventh_type = std::conditional_t< std::is_reference_v<Seventh>, FE::ref<FE::remove_const_reference_t<Seventh>>, Seventh >;
 
     seventh_type _seventh;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
@@ -231,7 +231,7 @@ public:
     using fifth_type = typename base_type::fifth_type;
     using sixth_type = typename base_type::sixth_type;
     using seventh_type = typename base_type::seventh_type;
-    using eighth_type = std::conditional_t< std::is_reference_v<Eighth>, FE::ref<FE::remove_const_reference_t<Eighth>>, std::remove_const_t<Eighth> >;
+    using eighth_type = std::conditional_t< std::is_reference_v<Eighth>, FE::ref<FE::remove_const_reference_t<Eighth>>, Eighth >;
 
     eighth_type _eighth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
@@ -257,7 +257,7 @@ public:
     using sixth_type = typename base_type::sixth_type;
     using seventh_type = typename base_type::seventh_type;
     using eighth_type = typename base_type::eighth_type;
-    using ninth_type = std::conditional_t< std::is_reference_v<Ninth>, FE::ref<FE::remove_const_reference_t<Ninth>>, std::remove_const_t<Ninth> >;
+    using ninth_type = std::conditional_t< std::is_reference_v<Ninth>, FE::ref<FE::remove_const_reference_t<Ninth>>, Ninth >;
 
     ninth_type _ninth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
@@ -285,7 +285,7 @@ public:
     using seventh_type = typename base_type::seventh_type;
     using eighth_type = typename base_type::eighth_type;
     using ninth_type = typename base_type::ninth_type;
-    using tenth_type = std::conditional_t< std::is_reference_v<Tenth>, FE::ref<FE::remove_const_reference_t<Tenth>>, std::remove_const_t<Tenth> >;
+    using tenth_type = std::conditional_t< std::is_reference_v<Tenth>, FE::ref<FE::remove_const_reference_t<Tenth>>, Tenth >;
 
     tenth_type _tenth;
     static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;

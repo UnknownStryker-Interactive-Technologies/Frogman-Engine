@@ -144,6 +144,13 @@ FE::int32 header_tool_engine::run()
 
 					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
 
+//					//// for debugging purpose.
+//for (auto& v : *l_tokens)
+//{
+//	std::cout << reinterpret_cast<const char*>(v._code.c_str()) << "\n";
+//}
+//std::cout << "\n";
+
 					header_file_root l_reflection_tree;
 					try // The exceptions must be thrown if the input header files have C++ syntax errors.
 					{

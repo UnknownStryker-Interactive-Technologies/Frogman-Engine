@@ -28,6 +28,16 @@ limitations under the License.
 
 
 
+enum struct ClassType : FE::int32
+{
+	_None = 0,
+	_ChildOfArchetypeBase = 1,
+	_ChildOfComponentBase = 2,
+	_ChildOfSystemBase = 3,
+	_ChildOfCppClass = 4
+};
+
+
 using identifier = std::pmr::basic_string<var::UTF8>;
 
 
@@ -79,8 +89,9 @@ struct frogman_engine_struct_macro_node
 
 struct class_node
 {
-	std::unique_ptr<frogman_engine_class_has_a_base_macro_node> _base_class_reflection_macro;
-	std::unique_ptr<frogman_engine_class_macro_node> _class_reflection_macro;
+	ClassType _class_type = ClassType::_None;
+	identifier _this_class_name;
+	identifier _base_class_name;
 };
 
 

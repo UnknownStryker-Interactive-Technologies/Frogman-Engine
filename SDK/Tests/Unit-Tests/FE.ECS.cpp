@@ -8,77 +8,10 @@
 #include <FE/framework/framework.hpp>
 
 #include "entt/single_include/entt/entt.hpp"
+#include "FE.ECS.hpp"
 
 
 
-
-class player : public FE::archetype_base
-{
-public:
-	player() noexcept = default;
-	virtual ~player() noexcept override = default;
-};
-
-class health : public FE::component_base
-{
-public:
-	int _health;
-
-	health() noexcept = default;
-
-	health(int health) noexcept
-		: _health(health)
-	{
-	}
-
-	virtual ~health() noexcept override = default;
-};
-
-class weapon : public FE::component_base
-{
-public:
-	var::float32 _damage;
-
-	weapon() noexcept = default;
-
-	weapon(var::float32 damage) noexcept
-		: _damage(damage)
-	{
-	}
-
-	virtual ~weapon() noexcept override = default;
-};
-
-class speed : public FE::component_base
-{
-public:
-	var::float32 _speed;
-
-	speed() noexcept = default;
-
-	speed(var::float32 speed) noexcept
-		: _speed(speed)
-	{
-	}
-
-	virtual ~speed() noexcept override = default;
-};
-
-class damage_system : public FE::system_base
-{
-public:
-	damage_system() noexcept = default;
-
-	virtual ~damage_system() noexcept override = default;
-
-	virtual void operator()(FE::component_base* const component_p) override
-	{
-		health* l_health = FE::polymorphic_cast<health*>(component_p);
-		assert(l_health != nullptr);
-
-		l_health->_health -= 10;
-	}
-};
 
 static 	FE::ECS ecs;
 
@@ -130,21 +63,42 @@ TEST(ECS, deserialize)
 
 TEST(ECS, reflection_combo)
 {
-	FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const) > >("player", &::FE::ECS::instanciate_entity<player>);
 	FE::task_base* constructor = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("player");
+		.get_framework().get_method_reflection().retrieve("::terrorist");
 
-	FE::entity<player> handle;
+	FE::entity<terrorist> handle;
 	FE::arguments<FE::ASCII*> construction_arg;
-	construction_arg._first = "player CDO";
+	construction_arg._first = "terrorist CDO";
 	(*constructor)(&ecs, &handle, &construction_arg);
 
 
-	FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&) > >("~player", &::FE::ECS::destruct_entity<player>);
-	FE::task_base* destructor = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("~player");
 
-	FE::arguments<const FE::entity<player>&> destruction_arg;
+
+	FE::task_base* add_component_health = FE::framework::framework_base::get_framework()
+		.get_framework().get_method_reflection().retrieve("::health");
+
+	FE::component_view<health> health_view;
+	FE::arguments<FE::archetype_base*> health_arg;
+	health_arg._first = handle.operator->();
+	(*add_component_health)(&ecs, &health_view, &health_arg);
+
+
+
+
+	FE::task_base* remove_component_ak_magazine = FE::framework::framework_base::get_framework()
+		.get_framework().get_method_reflection().retrieve("~::health");
+
+	FE::arguments<FE::archetype_base*> removal_arg;
+	removal_arg._first = handle.operator->();
+	(*remove_component_ak_magazine)(&ecs, nullptr, &removal_arg);
+
+
+
+
+	FE::task_base* destructor = FE::framework::framework_base::get_framework()
+		.get_framework().get_method_reflection().retrieve("~::terrorist");
+
+	FE::arguments<const FE::entity<terrorist>&> destruction_arg;
 	destruction_arg._first = handle;
 	(*destructor)(&ecs, nullptr, &destruction_arg);
 }

@@ -63,6 +63,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 	l_root._structs = std::pmr::vector<struct_node>(get_memory_resource());
 	l_root._enum_structs = std::pmr::vector<enum_struct_node>(get_memory_resource());
 
+	bool l_is_template = false;
 	for (auto iterator = token_list_p.begin(); iterator != token_list_p.end(); ++iterator)
 	{
 		switch (iterator->_vocabulary)
@@ -70,36 +71,42 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 		case Vocabulary::_Namespace:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'namespace.'", &(iterator->_line_number));
 			l_root._namespaces.push_back( __try_build_namespace_node_recursive(u8"::", iterator, token_list_p.end()) );
 			break;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(iterator);
+			l_is_template = true;
 			break;
 
 		case Vocabulary::_Class:
-			if (std::prev(iterator, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(iterator, token_list_p.end());
+				l_is_template = false;
 				break;
 			}
 			l_root._classes.push_back( __try_build_class_node_mutually_recursive(u8"::", iterator, token_list_p.end()) );
 			break;
 
 		case Vocabulary::_Struct:
-			if (std::prev(iterator, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(iterator, token_list_p.end());
+				l_is_template = false;
 				break;
 			}
 			l_root._structs.push_back( __try_build_struct_node_mutually_recursive(u8"::", iterator, token_list_p.end()) );
 			break;
 
 		case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'FE_ENUM_STRUCT().'", &(iterator->_line_number));
 			l_root._enum_structs.push_back( __try_build_enum_struct_node(u8"::", iterator, token_list_p.end()) );
 			break;
 
 		case Vocabulary::_Enum:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'enum.'", &(iterator->_line_number));
 			__skip_code_block(iterator, token_list_p.end());
 			break;
 
@@ -119,11 +126,14 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Namespace, "Frogman Engine Header Tool Assertion Failure: the 'namespace' keyword is missing from the current token, but the header tool is attempting to build a namespace node.");
-	namespace_node l_node;
-	if (out_token_iterator_p == end_p)
+	/* Five tokens are needed at least to build a namespace node.
+	namespace Some
 	{
-		return l_node;
-	}
+	};
+	*/
+	THROW_CPP_SYNTAX_ERROR(std::distance(out_token_iterator_p, end_p) < 5, "C++ code syntax Error: \nThe line number: ${%u32@0}.", &(out_token_iterator_p->_line_number));
+
+	namespace_node l_node;
 
 	l_node._target_namespace_name = file_buffer_t(parent_namespace_p, get_memory_resource());
 	l_node._classes = std::pmr::vector<class_node>(get_memory_resource());
@@ -135,14 +145,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 	case Vocabulary::_Namespace:
 		{
 			++out_token_iterator_p;
-			FE::clock l_loop_timer;
-			l_loop_timer.start_clock();
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
 			{
 				l_node._target_namespace_name += out_token_iterator_p->_code;
 				l_node._target_namespace_name += u8"::";
-				THROW_CPP_SYNTAX_ERROR((l_loop_timer.get_delta_milliseconds() >= 1000.0) || (out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode), " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'namespace Identifier {'.", &(out_token_iterator_p->_line_number));
-				l_loop_timer.end_clock();
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'namespace Identifier {'.", &(out_token_iterator_p->_line_number));
 				++out_token_iterator_p;
 			}
 			++out_token_iterator_p;
@@ -152,12 +159,12 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 	case Vocabulary::_BeginNamespace:
 		{
 			++out_token_iterator_p;
-			THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
+			THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
 			{
 				l_node._target_namespace_name += out_token_iterator_p->_code;
 				l_node._target_namespace_name += u8"::";
-				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
 				++out_token_iterator_p;
 			}
 			++out_token_iterator_p;
@@ -181,6 +188,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 		return l_node;
 	}
 
+	bool l_is_template = false;
 	for (; out_token_iterator_p != end_p; ++out_token_iterator_p)
 	{
 		switch (out_token_iterator_p->_vocabulary)
@@ -188,44 +196,42 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 		case Vocabulary::_Namespace:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'namespace.'", &(out_token_iterator_p->_line_number));
 			l_node._nested_namespaces->push_back( __try_build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(out_token_iterator_p);
+			l_is_template = true;
 			break;
 
 		case Vocabulary::_Class:
-			/*
-				This line of code checks if it is a template class and skips the code.
-				(out_token_iterator_p - 1)->_vocabulary technically is unsafe, but it won't read the memory before 'begin' since everybody uses the header guard or #pragma once to avoid header collisions.
-			*/
-			if (std::prev(out_token_iterator_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(out_token_iterator_p, end_p);
+				l_is_template = false;
 				break;
 			}
 			l_node._classes.push_back( __try_build_class_node_mutually_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Struct:
-			/*
-				This line of code checks if it is a template class and skips the code.
-				(out_token_iterator_p - 1)->_vocabulary technically is unsafe, but it won't read the memory before 'begin' since everybody uses the header guard or #pragma once to avoid header collisions.
-			*/
-			if (std::prev(out_token_iterator_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(out_token_iterator_p, end_p);
+				l_is_template = false;
 				break;
 			}
 			l_node._structs.push_back( __try_build_struct_node_mutually_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'FE_ENUM_STRUCT().'", &(out_token_iterator_p->_line_number));
 			l_node._enum_structs.push_back( __try_build_enum_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Enum:
+			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'enum.'", &(out_token_iterator_p->_line_number));
 			__skip_code_block(out_token_iterator_p, end_p);
 			break;
 
@@ -244,23 +250,23 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 _FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Class, "Frogman Engine Header Tool Assertion Failure: the 'class' keyword is missing from the current token, but the header tool is attempting to build a class node.");
+	/* Five tokens are needed at least to build a class node.
+	class Some
+	{
+	};
+	*/
+	THROW_CPP_SYNTAX_ERROR(std::distance(out_token_iterator_p, end_p) < 5, "C++ code syntax Error: \nThe line number: ${%u32@0}.", &(out_token_iterator_p->_line_number));
+	
 	++out_token_iterator_p; // move to the class name.
 	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the class name.
 	++out_token_iterator_p; // skip the class name.
 
 	class_node l_node;
-	if (out_token_iterator_p == end_p)
-	{
-		return l_node;
-	}
 
-	auto l_searchable_range_end = std::find_if(out_token_iterator_p, end_p, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_RightCurlyBracket; });
-	// Check if the class has a base class, and it is reflective.
-	if ((out_token_iterator_p->_vocabulary == Vocabulary::_Colon) &&
-		(std::find_if(out_token_iterator_p, l_searchable_range_end, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineBaseClassReflectionMacro; }) != l_searchable_range_end))
+	// Check if the class has a base class.
+	if (out_token_iterator_p->_vocabulary == Vocabulary::_Colon)
 	{
 		++out_token_iterator_p; // skip the ':'.
-		l_node._base_class_reflection_macro = std::make_unique<frogman_engine_class_has_a_base_macro_node>();
 
 		switch (out_token_iterator_p->_vocabulary) // determine if it needs to skip more.
 		{
@@ -272,75 +278,84 @@ _FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_re
 			++out_token_iterator_p; // skip the access modifier.
 			_FE_FALLTHROUGH_;
 
-		case Vocabulary::_EndOfCode:
-			THROW_CPP_SYNTAX_ERROR(true, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nThe class definition is incomplete.", &(out_token_iterator_p->_line_number));
+		default: // the base class name found.
+			l_node._base_class_name = identifier(get_memory_resource());
+			
+			while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
+			{
+
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'class Identifier {'.", &(out_token_iterator_p->_line_number));
+				l_node._base_class_name += out_token_iterator_p->_code;
+				++out_token_iterator_p; // skip the base class name.
+			}
+
+			{
+				/*
+				I wish I could use a constepxr hashing function with a switch statement here.
+				To do: create a constexpr function from scratch.
+				*/
+
+				// this is safe since all C++ class names are formatted in English, which guarantees them to be ASCII.
+				if (l_node._base_class_name.find(u8"archetype_base") != identifier::npos)
+				{
+					l_node._class_type = ClassType::_ChildOfArchetypeBase;
+				}
+				else if (l_node._base_class_name.find(u8"component_base") != identifier::npos)
+				{
+					l_node._class_type = ClassType::_ChildOfComponentBase;
+				}
+				else if (l_node._base_class_name.find(u8"system_base") != identifier::npos)
+				{
+					l_node._class_type = ClassType::_ChildOfSystemBase;
+				}
+				else
+				{
+					l_node._class_type = ClassType::_ChildOfCppClass;
+				}
+			}
 			break;
 
-		default: // the base class name found.
-			l_node._base_class_reflection_macro->_target_base_class_name = identifier(out_token_iterator_p->_code, get_memory_resource());
-			++out_token_iterator_p; // skip the base class name.
-			THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'class Identifier {'.", &(out_token_iterator_p->_line_number));
+		case Vocabulary::_EndOfCode:
+			THROW_CPP_SYNTAX_ERROR(true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nThe class definition is incomplete.", &(out_token_iterator_p->_line_number));
 			break;
 		}
 	}
 
-	// the class has a base but reflection unenabled.
-	if (out_token_iterator_p->_vocabulary != Vocabulary::_Colon)
+	l_node._this_class_name = identifier(parent_namespace_p, get_memory_resource());
+	l_node._this_class_name += l_class_name;
+
+	for (; out_token_iterator_p != end_p; ++out_token_iterator_p)
 	{
-		THROW_CPP_SYNTAX_ERROR((out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket), " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'class Identifier {'.", &(out_token_iterator_p->_line_number));
-	}
-
-	l_searchable_range_end = std::find_if(out_token_iterator_p, end_p, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_RightCurlyBracket; });
-	auto l_class_reflection_macro_search_result = std::find_if(out_token_iterator_p, l_searchable_range_end, [&](const token& token_p) { return token_p._vocabulary == Vocabulary::_FrogmanEngineClassReflectionMacro; });
-	if (l_class_reflection_macro_search_result != l_searchable_range_end)
-	{
-		l_node._class_reflection_macro = std::make_unique<frogman_engine_class_macro_node>();
-		l_node._class_reflection_macro->_target_class_name = identifier(parent_namespace_p, get_memory_resource());
-		l_node._class_reflection_macro->_target_class_name += l_class_name;
-		out_token_iterator_p = l_class_reflection_macro_search_result;
-
-		// To do: build n
-		l_node._class_reflection_macro->_property_reflection_macros;
-
-		// To do: build n
-		l_node._class_reflection_macro->_method_reflection_macros;
-
-		// To do: build n
-		l_node._class_reflection_macro->_static_method_reflection_macros;
-
-		for (; out_token_iterator_p != end_p; ++out_token_iterator_p)
+		switch (out_token_iterator_p->_vocabulary)
 		{
-			switch (out_token_iterator_p->_vocabulary)
+		case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
+
+			break;
+
+		case Vocabulary::_FrogmanEngineMethodReflectionMacro:
+
+			break;
+
+		case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
+
+			break;
+
+		case Vocabulary::_RightCurlyBracket:
+		{
+			auto l_next = std::next(out_token_iterator_p, 1);
+			if ((l_next != end_p) &&
+				(l_next->_vocabulary == Vocabulary::_Semicolon))
 			{
-			case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
-
-				break;
-
-			case Vocabulary::_FrogmanEngineMethodReflectionMacro:
-
-				break;
-
-			case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
-
-				break;
-
-			case Vocabulary::_RightCurlyBracket:
-				{
-					auto l_next = std::next(out_token_iterator_p, 1);
-					if ((l_next != end_p) && 
-						(l_next->_vocabulary == Vocabulary::_Semicolon))
-					{
-						++out_token_iterator_p;
-						return l_node;
-					}
-				}
-				break;
+				++out_token_iterator_p;
+				return l_node;
 			}
+		}
+		break;
+		}
 
-			if (out_token_iterator_p == end_p)
-			{
-				break;
-			}
+		if (out_token_iterator_p == end_p)
+		{
+			break;
 		}
 	}
 
@@ -351,10 +366,18 @@ _FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_re
 _FE_NODISCARD_ struct_node header_tool_engine::__try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Struct, "Frogman Engine Header Tool Assertion Failure: the 'struct' keyword is missing from the current token, but the header tool is attempting to build a struct node.");
+	
+	/* Five tokens are needed at least to build a struct node.
+	struct Some
+	{
+	};
+	*/
+	THROW_CPP_SYNTAX_ERROR(std::distance(out_token_iterator_p, end_p) < 5, "C++ code syntax Error: \nThe line number: ${%u32@0}.", &(out_token_iterator_p->_line_number));
+
 	++out_token_iterator_p; // move to the struct name.
 	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the struct name.
 	++out_token_iterator_p; // skip the struct name.
-	THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'struct Identifier {'.", &(out_token_iterator_p->_line_number));
+	THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "C++ code syntax Error: \nThe line number: ${%u32@0} \n FHT does not support struct polymorphism; '{' may be missing from the 'struct Identifier {'.", &(out_token_iterator_p->_line_number));
 
 	struct_node l_node;
 	if (out_token_iterator_p == end_p)
@@ -422,7 +445,7 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 			l_buffer[i] = *out_token_iterator_p->_code.c_str();
 			++out_token_iterator_p;
 		}
-		THROW_CPP_SYNTAX_ERROR((FE::algorithm::string::compare(l_buffer, u8"();") == false), " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nPlease check if any letter is missing from the 'FE_ENUM_STRUCT();'.", &(out_token_iterator_p->_line_number));
+		THROW_CPP_SYNTAX_ERROR((FE::algorithm::string::compare(l_buffer, u8"();") == false), "C++ code syntax Error: \nThe line number: ${%u32@0} \nPlease check if any letter is missing from the 'FE_ENUM_STRUCT();'.", &(out_token_iterator_p->_line_number));
 	}
 
 	if (out_token_iterator_p->_vocabulary == Vocabulary::_Enum)
@@ -434,7 +457,7 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 			{
 				break;
 			}
-			THROW_CPP_SYNTAX_ERROR(distance == 2, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
+			THROW_CPP_SYNTAX_ERROR(distance == 2, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
 		}
 		// build the enum struct node here:
 		l_enum_struct_node._target_enum_struct_name = identifier(parent_namespace_p, get_memory_resource());
@@ -449,14 +472,14 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 			case Vocabulary::_Colon:
 				while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
 				{
-					THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
+					THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
 					++out_token_iterator_p;
 				}
 				break;
 
 			case Vocabulary::_Undefined:
 				l_enum_struct_node._enum_struct_fields.push_back(out_token_iterator_p->_code);
-				THROW_CPP_SYNTAX_ERROR(std::next(out_token_iterator_p)->_vocabulary == Vocabulary::_Undefined, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
+				THROW_CPP_SYNTAX_ERROR(std::next(out_token_iterator_p)->_vocabulary == Vocabulary::_Undefined, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
 				break;
 				
 			case Vocabulary::_RightCurlyBracket:
@@ -477,7 +500,7 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 			case Vocabulary::_AssignmentOperator:
 				while ((out_token_iterator_p->_vocabulary != Vocabulary::_Comma) && (out_token_iterator_p->_vocabulary != Vocabulary::_RightCurlyBracket))
 				{
-					THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, " FHT C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
+					THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
 					++out_token_iterator_p;
 				}
 				break;
@@ -498,13 +521,10 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 void header_tool_engine::__try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const
 {
 	++iterator_p;
-	THROW_CPP_SYNTAX_ERROR(iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs, "FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'<' is missing from the 'template<...>'.", &(iterator_p->_line_number));
-	FE::clock l_loop_timer;
-	l_loop_timer.start_clock();
+	THROW_CPP_SYNTAX_ERROR(iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'<' is missing from the 'template<...>'.", &(iterator_p->_line_number));
 	while (iterator_p->_vocabulary != Vocabulary::_EndTemplateArgs)
 	{
-		THROW_CPP_SYNTAX_ERROR((l_loop_timer.get_delta_milliseconds() >= 1000.0) || (iterator_p->_vocabulary == Vocabulary::_EndOfCode), "FHT C++ code syntax Error: \nThe line number: ${%u32@0} \n'>' is missing from the 'template<...>'.", &(iterator_p->_line_number));
+		THROW_CPP_SYNTAX_ERROR(iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'>' is missing from the 'template<...>'.", &(iterator_p->_line_number));
 		++iterator_p;
-		l_loop_timer.end_clock();
 	}
 }

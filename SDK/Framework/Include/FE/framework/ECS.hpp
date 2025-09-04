@@ -129,8 +129,8 @@ public:
 	}
 
 
-	template <class Component, class Archetype, typename ...Arguments>
-	component_view<Component> add_component(entity<Archetype>& entt_p, Arguments&& ...arguments_p) noexcept
+	template <class Component, typename ...Arguments>
+	component_view<Component> add_component(archetype_base* const entt_p, Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 
@@ -206,8 +206,16 @@ public:
 		return component_view<Component>();
 	}
 
-	template <class Component, class Archetype>
-	void remove_component(entity<Archetype>& entt_p) noexcept
+	template <class Component, class Archetype, typename ...Arguments>
+	_FE_FORCE_INLINE_ component_view<Component> add_component(FE::entity<Archetype> entt_p, Arguments&& ...arguments_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		return add_component<Component>(entt_p.operator->(), std::forward<Arguments>(arguments_p)...);
+	}
+
+	template <class Component>
+	void remove_component(archetype_base* const entt_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		
@@ -226,6 +234,14 @@ public:
 
 		// Remove the component from the entity's component view table.
 		entt_p->m_component_view_table.erase(l_view_table_probe_result);
+	}
+
+	template <class Component, class Archetype>
+	_FE_FORCE_INLINE_ void remove_component(FE::entity<Archetype> entt_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		remove_component<Component>(entt_p.operator->());
 	}
 };
 

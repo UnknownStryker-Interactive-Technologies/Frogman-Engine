@@ -27,6 +27,7 @@ limitations under the License.
 _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) const
 {
 	symbol_count l_count{ 0, 0, 0 };
+	bool l_is_template = false;
 
 	while (begin_p != end_p)
 	{
@@ -39,18 +40,20 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Class:
-			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(begin_p, end_p);
+				l_is_template = false;
 				break;
 			}
 			++l_count._classes;
 			break;
 
 		case Vocabulary::_Struct:
-			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if (l_is_template == true)
 			{
 				__skip_code_block(begin_p, end_p);
+				l_is_template = false;
 				break;
 			}
 			++l_count._structs;
@@ -62,6 +65,7 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(begin_p);
+			l_is_template = true;
 			break;
 
 		case Vocabulary::_LineEnd:

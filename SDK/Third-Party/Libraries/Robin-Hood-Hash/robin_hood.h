@@ -40,6 +40,7 @@
 #define ROBIN_HOOD_VERSION_PATCH 5  // for backwards-compatible bug fixes
 
 #include <algorithm>
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <functional>
@@ -670,12 +671,12 @@ inline constexpr bool operator>=(pair<A, B> const& x, pair<A, B> const& y) {
     return !(x < y);
 }
 
-inline size_t hash_bytes(void const* ptr, size_t len) noexcept {
-    static constexpr uint64_t m = UINT64_C(0xc6a4a7935bd1e995);
-    static constexpr uint64_t seed = UINT64_C(0xe17a1465);
-    static constexpr unsigned int r = 47;
+inline size_t hash_bytes(const void* ptr, size_t len) noexcept {
+    constexpr auto m = UINT64_C(0xc6a4a7935bd1e995);
+    constexpr auto seed = UINT64_C(0xe17a1465);
+    constexpr unsigned int r = 47;
 
-    auto const* const data64 = static_cast<uint64_t const*>(ptr);
+    auto const* const data64 = (uint64_t const*)ptr;
     uint64_t h = seed ^ (len * m);
 
     size_t const n_blocks = len / 8;
@@ -690,7 +691,7 @@ inline size_t hash_bytes(void const* ptr, size_t len) noexcept {
         h *= m;
     }
 
-    auto const* const data8 = reinterpret_cast<uint8_t const*>(data64 + n_blocks);
+    auto const* const data8 = (uint8_t const*)(data64 + n_blocks);
 
 #pragma warning(push)
 #pragma warning(disable : 26819)
@@ -730,7 +731,7 @@ inline size_t hash_bytes(void const* ptr, size_t len) noexcept {
     return static_cast<size_t>(h);
 }
 
-inline size_t hash_int(uint64_t x) noexcept {
+constexpr inline size_t hash_int(uint64_t x) noexcept {
     // tried lots of different hashes, let's stick with murmurhash3. It's simple, fast, well tested,
     // and doesn't need any special 128bit operations.
     x ^= x >> 33U;
@@ -746,7 +747,7 @@ inline size_t hash_int(uint64_t x) noexcept {
 // A thin wrapper around std::hash, performing an additional simple mixing step of the result.
 template <typename T, typename Enable = void>
 struct hash : public std::hash<T> {
-    size_t operator()(T const& obj) const
+    constexpr size_t operator()(T const& obj) const
         noexcept(noexcept(std::declval<std::hash<T>>().operator()(std::declval<T const&>()))) {
         // call base hash
         auto result = std::hash<T>::operator()(obj);
@@ -757,7 +758,7 @@ struct hash : public std::hash<T> {
 
 template <typename CharT>
 struct hash<std::basic_string<CharT>> {
-    size_t operator()(std::basic_string<CharT> const& str) const noexcept {
+    constexpr size_t operator()(std::basic_string<CharT> const& str) const noexcept {
         return hash_bytes(str.data(), sizeof(CharT) * str.size());
     }
 };
@@ -765,7 +766,7 @@ struct hash<std::basic_string<CharT>> {
 #if ROBIN_HOOD(CXX) >= ROBIN_HOOD(CXX17)
 template <typename CharT>
 struct hash<std::basic_string_view<CharT>> {
-    size_t operator()(std::basic_string_view<CharT> const& sv) const noexcept {
+    constexpr size_t operator()(std::basic_string_view<CharT> const& sv) const noexcept {
         return hash_bytes(sv.data(), sizeof(CharT) * sv.size());
     }
 };
@@ -773,28 +774,28 @@ struct hash<std::basic_string_view<CharT>> {
 
 template <class T>
 struct hash<T*> {
-    size_t operator()(T* ptr) const noexcept {
+    constexpr size_t operator()(T* ptr) const noexcept {
         return hash_int(reinterpret_cast<detail::SizeT>(ptr));
     }
 };
 
 template <class T>
 struct hash<std::unique_ptr<T>> {
-    size_t operator()(std::unique_ptr<T> const& ptr) const noexcept {
+    constexpr size_t operator()(std::unique_ptr<T> const& ptr) const noexcept {
         return hash_int(reinterpret_cast<detail::SizeT>(ptr.get()));
     }
 };
 
 template <class T>
 struct hash<std::shared_ptr<T>> {
-    size_t operator()(std::shared_ptr<T> const& ptr) const noexcept {
+    constexpr size_t operator()(std::shared_ptr<T> const& ptr) const noexcept {
         return hash_int(reinterpret_cast<detail::SizeT>(ptr.get()));
     }
 };
 
 template <typename Enum>
 struct hash<Enum, typename std::enable_if<std::is_enum<Enum>::value>::type> {
-    size_t operator()(Enum e) const noexcept {
+    constexpr size_t operator()(Enum e) const noexcept {
         using Underlying = typename std::underlying_type<Enum>::type;
         return hash<Underlying>{}(static_cast<Underlying>(e));
     }
@@ -803,7 +804,7 @@ struct hash<Enum, typename std::enable_if<std::is_enum<Enum>::value>::type> {
 #define ROBIN_HOOD_HASH_INT(T)                           \
     template <>                                          \
     struct hash<T> {                                     \
-        size_t operator()(T const& obj) const noexcept { \
+        constexpr size_t operator()(T const& obj) const noexcept { \
             return hash_int(static_cast<uint64_t>(obj)); \
         }                                                \
     }

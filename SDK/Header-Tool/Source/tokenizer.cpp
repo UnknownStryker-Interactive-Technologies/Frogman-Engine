@@ -110,7 +110,7 @@ void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& 
 	using range = std::pair< typename std::pmr::list<token>::iterator, typename std::pmr::list<token>::iterator >;
 	std::pmr::vector<range> l_ranges(get_memory_resource());
 	
-	for (auto it = out_list_p.begin();; ++it)
+	for (auto it = out_list_p.begin(); it != out_list_p.end(); ++it)
 	{
 		if (it->_vocabulary == Vocabulary::_PreprocessorDirective)
 		{
@@ -147,7 +147,7 @@ void header_tool_engine::__purge_preprocessor_directives(std::pmr::list<token>& 
 			l_ranges.push_back(l_range);
 			it = l_line_end_indicator; // Move the iterator to the end of the preprocessor directive.
 
-			// for debugging purpose.
+			//// for debugging purpose.
 			//while (l_range.first != l_range.second)
 			//{
 			//	std::cout << reinterpret_cast<const char*>(l_range.first->_code.c_str()) << "\n";
