@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-apache-red.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-red.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-x86_64-white.svg)](PLATFORM)
 [![SIMD](https://img.shields.io/badge/SIMD-AVX-blue.svg)](PLATFORM)
 [![SIMD](https://img.shields.io/badge/SIMD-AVX512F-red.svg)](PLATFORM)
