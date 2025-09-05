@@ -42,7 +42,7 @@ namespace FrogmanEngine
         
         class Vector3
         {
-            FE_CLASS(Vector3);
+            FE_CLASS();
             
         public:
             FE_PROPERTY(x)
@@ -99,7 +99,7 @@ namespace FrogmanEngine
     template<typename T>
     class Entity
     {
-        FE_CLASS(Entity);
+        FE_CLASS();
 
     public:
         Entity() : name("Unnamed Entity") {}
@@ -128,7 +128,7 @@ namespace FrogmanEngine
 
     class Player : public Entity<int>
     {
-        FE_CLASS(Player);
+        FE_CLASS();
     public:
         Player() : Entity("Unnamed Player") {}
 
@@ -152,7 +152,7 @@ namespace FrogmanEngine
 
         class Renderer
         {
-            FE_CLASS(Renderer)
+            FE_CLASS()
         public:
             FE_METHOD(init, void(void));
             void init()
@@ -188,7 +188,7 @@ namespace FrogmanEngine
 
         class Timer
         {
-            FE_CLASS(Timer)
+            FE_CLASS()
         public:
             Timer() = default;
             ~Timer() = default;

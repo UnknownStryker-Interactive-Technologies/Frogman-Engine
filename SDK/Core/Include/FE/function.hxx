@@ -116,7 +116,7 @@ class arguments<First, Second, Third, void, void, void, void, void, void, void> 
 public:
     using base_type = arguments<First, Second, void, void, void, void, void, void, void, void>;
     using first_type = typename base_type::first_type;
-    using second_type = typename base_type::Second;
+    using second_type = typename base_type::second_type;
     using third_type = std::conditional_t< std::is_reference_v<Third>, FE::ref<FE::remove_const_reference_t<Third>>, Third >;
 
     third_type _third;

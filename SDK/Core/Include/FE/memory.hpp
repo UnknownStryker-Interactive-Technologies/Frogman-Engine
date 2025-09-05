@@ -882,22 +882,22 @@ _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size byte
 #endif
 
 
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_kb = 1024;
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_mb = 1048576;
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_gb = 1073741824;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_KiB = 1024;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_MiB = 1048576;
+_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_GiB = 1073741824;
 
 
 _FE_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept
 {
-	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_kb);
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_KiB);
 }
 _FE_FORCE_INLINE_ var::float64 convert_bytes_to_megabytes(uint64 bytes_p) noexcept
 {
-	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_mb);
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_MiB);
 }
 _FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexcept
 {
-	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_gb);
+	return static_cast<var::float64>(bytes_p) / static_cast<var::float64>(one_GiB);
 }
 
 

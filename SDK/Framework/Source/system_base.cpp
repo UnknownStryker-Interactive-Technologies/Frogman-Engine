@@ -24,7 +24,8 @@ BEGIN_NAMESPACE(FE)
 
 
 system_base::system_base() noexcept
-	: m_target_component_types(framework::framework_base::get_framework().get_memory_resource())
+	:	m_target_component_types(framework::framework_base::get_framework().get_memory_resource()),
+		m_typename(FE::framework::framework_base::get_framework().get_memory_resource())
 {
 }
 

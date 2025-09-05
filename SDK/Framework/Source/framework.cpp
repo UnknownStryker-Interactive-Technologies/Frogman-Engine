@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/framework.hpp>
-
+#include <FE/framework/ECS.hpp>
 #include <FE/framework/reflection/private/load_reflection_data.h>
 
 #include <FE/algorithm/string.hxx>
@@ -112,8 +112,8 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	:	m_program_options(argc_p, argv_p), 
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
 		m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
-		m_method_reflection(81920), 
-		m_property_reflection(81920),
+		m_method_reflection(81920, get_memory_resource()), 
+		m_property_reflection(81920, get_memory_resource()),
 		m_enum_reflection(81920),
 		m_game_memory(),
 		m_ecs()
@@ -123,7 +123,6 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 
 framework_base::~framework_base() noexcept
 {
-	m_memory.reset();
 }
 
 

@@ -405,18 +405,6 @@ _FE_MAYBE_UNUSED_ constexpr inline bool has_base_type_v = has_base_type<T>::valu
 
 
 template <typename T, typename = void>
-struct is_reflective : std::false_type {};
-
-template <typename T>
-struct is_reflective<T, std::void_t<typename T::is_reflective>> : std::true_type {};
-
-template<typename T>
-_FE_MAYBE_UNUSED_ constexpr inline bool is_reflective_v = is_reflective<T>::value;
-
-
-
-
-template <typename T, typename = void>
 struct has_value_type : std::false_type {};
 
 template <typename T>
@@ -589,7 +577,6 @@ struct is_serializable
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (
 		(FE::is_trivial<T>::value == true) ||
-		(FE::is_reflective<T>::value == true) ||
 		(FE::is_scalable_array<T>::value == true) ||
 		(FE::is_array<T>::value == true) ||
 		(FE::is_string_class<T>::value == true)

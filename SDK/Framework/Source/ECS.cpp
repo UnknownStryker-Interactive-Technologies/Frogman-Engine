@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/ECS.hpp>
+#include <FE/framework/framework.hpp>
 
 #include <vector>
 
@@ -46,5 +47,28 @@ ECS::ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept
 	(void)file_p;
 }
 
+system_view<system_base> ECS::find_system(FE::ASCII* const system_name_p) noexcept
+{
+	typename system_table::iterator l_probe_result = m_system_table.find(robin_hood::hash_bytes(system_name_p, std::strlen(system_name_p)));
+	if (l_probe_result != m_system_table.end())
+	{
+		return l_probe_result->second;
+	}
+	return system_view<system_base>();
+}
+
+void ECS::serialize_entity(std::pmr::string& out_buffer, archetype_base* const entt_p) noexcept
+{
+	thread_local static std::pmr::string tl_s_temp_buffer = "serialize_component_";
+	for (auto& [hash, component] : entt_p->m_component_view_table)
+	{
+		FE_LOG(component->get_typename().c_str());
+		(out_buffer);
+		(hash);
+		(component);
+		//FE::task_base* l_component_serializer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve();
+		
+	}
+}
 
 END_NAMESPACE

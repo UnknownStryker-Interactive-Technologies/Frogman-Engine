@@ -31,7 +31,6 @@ limitations under the License.
 
 #include <FE/pool/memory_resource.hpp>
 
-#include <FE/framework/ECS.hpp>
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/thread_id.hpp>
 
@@ -41,6 +40,8 @@ limitations under the License.
 
 
 
+CLASS_FORWARD_DECLARATION(FE, ECS);
+CLASS_FORWARD_DECLARATION(FE, memory_resource);
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
 
 
@@ -106,7 +107,7 @@ public:
 	reflection::enum_registry& get_enum_reflection() noexcept;
 
 	FE::memory_resource* get_game_memory() noexcept;
-	FE::ECS& get_ecs() noexcept;
+	class FE::ECS& get_ecs() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);

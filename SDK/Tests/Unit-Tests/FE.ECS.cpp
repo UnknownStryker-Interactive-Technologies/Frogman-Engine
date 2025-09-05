@@ -13,7 +13,8 @@
 
 
 
-static 	FE::ECS ecs;
+static std::pmr::unsynchronized_pool_resource pool;
+static 	FE::ECS ecs(&pool);
 
 
 TEST(ECS, instantiate_entity)
@@ -113,7 +114,7 @@ void ECS_instantiate_entity(benchmark::State& state_p) noexcept
 		ecs.destruct_entity(e);
 	}
 }
-BENCHMARK(ECS_instantiate_entity);
+BENCHMARK(ECS_instantiate_entity)->Iterations(1000);
 
 void ECS_add_component(benchmark::State& state_p) noexcept
 {
@@ -130,7 +131,7 @@ void ECS_add_component(benchmark::State& state_p) noexcept
 	}
 	ecs.destruct_entity(e);
 }
-BENCHMARK(ECS_add_component)->Iterations(10000);
+BENCHMARK(ECS_add_component)->Iterations(1000);
 
 
 void EnTT_instantiate_entity(benchmark::State& state_p) noexcept
@@ -142,7 +143,7 @@ void EnTT_instantiate_entity(benchmark::State& state_p) noexcept
 		registry.destroy(entity);
 	}
 }
-BENCHMARK(EnTT_instantiate_entity);
+BENCHMARK(EnTT_instantiate_entity)->Iterations(1000);
 
 void EnTT_add_component(benchmark::State& state_p) noexcept
 {
@@ -159,4 +160,4 @@ void EnTT_add_component(benchmark::State& state_p) noexcept
 	}
 	registry.destroy(entity);
 }
-BENCHMARK(EnTT_add_component)->Iterations(10000);
+BENCHMARK(EnTT_add_component)->Iterations(1000);

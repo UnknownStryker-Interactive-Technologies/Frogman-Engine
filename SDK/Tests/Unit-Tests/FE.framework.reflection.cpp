@@ -17,13 +17,13 @@
 template<typename T>
 class generic_base
 {
-	FE_CLASS(generic_base);
+
 private:
 	FE_PROPERTY(m_value);
 	T m_value;
 
 public:
-	generic_base() = default;
+	generic_base() {};
 	~generic_base() = default;
 	generic_base(const T& value_p) : m_value(value_p) {}
 
@@ -37,13 +37,13 @@ public:
 class child_of_generic_base : public generic_base<int>
 {
 	FE_CLASS_HAS_A_BASE(generic_base<int>);
-	FE_CLASS(child_of_generic_base);
+
 private:
 	FE_PROPERTY(m_child_value);
 	var::int32 m_child_value;
 
 public:
-	child_of_generic_base() : generic_base<int>() {};
+	child_of_generic_base() : base_type() {};
 	~child_of_generic_base() = default;
 	child_of_generic_base(const int& value_p, const int& child_value_p) : generic_base<int>(value_p), m_child_value(child_value_p) {}
 	
@@ -56,7 +56,7 @@ public:
 
 struct plain_old_data
 {
-	FE_CLASS(plain_old_data);
+
 
 	FE_PROPERTY(_a);
 	var::int32 _a;
@@ -78,7 +78,7 @@ struct pod_with_array
 
 struct object_with_string
 {
-	FE_CLASS(object_with_string);
+
 
 	FE_PROPERTY(_a);
 	std::string _a;
@@ -86,7 +86,7 @@ struct object_with_string
 
 struct object_with_vector
 {
-	FE_CLASS(object_with_vector);
+
 
 	FE_PROPERTY(_a);
 	std::vector<std::string> _a;
@@ -95,7 +95,7 @@ struct object_with_vector
 class object : public object_with_vector
 {
 	FE_CLASS_HAS_A_BASE(object_with_vector);
-	FE_CLASS(object);
+
 	
 	FE_PROPERTY(m_text);
 	std::string m_text;
@@ -125,10 +125,10 @@ TEST(reflection, POD_serialization)
 	l_pod._c = 3;
 
 	std::pmr::string serialized_pod;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized_pod, l_pod);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized_pod, l_pod, "v0.0.0");
 
 	plain_old_data l_new_pod;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized_pod, l_new_pod);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized_pod, l_new_pod, "v0.0.0");
 
 	EXPECT_EQ(l_pod._a, l_new_pod._a);
 	EXPECT_EQ(l_pod._b, l_new_pod._b);
@@ -141,10 +141,10 @@ TEST(reflection, object_with_string_serialization)
 	l_str._a = "Hello World";
 
 	std::pmr::string serialized;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_str);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_str, "v0.0.0");
 
 	object_with_string l_new_str;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_str);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_str, "v0.0.0");
 
 	EXPECT_STREQ(l_str._a.data(), l_new_str._a.data());
 }
@@ -156,10 +156,10 @@ TEST(reflection, object_with_vector_serialization)
 	l_strs._a.push_back("Bye World");
 
 	std::pmr::string serialized;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_strs);
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_strs, "v0.0.0");
 
 	object_with_vector l_new_strs;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_strs);
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_strs, "v0.0.0");
 
 	EXPECT_STREQ(l_strs._a[0].data(), l_new_strs._a[0].data());
 	EXPECT_STREQ(l_strs._a[1].data(), l_new_strs._a[1].data());
@@ -169,12 +169,12 @@ TEST(reflection, method_call)
 {
 	object l_object("Jesus Loves You!");
 	//std::cout <<  << std::endl;
-	auto l_function_pointer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.get_text_method_meta.get_signature());
+	auto l_function_pointer = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.get_text_method_meta.get_method_name());
 	FE::ASCII* l_msg;
 	(*l_function_pointer)(&l_object, &l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Jesus Loves You!");
 
-	auto l_greeter = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.greet_static_method_meta.get_signature());
+	auto l_greeter = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(l_object.greet_static_method_meta.get_method_name());
 	(*l_greeter)(&l_msg, nullptr);
 	EXPECT_STREQ(l_msg, "Hello, reflection system!");
 }

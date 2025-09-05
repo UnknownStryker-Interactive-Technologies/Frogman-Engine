@@ -444,7 +444,7 @@ void fe_concurrent_vector_concurrent_push_back(benchmark::State& state)
 		l_executor.run(l_tasks);
 	}
 }
-BENCHMARK(fe_concurrent_vector_concurrent_push_back)->Iterations(1000);
+BENCHMARK(fe_concurrent_vector_concurrent_push_back)->Iterations(10);
 
 
 static void std_vector_concurrent_push_back(benchmark::State& state)
@@ -469,7 +469,7 @@ static void std_vector_concurrent_push_back(benchmark::State& state)
 		l_executor.run(l_tasks);
 	}
 }
-BENCHMARK(std_vector_concurrent_push_back)->Iterations(1000);
+BENCHMARK(std_vector_concurrent_push_back)->Iterations(10);
 
 
 static void ppl_concurrent_vector_concurrent_push_back(benchmark::State& state)
@@ -493,7 +493,7 @@ static void ppl_concurrent_vector_concurrent_push_back(benchmark::State& state)
 		l_executor.run(l_tasks);
 	}
 }
-BENCHMARK(ppl_concurrent_vector_concurrent_push_back)->Iterations(1000);
+BENCHMARK(ppl_concurrent_vector_concurrent_push_back)->Iterations(10);
 
 
 

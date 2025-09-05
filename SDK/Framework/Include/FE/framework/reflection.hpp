@@ -74,11 +74,11 @@ private:
 	using internal_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*>;
 
 	lock_type m_lock;
-	std::pmr::unsynchronized_pool_resource m_pool;
+	std::pmr::memory_resource* m_pool;
 	internal_map_type m_method_registry;
 
 public:
-	method_registry(FE::size map_capacity_p) noexcept;
+	method_registry(FE::size map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
 
 	~method_registry() noexcept = default;
 
@@ -101,9 +101,9 @@ public:
 
 		std::lock_guard<lock_type> l_lock(m_lock);
 
-		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.allocate(1);
+		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
-		typename internal_map_type::key_type l_key(task_name_p, &m_pool);
+		typename internal_map_type::key_type l_key(task_name_p, m_pool);
 
 		std::pair<typename internal_map_type::iterator, bool> l_result = m_method_registry.emplace(std::move(l_key), l_task);
 		if (l_result.second == false) // If true, then the key already exists
@@ -111,7 +111,7 @@ public:
 			// Are the keys identical? If not, then we have a collision.
 			FE_EXIT_IF(task_name_p != l_result.first->first, FE::ErrorCode::_FatalError_TableInsertionFailure,
 				"FE Runtime Reflection Metadata Registration Failure: the function name keys have collided.");
-			std::pmr::polymorphic_allocator<TaskType>{ &m_pool }.deallocate(l_task, 1);
+			std::pmr::polymorphic_allocator<TaskType>{ m_pool }.deallocate(l_task, 1);
 		}
 	}
 
@@ -234,7 +234,7 @@ public:
 	using input_buffer_iterator_type = typename input_buffer_type::iterator;
 
 private:
-	std::pmr::unsynchronized_pool_resource m_pool;
+	std::pmr::memory_resource* m_pool;
 	internal_map_type m_property_registry;
 	class_layer_stack m_class_layer;
 	data_on_heap_size_record m_scalable_container_size_record;
@@ -246,7 +246,7 @@ private:
 	robin_hood::unordered_map<std::pmr::string, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
 
 public:
-	property_registry(FE::size reflection_map_capacity_p) noexcept;
+	property_registry(FE::size reflection_map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
 
 	~property_registry() noexcept = default;
 
@@ -280,11 +280,11 @@ public:
 		l_property_meta_data.m_typename = reflection::type_id<T>().name();
 
 		std::lock_guard<lock_type> l_lock(m_lock);
-		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), &m_pool);
+		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), m_pool);
 		auto l_iterator = m_property_registry.find(l_host_class_instance_typename);
 		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
 		{
-			auto l_result = m_property_registry.emplace(l_host_class_instance_typename, class_property_list(&m_pool));
+			auto l_result = m_property_registry.emplace(l_host_class_instance_typename, class_property_list(m_pool));
 			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property_registry::register_property().");
 			l_iterator = l_result.first;
 		}
@@ -337,15 +337,15 @@ public:
 
 
 	template<typename T>
-	void serialize(std::pmr::string& out_ret_buffer_p, const T& object_p) noexcept
+	void serialize(std::pmr::string& out_ret_buffer_p, const T& object_p, FE::ASCII* const version_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be serialized.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 		out_ret_buffer_p.clear();
-		out_ret_buffer_p.reserve(1024); // Pre-allocate 1 KiB.
+		out_ret_buffer_p.reserve(one_KiB); // Pre-allocate 1 KiB.
 
 		std::lock_guard<lock_type> l_lock(m_lock);
-		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
+		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
@@ -354,7 +354,8 @@ public:
 		{
 			__push_parent_class_layers_recursive<T>();
 		}
-
+		out_ret_buffer_p += version_p;
+		out_ret_buffer_p += "\n";
 		out_ret_buffer_p += l_typename;
 		out_ret_buffer_p += "{";
 		__serialize_mutually_recursive<T>(out_ret_buffer_p, object_p);
@@ -362,7 +363,7 @@ public:
 
 		while (m_scalable_container_size_record.empty() == false)
 		{
-			std::pmr::string l_buffer(&m_pool);
+			std::pmr::string l_buffer(m_pool);
 			l_buffer.reserve(FE::algorithm::utility::count_int_digit_length(m_scalable_container_size_record.front()));
 			FE::algorithm::utility::uint_to_string(l_buffer.data(), l_buffer.capacity(), m_scalable_container_size_record.front());
 
@@ -370,12 +371,12 @@ public:
 			out_ret_buffer_p += "-";
 			m_scalable_container_size_record.pop_front();
 		}
-		out_ret_buffer_p += "\0";
+		out_ret_buffer_p += "EOF\0";
 	}
 
 	// TODO: add file versioning.
 	template<typename T>
-	void deserialize(const std::pmr::string& data_p, T& out_object_p) noexcept
+	void deserialize(const std::pmr::string& data_p, T& out_object_p, _FE_MAYBE_UNUSED_ FE::ASCII* const version_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
@@ -383,7 +384,7 @@ public:
 		FE_ASSERT(data_p.empty() == false, "Assertion failure: the input data buffer is empty.");
 
 		std::lock_guard<lock_type> l_lock(m_lock);
-		std::pmr::string l_typename(reflection::type_id<T>().name(), &m_pool);
+		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
@@ -394,6 +395,10 @@ public:
 		}
 
 		m_input_buffer = data_p;
+		// Checks the file version
+		FE_EXIT_IF(!algorithm::string::compare_ranged<char>(m_input_buffer.data(), algorithm::string::range{ 0, std::strlen(version_p) },
+															version_p, algorithm::string::range{ 0, std::strlen(version_p) }),
+															FE::ErrorCode::_FatalSerializationError_3XX_FileVersionMismatch, "Assertion failure: the serialization file version is not supported.");
 
 		m_position = m_input_buffer.begin();
 		m_position += m_input_buffer.find('{');
@@ -401,7 +406,7 @@ public:
 
 		// Checks the class type name
 		FE_EXIT_IF(!algorithm::string::compare_ranged<char>(l_typename.data(), algorithm::string::range{0, std::strlen(l_typename.data())},
-			m_input_buffer.c_str(), algorithm::string::range{ 0, static_cast<uint64>(m_position - m_input_buffer.begin()) }),
+															m_input_buffer.c_str(), algorithm::string::range{ std::strlen(version_p) + sizeof('\n'), static_cast<uint64>(m_position - m_input_buffer.begin())}),
 			FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
 		++m_position; // Point the first byte.
 
@@ -412,7 +417,11 @@ public:
 		l_size_indicator += l_pos;
 		l_size_indicator += 2; // to skip the "$-" and point to the first one.
 
-		while (l_size_indicator != m_input_buffer.end())
+		std::pmr::string::size_type l_eof_pos = m_input_buffer.find("EOF\0");
+		FE_ASSERT(l_eof_pos != m_input_buffer.npos, "Assertion failure: the serialization file is ill-formed or unsupported.");
+		auto l_file_end = m_input_buffer.begin() + l_eof_pos;
+		FE_ASSERT(l_file_end <= m_input_buffer.end(), "Assertion failure: the serialization file is ill-formed or unsupported.");
+		while (l_size_indicator != l_file_end)
 		{
 			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
 			FE_LOG_IF(l_info._value == 0, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
@@ -685,17 +694,13 @@ private:
 				m_scalable_container_size_record.push_back(l_container->size());
 				for (auto& element : *l_container)
 				{
-					if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
-					{
-						__serialize_mutually_recursive<typename Container::value_type>(out_ret_buffer_p, element);
-					}
-					else if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
+					if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
 					{
 						__serialize_by_foreach_mutually_recursive<typename Container::value_type>(out_ret_buffer_p, &element);
 					}
 					else
 					{
-						FE_LOG("Warning: could not perform __serialize_by_foreach_mutually_recursive() operation successfully.");
+						__serialize_mutually_recursive<typename Container::value_type>(out_ret_buffer_p, element);
 					}
 				}
 			}
@@ -734,17 +739,13 @@ private:
 			{
 				for (auto& element : *l_container)
 				{
-					if constexpr (FE::is_reflective<typename Container::value_type>::value == true)
-					{
-						__deserialize_mutually_recursive<typename Container::value_type>(element);
-					}
-					else if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
+					if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
 					{
 						__deserialize_by_foreach_mutually_recursive<typename Container::value_type>(&element);
 					}
 					else
 					{
-						FE_LOG("Warning: could not perform __deserialize_by_foreach_mutually_recursive() operation successfully.");
+						__deserialize_mutually_recursive<typename Container::value_type>(element);
 					}
 				}
 			}
@@ -857,48 +858,10 @@ using base_type = base_class;
 #endif
 
 
-#ifdef FE_CLASS
-#error FE_CLASS is a reserved Frogman Engine macro keyword.
-#else
-/*
-The FE_CLASS macro defines a class metadata structure for a given class name
-enabling reflection capabilities by registering construction and destruction tasks with a framework's reflection system.
-*** NOTE: Future versions won't require the FE_CLASS macro to enable reflection capabilities. ***
-*/
-#define FE_CLASS(class_name) \
-using is_reflective = decltype(true); \
-class class_metadata \
-{ \
-public: \
-	using type = class_name; \
-	class_metadata() noexcept \
-	{ \
-/*		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-                   std::string l_class_name = ::FE::framework::reflection::type_id<type>().name(); \
-                   l_class_name += "()"; \
-                   ::FE::framework::framework_base::get_framework().get_method_reflection() \
-                   .register_task< ::FE::c_style_task<void(void*)> > \
-                    ( l_class_name.c_str(), &::FE::framework::reflection::construct_object<class_name> ) \
-		); \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-                   std::string l_class_name = "~"; \
-                   l_class_name += ::FE::framework::reflection::type_id<type>().name(); \
-                   l_class_name += "()"; \
-                   ::FE::framework::framework_base::get_framework().get_method_reflection() \
-			       .register_task< ::FE::c_style_task<void(void*)> > \
-			        ( l_class_name.c_str(), &::FE::framework::reflection::destruct_object<class_name> ) \
-		);*/ \
-	} \
-}; \
-_FE_NO_UNIQUE_ADDRESS_ class_metadata class_name##_class_meta;
-#endif
-
-
 #ifdef FE_STRUCT
 #error FE_STRUCT is a reserved Frogman Engine macro keyword.
 #else
-//*** NOTE: Future versions won't require the FE_STRUCT macro to enable reflection capabilities. ***
-	#define FE_STRUCT(struct_name) FE_CLASS(struct_name)
+	#define FE_STRUCT() 
 #endif
 
 
@@ -914,20 +877,23 @@ class method_metadata_##method_name \
 { \
 	static_assert(::FE::is_function<__VA_ARGS__>::value == true, "Static assertion failed: the type is not a function."); \
 public: \
-	_FE_FORCE_INLINE_ method_metadata_##method_name() noexcept \
+	_FE_FORCE_INLINE_ method_metadata_##method_name(auto* this_p) noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection() \
-                                                .register_task< ::FE::cpp_style_task<typename class_metadata::type, __VA_ARGS__> > \
-			                                     ( get_signature(), &class_metadata::type::method_name ) \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_,	m_method_name = __get_signature<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>>(); \
+												::FE::framework::framework_base::get_framework().get_method_reflection() \
+                                                .register_task< ::FE::cpp_style_task<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, __VA_ARGS__> > \
+			                                     ( m_method_name, &::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>::method_name ) \
         ); \
 	} \
-	static ::std::string& get_signature() noexcept \
+private: \
+	template <typename T = void> \
+	::std::string& __get_signature() noexcept \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
 			::std::string l_signature_body = " "; \
 			l_signature_body.reserve(128); \
-			l_signature_body += ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
+			l_signature_body += ::FE::framework::reflection::type_id<T>().name(); \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
 			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
@@ -942,8 +908,11 @@ public: \
 		); \
 		return l_s_full_signature; \
 	} \
+	std::string_view m_method_name; \
+public: \
+	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta;
+_FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta = this;
 #endif
 
 
@@ -958,20 +927,23 @@ capturing its signature and associating it with a task for runtime method invoca
 class static_method_metadata_##method_name \
 { \
 public: \
-	_FE_FORCE_INLINE_ static_method_metadata_##method_name() noexcept \
+	_FE_FORCE_INLINE_ static_method_metadata_##method_name(auto* this_p) noexcept \
 	{ \
-		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_method_reflection() \
+		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_,	m_method_name = __get_signature<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>>(); \
+												::FE::framework::framework_base::get_framework().get_method_reflection() \
                                                 .register_task< ::FE::c_style_task<__VA_ARGS__> > \
-                                                 ( get_signature(), &class_metadata::type::method_name ) \
+                                                 ( m_method_name, &::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>::method_name ) \
         ); \
 	} \
-	static ::std::string& get_signature() noexcept \
+private: \
+	template <typename T = void> \
+	::std::string& __get_signature() noexcept \
 	{ \
 		static ::std::string l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
 			::std::string l_signature_body = " "; \
 			l_signature_body.reserve(128); \
-			l_signature_body += ::FE::framework::reflection::type_id<typename class_metadata::type>().name(); \
+			l_signature_body += ::FE::framework::reflection::type_id<T>().name(); \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
 			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
@@ -986,8 +958,11 @@ public: \
 		); \
 		return l_s_full_signature; \
 	} \
+	std::string_view m_method_name; \
+public: \
+	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ static_method_metadata_##method_name method_name##_static_method_meta;
+_FE_NO_UNIQUE_ADDRESS_ static_method_metadata_##method_name method_name##_static_method_meta = this;
 #endif
 
 
@@ -1002,10 +977,10 @@ ensuring it is only registered once during the application's execution.
 class property_metadata_##property_name \
 { \
 public: \
-	_FE_FORCE_INLINE_ property_metadata_##property_name(typename class_metadata::type* const this_p) noexcept \
+	_FE_FORCE_INLINE_ property_metadata_##property_name(auto* this_p) noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection() \
-                                                .register_property<typename class_metadata::type, decltype(property_name)> \
+                                                .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(property_name)> \
                                                  ( *this_p, this_p->property_name, #property_name ) \
 		); \
 	} \

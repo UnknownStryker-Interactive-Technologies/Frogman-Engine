@@ -16,8 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/framework/framework.hpp>
-#include <FE/framework/reflection.hpp>
+#include <FE/framework/archetype_base.hpp>
 
 
 
@@ -25,10 +24,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class world final
+class world : public FE::archetype_base
 {
-	FE_CLASS(world);
-
 public:
 	world() noexcept;
 	~world() noexcept;

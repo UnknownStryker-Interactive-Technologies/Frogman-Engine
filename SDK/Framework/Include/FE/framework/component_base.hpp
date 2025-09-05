@@ -71,6 +71,7 @@ namespace internal::ECS
 	{
 		std::pmr::forward_list<components>::iterator _group;
 		var::size _index;
+		std::pmr::string _typename;
 	};
 }
 
@@ -86,6 +87,8 @@ private:
 public:
 	component_base() noexcept;
 	virtual ~component_base() noexcept;
+
+	_FE_FORCE_INLINE_ const std::pmr::string& get_typename() const { return m_identifier._typename; }
 };
 
 

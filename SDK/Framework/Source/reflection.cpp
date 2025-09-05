@@ -6,16 +6,16 @@
 BEGIN_NAMESPACE(FE::framework::reflection)
 
 
-method_registry::method_registry(FE::size map_capacity_p) noexcept
+method_registry::method_registry(FE::size map_capacity_p, std::pmr::memory_resource* pool_p) noexcept
 	: m_lock(),
-	m_pool(),
+	m_pool(pool_p),
 	m_method_registry(map_capacity_p)
 {
 }
 
 FE::boolean method_registry::check_presence(const std::string_view& key_p) noexcept
 {
-	typename internal_map_type::key_type l_key(key_p, &m_pool);
+	typename internal_map_type::key_type l_key(key_p, m_pool);
 	std::lock_guard<lock_type> l_lock(m_lock);
 	for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 	{
@@ -29,7 +29,7 @@ FE::boolean method_registry::check_presence(const std::string_view& key_p) noexc
 
 FE::task_base* method_registry::retrieve(const std::string_view& key_p) noexcept
 {
-	typename internal_map_type::key_type l_key(key_p, &m_pool);
+	typename internal_map_type::key_type l_key(key_p, m_pool);
 	std::lock_guard<lock_type> l_lock(m_lock);
 	for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 	{
@@ -44,10 +44,10 @@ FE::task_base* method_registry::retrieve(const std::string_view& key_p) noexcept
 
 
 
-property_registry::property_registry(FE::size reflection_map_capacity_p) noexcept
-	: m_pool(), m_property_registry(reflection_map_capacity_p),
-	m_class_layer(&m_pool), m_scalable_container_size_record(&m_pool),
-	m_lock(), m_input_buffer(&m_pool), m_position(),
+property_registry::property_registry(FE::size reflection_map_capacity_p, std::pmr::memory_resource* pool_p) noexcept
+	: m_pool(pool_p), m_property_registry(reflection_map_capacity_p),
+	m_class_layer(m_pool), m_scalable_container_size_record(m_pool),
+	m_lock(), m_input_buffer(m_pool), m_position(),
 	m_instance_metadata_lut(reflection_map_capacity_p) 
 {
 }

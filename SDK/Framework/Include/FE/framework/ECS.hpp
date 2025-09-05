@@ -165,6 +165,7 @@ public:
 			}
 			
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
 			
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -188,6 +189,7 @@ public:
 			l_probe_result->second._first.emplace_front();
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
 			
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -243,6 +245,46 @@ public:
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		remove_component<Component>(entt_p.operator->());
 	}
+
+
+	template <class System>
+	system_view<System> register_system() noexcept
+	{
+		static_assert(std::is_base_of_v<FE::system_base, System>, "Static assertion failed: the template argument System must be derived from FE::system_base.");
+		typename system_table::iterator l_probe_result = m_system_table.find(FE::framework::reflection::type_id<System>().hash_code());
+		if (l_probe_result != m_system_table.end())
+		{
+			return FE::down_cast_owner_to_observer<System>(l_probe_result->second);
+		}
+		FE::system l_alloc_result = FE::make_owner<System>(m_memory_resource);
+		l_alloc_result->m_typename = std::pmr::string(FE::framework::reflection::type_id<System>().name(), m_memory_resource);
+		std::pair<typename system_table::iterator, bool> l_result = m_system_table.emplace(FE::framework::reflection::type_id<System>().hash_code(), std::move(l_alloc_result));
+		
+		if (l_result.second == true) // The emplace() was successful. 
+		{
+			return FE::down_cast_owner_to_observer<System>(l_alloc_result);
+		}
+		return system_view<System>();
+	}
+
+	template <class System>
+	system_view<System> find_system() noexcept
+	{
+		static_assert(std::is_base_of_v<FE::system_base, System>, "Static assertion failed: the template argument System must be derived from FE::system_base.");
+		typename system_table::iterator l_probe_result = m_system_table.find(FE::framework::reflection::type_id<System>().hash_code());
+		if (l_probe_result != m_system_table.end())
+		{
+			return FE::down_cast_owner_to_observer<System>(l_probe_result->second);
+		}
+		return system_view<System>();
+	}
+
+	system_view<system_base> find_system(FE::ASCII* const system_name_p) noexcept;
+
+
+	void serialize_entity(std::pmr::string& out_buffer, archetype_base* const entt_p) noexcept;
+
+	// 	void deserialize_entity(const std::pmr::string& buffer, archetype_base* const entt_p) noexcept;
 };
 
 

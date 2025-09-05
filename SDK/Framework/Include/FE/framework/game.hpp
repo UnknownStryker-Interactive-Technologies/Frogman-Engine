@@ -17,8 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 
-#include <FE/framework/framework.hpp>
-#include <FE/framework/reflection.hpp>
+#include <FE/framework/archetype_base.hpp>
 
 
 
@@ -26,10 +25,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class game
+class game : public FE::archetype_base
 {
-	FE_CLASS(game);
-
 public:
 	game() noexcept = default;
 	~game() noexcept = default;

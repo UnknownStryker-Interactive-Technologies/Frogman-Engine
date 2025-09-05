@@ -165,23 +165,58 @@ void header_tool_engine::__output_enum_struct_metadata(reflection_metadata& out_
 void header_tool_engine::__generate_reflection_code(const reflection_metadata_set_t& metadata_set_p) noexcept
 {
 	std::pmr::wstring l_generated_code(get_memory_resource());
-	l_generated_code.reserve(10240);
+	l_generated_code.reserve(1 * FE::one_MiB);
 	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework/framework.hpp> \n";
-	for (const reflection_metadata& header_file : metadata_set_p)
+	for (const reflection_metadata& header_file : metadata_set_p) // #include <> statements gereration
 	{
 		l_generated_code += L"#include <";
 		l_generated_code += header_file._header_file_path;
 		l_generated_code += L">\n";
 	}
-	l_generated_code += L"\nvoid load_reflection_data()\n{\n";
-	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::ECS::instanciate_entity<player>);
-	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::ECS::destruct_entity<player>);
-	constexpr FE::wchar* l_class_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ";
+
+
+	l_generated_code += L"\n\n";
+	std::pmr::wstring l_namespace_concat_replaced_with_underscores(get_memory_resource());
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
-		for (const std::pmr::wstring& identifier : header_file._archetypes)
+		for (const std::pmr::wstring& identifier : header_file._components)
 		{
-			l_generated_code += l_class_reflexpr_frame;
+			l_namespace_concat_replaced_with_underscores = identifier; // The identifier may contain namespace concatenation, so we have to replace "::" with "_"
+			for (std::pmr::wstring::size_type pos = l_namespace_concat_replaced_with_underscores.find(L"::"); pos != std::pmr::wstring::npos; pos = l_namespace_concat_replaced_with_underscores.find(L"::"))
+			{
+				l_namespace_concat_replaced_with_underscores.replace(pos, 2, L"_");
+			}
+
+			l_generated_code += L"void serialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L"(std::pmr::string& out_buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
+			l_generated_code += L"{\n";
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().serialize(out_buffer_p, *FE::polymorphic_cast<";
+			l_generated_code += identifier;
+			l_generated_code += L"* const>(component_p), version_p);\n";
+			l_generated_code += L"}\n\n";
+
+			l_generated_code += L"void deserialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L"(const std::pmr::string& buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
+			l_generated_code += L"{\n";
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().deserialize(buffer_p, *FE::polymorphic_cast<";
+			l_generated_code += identifier;
+			l_generated_code += L"* const>(component_p), version_p);\n";
+			l_generated_code += L"}\n\n";
+		}
+	}
+
+
+	l_generated_code += L"\nvoid load_reflection_data()\n{\n"; // The void load_reflection_data() implementation generation
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::ECS::instanciate_entity<player>);
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::ECS::destruct_entity<player>);
+	constexpr FE::wchar* l_ECS_reflection_registry_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ";
+	for (const reflection_metadata& header_file : metadata_set_p)
+	{
+		for (const std::pmr::wstring& identifier : header_file._archetypes) // Archetypes
+		{
+			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
 			l_generated_code += L"::FE::entity<";
 			l_generated_code += identifier;
 			l_generated_code += L">(::FE::ASCII* const)> >(\"";
@@ -190,7 +225,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
-			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += l_ECS_reflection_registry_frame; // Archetype destructor reflection
 			l_generated_code += L"void(const ::FE::entity<";
 			l_generated_code += identifier;
 			l_generated_code += L">&)> >(\"~";
@@ -200,9 +235,11 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L">);\n";
 		}
 
+		l_generated_code += L"\n";
+
 		for (const std::pmr::wstring& identifier : header_file._components)
 		{
-			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += l_ECS_reflection_registry_frame; // Component adder reflection
 			l_generated_code += L"::FE::component_view<";
 			l_generated_code += identifier;
 			l_generated_code += L">(::FE::archetype_base* const";
@@ -212,17 +249,79 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
-			l_generated_code += l_class_reflexpr_frame;
+			l_generated_code += l_ECS_reflection_registry_frame; // Component remover reflection
 			l_generated_code += L"void(::FE::archetype_base* const";
 			l_generated_code += L")> >(\"~";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::remove_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
+
+			l_generated_code += L"\n";
+			l_namespace_concat_replaced_with_underscores = identifier; // The identifier may contain namespace concatenation, so we have to replace "::" with "_"
+			for (std::pmr::wstring::size_type pos = l_namespace_concat_replaced_with_underscores.find(L"::"); pos != std::pmr::wstring::npos; pos = l_namespace_concat_replaced_with_underscores.find(L"::"))
+			{
+				l_namespace_concat_replaced_with_underscores.replace(pos, 2, L"_");
+			}
+
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::std::pmr::string&, ::FE::component_base* const, ::FE::ASCII* const)> >(\"serialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L"\", &serialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L");\n";
+
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(const ::std::pmr::string&, ::FE::component_base* const, ::FE::ASCII* const)> >(\"deserialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L"\", &deserialize_component";
+			l_generated_code += l_namespace_concat_replaced_with_underscores;
+			l_generated_code += L");\n";
 		}
 
+		l_generated_code += L"\n";
+
+		for (const std::pmr::wstring& identifier : header_file._systems)
+		{
+			l_generated_code += l_ECS_reflection_registry_frame; // System adder reflection
+			l_generated_code += L"::FE::system_view<";
+			l_generated_code += identifier;
+			l_generated_code += L">()> >(\"";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &::FE::ECS::register_system<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+		}
+
+		l_generated_code += L"\n";
+
+		constexpr FE::wchar* l_class_and_structs_reflection_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<";
+		for (const std::pmr::wstring& identifier : header_file._class_and_structs) // Classes and structs reflection
+		{
+			l_generated_code += l_class_and_structs_reflection_frame;
+			l_generated_code += identifier;
+			l_generated_code += L"*(";
+			l_generated_code += identifier;
+			l_generated_code += L"*)> >(\"construct ";
+			l_generated_code += identifier;
+			l_generated_code += L"\", ";
+			l_generated_code += L"&::std::construct_at<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+
+			l_generated_code += l_class_and_structs_reflection_frame;
+			l_generated_code += L"void(";
+			l_generated_code += identifier;
+			l_generated_code += L"*)> >(\"destruct ";
+			l_generated_code += identifier;
+			l_generated_code += L"\", ";
+			l_generated_code += L"&::std::destroy_at<";
+			l_generated_code += identifier;
+			l_generated_code += L">);\n";
+		}
+
+		l_generated_code += L"\n";
+
 		constexpr FE::wchar* l_enum_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";
-		for (const std::pmr::vector<std::pmr::wstring>& enum_struct : header_file._enum_structs)
+		for (const std::pmr::vector<std::pmr::wstring>& enum_struct : header_file._enum_structs) // Enum structs reflection
 		{
 			// The first element of the enum_struct vector is the name of the enum struct, and the rest are the enum values.
 			const std::pmr::wstring& identifier = enum_struct.front();

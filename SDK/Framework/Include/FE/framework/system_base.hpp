@@ -16,8 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-
+#include <FE/framework/framework.hpp>
 #include <FE/framework/smart_ptr.hxx>
+
+#include <FE/framework/type_info.hpp>
 
 #include <string>
 #include <vector>
@@ -39,14 +41,25 @@ using system_view = FE::smart_ptr<System, FE::RefType::_Observer>;
 
 class system_base
 {
+	friend class ECS;
 private:
 	std::pmr::vector<std::pmr::string> m_target_component_types;
+	std::pmr::string m_typename;
 
 public:
 	system_base() noexcept;
 	virtual ~system_base() noexcept;
 
 	virtual void operator()(class component_base* const component_p) = 0;
+
+	_FE_FORCE_INLINE_ const std::pmr::string& get_typename() const { return m_typename; }
+	
+	template<class Component>
+	_FE_FORCE_INLINE_ void subscribe_component() noexcept
+	{
+		static_assert(std::is_base_of<FE::component_base, Component>::value, "An invalid component type detected."); 
+		m_target_component_types.emplace_back(FE::framework::reflection::type_id<Component>().name(), FE::framework::framework_base::get_framework().get_memory_resource());
+	}
 };
 
 

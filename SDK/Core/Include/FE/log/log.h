@@ -257,7 +257,8 @@ namespace FE
 		_FatalInputError_2XX_Null = 202,
 
 		_FatalSerializationError_3XX_TypeMismatch = 300,
-		_FatalSerializationError_3XX_TypeNotFound = 301
+		_FatalSerializationError_3XX_TypeNotFound = 301,
+		_FatalSerializationError_3XX_FileVersionMismatch = 302,
 	};
 }
 #endif

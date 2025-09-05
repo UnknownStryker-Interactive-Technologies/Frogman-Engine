@@ -17,6 +17,8 @@ limitations under the License.
 #include <FE/framework/reflection.hpp>
 
 
+
+
 class terrorist : public FE::archetype_base
 {
 public:
@@ -115,4 +117,16 @@ public:
 
 		l_health->_health -= 10;
 	}
+};
+
+
+
+
+struct config
+{
+	FE_STRUCT();
+};
+
+class config2
+{
 };
