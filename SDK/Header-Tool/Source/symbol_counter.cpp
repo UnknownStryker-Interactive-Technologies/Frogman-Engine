@@ -28,6 +28,7 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 {
 	symbol_count l_count{ 0, 0, 0 };
 	bool l_is_template = false;
+	bool l_is_enum = false;
 
 	while (begin_p != end_p)
 	{
@@ -40,6 +41,12 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Class:
+			if(l_is_enum == true)
+			{
+				l_is_enum = false;
+				break;
+			}
+
 			if (l_is_template == true)
 			{
 				__skip_code_block(begin_p, end_p);
@@ -50,6 +57,12 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Struct:
+			if(l_is_enum == true)
+			{
+				l_is_enum = false;
+				break;
+			}
+
 			if (l_is_template == true)
 			{
 				__skip_code_block(begin_p, end_p);
@@ -61,6 +74,7 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 
 		case Vocabulary::_Enum:
 			++l_count._enums;
+			l_is_enum = true;
 			break;
 
 		case Vocabulary::_Template:
@@ -84,6 +98,8 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 {
 	std::pmr::list<Vocabulary> l_scope_stack(get_memory_resource());
 	symbol_count l_count{ 0, 0, 0 };
+	bool l_is_template = false;
+	bool l_is_enum = false;
 
 	while (begin_p != end_p)
 	{
@@ -96,9 +112,16 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 		case Vocabulary::_Class:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_Struct:
-			if (std::prev(begin_p, 1)->_vocabulary == Vocabulary::_EndTemplateArgs)
+			if(l_is_enum == true)
+			{
+				l_is_enum = false;
+				break;
+			}
+
+			if (l_is_template ==  true)
 			{
 				__skip_code_block(begin_p, end_p);
+				l_is_template = false;
 				break;
 			}
 			l_scope_stack.push_back(begin_p->_vocabulary);
@@ -106,10 +129,12 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 
 		case Vocabulary::_Enum:
 			++l_count._enums;
+			l_is_enum = true;
 			break;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(begin_p);
+			l_is_template = true;
 			break;
 
 
