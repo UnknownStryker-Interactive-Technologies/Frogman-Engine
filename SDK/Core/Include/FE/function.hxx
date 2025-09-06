@@ -30,7 +30,7 @@ BEGIN_NAMESPACE(FE)
 class void_t{};
 
 
-enum class ARGUMENTS_COUNT : uint8
+enum class ArgumentCount : uint8
 {
     _0 = 0,
     _1 = 1,
@@ -51,6 +51,7 @@ class argument_base
 public:
     virtual ~argument_base() noexcept = default;
 };
+
 
 /*
 The arguments class template in the _FE namespace is designed to hold up to ten template parameters
@@ -73,7 +74,7 @@ template<>
 class arguments<void, void, void, void, void, void, void, void, void, void> : public argument_base
 {
 public:
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_0;
+    static constexpr inline ArgumentCount count = ArgumentCount::_0;
 };
 
 template<typename First>
@@ -83,12 +84,12 @@ public:
     using first_type = std::conditional_t< std::is_reference_v<First>, FE::ref<FE::remove_const_reference_t<First>>, First >;
 
     first_type _first;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_1;
+    static constexpr inline ArgumentCount count = ArgumentCount::_1;
 
     arguments() noexcept 
         : _first() {}
 
-    arguments(const First& first_p) noexcept
+    arguments(const first_type& first_p) noexcept
         : _first(first_p) {}
 };
 
@@ -101,12 +102,12 @@ public:
     using second_type = std::conditional_t< std::is_reference_v<Second>, FE::ref<FE::remove_const_reference_t<Second>>, Second >;
 
     second_type _second;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_2;
+    static constexpr inline ArgumentCount count = ArgumentCount::_2;
 
     arguments() noexcept 
         : base_type(), _second() {}
     
-    arguments(const First& first_p, const Second& second_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p) noexcept
         : base_type(first_p), _second(second_p) {}
 };
 
@@ -120,12 +121,12 @@ public:
     using third_type = std::conditional_t< std::is_reference_v<Third>, FE::ref<FE::remove_const_reference_t<Third>>, Third >;
 
     third_type _third;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_3;
+    static constexpr inline ArgumentCount count = ArgumentCount::_3;
 
     arguments() noexcept 
         : base_type(), _third() {}
     
-    arguments(const First& first_p, const Second& second_p, const Third& third_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p) noexcept
         : base_type(first_p, second_p), _third(third_p) {}
 };
 
@@ -140,12 +141,12 @@ public:
     using fourth_type = std::conditional_t< std::is_reference_v<Fourth>, FE::ref<FE::remove_const_reference_t<Fourth>>, Fourth >;
 
     fourth_type _fourth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_4;
+    static constexpr inline ArgumentCount count = ArgumentCount::_4;
 
     arguments() noexcept
         : base_type(), _fourth() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p) noexcept
         : base_type(first_p, second_p, third_p), _fourth(fourth_p) {}
 };
 
@@ -161,13 +162,13 @@ public:
     using fifth_type = std::conditional_t< std::is_reference_v<Fifth>, FE::ref<FE::remove_const_reference_t<Fifth>>, Fifth >;
 
     fifth_type _fifth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_5;
+    static constexpr inline ArgumentCount count = ArgumentCount::_5;
 
     arguments() noexcept 
         : base_type(), _fifth() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p, 
-                             const Fifth& fifth_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p), _fifth(fifth_p) {}
 };
 
@@ -184,13 +185,13 @@ public:
     using sixth_type = std::conditional_t< std::is_reference_v<Sixth>, FE::ref<FE::remove_const_reference_t<Sixth>>, Sixth >;
 
     sixth_type _sixth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_6;
+    static constexpr inline ArgumentCount count = ArgumentCount::_6;
 
     arguments() noexcept 
         : base_type(), _sixth() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
-                             const Fifth& fifth_p, const Sixth& sixth_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p, const sixth_type& sixth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p), _sixth(sixth_p) {}
 };
 
@@ -208,14 +209,14 @@ public:
     using seventh_type = std::conditional_t< std::is_reference_v<Seventh>, FE::ref<FE::remove_const_reference_t<Seventh>>, Seventh >;
 
     seventh_type _seventh;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_7;
+    static constexpr inline ArgumentCount count = ArgumentCount::_7;
 
 
     arguments() noexcept
         : base_type(), _seventh() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
-                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p, const sixth_type& sixth_p, const seventh_type& seventh_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p), _seventh(seventh_p) {}
 };
 
@@ -234,13 +235,13 @@ public:
     using eighth_type = std::conditional_t< std::is_reference_v<Eighth>, FE::ref<FE::remove_const_reference_t<Eighth>>, Eighth >;
 
     eighth_type _eighth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_8;
+    static constexpr inline ArgumentCount count = ArgumentCount::_8;
 
     arguments() noexcept
         : base_type(), _eighth() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
-                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p)
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p, const sixth_type& sixth_p, const seventh_type& seventh_p, const eighth_type& eighth_p)
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p), _eighth(eighth_p) {}
 };
 
@@ -260,14 +261,14 @@ public:
     using ninth_type = std::conditional_t< std::is_reference_v<Ninth>, FE::ref<FE::remove_const_reference_t<Ninth>>, Ninth >;
 
     ninth_type _ninth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_9;
+    static constexpr inline ArgumentCount count = ArgumentCount::_9;
 
     arguments() noexcept 
         : base_type(), _ninth() {}
 
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
-                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
-                             const Ninth& ninth_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p, const sixth_type& sixth_p, const seventh_type& seventh_p, const eighth_type& eighth_p,
+                             const ninth_type& ninth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p), _ninth(ninth_p) {}
 };
 
@@ -288,17 +289,18 @@ public:
     using tenth_type = std::conditional_t< std::is_reference_v<Tenth>, FE::ref<FE::remove_const_reference_t<Tenth>>, Tenth >;
 
     tenth_type _tenth;
-    static constexpr inline ARGUMENTS_COUNT count = ARGUMENTS_COUNT::_10;
+    static constexpr inline ArgumentCount count = ArgumentCount::_10;
 
 
     arguments() noexcept 
         : base_type(), _tenth() {}
         
-    arguments(const First& first_p, const Second& second_p, const Third& third_p, const Fourth& fourth_p,
-                             const Fifth& fifth_p, const Sixth& sixth_p, const Seventh& seventh_p, const Eighth& eighth_p,
-                             const Ninth& ninth_p, const Tenth& tenth_p) noexcept
+    arguments(const first_type& first_p, const second_type& second_p, const third_type& third_p, const fourth_type& fourth_p,
+                             const fifth_type& fifth_p, const sixth_type& sixth_p, const seventh_type& seventh_p, const eighth_type& eighth_p,
+                             const ninth_type& ninth_p, const tenth_type& tenth_p) noexcept
         : base_type(first_p, second_p, third_p, fourth_p, fifth_p, sixth_p, seventh_p, eighth_p, ninth_p), _tenth(tenth_p) {}
 };
+
 
 /*
 The cpp_style_task class template in the FE namespace encapsulates a callable task that can invoke a member function of a specified class type with a variable number of arguments
@@ -586,7 +588,6 @@ public:
 };
 
 
-
 /*
 The FE::task_base class is an abstract base class designed for defining tasks that can be executed with both C and C++ style function calls
 providing a virtual function interface to check for null function pointers.
@@ -616,10 +617,10 @@ class cpp_style_task : public task_base
 public:
     using class_type = C;
     using task_impl_type = TaskImpl;
+    using return_type = typename FE::method<class_type, task_impl_type>::return_type;
 
-    using task_type = typename FE::method<C, TaskImpl>::method_type;
+    using task_type = typename FE::method<class_type, task_impl_type>::method_type;
     using arguments_buffer_type = ArgumentsBufferType;
-    using return_type = typename FE::method<C, TaskImpl>::return_type;
     
 private:
     task_type m_method;
@@ -638,62 +639,62 @@ public:
         FE_ASSERT(instance_p != nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(m_instance));
         C* l_object = instance_p.get<C*>();
         arguments_buffer_type* const l_arguments = FE::polymorphic_cast<arguments_buffer_type* const>(arguments_p);
-        if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
+        if constexpr (arguments_buffer_type::count != ArgumentCount::_0)
         {
             FE_ASSERT(l_arguments != nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
         }
 
         if constexpr (std::is_same<return_type, void>::value == true)
         {
-            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ArgumentCount::_0)
             {
                 (l_object->*m_method)();
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_1)
             {
                 (l_object->*m_method)(l_arguments->_first);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_2)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_3)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_4)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_5)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_6)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_7)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_8)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_9)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -701,7 +702,7 @@ public:
                     l_arguments->_seventh, l_arguments->_eighth,
                     l_arguments->_ninth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_10)
             {
                 (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -712,55 +713,55 @@ public:
         }
         else if constexpr (std::is_same<return_type, void>::value == false)
         {
-            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ArgumentCount::_0)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)();
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_1)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_2)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_3)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_4)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_5)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_6)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_7)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_8)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_9)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -768,7 +769,7 @@ public:
                     l_arguments->_seventh, l_arguments->_eighth,
                     l_arguments->_ninth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_10)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = (l_object->*m_method)(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -807,10 +808,10 @@ class c_style_task : public task_base
 {
 public:
     using task_impl_type = TaskImpl;
+    using return_type = typename FE::function<task_impl_type>::return_type;
 
-    using task_type = typename FE::function<TaskImpl>::function_type;
+    using task_type = typename FE::function<task_impl_type>::function_type;
     using arguments_buffer_type = ArgumentsBufferType;
-    using return_type = typename FE::function<TaskImpl>::return_type;
 
 private:
     task_type m_function;
@@ -827,62 +828,62 @@ public:
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
         arguments_buffer_type* const l_arguments = FE::polymorphic_cast<arguments_buffer_type* const>(arguments_p);
-        if constexpr (arguments_buffer_type::count != ARGUMENTS_COUNT::_0)
+        if constexpr (arguments_buffer_type::count != ArgumentCount::_0)
         {
             FE_NEGATIVE_ASSERT(l_arguments == nullptr, "Assertion Failure: failed to down cast an argument instance pointer from argument_base*.");
         }
 
         if constexpr (std::is_same<return_type, void>::value == true)
         {
-            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ArgumentCount::_0)
             {
                 m_function();
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_1)
             {
                 m_function(l_arguments->_first);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_2)
             {
                 m_function(l_arguments->_first, l_arguments->_second);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_3)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_4)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_5)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_6)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_7)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_8)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_9)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -890,7 +891,7 @@ public:
                     l_arguments->_seventh, l_arguments->_eighth,
                     l_arguments->_ninth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_10)
             {
                 m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -901,55 +902,55 @@ public:
         }
         else if constexpr (std::is_same<return_type, void>::value == false)
         {
-            if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_0)
+            if constexpr (arguments_buffer_type::count == ArgumentCount::_0)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function();
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_1)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_1)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_2)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_2)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_3)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_3)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_4)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_4)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_5)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_5)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_6)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_6)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_7)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_7)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_8)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_8)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
                     l_arguments->_fifth, l_arguments->_sixth,
                     l_arguments->_seventh, l_arguments->_eighth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_9)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_9)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -957,7 +958,7 @@ public:
                     l_arguments->_seventh, l_arguments->_eighth,
                     l_arguments->_ninth);
             }
-            else if constexpr (arguments_buffer_type::count == ARGUMENTS_COUNT::_10)
+            else if constexpr (arguments_buffer_type::count == ArgumentCount::_10)
             {
                 *(out_ret_buffer_p.get<return_type*>()) = m_function(l_arguments->_first, l_arguments->_second,
                     l_arguments->_third, l_arguments->_fourth,
@@ -984,6 +985,7 @@ public:
         FE_ASSERT(false, "Invalid FE::c_style_task invocation");
     }
 };
+
 
 END_NAMESPACE
 #endif

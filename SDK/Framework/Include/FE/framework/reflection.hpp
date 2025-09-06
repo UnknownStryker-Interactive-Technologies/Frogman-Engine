@@ -347,7 +347,15 @@ public:
 		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);
 		auto l_search_result = m_property_registry.find(l_typename);
-		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "Serialization failed: could not find the requested type information or the class/struct is empty");
+		if (l_search_result == m_property_registry.end())
+		{
+#ifdef _ENABLE_LOG_
+			constexpr FE::ASCII* l_error_code = TO_STRING(ErrorCode::_FatalSerializationError_3XX_TypeNotFound);
+			constexpr FE::ASCII* l_error_message = "serialization failed - could not find the requested type information";
+			FE_LOG("Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
+#endif
+			return;
+		}
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 
 		if constexpr (FE::has_base_type<T>::value == true)
@@ -381,7 +389,15 @@ public:
 		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
 		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 
-		FE_ASSERT(data_p.empty() == false, "Assertion failure: the input data buffer is empty.");
+		if (data_p.empty() == true)
+		{
+#ifdef _ENABLE_LOG_
+			constexpr FE::ASCII* l_error_code = TO_STRING(ErrorCode::_FatalDeserializationError_3XX_FileBufferEmpty);
+			constexpr FE::ASCII* l_error_message = "deserialization failed - the input data buffer is empty";
+			FE_LOG("Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
+#endif
+			return;
+		}
 
 		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);

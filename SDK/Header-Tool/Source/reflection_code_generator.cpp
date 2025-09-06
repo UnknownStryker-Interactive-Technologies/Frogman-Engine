@@ -232,10 +232,9 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::destruct_entity<";
 			l_generated_code += identifier;
-			l_generated_code += L">);\n";
+			l_generated_code += L">);\n\n";
 		}
 
-		l_generated_code += L"\n";
 
 		for (const std::pmr::wstring& identifier : header_file._components)
 		{
@@ -274,10 +273,9 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
 			l_generated_code += L"\", &deserialize_component";
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
-			l_generated_code += L");\n";
+			l_generated_code += L");\n\n";
 		}
 
-		l_generated_code += L"\n";
 
 		for (const std::pmr::wstring& identifier : header_file._systems)
 		{
@@ -291,7 +289,6 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L">);\n";
 		}
 
-		l_generated_code += L"\n";
 
 		constexpr FE::wchar* l_class_and_structs_reflection_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<";
 		for (const std::pmr::wstring& identifier : header_file._class_and_structs) // Classes and structs reflection
@@ -318,9 +315,8 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L">);\n";
 		}
 
-		l_generated_code += L"\n";
 
-		constexpr FE::wchar* l_enum_reflexpr_frame = L"    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";
+		constexpr FE::wchar* l_enum_reflexpr_frame = L"\n    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";
 		for (const std::pmr::vector<std::pmr::wstring>& enum_struct : header_file._enum_structs) // Enum structs reflection
 		{
 			// The first element of the enum_struct vector is the name of the enum struct, and the rest are the enum values.
@@ -346,6 +342,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		}
 	}
 	l_generated_code += L"}\n";
+
 
 	std::pmr::wstring l_path_to_generated(get_memory_resource());
 	FE::size l_path_length = FE::algorithm::string::length( m_header_tool_options.get_path_to_project() );

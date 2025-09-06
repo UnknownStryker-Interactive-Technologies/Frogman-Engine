@@ -1063,7 +1063,8 @@
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\smart_ptr.hxx",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\system_base.hpp",
             "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\framework\\include\\fe\\framework\\file.hpp",
-            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\farray.hxx"
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\core\\include\\fe\\farray.hxx",
+            "c:\\users\\leeho\\onedrive\\문서\\github\\frogman-engine\\sdk\\header-tool\\include\\error_code.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

@@ -42,6 +42,7 @@ public:
 
 class ak_magazine : public FE::component_base
 {
+	FE_PROPERTY(_rounds);
 	std::vector<ak_ammo> _rounds;
 public:
 	ak_magazine() = default;
@@ -61,6 +62,7 @@ public:
 class health : public FE::component_base
 {
 public:
+	FE_PROPERTY(_health);
 	int _health;
 
 	health() noexcept = default;
@@ -76,6 +78,7 @@ public:
 class weapon : public FE::component_base
 {
 public:
+	FE_PROPERTY(_damage);
 	var::float32 _damage;
 
 	weapon() noexcept = default;
@@ -91,6 +94,7 @@ public:
 class speed : public FE::component_base
 {
 public:
+	FE_PROPERTY(_speed);
 	var::float32 _speed;
 
 	speed() noexcept = default;

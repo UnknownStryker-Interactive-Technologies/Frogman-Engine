@@ -7,7 +7,6 @@
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/framework.hpp>
 
-#include "entt/single_include/entt/entt.hpp"
 #include "FE.ECS.hpp"
 
 
@@ -59,7 +58,30 @@ TEST(ECS, deserialize)
 	file["Components"]["names"].emplace_back("speed");
 	file["Systems"]["names"].emplace_back("damage_system");
 
-	FE::ECS ecs2(file);
+	FE::ECS ecs2(file, &pool);
+}
+
+TEST(ECS, entity_serialization)
+{
+	FE::entity<player> e = ecs.instanciate_entity<player>("TestEntity");
+	FE::component_view<speed> l_speed = ecs.add_component<speed>(e, 1.0f);
+	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
+	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
+
+	FE::serialized_entity buffer = ecs.serialize_entity(e);
+
+	FE::entity<player> ne = ecs.instanciate_entity<player>("New Entity");
+	FE::component_view<speed> l_speed2 = ecs.add_component<speed>(ne);
+	FE::component_view<health> l_health2 = ecs.add_component<health>(ne);
+	FE::component_view<weapon> l_weapon2 = ecs.add_component<weapon>(ne);
+	ecs.deserialize_entity(buffer, ne);
+
+	EXPECT_EQ(l_speed->_speed, l_speed2->_speed);
+	EXPECT_EQ(l_health->_health, l_health2->_health);
+	EXPECT_EQ(l_weapon->_damage, l_weapon2->_damage);
+
+	ecs.destruct_entity(e);
+	ecs.destruct_entity(ne);
 }
 
 TEST(ECS, reflection_combo)
@@ -134,30 +156,3 @@ void ECS_add_component(benchmark::State& state_p) noexcept
 BENCHMARK(ECS_add_component)->Iterations(1000);
 
 
-void EnTT_instantiate_entity(benchmark::State& state_p) noexcept
-{
-	entt::registry registry;
-	for (auto _ : state_p)
-	{
-		auto entity = registry.create();
-		registry.destroy(entity);
-	}
-}
-BENCHMARK(EnTT_instantiate_entity)->Iterations(1000);
-
-void EnTT_add_component(benchmark::State& state_p) noexcept
-{
-	entt::registry registry;
-	auto entity = registry.create();
-	for (auto _ : state_p)
-	{
-		registry.emplace<speed>(entity, 1.0f);
-		registry.emplace<health>(entity, 100);
-		registry.emplace<weapon>(entity, 10.0f);
-		registry.remove<speed>(entity);
-		registry.remove<health>(entity);
-		registry.remove<weapon>(entity);
-	}
-	registry.destroy(entity);
-}
-BENCHMARK(EnTT_add_component)->Iterations(1000);

@@ -72,6 +72,9 @@ namespace internal::ECS
 		std::pmr::forward_list<components>::iterator _group;
 		var::size _index;
 		std::pmr::string _typename;
+		std::pmr::string _memory_layout_version; /* modify the string value when the memory layout of the component changes; this ensures correct auto serialization. 
+			the intial value is set to "default"
+		*/
 	};
 }
 
@@ -89,6 +92,7 @@ public:
 	virtual ~component_base() noexcept;
 
 	_FE_FORCE_INLINE_ const std::pmr::string& get_typename() const { return m_identifier._typename; }
+	_FE_FORCE_INLINE_ const std::pmr::string& get_memory_layout_version() const { return m_identifier._memory_layout_version; }
 };
 
 

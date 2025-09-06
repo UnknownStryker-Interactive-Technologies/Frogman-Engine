@@ -45,6 +45,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+using serialized_entity = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
+
 class ECS
 {
 	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype>;
@@ -62,8 +64,8 @@ class ECS
 	system_table m_system_table;
 
 public:
-	ECS(std::pmr::memory_resource* resource = std::pmr::get_default_resource()) noexcept;
-	ECS(FE::init& file_p, std::pmr::memory_resource* resource = std::pmr::get_default_resource()) noexcept;
+	ECS(std::pmr::memory_resource* resource) noexcept;
+	ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept;
 	~ECS() noexcept = default;
 
 	ECS(const ECS&) noexcept = delete;
@@ -82,13 +84,11 @@ public:
 		l_alloc_result->m_name = FE::framework::reflection::type_id<Archetype>().name();
 		l_alloc_result->m_name += " ";
 		l_alloc_result->m_name += entity_name_p;
-		entity<Archetype> l_entity = FE::down_cast_owner_to_observer<Archetype>( l_alloc_result );
-
 		std::pair<typename archetype_table::iterator, bool> l_result = m_archetype_table.emplace( l_alloc_result->m_name, std::move(l_alloc_result) );
 		
 		if (l_result.second == true) // The emplace() was successful. 
 		{
-			return l_entity;
+			return FE::down_cast_owner_to_observer<Archetype>(l_result.first->second);
 		}
 
 		return entity<Archetype>();
@@ -107,19 +107,19 @@ public:
 		}
 	}
 
+	std::pmr::string m_name_buffer;
+
 	template <class Archetype>
 	entity<Archetype> find_entity(FE::ASCII* const entity_name_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		m_name_buffer.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + 1 + std::strlen(entity_name_p) );
+		m_name_buffer = FE::framework::reflection::type_id<Archetype>().name();
+		m_name_buffer += " ";
+		m_name_buffer += entity_name_p;
 
-		thread_local static std::pmr::string tl_s_entity_name;
-		tl_s_entity_name.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + 1 + std::strlen(entity_name_p) );
-		tl_s_entity_name = FE::framework::reflection::type_id<Archetype>().name();
-		tl_s_entity_name += " ";
-		tl_s_entity_name += entity_name_p;
-
-		typename archetype_table::iterator l_probe_result = m_archetype_table.find(tl_s_entity_name);
-		tl_s_entity_name.clear();
+		typename archetype_table::iterator l_probe_result = m_archetype_table.find(m_name_buffer);
+		m_name_buffer.clear();
 		if (l_probe_result != m_archetype_table.end())
 		{
 			return FE::down_cast_owner_to_observer<Archetype>(l_probe_result->second);
@@ -166,6 +166,7 @@ public:
 			
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
+			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
 			
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -190,6 +191,7 @@ public:
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
+			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
 			
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -282,9 +284,8 @@ public:
 	system_view<system_base> find_system(FE::ASCII* const system_name_p) noexcept;
 
 
-	void serialize_entity(std::pmr::string& out_buffer, archetype_base* const entt_p) noexcept;
-
-	// 	void deserialize_entity(const std::pmr::string& buffer, archetype_base* const entt_p) noexcept;
+	serialized_entity serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
+	void deserialize_entity(serialized_entity& serialized_components_p, FE::entity<archetype_base> entt_p) noexcept;
 };
 
 
