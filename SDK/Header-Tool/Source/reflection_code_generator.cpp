@@ -226,13 +226,9 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L">);\n";
 
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype destructor reflection
-			l_generated_code += L"void(const ::FE::entity<";
+			l_generated_code += L"void(::FE::entity<::FE::archetype_base>)> >(\"~";
 			l_generated_code += identifier;
-			l_generated_code += L">&)> >(\"~";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::destruct_entity<";
-			l_generated_code += identifier;
-			l_generated_code += L">);\n\n";
+			l_generated_code += L"\", &::FE::ECS::destruct_entity);\n\n";
 		}
 
 
@@ -241,16 +237,14 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += l_ECS_reflection_registry_frame; // Component adder reflection
 			l_generated_code += L"::FE::component_view<";
 			l_generated_code += identifier;
-			l_generated_code += L">(::FE::archetype_base* const";
-			l_generated_code += L")> >(\"";
+			l_generated_code += L">(::FE::entity<::FE::archetype_base>)> >(\"";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::add_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
 			l_generated_code += l_ECS_reflection_registry_frame; // Component remover reflection
-			l_generated_code += L"void(::FE::archetype_base* const";
-			l_generated_code += L")> >(\"~";
+			l_generated_code += L"void(::FE::entity<::FE::archetype_base>)> >(\"~";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::ECS::remove_component<";
 			l_generated_code += identifier;

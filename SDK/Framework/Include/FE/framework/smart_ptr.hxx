@@ -583,6 +583,13 @@ _FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> down_cast_
     return l_result;
 }
 
+template <class Parent, class Child>
+_FE_FORCE_INLINE_ static FE::smart_ptr<Parent, FE::RefType::_Observer> up_cast_observer(const FE::smart_ptr<Child, FE::RefType::_Observer>& other_p) noexcept
+{
+    static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
+    FE::smart_ptr<Parent, FE::RefType::_Observer> l_result = reinterpret_cast<const FE::smart_ptr<Parent, FE::RefType::_Observer>&>(other_p);
+    return l_result;
+}
 
 END_NAMESPACE
 #endif

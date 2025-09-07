@@ -19,9 +19,6 @@ limitations under the License.
 
 
 
-class FE::ECS;
-class terrorist* troll;
-
 class terrorist : public FE::archetype_base
 {
 public:

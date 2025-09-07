@@ -190,7 +190,7 @@ public:
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ const_reference load() const noexcept { return m_data; }
+	_FE_FORCE_INLINE_ const_reference load() const noexcept { return m_data; }
 };
 
 
@@ -200,22 +200,22 @@ class void_ptr
 	std::type_index m_info;
 
 public:
-	void_ptr() noexcept : m_ptr(), m_info(typeid(void*)) {}
-	_FE_CONSTEXPR20_ ~void_ptr() noexcept {}
+	_FE_FORCE_INLINE_ void_ptr() noexcept : m_ptr(), m_info(typeid(void*)) {}
+	_FE_FORCE_INLINE_ ~void_ptr() noexcept {}
 
 
-	_FE_CONSTEXPR20_ void_ptr(const void_ptr& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
-	_FE_CONSTEXPR20_ void_ptr(void_ptr&& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+	_FE_FORCE_INLINE_ void_ptr(const void_ptr& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
+	_FE_FORCE_INLINE_ void_ptr(void_ptr&& other_p) noexcept : m_ptr(other_p.m_ptr), m_info(other_p.m_info) {}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void_ptr& operator=(const void_ptr& other_p) noexcept
+	_FE_FORCE_INLINE_ void_ptr& operator=(const void_ptr& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		m_info = other_p.m_info;
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void_ptr& operator=(void_ptr&& other_p) noexcept
+	_FE_FORCE_INLINE_ void_ptr& operator=(void_ptr&& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		m_info = other_p.m_info;
@@ -255,32 +255,32 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator==(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator==(void* ptr_p) const noexcept
 	{
 		return m_ptr == ptr_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator!=(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator!=(void* ptr_p) const noexcept
 	{
 		return m_ptr != ptr_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator>(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator>(void* ptr_p) const noexcept
 	{
 		return m_ptr > ptr_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator>=(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator>=(void* ptr_p) const noexcept
 	{
 		return m_ptr >= ptr_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator<(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator<(void* ptr_p) const noexcept
 	{
 		return m_ptr < ptr_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator<=(void* ptr_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator<=(void* ptr_p) const noexcept
 	{
 		return m_ptr <= ptr_p;
 	}
@@ -293,70 +293,79 @@ class ref
 	T* m_ptr = nullptr;
 
 public:
-	_FE_CONSTEXPR20_ ref() noexcept : m_ptr(nullptr) {}
-	_FE_CONSTEXPR20_ ~ref() noexcept {}
-	_FE_CONSTEXPR20_ ref(const ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
-	_FE_CONSTEXPR20_ ref(ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref& operator=(const ref& other_p) noexcept
+	ref() noexcept : m_ptr(nullptr) {}
+	~ref() noexcept {}
+	ref(const ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
+	ref(ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
+
+	_FE_FORCE_INLINE_ ref& operator=(const ref& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref& operator=(ref&& other_p) noexcept
+	_FE_FORCE_INLINE_ ref& operator=(ref&& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		other_p.m_ptr = nullptr;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref(T& value_p) noexcept : m_ptr(&value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ ref& operator=(T& value_p) noexcept
+
+	ref(T& value_p) noexcept : m_ptr(&value_p) {}
+	
+	template<typename Child>
+	ref(Child& value_p) noexcept : m_ptr(&value_p)
+	{
+		static_assert(std::is_base_of<T, Child>::value == true, "Child must be derived from T.");
+	}
+
+	_FE_FORCE_INLINE_ ref& operator=(T& value_p) noexcept
 	{
 		m_ptr = &value_p;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator T& () noexcept
+	_FE_FORCE_INLINE_ operator T& () noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be copied.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator const T& () const noexcept
+	_FE_FORCE_INLINE_ operator const T& () const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be copied.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T* operator&() noexcept
+	_FE_FORCE_INLINE_ T* operator&() noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const T* operator&() const noexcept
+	_FE_FORCE_INLINE_ const T* operator&() const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ T& operator*() noexcept
+	_FE_FORCE_INLINE_ T& operator*() noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const T& operator*() const noexcept
+	_FE_FORCE_INLINE_ const T& operator*() const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator==(null_t) const noexcept
+	_FE_FORCE_INLINE_ bool operator==(null_t) const noexcept
 	{
 		return m_ptr == nullptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator!=(null_t) const noexcept
+	_FE_FORCE_INLINE_ bool operator!=(null_t) const noexcept
 	{
 		return m_ptr != nullptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator==(const ref& other_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator==(const ref& other_p) const noexcept
 	{
 		return m_ptr == other_p.m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator!=(const ref& other_p) const noexcept
+	_FE_FORCE_INLINE_ bool operator!=(const ref& other_p) const noexcept
 	{
 		return m_ptr != other_p.m_ptr;
 	}
@@ -369,47 +378,56 @@ class const_ref
 	const T* m_ptr = nullptr;
 
 public:
-	_FE_CONSTEXPR20_ const_ref() noexcept : m_ptr(nullptr) {}
-	_FE_CONSTEXPR20_ ~const_ref() noexcept {}
-	_FE_CONSTEXPR20_ const_ref(const const_ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
-	_FE_CONSTEXPR20_ const_ref(const_ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref& operator=(const const_ref& other_p) noexcept
+	 const_ref() noexcept : m_ptr(nullptr) {}
+	 ~const_ref() noexcept {}
+	 const_ref(const const_ref& other_p) noexcept : m_ptr(other_p.m_ptr) {}
+	 const_ref(const_ref&& other_p) noexcept : m_ptr(other_p.m_ptr) { other_p.m_ptr = nullptr; }
+
+	_FE_FORCE_INLINE_ const_ref& operator=(const const_ref& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref& operator=(const_ref&& other_p) noexcept
+	_FE_FORCE_INLINE_ const_ref& operator=(const_ref&& other_p) noexcept
 	{
 		m_ptr = other_p.m_ptr;
 		other_p.m_ptr = nullptr;
 		return *this;
 	}
-	_FE_CONSTEXPR20_ const_ref(const T& value_p) noexcept : m_ptr(&value_p) {}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_ref& operator=(const T& value_p) noexcept
+
+	const_ref(const T& value_p) noexcept : m_ptr(&value_p) {}
+
+	template<typename Child>
+	const_ref(Child& value_p) noexcept : m_ptr(&value_p)
+	{
+		static_assert(std::is_base_of<T, Child>::value == true, "Child must be derived from T.");
+	}
+
+	_FE_FORCE_INLINE_ const_ref& operator=(const T& value_p) noexcept
 	{
 		m_ptr = &value_p;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator const T& () const noexcept
+	_FE_FORCE_INLINE_ operator const T& () const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be copied.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const T* operator&() const noexcept
+	_FE_FORCE_INLINE_ const T* operator&() const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const T& operator*() const noexcept
+	_FE_FORCE_INLINE_ const T& operator*() const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be dereferenced.");
 		return *m_ptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator==(null_t) const noexcept
+	_FE_FORCE_INLINE_ bool operator==(null_t) const noexcept
 	{
 		return m_ptr == nullptr;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ bool operator!=(null_t) const noexcept
+	_FE_FORCE_INLINE_ bool operator!=(null_t) const noexcept
 	{
 		return m_ptr != nullptr;
 	}

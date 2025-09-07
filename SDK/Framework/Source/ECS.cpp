@@ -56,6 +56,29 @@ ECS::ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept
 }
 
 
+void ECS::destruct_entity(entity<archetype_base> entt_p) noexcept
+{
+	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
+	typename archetype_table::iterator l_probe_result = m_archetype_table.find(entt_p->get_name());
+
+	if (l_probe_result->first == entt_p->get_name())
+	{
+		m_archetype_table.erase(l_probe_result);
+		return;
+	}
+}
+
+
+void ECS::attatch_component(FE::entity<archetype_base> entt_p, const FE::component_view<component_base>& to_attatch_p) noexcept
+{
+	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
+	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
+
+	_FE_MAYBE_UNUSED_ auto l_result = entt_p->m_component_view_table.emplace( robin_hood::hash_bytes( to_attatch_p->m_identifier._typename.c_str(), to_attatch_p->m_identifier._typename.length() ), to_attatch_p );
+	FE_ASSERT(l_result.second == true, "Assertion failed: the component to attatch already exists in the entity.");
+}
+
+
 system_view<system_base> ECS::find_system(FE::ASCII* const system_name_p) noexcept
 {
 	typename system_table::iterator l_probe_result = m_system_table.find(robin_hood::hash_bytes(system_name_p, std::strlen(system_name_p)));
@@ -94,8 +117,8 @@ serialized_entity ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexc
 		l_arguments._third = component->get_memory_layout_version().c_str();
 		(*l_component_serializer)(nullptr, &l_arguments); // Boom! Magcic!
 		/*
-		* The first argument is a reference to the serialized component datavbuffer.\
-		* The second argument is a pointer to the component instance.\
+		* The first argument is a reference to the serialized component datavbuffer.
+		* The second argument is a pointer to the component instance.
 		* The third argument is the memory layout version of the component.
 		*/
 	}
@@ -130,11 +153,11 @@ void ECS::deserialize_entity(serialized_entity& serialized_components_p, FE::ent
 		l_arguments._second = component.operator->();
 		l_arguments._third = component->get_memory_layout_version().c_str();
 		(*l_component_deserializer)(nullptr, &l_arguments);
-		///*
-		//* The first argument is a reference to the serialized component datavbuffer.\
-		//* The second argument is a pointer to the component instance.\
-		//* The third argument is the memory layout version of the component.
-		//*/
+		/*
+		* The first argument is a reference to the serialized component datavbuffer.
+		* The second argument is a pointer to the component instance.
+		* The third argument is the memory layout version of the component.
+		*/
 	}
 }
 

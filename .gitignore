@@ -1,7 +1,0 @@
-*.obj
-*.ipch
-*.idb
-*.pdb
-
-goorm.manifest
-/SDK/.vs/

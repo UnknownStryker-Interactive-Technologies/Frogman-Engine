@@ -101,8 +101,8 @@ TEST(ECS, reflection_combo)
 		.get_framework().get_method_reflection().retrieve("::health");
 
 	FE::component_view<health> health_view;
-	FE::arguments<FE::archetype_base*> health_arg;
-	health_arg._first = handle.operator->();
+	FE::arguments<FE::entity<FE::archetype_base>> health_arg;
+	health_arg._first = handle;
 	(*add_component_health)(&ecs, &health_view, &health_arg);
 
 
@@ -111,8 +111,8 @@ TEST(ECS, reflection_combo)
 	FE::task_base* remove_component_ak_magazine = FE::framework::framework_base::get_framework()
 		.get_framework().get_method_reflection().retrieve("~::health");
 
-	FE::arguments<FE::archetype_base*> removal_arg;
-	removal_arg._first = handle.operator->();
+	FE::arguments<FE::entity<FE::archetype_base>> removal_arg;
+	removal_arg._first = handle;
 	(*remove_component_ak_magazine)(&ecs, nullptr, &removal_arg);
 
 
@@ -121,7 +121,7 @@ TEST(ECS, reflection_combo)
 	FE::task_base* destructor = FE::framework::framework_base::get_framework()
 		.get_framework().get_method_reflection().retrieve("~::terrorist");
 
-	FE::arguments<const FE::entity<terrorist>&> destruction_arg;
+	FE::arguments<FE::entity<FE::archetype_base>> destruction_arg;
 	destruction_arg._first = handle;
 	(*destructor)(&ecs, nullptr, &destruction_arg);
 }
@@ -136,7 +136,7 @@ void ECS_instantiate_entity(benchmark::State& state_p) noexcept
 		ecs.destruct_entity(e);
 	}
 }
-BENCHMARK(ECS_instantiate_entity)->Iterations(1000);
+BENCHMARK(ECS_instantiate_entity)->Iterations(100);
 
 void ECS_add_component(benchmark::State& state_p) noexcept
 {
@@ -153,6 +153,6 @@ void ECS_add_component(benchmark::State& state_p) noexcept
 	}
 	ecs.destruct_entity(e);
 }
-BENCHMARK(ECS_add_component)->Iterations(1000);
+BENCHMARK(ECS_add_component)->Iterations(100);
 
 
