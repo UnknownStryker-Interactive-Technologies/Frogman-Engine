@@ -52,12 +52,14 @@ class ECS
 	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype>;
 	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
 														FE::pair<	std::pmr::forward_list<components>, 
-																	FE::scalable_pool<FE::PoolPageCapacity::_256KiB, FE::align_8bytes>
+																	FE::scalable_pool<FE::PoolPageCapacity::_32MiB, FE::align_8bytes>
 																	>
 														>;
 	using system_table = robin_hood::unordered_map<std::size_t, system>;
 
 	std::pmr::memory_resource* m_memory_resource;
+	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::align_8bytes> m_archetype_pool;
+	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::align_8bytes> m_system_pool;
 
 	archetype_table m_archetype_table;
 	component_table m_component_table;
@@ -77,7 +79,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 
-		FE::archetype l_alloc_result = FE::make_owner<Archetype>( m_memory_resource, std::forward<Arguments>(arguments_p)... );
+		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_name = std::pmr::string( m_memory_resource );
 		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
 
@@ -248,6 +250,9 @@ public:
 		remove_component<Component>(entt_p.operator->());
 	}
 
+	// attatch_component()
+	// detach_component()
+
 
 	template <class System>
 	system_view<System> register_system() noexcept
@@ -258,7 +263,7 @@ public:
 		{
 			return FE::down_cast_owner_to_observer<System>(l_probe_result->second);
 		}
-		FE::system l_alloc_result = FE::make_owner<System>(m_memory_resource);
+		FE::system l_alloc_result = FE::make_owner<System>( &m_system_pool );
 		l_alloc_result->m_typename = std::pmr::string(FE::framework::reflection::type_id<System>().name(), m_memory_resource);
 		std::pair<typename system_table::iterator, bool> l_result = m_system_table.emplace(FE::framework::reflection::type_id<System>().hash_code(), std::move(l_alloc_result));
 		

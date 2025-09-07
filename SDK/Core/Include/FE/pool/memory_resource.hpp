@@ -53,10 +53,10 @@ inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 class memory_resource : public std::pmr::memory_resource
 {
 public:
-	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_64MiB, internal::xmmword_size, FE::align_16bytes>;
-	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_128MiB, internal::ymmword_size, FE::align_32bytes>;
-	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_256MiB, internal::zmmword_size, FE::align_64bytes>;
-	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_512MiB, internal::dzmmword_size, FE::align_128bytes>;
+	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_1MiB, internal::xmmword_size, FE::align_16bytes>;
+	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_2MiB, internal::ymmword_size, FE::align_32bytes>;
+	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_4MiB, internal::zmmword_size, FE::align_64bytes>;
+	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_8MiB, internal::dzmmword_size, FE::align_128bytes>;
 	using scalable_pool_type = FE::scalable_pool<FE::PoolPageCapacity::_Max, FE::SIMD_auto_alignment>;
 
 private:

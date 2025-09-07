@@ -159,6 +159,7 @@ private:
 
 	void __try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
 	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept;
+	bool __is_forward_declaration(typename std::pmr::list<token>::const_iterator& out_token_iterator_p) const;
 
 private:
 	struct reflection_metadata

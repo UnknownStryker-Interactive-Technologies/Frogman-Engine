@@ -1,8 +1,8 @@
 // Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.h> 
 #include <FE/framework/framework.hpp> 
-#include <C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\FE.ECS.hpp>
 #include <C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Include\error_code.hpp>
+#include <C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\FE.ECS.hpp>
 
 
 void serialize_component_ak_magazine(std::pmr::string& out_buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept
@@ -48,6 +48,18 @@ void deserialize_component_speed(const std::pmr::string& buffer_p, ::FE::compone
 
 void load_reflection_data()
 {
+
+    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FrogmanEngineHeaderToolError >("::FrogmanEngineHeaderToolError",
+    {
+        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_NoProgramOptionsAreGiven, "_FatalCmdInputError_NoProgramOptionsAreGiven" },
+        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_NoFilesAreGiven, "_FatalCmdInputError_NoFilesAreGiven" },
+        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "_FatalCmdInputError_InvalidPathToCMakeProject" },
+        { ::FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "_FatalError_FailedToOpenFile" },
+        { ::FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "_InputError_NoCopyRightNoticeIsGiven" },
+        { ::FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM" },
+        { ::FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, "_InputError_IncorrectCppSyntax" },
+        { ::FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "_InputError_ParsingFailure" }
+    });
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ::FE::entity<::terrorist>(::FE::ASCII* const)> >("::terrorist", &::FE::ECS::instanciate_entity<::terrorist>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, void(const ::FE::entity<::terrorist>&)> >("~::terrorist", &::FE::ECS::destruct_entity<::terrorist>);
 
@@ -85,20 +97,4 @@ void load_reflection_data()
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(const ::std::pmr::string&, ::FE::component_base* const, ::FE::ASCII* const)> >("deserialize_component_speed", &deserialize_component_speed);
 
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ::FE::system_view<::damage_system>()> >("::damage_system", &::FE::ECS::register_system<::damage_system>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::config2*(::config2*)> >("construct ::config2", &::std::construct_at<::config2>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::config2*)> >("destruct ::config2", &::std::destroy_at<::config2>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::config*(::config*)> >("construct ::config", &::std::construct_at<::config>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::config*)> >("destruct ::config", &::std::destroy_at<::config>);
-
-    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FrogmanEngineHeaderToolError >("::FrogmanEngineHeaderToolError",
-    {
-        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_NoProgramOptionsAreGiven, "_FatalCmdInputError_NoProgramOptionsAreGiven" },
-        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_NoFilesAreGiven, "_FatalCmdInputError_NoFilesAreGiven" },
-        { ::FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "_FatalCmdInputError_InvalidPathToCMakeProject" },
-        { ::FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "_FatalError_FailedToOpenFile" },
-        { ::FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "_InputError_NoCopyRightNoticeIsGiven" },
-        { ::FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM" },
-        { ::FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, "_InputError_IncorrectCppSyntax" },
-        { ::FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "_InputError_ParsingFailure" }
-    });
 }

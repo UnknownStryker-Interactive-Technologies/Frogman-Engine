@@ -19,6 +19,9 @@ limitations under the License.
 
 
 
+class FE::ECS;
+class terrorist* troll;
+
 class terrorist : public FE::archetype_base
 {
 public:
@@ -77,6 +80,7 @@ public:
 
 class weapon : public FE::component_base
 {
+	class AK47* fake;
 public:
 	FE_PROPERTY(_damage);
 	var::float32 _damage;
@@ -121,16 +125,4 @@ public:
 
 		l_health->_health -= 10;
 	}
-};
-
-
-
-
-struct config
-{
-	FE_STRUCT();
-};
-
-class config2
-{
 };

@@ -53,6 +53,12 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 				l_is_template = false;
 				break;
 			}
+
+			if (__is_forward_declaration(begin_p) == true)
+			{
+				break;
+			}
+
 			++l_count._classes;
 			break;
 
@@ -69,10 +75,21 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 				l_is_template = false;
 				break;
 			}
+
+			if (__is_forward_declaration(begin_p) == true)
+			{
+				break;
+			}
+
 			++l_count._structs;
 			break;
 
 		case Vocabulary::_Enum:
+			if (__is_forward_declaration(begin_p) == true)
+			{
+				break;
+			}
+
 			++l_count._enums;
 			l_is_enum = true;
 			break;

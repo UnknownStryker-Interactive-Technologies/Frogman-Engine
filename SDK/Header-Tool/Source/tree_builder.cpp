@@ -35,6 +35,33 @@ void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const
 	}
 }
 
+bool header_tool_engine::__is_forward_declaration(typename std::pmr::list<token>::const_iterator& out_token_iterator_p) const
+{
+	auto l_origin = out_token_iterator_p;
+	while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
+	{
+		switch (out_token_iterator_p->_vocabulary)
+		{
+		case Vocabulary::_EndOfCode:
+			THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'class Identifier {'.", &(out_token_iterator_p->_line_number));
+			_FE_FALLTHROUGH_;
+
+		case Vocabulary::_Comma:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Pointer:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Semicolon:
+			return true;
+
+		default:
+			break;
+		}
+		++out_token_iterator_p;
+	}
+	out_token_iterator_p = l_origin; // reset to the origin; it is not a forward declaration.
+	return false;
+}
+
 _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p)
 {
 	// returns an optional error message object.
@@ -87,6 +114,12 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 				l_is_template = false;
 				break;
 			}
+
+			if (__is_forward_declaration(iterator) == true)
+			{
+				break;
+			}
+
 			l_root._classes.push_back( __try_build_class_node_mutually_recursive(u8"::", iterator, token_list_p.end()) );
 			break;
 
@@ -97,6 +130,12 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 				l_is_template = false;
 				break;
 			}
+
+			if (__is_forward_declaration(iterator) == true)
+			{
+				break;
+			}
+
 			l_root._structs.push_back( __try_build_struct_node_mutually_recursive(u8"::", iterator, token_list_p.end()) );
 			break;
 
@@ -107,6 +146,12 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 
 		case Vocabulary::_Enum:
 			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'enum.'", &(iterator->_line_number));
+
+			if (__is_forward_declaration(iterator) == true)
+			{
+				break;
+			}
+
 			__skip_code_block(iterator, token_list_p.end());
 			break;
 
@@ -283,7 +328,6 @@ _FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_re
 			
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
 			{
-
 				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'class Identifier {'.", &(out_token_iterator_p->_line_number));
 				l_node._base_class_name += out_token_iterator_p->_code;
 				++out_token_iterator_p; // skip the base class name.

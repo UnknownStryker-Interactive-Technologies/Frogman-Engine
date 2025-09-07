@@ -227,7 +227,8 @@ public:
 private:
     using page_pointer = std::shared_ptr<chunk_type>;
 
-    page_pointer m_memory_pool[maximum_page_count];
+	page_pointer m_memory_pool[maximum_page_count]; // uncap the max page count and use binary search to find which page a pointer belongs to.
+    // binary heap tree!
     std::pmr::memory_resource* m_upstream_resource;
     var::uint32 m_page_count;
 
