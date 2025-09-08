@@ -76,7 +76,7 @@ namespace internal::pool
     struct block_info
     {
         var::byte* _address;
-        var::int64 _size_in_bytes;
+        var::int32 _size_in_bytes;
     };
 
     template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>

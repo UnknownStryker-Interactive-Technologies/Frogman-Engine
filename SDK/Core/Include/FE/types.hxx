@@ -85,31 +85,31 @@ typedef const char directory_char_t;
 
 
 template <typename T>
-constexpr inline auto max_value = ::std::numeric_limits<T>::max();
+constexpr inline FE::size max_value = ::std::numeric_limits<T>::max();
 
 template <typename T>
-constexpr inline auto min_value = ::std::numeric_limits<T>::min();
+constexpr inline FE::size min_value = ::std::numeric_limits<T>::min();
 
 
-_FE_MAYBE_UNUSED_	constexpr inline FE::int8 int8_max = max_value<FE::int8>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int16 int16_max = max_value<FE::int16>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int32 int32_max = max_value<FE::int32>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int64 int64_max = max_value<FE::int64>;
-	
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_max = max_value<FE::uint8>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_max = max_value<FE::uint16>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_max = max_value<FE::uint32>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_max = max_value<FE::uint64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int8_max = max_value<FE::int8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int16_max = max_value<FE::int16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int32_max = max_value<FE::int32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int64_max = max_value<FE::int64>;
 
-_FE_MAYBE_UNUSED_	constexpr inline FE::int8 int8_min = min_value<FE::int8>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int16 int16_min = min_value<FE::int16>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int32 int32_min = min_value<FE::int32>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::int64 int64_min = min_value<FE::int64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint8_max = max_value<FE::uint8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint16_max = max_value<FE::uint16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint32_max = max_value<FE::uint32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint64_max = max_value<FE::uint64>;
 
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint8 uint8_min = min_value<FE::uint8>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint16 uint16_min = min_value<FE::uint16>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint32 uint32_min = min_value<FE::uint32>;
-_FE_MAYBE_UNUSED_	constexpr inline FE::uint64 uint64_min = min_value<FE::uint64>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int8_min = min_value<FE::int8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int16_min = min_value<FE::int16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int32_min = min_value<FE::int32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size int64_min = min_value<FE::int64>;
+
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint8_min = min_value<FE::uint8>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint16_min = min_value<FE::uint16>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint32_min = min_value<FE::uint32>;
+_FE_MAYBE_UNUSED_	constexpr inline FE::size uint64_min = min_value<FE::uint64>;
 
 
 #define _FE_TRUE_ 1

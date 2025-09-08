@@ -236,10 +236,8 @@ public:
 		typename FE::archetype_base::component_view_table::iterator l_probe_result = entt_p->m_component_view_table.find( FE::framework::reflection::type_id<Component>().hash_code() );
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");
 
-		FE::component_view<Component> l_detached_component;
-		l_detached_component = FE::down_cast_observer<Component>(l_probe_result->second);
 		entt_p->m_component_view_table.erase(l_probe_result);
-		return l_detached_component;
+		return FE::down_cast_observer<Component>(l_probe_result->second);
 	}
 
 

@@ -293,7 +293,7 @@ void aligned_malloc_aligned_free_random_size_test(benchmark::State& state_p) noe
 
 	for (auto _ : state_p)
 	{
-		FE::size l_random_size = (rand() % 20) + 1;
+		FE::int32 l_random_size = (rand() % 20) + 1;
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
 		{
 			l_strings[i] = new std::string[l_random_size];
@@ -319,7 +319,7 @@ void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-		FE::size l_random_size = (rand() % 20) + 1;
+		FE::int32 l_random_size = (rand() % 20) + 1;
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
 		{
 			l_strings[i] = l_allocator.template allocate<std::string>(l_random_size);
@@ -343,7 +343,7 @@ void FE_pmr_memory_resource_random_size_test(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-		FE::size l_random_size = (rand() % 20) + 1;
+		FE::int32 l_random_size = (rand() % 20) + 1;
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
 		{
 			l_strings[i].resize(l_random_size);
@@ -363,7 +363,7 @@ void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-		FE::size l_random_size = (rand() % 20) + 1;
+		FE::int32 l_random_size = (rand() % 20) + 1;
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
 		{
 			l_strings[i] = boost::pool_allocator<std::string>::allocate(l_random_size);
@@ -388,7 +388,7 @@ void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexc
 
 	for (auto _ : state_p)
 	{
-		FE::size l_random_size = (rand() % 20) + 1;
+		FE::int32 l_random_size = (rand() % 20) + 1;
 		for (var::uint32 i = 0; i < _MAX_ITERATION_; ++i)
 		{
 			l_strings[i] = boost::fast_pool_allocator<std::string>::allocate(l_random_size);

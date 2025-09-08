@@ -89,12 +89,12 @@ void* FE::memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ st
 		break;
 
 	default:
-		return m_scalable_pool.allocate<std::byte>(bytes_p);
+		return m_scalable_pool.allocate<std::byte>((FE::int32)bytes_p);
 	}
 
 	if (l_allocation_result == nullptr) _FE_UNLIKELY_
 	{
-		return m_scalable_pool.allocate<std::byte>(bytes_p);
+		return m_scalable_pool.allocate<std::byte>((FE::int32)bytes_p);
 	}
 
 	return l_allocation_result;
@@ -123,14 +123,14 @@ void FE::memory_resource::do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MA
 		break;
 
 	default:
-		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), bytes_p );
+		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p );
 		FE_ASSERT(l_deallocation_result == true, "Assertion failed: the deallocation of the scalable pool failed; ptr_p is an alien pointer.");
 		return;
 	}
 
 	if (l_deallocation_result == false)
 	{
-		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), bytes_p );
+		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p );
 		FE_ASSERT(l_deallocation_result == true, "Assertion failed: the deallocation of the scalable pool failed; ptr_p is an alien pointer.");
 		return;
 	}

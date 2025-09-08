@@ -48,6 +48,28 @@ TEST(ECS, remove_component)
 	ecs.destruct_entity(e);
 }
 
+TEST(ECS, attach_and_detach_components)
+{
+	FE::entity<player> e = ecs.instanciate_entity<player>("TestEntity");
+
+	FE::component_view<speed> l_speed = ecs.add_component<speed>(e, 1.0f);
+	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
+	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
+
+	FE::entity<player> e2 = ecs.instanciate_entity<player>("TestEntity2");
+
+	ecs.attatch_component(e2, ecs.detach_component<speed>(e));
+	ecs.attatch_component(e2, ecs.detach_component<health>(e));
+	ecs.attatch_component(e2, ecs.detach_component<weapon>(e));
+
+	ecs.attatch_component(e, ecs.detach_component<speed>(e2));
+	ecs.attatch_component(e, ecs.detach_component<health>(e2));
+	ecs.attatch_component(e, ecs.detach_component<weapon>(e2));
+
+	ecs.destruct_entity(e);
+	ecs.destruct_entity(e2);
+}
+
 
 TEST(ECS, deserialize)
 {

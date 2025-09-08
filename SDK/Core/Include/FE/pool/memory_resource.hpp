@@ -73,6 +73,7 @@ public:
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
 
+	// this significantly impacts the performance of m_scalable_pool, if you do not know what you are doing, do not call this function.
 	_FE_FORCE_INLINE_ void try_defragment() noexcept { m_scalable_pool.try_defragment(); }
 
 protected:

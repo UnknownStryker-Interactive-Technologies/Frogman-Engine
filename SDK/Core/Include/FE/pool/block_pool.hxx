@@ -52,7 +52,7 @@ namespace internal::pool
         var::byte* const _begin = m_memory.data();
         var::byte* _page_iterator = m_memory.data();
         var::byte* const _end = m_memory.data() + m_memory.size();
-
+        var::int32 _usage_in_bytes = 0;
     public:
 		chunk() noexcept = default;
 		~chunk() noexcept = default;
@@ -61,6 +61,11 @@ namespace internal::pool
         _FE_FORCE_INLINE_ boolean is_out_of_memory() const noexcept
         {
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
+        }
+
+        _FE_FORCE_INLINE_ FE::int32 get_usage_as_percentile() const noexcept
+        {
+            return static_cast<FE::int32>(((FE::float32)_usage_in_bytes / (FE::float32)page_capacity_in_bytes) * 100.0f);
         }
 
 #ifdef _ENABLE_ASSERT_
@@ -214,6 +219,7 @@ public:
             }
 
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_allocation_result) % Alignment::size) == 0, "FE.pool.block_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_allocation_result, &Alignment::size);
+			m_memory_pool[i]->_usage_in_bytes += fixed_block_size_in_bytes;
             return static_cast<U*>(l_allocation_result);
         }
 
@@ -246,6 +252,7 @@ public:
                 }
 
                 page_ptr->_free_blocks.push(l_to_be_freed);
+				page_ptr->_usage_in_bytes -= fixed_block_size_in_bytes;
 				return true; // The deletion was successful.
             }
         }
