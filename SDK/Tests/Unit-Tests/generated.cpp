@@ -84,4 +84,5 @@ void load_reflection_data()
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(const ::std::pmr::string&, ::FE::component_base* const, ::FE::ASCII* const)> >("deserialize_component_speed", &deserialize_component_speed);
 
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ::FE::system_view<::damage_system>()> >("::damage_system", &::FE::ECS::register_system<::damage_system>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::component_base* const)> >("::take_damage", &::take_damage);
 }

@@ -155,6 +155,17 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 			__skip_code_block(iterator, token_list_p.end());
 			break;
 
+		case Vocabulary::_LeftParen:
+			{
+				identifier l_system_function_name = __try_build_c_style_system_function_node(u8"::", iterator, token_list_p.end());
+				if (l_system_function_name.length() == 0)
+				{
+					break;
+				}
+				l_root._c_style_systems.push_back(l_system_function_name);
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -280,6 +291,17 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 			__skip_code_block(out_token_iterator_p, end_p);
 			break;
 
+		case Vocabulary::_LeftParen:
+			{
+				identifier l_system_function_name = __try_build_c_style_system_function_node(l_node._target_namespace_name, out_token_iterator_p, end_p);
+				if (l_system_function_name.length() == 0)
+				{
+					break;
+				}
+				l_node._c_style_systems.push_back(l_system_function_name);
+			}
+			break;
+
 		default:
 			return l_node;
 		}
@@ -302,7 +324,10 @@ _FE_NODISCARD_ class_node header_tool_engine::__try_build_class_node_mutually_re
 	*/
 	THROW_CPP_SYNTAX_ERROR(std::distance(out_token_iterator_p, end_p) < 5, "C++ code syntax Error: \nThe line number: ${%u32@0}.", &(out_token_iterator_p->_line_number));
 	
-	++out_token_iterator_p; // move to the class name.
+	while (out_token_iterator_p->_vocabulary != Vocabulary::_Undefined)
+	{
+		++out_token_iterator_p; // move to the name.
+	}
 	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the class name.
 	++out_token_iterator_p; // skip the class name.
 
@@ -418,7 +443,10 @@ _FE_NODISCARD_ struct_node header_tool_engine::__try_build_struct_node_mutually_
 	*/
 	THROW_CPP_SYNTAX_ERROR(std::distance(out_token_iterator_p, end_p) < 5, "C++ code syntax Error: \nThe line number: ${%u32@0}.", &(out_token_iterator_p->_line_number));
 
-	++out_token_iterator_p; // move to the struct name.
+	while (out_token_iterator_p->_vocabulary != Vocabulary::_Undefined)
+	{
+		++out_token_iterator_p; // move to the name.
+	}
 	const file_buffer_t& l_class_name = out_token_iterator_p->_code; // get the struct name.
 	++out_token_iterator_p; // skip the struct name.
 	THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket, "C++ code syntax Error: \nThe line number: ${%u32@0} \n FHT does not support struct polymorphism; '{' may be missing from the 'struct Identifier {'.", &(out_token_iterator_p->_line_number));
@@ -494,14 +522,14 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 
 	if (out_token_iterator_p->_vocabulary == Vocabulary::_Enum)
 	{
-		for (var::int32 distance = 0; distance < 3; ++distance)
+		for (var::int32 distance = 0; distance <= 3; ++distance)
 		{
 			++out_token_iterator_p; // skip the 'enum' keyword and the 'struct' keyword.
 			if (out_token_iterator_p->_vocabulary == Vocabulary::_Undefined)
 			{
 				break;
 			}
-			THROW_CPP_SYNTAX_ERROR(distance == 2, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
+			THROW_CPP_SYNTAX_ERROR(distance == 3, "C++ code syntax Error: \nThe line number: ${%u32@0} \nIncorrect C++ enum struct syntax.", &(out_token_iterator_p->_line_number));
 		}
 		// build the enum struct node here:
 		l_enum_struct_node._target_enum_struct_name = identifier(parent_namespace_p, get_memory_resource());
@@ -560,6 +588,61 @@ _FE_NODISCARD_ enum_struct_node header_tool_engine::__try_build_enum_struct_node
 		}
 	}
 	return l_enum_struct_node;
+}
+
+_FE_NODISCARD_ identifier header_tool_engine::__try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+{
+	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_LeftParen);
+	typename std::pmr::list<token>::const_iterator l_iterator = out_token_iterator_p;
+
+	identifier l_system_parameter(get_memory_resource());
+	l_system_parameter.reserve(64);
+
+	while (out_token_iterator_p != end_p)
+	{
+		++out_token_iterator_p;
+		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightParen)
+		{
+			break;
+		}
+		l_system_parameter += out_token_iterator_p->_code;
+	}
+
+	identifier l_node;
+	l_node = identifier(get_memory_resource());
+	l_node.reserve(64);
+	l_node = parent_namespace_p;
+
+	if ((false == FE::algorithm::string::space_insensitive_contains(l_system_parameter.c_str(), l_system_parameter.length(), u8"component_base* const"))
+		|| (identifier::npos != l_system_parameter.find(','))) // it is not a valid C-style system function if there are multiple parameters.)
+	{
+		l_node.clear();
+		return l_node;
+	}
+
+
+	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_LeftParen);
+	--l_iterator;
+	if (l_iterator->_vocabulary == Vocabulary::_RightParen)
+	{
+		l_node.clear();
+		return l_node; // it is not a valid C-style system function if there is no return type; it is a system_base's virtual function.
+	}
+
+	while (l_iterator->_vocabulary != Vocabulary::_ContractedSpace) // spaces are already filtered; this wont work.
+	{
+		l_node += l_iterator->_code;
+		--l_iterator;
+	}
+
+	--l_iterator;
+	if (l_iterator->_code != u8"void")
+	{
+		l_node.clear();
+		return l_node; // it is not a valid C-style system function if the return type is not 'void'.
+	}
+
+	return l_node;
 }
 
 void header_tool_engine::__try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const

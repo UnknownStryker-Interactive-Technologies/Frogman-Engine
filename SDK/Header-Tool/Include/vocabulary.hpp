@@ -25,7 +25,7 @@ limitations under the License.
 
 enum struct Vocabulary : FE::uint32
 {
-	_Undefined, _EndOfCode,
+	_Undefined, _EndOfCode, _ContractedSpace,
 	_LineComment, _LineEnd,
 	_CommentBegin, _CommentEnd,
 	_BeginNamespace, _EndNamespace,
@@ -98,6 +98,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "(", Vocabulary::_LeftParen }, { ")", Vocabulary::_RightParen },
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
+
 	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
 	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },
 	{ "FE_STRUCT", Vocabulary::_FrogmanEngineStructReflectionMacro },

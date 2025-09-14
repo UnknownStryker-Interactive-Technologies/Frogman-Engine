@@ -57,6 +57,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 
 		if (l_token._vocabulary == Vocabulary::_Undefined)
 		{
+			l_list.emplace_back(Vocabulary::_ContractedSpace, l_line_number, u8" ", path_p.c_str());
 			l_token = __tokenize_unidentifiable(iterator);
 			l_token._line_number = l_line_number;
 			l_token._header_file_path = path_p.c_str();
@@ -270,6 +271,7 @@ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_Noexcept:
 			_FE_FALLTHROUGH_;
+
 		case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_FrogmanEngineClassReflectionMacro:

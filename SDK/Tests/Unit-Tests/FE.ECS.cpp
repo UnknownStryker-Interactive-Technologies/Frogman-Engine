@@ -39,10 +39,11 @@ TEST(ECS, add_component)
 	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
 	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
 
-	system_take_damage sys_initializer; // These steps are what will happen inside the game engine framework; the engine will load system pointers, and iterate over their target components.
+	// These steps are what will happen inside the game engine framework; the engine will load system pointers, and iterate over their target components.
 	FE::task_base* take_damage = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("take_damage");
+		.get_framework().get_method_reflection().retrieve("::take_damage");
 	FE_ASSERT(take_damage != nullptr, "Assertion failed: the take_damage function must be registered.");
+
 	FE::arguments<FE::component_base*> damage_arg;
 	damage_arg._first = l_health.operator->();
 	(*take_damage)(nullptr, &damage_arg);

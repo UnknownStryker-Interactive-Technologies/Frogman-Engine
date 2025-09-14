@@ -127,4 +127,3 @@ public:
 
 
 void take_damage(FE::component_base* const component_p) noexcept;
-FE_SYSTEM(take_damage);

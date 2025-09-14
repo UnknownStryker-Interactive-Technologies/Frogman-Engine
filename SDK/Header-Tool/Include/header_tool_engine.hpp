@@ -49,7 +49,7 @@ using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 
 
 
-
+// To Do - Eating my own dog food: integrate the FE ECS.
 struct token
 {
 	Vocabulary _vocabulary;
@@ -69,7 +69,6 @@ struct token
 };
 
 
-// TO DO: prefix try_ to function names, by the FE standards.
 // C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
 // sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\FE.ECS.hpp
 
@@ -122,16 +121,10 @@ private:
 		var::uint16 _classes;
 		var::uint16 _structs;
 		var::uint16 _enums;
+		var::uint16 _systems;
 	};
 	_FE_NODISCARD_ symbol_count __try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) const;
 	_FE_NODISCARD_ symbol_count __try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
-
-	struct member_symbol_count
-	{
-		var::uint16 _methods;
-		var::uint16 _properties;
-	};
-	_FE_NODISCARD_ member_symbol_count __count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
 
 	// ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) returns std::nullopt if paren_p is not a paren nor a bracket.
 	_FE_NODISCARD_ std::optional<FE::uint32> ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept;
@@ -156,6 +149,7 @@ private:
 	_FE_NODISCARD_ class_node __try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 	_FE_NODISCARD_ struct_node __try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 	_FE_NODISCARD_ enum_struct_node __try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ identifier __try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	void __try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
 	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept;
@@ -165,15 +159,14 @@ private:
 	struct reflection_metadata
 	{
 		directory_t _header_file_path;
-		std::pmr::vector<std::pmr::wstring> _archetypes;
-		std::pmr::vector<std::pmr::wstring> _components;
-		std::pmr::vector<std::pmr::wstring> _systems;
+		std::pmr::vector<std::pmr::wstring> _archetype_base_children;
+		std::pmr::vector<std::pmr::wstring> _component_base_children;
+		std::pmr::vector<std::pmr::wstring> _system_base_children;
 		std::pmr::vector<std::pmr::wstring> _class_and_structs;
-		std::pmr::vector<std::pmr::wstring> _methods;
-		std::pmr::vector<std::pmr::wstring> _properties;
 		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
+		std::pmr::vector<std::pmr::wstring> _c_style_system_functions;
 	};
-	using reflection_metadata_set_t = FE::concurrent_vector<reflection_metadata, std::pmr::polymorphic_allocator<reflection_metadata>>;
+	using reflection_metadata_set_t = FE::concurrent_vector<reflection_metadata>;
 	reflection_metadata_set_t m_reflection_metadata_set;
 
 	_FE_NODISCARD_ reflection_metadata __generate_reflection_metadata(const header_file_root& tree_p) noexcept;

@@ -41,49 +41,10 @@ enum struct ClassType : FE::int32
 using identifier = std::pmr::basic_string<var::UTF8>;
 
 
-struct frogman_engine_property_macro_node
-{
-	identifier _target_property_name;
-};
-
-
-struct frogman_engine_method_macro_node
-{
-	identifier _return_type;
-	identifier _method_name;
-	std::pmr::vector<identifier> _parameter_types;
-	std::pmr::vector<identifier> _specifiers;
-};
-
-
-struct frogman_engine_static_method_macro_node
-{
-	identifier _return_type;
-	identifier _method_name;
-	std::pmr::vector<identifier> _parameter_types;
-	std::pmr::vector<identifier> _specifiers;
-};
-
-
-struct frogman_engine_class_has_a_base_macro_node
-{
-	identifier _target_base_class_name;
-};
-
-
-struct frogman_engine_class_macro_node
-{
-	identifier _target_class_name;
-	std::pmr::vector<frogman_engine_property_macro_node> _property_reflection_macros;
-	std::pmr::vector<frogman_engine_method_macro_node> _method_reflection_macros;
-	std::pmr::vector<frogman_engine_static_method_macro_node> _static_method_reflection_macros;
-};
-
-
 struct frogman_engine_struct_macro_node
 {
 	identifier _target_struct_name;
-	std::pmr::vector<frogman_engine_property_macro_node> _property_reflection_macros;
+	std::pmr::vector<identifier> _property_reflection_macros;
 };
 
 
@@ -115,6 +76,7 @@ struct namespace_node
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
 	std::pmr::vector<enum_struct_node> _enum_structs;
+	std::pmr::vector<identifier> _c_style_systems;
 };
 
 
@@ -125,6 +87,7 @@ struct header_file_root
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
 	std::pmr::vector<enum_struct_node> _enum_structs;
+	std::pmr::vector<identifier> _c_style_systems;
 };
 
 
