@@ -148,6 +148,7 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
         Iterator l_end = end_p;
         Iterator l_begin = begin_p;
         Iterator l_tmp_it = begin_p;
+
         while (l_tmp_it != l_end)
         {
             if (predicate_p(*l_begin))
@@ -159,9 +160,11 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
                     ++l_tmp_it;
                     continue;
                 }
+
                 ++l_tmp_it;
                 continue;
             }
+
             ++l_begin;
             ++l_tmp_it;
         }
@@ -170,8 +173,9 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
     else if constexpr (IsolationVector == IsolationVector::_Left)
     {
         Iterator l_rend = begin_p;
-        Iterator l_rbegin = begin_p + ((end_p - begin_p) - 1);
+        Iterator l_rbegin = std::next(begin_p, ((end_p - begin_p) - 1));
         Iterator l_rtmp_it = l_rbegin;
+
         while (l_rtmp_it > l_rend)
         {
             if (predicate_p(*l_rbegin))
@@ -183,13 +187,19 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
                     --l_rtmp_it;
                     continue;
                 }
+
                 --l_rtmp_it;
                 continue;
             }
+
             --l_rbegin;
             --l_rtmp_it;
         }
         std::swap(*l_rbegin, *l_rtmp_it);
+        if (predicate_p(*l_rbegin))
+        {
+            ++l_rbegin;
+        }
         return FE::pair<Iterator, Iterator>{l_rbegin, end_p};
     }
 }
@@ -205,61 +215,66 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
 template<IsolationVector IsolationVector, class Iterator>
 _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
-    if constexpr (IsolationVector == IsolationVector::_Right)
-    {
-        Iterator l_end = end_p;
-        Iterator l_begin = begin_p;
-        Iterator l_tmp_it = begin_p;
+    return partition_stable_if<IsolationVector>(begin_p, end_p, [&](const auto& value_p) { return value_p == exclusion_target_p; });
+   // if constexpr (IsolationVector == IsolationVector::_Right)
+   // {
+   //     Iterator l_end = end_p;
+   //     Iterator l_begin = begin_p;
+   //     Iterator l_tmp_it = begin_p;
 
-        while (l_tmp_it != l_end)
-        {
-            if (*l_begin == exclusion_target_p)
-            {
-                if (*l_tmp_it != exclusion_target_p)
-                {
-                    std::swap(*l_begin, *l_tmp_it);
-                    ++l_begin;
-                    ++l_tmp_it;
-                    continue;
-                }
+   //     while (l_tmp_it != l_end)
+   //     {
+   //         if (*l_begin == exclusion_target_p)
+   //         {
+   //             if (*l_tmp_it != exclusion_target_p)
+   //             {
+   //                 std::swap(*l_begin, *l_tmp_it);
+   //                 ++l_begin;
+   //                 ++l_tmp_it;
+   //                 continue;
+   //             }
 
-                ++l_tmp_it;
-                continue;
-            }
+   //             ++l_tmp_it;
+   //             continue;
+   //         }
 
-            ++l_begin;
-            ++l_tmp_it;
-        }
-        return FE::pair<Iterator, Iterator>{begin_p, l_tmp_it};
-    }
-    else if constexpr (IsolationVector == IsolationVector::_Left)
-    {
-        Iterator l_rend = begin_p;
-        Iterator l_rbegin = begin_p + ((end_p - begin_p) - 1);
-        Iterator l_rtmp_it = l_rbegin;
+   //         ++l_begin;
+   //         ++l_tmp_it;
+   //     }
+   //     return FE::pair<Iterator, Iterator>{begin_p, l_tmp_it};
+   // }
+   // else if constexpr (IsolationVector == IsolationVector::_Left)
+   // {
+   //     Iterator l_rend = begin_p;
+   //     Iterator l_rbegin = std::next(begin_p, ((end_p - begin_p) - 1));
+   //     Iterator l_rtmp_it = l_rbegin;
 
-        while (l_rtmp_it > l_rend)
-        {
-            if (*l_rbegin == exclusion_target_p)
-            {
-                if (*l_rtmp_it != exclusion_target_p)
-                {
-                    std::swap(*l_rbegin, *l_rtmp_it);
-                    --l_rbegin;
-                    --l_rtmp_it;
-                    continue;
-                }
+   //     while (l_rtmp_it > l_rend)
+   //     {
+   //         if (*l_rbegin == exclusion_target_p)
+   //         {
+   //             if (*l_rtmp_it != exclusion_target_p)
+   //             {
+   //                 std::swap(*l_rbegin, *l_rtmp_it);
+   //                 --l_rbegin;
+   //                 --l_rtmp_it;
+   //                 continue;
+   //             }
 
-                --l_rtmp_it;
-                continue;
-            }
+   //             --l_rtmp_it;
+   //             continue;
+   //         }
 
-            --l_rbegin;
-            --l_rtmp_it;
-        }
-        std::swap(*l_rbegin, *l_rtmp_it);
-        return FE::pair<Iterator, Iterator>{l_rbegin, end_p};
-    }
+   //         --l_rbegin;
+   //         --l_rtmp_it;
+   //     }
+   //     std::swap(*l_rbegin, *l_rtmp_it);
+   //     if (*l_rbegin == exclusion_target_p)
+   //     {
+			//++l_rbegin;
+   //     }
+   //     return FE::pair<Iterator, Iterator>{l_rbegin, end_p};
+   // }
 }
 
 /* 
@@ -284,7 +299,7 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator beg
 
 
     if constexpr (IsolationVector == IsolationVector::_Right)
-	{
+    {
         while (begin_p < end_p)
         {
             if (predicate_p(*begin_p) && !predicate_p(*end_p))
@@ -302,37 +317,33 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator beg
                 --end_p;
             }
         }
-        if (l_begin == end_p)
+        if (begin_p >= end_p)
         {
-			++end_p;
+            end_p = begin_p;
         }
-        FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        FE_NEGATIVE_ASSERT(l_begin > end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
         return FE::pair<Iterator, Iterator>{l_begin, end_p};
-	}
-	else if constexpr (IsolationVector == IsolationVector::_Left)
-	{
-        while (begin_p < end_p)
+    }
+    else if constexpr (IsolationVector == IsolationVector::_Left)
+    {
+        while (begin_p <= end_p)
         {
             if (!predicate_p(*begin_p) && predicate_p(*end_p))
             {
                 std::swap(*begin_p, *end_p);
             }
 
-            if (predicate_p(*begin_p))
-            {
-                ++begin_p;
-            }
-
             if (!predicate_p(*end_p))
             {
                 --end_p;
             }
+
+            if (predicate_p(*begin_p))
+            {
+                ++begin_p;
+            }
         }
-        if (l_begin == end_p)
-        {
-            ++end_p;
-        }
-        FE_NEGATIVE_ASSERT(begin_p >= l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
+        FE_NEGATIVE_ASSERT(begin_p > l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
         return FE::pair<Iterator, Iterator>{begin_p, l_end};
 	}
 }
@@ -351,64 +362,61 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator beg
 template<IsolationVector IsolationVector, class Iterator>
 _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
-    Iterator l_begin = begin_p;
-    Iterator l_end = end_p;
-    --end_p;
-    FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
+    return partition_unstable_if<IsolationVector>(begin_p, end_p, [&](const auto& value_p) { return value_p == exclusion_target_p; });
+    //Iterator l_begin = begin_p;
+    //_FE_MAYBE_UNUSED_ Iterator l_end = end_p;
+    //--end_p;
+    //FE_NEGATIVE_ASSERT(begin_p >= end_p, "Assertion failure: the 'begin' iterator is pointing after the 'end' iterator.");
 
 
-    if constexpr (IsolationVector == IsolationVector::_Right)
-    {
-        while (begin_p < end_p)
-        {
-            if ((*begin_p == exclusion_target_p) && (*end_p != exclusion_target_p))
-            {
-                std::swap(*begin_p, *end_p);
-            }
+    //if constexpr (IsolationVector == IsolationVector::_Right)
+    //{
+    //    while (begin_p < end_p)
+    //    {
+    //        if ((*begin_p == exclusion_target_p) && (*end_p != exclusion_target_p))
+    //        {
+    //            std::swap(*begin_p, *end_p);
+    //        }
 
-            if (*begin_p != exclusion_target_p)
-            {
-                ++begin_p;
-            }
+    //        if (*begin_p != exclusion_target_p)
+    //        {
+    //            ++begin_p;
+    //        }
 
-            if (*end_p == exclusion_target_p)
-            {
-                --end_p;
-            }
-        }
-        if (l_begin == end_p)
-        {
-            ++end_p;
-        }
-        FE_NEGATIVE_ASSERT(l_begin >= end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
-        return FE::pair<Iterator, Iterator>{l_begin, end_p};
-    }
-    else if constexpr (IsolationVector == IsolationVector::_Left)
-    {
-        while (begin_p < end_p)
-        {
-            if ((*begin_p != exclusion_target_p) && (*end_p == exclusion_target_p))
-            {
-                std::swap(*begin_p, *end_p);
-            }
+    //        if (*end_p == exclusion_target_p)
+    //        {
+    //            --end_p;
+    //        }
+    //    }
+    //    if (begin_p >= end_p)
+    //    {
+    //        end_p = begin_p;
+    //    }
+    //    FE_NEGATIVE_ASSERT(l_begin > end_p, "Assertion failure: the begin iterator is pointing after the end iterator.");
+    //    return FE::pair<Iterator, Iterator>{l_begin, end_p};
+    //}
+    //else if constexpr (IsolationVector == IsolationVector::_Left)
+    //{
+    //    while (begin_p <= end_p)
+    //    {
+    //        if ((*begin_p != exclusion_target_p) && (*end_p == exclusion_target_p))
+    //        {
+    //            std::swap(*begin_p, *end_p);
+    //        }
 
-            if (*begin_p == exclusion_target_p)
-            {
-                ++begin_p;
-            }
+    //        if (*end_p != exclusion_target_p)
+    //        {
+    //            --end_p;
+    //        }
 
-            if (*end_p != exclusion_target_p)
-            {
-                --end_p;
-            }
-        }
-        if (l_begin == end_p)
-        {
-            ++end_p;
-        }
-        FE_NEGATIVE_ASSERT(begin_p >= l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
-        return FE::pair<Iterator, Iterator>{begin_p, l_end};
-    }
+    //        if (*begin_p == exclusion_target_p)
+    //        {
+    //            ++begin_p;
+    //        }
+    //    }
+    //    FE_NEGATIVE_ASSERT(begin_p > l_end, "Assertion failure: the begin iterator is pointing after the end iterator.");
+    //    return FE::pair<Iterator, Iterator>{begin_p, l_end};
+    //}
 }
 
 

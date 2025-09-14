@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 #include <FE/algorithm/utility.hxx>
+#include <FE/do_once.hxx>
 #include <FE/pool/private/pool_common.hxx>
 #include <FE/iterator.hxx>
 #include <FE/memory.hpp>
@@ -39,8 +40,7 @@ limitations under the License.
 #include <memory>
 #include <memory_resource>
 
-// std thread for parallel sorting.
-#include <thread>
+#include <taskflow.hpp>
 
 
 
@@ -106,7 +106,7 @@ namespace internal::pool
         alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
 
     public:
-        alignas(16) block_info _free_list[free_list_capacity];
+        alignas(FE::align_CPU_L1_cache_line::size)  block_info _free_list[free_list_capacity];
 
     private:
 		var::boolean m_is_page_heapified = false;
@@ -189,7 +189,10 @@ namespace internal::pool
 		}
 
 		_FE_FORCE_INLINE_ FE::int32 get_free_list_size() const noexcept { return m_free_list_size; }
-        _FE_FORCE_INLINE_ void set_free_list_size(FE::int32 size_p) noexcept { m_free_list_size = size_p; }
+        _FE_FORCE_INLINE_ void set_free_list_size(FE::int32 size_p) noexcept 
+        {
+            m_free_list_size = size_p; 
+        }
 
         _FE_FORCE_INLINE_ FE::int32 get_usage_as_percentile() const noexcept 
         {
@@ -241,10 +244,10 @@ public:
     constexpr static FE::int32 maximum_page_count = 6;
 
 private:
-    using page_pointer = std::shared_ptr<chunk_type>;
-	std::pmr::vector<page_pointer> m_page_pointer_heap;     // binary heap tree!
+    using page_pointer = chunk_type*;
+    // chunk_type* m_page_pointer_heap;     // binary heap tree!
+    // chunk_type* m_page_size_heap;     // binary heap tree!
 	page_pointer m_memory_pool[maximum_page_count]; // uncap the max page count and use binary search to find which page a pointer belongs to.
-
     std::pmr::memory_resource* m_upstream_resource;
     var::int32 m_page_count;
 
@@ -257,14 +260,27 @@ public:
         FE_ASSERT(upstream_resource_p != nullptr, "Assertion failed: the upstream_resource_p must not be a nullptr.");
     }
 
-    virtual ~pool() noexcept override = default;
+    virtual ~pool() noexcept override
+    {
+        for (page_pointer& page_ptr : m_memory_pool)
+        {
+            if (page_ptr != nullptr)
+            {
+                page_ptr->~chunk_type();
+                --m_page_count;
+                m_upstream_resource->deallocate(page_ptr, sizeof(chunk_type), Alignment::size);
+                page_ptr = nullptr;
+            }
+        }
+    }
 
     pool(pool&& other_p) noexcept
         : m_upstream_resource(other_p.m_upstream_resource), m_page_count(other_p.m_page_count)
 	{
 		for (var::int32 i = 0; i < maximum_page_count; ++i)
 		{
-			m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+			m_memory_pool[i] = other_p.m_memory_pool[i];
+			other_p.m_memory_pool[i] = nullptr;
 		}
         other_p.m_page_count = 0;
 	}
@@ -277,12 +293,13 @@ public:
 
         for (var::int32 i = 0; i < maximum_page_count; ++i)
         {
-            m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+            m_memory_pool[i] = other_p.m_memory_pool[i];
+            other_p.m_memory_pool[i] = nullptr;
         }
         return *this;
     }
 
-	_FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
+	_FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return m_memory_pool[0] == other_p.m_memory_pool[0]; }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -300,12 +317,14 @@ public:
         {
             if (m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>( (m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource );
+                m_memory_pool[i] = (chunk_type*)m_upstream_resource->allocate(sizeof(chunk_type), Alignment::size);
+			    new(m_memory_pool[i]) chunk_type();
                 ++m_page_count;
 
 				// Swap the new page to the front of the array for faster access.
                 std::swap(m_memory_pool[0], m_memory_pool[i]);
                 i = 0;
+                FE_LOG("New memory page has been created for this instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
             }
 
             alignas(16) internal::pool::block_info l_memblock_info{};
@@ -316,7 +335,6 @@ public:
                 {
                     return nullptr;
                 }
-                FE_LOG("New memory page has been created for this scalable_pool instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
                 continue; // It will eventually create a new page if the next pages are not available.
             }
 
@@ -381,16 +399,6 @@ public:
 
 		return false; // The pointer does not belong to this scalable_pool instance.
     }
-    
-    void create_pages(FE::int32 chunk_count_p) noexcept
-    {
-        FE_ASSERT(m_page_count < maximum_page_count, "The pool instance is out of its page table capacity: unable to create new pages for the pool instance.");
-
-        for (; m_page_count < chunk_count_p; ++m_page_count)
-        {
-            m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
-        }
-    }
 
     void shrink_to_fit() noexcept
     {
@@ -414,7 +422,10 @@ public:
 
             if (l_unused_memory_size_in_bytes == page_capacity)
             {
-				page_ptr.reset();
+				page_ptr->~chunk_type();
+				--m_page_count;
+				m_upstream_resource->deallocate(page_ptr, sizeof(chunk_type), Alignment::size);
+				page_ptr = nullptr;
             }
         }
     }
@@ -513,6 +524,11 @@ private:
 	// Time complexity: O(5n + n log n).
     static void __defragment(page_pointer& page_p) noexcept
     {
+        if (page_p->get_free_list_size() <= 1) _FE_UNLIKELY_
+        {
+            return;
+        }
+
         std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(std::execution::parallel_unsequenced_policy{},
             static_cast<free_list_iterator>(page_p->_free_list),
             static_cast<free_list_iterator>(page_p->_free_list) + page_p->get_free_list_size(),
@@ -523,31 +539,84 @@ private:
 		free_list_iterator l_next = l_iterator + 1;
 		free_list_iterator l_end = l_iterator + page_p->get_free_list_size();
 
+		FE::int32 l_threads_count = std::thread::hardware_concurrency() >> 1;
+		FE::int32 l_jobs_count_per_thread = page_p->get_free_list_size() / l_threads_count;
+  
+        static_assert(sizeof(internal::pool::block_info)*4 == FE::align_CPU_L1_cache_line::size, "Static Assertion failed: can't compile due to false sharing issues!");
+		if (l_jobs_count_per_thread > 8) // Parallelize the defragmentation if the job count per thread is large enough.
+        {
+			thread_local static tf::Executor tl_s_executor(l_threads_count);
+            thread_local static tf::Taskflow tl_s_taskflow;
+
+			std::atomic<free_list_iterator> l_atomic_partition = static_cast<free_list_iterator>(page_p->_free_list);
+
+            FE_DO_ONCE(_DO_ONCE_PER_THREAD_,
+                for (var::int32 i = 0; i < l_threads_count; ++i)
+                {
+                    tl_s_taskflow.emplace(
+                        [l_jobs_count_per_thread, &l_atomic_partition]()
+                        {
+                            free_list_iterator l_range_iterator = l_atomic_partition.fetch_add(l_jobs_count_per_thread);
+							free_list_iterator l_next = l_range_iterator + 1;
+                            free_list_iterator l_range_end = l_range_iterator + l_jobs_count_per_thread;
+
+                            // Time complexity: O(n)
+                            while (l_next != l_range_end)
+                            {
+                                // Merge the adjacent blocks.
+                                if ((l_range_iterator->_address + l_range_iterator->_size_in_bytes) == l_next->_address)
+                                {
+                                    l_range_iterator->_size_in_bytes += l_next->_size_in_bytes;
+
+                                    // Nullify the block.
+                                    l_next->_address = nullptr;
+                                    l_next->_size_in_bytes = l_next->_size_in_bytes xor l_next->_size_in_bytes;
+                                }
+                                // Move to the next block if they are not adjacent.
+                                ++l_next;
+                            }
+                        }
+                    );
+                }
+            );
+
+			tl_s_executor.run(tl_s_taskflow).wait();
+			tl_s_taskflow.clear();
+
+			// Migrate null blocks to right-side of the array to exclude them from being iterated.
+            auto l_mergeable_range = algorithm::utility::partition_stable<algorithm::utility::IsolationVector::_Right, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
+                l_end, internal::pool::block_info{ nullptr, 0 });
+        
+            l_iterator = l_mergeable_range._first;
+			l_next = l_iterator + 1;
+			l_end = l_mergeable_range._second;
+        }
+
+
         // Time complexity: O(n)
         while (l_next != l_end)
         {
-			// Merge the adjacent blocks.
+            // Merge the adjacent blocks.
             if ((l_iterator->_address + l_iterator->_size_in_bytes) == l_next->_address)
             {
-				l_iterator->_size_in_bytes += l_next->_size_in_bytes;
+                l_iterator->_size_in_bytes += l_next->_size_in_bytes;
 
-				// Nullify the block.
+                // Nullify the block.
                 l_next->_address = nullptr;
                 l_next->_size_in_bytes = l_next->_size_in_bytes xor l_next->_size_in_bytes;
-				++l_next; // Look for the next block.
+                ++l_next; // Look for the next block.
+                continue;
             }
-            else
-            {
-				// Move to the next block if they are not adjacent.
-                l_iterator = l_next;
-            }
+            // Move to the next block if they are not adjacent.
+            l_iterator = l_next;
+            ++l_next;
         }
 
 		// Migrate null blocks to right-side of the array to exclude them from being binary searched.
         /* Time complexity: 
         Best - O(n/2)
 		Worst - O(n)
-        */
+        */                                                
         auto l_binary_searchable_range = algorithm::utility::partition_unstable<algorithm::utility::IsolationVector::_Right, free_list_iterator>(static_cast<free_list_iterator>(page_p->_free_list),
                                                                                                                                      l_end, internal::pool::block_info{ nullptr, 0 });
         // Reset it.

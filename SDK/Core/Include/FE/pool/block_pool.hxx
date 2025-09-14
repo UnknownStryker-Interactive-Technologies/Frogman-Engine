@@ -48,7 +48,7 @@ namespace internal::pool
         alignas(Alignment::size) std::array<var::byte, page_capacity_in_bytes> m_memory;
 
     public:
-        alignas(Alignment::size) FE::fstack<block_info_type, possible_address_count> _free_blocks;
+        alignas(FE::align_CPU_L1_cache_line::size)  FE::fstack<block_info_type, possible_address_count> _free_blocks;
         var::byte* const _begin = m_memory.data();
         var::byte* _page_iterator = m_memory.data();
         var::byte* const _end = m_memory.data() + m_memory.size();
@@ -109,7 +109,7 @@ public:
     static constexpr uint64 maximum_page_count = 6;
 
 private:
-    using page_pointer = std::shared_ptr<chunk_type>;
+    using page_pointer = chunk_type*;
 
     page_pointer m_memory_pool[maximum_page_count];
     std::pmr::memory_resource* m_upstream_resource;
@@ -125,14 +125,27 @@ public:
 		FE_ASSERT(upstream_resource_p != nullptr, "Assertion failed: the upstream_resource_p must not be a nullptr.");
     }
 
-    virtual ~pool() noexcept override = default;
+    virtual ~pool() noexcept override
+    {
+        for (page_pointer& page_ptr : m_memory_pool)
+        {
+            if (page_ptr != nullptr)
+            {
+                page_ptr->~chunk_type();
+                --m_page_count;
+                m_upstream_resource->deallocate(page_ptr, sizeof(chunk_type), Alignment::size);
+                page_ptr = nullptr;
+            }
+        }
+    }
 
     pool(pool&& other_p) noexcept
 		: m_upstream_resource(other_p.m_upstream_resource), m_page_count(other_p.m_page_count)
 	{
 		for (var::size i = 0; i < maximum_page_count; ++i)
 		{
-			m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+            m_memory_pool[i] = other_p.m_memory_pool[i];
+            other_p.m_memory_pool[i] = nullptr;
 		}
         other_p.m_page_count = 0;
 	}
@@ -145,12 +158,13 @@ public:
 
         for (var::size i = 0; i < maximum_page_count; ++i)
         {
-            m_memory_pool[i] = std::move(other_p.m_memory_pool[i]);
+            m_memory_pool[i] = other_p.m_memory_pool[i];
+            other_p.m_memory_pool[i] = nullptr;
         }
         return *this;
     }
 
-    _FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return m_memory_pool[0].get() == other_p.m_memory_pool[0].get(); }
+    _FE_FORCE_INLINE_ bool operator==(const pool& other_p) const noexcept { return m_memory_pool[0] == other_p.m_memory_pool[0]; }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -158,7 +172,7 @@ public:
 protected:
     inline virtual void* do_allocate(_FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
     {
-        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
+        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size, ${%lu@0} is greater than the fixed block size, ${%lu@1}.", &bytes_p, &fixed_block_size_in_bytes);
         return allocate<std::byte>();
     }
 
@@ -189,12 +203,15 @@ public:
         {
 			if (m_memory_pool[i] == nullptr) _FE_UNLIKELY_
             {
-                m_memory_pool[i] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
+                m_memory_pool[i] = (chunk_type*)m_upstream_resource->allocate(sizeof(chunk_type), Alignment::size);
+                new(m_memory_pool[i]) chunk_type();
                 ++m_page_count;
 
                 // Swap the new page to the front of the array for faster access.
                 std::swap(m_memory_pool[0], m_memory_pool[i]);
                 i = 0;
+
+                FE_LOG("New memory page has been created for this instance.\nThe instance address: ${%p@0}\nThe number of pages have been allocated for the instance: ${%u32@1}.", this, &m_page_count);
             }
 
             if (m_memory_pool[i]->is_out_of_memory() == true) _FE_UNLIKELY_
@@ -260,16 +277,6 @@ public:
 		return false; // The pointer does not belong to this block_pool instance.
     }
 
-    void create_pages(FE::size chunk_count_p) noexcept
-    {
-        FE_ASSERT(m_page_count < maximum_page_count, "The pool instance is out of its page table capacity: unable to create new pages for the pool instance.");
-
-        for (; m_page_count < chunk_count_p; ++m_page_count)
-        {
-            m_memory_pool[m_page_count] = std::allocate_shared<chunk_type, std::pmr::polymorphic_allocator<chunk_type>>((m_upstream_resource == nullptr) ? std::pmr::polymorphic_allocator<chunk_type>() : m_upstream_resource);
-        }
-    }
-
     void shrink_to_fit() noexcept
     {
         for (page_pointer& page_ptr : m_memory_pool)
@@ -288,7 +295,10 @@ public:
 
             if (l_unused_element_size == possible_address_count * fixed_block_size_in_bytes)
             {
-                page_ptr.reset();
+                page_ptr->~chunk_type();
+                --m_page_count;
+                m_upstream_resource->deallocate(page_ptr, sizeof(chunk_type), Alignment::size);
+                page_ptr = nullptr;
             }
         }
     }

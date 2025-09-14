@@ -1012,4 +1012,25 @@ _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_propert
 #endif
 
 
+#ifdef FE_SYSTEM
+	#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
+#else
+	#define FE_SYSTEM(function_name) \
+class system_##function_name \
+{ \
+public: \
+	_FE_FORCE_INLINE_ system_##function_name() noexcept \
+	{ \
+		::FE::framework::framework_base::get_framework().get_method_reflection() \
+                                                .register_task< ::FE::c_style_task<void(class ::FE::component_base* const)> > \
+                                                 ( #function_name, &function_name ); \
+	} \
+private: \
+	std::string_view m_system_name = #function_name; \
+public: \
+	const ::std::string_view& get_system_name() const noexcept { return m_system_name; } \
+}; 
+#endif
+
+
 #endif

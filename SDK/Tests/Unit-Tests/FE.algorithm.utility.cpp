@@ -110,11 +110,31 @@ TEST(FE_algorithm_utility, partition_unstable)
 
 	FE::pair<std::array<int, 10>::iterator, std::array<int, 10>::iterator> l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
 
+	EXPECT_EQ((l_result._second - l_result._first), 6);
+
 	while (l_result._first != l_result._second)
 	{
 		EXPECT_NE(*(l_result._first), l_value_to_exclude);
 		++(l_result._first);
 	}
+
+
+	l_array = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result._second - l_result._first), 1);
+
+	l_array = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result._second - l_result._first), 0);
+
+
+	std::array<int, 3> l_array2 = { 1, 0, 0 };
+	FE::pair<std::array<int, 3>::iterator, std::array<int, 3>::iterator> l_result2 = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Left>(l_array2.begin(), l_array2.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result2._second - l_result2._first), 1);
+
+	l_array2 = { 0, 0, 0 };
+	l_result2 = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Left>(l_array2.begin(), l_array2.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result2._second - l_result2._first), 0);
 }
 
 TEST(FE_algorithm_utility, partition_stable)
@@ -129,6 +149,24 @@ TEST(FE_algorithm_utility, partition_stable)
 		EXPECT_NE(*(l_result._first), l_value_to_exclude);
 		++(l_result._first);
 	}
+
+
+	l_array = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result._second - l_result._first), 1);
+
+	l_array = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	l_result = FE::algorithm::utility::partition_unstable<FE::algorithm::utility::IsolationVector::_Right>(l_array.begin(), l_array.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result._second - l_result._first), 0);
+
+
+	std::array<int, 3> l_array2 = { 1, 0, 0 };
+	FE::pair<std::array<int, 3>::iterator, std::array<int, 3>::iterator> l_result2 = FE::algorithm::utility::partition_stable<FE::algorithm::utility::IsolationVector::_Left>(l_array2.begin(), l_array2.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result2._second - l_result2._first), 1);
+
+	l_array2 = { 0, 0, 0 };
+	l_result2 = FE::algorithm::utility::partition_stable<FE::algorithm::utility::IsolationVector::_Left>(l_array2.begin(), l_array2.end(), l_value_to_exclude);
+	EXPECT_EQ((l_result2._second - l_result2._first), 0);
 }
 
 // count_int_digit_length

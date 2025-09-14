@@ -121,7 +121,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fqueue.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fstack.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/concurrent_vector.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/mutex.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/function.hxx
 

@@ -38,11 +38,11 @@ namespace FE::internal
 // A directive for executing a given code once per an application launch.
 #define _DO_ONCE_PER_APP_EXECUTION_ static
 
-#ifdef _DO_ONCE_AT_THREAD_PROCESS_
-    #error _DO_ONCE_AT_THREAD_PROCESS_ is a reserved Frogman Engine macro keyword.
+#ifdef _DO_ONCE_PER_THREAD_
+    #error _DO_ONCE_PER_THREAD_ is a reserved Frogman Engine macro keyword.
 #endif 
 // A directive for executing a given code once per thread.
-#define _DO_ONCE_AT_THREAD_PROCESS_ thread_local static 
+#define _DO_ONCE_PER_THREAD_ thread_local static 
 
 #ifdef FE_DO_ONCE
     #error FE_DO_ONCE is a reserved Frogman Engine macro keyword.

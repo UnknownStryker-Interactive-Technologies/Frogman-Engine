@@ -15,6 +15,15 @@
 static std::pmr::unsynchronized_pool_resource pool;
 static 	FE::ECS ecs(&pool);
 
+void take_damage(FE::component_base* const component_p) noexcept
+{
+	health* l_health = FE::polymorphic_cast<health*>(component_p);
+	assert(l_health != nullptr);
+	l_health->_health -= 10;
+}
+
+
+
 
 TEST(ECS, instantiate_entity)
 {
@@ -29,6 +38,15 @@ TEST(ECS, add_component)
 	FE::component_view<speed> l_speed = ecs.add_component<speed>(e, 1.0f);
 	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
 	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
+
+	system_take_damage sys_initializer; // These steps are what will happen inside the game engine framework; the engine will load system pointers, and iterate over their target components.
+	FE::task_base* take_damage = FE::framework::framework_base::get_framework()
+		.get_framework().get_method_reflection().retrieve("take_damage");
+	FE_ASSERT(take_damage != nullptr, "Assertion failed: the take_damage function must be registered.");
+	FE::arguments<FE::component_base*> damage_arg;
+	damage_arg._first = l_health.operator->();
+	(*take_damage)(nullptr, &damage_arg);
+	EXPECT_EQ(l_health->_health, 90);
 
 	ecs.destruct_entity(e);
 }
@@ -176,5 +194,3 @@ void ECS_add_component(benchmark::State& state_p) noexcept
 	ecs.destruct_entity(e);
 }
 BENCHMARK(ECS_add_component)->Iterations(100);
-
-

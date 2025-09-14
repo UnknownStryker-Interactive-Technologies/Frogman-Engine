@@ -123,3 +123,8 @@ public:
 		l_health->_health -= 10;
 	}
 };
+// or to avoid virtual functions:
+
+
+void take_damage(FE::component_base* const component_p) noexcept;
+FE_SYSTEM(take_damage);
