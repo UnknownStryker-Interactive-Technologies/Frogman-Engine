@@ -72,7 +72,7 @@ To run the header tool with CMake, call this CMake function:
 # The first argument is the header files' paths, and the latter ones are the options to the tool. 
 # The tool will not properly work without wrapping " " around the header files paths argument.  
 # The each header file path must be seperated with a semi-colon ';'.  
-RUN_FROGMAN_HEADER_TOOL("${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS}" -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt )  
+RUN_FROGMAN_HEADER_TOOL(${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};${FE_MISC_HEADERS} -max-concurrency=8 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt )  
 ```
 
 - The CMake function 'RUN_FROGMAN_HEADER_TOOL()' will generate the reflection helper code within the generated.cpp.  
