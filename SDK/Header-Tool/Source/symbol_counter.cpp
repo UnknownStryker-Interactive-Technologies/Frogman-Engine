@@ -212,13 +212,6 @@ Return:
 	return l_count;
 }
 
-_FE_NODISCARD_ header_tool_engine::member_symbol_count header_tool_engine::__count_the_current_class_member_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) noexcept
-{
-	(void)begin_p;
-	(void)end_p;
-	return member_symbol_count();
-}
-
 _FE_NODISCARD_ std::optional<FE::uint32> header_tool_engine::___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept
 {
 	switch (paren_p)

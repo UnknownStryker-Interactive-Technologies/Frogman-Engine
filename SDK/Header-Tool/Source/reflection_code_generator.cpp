@@ -58,6 +58,15 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 		__output_namespace_metadata_recursive(l_reflection_metadata, node);
 	}
 
+	for (const identifier& c_style_system_function : tree_p._c_style_systems)
+	{
+		std::pmr::wstring l_identifier(get_memory_resource());
+		l_identifier.resize( c_style_system_function.length() + 1 );
+		std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function.data()), c_style_system_function.length() );
+		l_identifier = l_identifier.c_str();
+		l_reflection_metadata._c_style_system_functions.push_back( std::move(l_identifier) );
+	}
+
 	return l_reflection_metadata;
 }
 
@@ -93,6 +102,15 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 			__output_namespace_metadata_recursive(out_return_p, node);
 		}
 	}
+
+	for (const identifier& c_style_system_function : node_p._c_style_systems)
+	{
+		std::pmr::wstring l_identifier(get_memory_resource());
+		l_identifier.resize(c_style_system_function.length() + 1);
+		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function.data()), c_style_system_function.length());
+		l_identifier = l_identifier.c_str();
+		out_return_p._c_style_system_functions.push_back(std::move(l_identifier));
+	}
 }
 
 
@@ -107,15 +125,15 @@ void header_tool_engine::__output_class_metadata(reflection_metadata& out_return
 	switch (node_p._class_type)
 	{
 	case ClassType::_ChildOfArchetypeBase:
-		out_return_p._archetypes.push_back( std::move(l_identifier) );
+		out_return_p._archetype_base_children.push_back( std::move(l_identifier) );
 		break;
 
 	case ClassType::_ChildOfComponentBase:
-		out_return_p._components.push_back( std::move(l_identifier) );
+		out_return_p._component_base_children.push_back( std::move(l_identifier) );
 		break;
 
 	case ClassType::_ChildOfSystemBase:
-		out_return_p._systems.push_back( std::move(l_identifier) );
+		out_return_p._system_base_children.push_back( std::move(l_identifier) );
 		break;
 
 	case ClassType::_ChildOfCppClass:
@@ -179,7 +197,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	std::pmr::wstring l_namespace_concat_replaced_with_underscores(get_memory_resource());
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
-		for (const std::pmr::wstring& identifier : header_file._components)
+		for (const std::pmr::wstring& identifier : header_file._component_base_children)
 		{
 			l_namespace_concat_replaced_with_underscores = identifier; // The identifier may contain namespace concatenation, so we have to replace "::" with "_"
 			for (std::pmr::wstring::size_type pos = l_namespace_concat_replaced_with_underscores.find(L"::"); pos != std::pmr::wstring::npos; pos = l_namespace_concat_replaced_with_underscores.find(L"::"))
@@ -214,7 +232,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 	constexpr FE::wchar* l_ECS_reflection_registry_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
-		for (const std::pmr::wstring& identifier : header_file._archetypes) // Archetypes
+		for (const std::pmr::wstring& identifier : header_file._archetype_base_children) // Archetypes
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
 			l_generated_code += L"::FE::entity<";
@@ -232,7 +250,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		}
 
 
-		for (const std::pmr::wstring& identifier : header_file._components)
+		for (const std::pmr::wstring& identifier : header_file._component_base_children)
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Component adder reflection
 			l_generated_code += L"::FE::component_view<";
@@ -271,7 +289,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		}
 
 
-		for (const std::pmr::wstring& identifier : header_file._systems)
+		for (const std::pmr::wstring& identifier : header_file._system_base_children)
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // System adder reflection
 			l_generated_code += L"::FE::system_view<";
@@ -281,6 +299,16 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L"\", &::FE::ECS::register_system<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
+		}
+
+
+		for (const std::pmr::wstring& identifier : header_file._c_style_system_functions) // C-style system functions reflection
+		{
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::component_base* const)> >(\"";
+			l_generated_code += identifier;
+			l_generated_code += L"\", &";
+			l_generated_code += identifier;
+			l_generated_code += L");\n";
 		}
 
 
