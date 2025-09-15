@@ -289,17 +289,17 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		}
 
 
-		for (const std::pmr::wstring& identifier : header_file._system_base_children)
-		{
-			l_generated_code += l_ECS_reflection_registry_frame; // System adder reflection
-			l_generated_code += L"::FE::system_view<";
-			l_generated_code += identifier;
-			l_generated_code += L">()> >(\"";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::register_system<";
-			l_generated_code += identifier;
-			l_generated_code += L">);\n";
-		}
+		//for (const std::pmr::wstring& identifier : header_file._system_base_children)
+		//{
+		//	l_generated_code += l_ECS_reflection_registry_frame; // System adder reflection
+		//	l_generated_code += L"::FE::system_view<";
+		//	l_generated_code += identifier;
+		//	l_generated_code += L">()> >(\"";
+		//	l_generated_code += identifier;
+		//	l_generated_code += L"\", &::FE::ECS::register_system<";
+		//	l_generated_code += identifier;
+		//	l_generated_code += L">);\n";
+		//}
 
 
 		for (const std::pmr::wstring& identifier : header_file._c_style_system_functions) // C-style system functions reflection

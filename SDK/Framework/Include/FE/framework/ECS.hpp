@@ -59,7 +59,6 @@ class ECS
 
 	std::pmr::memory_resource* m_memory_resource;
 	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::align_8bytes> m_archetype_pool;
-	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::align_8bytes> m_system_pool;
 
 	archetype_table m_archetype_table;
 	component_table m_component_table;
@@ -90,7 +89,7 @@ public:
 		
 		if (l_result.second == true) // The emplace() was successful. 
 		{
-			return FE::down_cast_owner_to_observer<Archetype>(l_result.first->second);
+			return FE::downcast_owner_to_observer<Archetype>(l_result.first->second);
 		}
 
 		return entity<Archetype>();
@@ -113,7 +112,7 @@ public:
 		m_name_buffer.clear();
 		if (l_probe_result != m_archetype_table.end())
 		{
-			return FE::down_cast_owner_to_observer<Archetype>(l_probe_result->second);
+			return FE::downcast_owner_to_observer<Archetype>(l_probe_result->second);
 		}
 
 		return entity<Archetype>();
@@ -159,7 +158,7 @@ public:
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
-			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
+			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
 			if (l_result.second == false)
@@ -184,7 +183,7 @@ public:
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
-			FE::component_view<Component> l_view = FE::down_cast_owner_to_observer<Component>(l_alloc_result);
+			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
 			if (l_result.second == false)
@@ -237,43 +236,11 @@ public:
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");
 
 		entt_p->m_component_view_table.erase(l_probe_result);
-		return FE::down_cast_observer<Component>(l_probe_result->second);
+		return FE::downcast_observer<Component>(l_probe_result->second);
 	}
 
 
-	template <class System>
-	system_view<System> register_system() noexcept
-	{
-		static_assert(std::is_base_of_v<FE::system_base, System>, "Static assertion failed: the template argument System must be derived from FE::system_base.");
-		typename system_table::iterator l_probe_result = m_system_table.find(FE::framework::reflection::type_id<System>().hash_code());
-		if (l_probe_result != m_system_table.end())
-		{
-			return FE::down_cast_owner_to_observer<System>(l_probe_result->second);
-		}
-		FE::system l_alloc_result = FE::make_owner<System>( &m_system_pool );
-		l_alloc_result->m_typename = std::pmr::string(FE::framework::reflection::type_id<System>().name(), m_memory_resource);
-		std::pair<typename system_table::iterator, bool> l_result = m_system_table.emplace(FE::framework::reflection::type_id<System>().hash_code(), std::move(l_alloc_result));
-		
-		if (l_result.second == true) // The emplace() was successful. 
-		{
-			return FE::down_cast_owner_to_observer<System>(l_alloc_result);
-		}
-		return system_view<System>();
-	}
-
-	template <class System>
-	system_view<System> find_system() noexcept
-	{
-		static_assert(std::is_base_of_v<FE::system_base, System>, "Static assertion failed: the template argument System must be derived from FE::system_base.");
-		typename system_table::iterator l_probe_result = m_system_table.find(FE::framework::reflection::type_id<System>().hash_code());
-		if (l_probe_result != m_system_table.end())
-		{
-			return FE::down_cast_owner_to_observer<System>(l_probe_result->second);
-		}
-		return system_view<System>();
-	}
-
-	system_view<system_base> find_system(FE::ASCII* const system_name_p) noexcept;
+	system find_system(FE::ASCII* const system_name_p) noexcept;
 
 
 	serialized_entity serialize_entity(FE::entity<archetype_base> entt_p) noexcept;

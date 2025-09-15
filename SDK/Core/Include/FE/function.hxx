@@ -588,6 +588,7 @@ public:
 };
 
 
+class component_base;
 /*
 The FE::task_base class is an abstract base class designed for defining tasks that can be executed with both C and C++ style function calls
 providing a virtual function interface to check for null function pointers.
@@ -606,6 +607,9 @@ public:
 
 	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
+
+    using system = void(*)(class FE::component_base* const);
+	virtual system try_get_as_system() noexcept = 0;
 };
 
 
@@ -793,8 +797,14 @@ public:
     // for C style tasks
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        FE_ASSERT(false, "Invalid FE::cpp_style_task invocation");
+        FE_EXIT_IF(true, FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "This operator() overload is not supported for C++ style tasks.");
     }
+
+    virtual system try_get_as_system() noexcept override
+    {
+        FE_EXIT_IF(true, FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "This method is not supported for C++ style tasks.");
+        return nullptr;
+	}
 
 };
 
@@ -982,7 +992,16 @@ public:
     // for C++ style tasks
     virtual void operator()(_FE_MAYBE_UNUSED_ FE::void_ptr instance_p, _FE_MAYBE_UNUSED_ FE::void_ptr out_ret_buffer_p, _FE_MAYBE_UNUSED_ argument_base* const arguments_p) noexcept override
     {
-        FE_ASSERT(false, "Invalid FE::c_style_task invocation");
+        FE_EXIT_IF(true, FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "This operator() overload is not supported for C style tasks");
+    }
+
+    virtual system try_get_as_system() noexcept override
+    {
+        if constexpr (std::is_same<task_type, typename FE::task_base::system>::value == true)
+        {
+            return m_function;
+        }
+        return nullptr;
     }
 };
 

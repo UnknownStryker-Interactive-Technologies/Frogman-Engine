@@ -108,22 +108,5 @@ public:
 	virtual ~speed() noexcept override = default;
 };
 
-class damage_system : public FE::system_base
-{
-public:
-	damage_system() noexcept = default;
-
-	virtual ~damage_system() noexcept override = default;
-
-	virtual void operator()(FE::component_base* const component_p) override
-	{
-		health* l_health = FE::polymorphic_cast<health*>(component_p);
-		assert(l_health != nullptr);
-
-		l_health->_health -= 10;
-	}
-};
-// or to avoid virtual functions:
-
 
 void take_damage(FE::component_base* const component_p) noexcept;

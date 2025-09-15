@@ -27,7 +27,6 @@ BEGIN_NAMESPACE(FE)
 ECS::ECS(std::pmr::memory_resource* resource) noexcept
 	:	m_memory_resource(resource),
 		m_archetype_pool(resource),
-		m_system_pool(resource),
 
 		m_archetype_table(),
 		m_component_table(),
@@ -42,7 +41,6 @@ ECS::ECS(std::pmr::memory_resource* resource) noexcept
 ECS::ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept
 	:	m_memory_resource(resource),
 		m_archetype_pool(resource),
-		m_system_pool(resource),
 
 		m_archetype_table(),
 		m_component_table(),
@@ -79,14 +77,10 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const FE::compone
 }
 
 
-system_view<system_base> ECS::find_system(FE::ASCII* const system_name_p) noexcept
+system ECS::find_system(FE::ASCII* const system_name_p) noexcept
 {
-	typename system_table::iterator l_probe_result = m_system_table.find(robin_hood::hash_bytes(system_name_p, std::strlen(system_name_p)));
-	if (l_probe_result != m_system_table.end())
-	{
-		return l_probe_result->second;
-	}
-	return system_view<system_base>();
+	FE::task_base* l_system = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(system_name_p);
+	return (l_system == nullptr) ? nullptr : l_system->try_get_as_system();
 }
 
 

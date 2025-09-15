@@ -64,7 +64,7 @@ public:
 		typename component_view_table::iterator l_probe_result = m_component_view_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		if (l_probe_result != m_component_view_table.end())
 		{
-			return FE::down_cast_observer<Component>(l_probe_result->second);
+			return FE::downcast_observer<Component>(l_probe_result->second);
 		}
 		return component_view<Component>();
 	}
