@@ -292,6 +292,7 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 		// It could not find the token and reached the end of the string.
         if (*l_token == FE::null)
         {
+			*out_buffer_pointer_p = FE::null;
             return;
         }
         else
@@ -417,16 +418,16 @@ void format_string(char* out_buffer_pointer_p, const char* string_format_p, size
 			break;
         }
     }
+	*out_buffer_pointer_p = FE::null;
 }
 
 const char* buffered_string_formatter(std::initializer_list<const void*> arguments_p) noexcept
 {
-    thread_local static char tl_s_buffer[string_formatter_buffer_size] = { "\0" };
+	thread_local static char tl_s_buffer[string_formatter_buffer_size];
     std::memset(tl_s_buffer, null, string_formatter_buffer_size);
-
     if (arguments_p.begin() != nullptr)
     {
-        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()) + 1, arguments_p.size()-1);
+        format_string(tl_s_buffer, static_cast<const char*>(*arguments_p.begin()), string_formatter_buffer_size, const_cast<const void**>(arguments_p.begin()+1), arguments_p.size()-1);
     }
     return tl_s_buffer;
 }

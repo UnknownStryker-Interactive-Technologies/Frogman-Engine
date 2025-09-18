@@ -153,7 +153,7 @@ public:
         {
             return l_result->second._base_typename.c_str();
         }
-        FE_LOG("Warning: Frogman Engine RTTI get_base_name_of() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
+        FE_LOG(FE::log::Severity::_Warning, "Warning: Frogman Engine RTTI get_base_name_of() method_registry is returning nullptr. Please check if the type is registered to this RTTI system.");
         return "\0";
     }
 

@@ -105,6 +105,11 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 		default:
 			break;
 		}
+
+		if (begin_p == end_p)
+		{
+			return l_count;
+		}
 		++begin_p;
 	}
 Return:

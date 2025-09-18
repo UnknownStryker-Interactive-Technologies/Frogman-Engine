@@ -69,7 +69,6 @@ struct token
 };
 
 
-// C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\HeaderWithCopyright.hpp;
 // sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\FE.ECS.hpp
 
 /*
@@ -92,6 +91,7 @@ class header_tool_engine : public FE::framework::framework_base
 
 	std::pmr::vector<directory_t> m_header_file_list;
 	std::pmr::vector<file_buffer_t> m_mapped_header_files;
+	FE::framework::reflection::enum_metadata* m_FHT_error_codes;
 
 public:
 	header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;

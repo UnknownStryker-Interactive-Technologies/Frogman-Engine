@@ -30,13 +30,30 @@ limitations under the License.
 
 
 
+_FE_MAYBE_UNUSED_ FE::uint64 FE::system_page_size = []() -> FE::uint64
+	{
+		SYSTEM_INFO l_sysinfo;
+		GetSystemInfo(&l_sysinfo);
+		return l_sysinfo.dwPageSize;
+	}();
+
+_FE_MAYBE_UNUSED_ FE::uint64 FE::system_large_page_size = []() -> FE::uint64
+	{
+		SYSTEM_INFO l_sysinfo;
+		GetSystemInfo(&l_sysinfo);
+		return (GetLargePageMinimum() == 0) ? l_sysinfo.dwPageSize : GetLargePageMinimum();
+	}();
+
+
 void* operator new(std::size_t bytes_p)
 {
-	return FE_ALIGNED_ALLOC(bytes_p, FE::align_CPU_L1_cache_line::size);
+	FE_ASSERT(bytes_p != 0, "Allocating zero bytes is not allowed.");
+	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
 void* operator new[](std::size_t bytes_p)
 {
-	return FE_ALIGNED_ALLOC(bytes_p, FE::align_CPU_L1_cache_line::size);
+	FE_ASSERT(bytes_p != 0, "Allocating zero bytes is not allowed.");
+	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
 
 void operator delete(void* ptr_p) noexcept

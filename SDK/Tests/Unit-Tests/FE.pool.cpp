@@ -20,7 +20,7 @@
 
 TEST(FE_Core_scalable_pool, __defragment)
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::SIMD_auto_alignment> l_pool;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_pool;
 	std::pmr::list<std::size_t> l_strings(&l_pool);
 	for (int i = 0; i < 126; ++i)
 	{
@@ -106,7 +106,7 @@ BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iter
 
 void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_16KiB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
@@ -130,7 +130,7 @@ BENCHMARK(FE_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1
 
 void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<FE::PoolPageCapacity::_16KiB, sizeof(std::string), FE::align_as<sizeof(std::string), FE::align_64bytes>> l_allocator;
+	FE::block_pool<sizeof(std::string), FE::align_64bytes> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
@@ -271,7 +271,7 @@ BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_test)->Iterations(10000)
 
 void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_16KiB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
@@ -288,7 +288,7 @@ BENCHMARK(FE_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
 
 void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	FE::block_pool<FE::PoolPageCapacity::_16KiB, sizeof(std::string), FE::align_as<sizeof(std::string), FE::align_64bytes>> l_allocator;
+	FE::block_pool<sizeof(std::string), FE::align_64bytes> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
@@ -372,7 +372,7 @@ BENCHMARK(aligned_malloc_aligned_free_random_size_test)->Iterations(10000);
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_16KiB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::vector<std::byte> l_vector(&l_allocator);
@@ -468,7 +468,7 @@ BENCHMARK(aligned_malloc_aligned_free_random_size_accumulation_test)->Iterations
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	FE::scalable_pool<FE::PoolPageCapacity::_1MiB, FE::SIMD_auto_alignment> l_allocator;
+	FE::scalable_pool<FE::SIMD_auto_alignment> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
 
 	std::pmr::vector< std::pmr::vector<std::byte> > l_vector(&l_allocator);

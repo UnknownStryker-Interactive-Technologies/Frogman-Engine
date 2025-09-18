@@ -118,6 +118,11 @@ limitations under the License.
 #include <FE/algorithm/math.hpp>
 
 
+#ifdef _FE_ON_WINDOWS_X86_64_
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <sysinfoapi.h> // to use GetSystemInfo
+#endif
 
 
 #ifdef _FE_ON_X86_64_
@@ -167,6 +172,10 @@ _FE_MAYBE_UNUSED_ constexpr uint8 byte_size = 1;
 _FE_MAYBE_UNUSED_ constexpr uint8 word_size = 2;
 _FE_MAYBE_UNUSED_ constexpr uint8 dword_size = 4;
 _FE_MAYBE_UNUSED_ constexpr uint8 qword_size = 8;
+
+_FE_MAYBE_UNUSED_ extern FE::uint64 system_page_size;
+_FE_MAYBE_UNUSED_ extern FE::uint64 system_large_page_size;
+
 
 using reserve = size;
 using resize_to = size;
@@ -221,7 +230,7 @@ struct align_128bytes final
 	_FE_MAYBE_UNUSED_ static constexpr size size = 128;
 };
 
-struct align_CPU_L1_cache_line final
+struct CPU_L1_cache_line final
 {
 	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size;
 };
@@ -751,6 +760,15 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(u
 	return sizeof(FE::aligned<T, Alignment>) * l_multiplier;
 }
 
+template<typename T>
+_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_size_of_T(uint64 alignment_p) noexcept
+{
+	FE_ASSERT(FE::is_power_of_two(alignment_p) == true, "Assertion failed: the alignment is not a power of two.");
+	var::size l_multiplier =  sizeof(T) / alignment_p;
+	l_multiplier += ((sizeof(T) % alignment_p) != 0);
+	return alignment_p * l_multiplier;
+}
+
 template<class ConstIterator>
 FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
 {
@@ -882,9 +900,9 @@ _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size byte
 #endif
 
 
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_KiB = 1024;
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_MiB = 1048576;
-_FE_MAYBE_UNUSED_ constexpr FE::uint64 one_GiB = 1073741824;
+_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_KiB = 1024;
+_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_MiB = 1048576;
+_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_GiB = 1073741824;
 
 
 _FE_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept

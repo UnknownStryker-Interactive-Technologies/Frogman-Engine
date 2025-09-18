@@ -16,7 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
+#include <FE/do_once.hxx>
 #include <FE/type_traits.hxx>
+#include <FE/memory.hpp>
 
 // std
 #include <array>
@@ -26,8 +28,8 @@ limitations under the License.
 
 #ifdef _FE_ON_WINDOWS_X86_64_
 #define WIN32_LEAN_AND_MEAN
-// to use VirtualAlloc and VirtualFree
-#include <Windows.h>
+#include <windows.h>
+#include <memoryapi.h> // to use VirtualAlloc and VirtualFree
 #endif
 
 
@@ -44,33 +46,6 @@ enum struct PoolType : uint8
 };
 
 
-enum struct PoolPageCapacity : FE::uint64
-{
-	_1KiB = 1024,
-	_2KiB = 2048,
-	_4KiB = 4096,
-	_8KiB = 8192,
-	_16KiB = 16384,
-	_32KiB = 32768,
-	_64KiB = 65536,
-	_128KiB = 131072,
-	_256KiB = 262144,
-	_512KiB = 524288,
-	_1MiB = 1048576,
-	_2MiB = 2097152,
-	_4MiB = 4194304,
-	_8MiB = 8388608,
-	_16MiB = 16777216,
-	_32MiB = 33554432,
-	_64MiB = 67108864,
-	_128MiB = 134217728,
-	_256MiB = 268435456,
-	_512MiB = 536870912,
-	_1GiB = 1073741824,
-	_Max = (0x7FFFFFFF - 63)
-};
-
-
 namespace internal::pool
 {
     struct block_info
@@ -79,35 +54,12 @@ namespace internal::pool
         var::int32 _size_in_bytes;
     };
 
-    template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
+    template<PoolType PoolType, class Alignment>
     class chunk;
-
-	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
-	//struct page_deleter
-	//{
-	//	_FE_FORCE_INLINE_ void operator()(chunk<PoolType, PageCapacity, Alignment>* ptr_p) const noexcept
-	//	{
-	//		ptr_p->~chunk<PoolType, PageCapacity, Alignment>();
-	//		FE_EXIT_IF(VirtualUnlock(ptr_p, sizeof(chunk<PoolType, PageCapacity, Alignment>)) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualUnlockFailure, "Failed to VirtualUnlock() a memory page.");
-	//		FE_EXIT_IF(VirtualFree(ptr_p, 0, MEM_RELEASE) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualFreeFailure, "Failed to VirtualFree() a memory page.");
-	//	}
-	//};
-
-	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
-	//using page_ptr = std::unique_ptr<chunk<PoolType, PageCapacity, Alignment>, page_deleter<PoolType, PageCapacity, Alignment>>;
-
-	//template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
-	//_FE_FORCE_INLINE_ page_ptr<PoolType, PageCapacity, Alignment> make_page() noexcept
-	//{
-	//	typename page_ptr<PoolType, PageCapacity, Alignment>::pointer l_virtual_alloc_result = (typename page_ptr<PoolType, PageCapacity, Alignment>::pointer)VirtualAlloc(nullptr, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	//	FE_EXIT_IF(VirtualLock( l_virtual_alloc_result, sizeof(typename page_ptr<PoolType, PageCapacity, Alignment>::element_type) ) == _FE_FAILED_, FE::ErrorCode::_FatalMemoryError_1XX_VirtualLockFailure, "Failed to VirtualLock() a memory page.");
-	//	new(l_virtual_alloc_result) typename page_ptr<PoolType, PageCapacity, Alignment>::element_type();
-	//	return page_ptr<PoolType, PageCapacity, Alignment>(l_virtual_alloc_result);
-	//}
 }
 
 
-template<PoolType PoolType, PoolPageCapacity PageCapacity, class Alignment>
+template<PoolType PoolType, class Alignment>
 class pool;
 
 

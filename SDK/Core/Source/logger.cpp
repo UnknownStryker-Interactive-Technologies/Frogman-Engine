@@ -54,7 +54,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
             m_log_buffer.data(),
             default_buffer_size,
             {
-                "[Time: ", FE::clock::get_current_local_time(), "]\t", message_p, "\n",
+                "\033[31m[Time: ", FE::clock::get_current_local_time(), "]\t", message_p, "\n",
                 "File Directory: ", file_name_p, "\n",
                 "Function Name: ", function_name_p, "\n",
                 "Code Line Number: ", l_source_code_line_info_buffer
@@ -72,11 +72,11 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
 
     std::cerr << l_stack_trace_dumps_string.data() << '\n';
 
-    std::cerr << "\n-------------------------------------------------------- END OF RECORD -------------------------------------------------------\n";
+    std::cerr << "\n-------------------------------------------------------- END OF RECORD -------------------------------------------------------\n\033[0m";
 }
 
 
-void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept
+void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p, Severity severity) noexcept
 {
     if (std::strlen(message_p) >= default_buffer_size) _FE_UNLIKELY_
     {
@@ -87,20 +87,60 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
 
-    FE::algorithm::string::concatenate<var::ASCII>
-        (
-            m_log_buffer.data(),
-            default_buffer_size,
-            {
-                "[Time: ", FE::clock::get_current_local_time(), " | File Directory: ", file_name_p, " | Function Name: ", function_name_p, " | Code Line Number: ", l_source_code_line_info_buffer,
-                "\nActual Message:\n\n",
-                message_p, "\n\n\n\n\n"
-            }
-    );
+    m_log_buffer.clear();
+
+    switch (severity)
+    {
+    case FE::log::Severity::_Info:
+        {
+        FE::algorithm::string::concatenate<var::ASCII>
+            (
+                m_log_buffer.data(),
+                default_buffer_size,
+                {
+                    "[Time: ", FE::clock::get_current_local_time(), " | File Directory: ", file_name_p, " | Function Name: ", function_name_p, " | Code Line Number: ", l_source_code_line_info_buffer,
+                    "\nActual Message:\n\n",
+                    message_p, "\n\n\n\n\n\0"
+                }
+            );
+        }
+        break;
+
+    case FE::log::Severity::_Warning:
+        {
+            FE::algorithm::string::concatenate<var::ASCII>
+            (
+                m_log_buffer.data(),
+                default_buffer_size,
+                {
+                    "\033[33m[Time: ", FE::clock::get_current_local_time(), " | File Directory: ", file_name_p, " | Function Name: ", function_name_p, " | Code Line Number: ", l_source_code_line_info_buffer,
+                    "\nActual Message:\n\n",
+                    message_p, "\n\n\n\n\n\033[0m\0"
+                }
+            );
+        }
+        break;
+
+    case FE::log::Severity::_Error:
+        {
+        FE::algorithm::string::concatenate<var::ASCII>
+            (
+                m_log_buffer.data(),
+                default_buffer_size,
+                {
+                    "\033[31m[Time: ", FE::clock::get_current_local_time(), " | File Directory: ", file_name_p, " | Function Name: ", function_name_p, " | Code Line Number: ", l_source_code_line_info_buffer,
+                    "\nActual Message:\n\n",
+                    message_p, "\n\n\n\n\n\033[0m\0"
+                }
+            );
+        }
+        break;
+
+    default: _FE_UNLIKELY_;
+        break;
+    } 
 
     std::cout << m_log_buffer.data();
-
-    std::memset(m_log_buffer.data(), null, default_buffer_size * sizeof(typename buffer_type::value_type));
 }
 
 

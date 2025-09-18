@@ -16,6 +16,8 @@ limitations under the License.
 #define _CRT_SECURE_NO_WARNINGS
 #include "header_tool_engine.hpp"
 
+#include "error_code.hpp"
+
 // std::mbstowcs
 #include <cstdlib>
 
@@ -23,10 +25,11 @@ limitations under the License.
 
 
 header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	: FE::framework::framework_base(argc_p, argv_p),
-	  m_UTF8_with_BOM{ 0xEF, 0xBB, 0xBF },
-	  m_UTF8_locale("en_US.UTF-8"),
-	  m_header_tool_options(argc_p, argv_p)
+	:	FE::framework::framework_base(argc_p, argv_p),
+		m_UTF8_with_BOM{ 0xEF, 0xBB, 0xBF },
+		m_UTF8_locale("en_US.UTF-8"),
+		m_header_tool_options(argc_p, argv_p),
+		m_FHT_error_codes()
 {
 	std::cout << "Frogman Engine Header Tool: the given program options are - ";
 	for (var::int32 i = 0; i < argc_p; ++i)
@@ -42,6 +45,7 @@ header_tool_engine::header_tool_engine(FE::int32 argc_p, FE::ASCII** argv_p) noe
 FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
 	__load_reflection_data();
+	m_FHT_error_codes = FE::framework::framework_base::get_framework().get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
 	m_code_style_guide = file_buffer_t(get_memory_resource());
 	m_reflection_metadata_set /*= reflection_metadata_set_t(get_memory_resource())*/;
@@ -95,8 +99,9 @@ FE::int32 header_tool_engine::run()
 					if (l_result == false) // The given copy right notice is not found.
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						std::wcerr << L"\n\nFrogman Engine Header Tool WARNING:\n\tThe file located at '" << l_path.c_str() << L"' has no copy of the specified copyright notice.\n\n";
-						l_exit_code = -1; // Reserve the error report.
+						FE_LOG(FE::log::Severity::_Warning, "Frogman Engine Header Tool WARNING:\n\tThe file has no copy of the specified copyright notice.");
+						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven;
 					}
 				}
 			);
@@ -131,8 +136,9 @@ FE::int32 header_tool_engine::run()
 					if (l_tokens == std::nullopt)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						std::wcerr << L"\n\nFrogman Engine Header Tool Error:\n\tUnable to parse the file located at '" << l_path.c_str();
-						l_exit_code = -2;
+						FE_LOG(FE::log::Severity::_Warning, "Frogman Engine Header Tool Error:\n\tThe error code is ${%s@0}", m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_TokenizationFailure));
+						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_TokenizationFailure; 
 						return;
 					}
 
@@ -158,8 +164,9 @@ FE::int32 header_tool_engine::run()
 					}
 					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
 					{
-						std::wcerr << "\n\nFrogman Engine Header Tool: failed to parse the header file. Skipping the file located at '" << l_path.c_str() << "'.\n\n";
-						std::wcerr << error_p._second;
+						std::lock_guard<std::mutex> l_guard(l_log_lock);
+						FE_LOG(FE::log::Severity::_Warning, "${%s@0}", error_p._second);
+						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
 						l_exit_code = (int)error_p._first;
 						return; 
 					}

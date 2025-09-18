@@ -352,7 +352,7 @@ public:
 #ifdef _ENABLE_LOG_
 			constexpr FE::ASCII* l_error_code = TO_STRING(ErrorCode::_FatalSerializationError_3XX_TypeNotFound);
 			constexpr FE::ASCII* l_error_message = "serialization failed - could not find the requested type information";
-			FE_LOG("Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
+			FE_LOG(FE::log::Severity::_Warning, "Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
 #endif
 			return;
 		}
@@ -394,7 +394,7 @@ public:
 #ifdef _ENABLE_LOG_
 			constexpr FE::ASCII* l_error_code = TO_STRING(ErrorCode::_FatalDeserializationError_3XX_FileBufferEmpty);
 			constexpr FE::ASCII* l_error_message = "deserialization failed - the input data buffer is empty";
-			FE_LOG("Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
+			FE_LOG(FE::log::Severity::_Warning, "Frogman Engine ${%s@0}: ${%s@1}.", l_error_code, l_error_message);
 #endif
 			return;
 		}
@@ -440,7 +440,7 @@ public:
 		while (l_size_indicator != l_file_end)
 		{
 			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
-			FE_LOG_IF(l_info._value == 0, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
+			FE_LOG_IF(l_info._value == 0, FE::log::Severity::_Warning, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
 			m_scalable_container_size_record.push_back(l_info._value);
 			l_size_indicator += l_info._digit_length; // move to the next.
 			++l_size_indicator; // to skip the '-'.
@@ -865,22 +865,6 @@ END_NAMESPACE
 
 
 
-#ifdef FE_CLASS_HAS_A_BASE
-#error FE_CLASS_HAS_A_BASE is a reserved Frogman Engine macro keyword.
-#else
-// *** NOTE: Future versions won't require the FE_CLASS_HAS_A_BASE macro to enable reflection capabilities. ***
-#define FE_CLASS_HAS_A_BASE(base_class) \
-using base_type = base_class; 
-#endif
-
-
-#ifdef FE_STRUCT
-#error FE_STRUCT is a reserved Frogman Engine macro keyword.
-#else
-	#define FE_STRUCT() 
-#endif
-
-
 #ifdef FE_METHOD
 	#error FE_METHOD is a reserved Frogman Engine macro keyword.
 #else
@@ -1002,13 +986,6 @@ public: \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this;
-#endif
-
-
-#ifdef FE_ENUM_STRUCT
-	#error FE_ENUM_STRUCT is a reserved Frogman Engine macro keyword.
-#else
-	#define FE_ENUM_STRUCT()
 #endif
 
 

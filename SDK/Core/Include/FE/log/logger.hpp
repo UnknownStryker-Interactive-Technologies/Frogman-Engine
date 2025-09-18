@@ -35,6 +35,14 @@ class fatal_error_logger_base;
 class message_logger_base;
 
 
+enum struct Severity
+{
+    _Info,
+    _Warning,
+	_Error
+};
+
+
 class logger_base
 {
 public:
@@ -93,7 +101,7 @@ public:
     message_logger_base() noexcept : base_type() {}
     ~message_logger_base() noexcept = default;
 
-    void do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p) noexcept;
+    void do_log(ASCII* const message_p, ASCII* const file_name_p, ASCII* const function_name_p, uint32 line_p, Severity severity_p = Severity::_Info) noexcept;
 };
 
 

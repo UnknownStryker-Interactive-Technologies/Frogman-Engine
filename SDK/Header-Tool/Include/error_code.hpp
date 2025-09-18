@@ -33,7 +33,8 @@ enum struct FrogmanEngineHeaderToolError : FE::int32
 	_InputError_NoCopyRightNoticeIsGiven = 1004,
 	_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM = 1005,
 	_InputError_IncorrectCppSyntax = 1006,
-	_InputError_ParsingFailure = 1007
+	_InputError_ParsingFailure = 1007,
+	_InputError_TokenizationFailure = 1008
 };
 
 #define THROW_CPP_SYNTAX_ERROR(expr, ...) \

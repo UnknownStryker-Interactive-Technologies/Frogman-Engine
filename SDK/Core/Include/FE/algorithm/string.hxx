@@ -391,6 +391,7 @@ _FE_CONSTEXPR20_ void concatenate(CharT* const out_string_buffer_p, _FE_MAYBE_UN
         std::memcpy(out_string_buffer_p + l_current_begin_index, strings_p.begin()[i], l_string_length_buffer * sizeof(CharT));
         l_current_begin_index += l_string_length_buffer;
     }
+    out_string_buffer_p[l_current_begin_index] = FE::null;
 }
 
 

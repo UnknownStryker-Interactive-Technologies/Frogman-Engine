@@ -29,19 +29,21 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+constexpr FE::size xmmword_size = 16;
+constexpr FE::size ymmword_size = 32;
+constexpr FE::size zmmword_size = 64;
+constexpr FE::size dzmmword_size = 128;
+
+
 namespace internal
 {
-	constexpr FE::size xmmword_size = 16;
-	constexpr FE::size ymmword_size = 32;
-	constexpr FE::size zmmword_size = 64;
-	constexpr FE::size dzmmword_size = 128;
-
 	enum struct AllocatorType
 	{
-		_XMMWordAllocator = 0,
-		_YMMWordAllocator = 1,
-		_ZMMWordAllocator = 2,
-		_DZMMWordAllocator = 3
+		_XMMWordAllocator,
+		_YMMWordAllocator,
+		_ZMMWordAllocator,
+		_DZMMWordAllocator,
+		_ScalableAllocator
 	};
 }
 
@@ -53,11 +55,11 @@ inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
 class memory_resource : public std::pmr::memory_resource
 {
 public:
-	using xmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_1MiB, internal::xmmword_size, FE::align_16bytes>;
-	using ymmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_2MiB, internal::ymmword_size, FE::align_32bytes>;
-	using zmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_4MiB, internal::zmmword_size, FE::align_64bytes>;
-	using dzmmword_pool_type = FE::block_pool<FE::PoolPageCapacity::_8MiB, internal::dzmmword_size, FE::align_128bytes>;
-	using scalable_pool_type = FE::scalable_pool<FE::PoolPageCapacity::_Max, FE::SIMD_auto_alignment>;
+	using xmmword_pool_type = FE::block_pool<xmmword_size, FE::align_16bytes>;
+	using ymmword_pool_type = FE::block_pool<ymmword_size, FE::align_32bytes>;
+	using zmmword_pool_type = FE::block_pool<zmmword_size, FE::align_64bytes>;
+	using dzmmword_pool_type = FE::block_pool<dzmmword_size, FE::align_128bytes>;
+	using scalable_pool_type = FE::scalable_pool<FE::SIMD_auto_alignment>;
 
 private:
 	xmmword_pool_type m_xmmword_block_pool;
@@ -72,9 +74,6 @@ public:
 
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
-
-	// this significantly impacts the performance of m_scalable_pool, if you do not know what you are doing, do not call this function.
-	_FE_FORCE_INLINE_ void try_defragment() noexcept { m_scalable_pool.try_defragment(); }
 
 protected:
 	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;

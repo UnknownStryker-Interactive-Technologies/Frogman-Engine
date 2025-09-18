@@ -20,17 +20,30 @@ limitations under the License.
 
 void header_tool_engine::__skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept
 {
+	var::uint64 l_block_scope_count = 0;
 	for (; out_token_iterator_p != end_p; ++out_token_iterator_p)
 	{
-		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightCurlyBracket)
+		switch (out_token_iterator_p->_vocabulary)
 		{
-			auto l_next = std::next(out_token_iterator_p, 1);
-			if ((l_next != end_p) &&
-				(l_next->_vocabulary == Vocabulary::_Semicolon))
+		case Vocabulary::_LeftCurlyBracket:
+			++l_block_scope_count;
+			break;
+
+		case Vocabulary::_RightCurlyBracket:
 			{
-				++out_token_iterator_p;
-				return;
+				auto l_next = std::next(out_token_iterator_p, 1);
+				if ((l_next != end_p) && (l_block_scope_count == 1) &&
+					(l_next->_vocabulary == Vocabulary::_Semicolon))
+				{
+					++out_token_iterator_p;
+					return;
+				}
+				--l_block_scope_count;
+				break;
 			}
+
+		default:
+			break;
 		}
 	}
 }
@@ -72,9 +85,9 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 	}
 
 	{
-		static std::mutex l_s_log_lock;
 		symbol_count l_total_nums = __try_count_all_symbols(token_list_p.begin(), token_list_p.cend());
 
+		static std::mutex l_s_log_lock;
 		std::lock_guard<std::mutex> l_guard(l_s_log_lock);
 		std::wcout << L"Frogman Engine Header Tool: In the file located at '" << file_path_p.c_str() << "'\n";
 		std::cout << "Frogman Engine Header Tool: the total number of namespaces is " << l_total_nums._namespaces << '\n';
@@ -181,7 +194,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 
 _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
-	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Namespace, "Frogman Engine Header Tool Assertion Failure: the 'namespace' keyword is missing from the current token, but the header tool is attempting to build a namespace node.");
+	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_Namespace || out_token_iterator_p->_vocabulary == Vocabulary::_BeginNamespace, "Frogman Engine Header Tool Assertion Failure: the 'namespace' keyword is missing from the current token, but the header tool is attempting to build a namespace node.");
 	/* Five tokens are needed at least to build a namespace node.
 	namespace Some
 	{
@@ -200,7 +213,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 	{
 	case Vocabulary::_Namespace:
 		{
-			++out_token_iterator_p;
+			while (out_token_iterator_p->_vocabulary != Vocabulary::_Undefined)
+			{
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'Identifier' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
+				++out_token_iterator_p;
+			}
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_LeftCurlyBracket)
 			{
 				l_node._target_namespace_name += out_token_iterator_p->_code;
@@ -208,7 +225,6 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'{' is missing from the 'namespace Identifier {'.", &(out_token_iterator_p->_line_number));
 				++out_token_iterator_p;
 			}
-			++out_token_iterator_p;
 		}
 		break;
 
@@ -216,6 +232,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 		{
 			++out_token_iterator_p;
 			THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_LeftParen, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
+			while (out_token_iterator_p->_vocabulary != Vocabulary::_Undefined)
+			{
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'Identifier' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
+				++out_token_iterator_p;
+			}
 			while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
 			{
 				l_node._target_namespace_name += out_token_iterator_p->_code;
@@ -223,7 +244,6 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n'(' is missing from the 'BEGIN_NAMESPACE(Identifier)'.", &(out_token_iterator_p->_line_number));
 				++out_token_iterator_p;
 			}
-			++out_token_iterator_p;
 		}
 		break;
 
@@ -237,11 +257,14 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 		l_node._classes.reserve(l_nums._classes);
 		l_node._structs.reserve(l_nums._structs);
 		l_node._enum_structs.reserve(l_nums._enums);
-	}
 
-	if (out_token_iterator_p == end_p)
-	{
-		return l_node;
+		static std::mutex l_s_log_lock;
+		std::lock_guard<std::mutex> l_guard(l_s_log_lock);
+		std::cout << "Frogman Engine Header Tool: In the namespace '" << (FE::ASCII*)(l_node._target_namespace_name.c_str()) << "'\n";
+		std::cout << "Frogman Engine Header Tool: the total number of namespaces is " << l_nums._namespaces << '\n';
+		std::cout << "Frogman Engine Header Tool: the total number of classes is " << l_nums._classes << '\n';
+		std::cout << "Frogman Engine Header Tool: the total number of structs is " << l_nums._structs << "\n";
+		std::cout << "Frogman Engine Header Tool: the total number of enum structs is " << l_nums._enums << "\n\n";
 	}
 
 	bool l_is_template = false;
@@ -255,6 +278,11 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'namespace.'", &(out_token_iterator_p->_line_number));
 			l_node._nested_namespaces->push_back( __try_build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
+
+		case Vocabulary::_EndNamespace:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_RightCurlyBracket:
+			return l_node;
 
 		case Vocabulary::_Template:
 			__try_skip_template_args(out_token_iterator_p);
@@ -287,7 +315,7 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 			break;
 
 		case Vocabulary::_Enum:
-			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'enum.'", &(out_token_iterator_p->_line_number));
+			//THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'enum.'", &(out_token_iterator_p->_line_number));
 			__skip_code_block(out_token_iterator_p, end_p);
 			break;
 
@@ -299,11 +327,22 @@ _FE_NODISCARD_ namespace_node header_tool_engine::__try_build_namespace_node_rec
 					break;
 				}
 				l_node._c_style_systems.push_back(l_system_function_name);
+
+				while (out_token_iterator_p->_vocabulary != Vocabulary::_Semicolon)
+				{
+					if (out_token_iterator_p->_vocabulary == Vocabulary::_LeftCurlyBracket)
+					{
+						__skip_code_block(out_token_iterator_p, end_p);
+						break;
+					}
+					THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n';' is missing from the end of the C-style system function declaration.", &(out_token_iterator_p->_line_number));
+					++out_token_iterator_p;
+				}
 			}
 			break;
 
 		default:
-			return l_node;
+			break;
 		}
 
 		if (out_token_iterator_p == end_p)
@@ -609,6 +648,10 @@ _FE_NODISCARD_ identifier header_tool_engine::__try_build_c_style_system_functio
 	}
 
 	identifier l_node;
+	if (l_system_parameter.length() == 0)
+	{
+		return l_node;
+	}
 	l_node = identifier(get_memory_resource());
 	l_node.reserve(64);
 	l_node = parent_namespace_p;

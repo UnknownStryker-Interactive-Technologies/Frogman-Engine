@@ -20,29 +20,42 @@ limitations under the License.
 
 _FE_FORCE_INLINE_ FE::internal::AllocatorType __select_allocator(std::size_t bytes_p) noexcept
 {
-	FE::internal::AllocatorType l_allocator_type; 
-
 	switch (bytes_p)
 	{
-	case FE::internal::xmmword_size:
+	case FE::xmmword_size:
 		return FE::internal::AllocatorType::_XMMWordAllocator;
 
-	case FE::internal::ymmword_size:
+	case FE::ymmword_size:
 		return FE::internal::AllocatorType::_YMMWordAllocator;
 
-	case FE::internal::zmmword_size:
+	case FE::zmmword_size:
 		return FE::internal::AllocatorType::_ZMMWordAllocator;
 
-	case FE::internal::dzmmword_size:
+	case FE::dzmmword_size:
 		return FE::internal::AllocatorType::_DZMMWordAllocator;
 
 	default:
-		break;
-	}
+		switch (bytes_p / FE::xmmword_size)
+		{
+		case 0:
+			return FE::internal::AllocatorType::_XMMWordAllocator;
 
-	constexpr std::size_t l_smallest_block_size = FE::internal::xmmword_size;
-	l_allocator_type = static_cast<FE::internal::AllocatorType>( bytes_p / l_smallest_block_size );
-	return l_allocator_type;
+		case 1:
+			return FE::internal::AllocatorType::_YMMWordAllocator;
+
+		case 2:
+			_FE_FALLTHROUGH_;
+		case 3:
+			return FE::internal::AllocatorType::_ZMMWordAllocator;
+
+		case 4:
+			return FE::internal::AllocatorType::_DZMMWordAllocator;
+
+		default:
+			return FE::internal::AllocatorType::_ScalableAllocator;
+		}
+		return FE::internal::AllocatorType::_ScalableAllocator;
+	}
 }
 
 
@@ -73,19 +86,19 @@ void* FE::memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ st
 	switch (__select_allocator(bytes_p))
 	{
 	case internal::AllocatorType::_XMMWordAllocator:
-		l_allocation_result = m_xmmword_block_pool.allocate< FE::align_as<internal::xmmword_size, FE::align_16bytes> >();
+		l_allocation_result = m_xmmword_block_pool.allocate< FE::align_as<xmmword_size, FE::align_16bytes> >();
 		break;
 
 	case internal::AllocatorType::_YMMWordAllocator:
-		l_allocation_result =  m_ymmword_block_pool.allocate< FE::align_as<internal::ymmword_size, FE::align_32bytes> >();
+		l_allocation_result =  m_ymmword_block_pool.allocate< FE::align_as<ymmword_size, FE::align_32bytes> >();
 		break;
 
 	case internal::AllocatorType::_ZMMWordAllocator:
-		l_allocation_result = m_zmmword_block_pool.allocate< FE::align_as<internal::zmmword_size, FE::align_64bytes> >();
+		l_allocation_result = m_zmmword_block_pool.allocate< FE::align_as<zmmword_size, FE::align_64bytes> >();
 		break;
 
 	case internal::AllocatorType::_DZMMWordAllocator:
-		l_allocation_result = m_dzmmword_block_pool.allocate< FE::align_as<internal::dzmmword_size, FE::align_128bytes> >();
+		l_allocation_result = m_dzmmword_block_pool.allocate< FE::align_as<dzmmword_size, FE::align_128bytes> >();
 		break;
 
 	default:
@@ -107,31 +120,29 @@ void FE::memory_resource::do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MA
 	switch (__select_allocator(bytes_p))
 	{
 	case internal::AllocatorType::_XMMWordAllocator:
-		l_deallocation_result = m_xmmword_block_pool.deallocate< FE::align_as<internal::xmmword_size, FE::align_16bytes> >( static_cast< FE::align_as<internal::xmmword_size, FE::align_16bytes>* >( ptr_p ) );
+		l_deallocation_result = m_xmmword_block_pool.deallocate< FE::align_as<xmmword_size, FE::align_16bytes> >( static_cast< FE::align_as<xmmword_size, FE::align_16bytes>* >( ptr_p ) );
 		break;
 
 	case internal::AllocatorType::_YMMWordAllocator:
-		l_deallocation_result = m_ymmword_block_pool.deallocate< FE::align_as<internal::ymmword_size, FE::align_32bytes> >( static_cast<FE::align_as<internal::ymmword_size, FE::align_32bytes>*>( ptr_p ) );
+		l_deallocation_result = m_ymmword_block_pool.deallocate< FE::align_as<ymmword_size, FE::align_32bytes> >( static_cast<FE::align_as<ymmword_size, FE::align_32bytes>*>( ptr_p ) );
 		break;
 
 	case internal::AllocatorType::_ZMMWordAllocator:
-		l_deallocation_result = m_zmmword_block_pool.deallocate< FE::align_as<internal::zmmword_size, FE::align_64bytes> >( static_cast<FE::align_as<internal::zmmword_size, FE::align_64bytes>*>( ptr_p ) );
+		l_deallocation_result = m_zmmword_block_pool.deallocate< FE::align_as<zmmword_size, FE::align_64bytes> >( static_cast<FE::align_as<zmmword_size, FE::align_64bytes>*>( ptr_p ) );
 		break;
 
 	case internal::AllocatorType::_DZMMWordAllocator:
-		l_deallocation_result = m_dzmmword_block_pool.deallocate< FE::align_as<internal::dzmmword_size, FE::align_128bytes> >( static_cast<FE::align_as<internal::dzmmword_size, FE::align_128bytes>*>( ptr_p ) );
+		l_deallocation_result = m_dzmmword_block_pool.deallocate< FE::align_as<dzmmword_size, FE::align_128bytes> >( static_cast<FE::align_as<dzmmword_size, FE::align_128bytes>*>( ptr_p ) );
 		break;
 
 	default:
-		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p );
-		FE_ASSERT(l_deallocation_result == true, "Assertion failed: the deallocation of the scalable pool failed; ptr_p is an alien pointer.");
+		m_scalable_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p);
 		return;
 	}
 
 	if (l_deallocation_result == false)
 	{
-		l_deallocation_result = m_scalable_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p );
-		FE_ASSERT(l_deallocation_result == true, "Assertion failed: the deallocation of the scalable pool failed; ptr_p is an alien pointer.");
+		m_scalable_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), (FE::int32)bytes_p);
 		return;
 	}
 }

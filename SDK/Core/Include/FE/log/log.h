@@ -66,6 +66,8 @@ limitations under the License.
 #endif
 
 
+
+
 #ifdef _ENABLE_LOG_
 /*
 %i8 - int8
@@ -85,7 +87,7 @@ limitations under the License.
 
 FE_LOG is a macro that facilitates logging messages by formatting them with a buffered string formatter and including the current file name, function signature, and line number for better traceability in the log output.
 */
-#define FE_LOG(...) ::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__)
+#define FE_LOG(severity, ...) ::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__, severity)
 #else
 #define FE_LOG(...)
 #endif
@@ -111,11 +113,11 @@ FE_LOG is a macro that facilitates logging messages by formatting them with a bu
 FE_LOG_IF is a macro that logs messages conditionally based on a specified condition
 utilizing a logger to format and output the message along with the file name and line number where the log was triggered.
 */
-#define FE_LOG_IF(condition, ...) \
+#define FE_LOG_IF(condition, severity, ...) \
 { \
 	if(condition) \
 	{ \
-		::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		::FE::log::logger_base::get_logger<::FE::log::message_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__, severity); \
 	} \
 }
 #else
@@ -230,6 +232,7 @@ The FE_EXIT_IF macro logs a fatal error message and terminates the program with 
 
 namespace FE
 {
+	FE_ENUM_STRUCT();
 	enum struct ErrorCode : FE::int32
 	{
 		_None = 0,
@@ -247,19 +250,23 @@ namespace FE
 		_FatalMemoryError_1XX_BufferOverflow = 105,
 		_FatalMemoryError_1XX_InvalidSize = 106,
 		_FatalMemoryError_1XX_InvalidIterator = 107,
-		_FatalMemoryError_1XX_VirtualAllocFailure = 108,
-		_FatalMemoryError_1XX_VirtualLockFailure = 109,
-		_FatalMemoryError_1XX_VirtualUnlockFailure = 110,
-		_FatalMemoryError_1XX_VirtualFreeFailure = 110,
-		_FatalMemoryError_1XX_FalseDeallocation = 111,
+		_FatalMemoryError_1XX_FalseDeallocation = 108,
 
 		_FatalInputError_2XX_InvalidArgument = 200,
-		_FatalInputError_2XX_Null = 202,
+		_FatalInputError_2XX_Null = 201,
 
 		_FatalSerializationError_3XX_TypeMismatch = 300,
 		_FatalSerializationError_3XX_TypeNotFound = 301,
 		_FatalSerializationError_3XX_FileVersionMismatch = 302,
 		_FatalDeserializationError_3XX_FileBufferEmpty = 303,
+
+		_FatalWinAPI_Error_4XX_OpenProcessTokenFailure = 400,
+		_FatalWinAPI_Error_4XX_LookupPrivilegeValueFailure = 401,
+		_FatalWinAPI_Error_4XX_AdjustTokenPrivilegesFailure = 402,
+		_FatalMemoryError_1XX_VirtualAllocFailure = 403,
+		_FatalMemoryError_1XX_VirtualLockFailure = 404,
+		_FatalMemoryError_1XX_VirtualUnlockFailure = 405,
+		_FatalMemoryError_1XX_VirtualFreeFailure = 406
 	};
 }
 #endif

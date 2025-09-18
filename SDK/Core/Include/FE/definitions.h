@@ -137,4 +137,27 @@ limitations under the License.
 #define _SOURCE_CODE_LOCATION_ __FILE__, __func__, __LINE__
 
 
+
+
+#ifdef FE_CLASS_HAS_A_BASE
+#error FE_CLASS_HAS_A_BASE is a reserved Frogman Engine macro keyword.
+#else
+#define FE_CLASS_HAS_A_BASE(base_class) \
+using base_type = base_class; 
+#endif
+
+
+#ifdef FE_STRUCT
+#error FE_STRUCT is a reserved Frogman Engine macro keyword.
+#else
+#define FE_STRUCT() // THis is an indicator for the FHT.
+#endif
+
+#ifdef FE_ENUM_STRUCT
+#error FE_ENUM_STRUCT is a reserved Frogman Engine macro keyword.
+#else
+#define FE_ENUM_STRUCT() // THis is an indicator for the FHT.
+#endif
+
+
 #endif

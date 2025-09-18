@@ -1,4 +1,4 @@
-#ifndef _FE_CORE_CONCURRENT_VECTOR_HXX_
+﻿#ifndef _FE_CORE_CONCURRENT_VECTOR_HXX_
 #define _FE_CORE_CONCURRENT_VECTOR_HXX_
 /* https://oneapi-spec.uxlfoundation.org/specifications/oneapi/v1.3-rev-1/elements/onetbb/source/containers/concurrent_vector_cls
 Copyright 2025 Unknown Stryker

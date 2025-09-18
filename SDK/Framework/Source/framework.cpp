@@ -64,12 +64,12 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 
 			if (l_uint_info._value < 4)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
 				m_max_concurrency._second = 4;
 			}
 			else if (l_uint_info._value > 254)
 			{
-				FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
 				m_max_concurrency._second = 4;
 			}
 			break;
@@ -83,7 +83,7 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	FE_EXIT_IF(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
 	if (m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
 	{
-		FE_LOG("Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", m_max_concurrency._first, &m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
+		FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", m_max_concurrency._first, &m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
 		m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
 	}
 #endif
@@ -130,6 +130,7 @@ framework_base::~framework_base() noexcept
 
 FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
 {
+
 	return 0;
 }
 

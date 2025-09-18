@@ -26,7 +26,7 @@ BEGIN_NAMESPACE(FE)
 
 ECS::ECS(std::pmr::memory_resource* resource) noexcept
 	:	m_memory_resource(resource),
-		m_archetype_pool(resource),
+		m_archetype_pool(),
 
 		m_archetype_table(),
 		m_component_table(),
@@ -40,7 +40,7 @@ ECS::ECS(std::pmr::memory_resource* resource) noexcept
 
 ECS::ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept
 	:	m_memory_resource(resource),
-		m_archetype_pool(resource),
+		m_archetype_pool(),
 
 		m_archetype_table(),
 		m_component_table(),
@@ -51,6 +51,10 @@ ECS::ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept
 	m_component_table.reserve(1024);
 	m_system_table.reserve(1024);
 	(void)file_p;
+}
+
+ECS::~ECS() noexcept
+{
 }
 
 

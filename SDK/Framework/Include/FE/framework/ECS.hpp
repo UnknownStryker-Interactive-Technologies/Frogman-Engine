@@ -51,14 +51,14 @@ class ECS
 {
 	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype>;
 	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
-														FE::pair<	std::pmr::forward_list<components>, 
-																	FE::scalable_pool<FE::PoolPageCapacity::_32MiB, FE::align_8bytes>
+														FE::pair<	FE::scalable_pool<FE::align_8bytes>,
+																	std::pmr::forward_list<components>
 																	>
 														>;
 	using system_table = robin_hood::unordered_map<std::size_t, system>;
 
 	std::pmr::memory_resource* m_memory_resource;
-	FE::scalable_pool<FE::PoolPageCapacity::_8KiB, FE::align_8bytes> m_archetype_pool;
+	FE::scalable_pool<FE::align_8bytes> m_archetype_pool;
 
 	archetype_table m_archetype_table;
 	component_table m_component_table;
@@ -67,7 +67,7 @@ class ECS
 public:
 	ECS(std::pmr::memory_resource* resource) noexcept;
 	ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept;
-	~ECS() noexcept = default;
+	~ECS() noexcept;
 
 	ECS(const ECS&) noexcept = delete;
 	ECS& operator=(const ECS&) noexcept = delete;
@@ -141,21 +141,22 @@ public:
 			*                                                          *
 			*----------------------------------------------------------*
 			*/
-			typename component_table::iterator l_list_and_allocator = m_component_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), typename component_table::mapped_type(std::pmr::forward_list<FE::components>(m_memory_resource), m_memory_resource)).first;
-			l_list_and_allocator->second._first.emplace_front(); // allocate a component pool.
-			l_probe_result = l_list_and_allocator;
+			typename component_table::mapped_type& l_list_and_allocator = m_component_table[FE::framework::reflection::type_id<Component>().hash_code()];
+			l_list_and_allocator._second = std::pmr::forward_list<components>(&l_list_and_allocator._first);
+			l_list_and_allocator._second.emplace_front(); // allocate a component pool.
+			l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		}
 
 
 		FE::component l_alloc_result;
-		for (typename component_table::mapped_type::first_type::iterator components = l_probe_result->second._first.begin(); components != l_probe_result->second._first.end(); ++components)
+		for (typename component_table::mapped_type::second_type::iterator components = l_probe_result->second._second.begin(); components != l_probe_result->second._second.end(); ++components)
 		{
 			if (components->get_size() == components->max_components) // true if the component pool is full.
 			{
 				continue;
 			}
 
-			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
@@ -163,7 +164,7 @@ public:
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
 			if (l_result.second == false)
 			{
-				FE_LOG("FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
+				FE_LOG(FE::log::Severity::_Warning, "FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
 				return component_view<Component>();
 			}
 
@@ -178,9 +179,9 @@ public:
 		if (l_alloc_result == nullptr) _FE_LIKELY_
 		{
 			// All components lists are full. Create a new one.
-			l_probe_result->second._first.emplace_front();
+			l_probe_result->second._second.emplace_front();
 
-			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._second), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
 			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
 			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
@@ -188,12 +189,12 @@ public:
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
 			if (l_result.second == false)
 			{
-				FE_LOG("FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
+				FE_LOG(FE::log::Severity::_Warning, "FE ECS: add_component<T>() failed due to a pre-existing duplicate component.");
 				return component_view<Component>();
 			}
 
-			FE::size l_idx = l_probe_result->second._first.front().add_component(std::move(l_alloc_result));
-			l_view->m_identifier._group = l_probe_result->second._first.begin();
+			FE::size l_idx = l_probe_result->second._second.front().add_component(std::move(l_alloc_result));
+			l_view->m_identifier._group = l_probe_result->second._second.begin();
 			l_view->m_identifier._index = l_idx;
 			return l_view;
 		}
