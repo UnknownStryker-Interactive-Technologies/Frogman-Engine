@@ -1,4 +1,4 @@
-#ifndef CHECK_H_
+﻿#ifndef CHECK_H_
 #define CHECK_H_
 
 #include <cmath>

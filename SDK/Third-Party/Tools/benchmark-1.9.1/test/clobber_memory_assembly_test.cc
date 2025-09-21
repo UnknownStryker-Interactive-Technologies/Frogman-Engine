@@ -1,4 +1,4 @@
-#include <benchmark/benchmark.h>
+﻿#include <benchmark/benchmark.h>
 
 #ifdef __clang__
 #pragma clang diagnostic ignored "-Wreturn-type"

@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_EXPORT_H
+﻿#ifndef BENCHMARK_EXPORT_H
 #define BENCHMARK_EXPORT_H
 
 #if defined(_WIN32)

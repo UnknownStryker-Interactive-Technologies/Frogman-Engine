@@ -1,4 +1,4 @@
-#undef NDEBUG
+﻿#undef NDEBUG
 #include <algorithm>
 #include <cassert>
 #include <cmath>

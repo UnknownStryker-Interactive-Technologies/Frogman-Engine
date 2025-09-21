@@ -1,4 +1,4 @@
-
+﻿
 #undef NDEBUG
 #include <numeric>
 #include <utility>

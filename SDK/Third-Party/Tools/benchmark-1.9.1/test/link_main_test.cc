@@ -1,4 +1,4 @@
-#include "benchmark/benchmark.h"
+﻿#include "benchmark/benchmark.h"
 
 void BM_empty(benchmark::State& state) {
   for (auto _ : state) {

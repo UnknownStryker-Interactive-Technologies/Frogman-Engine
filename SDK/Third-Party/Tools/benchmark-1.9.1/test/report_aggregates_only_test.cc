@@ -1,4 +1,4 @@
-
+﻿
 #undef NDEBUG
 #include <cstdio>
 #include <string>

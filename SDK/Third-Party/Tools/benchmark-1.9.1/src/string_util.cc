@@ -1,4 +1,4 @@
-#include "string_util.h"
+﻿#include "string_util.h"
 
 #include <array>
 #ifdef BENCHMARK_STL_ANDROID_GNUSTL

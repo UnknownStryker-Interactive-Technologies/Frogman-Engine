@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_MUTEX_H_
+﻿#ifndef BENCHMARK_MUTEX_H_
 #define BENCHMARK_MUTEX_H_
 
 #include <condition_variable>

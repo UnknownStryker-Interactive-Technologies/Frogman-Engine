@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_THREAD_MANAGER_H
+﻿#ifndef BENCHMARK_THREAD_MANAGER_H
 #define BENCHMARK_THREAD_MANAGER_H
 
 #include <atomic>

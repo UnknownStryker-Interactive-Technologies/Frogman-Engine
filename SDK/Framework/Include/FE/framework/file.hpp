@@ -1,4 +1,4 @@
-#ifndef _FE_FRAMEWORK_FRAMEWORK_FILE_HPP_
+﻿#ifndef _FE_FRAMEWORK_FRAMEWORK_FILE_HPP_
 #define _FE_FRAMEWORK_FRAMEWORK_FILE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

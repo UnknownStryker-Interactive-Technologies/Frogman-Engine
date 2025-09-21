@@ -1,4 +1,4 @@
-#include "../src/benchmark_runner.h"
+﻿#include "../src/benchmark_runner.h"
 #include "gtest/gtest.h"
 
 namespace {

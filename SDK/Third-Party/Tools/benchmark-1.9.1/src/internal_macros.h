@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_INTERNAL_MACROS_H_
+﻿#ifndef BENCHMARK_INTERNAL_MACROS_H_
 #define BENCHMARK_INTERNAL_MACROS_H_
 
 /* Needed to detect STL */

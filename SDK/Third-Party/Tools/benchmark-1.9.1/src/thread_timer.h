@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_THREAD_TIMER_H
+﻿#ifndef BENCHMARK_THREAD_TIMER_H
 #define BENCHMARK_THREAD_TIMER_H
 
 #include "check.h"

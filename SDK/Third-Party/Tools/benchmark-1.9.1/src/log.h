@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_LOG_H_
+﻿#ifndef BENCHMARK_LOG_H_
 #define BENCHMARK_LOG_H_
 
 #include <iostream>

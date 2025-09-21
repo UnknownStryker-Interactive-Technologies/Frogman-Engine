@@ -1,4 +1,4 @@
-// Benchmark for Python.
+﻿// Benchmark for Python.
 
 #include "benchmark/benchmark.h"
 

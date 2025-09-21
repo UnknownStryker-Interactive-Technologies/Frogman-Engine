@@ -1,4 +1,4 @@
-#include <pthread.h>
+﻿#include <pthread.h>
 int main() {
   cpu_set_t set;
   CPU_ZERO(&set);

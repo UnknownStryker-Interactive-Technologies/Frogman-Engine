@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_ARRAYSIZE_H_
+﻿#ifndef BENCHMARK_ARRAYSIZE_H_
 #define BENCHMARK_ARRAYSIZE_H_
 
 #include "internal_macros.h"

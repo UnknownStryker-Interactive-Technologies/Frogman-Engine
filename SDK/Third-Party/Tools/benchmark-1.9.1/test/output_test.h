@@ -1,4 +1,4 @@
-#ifndef TEST_OUTPUT_TEST_H
+﻿#ifndef TEST_OUTPUT_TEST_H
 #define TEST_OUTPUT_TEST_H
 
 #undef NDEBUG

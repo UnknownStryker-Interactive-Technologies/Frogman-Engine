@@ -1,4 +1,4 @@
-// Copyright 2016 Ismael Jimenez Martinez. All rights reserved.
+﻿// Copyright 2016 Ismael Jimenez Martinez. All rights reserved.
 // Copyright 2017 Roman Lebedev. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");

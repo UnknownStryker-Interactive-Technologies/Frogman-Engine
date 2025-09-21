@@ -1,4 +1,4 @@
-#include "benchmark_api_internal.h"
+﻿#include "benchmark_api_internal.h"
 
 #include <cinttypes>
 

@@ -1,4 +1,4 @@
-#pragma warning (disable : 26495)
+﻿#pragma warning (disable : 26495)
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //

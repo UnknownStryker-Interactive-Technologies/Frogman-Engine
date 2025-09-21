@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_STRING_UTIL_H_
+﻿#ifndef BENCHMARK_STRING_UTIL_H_
 #define BENCHMARK_STRING_UTIL_H_
 
 #include <sstream>

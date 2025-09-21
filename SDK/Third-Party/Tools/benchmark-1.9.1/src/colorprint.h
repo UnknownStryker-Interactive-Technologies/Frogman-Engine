@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_COLORPRINT_H_
+﻿#ifndef BENCHMARK_COLORPRINT_H_
 #define BENCHMARK_COLORPRINT_H_
 
 #include <cstdarg>

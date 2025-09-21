@@ -1,4 +1,4 @@
-#include <cstdarg>
+﻿#include <cstdarg>
 #undef NDEBUG
 
 #include "../src/commandlineflags.h"

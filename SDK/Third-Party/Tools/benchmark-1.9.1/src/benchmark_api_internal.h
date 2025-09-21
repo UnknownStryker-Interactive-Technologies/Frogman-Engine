@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_API_INTERNAL_H
+﻿#ifndef BENCHMARK_API_INTERNAL_H
 #define BENCHMARK_API_INTERNAL_H
 
 #include <cmath>

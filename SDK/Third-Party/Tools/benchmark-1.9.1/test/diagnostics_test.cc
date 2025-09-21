@@ -1,4 +1,4 @@
-// Testing:
+﻿// Testing:
 //   State::PauseTiming()
 //   State::ResumeTiming()
 // Test that CHECK's within these function diagnose when they are called

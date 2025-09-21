@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------
+﻿// ----------------------------------------------------------------------
 // CycleClock
 //    A CycleClock tells you the current time in Cycles.  The "time"
 //    is actually time since power-on.  This is like time() but doesn't

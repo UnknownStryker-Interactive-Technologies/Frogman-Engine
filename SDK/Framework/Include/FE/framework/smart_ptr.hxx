@@ -1,4 +1,4 @@
-#ifndef _FE_FRAMEWORK_SMART_PTR_HXX_
+﻿#ifndef _FE_FRAMEWORK_SMART_PTR_HXX_
 #define _FE_FRAMEWORK_SMART_PTR_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

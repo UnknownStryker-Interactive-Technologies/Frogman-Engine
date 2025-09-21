@@ -99,8 +99,8 @@ FE::int32 header_tool_engine::run()
 					if (l_result == false) // The given copy right notice is not found.
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						FE_LOG(FE::log::Severity::_Warning, "Frogman Engine Header Tool WARNING:\n\tThe file has no copy of the specified copyright notice.");
-						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						std::cerr << "Frogman Engine Header Tool WARNING:\n\tThe file has no copy of the specified copyright notice.\n";
+						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
 						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven;
 					}
 				}
@@ -136,8 +136,8 @@ FE::int32 header_tool_engine::run()
 					if (l_tokens == std::nullopt)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						FE_LOG(FE::log::Severity::_Warning, "Frogman Engine Header Tool Error:\n\tThe error code is ${%s@0}", m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_TokenizationFailure));
-						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						std::cerr << "Frogman Engine Header Tool Error:\n\tThe error code is " << m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_TokenizationFailure) << '\n';
+						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
 						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_TokenizationFailure; 
 						return;
 					}
@@ -165,8 +165,8 @@ FE::int32 header_tool_engine::run()
 					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						FE_LOG(FE::log::Severity::_Warning, "${%s@0}", error_p._second);
-						std::wcout << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						std::cerr << error_p._second << '\n';
+						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
 						l_exit_code = (int)error_p._first;
 						return; 
 					}

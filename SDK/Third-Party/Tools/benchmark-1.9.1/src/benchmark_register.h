@@ -1,4 +1,4 @@
-#ifndef BENCHMARK_REGISTER_H
+﻿#ifndef BENCHMARK_REGISTER_H
 #define BENCHMARK_REGISTER_H
 
 #include <algorithm>
