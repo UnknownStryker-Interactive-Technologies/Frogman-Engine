@@ -32,6 +32,10 @@ JSON/
 ## Commonly used CMake directories
 build*/
 
+## Frogman Engine Folders
+Binaries/
+Solution/
+
 ## Xcode artifacts
 project.xcworkspace
 xcuserdata
