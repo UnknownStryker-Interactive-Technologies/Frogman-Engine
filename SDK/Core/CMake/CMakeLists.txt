@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.25.0...4.1.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.25.0...4.1.2)
 # Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 PROJECT(FE.Core
         VERSION 0.0
@@ -9,8 +9,8 @@ GET_FILENAME_COMPONENT(FE_CORE_CMAKE_CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR} 
 INCLUDE("${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../CMake/predefined-settings.cmake")	   
 INCLUDE("${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../CMake/frogman-engine.cmake")
 
-#
-RUN_FROGMAN_HEADER_TOOL(${FE_CORE_HEADERS};${FE_ALGORITHM_HEADERS};${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_MISC_HEADERS} -fno-reflection-helper -max-concurrency=16 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt) 
+# -fno-reflection-helper 
+RUN_FROGMAN_HEADER_TOOL(${FE_CORE_HEADERS} -max-concurrency=16 -path-to-copyright-notice=${FE_CORE_CMAKE_CURRENT_LIST_DIR}/../../LICENSE.txt) 
 
 
 ADD_LIBRARY(${CMAKE_PROJECT_NAME} STATIC ${FE_ALGORITHM_HEADERS}

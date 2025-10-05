@@ -47,9 +47,6 @@ FE::int32 header_tool_engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	__load_reflection_data();
 	m_FHT_error_codes = FE::framework::framework_base::get_framework().get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
-	m_code_style_guide = file_buffer_t(get_memory_resource());
-	m_reflection_metadata_set /*= reflection_metadata_set_t(get_memory_resource())*/;
-
 	if (m_header_tool_options.is_fno_op_defined() == true)
 	{
 		std::cerr << "\n\nFrogman Engine Header Tool: No operation will be done. Exiting the program.\n\n";
@@ -77,7 +74,7 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor(m_program_options.get_max_concurrency());
+	tf::Executor l_executor(m_program_options.get_max_concurrency() - 1); // exlude the main thread.
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = m_mapped_header_files.size();
 	std::mutex l_log_lock;
@@ -141,21 +138,25 @@ FE::int32 header_tool_engine::run()
 						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_TokenizationFailure; 
 						return;
 					}
+					
 
-					// literally removes /**/ and // comments.
+					// removes /**/ and // comments.
 					__purge_comments(*l_tokens); // throws if */ is missing.
+
+					__purge_string_literals(*l_tokens); // removes the string literals ( quoted texts ).
 
 					// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
 					__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
+										//// for debugging purpose.
 
 					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
 
-//					//// for debugging purpose.
-//for (auto& v : *l_tokens)
-//{
-//	std::cout << reinterpret_cast<const char*>(v._code.c_str()) << "\n";
-//}
-//std::cout << "\n";
+					//// for debugging purpose.
+					//for (auto& v : *l_tokens)
+					//{
+					//	std::cout << reinterpret_cast<const char*>(v._code.c_str()) << "\n";
+					//}
+					//std::cout << "\n";
 
 					header_file_root l_reflection_tree;
 					try // The exceptions must be thrown if the input header files have C++ syntax errors.
@@ -205,7 +206,13 @@ FE::boolean header_tool_engine::__is_the_file_encoded_with_UTF8_BOM(FE::wchar* d
 {
 	std::basic_ifstream<var::ASCII> l_BOM_validator;
 	l_BOM_validator.open(directory_p);
-	FE_EXIT_IF(l_BOM_validator.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the path '${%s@0}' is not a valid directory.", directory_p);
+
+	if (l_BOM_validator.is_open() == false)
+	{
+		std::wcerr << "Frogman Engine Header Tool ERROR: the path '" << directory_p << "' is not a valid directory.\n";
+		return false;
+	}
+	
 	var::uint8 l_BOM[3];
 	l_BOM_validator.read(reinterpret_cast<char*>(l_BOM), 3);
 	return ((l_BOM[0] == m_UTF8_with_BOM[0]) && (l_BOM[1] == m_UTF8_with_BOM[1]) && (l_BOM[2] == m_UTF8_with_BOM[2]));
@@ -276,12 +283,22 @@ std::pmr::vector<file_buffer_t> header_tool_engine::__map_header_files(const std
 		{
 			continue;
 		}
-		FE_EXIT_IF(__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.", path_to_file.c_str());
+
+		if (__is_the_file_encoded_with_UTF8_BOM(path_to_file.c_str()) == false)
+		{
+			std::wcerr << "Frogman Engine Header Tool ERROR: the header file '" << path_to_file.c_str() << "' is not encoded in UTF-8 BOM.\n";
+			continue;
+		}
 
 		std::basic_ifstream<var::UTF8> l_file_handler;
 		l_file_handler.imbue(m_UTF8_locale);
 		l_file_handler.open(path_to_file.c_str());
-		FE_EXIT_IF(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_FatalError_FailedToOpenFile, "Frogman Engine Header Tool ERROR: failed to open a file. The given path is '${%s@0}'.", path_to_file.c_str());
+
+		if (l_file_handler.is_open() == false)
+		{
+			std::wcerr << "Frogman Engine Header Tool ERROR: the header file '" << path_to_file.c_str() << "' is not encoded in UTF-8 BOM.\n";
+			continue;
+		}
 
 		l_files.emplace_back(std::istreambuf_iterator<var::UTF8>(l_file_handler), std::istreambuf_iterator<var::UTF8>());
 		l_file_handler.close();

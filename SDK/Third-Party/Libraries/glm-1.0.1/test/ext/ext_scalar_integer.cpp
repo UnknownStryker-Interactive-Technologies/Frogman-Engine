@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_integer.hpp>
+﻿#include <glm/ext/scalar_integer.hpp>
 #include <glm/ext/scalar_int_sized.hpp>
 #include <glm/ext/scalar_uint_sized.hpp>
 #include <vector>

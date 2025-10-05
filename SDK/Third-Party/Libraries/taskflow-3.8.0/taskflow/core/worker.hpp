@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "declarations.hpp"
 #include "tsq.hpp"

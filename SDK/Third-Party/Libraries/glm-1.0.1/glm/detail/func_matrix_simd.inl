@@ -1,4 +1,4 @@
-#if GLM_ARCH & GLM_ARCH_SSE2_BIT
+﻿#if GLM_ARCH & GLM_ARCH_SSE2_BIT
 
 #include "type_mat4x4.hpp"
 #include "../geometric.hpp"

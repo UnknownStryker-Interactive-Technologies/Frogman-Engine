@@ -1,4 +1,4 @@
-// This program demonstrates how to create a pipeline scheduling framework
+﻿// This program demonstrates how to create a pipeline scheduling framework
 // that describes a generalized token dependencies,
 // propagates a series of integers, and adds one to the result at each
 // stage, using a range of pipes provided by the application.

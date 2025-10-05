@@ -1,4 +1,4 @@
-#define GLM_FORCE_INLINE
+﻿#define GLM_FORCE_INLINE
 #include <glm/ext/matrix_float2x2.hpp>
 #include <glm/ext/matrix_double2x2.hpp>
 #include <glm/ext/matrix_float3x3.hpp>

@@ -1,4 +1,4 @@
-/// @ref gtx_color_space_YCoCg
+﻿/// @ref gtx_color_space_YCoCg
 /// @file glm/gtx/color_space_YCoCg.hpp
 ///
 /// @see core (dependence)

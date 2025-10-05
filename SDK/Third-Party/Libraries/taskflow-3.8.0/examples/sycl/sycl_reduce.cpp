@@ -1,4 +1,4 @@
-// This program demonstrates how to performs a parallel reduction
+﻿// This program demonstrates how to performs a parallel reduction
 // using syclFlow.
 
 #include <taskflow/sycl/syclflow.hpp>

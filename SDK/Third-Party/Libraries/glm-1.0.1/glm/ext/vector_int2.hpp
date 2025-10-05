@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/ext/vector_int2.hpp
 
 #pragma once

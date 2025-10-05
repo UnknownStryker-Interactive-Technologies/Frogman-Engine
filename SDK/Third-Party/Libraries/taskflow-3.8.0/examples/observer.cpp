@@ -1,4 +1,4 @@
-// Demonstrates the use of observer to monitor worker activities.
+﻿// Demonstrates the use of observer to monitor worker activities.
 
 #include <taskflow/taskflow.hpp>
 

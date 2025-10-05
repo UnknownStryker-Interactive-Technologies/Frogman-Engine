@@ -1,4 +1,4 @@
-// dear imgui: Renderer for WebGPU
+﻿// dear imgui: Renderer for WebGPU
 // This needs to be used along with a Platform Binding (e.g. GLFW)
 // (Please note that WebGPU is currently experimental, will not run on non-beta browsers, and may break.)
 

@@ -1,4 +1,4 @@
-#ifndef GLM_FORCE_ARCH_UNKNOWN
+﻿#ifndef GLM_FORCE_ARCH_UNKNOWN
 #	define GLM_FORCE_ARCH_UNKNOWN
 #endif
 

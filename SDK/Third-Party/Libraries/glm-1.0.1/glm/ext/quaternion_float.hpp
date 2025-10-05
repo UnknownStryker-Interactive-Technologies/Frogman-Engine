@@ -1,4 +1,4 @@
-/// @ref ext_quaternion_float
+﻿/// @ref ext_quaternion_float
 /// @file glm/ext/quaternion_float.hpp
 ///
 /// @defgroup ext_quaternion_float GLM_EXT_quaternion_float

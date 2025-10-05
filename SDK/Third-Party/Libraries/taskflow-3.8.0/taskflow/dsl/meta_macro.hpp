@@ -1,4 +1,4 @@
-// 2020/08/30 - Created by netcan: https://github.com/netcan
+﻿// 2020/08/30 - Created by netcan: https://github.com/netcan
 // ref https://github.com/Erlkoenig90/map-macro/
 #pragma once
 #ifdef _MSC_VER

@@ -1,4 +1,4 @@
-// This program demonstrates how to create a pipeline scheduling framework
+﻿// This program demonstrates how to create a pipeline scheduling framework
 // that computes the maximum occurrence of the character for each input string.
 //
 // The pipeline has the following structure:

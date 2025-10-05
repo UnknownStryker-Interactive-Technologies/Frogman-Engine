@@ -1,4 +1,4 @@
-// This program demonstrates how to propagates a sequence of input tokens through
+﻿// This program demonstrates how to propagates a sequence of input tokens through
 // linearly dependent taskflows to implement complex parallel algorithms.
 // Parallelism exhibits both inside and outside these taskflows, combining
 // both task graph parallelism and pipeline parallelism.

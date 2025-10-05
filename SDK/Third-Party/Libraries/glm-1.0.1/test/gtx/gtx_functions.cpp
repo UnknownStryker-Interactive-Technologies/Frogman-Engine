@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/functions.hpp>
 #include <glm/ext/vector_float2.hpp>
 #include <vector>

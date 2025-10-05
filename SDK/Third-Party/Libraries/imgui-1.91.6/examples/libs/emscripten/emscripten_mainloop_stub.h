@@ -1,4 +1,4 @@
-// What does this file solves?
+﻿// What does this file solves?
 // - Since Dear ImGui 1.00 we took pride that most of our examples applications had their entire
 //   main-loop inside the main() function. That's because:
 //   - It makes the examples easier to read, keeping the code sequential.

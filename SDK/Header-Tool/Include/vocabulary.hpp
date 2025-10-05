@@ -34,7 +34,7 @@ enum struct Vocabulary : FE::uint32
 	_Class, _Struct, _Enum,
 	_Colon, _Semicolon, _Comma,
 
-	_StringLiteral, _CharLiteral, _NumericLiteral, _NumberValue, // To do:  _NumericLiteral, _NumberValue,  
+	_StringLiteral, _CharLiteral, _NumberValue,
 	_Access, _Operator,
 	_AssignmentOperator,
 	_LogicalAnd,
@@ -55,10 +55,9 @@ enum struct Vocabulary : FE::uint32
 	_LeftCurlyBracket, _RightCurlyBracket,
 	_CallingConvention,
 
+	_StaticAssert, _Using,
+
 	_FrogmanEngineBaseClassReflectionMacro,
-	_FrogmanEngineClassReflectionMacro,
-	_FrogmanEngineStructReflectionMacro,
-	_FrogmanEngineStaticPropertyReflectionMacro,
 	_FrogmanEnginePropertyReflectionMacro,
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
@@ -99,9 +98,9 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
 
+	{ "static_assert", Vocabulary::_StaticAssert }, { "using", Vocabulary::_Using },
+
 	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
-	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },
-	{ "FE_STRUCT", Vocabulary::_FrogmanEngineStructReflectionMacro },
 	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },

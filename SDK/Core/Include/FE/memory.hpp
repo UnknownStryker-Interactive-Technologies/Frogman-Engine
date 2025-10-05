@@ -923,8 +923,8 @@ _FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexce
 The operator new function allocates a specified number of bytes of memory
 aligned to the size of the CPU's L1 cache line.
 */
-void* ::operator new(std::size_t bytes_p);
-void* ::operator new[](std::size_t bytes_p);
+void* __cdecl ::operator new(size_t bytes_p);
+void* __cdecl ::operator new[](size_t bytes_p);
 
 void ::operator delete(void* ptr_p) noexcept;
 void ::operator delete[](void* ptr_p) noexcept;

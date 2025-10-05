@@ -1,4 +1,4 @@
-/// @ref ext_vector_packing
+﻿/// @ref ext_vector_packing
 /// @file glm/ext/vector_packing.hpp
 ///
 /// @see core (dependence)

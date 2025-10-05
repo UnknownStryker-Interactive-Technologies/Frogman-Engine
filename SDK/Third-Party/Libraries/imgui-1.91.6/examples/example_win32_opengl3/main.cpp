@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for Win32 + OpenGL 3
+﻿// Dear ImGui: standalone example application for Win32 + OpenGL 3
 
 // Learn about Dear ImGui:
 // - FAQ                  https://dearimgui.com/faq

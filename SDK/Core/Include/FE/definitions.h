@@ -146,13 +146,6 @@ limitations under the License.
 using base_type = base_class; 
 #endif
 
-
-#ifdef FE_STRUCT
-#error FE_STRUCT is a reserved Frogman Engine macro keyword.
-#else
-#define FE_STRUCT() // THis is an indicator for the FHT.
-#endif
-
 #ifdef FE_ENUM_STRUCT
 #error FE_ENUM_STRUCT is a reserved Frogman Engine macro keyword.
 #else

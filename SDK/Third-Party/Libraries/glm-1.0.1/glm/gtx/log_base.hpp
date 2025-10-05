@@ -1,4 +1,4 @@
-/// @ref gtx_log_base
+﻿/// @ref gtx_log_base
 /// @file glm/gtx/log_base.hpp
 ///
 /// @see core (dependence)

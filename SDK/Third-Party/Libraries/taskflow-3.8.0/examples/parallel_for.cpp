@@ -1,4 +1,4 @@
-// This program demonstrates loop-based parallelism using:
+﻿// This program demonstrates loop-based parallelism using:
 //   + STL-styled iterators
 //   + plain integral indices
 

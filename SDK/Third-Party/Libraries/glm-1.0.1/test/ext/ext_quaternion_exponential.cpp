@@ -1,4 +1,4 @@
-#include <glm/ext/quaternion_exponential.hpp>
+﻿#include <glm/ext/quaternion_exponential.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/quaternion_float_precision.hpp>
 #include <glm/ext/quaternion_double.hpp>

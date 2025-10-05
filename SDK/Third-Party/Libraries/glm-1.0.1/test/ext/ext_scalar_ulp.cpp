@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_ulp.hpp>
+﻿#include <glm/ext/scalar_ulp.hpp>
 #include <glm/ext/scalar_relational.hpp>
 
 static int test_ulp_float_dist()

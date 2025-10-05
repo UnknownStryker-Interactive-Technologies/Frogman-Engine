@@ -1,4 +1,4 @@
-/// @ref gtc_round
+﻿/// @ref gtc_round
 /// @file glm/gtc/round.hpp
 ///
 /// @see core (dependence)

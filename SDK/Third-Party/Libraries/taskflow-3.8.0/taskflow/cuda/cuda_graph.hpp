@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "cuda_memory.hpp"
 #include "cuda_stream.hpp"

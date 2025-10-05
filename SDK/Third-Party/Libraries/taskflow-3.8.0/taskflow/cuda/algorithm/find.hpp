@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "for_each.hpp"
 #include "reduce.hpp"

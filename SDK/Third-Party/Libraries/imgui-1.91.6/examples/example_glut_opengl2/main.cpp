@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for GLUT/FreeGLUT + OpenGL2, using legacy fixed pipeline
+﻿// Dear ImGui: standalone example application for GLUT/FreeGLUT + OpenGL2, using legacy fixed pipeline
 
 // Learn about Dear ImGui:
 // - FAQ                  https://dearimgui.com/faq

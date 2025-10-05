@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/noise.hpp>
 #include <glm/gtc/type_precision.hpp>
 #include <glm/gtx/raw_data.hpp>

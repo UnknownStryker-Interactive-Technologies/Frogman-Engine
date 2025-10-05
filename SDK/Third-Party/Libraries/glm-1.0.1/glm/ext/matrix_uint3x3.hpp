@@ -1,4 +1,4 @@
-/// @ref ext_matrix_uint3x3
+﻿/// @ref ext_matrix_uint3x3
 /// @file glm/ext/matrix_uint3x3.hpp
 ///
 /// @see core (dependence)

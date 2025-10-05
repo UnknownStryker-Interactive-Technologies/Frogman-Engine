@@ -1,4 +1,4 @@
-/// @ref gtc_round
+﻿/// @ref gtc_round
 
 #include "../integer.hpp"
 #include "../ext/vector_integer.hpp"

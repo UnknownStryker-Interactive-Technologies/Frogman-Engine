@@ -1,4 +1,4 @@
-#define GLM_FORCE_SWIZZLE
+﻿#define GLM_FORCE_SWIZZLE
 #include <glm/gtc/vec1.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/ext/vector_float1.hpp>

@@ -8,7 +8,7 @@ GET_FILENAME_COMPONENT(FROGMAN_ENGINE_PREDEFINED_SETTINGS_CMAKE_DIR ${CMAKE_CURR
 
 
 MESSAGE("
-Define a cmake macro if you want to make changes on the settings.
+Define a cmake macro if you want to make changes to the settings.
 Available -D macro options:
 -DENABLE_MEMORY_TRACKER=1
 

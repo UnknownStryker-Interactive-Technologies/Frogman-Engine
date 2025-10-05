@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../utility/macros.hpp"
 #include "../utility/traits.hpp"

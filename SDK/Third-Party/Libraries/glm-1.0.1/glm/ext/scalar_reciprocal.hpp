@@ -1,4 +1,4 @@
-/// @ref ext_scalar_reciprocal
+﻿/// @ref ext_scalar_reciprocal
 /// @file glm/ext/scalar_reciprocal.hpp
 ///
 /// @see core (dependence)

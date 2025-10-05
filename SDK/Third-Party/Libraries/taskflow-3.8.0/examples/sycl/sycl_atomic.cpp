@@ -1,4 +1,4 @@
-// This program demonstrates how to create a simple vector-add
+﻿// This program demonstrates how to create a simple vector-add
 // application using syclFlow and unified shared memory (USM).
 
 #include <taskflow/sycl/syclflow.hpp>

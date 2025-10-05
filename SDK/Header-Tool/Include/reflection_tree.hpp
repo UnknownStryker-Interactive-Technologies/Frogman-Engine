@@ -22,7 +22,7 @@ limitations under the License.
 
 // std::string_view
 #include <string_view>
-
+#include <optional>
 #include <vector>
 
 
@@ -41,13 +41,6 @@ enum struct ClassType : FE::int32
 using identifier = std::pmr::basic_string<var::UTF8>;
 
 
-struct frogman_engine_struct_macro_node
-{
-	identifier _target_struct_name;
-	std::pmr::vector<identifier> _property_reflection_macros;
-};
-
-
 struct class_node
 {
 	ClassType _class_type = ClassType::_None;
@@ -58,7 +51,7 @@ struct class_node
 
 struct struct_node
 {
-	std::unique_ptr<frogman_engine_struct_macro_node> _struct_reflection_macro;
+	identifier _target_struct_name;
 };
 
 
@@ -72,22 +65,22 @@ struct enum_struct_node
 struct namespace_node
 {
 	identifier _target_namespace_name;
-	std::unique_ptr< std::pmr::vector<namespace_node> > _nested_namespaces;
-	std::pmr::vector<class_node> _classes;
-	std::pmr::vector<struct_node> _structs;
-	std::pmr::vector<enum_struct_node> _enum_structs;
-	std::pmr::vector<identifier> _c_style_systems;
+	std::unique_ptr< std::pmr::vector<std::optional<namespace_node>> > _nested_namespaces;
+	std::pmr::vector<std::optional<class_node>> _classes;
+	std::pmr::vector<std::optional<struct_node>> _structs;
+	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
+	std::pmr::vector<std::optional<identifier>> _c_style_systems;
 };
 
 
 struct header_file_root
 {
 	std::wstring_view _path_to_the_header_file;
-	std::pmr::vector<namespace_node> _namespaces;
-	std::pmr::vector<class_node> _classes;
-	std::pmr::vector<struct_node> _structs;
-	std::pmr::vector<enum_struct_node> _enum_structs;
-	std::pmr::vector<identifier> _c_style_systems;
+	std::pmr::vector<std::optional<namespace_node>> _namespaces;
+	std::pmr::vector<std::optional<class_node>> _classes;
+	std::pmr::vector<std::optional<struct_node>> _structs;
+	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
+	std::pmr::vector<std::optional<identifier>> _c_style_systems;
 };
 
 

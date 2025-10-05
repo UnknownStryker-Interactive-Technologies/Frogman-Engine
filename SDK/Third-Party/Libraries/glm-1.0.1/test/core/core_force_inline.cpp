@@ -1,4 +1,4 @@
-#define GLM_FORCE_INLINE
+﻿#define GLM_FORCE_INLINE
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

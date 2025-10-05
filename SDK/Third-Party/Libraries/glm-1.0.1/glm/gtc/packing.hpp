@@ -1,4 +1,4 @@
-/// @ref gtc_packing
+﻿/// @ref gtc_packing
 /// @file glm/gtc/packing.hpp
 ///
 /// @see core (dependence)

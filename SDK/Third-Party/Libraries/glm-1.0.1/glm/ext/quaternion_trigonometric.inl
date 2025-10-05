@@ -1,4 +1,4 @@
-#include "scalar_constants.hpp"
+﻿#include "scalar_constants.hpp"
 
 namespace glm
 {

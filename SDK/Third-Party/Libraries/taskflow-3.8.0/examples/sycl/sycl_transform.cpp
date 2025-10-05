@@ -1,4 +1,4 @@
-// This program demonstrates how to performs a parallel transform
+﻿// This program demonstrates how to performs a parallel transform
 // using syclFlow.
 
 #include <taskflow/syclflow.hpp>

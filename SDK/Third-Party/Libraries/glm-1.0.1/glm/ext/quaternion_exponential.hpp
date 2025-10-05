@@ -1,4 +1,4 @@
-/// @ref ext_quaternion_exponential
+﻿/// @ref ext_quaternion_exponential
 /// @file glm/ext/quaternion_exponential.hpp
 ///
 /// @defgroup ext_quaternion_exponential GLM_EXT_quaternion_exponential

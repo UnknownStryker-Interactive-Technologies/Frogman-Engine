@@ -1,4 +1,4 @@
-#include "../vector_relational.hpp"
+﻿#include "../vector_relational.hpp"
 #include "../common.hpp"
 #include "../detail/qualifier.hpp"
 #include "../detail/type_float.hpp"

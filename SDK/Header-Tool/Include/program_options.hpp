@@ -43,10 +43,7 @@ public:
 
 	void __parse_path_options(FE::ASCII* non_fno_option_p) noexcept;
 
-	FE::ASCII* view_path_to_copyright_notice_option_title() const noexcept { return m_path_options.find("-path-to-copyright-notice=").key().c_str(); }
 	FE::ASCII* get_path_to_copyright_notice() const noexcept { return m_path_options.find("-path-to-copyright-notice=").value().c_str(); }
-
-	FE::ASCII* view_path_to_project_option_title() const noexcept { return m_path_options.find("-path-to-project=").key().c_str(); }
 	FE::ASCII* get_path_to_project() const noexcept { return m_path_options.find("-path-to-project=").value().c_str(); }
 
 	FE::ASCII* view_fno_copyright_notice_option_title() const noexcept { return m_fno_options.find("-fno-copyright-notice")->first.data(); }

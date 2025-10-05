@@ -34,19 +34,19 @@ BEGIN_NAMESPACE(FE::framework)
 
 namespace internal::thread_id
 {
-	static concurrency::concurrent_queue<var::uint16> s_thread_ids;
-	static std::atomic_uint16_t s_next_thread_id = 0;
+	static concurrency::concurrent_queue<var::int32> s_thread_ids;
+	static std::atomic_int32_t s_next_thread_id = 0;
 
 	class __generator
 	{
-		var::uint16 m_thread_id;
+		var::int32 m_thread_id;
 
 	public:
 		__generator() noexcept
 		{
 			if (s_thread_ids.try_pop(m_thread_id) == false)
 			{
-				FE_ASSERT(s_next_thread_id.load() < FE::max_value<var::uint16>);
+				FE_ASSERT(s_next_thread_id.load() < FE::max_value<var::int32>);
 				m_thread_id = s_next_thread_id++;
 			}
 		}
@@ -56,14 +56,14 @@ namespace internal::thread_id
 			s_thread_ids.push(m_thread_id);
 		}
 
-		FE::uint16 get_id() const noexcept
+		FE::int32 get_id() const noexcept
 		{
 			return m_thread_id;
 		}
 	};
 }
 
-FE::uint16 get_current_thread_id() noexcept
+FE::int32 get_current_thread_id() noexcept
 {
 	thread_local static internal::thread_id::__generator tl_s_id_generator;
 	return tl_s_id_generator.get_id();

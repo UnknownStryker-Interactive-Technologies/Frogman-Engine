@@ -1,4 +1,4 @@
-// 2020/08/28 - Created by netcan: https://github.com/netcan
+﻿// 2020/08/28 - Created by netcan: https://github.com/netcan
 #pragma once
 #include "../core/flow_builder.hpp"
 #include "task_trait.hpp"

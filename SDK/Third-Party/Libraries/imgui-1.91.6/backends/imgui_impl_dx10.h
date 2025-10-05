@@ -1,4 +1,4 @@
-// dear imgui: Renderer Backend for DirectX10
+﻿// dear imgui: Renderer Backend for DirectX10
 // This needs to be used along with a Platform Backend (e.g. Win32)
 
 // Implemented features:

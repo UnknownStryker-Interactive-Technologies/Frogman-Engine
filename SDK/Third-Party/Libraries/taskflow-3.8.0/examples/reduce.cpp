@@ -1,4 +1,4 @@
-// This example demonstrates how to create a parallel-reduction task.
+﻿// This example demonstrates how to create a parallel-reduction task.
 
 #include <taskflow/taskflow.hpp>
 #include <taskflow/algorithm/reduce.hpp>

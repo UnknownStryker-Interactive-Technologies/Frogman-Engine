@@ -1,4 +1,4 @@
-/// @ref ext_vector_double1
+﻿/// @ref ext_vector_double1
 /// @file glm/ext/vector_double1.hpp
 ///
 /// @defgroup ext_vector_double1 GLM_EXT_vector_double1

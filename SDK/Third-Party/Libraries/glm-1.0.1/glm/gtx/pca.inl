@@ -1,4 +1,4 @@
-/// @ref gtx_pca
+﻿/// @ref gtx_pca
 
 #ifndef GLM_HAS_CXX11_STL
 #include <algorithm>

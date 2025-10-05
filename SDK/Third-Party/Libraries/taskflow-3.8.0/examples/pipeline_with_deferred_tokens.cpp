@@ -1,4 +1,4 @@
-// This program demonstrates how to create a pipeline scheduling framework
+﻿// This program demonstrates how to create a pipeline scheduling framework
 // that defers the exection of current scheuling token to the future.  
 //
 // The pipeline has the following structure:

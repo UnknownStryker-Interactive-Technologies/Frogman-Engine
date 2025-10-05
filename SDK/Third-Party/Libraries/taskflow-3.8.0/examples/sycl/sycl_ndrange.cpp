@@ -1,4 +1,4 @@
-// This program inspects the indexing methods of SYCL kernels
+﻿// This program inspects the indexing methods of SYCL kernels
 // through nd_range and nd_item.
 
 #include <taskflow/taskflow.hpp>

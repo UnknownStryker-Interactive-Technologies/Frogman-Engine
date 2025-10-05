@@ -1,4 +1,4 @@
-#include <glm/ext/matrix_uint2x3_sized.hpp>
+﻿#include <glm/ext/matrix_uint2x3_sized.hpp>
 
 #if GLM_HAS_STATIC_ASSERT
 static_assert(sizeof(glm::u8mat2x3) == 6, "uint8 size isn't 1 byte on this platform");

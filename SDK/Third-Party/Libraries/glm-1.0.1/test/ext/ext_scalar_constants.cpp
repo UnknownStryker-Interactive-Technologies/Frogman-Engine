@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_constants.hpp>
+﻿#include <glm/ext/scalar_constants.hpp>
 
 template <typename valType>
 static int test_epsilon()

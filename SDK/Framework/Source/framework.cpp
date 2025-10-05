@@ -64,12 +64,12 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 
 			if (l_uint_info._value < 4)
 			{
-				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The -max-concurrency must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
 				m_max_concurrency._second = 4;
 			}
-			else if (l_uint_info._value > 254)
+			else if (l_uint_info._value > FE::int32_max)
 			{
-				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than 255.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than (2^32) / 2.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
 				m_max_concurrency._second = 4;
 			}
 			break;
@@ -111,7 +111,7 @@ RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	:	m_program_options(argc_p, argv_p), 
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
-		m_memory(std::make_unique<FE::memory_resource[]>(m_program_options.get_max_concurrency())), 
+		m_memory(std::make_unique<FE::memory_resource[]>( m_program_options.get_max_concurrency() )), 
 		m_method_reflection(81920, get_memory_resource()), 
 		m_property_reflection(81920, get_memory_resource()),
 		m_enum_reflection(81920),

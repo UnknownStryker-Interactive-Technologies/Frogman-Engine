@@ -1,4 +1,4 @@
-#include <cmath>
+﻿#include <cmath>
 
 //! Workaround for compatibility with other libraries
 #ifdef max

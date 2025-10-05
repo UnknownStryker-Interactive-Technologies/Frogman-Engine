@@ -1,4 +1,4 @@
-/// @ref gtx_wrap
+﻿/// @ref gtx_wrap
 /// @file glm/gtx/wrap.hpp
 ///
 /// @see core (dependence)

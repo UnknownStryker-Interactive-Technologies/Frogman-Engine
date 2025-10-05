@@ -43,7 +43,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-FE::uint16 get_current_thread_id() noexcept;
+FE::int32 get_current_thread_id() noexcept;
 
 
 END_NAMESPACE

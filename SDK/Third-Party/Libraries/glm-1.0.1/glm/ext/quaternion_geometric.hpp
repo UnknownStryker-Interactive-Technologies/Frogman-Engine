@@ -1,4 +1,4 @@
-/// @ref ext_quaternion_geometric
+﻿/// @ref ext_quaternion_geometric
 /// @file glm/ext/quaternion_geometric.hpp
 ///
 /// @defgroup ext_quaternion_geometric GLM_EXT_quaternion_geometric

@@ -1,4 +1,4 @@
-// dear imgui: Renderer Backend for SDL_Renderer for SDL3
+﻿// dear imgui: Renderer Backend for SDL_Renderer for SDL3
 // (Requires: SDL 3.0.0+)
 
 // (**IMPORTANT: SDL 3.0.0 is NOT YET RELEASED AND CURRENTLY HAS A FAST CHANGING API. THIS CODE BREAKS OFTEN AS SDL3 CHANGES.**)

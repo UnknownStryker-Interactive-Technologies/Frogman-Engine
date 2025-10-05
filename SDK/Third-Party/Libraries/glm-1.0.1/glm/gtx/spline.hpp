@@ -1,4 +1,4 @@
-/// @ref gtx_spline
+﻿/// @ref gtx_spline
 /// @file glm/gtx/spline.hpp
 ///
 /// @see core (dependence)

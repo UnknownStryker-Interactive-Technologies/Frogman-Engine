@@ -1,4 +1,4 @@
-// 2020/08/28 - Created by netcan: https://github.com/netcan
+﻿// 2020/08/28 - Created by netcan: https://github.com/netcan
 // A simple example to capture the following task dependencies.
 // using Task DSL to describe
 // TaskA -> fork(TaskB, TaskC) -> TaskD

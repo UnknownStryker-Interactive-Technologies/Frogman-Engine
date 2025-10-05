@@ -31,38 +31,54 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 	l_reflection_metadata._class_and_structs = std::pmr::vector<std::pmr::wstring>(get_memory_resource());
 	l_reflection_metadata._header_file_path = std::pmr::wstring(tree_p._path_to_the_header_file.data(), get_memory_resource());
 
-	for (const class_node& node : tree_p._classes)
+	for (const std::optional<class_node>& node : tree_p._classes)
 	{
-		__output_class_metadata(l_reflection_metadata, node);
+		if (node == std::nullopt)
+		{
+			continue;
+		}
+		__output_class_metadata(l_reflection_metadata, *node);
 	}
 
-	for (const struct_node& node : tree_p._structs)
+	for (const std::optional<struct_node>& node : tree_p._structs)
 	{
-		if (node._struct_reflection_macro == nullptr)
+		if (node == std::nullopt)
+		{
+			continue;
+		}
+		__output_struct_metadata(l_reflection_metadata, *node);
+	}
+
+	for (const std::optional<enum_struct_node>& node : tree_p._enum_structs)
+	{
+		if (node == std::nullopt)
 		{
 			continue;
 		}
 
-		__output_struct_metadata(l_reflection_metadata, node);
+		__output_enum_struct_metadata(l_reflection_metadata, *node);
 	}
 
-	for (const enum_struct_node& node : tree_p._enum_structs)
+	for (const std::optional<namespace_node>& node : tree_p._namespaces)
 	{
-		FE_ASSERT(node._target_enum_struct_name.empty() != true, "Assertion failed: the target enum struct name cannot be null.");
+		if (node == std::nullopt)
+		{
+			continue;
+		}
 
-		__output_enum_struct_metadata(l_reflection_metadata, node);
+		__output_namespace_metadata_recursive(l_reflection_metadata, *node);
 	}
 
-	for (const namespace_node& node : tree_p._namespaces)
+	for (const std::optional<identifier>& c_style_system_function : tree_p._c_style_systems)
 	{
-		__output_namespace_metadata_recursive(l_reflection_metadata, node);
-	}
+		if (c_style_system_function == std::nullopt)
+		{
+			continue;
+		}
 
-	for (const identifier& c_style_system_function : tree_p._c_style_systems)
-	{
 		std::pmr::wstring l_identifier(get_memory_resource());
-		l_identifier.resize( c_style_system_function.length() + 1 );
-		std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function.data()), c_style_system_function.length() );
+		l_identifier.resize( c_style_system_function->length() + 1 );
+		std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->data()), c_style_system_function->length() );
 		l_identifier = l_identifier.c_str();
 		l_reflection_metadata._c_style_system_functions.push_back( std::move(l_identifier) );
 	}
@@ -73,41 +89,55 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 
 void header_tool_engine::__output_namespace_metadata_recursive(reflection_metadata& out_return_p, const namespace_node& node_p) noexcept
 {
-	for (const class_node& node : node_p._classes)
+	for (const std::optional<class_node>& node : node_p._classes)
 	{	
-		__output_class_metadata(out_return_p, node);
-	}
-
-	for (const struct_node& node : node_p._structs)
-	{
-		if (node._struct_reflection_macro == nullptr)
+		if (node == std::nullopt)
 		{
 			continue;
 		}
-
-		__output_struct_metadata(out_return_p, node);
+		__output_class_metadata(out_return_p, *node);
 	}
 
-	for (const enum_struct_node& node : node_p._enum_structs)
+	for (const std::optional<struct_node>& node : node_p._structs)
 	{
-		FE_ASSERT(node._target_enum_struct_name.empty() != true, "Assertion failed: the target enum struct name cannot be null.");
+		if (node == std::nullopt)
+		{
+			continue;
+		}
+		__output_struct_metadata(out_return_p, *node);
+	}
 
-		__output_enum_struct_metadata(out_return_p, node);
+	for (const std::optional<enum_struct_node>& node : node_p._enum_structs)
+	{
+		if (node == std::nullopt)
+		{
+			continue;
+		}
+		__output_enum_struct_metadata(out_return_p, *node);
 	}
 
 	if (node_p._nested_namespaces != nullptr)
 	{
-		for (const namespace_node& node : *(node_p._nested_namespaces))
+		for (const std::optional<namespace_node>& node : *(node_p._nested_namespaces))
 		{
-			__output_namespace_metadata_recursive(out_return_p, node);
+			if (node == std::nullopt)
+			{
+				continue;
+			}
+			__output_namespace_metadata_recursive(out_return_p, *node);
 		}
 	}
 
-	for (const identifier& c_style_system_function : node_p._c_style_systems)
+	for (const  std::optional<identifier>& c_style_system_function : node_p._c_style_systems)
 	{
+		if (c_style_system_function == std::nullopt)
+		{
+			continue;
+		}
+
 		std::pmr::wstring l_identifier(get_memory_resource());
-		l_identifier.resize(c_style_system_function.length() + 1);
-		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function.data()), c_style_system_function.length());
+		l_identifier.resize(c_style_system_function->length() + 1);
+		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->data()), c_style_system_function->length());
 		l_identifier = l_identifier.c_str();
 		out_return_p._c_style_system_functions.push_back(std::move(l_identifier));
 	}
@@ -148,9 +178,9 @@ void header_tool_engine::__output_class_metadata(reflection_metadata& out_return
 void header_tool_engine::__output_struct_metadata(reflection_metadata& out_return_p, const struct_node& node_p) noexcept
 {
 	std::pmr::wstring l_identifier(get_memory_resource());
-	l_identifier.resize( node_p._struct_reflection_macro->_target_struct_name.length() + 1 );
+	l_identifier.resize( node_p._target_struct_name.length() + 1 );
 
-	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._struct_reflection_macro->_target_struct_name.data()), node_p._struct_reflection_macro->_target_struct_name.length() );
+	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._target_struct_name.data()), node_p._target_struct_name.length() );
 	l_identifier = l_identifier.c_str();
 	out_return_p._class_and_structs.push_back( std::move(l_identifier) );
 }

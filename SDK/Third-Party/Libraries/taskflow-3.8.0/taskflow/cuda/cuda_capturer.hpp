@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "cuda_task.hpp"
 #include "cuda_optimizer.hpp"

@@ -1,4 +1,4 @@
-// This program pulls out all platforms and devices using SYCL.
+﻿// This program pulls out all platforms and devices using SYCL.
 
 #include <taskflow/sycl/syclflow.hpp>
 

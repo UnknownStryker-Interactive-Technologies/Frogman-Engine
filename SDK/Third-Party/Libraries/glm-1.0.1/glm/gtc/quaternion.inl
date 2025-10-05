@@ -1,4 +1,4 @@
-#include "../trigonometric.hpp"
+﻿#include "../trigonometric.hpp"
 #include "../geometric.hpp"
 #include "../exponential.hpp"
 #include "epsilon.hpp"

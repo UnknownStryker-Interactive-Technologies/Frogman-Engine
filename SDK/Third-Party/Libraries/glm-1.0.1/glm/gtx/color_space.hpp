@@ -1,4 +1,4 @@
-/// @ref gtx_color_space
+﻿/// @ref gtx_color_space
 /// @file glm/gtx/color_space.hpp
 ///
 /// @see core (dependence)

@@ -1,4 +1,4 @@
-// dear imgui: Platform Binding for Android native app
+﻿// dear imgui: Platform Binding for Android native app
 // This needs to be used along with the OpenGL 3 Renderer (imgui_impl_opengl3)
 
 // Implemented features:

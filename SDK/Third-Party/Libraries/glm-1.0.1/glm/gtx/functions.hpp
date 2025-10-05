@@ -1,4 +1,4 @@
-/// @ref gtx_functions
+﻿/// @ref gtx_functions
 /// @file glm/gtx/functions.hpp
 ///
 /// @see core (dependence)

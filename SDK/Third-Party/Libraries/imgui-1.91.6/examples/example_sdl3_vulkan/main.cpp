@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for SDL3 + Vulkan
+﻿// Dear ImGui: standalone example application for SDL3 + Vulkan
 
 // Learn about Dear ImGui:
 // - FAQ                  https://dearimgui.com/faq

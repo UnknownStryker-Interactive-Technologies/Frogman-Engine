@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 #include <functional>
 #include "_vectorize.hpp"

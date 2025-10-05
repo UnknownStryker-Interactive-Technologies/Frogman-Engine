@@ -1,4 +1,4 @@
-#include "../common.hpp"
+﻿#include "../common.hpp"
 #include "../ext/scalar_int_sized.hpp"
 #include "../ext/scalar_uint_sized.hpp"
 #include "../detail/type_float.hpp"

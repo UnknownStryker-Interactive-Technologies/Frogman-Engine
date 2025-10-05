@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for Allegro 5
+﻿// Dear ImGui: standalone example application for Allegro 5
 
 // Learn about Dear ImGui:
 // - FAQ                  https://dearimgui.com/faq

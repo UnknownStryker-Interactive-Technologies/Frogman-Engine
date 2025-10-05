@@ -1,4 +1,4 @@
-/// @ref gtx_hash
+﻿/// @ref gtx_hash
 
 namespace glm {
 namespace detail

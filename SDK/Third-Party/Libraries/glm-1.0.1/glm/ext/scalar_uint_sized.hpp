@@ -1,4 +1,4 @@
-/// @ref ext_scalar_uint_sized
+﻿/// @ref ext_scalar_uint_sized
 /// @file glm/ext/scalar_uint_sized.hpp
 ///
 /// @defgroup ext_scalar_uint_sized GLM_EXT_scalar_uint_sized

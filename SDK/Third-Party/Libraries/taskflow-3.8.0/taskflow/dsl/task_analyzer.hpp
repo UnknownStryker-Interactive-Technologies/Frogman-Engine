@@ -1,4 +1,4 @@
-// 2020/08/28 - Created by netcan: https://github.com/netcan
+﻿// 2020/08/28 - Created by netcan: https://github.com/netcan
 #pragma once
 #include "connection.hpp"
 #include "type_list.hpp"

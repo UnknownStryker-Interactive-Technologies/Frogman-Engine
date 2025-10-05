@@ -1,4 +1,4 @@
-/// @ref gtx_matrix_query
+﻿/// @ref gtx_matrix_query
 /// @file glm/gtx/matrix_query.hpp
 ///
 /// @see core (dependence)

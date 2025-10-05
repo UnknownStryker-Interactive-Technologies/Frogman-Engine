@@ -1,4 +1,4 @@
-// This program demonstrates how to pipeline a sequence of linearly dependent
+﻿// This program demonstrates how to pipeline a sequence of linearly dependent
 // tasks (stage function) over a directed acyclic graph.
 
 #include <taskflow/taskflow.hpp>

@@ -95,7 +95,7 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Template:
-			__try_skip_template_args(begin_p);
+			__skip_template_args(begin_p);
 			l_is_template = true;
 			break;
 
@@ -118,103 +118,39 @@ Return:
 
 _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 {
-	std::pmr::list<Vocabulary> l_scope_stack(get_memory_resource());
-	symbol_count l_count{ 0, 0, 0 };
-	bool l_is_template = false;
-	bool l_is_enum = false;
+	std::pmr::vector<Vocabulary> l_scope_stack(get_memory_resource());
+	auto l_iterator = begin_p;
 
-	while (begin_p != end_p)
+	while (l_iterator != end_p)
 	{
-		switch (begin_p->_vocabulary)
+		switch (l_iterator->_vocabulary)
 		{
-		case Vocabulary::_Namespace:
-			l_scope_stack.push_back(begin_p->_vocabulary);
-			break;
-
-		case Vocabulary::_Class:
-			_FE_FALLTHROUGH_;
-		case Vocabulary::_Struct:
-			if(l_is_enum == true)
-			{
-				l_is_enum = false;
-				break;
-			}
-
-			if (l_is_template ==  true)
-			{
-				__skip_code_block(begin_p, end_p);
-				l_is_template = false;
-				break;
-			}
-			l_scope_stack.push_back(begin_p->_vocabulary);
-			break;
-
-		case Vocabulary::_Enum:
-			++l_count._enums;
-			l_is_enum = true;
-			break;
-
-		case Vocabulary::_Template:
-			__try_skip_template_args(begin_p);
-			l_is_template = true;
-			break;
-
-
-		case Vocabulary::_BeginNamespace:
-			_FE_FALLTHROUGH_;
 		case Vocabulary::_LeftCurlyBracket:
-			l_scope_stack.push_back(begin_p->_vocabulary);
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_BeginNamespace:
+			l_scope_stack.push_back(Vocabulary::_LeftCurlyBracket);
 			break;
 
-		case Vocabulary::_EndNamespace:
-			_FE_FALLTHROUGH_;
 		case Vocabulary::_RightCurlyBracket:
-			if (l_scope_stack.empty() == true) { goto Return; }
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndNamespace:
 			l_scope_stack.pop_back();
-			if (l_scope_stack.empty() == true) { break; }
-
-			switch (l_scope_stack.back())
+			if (l_scope_stack.empty() == true)
 			{
-			case Vocabulary::_Namespace:
-				l_scope_stack.pop_back();
-				if (l_scope_stack.size() == 0)
-				{
-					++l_count._namespaces;
-				}
-				break;
-			case Vocabulary::_Class:
-				l_scope_stack.pop_back();
-				if (l_scope_stack.size() == 0)
-				{
-					++l_count._classes;
-				}
-				break;
-			case Vocabulary::_Struct:
-				l_scope_stack.pop_back();
-				if (l_scope_stack.size() == 0)
-				{
-					++l_count._structs;
-				}
-				break;
-			default:
-				break;
+				goto Return;
 			}
 			break;
-
-
-		case Vocabulary::_LineEnd:
-			goto Return;
-
 
 		default:
 			break;
 		}
-
-		++begin_p;
+		++l_iterator;
 	}
 
 Return:
-	return l_count;
+	symbol_count l_result = __try_count_all_symbols(begin_p, l_iterator);
+	l_result._namespaces -= 1;
+	return l_result;
 }
 
 _FE_NODISCARD_ std::optional<FE::uint32> header_tool_engine::___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept
@@ -342,7 +278,7 @@ _FE_NODISCARD_ std::optional<FE::ASCII*> header_tool_engine::__validate_parenthe
 		}
 	}
 
-	if (tl_s_stack.size() != 0)
+ 	if (tl_s_stack.size() != 0)
 	{
 		return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
 	}

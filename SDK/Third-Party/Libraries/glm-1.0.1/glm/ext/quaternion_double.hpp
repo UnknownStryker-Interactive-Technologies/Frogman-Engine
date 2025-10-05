@@ -1,4 +1,4 @@
-/// @ref ext_quaternion_double
+﻿/// @ref ext_quaternion_double
 /// @file glm/ext/quaternion_double.hpp
 ///
 /// @defgroup ext_quaternion_double GLM_EXT_quaternion_double

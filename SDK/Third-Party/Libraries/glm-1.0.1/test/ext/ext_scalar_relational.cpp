@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_relational.hpp>
+﻿#include <glm/ext/scalar_relational.hpp>
 #include <glm/ext/scalar_integer.hpp>
 #include <glm/ext/scalar_ulp.hpp>
 #include <cmath>

@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for using GLFW + WebGPU
+﻿// Dear ImGui: standalone example application for using GLFW + WebGPU
 // - Emscripten is supported for publishing on web. See https://emscripten.org.
 // - Dawn is used as a WebGPU implementation on desktop.
 

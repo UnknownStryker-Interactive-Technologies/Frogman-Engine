@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // COMPILE-TIME OPTIONS FOR DEAR IMGUI ALLEGRO 5 EXAMPLE
 // See imconfig.h for the full template
 // Because Allegro doesn't support 16-bit vertex indices, we enable the compile-time option of imgui to use 32-bit indices

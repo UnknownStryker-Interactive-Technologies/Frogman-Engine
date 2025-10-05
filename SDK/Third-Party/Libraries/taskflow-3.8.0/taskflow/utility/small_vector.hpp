@@ -1,4 +1,4 @@
-// small vector modified from llvm
+﻿// small vector modified from llvm
 
 #pragma once
 

@@ -1,4 +1,4 @@
-// dear imgui: standalone example application for Android + OpenGL ES 3
+﻿// dear imgui: standalone example application for Android + OpenGL ES 3
 
 // Learn about Dear ImGui:
 // - FAQ                  https://dearimgui.com/faq

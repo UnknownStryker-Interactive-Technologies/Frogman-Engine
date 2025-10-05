@@ -1,4 +1,4 @@
-#ifdef __cpp_lib_atomic_wait
+﻿#ifdef __cpp_lib_atomic_wait
 
 #pragma once
 

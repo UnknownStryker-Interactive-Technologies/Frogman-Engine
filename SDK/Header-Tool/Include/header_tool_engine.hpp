@@ -39,7 +39,7 @@ limitations under the License.
 // Microsoft Parallel Patterns Library. This header is specific to the Microsoft Visual Studio.
 //#include <concurrent_vector.h>
 
-#include <FE/concurrent_vector.hxx> // This is to replace the Microsoft PPL concurrent_vector with FE's own implementation.
+#include <FE/concurrent_vector.hxx> // The in-house replacement for the Microsoft PPL concurrent_vector
 
 
 
@@ -69,17 +69,17 @@ struct token
 };
 
 
-// sample data: -fno-code-style-guide -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake -path-to-copyright-notice=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FE-HT-Test\LICENSE.txt C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\Unit-Tests\FE.ECS.hpp
-
 /*
-* requisite program options for building this project:
--path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\Include\error_code.hpp
+* Test arguments:
+-fno-code-style-guide -fno-copyright-notice -path-to-project=C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\archetype_base.hpp
 */
 
 /*
-The header_tool_engine class is a specialized component of the Frogman Engine that manages header file processing, including copyright notice verification and reflection code generation
+The header_tool_engine class is a specialized tool for enforcing copyright notice embedment and generating reflection meta data registry code
 while utilizing parallel task execution for efficiency.
 */
+
+// The header_tool_engine will be refactored into multiple smaller classes in the future; this is absurdly large.
 class header_tool_engine : public FE::framework::framework_base
 {
 	FE::uint8 m_UTF8_with_BOM[3];
@@ -87,7 +87,6 @@ class header_tool_engine : public FE::framework::framework_base
 
 	program_options m_header_tool_options;
 	file_buffer_t m_copyright_notice;
-	file_buffer_t m_code_style_guide;
 
 	std::pmr::vector<directory_t> m_header_file_list;
 	std::pmr::vector<file_buffer_t> m_mapped_header_files;
@@ -134,6 +133,7 @@ private:
 	_FE_NODISCARD_ std::optional<std::pmr::list<token>> __tokenize_header(const file_buffer_t& file_p, const directory_t& path_p) noexcept;
 	// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT, which means that they will be purged from the token list.
 	void __purge_comments(std::pmr::list<token>& out_list_p) noexcept;
+	void __purge_string_literals(std::pmr::list<token>& out_list_p) noexcept;
 	void __purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
 
 	token __tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
@@ -142,19 +142,19 @@ private:
 	void __tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept;
 
 	_FE_NODISCARD_ FE::boolean __verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p) noexcept;
-
+	 
 private:
 	_FE_NODISCARD_ header_file_root __try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
-	_FE_NODISCARD_ namespace_node __try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ class_node __try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ struct_node __try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ enum_struct_node __try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ identifier __try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<namespace_node> __try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<class_node> __try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<struct_node> __try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<enum_struct_node> __try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<identifier> __try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
-	void __try_skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
+	void __skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
 	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept;
 	bool __is_forward_declaration(typename std::pmr::list<token>::const_iterator& out_token_iterator_p) const;
-
+	
 private:
 	struct reflection_metadata
 	{

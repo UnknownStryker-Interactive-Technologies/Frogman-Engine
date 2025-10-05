@@ -1,4 +1,4 @@
-#define GLM_FORCE_XYZW_ONLY
+﻿#define GLM_FORCE_XYZW_ONLY
 
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/vec1.hpp>

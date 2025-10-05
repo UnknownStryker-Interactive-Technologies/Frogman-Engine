@@ -25,9 +25,6 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 		return std::nullopt;
 	}
 
-	FE_EXIT_IF(__is_encoded_with_UTF8_BOM(file_p.c_str()) == false, FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM,
-		    "Frogman Engine Header Tool ERROR: the header file '${%s@0}' is not encoded in UTF-8 BOM.");
-
 	std::pmr::list<token> l_list(get_memory_resource());
 
 	auto l_end = file_p.c_str() + file_p.size();
@@ -57,7 +54,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 
 		if (l_token._vocabulary == Vocabulary::_Undefined)
 		{
-			l_list.emplace_back(Vocabulary::_ContractedSpace, l_line_number, u8" ", path_p.c_str());
+			//l_list.emplace_back(Vocabulary::_ContractedSpace, l_line_number, u8" ", path_p.c_str());
 			l_token = __tokenize_unidentifiable(iterator);
 			l_token._line_number = l_line_number;
 			l_token._header_file_path = path_p.c_str();
@@ -74,7 +71,7 @@ _FE_NODISCARD_ std::optional<std::pmr::list<token>> header_tool_engine::__tokeni
 	return l_list;
 }
 
-// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT, which means that they will be purged from the token list.
+// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT are purged from the token list.
 void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p) noexcept
 {
 	const auto l_is_comment_begin = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentBegin; };
@@ -103,6 +100,41 @@ void header_tool_engine::__purge_comments(std::pmr::list<token>& out_list_p) noe
 		out_list_p.erase(l_comment_begin, l_comment_end);
 		l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_comment);
 		l_comment_end = std::find_if(l_comment_begin, out_list_p.end(), l_is_line_end);
+	}
+}
+
+void header_tool_engine::__purge_string_literals(std::pmr::list<token>& out_list_p) noexcept
+{
+	using iterator = typename std::pmr::list<token>::iterator;
+
+	const auto l_is_string_literal = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_StringLiteral; };
+	iterator l_begin = out_list_p.begin();
+	iterator l_end = out_list_p.begin();;
+
+	while (true)
+	{
+		l_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_string_literal);
+		if (l_begin == out_list_p.end())
+		{
+			break;
+		}
+
+		l_end = std::find_if(std::next(l_begin), out_list_p.end(), l_is_string_literal);
+		if (l_end == out_list_p.end())
+		{
+			break; 
+		}
+
+		while ( std::prev(l_end)->_code == u8"\\" )
+		{
+			l_end = std::find_if(std::next(l_end), out_list_p.end(), l_is_string_literal);
+			if (l_end == out_list_p.end())
+			{
+				break; 
+			}
+		}
+		out_list_p.erase(l_begin, l_end);
+		out_list_p.erase(l_end); // erase the last string literal.
 	}
 }
 
@@ -225,6 +257,10 @@ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_
 		case Vocabulary::_ThreadLocal:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_Virtual:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_Using:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_StaticAssert:
 			if (__verify_key_equivalence(code_iterator_p, tl_s_key_buffer.c_str()) == true)
 			{
 				l_token._vocabulary = it.value();
@@ -273,10 +309,6 @@ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_
 			_FE_FALLTHROUGH_;
 
 		case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
-			_FE_FALLTHROUGH_;
-		case Vocabulary::_FrogmanEngineClassReflectionMacro:
-			_FE_FALLTHROUGH_;
-		case Vocabulary::_FrogmanEngineStructReflectionMacro:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
 			_FE_FALLTHROUGH_;
@@ -484,8 +516,6 @@ void header_tool_engine::__tokenize_operator(token& out_token_p, typename file_b
 	case '|':
 		_FE_FALLTHROUGH_;
 	case '^':
-		_FE_FALLTHROUGH_;
-	case '~':
 		_FE_FALLTHROUGH_;
 	case '?':
 		_FE_FALLTHROUGH_;

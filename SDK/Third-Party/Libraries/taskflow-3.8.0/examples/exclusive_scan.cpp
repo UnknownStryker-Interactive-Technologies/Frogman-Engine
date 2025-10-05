@@ -1,4 +1,4 @@
-// This program demonstrates how to perform parallel exclusive scan.
+﻿// This program demonstrates how to perform parallel exclusive scan.
 
 #include <taskflow/taskflow.hpp>
 #include <taskflow/algorithm/scan.hpp>

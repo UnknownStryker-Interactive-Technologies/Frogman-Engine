@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/matrix.hpp
 ///
 /// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.6 Matrix Functions</a>

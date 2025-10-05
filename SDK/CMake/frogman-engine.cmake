@@ -35,7 +35,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/file.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/renderer.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
@@ -64,7 +63,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/reflection.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/renderer.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
@@ -310,17 +308,15 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
     ENDIF()
 
     MESSAGE("${TOOL_STDOUT}")
+    MESSAGE("${TOOL_STDERR}")
 
     # Print tool output and error for debugging
     MESSAGE("Frogman Engine Header Tool returned the exit code '${RETURN_VALUE_FROM_TOOL}'.")
 
     IF(NOT RETURN_VALUE_FROM_TOOL EQUAL 0)
-
-        IF(RETURN_VALUE_FROM_TOOL EQUAL -1)
-            MESSAGE(STATUS "Frogman Engine Header Tool: The header files must retain a copy of the specified license text.")
+        IF(NOT RETURN_VALUE_FROM_TOOL EQUAL 1006)
+            MESSAGE(FATAL_ERROR "------ FE HT: compilation failed! Please, check the messages above! ------")
         ENDIF()
-
-        MESSAGE(FATAL_ERROR "------ FE HT: compilation failed! Please, check the messages above! ------")
     ENDIF()
 
     MESSAGE("========== Frogman Engine Header Tool Successfully Processed the Target Header Files ==========")

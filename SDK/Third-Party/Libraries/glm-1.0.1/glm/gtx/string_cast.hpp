@@ -1,4 +1,4 @@
-/// @ref gtx_string_cast
+﻿/// @ref gtx_string_cast
 /// @file glm/gtx/string_cast.hpp
 ///
 /// @see core (dependence)

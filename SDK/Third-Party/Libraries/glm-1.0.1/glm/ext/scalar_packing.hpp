@@ -1,4 +1,4 @@
-/// @ref ext_scalar_packing
+﻿/// @ref ext_scalar_packing
 /// @file glm/ext/scalar_packing.hpp
 ///
 /// @see core (dependence)

@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_packing.hpp>
+﻿#include <glm/ext/scalar_packing.hpp>
 #include <glm/ext/scalar_relational.hpp>
 
 int test_packUnorm()

@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/ext/matrix_double3x2.hpp
 
 #pragma once

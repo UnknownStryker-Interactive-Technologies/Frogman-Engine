@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // About imgui_impl_opengl3_loader.h:
 //
 // We embed our own OpenGL loader to not require user to provide their own or to have to use ours,

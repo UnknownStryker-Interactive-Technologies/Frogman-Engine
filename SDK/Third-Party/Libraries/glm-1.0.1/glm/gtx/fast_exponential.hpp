@@ -1,4 +1,4 @@
-/// @ref gtx_fast_exponential
+﻿/// @ref gtx_fast_exponential
 /// @file glm/gtx/fast_exponential.hpp
 ///
 /// @see core (dependence)
