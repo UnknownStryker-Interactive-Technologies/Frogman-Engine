@@ -22,10 +22,10 @@ limitations under the License.
 #include <FE/framework/component_base.hpp>
 #include <FE/framework/system_base.hpp>
 
-#include <FE/framework/file.hpp>
-
 // ECS smart pointer
 #include <FE/framework/smart_ptr.hxx>
+
+#include <FE/framework/framework.hpp>
 
 // FE::reflection::type_id<Archetype>()
 #include <FE/framework/type_info.hpp>
@@ -45,7 +45,9 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-using serialized_entity = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
+using initializer = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
+using initializer_list = robin_hood::unordered_map<std::pmr::string, initializer>;
+
 
 class ECS
 {
@@ -63,10 +65,12 @@ class ECS
 	archetype_table m_archetype_table;
 	component_table m_component_table;
 	system_table m_system_table;
+	initializer_list m_archetype_default_entities;
+	std::pmr::string m_buffer;
 
 public:
 	ECS(std::pmr::memory_resource* resource) noexcept;
-	ECS(FE::init& file_p, std::pmr::memory_resource* resource) noexcept;
+	ECS(initializer_list& initializer_list_p, std::pmr::memory_resource* resource) noexcept;
 	~ECS() noexcept;
 
 	ECS(const ECS&) noexcept = delete;
@@ -74,7 +78,7 @@ public:
 
 	
 	template <class Archetype, typename ...Arguments>
-	entity<Archetype> instanciate_entity(FE::ASCII* const entity_name_p, Arguments&& ...arguments_p) noexcept
+	FE::entity<Archetype> instanciate_entity(FE::ASCII* const entity_name_p, Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 
@@ -83,7 +87,6 @@ public:
 		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
 
 		l_alloc_result->m_name = FE::framework::reflection::type_id<Archetype>().name();
-		l_alloc_result->m_name += " ";
 		l_alloc_result->m_name += entity_name_p;
 		std::pair<typename archetype_table::iterator, bool> l_result = m_archetype_table.emplace( l_alloc_result->m_name, std::move(l_alloc_result) );
 		
@@ -95,21 +98,98 @@ public:
 		return entity<Archetype>();
 	}
 
-	void destruct_entity(entity<archetype_base> entt_p) noexcept;
-
-	std::pmr::string m_name_buffer;
-
 	template <class Archetype>
-	entity<Archetype> find_entity(FE::ASCII* const entity_name_p) noexcept
+	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, FE::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		m_name_buffer.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + 1 + std::strlen(entity_name_p) );
-		m_name_buffer = FE::framework::reflection::type_id<Archetype>().name();
-		m_name_buffer += " ";
-		m_name_buffer += entity_name_p;
+		
+		FE::entity<FE::archetype_base> l_entity = FE::ECS::instanciate_entity<Archetype>(entity_name_p);
+		if (l_entity.is_valid() == false)
+		{
+			return entity<FE::archetype_base>();
+		}
 
-		typename archetype_table::iterator l_probe_result = m_archetype_table.find(m_name_buffer);
-		m_name_buffer.clear();
+		for (const auto& [component_identifier, serialized_component] : serialized_entity_p)
+		{
+			constexpr FE::ASCII* l_class = "class";
+			constexpr FE::ASCII* l_struct = "struct";
+
+			m_buffer = component_identifier;
+			std::pmr::string::size_type l_pos = m_buffer.find(l_class);
+			if (l_pos == std::pmr::string::npos)
+			{
+				l_pos = m_buffer.find(l_struct);
+				FE_ASSERT(l_pos != std::pmr::string::npos, "Assertion failed: the component type name must start with 'class' or 'struct'.");
+				l_pos += std::strlen(l_struct);
+			}
+			else
+			{
+				l_pos += std::strlen(l_class);
+			}
+			m_buffer.erase(0, l_pos);
+
+			for (l_pos = m_buffer.find(' '); l_pos != std::pmr::string::npos; l_pos = m_buffer.find(' '))
+			{
+				m_buffer.erase(m_buffer.begin() + l_pos);
+			}
+			m_buffer.insert(0, "::");
+
+			FE::task_base* l_component_adder = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(m_buffer);
+			FE_ASSERT(l_component_adder != nullptr, "Assertion failed: the component adder function is not found. The component type may not be registered.");
+
+			FE::component_view<FE::component_base> l_handle;
+			FE::arguments<FE::entity<FE::archetype_base>> l_arguments;
+			l_arguments._first = l_entity;
+			(*l_component_adder)(this, &l_handle, &l_arguments);
+		}
+		deserialize_entity(serialized_entity_p, l_entity);
+		return l_entity;
+	}
+
+	template <class Archetype>
+	FE::entity<FE::archetype_base> instanciate_default_entity(FE::ASCII* const entity_name_p) noexcept
+	{
+		FE::initializer* l_default_values = FE::ECS::get_archetype_default_entity<Archetype>();
+		if (l_default_values == nullptr)
+		{
+			return FE::entity<FE::archetype_base>{};
+		}
+		return FE::ECS::instanciate_entity_from_initializer<Archetype>(entity_name_p, *l_default_values);
+	}
+
+	void destruct_entity(FE::entity<archetype_base> entt_p) noexcept;
+
+
+	template <class Archetype>
+	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::initializer& default_values_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = default_values_p;
+	}
+
+	template <class Archetype>
+	_FE_FORCE_INLINE_ FE::initializer* const get_archetype_default_entity() noexcept
+	{
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
+		if (l_probe_result != m_archetype_default_entities.end())
+		{
+			return &(l_probe_result->second);
+		}
+		return nullptr;
+	}
+
+
+	template <class Archetype>
+	FE::entity<Archetype> find_entity(FE::ASCII* const entity_name_p) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		m_buffer.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + std::strlen(entity_name_p) );
+		m_buffer = FE::framework::reflection::type_id<Archetype>().name();
+		m_buffer += entity_name_p;
+
+		typename archetype_table::iterator l_probe_result = m_archetype_table.find(m_buffer);
+		m_buffer.clear();
 		if (l_probe_result != m_archetype_table.end())
 		{
 			return FE::downcast_owner_to_observer<Archetype>(l_probe_result->second);
@@ -120,7 +200,7 @@ public:
 
 
 	template <class Component, typename ...Arguments>
-	component_view<Component> add_component(FE::entity<archetype_base> entt_p, Arguments&& ...arguments_p) noexcept
+	FE::component_view<Component> add_component(FE::entity<archetype_base> entt_p, Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
@@ -203,6 +283,12 @@ public:
 	}
 
 	template <class Component>
+	_FE_FORCE_INLINE_ FE::component_view<FE::component_base> instanciate_component(FE::entity<archetype_base> entt_p) noexcept
+	{
+		return add_component<Component>(entt_p);
+	}
+
+	template <class Component>
 	void remove_component(FE::entity<archetype_base> entt_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
@@ -225,6 +311,7 @@ public:
 		entt_p->m_component_view_table.erase(l_view_table_probe_result);
 	}
 
+
 	void attatch_component(FE::entity<archetype_base> entt_p, const FE::component_view<component_base>& to_attatch_p) noexcept;
 
 	template <class Component>
@@ -241,11 +328,11 @@ public:
 	}
 
 
-	system find_system(FE::ASCII* const system_name_p) noexcept;
+	FE::system find_system(FE::ASCII* const system_name_p) noexcept;
 
 
-	serialized_entity serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
-	void deserialize_entity(serialized_entity& serialized_components_p, FE::entity<archetype_base> entt_p) noexcept;
+	FE::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
+	void deserialize_entity(FE::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
 };
 
 

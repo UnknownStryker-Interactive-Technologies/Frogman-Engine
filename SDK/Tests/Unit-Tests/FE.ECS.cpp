@@ -85,18 +85,6 @@ TEST(ECS, attach_and_detach_components)
 }
 
 
-TEST(ECS, deserialize)
-{
-	FE::init file;
-	file["Archetypes"]["names"].emplace_back("player");
-	file["Components"]["names"].emplace_back("health");
-	file["Components"]["names"].emplace_back("weapon");
-	file["Components"]["names"].emplace_back("speed");
-	file["Systems"]["names"].emplace_back("damage_system");
-
-	FE::ECS ecs2(file, &pool);
-}
-
 TEST(ECS, entity_serialization)
 {
 	FE::entity<player> e = ecs.instanciate_entity<player>("TestEntity");
@@ -104,7 +92,7 @@ TEST(ECS, entity_serialization)
 	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
 	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
 
-	FE::serialized_entity buffer = ecs.serialize_entity(e);
+	FE::initializer buffer = ecs.serialize_entity(e);
 
 	FE::entity<player> ne = ecs.instanciate_entity<player>("New Entity");
 	FE::component_view<speed> l_speed2 = ecs.add_component<speed>(ne);
@@ -120,46 +108,25 @@ TEST(ECS, entity_serialization)
 	ecs.destruct_entity(ne);
 }
 
-TEST(ECS, reflection_combo)
+TEST(ECS, reflection_combo) // ADE: Archtype Default Entity
 {
-	FE::task_base* constructor = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("::terrorist");
+	FE::entity<player> e = ecs.instanciate_entity<player>("TestEntity");
+	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
+	FE::initializer serialized = ecs.serialize_entity(e);
+	ecs.set_archetype_default_entity<player>(serialized);
 
-	FE::entity<terrorist> handle;
-	FE::arguments<FE::ASCII*> construction_arg;
-	construction_arg._first = "terrorist CDO";
-	(*constructor)(&ecs, &handle, &construction_arg);
+	FE::entity<player> e2 = FE::downcast_observer<player>(ecs.instanciate_entity_from_initializer<player>("New Entity", serialized));
+	EXPECT_EQ(e->get_component<health>()->_health, e2->get_component<health>()->_health);
 
-
-
-
-	FE::task_base* add_component_health = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("::health");
-
-	FE::component_view<health> health_view;
-	FE::arguments<FE::entity<FE::archetype_base>> health_arg;
-	health_arg._first = handle;
-	(*add_component_health)(&ecs, &health_view, &health_arg);
+	FE::entity<player> e3 = FE::downcast_observer<player>(ecs.instanciate_default_entity<player>("Default Entity"));
+	EXPECT_EQ(e->get_component<health>()->_health, e3->get_component<health>()->_health);
 
 
-
-
-	FE::task_base* remove_component_ak_magazine = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("~::health");
-
-	FE::arguments<FE::entity<FE::archetype_base>> removal_arg;
-	removal_arg._first = handle;
-	(*remove_component_ak_magazine)(&ecs, nullptr, &removal_arg);
-
-
-
-
-	FE::task_base* destructor = FE::framework::framework_base::get_framework()
-		.get_framework().get_method_reflection().retrieve("~::terrorist");
-
-	FE::arguments<FE::entity<FE::archetype_base>> destruction_arg;
-	destruction_arg._first = handle;
-	(*destructor)(&ecs, nullptr, &destruction_arg);
+	FE::initializer_list init_list;
+	init_list.emplace(FE::framework::reflection::type_id<player>().name(), serialized);
+	FE::ECS ecs2(init_list, FE::framework::framework_base::get_framework().get_memory_resource());
+	e = ecs2.find_entity<player>(""); // find the ADE.
+	EXPECT_EQ(e->get_component<health>()->_health, 100);
 }
 
 

@@ -31,7 +31,6 @@ SET(FE_SOURCES
 
 SET(FE_FRAMEWORK_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/file.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
@@ -57,7 +56,6 @@ SOURCE_GROUP("FE.Framework.Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
 
 SET(FE_FRAMEWORK_SOURCES 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/file.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/thread_id.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 

@@ -237,16 +237,16 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 
 			l_generated_code += L"void serialize_component";
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
-			l_generated_code += L"(std::pmr::string& out_buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
+			l_generated_code += L"(::std::pmr::string& out_buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
 			l_generated_code += L"{\n";
-			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().serialize(out_buffer_p, *FE::polymorphic_cast<";
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().serialize(out_buffer_p, *::FE::polymorphic_cast<";
 			l_generated_code += identifier;
 			l_generated_code += L"* const>(component_p), version_p);\n";
 			l_generated_code += L"}\n\n";
 
 			l_generated_code += L"void deserialize_component";
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
-			l_generated_code += L"(const std::pmr::string& buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
+			l_generated_code += L"(const ::std::pmr::string& buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
 			l_generated_code += L"{\n";
 			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().deserialize(buffer_p, *FE::polymorphic_cast<";
 			l_generated_code += identifier;
@@ -265,11 +265,9 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		for (const std::pmr::wstring& identifier : header_file._archetype_base_children) // Archetypes
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
-			l_generated_code += L"::FE::entity<";
+			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, ::FE::initializer&)> >(\"";
 			l_generated_code += identifier;
-			l_generated_code += L">(::FE::ASCII* const)> >(\"";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::instanciate_entity<";
+			l_generated_code += L"\", &::FE::ECS::instanciate_entity_from_initializer<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
@@ -283,11 +281,9 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		for (const std::pmr::wstring& identifier : header_file._component_base_children)
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Component adder reflection
-			l_generated_code += L"::FE::component_view<";
+			l_generated_code += L"::FE::component_view<::FE::component_base>(::FE::entity<::FE::archetype_base>)> >(\"";
 			l_generated_code += identifier;
-			l_generated_code += L">(::FE::entity<::FE::archetype_base>)> >(\"";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::add_component<";
+			l_generated_code += L"\", &::FE::ECS::instanciate_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
@@ -317,19 +313,6 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
 			l_generated_code += L");\n\n";
 		}
-
-
-		//for (const std::pmr::wstring& identifier : header_file._system_base_children)
-		//{
-		//	l_generated_code += l_ECS_reflection_registry_frame; // System adder reflection
-		//	l_generated_code += L"::FE::system_view<";
-		//	l_generated_code += identifier;
-		//	l_generated_code += L">()> >(\"";
-		//	l_generated_code += identifier;
-		//	l_generated_code += L"\", &::FE::ECS::register_system<";
-		//	l_generated_code += identifier;
-		//	l_generated_code += L">);\n";
-		//}
 
 
 		for (const std::pmr::wstring& identifier : header_file._c_style_system_functions) // C-style system functions reflection
