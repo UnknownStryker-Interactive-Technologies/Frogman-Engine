@@ -13,7 +13,7 @@
 
 
 static std::pmr::unsynchronized_pool_resource pool;
-static 	FE::ECS ecs(&pool);
+static FE::framework::ECS ecs(&pool);
 
 void take_damage(FE::component_base* const component_p) noexcept
 {
@@ -92,7 +92,7 @@ TEST(ECS, entity_serialization)
 	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
 	FE::component_view<weapon> l_weapon = ecs.add_component<weapon>(e, 10.0f);
 
-	FE::initializer buffer = ecs.serialize_entity(e);
+	FE::framework::initializer buffer = ecs.serialize_entity(e);
 
 	FE::entity<player> ne = ecs.instanciate_entity<player>("New Entity");
 	FE::component_view<speed> l_speed2 = ecs.add_component<speed>(ne);
@@ -112,7 +112,7 @@ TEST(ECS, reflection_combo) // ADE: Archtype Default Entity
 {
 	FE::entity<player> e = ecs.instanciate_entity<player>("TestEntity");
 	FE::component_view<health> l_health = ecs.add_component<health>(e, 100);
-	FE::initializer serialized = ecs.serialize_entity(e);
+	FE::framework::initializer serialized = ecs.serialize_entity(e);
 	ecs.set_archetype_default_entity<player>(serialized);
 
 	FE::entity<player> e2 = FE::downcast_observer<player>(ecs.instanciate_entity_from_initializer<player>("New Entity", serialized));
@@ -122,9 +122,9 @@ TEST(ECS, reflection_combo) // ADE: Archtype Default Entity
 	EXPECT_EQ(e->get_component<health>()->_health, e3->get_component<health>()->_health);
 
 
-	FE::initializer_list init_list;
+	FE::framework::initializer_list init_list;
 	init_list.emplace(FE::framework::reflection::type_id<player>().name(), serialized);
-	FE::ECS ecs2(init_list, FE::framework::framework_base::get_framework().get_memory_resource());
+	FE::framework::ECS ecs2(init_list, FE::framework::framework_base::get_framework().get_memory_resource());
 	e = ecs2.find_entity<player>(""); // find the ADE.
 	EXPECT_EQ(e->get_component<health>()->_health, 100);
 }

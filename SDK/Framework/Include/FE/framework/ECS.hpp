@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -42,7 +42,7 @@ limitations under the License.
 
 
 
-BEGIN_NAMESPACE(FE)
+BEGIN_NAMESPACE(FE::framework)
 
 
 using initializer = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
@@ -99,11 +99,11 @@ public:
 	}
 
 	template <class Archetype>
-	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, FE::initializer& serialized_entity_p) noexcept
+	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, FE::framework::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		
-		FE::entity<FE::archetype_base> l_entity = FE::ECS::instanciate_entity<Archetype>(entity_name_p);
+		FE::entity<FE::archetype_base> l_entity = ECS::instanciate_entity<Archetype>(entity_name_p);
 		if (l_entity.is_valid() == false)
 		{
 			return entity<FE::archetype_base>();
@@ -149,26 +149,26 @@ public:
 	template <class Archetype>
 	FE::entity<FE::archetype_base> instanciate_default_entity(FE::ASCII* const entity_name_p) noexcept
 	{
-		FE::initializer* l_default_values = FE::ECS::get_archetype_default_entity<Archetype>();
+		framework::initializer* l_default_values = ECS::get_archetype_default_entity<Archetype>();
 		if (l_default_values == nullptr)
 		{
 			return FE::entity<FE::archetype_base>{};
 		}
-		return FE::ECS::instanciate_entity_from_initializer<Archetype>(entity_name_p, *l_default_values);
+		return ECS::instanciate_entity_from_initializer<Archetype>(entity_name_p, *l_default_values);
 	}
 
 	void destruct_entity(FE::entity<archetype_base> entt_p) noexcept;
 
 
 	template <class Archetype>
-	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::initializer& default_values_p) noexcept
+	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = default_values_p;
 	}
 
 	template <class Archetype>
-	_FE_FORCE_INLINE_ FE::initializer* const get_archetype_default_entity() noexcept
+	_FE_FORCE_INLINE_ FE::framework::initializer* const get_archetype_default_entity() noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
@@ -331,8 +331,8 @@ public:
 	FE::system find_system(FE::ASCII* const system_name_p) noexcept;
 
 
-	FE::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
-	void deserialize_entity(FE::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
+	FE::framework::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
+	void deserialize_entity(FE::framework::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
 };
 
 

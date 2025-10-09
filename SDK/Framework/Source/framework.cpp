@@ -1,7 +1,7 @@
 ﻿/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -190,7 +190,7 @@ FE::memory_resource* framework_base::get_game_memory() noexcept
 	return m_game_memory.get();
 }
 
-FE::ECS& framework_base::get_ecs() noexcept
+framework::ECS& framework_base::get_ecs() noexcept
 {
 	return *m_ecs;
 }
@@ -295,6 +295,6 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 extern "C"
 {
-	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
-	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x00000001;
+	__declspec(selectany) unsigned long NvOptimusEnablement = 0x00000001;
+	__declspec(selectany) int AmdPowerXpressRequestHighPerformance = 0x00000001;
 }

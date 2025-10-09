@@ -1,9 +1,9 @@
-﻿#ifndef _FE_FRAMEWORK_TASK_HPP_
-#define _FE_FRAMEWORK_TASK_HPP_
+﻿#ifndef _FE_FRAMEWORK_THREAD_ID_HPP_
+#define _FE_FRAMEWORK_THREAD_ID_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 

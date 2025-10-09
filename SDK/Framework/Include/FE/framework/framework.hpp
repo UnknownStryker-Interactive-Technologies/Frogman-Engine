@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -40,7 +40,7 @@ limitations under the License.
 
 
 
-CLASS_FORWARD_DECLARATION(FE, ECS);
+CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE, memory_resource);
 
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
@@ -93,7 +93,7 @@ protected:
 	reflection::enum_registry m_enum_reflection;
 
 	std::unique_ptr<class FE::memory_resource> m_game_memory;
-	std::unique_ptr<class FE::ECS> m_ecs;
+	std::unique_ptr<class framework::ECS> m_ecs;
 
 public:
 	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
@@ -108,7 +108,7 @@ public:
 	reflection::enum_registry& get_enum_reflection() noexcept;
 
 	FE::memory_resource* get_game_memory() noexcept;
-	class FE::ECS& get_ecs() noexcept;
+	class framework::ECS& get_ecs() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);

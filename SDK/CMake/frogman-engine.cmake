@@ -34,6 +34,9 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/processors.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/garbage_collector.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
@@ -42,8 +45,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
 )
 SOURCE_GROUP("FE.Framework" FILES ${FE_FRAMEWORK_HEADER})
 
@@ -61,6 +62,8 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/reflection.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/processors.cpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/garbage_collector.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
@@ -190,6 +193,13 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x8
         $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
         $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
+    )
+
+    SET(BOOST_CONTEXT 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-sgd-x64-1_87.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
     )
 
     SET(GLFW
@@ -329,5 +339,5 @@ ENDFUNCTION()
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
+SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_CONTEXT} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
 SET(FROGMAN_ENGINE_SDK ${GLFW} ${IMGUI} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

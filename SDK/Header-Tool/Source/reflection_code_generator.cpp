@@ -1,7 +1,7 @@
 ﻿/*
 Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -248,7 +248,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += l_namespace_concat_replaced_with_underscores;
 			l_generated_code += L"(const ::std::pmr::string& buffer_p, ::FE::component_base* const component_p, ::FE::ASCII* const version_p) noexcept\n";
 			l_generated_code += L"{\n";
-			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().deserialize(buffer_p, *FE::polymorphic_cast<";
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_property_reflection().deserialize(buffer_p, *::FE::polymorphic_cast<";
 			l_generated_code += identifier;
 			l_generated_code += L"* const>(component_p), version_p);\n";
 			l_generated_code += L"}\n\n";
@@ -257,24 +257,24 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 
 
 	l_generated_code += L"\nvoid load_reflection_data()\n{\n"; // The void load_reflection_data() implementation generation
-	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::ECS::instanciate_entity<player>);
-	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::ECS::destruct_entity<player>);
-	constexpr FE::wchar* l_ECS_reflection_registry_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::ECS, ";
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, FE::entity<player>(FE::ASCII* const)> >("player", &::FE::framework::ECS::instanciate_entity<player>);
+	//::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<FE::ECS, void(const FE::entity<player>&)> >("~player", &::FE::framework::ECS::destruct_entity<player>);
+	constexpr FE::wchar* l_ECS_reflection_registry_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::cpp_style_task<::FE::framework::ECS, ";
 	for (const reflection_metadata& header_file : metadata_set_p)
 	{
 		for (const std::pmr::wstring& identifier : header_file._archetype_base_children) // Archetypes
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
-			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, ::FE::initializer&)> >(\"";
+			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, ::FE::framework::initializer&)> >(\"";
 			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::instanciate_entity_from_initializer<";
+			l_generated_code += L"\", &::FE::framework::ECS::instanciate_entity_from_initializer<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype destructor reflection
 			l_generated_code += L"void(::FE::entity<::FE::archetype_base>)> >(\"~";
 			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::destruct_entity);\n\n";
+			l_generated_code += L"\", &::FE::framework::ECS::destruct_entity);\n\n";
 		}
 
 
@@ -283,14 +283,14 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += l_ECS_reflection_registry_frame; // Component adder reflection
 			l_generated_code += L"::FE::component_view<::FE::component_base>(::FE::entity<::FE::archetype_base>)> >(\"";
 			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::instanciate_component<";
+			l_generated_code += L"\", &::FE::framework::ECS::instanciate_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 
 			l_generated_code += l_ECS_reflection_registry_frame; // Component remover reflection
 			l_generated_code += L"void(::FE::entity<::FE::archetype_base>)> >(\"~";
 			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::ECS::remove_component<";
+			l_generated_code += L"\", &::FE::framework::ECS::remove_component<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
 

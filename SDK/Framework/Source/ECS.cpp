@@ -1,7 +1,7 @@
 ﻿/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -21,7 +21,7 @@ limitations under the License.
 
 
 
-BEGIN_NAMESPACE(FE)
+BEGIN_NAMESPACE(FE::framework)
 
 
 ECS::ECS(std::pmr::memory_resource* resource) noexcept
@@ -38,7 +38,7 @@ ECS::ECS(std::pmr::memory_resource* resource) noexcept
 	m_system_table.reserve(1024);
 }
 
-ECS::ECS(FE::initializer_list& initializer_list_p, std::pmr::memory_resource* resource) noexcept
+ECS::ECS(framework::initializer_list& initializer_list_p, std::pmr::memory_resource* resource) noexcept
 	:	m_memory_resource(resource),
 		m_archetype_pool(),
 
@@ -81,7 +81,7 @@ ECS::ECS(FE::initializer_list& initializer_list_p, std::pmr::memory_resource* re
 		FE::task_base* l_entity_creator = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(m_buffer);
 		FE_ASSERT(l_entity_creator != nullptr, "Assertion failed: the entity creator function is not found. The archetype type may not be registered.");
 
-		FE::arguments<FE::ASCII*, FE::initializer&> l_arguments{ "", archetype_default_entity};
+		FE::arguments<FE::ASCII*, framework::initializer&> l_arguments{ "", archetype_default_entity};
 		FE::entity<FE::archetype_base> l_entity;
 		(*l_entity_creator)(this, &l_entity, &l_arguments); // Boom! Magcic!
 		FE_ASSERT(l_entity.is_valid() == true, "Assertion failed: the entity could not be instanciated from the initializer list.");

@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -27,6 +27,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+CLASS_FORWARD_DECLARATION(framework, ECS);
 class component_base;
 
 
@@ -82,7 +83,7 @@ namespace internal::ECS
 class component_base
 {
 	friend class archetype_base;
-	friend class ECS;
+	friend class framework::ECS;
 
 private:
 	internal::ECS::component_identifier m_identifier;

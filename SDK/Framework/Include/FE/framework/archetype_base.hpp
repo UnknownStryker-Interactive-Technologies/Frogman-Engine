@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -31,6 +31,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+CLASS_FORWARD_DECLARATION(framework, ECS);
+
 class archetype_base;
 
 
@@ -44,7 +46,7 @@ using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
 
 class archetype_base
 {
-	friend class ECS;
+	friend class framework::ECS;
 	using component_view_table = robin_hood::unordered_map<std::size_t, component_view<component_base>>;
 
 private:
