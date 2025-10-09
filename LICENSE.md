@@ -1,6 +1,6 @@
 # Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
 Frogman Engine is licensed under the Apache License, version 2.0.  
-
+This code may not be used, in whole or in part, to train machine learning models or for any AI-related data collection purposes.  
 # Apache License, Version 2.0  
 http://www.apache.org/licenses/  
 
