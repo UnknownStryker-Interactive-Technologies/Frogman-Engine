@@ -21,11 +21,11 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include)
 
 
 SET(FE_HEADERS
-
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/engine.hpp
 )
 
 SET(FE_SOURCES
-
+${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/engine.cpp
 )
 
 
@@ -35,12 +35,11 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/processors.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/garbage_collector.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system_base.hpp
+${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system.hpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game.hpp
 
@@ -63,11 +62,9 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/reflection.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/processors.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/garbage_collector.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/system_base.cpp
 
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game.cpp
 
@@ -339,5 +336,5 @@ ENDFUNCTION()
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_CONTEXT} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
+SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${BOOST_CONTEXT} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
 SET(FROGMAN_ENGINE_SDK ${GLFW} ${IMGUI} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

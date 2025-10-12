@@ -98,9 +98,7 @@ public:
 	void register_task(const std::string_view& task_name_p, typename TaskType::task_type function_p) noexcept
 	{
 		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
-
 		std::lock_guard<lock_type> l_lock(m_lock);
-
 		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
 		typename internal_map_type::key_type l_key(task_name_p, m_pool);

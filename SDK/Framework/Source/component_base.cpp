@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/component_base.hpp>
+#include <FE/framework/processors.hpp>
 
 
 
@@ -23,10 +24,6 @@ BEGIN_NAMESPACE(FE)
 
 component_base::component_base() noexcept
 	:	m_identifier{}
-{
-}
-
-component_base::~component_base() noexcept
 {
 }
 

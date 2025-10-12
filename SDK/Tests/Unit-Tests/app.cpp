@@ -1,5 +1,6 @@
 ﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/framework/framework.hpp>
+#include <FE/engine.hpp>
 
 // google headers
 #include <gtest/gtest.h>
@@ -56,6 +57,5 @@ public:
 		return 0;
 	}
 };
-CUSTOM_ENGINE(test_engine);
-
-//FROGMAN_ENGINE();
+//CUSTOM_ENGINE(test_engine);
+FROGMAN_ENGINE();

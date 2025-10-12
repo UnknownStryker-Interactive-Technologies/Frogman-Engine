@@ -323,6 +323,13 @@ public:
 		m_ptr = &value_p;
 		return *this;
 	}
+	template<typename Child>
+	_FE_FORCE_INLINE_ ref& operator=(Child& value_p) noexcept
+	{
+		m_ptr = &value_p;
+		return *this;
+	}
+
 	_FE_FORCE_INLINE_ operator T& () noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be copied.");
@@ -408,6 +415,13 @@ public:
 		m_ptr = &value_p;
 		return *this;
 	}
+	template<typename Child>
+	_FE_FORCE_INLINE_ const_ref& operator=(Child& value_p) noexcept
+	{
+		m_ptr = &value_p;
+		return *this;
+	}
+
 	_FE_FORCE_INLINE_ operator const T& () const noexcept
 	{
 		assert(m_ptr != nullptr && "Frogman Engine C++: a null reference cannot be copied.");

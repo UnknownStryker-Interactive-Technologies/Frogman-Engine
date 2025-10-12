@@ -28,6 +28,7 @@ BEGIN_NAMESPACE(FE)
 
 
 CLASS_FORWARD_DECLARATION(framework, ECS);
+CLASS_FORWARD_DECLARATION(framework, processors);
 class component_base;
 
 
@@ -62,7 +63,10 @@ public:
 
 	_FE_FORCE_INLINE_ component& last() { return m_components[m_current_size - 1]; }
 
-	_FE_FORCE_INLINE_ var::size get_size() { return m_current_size; }
+	_FE_FORCE_INLINE_ var::size get_size() const { return m_current_size; }
+
+	_FE_FORCE_INLINE_ component* begin() noexcept { return static_cast<component*>(m_components); }
+	_FE_FORCE_INLINE_ component* end() noexcept { return static_cast<component*>(m_components) + m_current_size; }
 };
 
 
@@ -84,13 +88,14 @@ class component_base
 {
 	friend class archetype_base;
 	friend class framework::ECS;
+	friend class framework::processors;
 
 private:
 	internal::ECS::component_identifier m_identifier;
 
 public:
 	component_base() noexcept;
-	virtual ~component_base() noexcept;
+	virtual ~component_base() noexcept = default;
 
 	_FE_FORCE_INLINE_ const std::pmr::string& get_typename() const { return m_identifier._typename; }
 	_FE_FORCE_INLINE_ const std::pmr::string& get_memory_layout_version() const { return m_identifier._memory_layout_version; }

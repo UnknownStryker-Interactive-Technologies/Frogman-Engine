@@ -31,10 +31,10 @@ namespace internal::smart_ptr
 {
     struct metadata
     {
-        var::uint64 _observer_count;
         std::pmr::memory_resource* const _resource;
 		FE::uint32 _sizeofT;
-        var::boolean _is_expired;
+        std::atomic_int16_t _observer_count;
+        std::atomic_bool _is_expired;
     };
 }
 
@@ -79,7 +79,7 @@ public:
             m_metadata()
     {
         m_metadata = (internal::smart_ptr::metadata*)resource_p->allocate( sizeof(internal::smart_ptr::metadata) );
-        new(m_metadata) internal::smart_ptr::metadata( 0, resource_p, sizeof(T), false );
+        new(m_metadata) internal::smart_ptr::metadata(resource_p, sizeof(T), 0, false);
 
         m_ptr = (pointer)m_metadata->_resource->allocate( m_metadata->_sizeofT );
         new(m_ptr) T( std::forward<Arguments&&>(arguments_p)... );
@@ -92,19 +92,19 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count >= 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
-        m_metadata->_is_expired = true; // Mark the object as expired.
+        m_metadata->_is_expired.store(true, std::memory_order_release); // Mark the object as expired.
 
 		// Call the destructor of Archetype.
         m_ptr->~T();
         m_metadata->_resource->deallocate(m_ptr, m_metadata->_sizeofT); // Deallocate the entity.
 
 		// Nobody is observing this object, so we can safely deallocate it.
-        if (m_metadata->_observer_count == 0)
+        if (m_metadata->_observer_count.load(std::memory_order_acquire) == 0)
         {
             // Deallocate the metadata instance.
             m_metadata->_resource->deallocate( m_metadata, sizeof(internal::smart_ptr::metadata) );
@@ -161,12 +161,12 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count >= 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
-        m_metadata->_is_expired = true; // Mark the object as expired.
+        m_metadata->_is_expired.store(true, std::memory_order_release); // Mark the object as expired.
 
         // Call the destructor of Archetype.
         m_ptr->~T();
@@ -174,7 +174,7 @@ public:
         m_ptr = nullptr;
 
         // Nobody is observing this object, so we can safely deallocate it.
-        if (m_metadata->_observer_count == 0)
+        if (m_metadata->_observer_count.load(std::memory_order_acquire) == 0)
         {
             m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
         }
@@ -227,7 +227,7 @@ public:
         {
             return 0;
         }
-        return m_metadata->_observer_count;
+        return m_metadata->_observer_count.load(std::memory_order_acquire);
     }
 };
 
@@ -261,12 +261,12 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count >= 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
-		++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
     }
 
     template<class Child>
@@ -281,12 +281,12 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count >= 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
-        ++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
     }
 
     smart_ptr& operator=(const smart_ptr<T, RefType::_Owner>& target_p) noexcept
@@ -296,16 +296,16 @@ public:
             return *this;
         }
         FE_ASSERT(target_p.m_metadata != nullptr);
-        FE_ASSERT(target_p.m_metadata->_observer_count >= 0);
+        FE_ASSERT(target_p.m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(target_p.m_metadata->_resource != nullptr);
         FE_ASSERT(target_p.m_metadata->_sizeofT >= 0);
-        FE_ASSERT(target_p.m_metadata->_is_expired == false);
+        FE_ASSERT(target_p.m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
         reset();
         m_ptr = target_p.m_ptr;
 		m_metadata = target_p.m_metadata;
         
-        ++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
         return *this;
     }
 
@@ -320,16 +320,16 @@ public:
             return *this;
         }
         FE_ASSERT(l_target.m_metadata != nullptr);
-        FE_ASSERT(l_target.m_metadata->_observer_count >= 0);
+        FE_ASSERT(l_target.m_metadata->_observer_count.load(std::memory_order_acquire) >= 0);
         FE_ASSERT(l_target.m_metadata->_resource != nullptr);
         FE_ASSERT(l_target.m_metadata->_sizeofT >= 0);
-        FE_ASSERT(l_target.m_metadata->_is_expired == false);
+        FE_ASSERT(l_target.m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
         reset();
         m_ptr = l_target.m_ptr;
         m_metadata = l_target.m_metadata;
 
-        ++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
         return *this;
     }
 
@@ -340,16 +340,16 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count > 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
 
-        --(m_metadata->_observer_count); // Decrement the observer count
+        m_metadata->_observer_count.fetch_sub(1, std::memory_order_acq_rel); // Decrement the observer count
 
-        if (m_metadata->_is_expired == true)
+        if (m_metadata->_is_expired.load(std::memory_order_acquire) == true)
         {
             // Nobody is observing this object, so we can safely deallocate it
-            if (m_metadata->_observer_count == 0)
+            if (m_metadata->_observer_count.load(std::memory_order_acquire) == 0)
             {
                 m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
             }
@@ -365,11 +365,11 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count > 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
 
-        ++(m_metadata->_observer_count); // Increment the observer count
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count
     }
 
     template<class Child>
@@ -384,11 +384,11 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count > 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
 
-        ++(m_metadata->_observer_count); // Increment the observer count
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count
     }
 
     smart_ptr& operator=(const smart_ptr& other_p) noexcept
@@ -398,7 +398,7 @@ public:
             return *this;
         }
         FE_ASSERT(other_p.m_metadata != nullptr);
-        FE_ASSERT(other_p.m_metadata->_observer_count > 0);
+        FE_ASSERT(other_p.m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(other_p.m_metadata->_resource != nullptr);
         FE_ASSERT(other_p.m_metadata->_sizeofT >= 0);
 
@@ -406,7 +406,7 @@ public:
         m_ptr = other_p.m_ptr;
         m_metadata = other_p.m_metadata;
 
-        ++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
         return *this;
     }
 
@@ -421,7 +421,7 @@ public:
             return *this;
         }
         FE_ASSERT(l_other.m_metadata != nullptr);
-        FE_ASSERT(l_other.m_metadata->_observer_count > 0);
+        FE_ASSERT(l_other.m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(l_other.m_metadata->_resource != nullptr);
         FE_ASSERT(l_other.m_metadata->_sizeofT >= 0);
 
@@ -429,7 +429,7 @@ public:
         m_ptr = l_other.m_ptr;
         m_metadata = l_other.m_metadata;
 
-        ++(m_metadata->_observer_count); // Increment the observer count.
+        m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
         return *this;
     }
 
@@ -482,16 +482,16 @@ public:
             return;
         }
         FE_ASSERT(m_metadata != nullptr);
-        FE_ASSERT(m_metadata->_observer_count > 0);
+        FE_ASSERT(m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
         FE_ASSERT(m_metadata->_resource != nullptr);
         FE_ASSERT(m_metadata->_sizeofT >= 0);
 
-        --(m_metadata->_observer_count); // Decrement the observer count
+        m_metadata->_observer_count.fetch_sub(1, std::memory_order_acq_rel); // Decrement the observer count
 
-        if (m_metadata->_is_expired == true)
+        if (m_metadata->_is_expired.load(std::memory_order_acquire) == true)
         {
             // Nobody is observing this object, so we can safely deallocate it
-            if (m_metadata->_observer_count == 0)
+            if (m_metadata->_observer_count.load(std::memory_order_acquire) == 0)
             {
                 m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
             }
@@ -509,34 +509,34 @@ public:
     _FE_FORCE_INLINE_ T* operator->() noexcept
     {
         FE_ASSERT(m_ptr != nullptr);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
         return m_ptr;
     }
 
     _FE_FORCE_INLINE_ const T* operator->() const noexcept
     {
         FE_ASSERT(m_ptr != nullptr);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
         return m_ptr;
     }
 
     _FE_FORCE_INLINE_ T& operator*() noexcept
     {
         FE_ASSERT(m_ptr != nullptr);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
         return *m_ptr;
     }
 
     _FE_FORCE_INLINE_ const T& operator*() const noexcept
     {
         FE_ASSERT(m_ptr != nullptr);
-        FE_ASSERT(m_metadata->_is_expired == false);
+        FE_ASSERT(m_metadata->_is_expired.load(std::memory_order_acquire) == false);
         return *m_ptr;
     }
 
     _FE_FORCE_INLINE_ FE::boolean is_valid() const noexcept
     {
-        return ((m_ptr != nullptr) && (m_metadata->_is_expired == false));
+        return ((m_ptr != nullptr) && (m_metadata->_is_expired.load(std::memory_order_acquire) == false));
     }
 
     _FE_FORCE_INLINE_ FE::uint64 observer_count() const noexcept
@@ -545,7 +545,7 @@ public:
         {
             return 0;
         }
-        return m_metadata->_observer_count;
+        return m_metadata->_observer_count.load(std::memory_order_acquire);
 	}
 };
 

@@ -15,6 +15,7 @@ limitations under the License.
 */
 #include <FE/framework/framework.hpp>
 #include <FE/framework/ECS.hpp>
+#include <FE/framework/processors.hpp>
 #include <FE/framework/reflection/private/load_reflection_data.h>
 
 #include <FE/algorithm/string.hxx>
@@ -23,6 +24,7 @@ limitations under the License.
 #include <FE/do_once.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hpp>
+#include <FE/pool/memory_resource.hpp>
 
 // boost
 #include <boost/stacktrace.hpp>
@@ -116,32 +118,10 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		m_property_reflection(81920, get_memory_resource()),
 		m_enum_reflection(81920),
 		m_game_memory(),
-		m_ecs()
+		m_ecs(),
+		m_processors()
 {
 	std::locale::global(m_current_system_locale);
-}
-
-framework_base::~framework_base() noexcept
-{
-}
-
-
-
-
-FE::int32 framework_base::launch(_FE_MAYBE_UNUSED_ FE::int32 argc_p, _FE_MAYBE_UNUSED_ FE::ASCII** argv_p)
-{
-
-	return 0;
-}
-
-FE::int32 framework_base::run()
-{
-	return 0;
-}
-
-FE::int32 framework_base::shutdown()
-{
-	return 0;
 }
 
 
@@ -157,42 +137,9 @@ void framework_base::request_restart() noexcept
 	s_restart_or_not = RestartOrNot::_HasToRestart;
 }
 
-
-
-
-framework_base& framework_base::get_framework() noexcept
+_FE_FORCE_INLINE_ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
-	return *s_framework;
-}
-
-std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
-{
-	return &(m_memory[ get_current_thread_id() ]);
-}
-
-reflection::method_registry& framework_base::get_method_reflection() noexcept
-{
-	return m_method_reflection;
-}
-
-reflection::property_registry& framework_base::get_property_reflection() noexcept
-{
-	return m_property_reflection;
-}
-
-reflection::enum_registry& framework_base::get_enum_reflection() noexcept
-{
-	return m_enum_reflection;
-}
-
-FE::memory_resource* framework_base::get_game_memory() noexcept
-{
-	return m_game_memory.get();
-}
-
-framework::ECS& framework_base::get_ecs() noexcept
-{
-	return *m_ecs;
+	return &(m_memory[get_current_thread_id()]);
 }
 
 

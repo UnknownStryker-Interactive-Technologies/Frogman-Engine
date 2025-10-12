@@ -20,7 +20,7 @@ limitations under the License.
 // E, C, and S
 #include <FE/framework/archetype_base.hpp>
 #include <FE/framework/component_base.hpp>
-#include <FE/framework/system_base.hpp>
+#include <FE/framework/system.hpp>
 
 // ECS smart pointer
 #include <FE/framework/smart_ptr.hxx>
@@ -39,39 +39,49 @@ limitations under the License.
 #include <robin_hood.h>
 #include <vector>
 
+#include <boost/fiber/recursive_mutex.hpp>
+
 
 
 
 BEGIN_NAMESPACE(FE::framework)
 
 
+class processors;
+
 using initializer = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
 using initializer_list = robin_hood::unordered_map<std::pmr::string, initializer>;
+using system_table_initializer_list = robin_hood::unordered_map<std::pmr::string, std::pmr::string>; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
 
 
 class ECS
 {
-	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype>;
+	friend class processors;
+
+	using archetype_table = std::pmr::unordered_map<std::pmr::string, archetype>;
 	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
-														FE::pair<	FE::scalable_pool<FE::align_8bytes>,
+														FE::pair<	FE::scalable_pool<FE::align_16bytes>,
 																	std::pmr::forward_list<components>
 																	>
 														>;
-	using system_table = robin_hood::unordered_map<std::size_t, system>;
+	using system_table = robin_hood::unordered_map< std::pmr::string,
+													FE::pair<FE::system, std::pmr::vector<std::size_t>> 
+													>;
 
 	std::pmr::memory_resource* m_memory_resource;
-	FE::scalable_pool<FE::align_8bytes> m_archetype_pool;
+	FE::scalable_pool<FE::align_16bytes> m_archetype_pool;
 
 	archetype_table m_archetype_table;
 	component_table m_component_table;
 	system_table m_system_table;
-	initializer_list m_archetype_default_entities;
+
+	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
+	boost::fibers::recursive_mutex m_fiber_lock;
 
 public:
-	ECS(std::pmr::memory_resource* resource) noexcept;
-	ECS(initializer_list& initializer_list_p, std::pmr::memory_resource* resource) noexcept;
-	~ECS() noexcept;
+	ECS(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p, std::pmr::memory_resource* resource_p) noexcept;
+	~ECS() noexcept = default;
 
 	ECS(const ECS&) noexcept = delete;
 	ECS& operator=(const ECS&) noexcept = delete;
@@ -81,6 +91,7 @@ public:
 	FE::entity<Archetype> instanciate_entity(FE::ASCII* const entity_name_p, Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_name = std::pmr::string( m_memory_resource );
@@ -102,7 +113,8 @@ public:
 	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, FE::framework::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 		FE::entity<FE::archetype_base> l_entity = ECS::instanciate_entity<Archetype>(entity_name_p);
 		if (l_entity.is_valid() == false)
 		{
@@ -149,6 +161,8 @@ public:
 	template <class Archetype>
 	FE::entity<FE::archetype_base> instanciate_default_entity(FE::ASCII* const entity_name_p) noexcept
 	{
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 		framework::initializer* l_default_values = ECS::get_archetype_default_entity<Archetype>();
 		if (l_default_values == nullptr)
 		{
@@ -164,6 +178,8 @@ public:
 	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = default_values_p;
 	}
 
@@ -171,6 +187,8 @@ public:
 	_FE_FORCE_INLINE_ FE::framework::initializer* const get_archetype_default_entity() noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
 		if (l_probe_result != m_archetype_default_entities.end())
 		{
@@ -184,6 +202,8 @@ public:
 	FE::entity<Archetype> find_entity(FE::ASCII* const entity_name_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 		m_buffer.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + std::strlen(entity_name_p) );
 		m_buffer = FE::framework::reflection::type_id<Archetype>().name();
 		m_buffer += entity_name_p;
@@ -204,6 +224,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename component_table::iterator l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		if (l_probe_result == m_component_table.end())
@@ -293,6 +314,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename archetype_base::component_view_table::iterator l_view_table_probe_result = entt_p->m_component_view_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 
@@ -319,6 +341,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
+		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename FE::archetype_base::component_view_table::iterator l_probe_result = entt_p->m_component_view_table.find( FE::framework::reflection::type_id<Component>().hash_code() );
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");
@@ -328,7 +351,7 @@ public:
 	}
 
 
-	FE::system find_system(FE::ASCII* const system_name_p) noexcept;
+	std::optional<FE::pair<FE::system, std::pmr::vector<std::size_t>>> find_system(FE::ASCII* const system_name_p) noexcept;
 
 
 	FE::framework::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;

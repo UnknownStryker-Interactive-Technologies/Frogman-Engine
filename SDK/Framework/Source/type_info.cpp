@@ -18,7 +18,6 @@ limitations under the License.
 
 
 
-std::shared_ptr<std::pmr::monotonic_buffer_resource> FE::framework::reflection::internal::type_info::metadata::s_resource = nullptr;
+thread_local std::shared_ptr<std::pmr::monotonic_buffer_resource> FE::framework::reflection::internal::type_info::metadata::tl_s_resource = nullptr;
 
-typename FE::framework::reflection::type_info::table_type FE::framework::reflection::type_info::s_type_information;
-typename FE::framework::reflection::type_info::lock_type FE::framework::reflection::type_info::s_lock;
+thread_local typename FE::framework::reflection::type_info::table_type FE::framework::reflection::type_info::tl_s_type_information;

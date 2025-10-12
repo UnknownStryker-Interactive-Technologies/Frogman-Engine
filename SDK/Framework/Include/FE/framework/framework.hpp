@@ -29,19 +29,15 @@ limitations under the License.
 #endif
 
 
-#include <FE/pool/memory_resource.hpp>
-
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/thread_id.hpp>
 
-// boost::function
-#include <boost/functional.hpp>
 
 
 
-
-CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE, memory_resource);
+CLASS_FORWARD_DECLARATION(FE::framework, ECS);
+CLASS_FORWARD_DECLARATION(FE::framework, processors);
 
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
 
@@ -73,7 +69,7 @@ public:
 /*
 The framework_base class serves as a foundational component for a framework
 managing program options, memory resources, and task scheduling, while providing mechanisms for launching, running, and shutting down the framework
-along with reflection capabilities for methods and properties.
+along with reflection capabilities for methods, properties, and enums.
 */
 class framework_base
 {
@@ -94,26 +90,31 @@ protected:
 
 	std::unique_ptr<class FE::memory_resource> m_game_memory;
 	std::unique_ptr<class framework::ECS> m_ecs;
+	std::unique_ptr<class framework::processors> m_processors;
 
 public:
-	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept; // Exclude main thread from counting the number of the task scheduler threads.
-	virtual ~framework_base() noexcept;
+	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+	virtual ~framework_base() noexcept = default;
 
 	static void request_restart() noexcept;
-	static framework_base& get_framework() noexcept;
+	_FE_FORCE_INLINE_ static framework_base& get_framework() noexcept { return *s_framework; }
 
-	std::pmr::memory_resource* get_memory_resource() noexcept;
-	reflection::method_registry& get_method_reflection() noexcept;
-	reflection::property_registry& get_property_reflection() noexcept;
-	reflection::enum_registry& get_enum_reflection() noexcept;
+	_FE_FORCE_INLINE_ const program_options& get_program_options() const noexcept { return m_program_options; }
+	_FE_FORCE_INLINE_ const std::locale& get_current_system_locale() const noexcept { return m_current_system_locale; }
 
-	FE::memory_resource* get_game_memory() noexcept;
-	class framework::ECS& get_ecs() noexcept;
+	_FE_FORCE_INLINE_ std::pmr::memory_resource* get_memory_resource() noexcept;
+	_FE_FORCE_INLINE_ reflection::method_registry& get_method_reflection() noexcept { return m_method_reflection; }
+	_FE_FORCE_INLINE_ reflection::property_registry& get_property_reflection() noexcept { return m_property_reflection; }
+	_FE_FORCE_INLINE_ reflection::enum_registry& get_enum_reflection() noexcept { return m_enum_reflection; }
+
+	_FE_FORCE_INLINE_ class FE::memory_resource* get_game_memory() noexcept { return m_game_memory.get(); }
+	_FE_FORCE_INLINE_ class framework::ECS& get_ecs() noexcept { return *m_ecs; }
+	_FE_FORCE_INLINE_ class framework::processors& get_processors() noexcept { return *m_processors; }
 
 protected:
-	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p);
-	virtual FE::int32 run();
-	virtual FE::int32 shutdown();
+	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) = 0;
+	virtual FE::int32 run() = 0;
+	virtual FE::int32 shutdown() = 0;
 
 protected:
 	void __load_reflection_data() noexcept;

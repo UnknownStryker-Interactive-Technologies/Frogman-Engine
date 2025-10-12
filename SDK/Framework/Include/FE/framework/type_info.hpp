@@ -55,20 +55,12 @@ namespace internal::type_info
     public:
         using string_type = std::pmr::string;
 
-		static std::shared_ptr<std::pmr::monotonic_buffer_resource> s_resource;
+        thread_local static std::shared_ptr<std::pmr::monotonic_buffer_resource> tl_s_resource;
 
         string_type _typename;
         string_type _base_typename;
         std::size_t _hashed_name = 0;
 		std::size_t _hashed_base_name = 0;
-    };
-
-    struct c_style_deleter
-    {
-        void operator()(void* p) const noexcept
-        {
-            free(p);
-        }
     };
 }
 
@@ -81,18 +73,17 @@ class type_info
 	std::shared_ptr<std::pmr::monotonic_buffer_resource> m_resource;
     internal::type_info::metadata m_info;
    
-    static table_type s_type_information;
-    static lock_type s_lock;
+    thread_local static table_type tl_s_type_information;
 
 public:
     type_info() noexcept
         : m_info()
     {
-        if (internal::type_info::metadata::s_resource == nullptr)
+        if (internal::type_info::metadata::tl_s_resource == nullptr)
         {
-			internal::type_info::metadata::s_resource = std::make_shared<std::pmr::monotonic_buffer_resource>();
+			internal::type_info::metadata::tl_s_resource = std::make_shared<std::pmr::monotonic_buffer_resource>();
         }
-		m_resource = internal::type_info::metadata::s_resource;
+		m_resource = internal::type_info::metadata::tl_s_resource;
     }
 	~type_info() noexcept = default;
    
@@ -118,8 +109,7 @@ private:
 			m_info._hashed_base_name = robin_hood::hash_bytes(m_info._base_typename.data(), m_info._base_typename.length());
         }
 
-        std::lock_guard<lock_type> l_lock(s_lock);
-        type_info::s_type_information.emplace(m_info._typename, m_info);
+        type_info::tl_s_type_information.emplace(m_info._typename, m_info);
     }
 
 public:
@@ -147,9 +137,8 @@ public:
     {
         thread_local static typename internal::type_info::metadata::string_type tl_s_buff;
         tl_s_buff = this_type_name_p;
-        boost::shared_lock_guard<lock_type> l_shared_mutex(s_lock);
-        auto l_result = type_info::s_type_information.find(tl_s_buff);
-        if (l_result != type_info::s_type_information.end()) _FE_LIKELY_
+        auto l_result = type_info::tl_s_type_information.find(tl_s_buff);
+        if (l_result != type_info::tl_s_type_information.end()) _FE_LIKELY_
         {
             return l_result->second._base_typename.c_str();
         }
@@ -164,9 +153,9 @@ public:
 template<typename T>
 _FE_FORCE_INLINE_ type_info& type_id() noexcept
 {
-    static type_info l_type_info;
-    FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, l_type_info.set<T>(););
-    return l_type_info;
+    thread_local static type_info tl_s_type_info;
+    FE_DO_ONCE(_DO_ONCE_PER_THREAD_, tl_s_type_info.set<T>(););
+    return tl_s_type_info;
 }
 
 END_NAMESPACE
