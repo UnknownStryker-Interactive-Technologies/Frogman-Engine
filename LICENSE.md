@@ -73,17 +73,17 @@ While redistributing the Work or Derivative Works thereof, You may choose to off
 
 END OF TERMS AND CONDITIONS  
 
-APPENDIX: How to apply the Apache License to your work  
+APPENDIX: How to apply the Frogman Engine Apache License to your work  
 
-To apply the Apache License to your work, attach the following boilerplate notice, with the fields enclosed by brackets "[]" replaced with your own identifying information. (Don't include the brackets!) The text should be enclosed in the appropriate comment syntax for the file format. We also recommend that a file or class name and description of purpose be included on the same "printed page" as the copyright notice for easier identification within third-party archives.  
+To apply the Frogman Engine Apache License to your work, attach the following boilerplate notice, with the fields enclosed by brackets "[]" replaced with your own identifying information. (Don't include the brackets!) The text should be enclosed in the appropriate comment syntax for the file format. We also recommend that a file or class name and description of purpose be included on the same "printed page" as the copyright notice for easier identification within third-party archives.  
 
           Copyright [yyyy] [name of copyright owner] 
 
-Licensed under the Apache License, Version 2.0 (the "License");                                                                  
+Licensed under the Frogman Engine Apache License;                                                                  
 you may not use this file except in compliance with the License.  
 You may obtain a copy of the License at  
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine/blob/chaos/LICENSE.md 
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  
 See the License for the specific language governing permissions and limitations under the License.  
@@ -97,7 +97,7 @@ See the License for the specific language governing permissions and limitations 
   
   
   
-# 아파치 라이선스 버전 2.0  
+# Frogman Engine 아파치 라이선스
 사용, 복제 및 배포에 관한 규정과 조건  
 
  
@@ -172,16 +172,16 @@ See the License for the specific language governing permissions and limitations 
 
 규정과 조건의 끝  
 
-부록: 아파치 라이선스를 저작물에 적용시키는 방법  
+부록: Frogman Engine 아파치 라이선스를 저작물에 적용시키는 방법  
 
-당신의 저작물에 아파치 라이선스를 적용시키려면, 다음과 같은 조항을 첨부하라. “[]” 괄호로 둘러싸인 부분은 본인의 정보를 입력하면 된다. (괄호 자체는 삭제할 것!) 텍스트는 파일 형식에 대해 적절한 주석 형식의 문법으로 삽입되어야 한다. 또한 제3자 아카이브 내에서의 식별을 용이하게 하기 위해, 파일명이나 분류명, 그리고 취지에 대한 설명이 저작권 표시와 같은 “인쇄 페이지”에 나타나도록 하는 것을 추천한다.  
+당신의 저작물에 Frogman Engine 아파치 라이선스를 적용시키려면, 다음과 같은 조항을 첨부하라. “[]” 괄호로 둘러싸인 부분은 본인의 정보를 입력하면 된다. (괄호 자체는 삭제할 것!) 텍스트는 파일 형식에 대해 적절한 주석 형식의 문법으로 삽입되어야 한다. 또한 제3자 아카이브 내에서의 식별을 용이하게 하기 위해, 파일명이나 분류명, 그리고 취지에 대한 설명이 저작권 표시와 같은 “인쇄 페이지”에 나타나도록 하는 것을 추천한다.  
 
           Copyright [연도] [저작권 소유자의 이름]
 
-Apache License 버전 2.0(본 라이선스)의 적용을 받음.  
+Frogman Engine Apache License(본 라이선스)의 적용을 받음.  
 이 파일을 사용하기 위해서는 반드시 본 라이선스를 따라야 합니다. 본 라이선스의 사본은 다음 사이트에서 구할 수 있습니다.  
 
-          http://www.apache.org/licenses/LICENSE-2.0
+          https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine/blob/chaos/LICENSE.md
 
 관련 법규나 서면 동의에 의해 구속되지 않는 한, 본 라이선스에 따라 배포되는 소프트웨어는 어떠한 보증이나 조건도 명시적으로나 묵시적으로 설정되지 않는  “있는 그대로”의 상태로 배포됩니다. 본 라이선스가 허용하거나 제한하는 사항을 규정한 문언에 대해서는 라이선스를 참조하십시오.  
 
