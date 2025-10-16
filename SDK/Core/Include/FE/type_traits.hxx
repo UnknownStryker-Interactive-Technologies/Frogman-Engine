@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -590,13 +590,13 @@ _FE_MAYBE_UNUSED_ constexpr inline bool is_serializable_v = is_serializable<T>::
 
 
 template<class To, class From>
-_FE_FORCE_INLINE_ To polymorphic_cast(From& from_p) noexcept
+_FE_FORCE_INLINE_ To polymorphic_cast(From from_p) noexcept
 {
 	static_assert((std::is_base_of<To, From>::value == false) || (std::is_base_of<From, To>::value == false), "polymorphic_cast<T>() failed: Both types are incompatible to cast.");
 #ifdef _DEBUG_
-	return (dynamic_cast<To>(from_p));
+	return dynamic_cast<To>(from_p);
 #else
-	return static_cast<To>(from_p);
+	return reinterpret_cast<To>(from_p);
 #endif
 }
 

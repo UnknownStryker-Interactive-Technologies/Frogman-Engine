@@ -1,0 +1,12 @@
+build*/
+winbuild
+win64build
+.vs/
+
+## kdevelop
+*.kdev4
+
+## qt-creator
+CMakeLists.txt.user*
+
+Solution_X64/

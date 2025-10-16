@@ -5,7 +5,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,9 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/framework.hpp>
-#include <FE/framework/ECS.hpp>
-#include <FE/framework/processors.hpp>
+#include <FE/framework.h>
 #include <FE/framework/reflection/private/load_reflection_data.h>
 
 #include <FE/algorithm/string.hxx>
@@ -24,7 +22,6 @@ limitations under the License.
 #include <FE/do_once.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hpp>
-#include <FE/pool/memory_resource.hpp>
 
 // boost
 #include <boost/stacktrace.hpp>
@@ -47,7 +44,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", 4 }
+program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() >> 1 }
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
@@ -64,31 +61,25 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 			algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::ASCII>(argv_p[i] + l_range->_end);
 			m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
-			if (l_uint_info._value < 4)
+			if (l_uint_info._value < 6)
 			{
-				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The -max-concurrency must be greater than 4.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
-				m_max_concurrency._second = 4;
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The -max-concurrency must be greater than 6.\nThe value given to the option will be overriden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
+				m_max_concurrency._second = 6;
 			}
-			else if (l_uint_info._value > FE::int32_max)
+			else if (l_uint_info._value > FE::int16_max)
 			{
-				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than (2^32) / 2.\nThe value given to the option will be overriden with the default value '4'.", m_max_concurrency._first, &l_uint_info._value);
-				m_max_concurrency._second = 4;
+				FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than (2^16) / 2.\nThe value given to the option will be overriden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
+				m_max_concurrency._second = 6;
 			}
 			break;
 		}
 	}
 
-#ifdef _FE_ON_WINDOWS_X86_64_
-	SYSTEM_INFO l_system_info;
-	GetSystemInfo(&l_system_info);
-	
-	FE_EXIT_IF(l_system_info.dwNumberOfProcessors < 4, FE::ErrorCode::_FatalHardwareResourceError_CPU_HasNotEnoughThreads, "Error, a stone age CPU detected: a CPU with less than four threads is not supported.");
-	if (m_max_concurrency._second > l_system_info.dwNumberOfProcessors)
+	if (m_max_concurrency._second < 6)
 	{
-		FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to the number of logical processors.\nThe value given to the option will be overriden with ${%u@2}.", m_max_concurrency._first, &m_max_concurrency._second, &l_system_info.dwNumberOfProcessors);
-		m_max_concurrency._second = static_cast<FE::uint32>(l_system_info.dwNumberOfProcessors);
+		m_max_concurrency._second = 6;
+		FE_LOG(FE::log::Severity::_Warning, "Performance Warning: the current system's CPU lacks logical hardware threads; Frogman Engine based games run slow on systems with CPU logical hardware threads less than six.");
 	}
-#endif
 }
 
 FE::uint32 program_options::get_max_concurrency() const noexcept
@@ -137,7 +128,7 @@ void framework_base::request_restart() noexcept
 	s_restart_or_not = RestartOrNot::_HasToRestart;
 }
 
-_FE_FORCE_INLINE_ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
+std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
 	return &(m_memory[get_current_thread_id()]);
 }

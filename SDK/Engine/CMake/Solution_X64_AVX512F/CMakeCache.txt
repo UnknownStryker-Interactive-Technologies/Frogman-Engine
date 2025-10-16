@@ -182,6 +182,9 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //No help, variable specified on the command line.
 CMAKE_SYSTEM_NAME:UNINITIALIZED=Windows
 
+//No help, variable specified on the command line.
+CMAKE_SYSTEM_PROCESSOR:UNINITIALIZED=x64
+
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
 // during the make.  This is useful for debugging only. With Visual
@@ -199,9 +202,6 @@ FE.Engine_SOURCE_DIR:STATIC=C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/E
 
 //No help, variable specified on the command line.
 SIMD:UNINITIALIZED=AVX512F
-
-//No help, variable specified on the command line.
-TARGET_CPU_ARCHITECTURE:UNINITIALIZED=x86-64
 
 
 ########################

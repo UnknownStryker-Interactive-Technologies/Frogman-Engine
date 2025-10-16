@@ -1,8 +1,6 @@
 #include <FE/framework/processors.hpp>
 
-#include <FE/framework/framework.hpp>
-#include <FE/framework/ECS.hpp>
-
+#include <FE/framework.h>
 #include <FE/memory.hpp>
 #include <FE/clock.hpp>
 
@@ -12,6 +10,62 @@
 
 
 BEGIN_NAMESPACE(FE::framework)
+
+
+
+
+task_queue::task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept
+	:	m_urgent_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
+		m_priored_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
+		m_ordinary_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
+		m_trivial_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p))
+{
+}
+
+void task_queue::push(framework::task task_p) noexcept
+{
+	switch (task_p._priority)
+	{
+	case TaskType::_Urgent:
+		m_urgent_tasks.push(task_p);
+		break;
+
+	case TaskType::_Priored:
+		m_priored_tasks.push(task_p);
+		break;
+
+	case TaskType::_Ordinary:
+		m_ordinary_tasks.push(task_p);
+		break;
+
+	case TaskType::_Trivial:
+		m_trivial_tasks.push(task_p);
+		break;
+
+	default:
+		break;
+	}
+}
+
+FE::boolean task_queue::try_pop(framework::task& out_task_p) noexcept
+{
+	var::boolean l_was_successful = m_urgent_tasks.try_pop(out_task_p);
+	if (l_was_successful == false)
+	{
+		l_was_successful = m_priored_tasks.try_pop(out_task_p);
+		if (l_was_successful == false)
+		{
+			l_was_successful = m_ordinary_tasks.try_pop(out_task_p);
+			if (l_was_successful == false)
+			{
+				l_was_successful = m_trivial_tasks.try_pop(out_task_p);
+			}
+		}
+	}
+	return l_was_successful;
+}
+
+
 
 
 internal::processors::fiber_stack_allocator::fiber_stack_allocator(const std::size_t size = FE::one_MiB) noexcept
@@ -40,18 +94,6 @@ void internal::processors::fiber_stack_allocator::deallocate(boost::context::sta
 
 
 
-
-processor::processor() noexcept
-	:	m_host(),
-		m_processor(),
-		m_fiber_stack_allocator(0),
-		m_is_running(false),
-
-		m_fibers{},
-		m_queue(framework_base::get_framework().get_memory_resource()),
-		m_delta_time_milliseconds{ 0.0 }
-{
-}
 
 processor::processor(class processors& host_p, FE::size fiber_stack_size_p = FE::one_MiB) noexcept
 	:	m_host(&host_p),
@@ -107,7 +149,7 @@ void processor::join() noexcept
 	}
 }
 
-void processor::enqueue_task(framework::task task_p) noexcept
+void processor::push_task(framework::task task_p) noexcept
 {
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 	m_queue.push(task_p);
@@ -119,7 +161,7 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 
 	FE::clock l_delta_clock;
-	typename task_queue::value_type task{0, nullptr, nullptr};
+	typename task_queue::value_type task{TaskType::_Ordinary, nullptr, nullptr};
 
 	while(host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
@@ -127,7 +169,7 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 		{
 			for (var::int32 i = 0; i < host_p->m_host->m_fiber_host_count; ++i) // steal other processor's task
 			{
-				if (host_p->m_host->m_processors[i].m_queue.try_pop(task) == false)
+				if ( reinterpret_cast<processor*>( host_p->m_host->m_processors.get() )[i].m_queue.try_pop(task) == false )
 				{
 					continue;
 				}
@@ -145,27 +187,10 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 	}
 }
 
-processor& processor::operator=(processor&& other_p) noexcept
-{
-	m_host = other_p.m_host;
-	m_processor = std::move(other_p.m_processor);
-	m_fiber_stack_allocator = std::move(other_p.m_fiber_stack_allocator);
-	m_is_running.store(other_p.m_is_running.load(std::memory_order_acquire), std::memory_order_release);
-
-	m_queue = std::move(other_p.m_queue);
-
-	for (var::int32 i = 0; i < fibers_per_thread; ++i)
-	{
-		m_fibers[i] = std::move(other_p.m_fibers[i]);
-		m_delta_time_milliseconds[i] = other_p.m_delta_time_milliseconds[i];
-	}
-	return *this;
-}
 
 
 
-
-processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p = 30, FE::size fiber_stack_size_p = FE::one_MiB) noexcept
+processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p = 100, FE::size fiber_stack_size_p = FE::one_MiB) noexcept
 	:	m_ecs(ecs_p),
 		m_concurrency(concurrency_p),
 		m_fiber_host_count(m_concurrency - 4),
@@ -184,10 +209,10 @@ processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint3
 
 		m_gc_fiber(),
 		m_gc_delta_time_milliseconds(0.0),
-		m_batch_count(gc_batch_count_p)
+		m_iteration_count(gc_batch_count_p)
 
 {
-	FE_ASSERT(concurrency_p >= 4, "Assertion failure: the software thread count must be greater than or equal to 4.");
+	FE_ASSERT(concurrency_p >= 6, "Assertion failure: the software thread count must be greater than or equal to 6.");
 	m_game_systems.reserve(1024); // Preallocate some space to avoid frequent reallocations.
 }
 
@@ -225,7 +250,8 @@ processors::~processors() noexcept
 
 	for (var::uint32 i = 0; i < m_concurrency; ++i)
 	{
-		m_processors[i].join();
+		reinterpret_cast<processor*>( m_processors.get() )[i].join();
+		reinterpret_cast<processor*>(m_processors.get())[i].~processor();
 	}
 }
 
@@ -265,11 +291,12 @@ void processors::fork(FE::system renderer_p, FE::system physics_p, FE::system au
 		m_game_systems.emplace_back(system_and_target_component_type_hash_list._first, std::move(l_components_group_list));
 	}
 
-	m_processors = std::make_unique<processor[]>(m_fiber_host_count);
-	for (var::int32 i = 0; i < m_fiber_host_count; ++i)
+	m_processors = std::make_unique<std::byte[]>( m_fiber_host_count * sizeof(processor) );
+	const processor* const l_end = ((processor*)m_processors.get()) + m_fiber_host_count;
+	for (processor* ptr = (processor*)m_processors.get(); ptr != l_end; ++ptr)
 	{
-		m_processors[i] = processor(*this, m_fiber_stack_allocator.stack_size());
-		m_processors[i].fork(); // start listening for tasks
+		new(ptr) processor(*this, m_fiber_stack_allocator.stack_size());
+		ptr->fork();
 	}
 
 	boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
@@ -277,27 +304,13 @@ void processors::fork(FE::system renderer_p, FE::system physics_p, FE::system au
 	m_gc_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processors::__gc_main, this);
 }
 
-void processors::enqueue_task(framework::task task_p) noexcept
+void processors::push_task(framework::task task_p) noexcept
 {
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
-	typename task_queue::size_type l_remaining_tasks = m_processors[0].count_remaining_tasks();
-	var::int32 l_processor_index = 0;
-	/*
-	Although count_remaining_tasks is not accurate, it returns a clue to infer which processor is less busy.
-	Typical gaming cpus do not have more than 64 logical hardware threads. 
-	The concurrency can be adjusted by the -max-concurrency=N and the loop is linear. However, for most cases, the N won't be absurdly high.
-	*/
-	for (var::int32 i = 0; i < m_fiber_host_count; ++i) 
-	{
-		if (l_remaining_tasks > m_processors[i].count_remaining_tasks()) 
-		{
-			l_remaining_tasks = m_processors[i].count_remaining_tasks();
-			l_processor_index = i;
-		}
-	}
-	m_processors[l_processor_index].enqueue_task(task_p);
+	static std::atomic_uint64_t s_next_processor_index{ 0 };
+	reinterpret_cast<processor*>( m_processors.get() )[ s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count ].push_task(task_p);
 }
 
 
@@ -313,9 +326,9 @@ void processors::__game_main(processors* const host_p) noexcept
 		{
 			FE_ASSERT(system_and_components._first != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 			
-			for(std::pmr::forward_list<FE::components>* const component_list : system_and_components._second)
+			for(std::pmr::forward_list<FE::internal::ECS::components>* const component_list : system_and_components._second)
 			{
-				for (FE::components& components : *component_list)
+				for (FE::internal::ECS::components& components : *component_list)
 				{
 					for (FE::component& component : components)
 					{
@@ -331,6 +344,7 @@ void processors::__game_main(processors* const host_p) noexcept
 		}
 		l_delta_clock.end_clock();
 		host_p->m_delta_time_milliseconds = l_delta_clock.get_delta_milliseconds();
+		boost::this_fiber::yield();
 	}
 }
 
@@ -339,21 +353,29 @@ void processors::__gc_main(processors* const host_p) noexcept
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 	FE::clock l_delta_clock;
 
+	framework::task l_reachability_analysis_task;
+	l_reachability_analysis_task._priority = TaskType::_Urgent;
+	l_reachability_analysis_task._system = &processors::__reachability_analysis;
+	l_reachability_analysis_task._component = (FE::component_base*)framework::framework_base::get_framework().get_memory_resource()->allocate(sizeof(internal::processors::reachability_analysis_arguments));
+	new(l_reachability_analysis_task._component) internal::processors::reachability_analysis_arguments();
+	host_p->push_task(l_reachability_analysis_task); // kickstart the reachability analysis task
+
 	while (host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
 		l_delta_clock.start_clock();
-		var::uint32 l_death_count = 0;
+		var::uint32 l_iteration_count = 0;
 
 		for (auto& [identifier, archetype] : host_p->m_ecs.m_archetype_table)
 		{
-			FE_ASSERT(archetype == nullptr);
+			FE_ASSERT(archetype != nullptr);
 			if (archetype.observer_count() == 0)
 			{
 				host_p->m_ecs.m_archetype_table.erase(identifier);
-				++l_death_count;
 			}
+			
+			++l_iteration_count;
 
-			if (l_death_count >= host_p->m_batch_count)
+			if (l_iteration_count >= host_p->m_iteration_count)
 			{
 				goto Yield;
 			}
@@ -361,18 +383,23 @@ void processors::__gc_main(processors* const host_p) noexcept
 
 		for (auto& [type_hash, components_list] : host_p->m_ecs.m_component_table)
 		{
-			for (FE::components& components : components_list._second)
+			for (FE::internal::ECS::components& components : components_list._second)
 			{
 				for (FE::component& component : components)
 				{
 					FE_ASSERT(component != nullptr, "Assertion failure: component pointers cannot be a nullptr.");
 					if (component.observer_count() == 0)
 					{
-						components.remove_component(component->m_identifier._index);
-						++l_death_count;
+						components.remove_component(component->m_metadata->_index);
+					}
+					else if (component->m_metadata->m_gc_metadata->_is_circular_reference.load(std::memory_order_acquire) == true)
+					{
+						components.remove_component(component->m_metadata->_index); // remove circular reference components
 					}
 
-					if (l_death_count >= host_p->m_batch_count)
+					++l_iteration_count;
+
+					if (l_iteration_count >= host_p->m_iteration_count)
 					{
 						goto Yield;
 					}
@@ -383,6 +410,78 @@ void processors::__gc_main(processors* const host_p) noexcept
 		l_delta_clock.end_clock();
 		host_p->m_gc_delta_time_milliseconds = l_delta_clock.get_delta_milliseconds();
 		boost::this_fiber::yield();
+	}
+}
+
+void processors::__reachability_analysis(FE::component_base* const data_p) noexcept
+{
+	FE_ASSERT(data_p != nullptr, "Assertion failure: data_p cannot be null.");
+	internal::processors::reachability_analysis_arguments* const l_args = FE::polymorphic_cast<internal::processors::reachability_analysis_arguments* const>(data_p);
+
+	while (l_args->_host->m_is_running.load(std::memory_order_acquire) == true)
+	{
+		for (auto& [type_hash, components_list] : l_args->_host->m_ecs.m_component_table)
+		{
+			for (FE::internal::ECS::components& components : components_list._second)
+			{
+				for (FE::component& component : components)
+				{
+					if (component == nullptr)
+					{
+						continue; // skip expired components
+					}
+
+					if (component.observer_count() != 1) 
+					{
+						continue; // could not suspect a circular reference
+					}
+					__reachability_analysis_recursive(component); // examine the circular reference
+				}
+			}
+		}
+
+		boost::this_fiber::yield();
+	}
+	framework::framework_base::get_framework().get_memory_resource()->deallocate(l_args, sizeof(internal::processors::reachability_analysis_arguments));
+}
+
+void processors::__reachability_analysis_recursive(FE::component_view<FE::component_base> parent_p) noexcept
+{
+	FE_ASSERT(parent_p.is_valid () == true, "Assertion failure: parent_p cannot be null.");
+	FE_ASSERT(parent_p->m_metadata != nullptr, "Assertion failure: parent_p's metadata cannot be null.");
+	FE_ASSERT(parent_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: parent_p's gc_metadata cannot be null.");
+
+	for (FE::component_view<FE::component_base>* subcomponent_view : parent_p->m_metadata->m_gc_metadata->_member_components)
+	{
+		if (parent_p.observer_count() != 2)
+		{
+			continue; // could not suspect a circular reference
+		}
+
+		if (parent_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
+		{
+			parent_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+			return; // circular reference detected
+		}
+		__reachability_analysis_recursive(*subcomponent_view);
+	}
+
+	for (FE::entity<FE::archetype_base>* subentity_view : parent_p->m_metadata->m_gc_metadata->_member_entities)
+	{
+		if (parent_p.observer_count() != 2)
+		{
+			continue; // could not suspect a circular reference
+		}
+
+		for (auto& [type_hash, component_view] : (*subentity_view)->m_component_view_table)
+		{
+			if (parent_p.operator->() == component_view.operator->()) // examine the circular reference
+			{
+				parent_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+				return; // circular reference detected
+			}
+			__reachability_analysis_recursive(component_view);
+		}
 	}
 }
 

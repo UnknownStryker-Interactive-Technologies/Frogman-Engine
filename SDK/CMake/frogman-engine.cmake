@@ -7,6 +7,24 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Ha
 FILE(GLOB THIRD_PARTY_CITY_HASH "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Hash/*.cc" "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Hash/*.h")
 
 
+FILE(GLOB_RECURSE FE_CORE_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.hxx")
+FILE(GLOB_RECURSE FE_CORE_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/*.cpp")
+
+
+FILE(GLOB_RECURSE FE_FRAMEWORK_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/*.hxx")
+FILE(GLOB_RECURSE FE_FRAMEWORK_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/*.cpp")
+
+
+FILE(GLOB_RECURSE FE_ENGINE_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/*.hxx")
+FILE(GLOB_RECURSE FE_ENGINE_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/*.cpp")
+
+
+FILE(GLOB_RECURSE FE_RENDERER_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.hxx")
+FILE(GLOB_RECURSE FE_RENDERER_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Source/*.cpp")
+
+
+
+
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glm-1.0.1)
@@ -20,32 +38,7 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include)
 
 
-SET(FE_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include/FE/engine.hpp
-)
 
-SET(FE_SOURCES
-${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Source/engine.cpp
-)
-
-
-SET(FE_FRAMEWORK_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/framework.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/thread_id.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/ECS.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/processors.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/smart_ptr.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/archetype_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/component_base.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/system.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/game.hpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/world.hpp
-)
-SOURCE_GROUP("FE.Framework" FILES ${FE_FRAMEWORK_HEADER})
 
 SET(FE_FRAMEWORK_REFLECTION
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection.hpp
@@ -54,22 +47,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/type_info.hpp
 SOURCE_GROUP("FE.Framework.Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
 
 
-SET(FE_FRAMEWORK_SOURCES 
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/framework.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/thread_id.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/type_info.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/ECS.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/reflection.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/processors.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/archetype_base.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/component_base.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/game.cpp
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Source/world.cpp
-)
 
 
 SET(FE_ALGORITHM_HEADERS
@@ -78,7 +55,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/utility.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/math.hpp
 )
 SOURCE_GROUP("FE.Algorithm" FILES ${FE_ALGORITHM_HEADERS})
-
 
 SET(FE_LOG_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/format_string.h
@@ -92,7 +68,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/format_string.cpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/logger.cpp
 )
 
-
 SET(FE_POOL_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/block_pool.hxx
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
@@ -100,49 +75,6 @@ ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/memory_resource.hpp
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
 )
 SOURCE_GROUP("FE.Pool" FILES ${FE_POOL_HEADERS})
-
-
-SET(FE_CORE_HEADERS
-${FE_ALGORITHM_HEADERS}
-${FE_LOG_HEADERS}
-${FE_POOL_HEADERS}
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/definitions.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/prerequisites.h
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/memory.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/iterator.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/farray.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fqueue.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fstack.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/concurrent_vector.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/function.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/type_traits.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/types.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/do_once.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/clock.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/fstream_guard.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/hash.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pair.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/random.hxx
-
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/memory_traits.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/private/strlen.hxx
-)
-
-SET(FE_CORE_SOURCES
-${FE_LOG_SOURCES}
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/math.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/memory_resource.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/clock.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/hash.cpp
-)
-
 
 SET(FE_MISC_HEADERS
 ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/private/macro_restrictions.h
@@ -155,7 +87,14 @@ SOURCE_GROUP("FE.Misc" FILES ${FE_MISC_HEADERS})
 
 
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
+IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+
+    SET(ASSIMP
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Debug/assimp-vc143-mtd.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/RelWithDebInfo/assimp-vc143-mt.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Release/assimp-vc143-mt.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/MinSizeRel/assimp-vc143-mt.lib>
+    )
 
     SET(BOOST_CHRONO 
         $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_87.lib>
@@ -280,7 +219,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
         
     MESSAGE("========== Frogman Engine Header Tool ==========")
 
-    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
+    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
         # Print paths for debugging
         SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/Release/FE.HeaderTool.exe)
@@ -336,5 +275,5 @@ ENDFUNCTION()
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${BOOST_CONTEXT} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
-SET(FROGMAN_ENGINE_SDK ${GLFW} ${IMGUI} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})
+SET(FROGMAN_FRAMEWORK_SDK ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${GLFW} ${IMGUI})
+SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

@@ -5,7 +5,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -214,7 +214,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 {
 	std::pmr::wstring l_generated_code(get_memory_resource());
 	l_generated_code.reserve(1 * FE::one_MiB);
-	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework/framework.hpp> \n";
+	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework.h> \n";
 	for (const reflection_metadata& header_file : metadata_set_p) // #include <> statements gereration
 	{
 		l_generated_code += L"#include <";

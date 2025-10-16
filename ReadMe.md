@@ -34,6 +34,9 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 
 # This project leverages:
 
+- Assimp 6.0.2  
+https://github.com/assimp/assimp/releases/tag/v6.0.2  
+
 - Boost Libraries 1.87.0  
 https://github.com/boostorg/boost/releases/tag/boost-1.87.0  
 
@@ -51,6 +54,12 @@ https://github.com/Tessil/hat-trie
 
 - Dear ImGUI 1.91.6  
 https://github.com/ocornut/imgui/releases/tag/v1.91.6  
+
+- ORGE 14.4.1  
+https://github.com/OGRECave/ogre/releases/tag/v14.4.1  
+
+- OpenAL Soft  
+https://github.com/kcat/openal-soft/releases/tag/1.24.3  
 
 - Robin Hood Hash 3.11.5  
 https://github.com/martinus/robin-hood-hashing  

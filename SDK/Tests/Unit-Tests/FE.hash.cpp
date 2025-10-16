@@ -1,5 +1,4 @@
-﻿
-#include <gtest/gtest.h>
+﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/hash.hpp>

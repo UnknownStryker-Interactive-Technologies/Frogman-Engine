@@ -15,12 +15,12 @@
 //static std::pmr::unsynchronized_pool_resource pool;
 //static FE::framework::ECS ecs(&pool);
 //
-//void take_damage(FE::component_base* const component_p) noexcept
-//{
-//	health* l_health = FE::polymorphic_cast<health*>(component_p);
-//	assert(l_health != nullptr);
-//	l_health->_health -= 10;
-//}
+void take_damage(FE::component_base* const component_p) noexcept
+{
+	health* l_health = FE::polymorphic_cast<health*>(component_p);
+	assert(l_health != nullptr);
+	l_health->_health -= 10;
+}
 //
 //
 //

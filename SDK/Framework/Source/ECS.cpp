@@ -5,7 +5,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/ECS.hpp>
-#include <FE/framework/framework.hpp>
+#include <FE/framework.h>
 
 #include <vector>
 
@@ -28,7 +28,7 @@ ECS::ECS(framework::initializer_list& initializer_list_p, framework::system_tabl
 	:	m_memory_resource(resource_p),
 		m_archetype_pool(),
 
-		m_archetype_table(resource_p),
+		m_archetype_table(),
 		m_component_table(),
 		m_system_table(),
 		m_archetype_default_entities(initializer_list_p),
@@ -129,7 +129,7 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const FE::compone
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
 	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-	_FE_MAYBE_UNUSED_ auto l_result = entt_p->m_component_view_table.emplace( robin_hood::hash_bytes( to_attatch_p->m_identifier._typename.c_str(), to_attatch_p->m_identifier._typename.length() ), to_attatch_p );
+	_FE_MAYBE_UNUSED_ auto l_result = entt_p->m_component_view_table.emplace( robin_hood::hash_bytes( to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename) ), to_attatch_p );
 	FE_ASSERT(l_result.second == true, "Assertion failed: the component to attatch already exists in the entity.");
 }
 
@@ -186,7 +186,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 		FE_ASSERT(l_result.second == true, "Assertion failed: the component type was already serialized. This should never happen.");
 		l_arguments._first = l_serialized_components[component->get_typename()];
 		l_arguments._second = component.operator->();
-		l_arguments._third = component->get_memory_layout_version().c_str();
+		l_arguments._third = component->get_memory_layout_version();
 		(*l_component_serializer)(nullptr, &l_arguments); // Boom! Magcic!
 		/*
 		* The first argument is a reference to the serialized component datavbuffer.
@@ -236,7 +236,7 @@ void ECS::deserialize_entity(initializer& serialized_components_p, FE::entity<ar
 		FE::arguments<const std::pmr::string&, FE::component_base*, FE::ASCII*> l_arguments;
 		l_arguments._first = l_probe_result->second;
 		l_arguments._second = component.operator->();
-		l_arguments._third = component->get_memory_layout_version().c_str();
+		l_arguments._third = component->get_memory_layout_version();
 		(*l_component_deserializer)(nullptr, &l_arguments);
 		/*
 		* The first argument is a reference to the serialized component datavbuffer.

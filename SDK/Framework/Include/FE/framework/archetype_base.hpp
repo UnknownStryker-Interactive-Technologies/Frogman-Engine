@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +32,7 @@ BEGIN_NAMESPACE(FE)
 
 
 CLASS_FORWARD_DECLARATION(framework, ECS);
+CLASS_FORWARD_DECLARATION(framework, processors);
 
 class archetype_base;
 
@@ -47,6 +48,7 @@ using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
 class archetype_base
 {
 	friend class framework::ECS;
+	friend class framework::processors;
 	using component_view_table = robin_hood::unordered_map<std::size_t, component_view<component_base>>;
 
 private:

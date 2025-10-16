@@ -11,7 +11,7 @@
 
 FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	:	FE::framework::framework_base(argc_p, argv_p), 
-		m_gc_batch_count(30),
+		m_gc_batch_count(100),
 		m_fiber_stack_size(FE::one_MiB),
 		m_renderer_system(),
 		m_physics_system(),

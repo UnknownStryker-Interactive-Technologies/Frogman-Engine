@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -906,7 +906,7 @@ private: \
 		); \
 		return l_s_full_signature; \
 	} \
-	std::string_view m_method_name; \
+	::std::string_view m_method_name; \
 public: \
 	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
 }; \
@@ -956,7 +956,7 @@ private: \
 		); \
 		return l_s_full_signature; \
 	} \
-	std::string_view m_method_name; \
+	::std::string_view m_method_name; \
 public: \
 	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
 }; \
@@ -972,18 +972,23 @@ The FE_PROPERTY macro defines a class for property reflection that registers a s
 ensuring it is only registered once during the application's execution.
 */
 #define FE_PROPERTY(property_name)  \
-class property_metadata_##property_name \
+class property_metadata_##property_name : public ::FE::internal::ECS::gc_metadata_proxy_table \
 { \
 public: \
 	_FE_FORCE_INLINE_ property_metadata_##property_name(auto* this_p) noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection() \
-                                                .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(property_name)> \
+                                                .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(this_p->property_name)> \
                                                  ( *this_p, this_p->property_name, #property_name ) \
 		); \
+		if constexpr (::std::is_base_of_v< ::FE::component_base, ::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>> > == true) \
+		{ \
+			::FE::internal::ECS::gc_metadata_proxy_table::add_watch<decltype(this_p->property_name)>(this_p, this_p->property_name); \
+		} \
 	} \
 }; \
-_FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this;
+_FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this; \
+friend class property_metadata_##property_name;
 #endif
 
 
@@ -1001,7 +1006,7 @@ public: \
                                                  ( #function_name, &function_name ); \
 	} \
 private: \
-	std::string_view m_system_name = #function_name; \
+	::std::string_view m_system_name = #function_name; \
 public: \
 	const ::std::string_view& get_system_name() const noexcept { return m_system_name; } \
 }; 
