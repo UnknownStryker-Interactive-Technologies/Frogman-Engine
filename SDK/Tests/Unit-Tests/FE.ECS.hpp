@@ -72,7 +72,7 @@ public:
 	{
 	}
 
-	virtual ~health() noexcept override = default;
+	~health() noexcept = default;
 };
 
 class weapon : public FE::component_base
@@ -89,7 +89,7 @@ public:
 	{
 	}
 
-	virtual ~weapon() noexcept override = default;
+	~weapon() noexcept = default;
 };
 
 class speed : public FE::component_base
@@ -105,7 +105,7 @@ public:
 	{
 	}
 
-	virtual ~speed() noexcept override = default;
+	~speed() noexcept = default;
 };
 
 

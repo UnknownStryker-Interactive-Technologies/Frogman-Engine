@@ -155,7 +155,14 @@ SOURCE_GROUP("FE.Misc" FILES ${FE_MISC_HEADERS})
 
 
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
+IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+
+    SET(ASSIMP
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Debug/assimp-vc143-mtd.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/RelWithDebInfo/assimp-vc143-mt.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Release/assimp-vc143-mt.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/MinSizeRel/assimp-vc143-mt.lib>
+    )
 
     SET(BOOST_CHRONO 
         $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_87.lib>
@@ -280,7 +287,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
         
     MESSAGE("========== Frogman Engine Header Tool ==========")
 
-    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND TARGET_CPU_ARCHITECTURE STREQUAL "x86-64")
+    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
         # Print paths for debugging
         SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/Release/FE.HeaderTool.exe)
@@ -336,5 +343,5 @@ ENDFUNCTION()
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${BOOST_CHRONO} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${BOOST_CONTEXT} ${BOOST_FIBER} ${FE_CORE} ${FE_FRAMEWORK})
-SET(FROGMAN_ENGINE_SDK ${GLFW} ${IMGUI} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})
+SET(FROGMAN_FRAMEWORK_SDK ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${GLFW} ${IMGUI})
+SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

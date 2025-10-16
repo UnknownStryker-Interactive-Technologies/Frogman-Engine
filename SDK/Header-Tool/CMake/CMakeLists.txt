@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.25.0...4.1.2)
 # Copyright © 2024 to present UNKNOWN STRYKER. All Rights Reserved.
 PROJECT(FE.HeaderTool
         VERSION 0.0
-        DESCRIPTION "Frogman Engine Header Tool is an executable in-house tool application."
+        DESCRIPTION "Frogman Engine Header Tool is an executable in-house tool."
         LANGUAGES CXX)
 
 GET_FILENAME_COMPONENT(FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)

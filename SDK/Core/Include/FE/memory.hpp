@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -931,6 +931,40 @@ void ::operator delete[](void* ptr_p) noexcept;
 
 void ::operator delete(void* ptr_p, std::size_t size_p) noexcept;
 void ::operator delete[](void* ptr_p, std::size_t size_p) noexcept;
+
+
+namespace internal
+{
+	template<typename T>
+	class pmr_deleter
+	{
+		std::pmr::polymorphic_allocator<T> m_allocator;
+	public:
+		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p) noexcept
+			:	m_allocator(memory_resource_p)
+		{
+		}
+
+		_FE_FORCE_INLINE_ void operator()(T* ptr_p) noexcept
+		{
+			if (ptr_p != nullptr)
+			{
+				m_allocator.deallocate(ptr_p, 1);
+			}
+		}
+	};
+}
+
+template <typename T>
+using pmr_unique_ptr = std::unique_ptr<T, internal::pmr_deleter<T>>;
+
+template <typename T, typename... Arguments>
+_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_unique(std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
+{
+	T* l_object = (T*)std::pmr::polymorphic_allocator<T>(memory_resource_p).allocate_bytes(sizeof(T));
+	new (l_object) T( std::forward<Arguments&&>(arguments_p)... );
+	return pmr_unique_ptr<T>{ l_object, internal::pmr_deleter<T>(memory_resource_p) };
+}
 
 
 END_NAMESPACE

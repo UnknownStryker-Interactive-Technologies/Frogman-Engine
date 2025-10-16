@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,6 +53,7 @@ class smart_ptr;
 template <typename T>
 class smart_ptr<T, RefType::_Owner>
 {
+    friend class smart_ptr;
     friend class smart_ptr<T, RefType::_Observer>;
 
     static_assert(std::is_array_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to an array.");
@@ -124,12 +125,12 @@ public:
 
     template <class Child>
     smart_ptr(smart_ptr<Child, FE::RefType::_Owner>&& other_p) noexcept
-        :   m_ptr( reinterpret_cast< std::remove_pointer_t<decltype(this)>&& >(other_p).m_ptr ),
-            m_metadata( reinterpret_cast< std::remove_pointer_t<decltype(this)>&& >(other_p).m_metadata )
+        :   m_ptr(other_p.m_ptr ),
+            m_metadata(other_p.m_metadata )
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: Child must be derived from T.");
-
-        std::memset(&other_p, 0, sizeof(other_p));
+        other_p.m_ptr = nullptr;
+		other_p.m_metadata = nullptr;
     }
 
     smart_ptr& operator=(smart_ptr&& other_p) noexcept
@@ -148,9 +149,10 @@ public:
 		static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: Child must be derived from T.");
 
         reset();
-        m_ptr = reinterpret_cast< std::remove_pointer_t<decltype(this)>&& >(other_p).m_ptr;
-        m_metadata = reinterpret_cast< std::remove_pointer_t<decltype(this)>&& >(other_p).m_metadata;
-        std::memset(&other_p, 0, sizeof(other_p));
+        m_ptr = other_p.m_ptr;
+        m_metadata = other_p.m_metadata;
+		m_ptr = nullptr;
+		m_metadata = nullptr;
         return *this;
     }
 
@@ -229,6 +231,12 @@ public:
         }
         return m_metadata->_observer_count.load(std::memory_order_acquire);
     }
+
+    _FE_FORCE_INLINE_ FE::boolean is_unreachable() const noexcept
+    {
+        FE_ASSERT(m_metadata != nullptr);
+        return m_metadata->_is_unreachable.load(std::memory_order_acquire);
+	}
 };
 
 template <typename T>
@@ -237,13 +245,16 @@ class smart_ptr<T, RefType::_Observer>
 	static_assert(std::is_array_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to an array.");
     static_assert(std::is_reference_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a reference type variable.");
     static_assert(std::is_const_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a const type variable.");
+    
+    friend class smart_ptr;
+
 public:
     using element_type = T;
     using pointer = T*;
     using const_pointer = const T*;
 
 private:
-    pointer m_ptr;
+    std::atomic<pointer> m_ptr;
 	internal::smart_ptr::metadata* m_metadata;
 
 public:
@@ -256,7 +267,7 @@ public:
         :   m_ptr(target_p.m_ptr),
             m_metadata(target_p.m_metadata)
     {
-        if (m_ptr == nullptr)
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -275,8 +286,8 @@ public:
 		    m_metadata(reinterpret_cast<const smart_ptr<T, RefType::_Owner>&>(target_p).m_metadata)
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
-        
-        if (m_ptr == nullptr)
+
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -302,7 +313,7 @@ public:
         FE_ASSERT(target_p.m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
         reset();
-        m_ptr = target_p.m_ptr;
+        m_ptr.store(target_p.m_ptr, std::memory_order_release);
 		m_metadata = target_p.m_metadata;
         
         m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
@@ -326,7 +337,7 @@ public:
         FE_ASSERT(l_target.m_metadata->_is_expired.load(std::memory_order_acquire) == false);
 
         reset();
-        m_ptr = l_target.m_ptr;
+        m_ptr.store(l_target.m_ptr, std::memory_order_release);
         m_metadata = l_target.m_metadata;
 
         m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
@@ -335,7 +346,7 @@ public:
 
     ~smart_ptr() noexcept
     {
-        if (m_ptr == nullptr)
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -357,10 +368,10 @@ public:
     }
 
     smart_ptr(const smart_ptr& other_p) noexcept
-        :   m_ptr(other_p.m_ptr),
+        :   m_ptr(other_p.m_ptr.load(std::memory_order_acquire)),
 		    m_metadata(other_p.m_metadata)
     {
-        if (m_ptr == nullptr)
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -374,12 +385,12 @@ public:
 
     template<class Child>
     smart_ptr(const smart_ptr<Child, FE::RefType::_Observer>& other_p) noexcept
-        :   m_ptr(reinterpret_cast<const smart_ptr<T, RefType::_Observer>&>(other_p).m_ptr),
-            m_metadata(reinterpret_cast<const smart_ptr<T, RefType::_Observer>&>(other_p).m_metadata)
+        :   m_ptr(other_p.m_ptr.load(std::memory_order_acquire)),
+            m_metadata(other_p.m_metadata)
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
 
-        if (m_ptr == nullptr)
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -393,7 +404,7 @@ public:
 
     smart_ptr& operator=(const smart_ptr& other_p) noexcept
     {
-        if ((other_p.m_ptr == nullptr) || (other_p.m_ptr == m_ptr))
+        if ((other_p.m_ptr.load(std::memory_order_acquire) == nullptr) || (other_p.m_ptr.load(std::memory_order_acquire) == m_ptr.load(std::memory_order_acquire)))
         {
             return *this;
         }
@@ -403,7 +414,7 @@ public:
         FE_ASSERT(other_p.m_metadata->_sizeofT >= 0);
 
         reset();
-        m_ptr = other_p.m_ptr;
+        m_ptr.store(other_p.m_ptr.load(std::memory_order_acquire), std::memory_order_release);
         m_metadata = other_p.m_metadata;
 
         m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
@@ -415,49 +426,43 @@ public:
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
 
-        const smart_ptr<T, RefType::_Observer>& l_other = reinterpret_cast<const smart_ptr<T, RefType::_Observer>&>(other_p);
-        if ((l_other.m_ptr == nullptr) || (l_other.m_ptr == m_ptr))
+        if ((other_p.m_ptr.load(std::memory_order_acquire) == nullptr) || (other_p.m_ptr.load(std::memory_order_acquire) == m_ptr.load(std::memory_order_acquire)))
         {
             return *this;
         }
-        FE_ASSERT(l_other.m_metadata != nullptr);
-        FE_ASSERT(l_other.m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
-        FE_ASSERT(l_other.m_metadata->_resource != nullptr);
-        FE_ASSERT(l_other.m_metadata->_sizeofT >= 0);
+        FE_ASSERT(other_p.m_metadata != nullptr);
+        FE_ASSERT(other_p.m_metadata->_observer_count.load(std::memory_order_acquire) > 0);
+        FE_ASSERT(other_p.m_metadata->_resource != nullptr);
+        FE_ASSERT(other_p.m_metadata->_sizeofT >= 0);
 
         reset();
-        m_ptr = l_other.m_ptr;
-        m_metadata = l_other.m_metadata;
+        m_ptr.store(other_p.m_ptr, std::memory_order_release);
+        m_metadata = other_p.m_metadata;
 
         m_metadata->_observer_count.fetch_add(1, std::memory_order_acq_rel); // Increment the observer count.
         return *this;
     }
 
     smart_ptr(smart_ptr&& other_p) noexcept
-        :   m_ptr(other_p.m_ptr),
+        :   m_ptr(other_p.m_ptr.exchange(nullptr, std::memory_order_acq_rel)),
             m_metadata(other_p.m_metadata)
     {
-		other_p.m_ptr = nullptr;
 		other_p.m_metadata = nullptr;
     }
 
     template<class Child>
     smart_ptr(smart_ptr<Child, FE::RefType::_Observer>&& other_p) noexcept
-        :   m_ptr(reinterpret_cast<smart_ptr<T, RefType::_Observer>&&>(other_p).m_ptr),
-            m_metadata(reinterpret_cast<smart_ptr<T, RefType::_Observer>&&>(other_p).m_metadata)
+        :   m_ptr(other_p.m_ptr.exchange(nullptr, std::memory_order_acq_rel)),
+            m_metadata(other_p.m_metadata)
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
-
-        smart_ptr<T, RefType::_Observer>&& l_other = reinterpret_cast<smart_ptr<T, RefType::_Observer>&&>(other_p);
-        l_other.m_ptr = nullptr;
-        l_other.m_metadata = nullptr;
+        other_p.m_metadata = nullptr;
     }
 
     smart_ptr& operator=(smart_ptr&& other_p) noexcept
     {
-        m_ptr = other_p.m_ptr;
+        m_ptr = other_p.m_ptr.exchange(nullptr, std::memory_order_acq_rel);
 		m_metadata = other_p.m_metadata;
-        other_p.m_ptr = nullptr;
 		other_p.m_metadata = nullptr;
         return *this;
     }
@@ -467,17 +472,15 @@ public:
     {
         static_assert(std::is_base_of_v<T, Child>, "Static assertion failed: the template argument Child is not polymorphic.");
 
-        smart_ptr<T, RefType::_Observer>&& l_other = reinterpret_cast<smart_ptr<T, RefType::_Observer>&&>(other_p);
-        m_ptr = l_other.m_ptr;
-        m_metadata = l_other.m_metadata;
-        l_other.m_ptr = nullptr;
-        l_other.m_metadata = nullptr;
+        m_ptr = other_p.m_ptr.exchange(nullptr, std::memory_order_acq_rel);
+        m_metadata = other_p.m_metadata;
+        other_p.m_metadata = nullptr;
         return *this;
     }
 
     void reset() noexcept
     {
-        if (m_ptr == nullptr)
+        if (m_ptr.load(std::memory_order_acquire) == nullptr)
         {
             return;
         }
@@ -496,7 +499,7 @@ public:
                 m_metadata->_resource->deallocate(m_metadata, sizeof(internal::smart_ptr::metadata));
             }
         }
-        m_ptr = nullptr;
+        m_ptr.store(nullptr, std::memory_order_release);
 		m_metadata = nullptr;
     }
 
@@ -536,7 +539,7 @@ public:
 
     _FE_FORCE_INLINE_ FE::boolean is_valid() const noexcept
     {
-        return ((m_ptr != nullptr) && (m_metadata->_is_expired.load(std::memory_order_acquire) == false));
+        return ((m_ptr.load(std::memory_order_acquire) != nullptr) && (m_metadata->_is_expired.load(std::memory_order_acquire) == false));
     }
 
     _FE_FORCE_INLINE_ FE::uint64 observer_count() const noexcept
@@ -546,6 +549,12 @@ public:
             return 0;
         }
         return m_metadata->_observer_count.load(std::memory_order_acquire);
+	}
+
+    _FE_FORCE_INLINE_ void set_unreachable() noexcept
+    {
+        FE_ASSERT(m_metadata != nullptr);
+        return m_metadata->_is_unreachable.store(true, std::memory_order_release);
 	}
 };
 
@@ -558,7 +567,7 @@ _FE_FORCE_INLINE_ smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner> make_
 }
 
 template <class Child, class Parent>
-_FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>&& other_p) noexcept
+_FE_FORCE_INLINE_ FE::smart_ptr<Child, FE::RefType::_Observer> downcast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>&& other_p) noexcept
 {
     static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
     
@@ -567,7 +576,7 @@ _FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_o
 }
 
 template <class Child, class Parent>
-_FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>& other_p) noexcept
+_FE_FORCE_INLINE_ FE::smart_ptr<Child, FE::RefType::_Observer> downcast_owner_to_observer(FE::smart_ptr<Parent, FE::RefType::_Owner>& other_p) noexcept
 {
     static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
 
@@ -576,7 +585,7 @@ _FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_o
 }
 
 template <class Child, class Parent>
-_FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_observer(const FE::smart_ptr<Parent, FE::RefType::_Observer>& other_p) noexcept
+_FE_FORCE_INLINE_ FE::smart_ptr<Child, FE::RefType::_Observer> downcast_observer(const FE::smart_ptr<Parent, FE::RefType::_Observer>& other_p) noexcept
 {
     static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
     FE::smart_ptr<Child, FE::RefType::_Observer> l_result = reinterpret_cast<const FE::smart_ptr<Child, FE::RefType::_Observer>&>(other_p);
@@ -584,12 +593,43 @@ _FE_FORCE_INLINE_ static FE::smart_ptr<Child, FE::RefType::_Observer> downcast_o
 }
 
 template <class Parent, class Child>
-_FE_FORCE_INLINE_ static FE::smart_ptr<Parent, FE::RefType::_Observer> upcast_observer(const FE::smart_ptr<Child, FE::RefType::_Observer>& other_p) noexcept
+_FE_FORCE_INLINE_ FE::smart_ptr<Parent, FE::RefType::_Observer> upcast_observer(const FE::smart_ptr<Child, FE::RefType::_Observer>& other_p) noexcept
 {
     static_assert(std::is_base_of_v<Parent, Child>, "Static assertion failed: Parent must be the base class of Child.");
     FE::smart_ptr<Parent, FE::RefType::_Observer> l_result = reinterpret_cast<const FE::smart_ptr<Parent, FE::RefType::_Observer>&>(other_p);
     return l_result;
 }
+
+
+template <typename T>
+struct is_observer_smart_ptr : std::false_type {};
+
+template <typename T>
+struct is_observer_smart_ptr< FE::smart_ptr<T, FE::RefType::_Observer> > : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_observer_smart_ptr_v = is_observer_smart_ptr<T>::value;
+
+
+template <typename T>
+struct is_owner_smart_ptr : std::false_type {};
+
+template <typename T>
+struct is_owner_smart_ptr< FE::smart_ptr<T, FE::RefType::_Owner> > : std::true_type {};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_owner_smart_ptr_v = is_owner_smart_ptr<T>::value;
+
+
+template <typename T>
+struct is_smart_ptr
+{
+    _FE_MAYBE_UNUSED_ constexpr inline static bool value = is_owner_smart_ptr_v<T> || is_observer_smart_ptr_v<T>;
+};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_smart_ptr_v = is_smart_ptr<T>::value;
+
 
 END_NAMESPACE
 #endif

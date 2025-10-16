@@ -4,7 +4,7 @@
 #include <FE/function.hxx>
 #include <FE/framework/reflection.hpp>
 
-#include <FE/framework/framework.hpp>
+#include <FE/framework.h>
 
 // std
 #include <string>

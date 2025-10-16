@@ -34,7 +34,7 @@ build*/
 
 ## Frogman Engine Folders
 Binaries/
-Solution/
+Solution_X64/
 
 ## Xcode artifacts
 project.xcworkspace

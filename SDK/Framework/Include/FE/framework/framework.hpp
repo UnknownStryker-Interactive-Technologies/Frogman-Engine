@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +31,6 @@ limitations under the License.
 
 #include <FE/framework/reflection.hpp>
 #include <FE/framework/thread_id.hpp>
-
-
 
 
 CLASS_FORWARD_DECLARATION(FE, memory_resource);
@@ -102,7 +100,7 @@ public:
 	_FE_FORCE_INLINE_ const program_options& get_program_options() const noexcept { return m_program_options; }
 	_FE_FORCE_INLINE_ const std::locale& get_current_system_locale() const noexcept { return m_current_system_locale; }
 
-	_FE_FORCE_INLINE_ std::pmr::memory_resource* get_memory_resource() noexcept;
+	std::pmr::memory_resource* get_memory_resource() noexcept;
 	_FE_FORCE_INLINE_ reflection::method_registry& get_method_reflection() noexcept { return m_method_reflection; }
 	_FE_FORCE_INLINE_ reflection::property_registry& get_property_reflection() noexcept { return m_property_reflection; }
 	_FE_FORCE_INLINE_ reflection::enum_registry& get_enum_reflection() noexcept { return m_enum_reflection; }
@@ -130,6 +128,30 @@ public:
 	framework_base& operator=(const framework_base&) = delete;
 	framework_base& operator=(framework_base&&) = delete;
 };
+
+
+template <typename T>
+class tls_deleter
+{
+public:
+	void operator()(T* ptr_p) const noexcept
+	{
+		if (ptr_p != nullptr)
+		{
+			ptr_p->~T();
+			framework::framework_base::get_framework().get_memory_resource()->deallocate(ptr_p, sizeof(T));
+		}
+	}
+};
+
+template<typename T>
+using tls_unique_ptr = std::unique_ptr<T, tls_deleter<T>>;
+
+template<typename T, typename... Arguments>
+tls_unique_ptr<T> make_unique(Arguments&&... arguments_p) noexcept
+{
+	return tls_unique_ptr<T>{ new( framework::framework_base::get_framework().get_memory_resource()->allocate( sizeof(T) ) ) T( std::forward<Arguments&&>(arguments_p)... ) };
+}
 
 
 END_NAMESPACE

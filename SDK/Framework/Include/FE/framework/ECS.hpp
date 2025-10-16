@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,6 +35,7 @@ limitations under the License.
 
 // ECS data structures
 #include <FE/farray.hxx>
+#include <FE/hash.hpp>
 #include <forward_list>
 #include <robin_hood.h>
 #include <vector>
@@ -58,10 +59,10 @@ class ECS
 {
 	friend class processors;
 
-	using archetype_table = std::pmr::unordered_map<std::pmr::string, archetype>;
+	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype, FE::hash<std::pmr::string>>;
 	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
 														FE::pair<	FE::scalable_pool<FE::align_16bytes>,
-																	std::pmr::forward_list<components>
+																	std::pmr::forward_list<FE::internal::ECS::components>
 																	>
 														>;
 	using system_table = robin_hood::unordered_map< std::pmr::string,
@@ -243,7 +244,7 @@ public:
 			*----------------------------------------------------------*
 			*/
 			typename component_table::mapped_type& l_list_and_allocator = m_component_table[FE::framework::reflection::type_id<Component>().hash_code()];
-			l_list_and_allocator._second = std::pmr::forward_list<components>(&l_list_and_allocator._first);
+			l_list_and_allocator._second = std::pmr::forward_list<FE::internal::ECS::components>(&l_list_and_allocator._first);
 			l_list_and_allocator._second.emplace_front(); // allocate a component pool.
 			l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		}
@@ -258,8 +259,8 @@ public:
 			}
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
-			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
-			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
+			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
+			l_alloc_result->m_metadata->_memory_layout_version = "default"; // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -270,8 +271,8 @@ public:
 			}
 
 			FE::size l_idx = components->add_component(std::move(l_alloc_result));
-			l_view->m_identifier._group = components;
-			l_view->m_identifier._index = l_idx;
+			l_view->m_metadata->_group = components;
+			l_view->m_metadata->_index = l_idx;
 			return l_view;
 		}
 
@@ -283,8 +284,8 @@ public:
 			l_probe_result->second._second.emplace_front();
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
-			l_alloc_result->m_identifier._typename = std::pmr::string(FE::framework::reflection::type_id<Component>().name(), m_memory_resource);
-			l_alloc_result->m_identifier._memory_layout_version = std::pmr::string("default", m_memory_resource); // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
+			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
+			l_alloc_result->m_metadata->_memory_layout_version = "default"; // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -295,8 +296,8 @@ public:
 			}
 
 			FE::size l_idx = l_probe_result->second._second.front().add_component(std::move(l_alloc_result));
-			l_view->m_identifier._group = l_probe_result->second._second.begin();
-			l_view->m_identifier._index = l_idx;
+			l_view->m_metadata->_group = l_probe_result->second._second.begin();
+			l_view->m_metadata->_index = l_idx;
 			return l_view;
 		}
 
@@ -327,7 +328,7 @@ public:
 		FE_ASSERT(l_com_table_probe_result != m_component_table.end(), "Assertion failed: the component table must have this component.");
 
 		// Remove the component from the component table.
-		l_view_table_probe_result->second->m_identifier._group->remove_component(l_view_table_probe_result->second->m_identifier._index);
+		l_view_table_probe_result->second->m_metadata->_group->remove_component(l_view_table_probe_result->second->m_metadata->_index);
 
 		// Remove the component from the entity's component view table.
 		entt_p->m_component_view_table.erase(l_view_table_probe_result);

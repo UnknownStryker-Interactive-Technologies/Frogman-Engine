@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,13 +18,13 @@ limitations under the License.
 #include <FE/prerequisites.h>
 #include <FE/pair.hxx>
 
+#include <FE/framework/archetype_base.hpp>
 #include <FE/framework/component_base.hpp>
 #include <FE/framework/system.hpp>
 
 #include <boost/fiber/fiber.hpp> // boost::fibers::fiber
-#include <boost/fiber/buffered_channel.hpp>
 
-#include <concurrent_priority_queue.h>
+#include <concurrent_queue.h>
 
 #include <thread> // std::thread
 
@@ -34,22 +34,41 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
+enum struct TaskType : var::uint64
+{
+	_Urgent = 0,
+	_Priored = 1,
+	_Ordinary = 2,
+	_Trivial = 3
+};
+
 struct task
 {
-	var::uint64 _priority;
+	TaskType _priority;
 	FE::system _system;
 	FE::component_base* _component;
 };
 
-struct priority_comparator
+class task_queue
 {
-	bool operator()(const task& lhs_p, const task& rhs_p) const noexcept
-	{
-		return lhs_p._priority < rhs_p._priority; // lower priority value means higher priority
-	}
-};
+public:
+	using queue_type = concurrency::concurrent_queue<task, std::pmr::polymorphic_allocator<task>>;
+	using value_type = queue_type::value_type;
+	using size_type = queue_type::size_type;
 
-using task_queue = concurrency::concurrent_priority_queue<task, priority_comparator, std::pmr::polymorphic_allocator<task>>;
+private:
+	queue_type m_urgent_tasks;
+	queue_type m_priored_tasks;
+	queue_type m_ordinary_tasks;
+	queue_type m_trivial_tasks;
+
+public:
+	task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept;
+	~task_queue() noexcept = default;
+
+	void push(framework::task task_p) noexcept;
+	FE::boolean try_pop(framework::task& out_task_p) noexcept;
+};
 
 constexpr FE::int32 fibers_per_thread = 4;
 
@@ -74,6 +93,12 @@ namespace internal::processors
 
 		std::size_t stack_size() const noexcept { return m_size; }
 	};
+
+	class reachability_analysis_arguments : FE::component_base
+	{
+	public:
+		class framework::processors* _host;
+	};
 }
 
 
@@ -91,14 +116,12 @@ class processor
 	var::float64 m_delta_time_milliseconds[fibers_per_thread];
 
 public:
-	processor() noexcept;
 	processor(class processors& host_p, FE::size fiber_stack_size_p) noexcept;
 	~processor() noexcept;
 
 	void fork() noexcept;
 	void join() noexcept;
-	void enqueue_task(framework::task task_p) noexcept;
-	_FE_FORCE_INLINE_ typename task_queue::size_type count_remaining_tasks() noexcept { return m_queue.size(); }
+	void push_task(framework::task task_p) noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_time_milliseconds[fiber_index_p]; }
@@ -109,8 +132,6 @@ private:
 public:
 	processor(const processor&) = delete;
 	processor& operator=(const processor&) = delete;
-
-	processor& operator=(processor&& other_p) noexcept;
 };
 
 
@@ -120,14 +141,14 @@ class processors
 {
 	friend class processor;
 	using game_system_exec_table = std::pmr::vector< FE::pair<	FE::system, // the system function pointer
-																std::pmr::vector< std::pmr::forward_list<FE::components>* > // the list of components the system will operate on
+																std::pmr::vector< std::pmr::forward_list<FE::internal::ECS::components>* > // the list of components the system will operate on
 																>
 													>;
 	framework::ECS& m_ecs;
 	FE::uint32 m_concurrency;
 	FE::int32 m_fiber_host_count;
 	std::atomic_bool m_is_running;
-	std::unique_ptr<processor[]> m_processors;
+	std::unique_ptr<std::byte[]> m_processors;
 
 	std::thread m_renderer_thread;
 	std::thread m_physics_thread;
@@ -141,14 +162,14 @@ class processors
 
 	boost::fibers::fiber m_gc_fiber;
 	var::float64 m_gc_delta_time_milliseconds;
-	var::uint32 m_batch_count;
+	var::uint32 m_iteration_count;
 
 public:
 	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept;
 	~processors() noexcept;
 
 	void fork(FE::system renderer_p, FE::system physics_p, FE::system audio_p, FE::system networking_p) noexcept;
-	void enqueue_task(framework::task task_p) noexcept;
+	void push_task(framework::task task_p) noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds() const noexcept { return m_delta_time_milliseconds; }
@@ -157,6 +178,8 @@ public:
 private:
 	static void __game_main(processors* const host_p) noexcept;
 	static void __gc_main(processors* const host_p) noexcept;
+	static void __reachability_analysis(FE::component_base* const data_p) noexcept;
+	static void __reachability_analysis_recursive(FE::component_view<FE::component_base> parent_p) noexcept;
 
 public:
 	processors(const processors&) = delete;
