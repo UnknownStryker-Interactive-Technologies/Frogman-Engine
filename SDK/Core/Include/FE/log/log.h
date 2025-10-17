@@ -263,10 +263,14 @@ namespace FE
 		_FatalWinAPI_Error_4XX_OpenProcessTokenFailure = 400,
 		_FatalWinAPI_Error_4XX_LookupPrivilegeValueFailure = 401,
 		_FatalWinAPI_Error_4XX_AdjustTokenPrivilegesFailure = 402,
-		_FatalMemoryError_1XX_VirtualAllocFailure = 403,
-		_FatalMemoryError_1XX_VirtualLockFailure = 404,
-		_FatalMemoryError_1XX_VirtualUnlockFailure = 405,
-		_FatalMemoryError_1XX_VirtualFreeFailure = 406
+		_FatalMemoryError_4XX_VirtualAllocFailure = 403,
+		_FatalMemoryError_4XX_VirtualLockFailure = 404,
+		_FatalMemoryError_4XX_VirtualUnlockFailure = 405,
+		_FatalMemoryError_4XX_VirtualFreeFailure = 406,
+
+		_FatalRendererError_5XX_GLFW_InitializationFailure = 500,
+		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,
+		_FatalRendererError_5XX_RendererBackendDeviceCreationFailure = 502
 	};
 }
 #endif

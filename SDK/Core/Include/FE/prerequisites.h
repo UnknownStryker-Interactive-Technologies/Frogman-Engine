@@ -18,6 +18,7 @@ limitations under the License.
 #include <FE/types.hxx>
 #include <FE/log/log.h>
 
+
 #ifdef FE_NEGATIVE_STATIC_ASSERT
     #error FE_NEGATIVE_STATIC_ASSERT is a reserved Frogman Engine macro keyword.
 #endif 
