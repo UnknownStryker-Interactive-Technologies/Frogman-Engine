@@ -1,15 +1,15 @@
 // Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.h> 
 #include <FE/framework.h> 
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/system.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/type_info.hpp>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/smart_ptr.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/framework.hpp>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection.hpp>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/system.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/ECS.hpp>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/thread_id.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/archetype_base.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection.hpp>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/thread_id.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/game.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/component_base.hpp>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework.h>
@@ -39,6 +39,10 @@ void load_reflection_data()
 
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::archetype_base*(::FE::archetype_base*)> >("construct ::FE::archetype_base", &::std::construct_at<::FE::archetype_base>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::archetype_base*)> >("destruct ::FE::archetype_base", &::std::destroy_at<::FE::archetype_base>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::type_info*(::FE::framework::reflection::type_info*)> >("construct ::FE::framework::reflection::type_info", &::std::construct_at<::FE::framework::reflection::type_info>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::type_info*)> >("destruct ::FE::framework::reflection::type_info", &::std::destroy_at<::FE::framework::reflection::type_info>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::internal::type_info::metadata*(::FE::framework::reflection::internal::type_info::metadata*)> >("construct ::FE::framework::reflection::internal::type_info::metadata", &::std::construct_at<::FE::framework::reflection::internal::type_info::metadata>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::internal::type_info::metadata*)> >("destruct ::FE::framework::reflection::internal::type_info::metadata", &::std::destroy_at<::FE::framework::reflection::internal::type_info::metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::component_base*(::FE::component_base*)> >("construct ::FE::component_base", &::std::construct_at<::FE::component_base>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::component_base*)> >("destruct ::FE::component_base", &::std::destroy_at<::FE::component_base>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::internal::ECS::components*(::FE::internal::ECS::components*)> >("construct ::FE::internal::ECS::components", &::std::construct_at<::FE::internal::ECS::components>);
@@ -49,10 +53,6 @@ void load_reflection_data()
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::internal::ECS::component_metadata*)> >("destruct ::FE::internal::ECS::component_metadata", &::std::destroy_at<::FE::internal::ECS::component_metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::internal::ECS::gc_metadata_proxy_table*(::FE::internal::ECS::gc_metadata_proxy_table*)> >("construct ::FE::internal::ECS::gc_metadata_proxy_table", &::std::construct_at<::FE::internal::ECS::gc_metadata_proxy_table>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::internal::ECS::gc_metadata_proxy_table*)> >("destruct ::FE::internal::ECS::gc_metadata_proxy_table", &::std::destroy_at<::FE::internal::ECS::gc_metadata_proxy_table>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::type_info*(::FE::framework::reflection::type_info*)> >("construct ::FE::framework::reflection::type_info", &::std::construct_at<::FE::framework::reflection::type_info>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::type_info*)> >("destruct ::FE::framework::reflection::type_info", &::std::destroy_at<::FE::framework::reflection::type_info>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::internal::type_info::metadata*(::FE::framework::reflection::internal::type_info::metadata*)> >("construct ::FE::framework::reflection::internal::type_info::metadata", &::std::construct_at<::FE::framework::reflection::internal::type_info::metadata>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::internal::type_info::metadata*)> >("destruct ::FE::framework::reflection::internal::type_info::metadata", &::std::destroy_at<::FE::framework::reflection::internal::type_info::metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::type_info*(::FE::framework::reflection::type_info*)> >("construct ::FE::framework::reflection::type_info", &::std::construct_at<::FE::framework::reflection::type_info>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::type_info*)> >("destruct ::FE::framework::reflection::type_info", &::std::destroy_at<::FE::framework::reflection::type_info>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::internal::type_info::metadata*(::FE::framework::reflection::internal::type_info::metadata*)> >("construct ::FE::framework::reflection::internal::type_info::metadata", &::std::construct_at<::FE::framework::reflection::internal::type_info::metadata>);

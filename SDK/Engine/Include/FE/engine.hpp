@@ -16,11 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.h>
-#include <FE/pool/memory_resource.hpp>
-#include <FE/framework/ECS.hpp>
 #include <FE/framework.h>
-#include <FE/framework/processors.hpp>
-#include <FE/framework/system.hpp>
+#include <FE/renderer.hpp>
+
 
 #define FROGMAN_ENGINE() CUSTOM_ENGINE(FE::engine)
 
@@ -34,13 +32,13 @@ class engine final : public FE::framework::framework_base
 {
     FE::uint32 m_gc_batch_count;
     std::size_t m_fiber_stack_size;
-	FE::system m_renderer_system;
-    FE::system m_physics_system;
-    FE::system m_audio_system;
-    FE::system m_networking_system;
 
     framework::initializer_list m_entity_list;
 	framework::system_table_initializer_list m_system_list;
+
+    std::unique_ptr<window_config> m_window_config;
+    std::unique_ptr<FE::renderer> m_renderer;
+	engine_reference m_this_pointer;
 
 public:
     engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
@@ -50,6 +48,16 @@ private:
     virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
     virtual FE::int32 run() override;
     virtual FE::int32 shutdown() override;
+
+private:
+    _FE_FORCE_INLINE_ static FE::engine& __get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
+
+private: // Callbacks
+	static void __renderer_main(FE::component_base* engine_reference_p) noexcept;
+	static void __on_window_close(GLFWwindow* window_p) noexcept;
+	static void __key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
+	static void __mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
+	static void __cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept;
 };
 
 

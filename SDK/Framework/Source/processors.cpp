@@ -6,6 +6,8 @@
 
 #include <boost/fiber/all.hpp>
 
+#include <GLFW/glfw3.h>
+
 
 
 
@@ -256,7 +258,10 @@ processors::~processors() noexcept
 }
 
 
-void processors::fork(FE::system renderer_p, FE::system physics_p, FE::system audio_p, FE::system networking_p) noexcept
+void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_p,
+						FE::system physics_p, FE::component_base* physics_args_p,
+						FE::system audio_p, FE::component_base* audio_args_p,
+						FE::system networking_p, FE::component_base* networking_args_p) noexcept
 {
 	FE_ASSERT(renderer_p != nullptr, "Assertion failure: renderer_p cannot be null.");
 	FE_ASSERT(physics_p != nullptr, "Assertion failure: renderer_p cannot be null.");
@@ -273,10 +278,10 @@ void processors::fork(FE::system renderer_p, FE::system physics_p, FE::system au
 
 	m_is_running.store(true, std::memory_order_release);
 
-	m_renderer_thread = std::thread(renderer_p, nullptr);
-	m_physics_thread = std::thread(physics_p, nullptr);
-	m_audio_thread = std::thread(audio_p, nullptr);
-	m_networking_thread = std::thread(networking_p, nullptr);
+	m_renderer_thread = std::thread(renderer_p, renderer_args_p);
+	m_physics_thread = std::thread(physics_p, physics_args_p);
+	m_audio_thread = std::thread(audio_p, audio_args_p);
+	m_networking_thread = std::thread(networking_p, networking_args_p);
 
 	for (_FE_MAYBE_UNUSED_ auto& [system_name, system_and_target_component_type_hash_list] : m_ecs.m_system_table)
 	{
@@ -322,6 +327,7 @@ void processors::__game_main(processors* const host_p) noexcept
 	while (host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
 		l_delta_clock.start_clock();
+		glfwPollEvents();
 		for (typename game_system_exec_table::value_type& system_and_components : host_p->m_game_systems)
 		{
 			FE_ASSERT(system_and_components._first != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");

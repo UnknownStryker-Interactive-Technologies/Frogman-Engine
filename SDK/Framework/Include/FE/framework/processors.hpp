@@ -168,10 +168,14 @@ public:
 	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept;
 	~processors() noexcept;
 
-	void fork(FE::system renderer_p, FE::system physics_p, FE::system audio_p, FE::system networking_p) noexcept;
+	void fork(	FE::system renderer_p, FE::component_base* renderer_args_p,
+				FE::system physics_p, FE::component_base* physics_args_p,
+				FE::system audio_p, FE::component_base* audio_args_p,
+				FE::system networking_p, FE::component_base* networking_args_p) noexcept;
 	void push_task(framework::task task_p) noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
+	_FE_FORCE_INLINE_ void shutdown() noexcept { m_is_running.store(false, std::memory_order_release); }
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds() const noexcept { return m_delta_time_milliseconds; }
 	_FE_FORCE_INLINE_ FE::float64 get_gc_delta_time_milliseconds() const noexcept { return m_gc_delta_time_milliseconds; }
 

@@ -9,16 +9,26 @@
 
 
 
+void nullsys(FE::component_base*) noexcept {}
+
+class engine_reference : public FE::component_base
+{
+public:
+	FE::engine* _engine;
+};
+
+
+
+
 FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	:	FE::framework::framework_base(argc_p, argv_p), 
 		m_gc_batch_count(100),
 		m_fiber_stack_size(FE::one_MiB),
-		m_renderer_system(),
-		m_physics_system(),
-		m_audio_system(),
-		m_networking_system(),
 		m_entity_list(),
-		m_system_list()
+		m_system_list(),
+		m_window_config(),
+		m_renderer(),
+		m_this_pointer(this)
 {
 }
 
@@ -39,30 +49,22 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	// Read the .froggy file and update the m_fiber_stack_size and m_gc_batch_count if specified in the file.
 	m_processors = std::make_unique<framework::processors>(*m_ecs, m_program_options.get_max_concurrency(), m_gc_batch_count, m_fiber_stack_size);
 
-	// Read the .froggy file and load the function pointer to the m_renderer_system, m_physics_system, m_audio_system, and m_networking_system using the reflection system.
+	m_window_config = std::make_unique<window_config>(); // the .froggy file for config
+	m_renderer = std::make_unique<FE::renderer>(*m_window_config);
 
-	if (m_renderer_system == nullptr)
-	{
-		return -1; // Renderer system is mandatory.
-	}
-	if (m_physics_system == nullptr)
-	{
-		return -1; // Physics system is mandatory.
-	}
-	if (m_audio_system == nullptr)
-	{
-		return -1; // Audio system is mandatory.
-	}
-	if (m_networking_system == nullptr)
-	{
-		return -1; // Networking system is mandatory.
-	}
+	glfwSetWindowCloseCallback(m_renderer->get_window(), &FE::engine::__on_window_close);
+	glfwSetKeyCallback(m_renderer->get_window(), &FE::engine::__key_callback);
+	glfwSetMouseButtonCallback(m_renderer->get_window(), &FE::engine::__mouse_button_callback);
+	glfwSetCursorPosCallback(m_renderer->get_window(), &FE::engine::__cursor_position_callback);
 	return 0;
 }
 
 FE::int32 FE::engine::run()
 {
-	m_processors->fork(m_renderer_system, m_physics_system, m_audio_system, m_networking_system);
+	m_processors->fork(	__renderer_main, &m_this_pointer, 
+						nullsys, nullptr,
+						nullsys, nullptr, 
+						nullsys, nullptr);
 	return 0;
 }
 
@@ -72,4 +74,44 @@ FE::int32 FE::engine::shutdown()
 	m_ecs.reset();
 	m_game_memory.reset();
 	return 0;
+}
+
+void FE::engine::__renderer_main(FE::component_base* engine_reference_p) noexcept
+{
+	engine_reference* const l_engine_reference = FE::polymorphic_cast<engine_reference* const>(engine_reference_p);
+	
+	while (l_engine_reference->_engine->m_processors->is_running() == true)
+	{
+		l_engine_reference->_engine->m_renderer->render_frame();
+	}
+}
+
+void FE::engine::__on_window_close(GLFWwindow* window_p) noexcept
+{
+	FE::engine::__get_engine().m_processors->shutdown();
+	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
+}
+
+void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept
+{
+	(window_p);
+	(key_p);
+	(scancode_p);
+	(action_p);
+	(mods_p);
+}
+
+void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
+{
+	(window_p);
+	(button_p);
+	(action_p);
+	(mods_p);
+}
+
+void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
+{
+	(window_p);
+	(x_p);
+	(y_p);
 }
