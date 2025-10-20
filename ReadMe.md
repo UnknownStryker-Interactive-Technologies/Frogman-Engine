@@ -55,9 +55,6 @@ https://github.com/Tessil/hat-trie
 - Dear ImGUI 1.91.6  
 https://github.com/ocornut/imgui/releases/tag/v1.91.6  
 
-- ORGE 14.4.1  
-https://github.com/OGRECave/ogre/releases/tag/v14.4.1  
-
 - OpenAL Soft  
 https://github.com/kcat/openal-soft/releases/tag/1.24.3  
 
