@@ -57,5 +57,5 @@ public:
 		return 0;
 	}
 };
-//CUSTOM_ENGINE(test_engine);
-FROGMAN_ENGINE();
+CUSTOM_ENGINE(test_engine);
+//FROGMAN_ENGINE();

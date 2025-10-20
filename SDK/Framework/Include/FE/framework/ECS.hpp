@@ -69,7 +69,7 @@ class ECS
 													FE::pair<FE::system, std::pmr::vector<std::size_t>> 
 													>;
 
-	std::pmr::memory_resource* m_memory_resource;
+	FE::scalable_pool<FE::align_16bytes> m_memory_resource;
 	FE::scalable_pool<FE::align_16bytes> m_archetype_pool;
 
 	archetype_table m_archetype_table;
@@ -81,7 +81,8 @@ class ECS
 	boost::fibers::recursive_mutex m_fiber_lock;
 
 public:
-	ECS(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p, std::pmr::memory_resource* resource_p) noexcept;
+	ECS() noexcept;
+	void initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept;
 	~ECS() noexcept = default;
 
 	ECS(const ECS&) noexcept = delete;
@@ -95,7 +96,7 @@ public:
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, std::forward<Arguments>(arguments_p)... );
-		l_alloc_result->m_name = std::pmr::string( m_memory_resource );
+		l_alloc_result->m_name = std::pmr::string( &m_memory_resource );
 		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
 
 		l_alloc_result->m_name = FE::framework::reflection::type_id<Archetype>().name();
@@ -259,8 +260,9 @@ public:
 			}
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result->m_metadata = FE::make_pmr_unique<FE::internal::ECS::component_metadata>( &m_memory_resource );
 			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
-			l_alloc_result->m_metadata->_memory_layout_version = "default"; // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
+			l_alloc_result->m_metadata->m_gc_metadata = FE::make_pmr_unique<FE::internal::ECS::gc_metadata>(&m_memory_resource);
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);
@@ -284,8 +286,9 @@ public:
 			l_probe_result->second._second.emplace_front();
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
+			l_alloc_result->m_metadata = FE::make_pmr_unique<FE::internal::ECS::component_metadata>( &m_memory_resource );
 			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
-			l_alloc_result->m_metadata->_memory_layout_version = "default"; // modify the value when the memory layout of the component changes; this ensures correct auto serialization.
+			l_alloc_result->m_metadata->m_gc_metadata = FE::make_pmr_unique<FE::internal::ECS::gc_metadata>(&m_memory_resource);
 			FE::component_view<Component> l_view = FE::downcast_owner_to_observer<Component>(l_alloc_result);
 
 			auto l_result = entt_p->m_component_view_table.emplace(FE::framework::reflection::type_id<Component>().hash_code(), l_view);

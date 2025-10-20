@@ -43,7 +43,7 @@ class component_base
 	friend class framework::processors;
 	friend class internal::ECS::gc_metadata_proxy_table;
 
-	framework::tls_unique_ptr<class internal::ECS::component_metadata> m_metadata;
+	FE::pmr_unique_ptr<class internal::ECS::component_metadata> m_metadata;
 
 public:
 	component_base() noexcept;
@@ -112,8 +112,9 @@ namespace internal::ECS
 	{
 		friend class gc_metadata_proxy_table;
 		friend class framework::processors;
+		friend class framework::ECS;
 
-		framework::tls_unique_ptr<class gc_metadata> m_gc_metadata;
+		FE::pmr_unique_ptr<class gc_metadata> m_gc_metadata;
 
 	public:
 		std::pmr::forward_list<FE::internal::ECS::components>::iterator _group;

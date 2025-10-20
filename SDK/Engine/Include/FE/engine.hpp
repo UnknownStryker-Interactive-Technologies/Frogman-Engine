@@ -38,7 +38,18 @@ class engine final : public FE::framework::framework_base
 
     std::unique_ptr<window_config> m_window_config;
     std::unique_ptr<FE::renderer> m_renderer;
-	engine_reference m_this_pointer;
+
+public:
+    class reference : public FE::component_base
+    {
+    public:
+        FE::engine* _engine;
+
+		reference(FE::engine* engine_p) noexcept
+            :   _engine(engine_p) {}
+    };
+private:
+    reference m_this_pointer;
 
 public:
     engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;

@@ -93,12 +93,6 @@ namespace internal::processors
 
 		std::size_t stack_size() const noexcept { return m_size; }
 	};
-
-	class reachability_analysis_arguments : FE::component_base
-	{
-	public:
-		class framework::processors* _host;
-	};
 }
 
 
@@ -161,8 +155,9 @@ class processors
 	var::float64 m_delta_time_milliseconds;
 
 	boost::fibers::fiber m_gc_fiber;
+	boost::fibers::fiber m_gc_reachability_analysis_fiber;
 	var::float64 m_gc_delta_time_milliseconds;
-	var::uint32 m_iteration_count;
+	var::uint64 m_gc_iter_per_frame;
 
 public:
 	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept;
@@ -182,8 +177,8 @@ public:
 private:
 	static void __game_main(processors* const host_p) noexcept;
 	static void __gc_main(processors* const host_p) noexcept;
-	static void __reachability_analysis(FE::component_base* const data_p) noexcept;
-	static void __reachability_analysis_recursive(FE::component_view<FE::component_base> parent_p) noexcept;
+	static void __reachability_analysis_main(processors* const host_p) noexcept;
+	void __reachability_analysis_recursive(FE::component_view<FE::component_base> root_p, FE::component_view<FE::component_base> child_p) noexcept;
 
 public:
 	processors(const processors&) = delete;

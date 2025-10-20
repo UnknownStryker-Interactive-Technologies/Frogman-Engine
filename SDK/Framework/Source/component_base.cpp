@@ -23,7 +23,7 @@ BEGIN_NAMESPACE(FE)
 
 
 component_base::component_base() noexcept
-	:	m_metadata( framework::make_unique<internal::ECS::component_metadata>() )
+	:	m_metadata()
 {
 }
 
@@ -40,7 +40,7 @@ internal::ECS::gc_metadata::gc_metadata() noexcept
 
 
 internal::ECS::component_metadata::component_metadata() noexcept
-	:	m_gc_metadata( framework::make_unique<gc_metadata>() ),
+	:	m_gc_metadata(),
 		_group(),
 		_index(0),
 		_typename(nullptr),

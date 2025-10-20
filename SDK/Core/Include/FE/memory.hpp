@@ -938,19 +938,21 @@ namespace internal
 	template<typename T>
 	class pmr_deleter
 	{
-		std::pmr::polymorphic_allocator<T> m_allocator;
+		std::pmr::memory_resource* m_allocator;
 	public:
-		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p) noexcept
-			:	m_allocator(memory_resource_p)
+		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p = nullptr) noexcept
+			: m_allocator( ((memory_resource_p == nullptr) ? std::pmr::get_default_resource() : memory_resource_p) )
 		{
 		}
 
 		_FE_FORCE_INLINE_ void operator()(T* ptr_p) noexcept
 		{
-			if (ptr_p != nullptr)
+			if (ptr_p == nullptr)
 			{
-				m_allocator.deallocate(ptr_p, 1);
+				return;
 			}
+
+			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
 		}
 	};
 }
@@ -959,7 +961,7 @@ template <typename T>
 using pmr_unique_ptr = std::unique_ptr<T, internal::pmr_deleter<T>>;
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_unique(std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
 {
 	T* l_object = (T*)std::pmr::polymorphic_allocator<T>(memory_resource_p).allocate_bytes(sizeof(T));
 	new (l_object) T( std::forward<Arguments&&>(arguments_p)... );

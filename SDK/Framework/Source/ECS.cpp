@@ -24,20 +24,27 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-ECS::ECS(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p, std::pmr::memory_resource* resource_p) noexcept
-	:	m_memory_resource(resource_p),
+ECS::ECS() noexcept
+	:	m_memory_resource(),
 		m_archetype_pool(),
 
 		m_archetype_table(),
 		m_component_table(),
 		m_system_table(),
-		m_archetype_default_entities(initializer_list_p),
-		m_buffer(resource_p),
+		m_archetype_default_entities(),
+		m_buffer(),
 		m_fiber_lock()
 {
 	m_archetype_table.reserve(10240);
 	m_component_table.reserve(10240);
 	m_system_table.reserve(10240);
+}
+
+
+void ECS::initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept
+{
+	m_archetype_default_entities = std::move(initializer_list_p);
+	m_buffer = std::pmr::string(&m_memory_resource);
 
 	for (auto& [archetype_identifier, archetype_default_entity] : m_archetype_default_entities)
 	{
@@ -68,7 +75,7 @@ ECS::ECS(framework::initializer_list& initializer_list_p, framework::system_tabl
 		FE::task_base* l_entity_creator = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(m_buffer);
 		FE_ASSERT(l_entity_creator != nullptr, "Assertion failed: the entity creator function is not found. The archetype type may not be registered.");
 
-		FE::arguments<FE::ASCII*, framework::initializer&> l_arguments{ "", archetype_default_entity};
+		FE::arguments<FE::ASCII*, framework::initializer&> l_arguments{ "", archetype_default_entity };
 		FE::entity<FE::archetype_base> l_entity;
 		(*l_entity_creator)(this, &l_entity, &l_arguments); // Boom! Magcic!
 		FE_ASSERT(l_entity.is_valid() == true, "Assertion failed: the entity could not be instanciated from the initializer list.");
@@ -86,7 +93,7 @@ ECS::ECS(framework::initializer_list& initializer_list_p, framework::system_tabl
 		FE::system l_system = l_task->try_get_as_system();
 		FE_ASSERT(l_system != nullptr, "Assertion failed: the system function signature is invalid. The system function must have the signature: void system_name(FE::component_base* const).");
 
-		FE::pair<FE::system, std::pmr::vector<std::size_t>> l_value{ l_system, std::pmr::vector<std::size_t>(resource_p) };
+		FE::pair<FE::system, std::pmr::vector<std::size_t>> l_value{ l_system, std::pmr::vector<std::size_t>(&m_memory_resource) };
 		l_value._second.reserve(32);
 		std::pmr::string::size_type l_name_pos = 0;
 		std::pmr::string::size_type l_next_name_pos = component_type_names.find(',', l_name_pos);
@@ -102,11 +109,10 @@ ECS::ECS(framework::initializer_list& initializer_list_p, framework::system_tabl
 			l_next_name_pos = component_type_names.find(',', l_name_pos);
 		}
 
-		_FE_MAYBE_UNUSED_ auto l_result = m_system_table.emplace( std::pmr::string(system_name, resource_p), l_value);
+		_FE_MAYBE_UNUSED_ auto l_result = m_system_table.emplace(std::pmr::string(system_name, &m_memory_resource), l_value);
 		FE_ASSERT(l_result.second == true, "Assertion failed: the system was already registered.");
 	}
 }
-
 
 void ECS::destruct_entity(FE::entity<archetype_base> entt_p) noexcept
 {
@@ -182,7 +188,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 		FE_ASSERT(l_component_serializer != nullptr, "Assertion failed: the component serializer function is not found. The component type may not be registered.");
 
 		FE::arguments<std::pmr::string&, FE::component_base*, FE::ASCII*> l_arguments;
-		_FE_MAYBE_UNUSED_ auto l_result = l_serialized_components.emplace( std::pmr::string(component->get_typename(), m_memory_resource), std::pmr::string(m_memory_resource) );
+		_FE_MAYBE_UNUSED_ auto l_result = l_serialized_components.emplace( std::pmr::string(component->get_typename(), &m_memory_resource), std::pmr::string(&m_memory_resource) );
 		FE_ASSERT(l_result.second == true, "Assertion failed: the component type was already serialized. This should never happen.");
 		l_arguments._first = l_serialized_components[component->get_typename()];
 		l_arguments._second = component.operator->();

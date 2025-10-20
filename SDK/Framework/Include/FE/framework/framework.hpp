@@ -148,7 +148,7 @@ template<typename T>
 using tls_unique_ptr = std::unique_ptr<T, tls_deleter<T>>;
 
 template<typename T, typename... Arguments>
-tls_unique_ptr<T> make_unique(Arguments&&... arguments_p) noexcept
+tls_unique_ptr<T> make_tls_unique(Arguments&&... arguments_p) noexcept
 {
 	return tls_unique_ptr<T>{ new( framework::framework_base::get_framework().get_memory_resource()->allocate( sizeof(T) ) ) T( std::forward<Arguments&&>(arguments_p)... ) };
 }

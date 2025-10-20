@@ -210,8 +210,9 @@ processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint3
 		m_delta_time_milliseconds(0.0),
 
 		m_gc_fiber(),
+		m_gc_reachability_analysis_fiber(),
 		m_gc_delta_time_milliseconds(0.0),
-		m_iteration_count(gc_batch_count_p)
+		m_gc_iter_per_frame(gc_batch_count_p)
 
 {
 	FE_ASSERT(concurrency_p >= 6, "Assertion failure: the software thread count must be greater than or equal to 6.");
@@ -307,6 +308,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
 	m_game_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processors::__game_main, this);
 	m_gc_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processors::__gc_main, this);
+	m_gc_reachability_analysis_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processors::__reachability_analysis_main, this);
 }
 
 void processors::push_task(framework::task task_p) noexcept
@@ -332,7 +334,7 @@ void processors::__game_main(processors* const host_p) noexcept
 		{
 			FE_ASSERT(system_and_components._first != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 			
-			for(std::pmr::forward_list<FE::internal::ECS::components>* const component_list : system_and_components._second)
+			for (std::pmr::forward_list<FE::internal::ECS::components>* const component_list : system_and_components._second)
 			{
 				for (FE::internal::ECS::components& components : *component_list)
 				{
@@ -359,134 +361,165 @@ void processors::__gc_main(processors* const host_p) noexcept
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 	FE::clock l_delta_clock;
 
-	framework::task l_reachability_analysis_task;
-	l_reachability_analysis_task._priority = TaskType::_Urgent;
-	l_reachability_analysis_task._system = &processors::__reachability_analysis;
-	l_reachability_analysis_task._component = (FE::component_base*)framework::framework_base::get_framework().get_memory_resource()->allocate(sizeof(internal::processors::reachability_analysis_arguments));
-	new(l_reachability_analysis_task._component) internal::processors::reachability_analysis_arguments();
-	host_p->push_task(l_reachability_analysis_task); // kickstart the reachability analysis task
-
 	while (host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
 		l_delta_clock.start_clock();
-		var::uint32 l_iteration_count = 0;
-
-		for (auto& [identifier, archetype] : host_p->m_ecs.m_archetype_table)
 		{
-			FE_ASSERT(archetype != nullptr);
-			if (archetype.observer_count() == 0)
+			var::uint64 l_batch_count = 0;
+			var::uint64 l_current_idx = 0;
+			std::lock_guard<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
+			for (auto iterator = host_p->m_ecs.m_archetype_table.begin(); iterator != host_p->m_ecs.m_archetype_table.end(); ++iterator)
 			{
-				host_p->m_ecs.m_archetype_table.erase(identifier);
-			}
-			
-			++l_iteration_count;
-
-			if (l_iteration_count >= host_p->m_iteration_count)
-			{
-				goto Yield;
-			}
-		}
-
-		for (auto& [type_hash, components_list] : host_p->m_ecs.m_component_table)
-		{
-			for (FE::internal::ECS::components& components : components_list._second)
-			{
-				for (FE::component& component : components)
+				if (iterator->second == nullptr)
 				{
-					FE_ASSERT(component != nullptr, "Assertion failure: component pointers cannot be a nullptr.");
-					if (component.observer_count() == 0)
-					{
-						components.remove_component(component->m_metadata->_index);
-					}
-					else if (component->m_metadata->m_gc_metadata->_is_circular_reference.load(std::memory_order_acquire) == true)
-					{
-						components.remove_component(component->m_metadata->_index); // remove circular reference components
-					}
-
-					++l_iteration_count;
-
-					if (l_iteration_count >= host_p->m_iteration_count)
-					{
-						goto Yield;
-					}
+					continue; // skip expired entities
 				}
-			}
-		}
-	Yield:
-		l_delta_clock.end_clock();
-		host_p->m_gc_delta_time_milliseconds = l_delta_clock.get_delta_milliseconds();
-		boost::this_fiber::yield();
-	}
-}
 
-void processors::__reachability_analysis(FE::component_base* const data_p) noexcept
-{
-	FE_ASSERT(data_p != nullptr, "Assertion failure: data_p cannot be null.");
-	internal::processors::reachability_analysis_arguments* const l_args = FE::polymorphic_cast<internal::processors::reachability_analysis_arguments* const>(data_p);
-
-	while (l_args->_host->m_is_running.load(std::memory_order_acquire) == true)
-	{
-		for (auto& [type_hash, components_list] : l_args->_host->m_ecs.m_component_table)
-		{
-			for (FE::internal::ECS::components& components : components_list._second)
-			{
-				for (FE::component& component : components)
+				if (iterator->second.observer_count() == 0)
 				{
-					if (component == nullptr)
-					{
-						continue; // skip expired components
-					}
+					iterator = host_p->m_ecs.m_archetype_table.erase(iterator); // remove expired entities
+				}
 
-					if (component.observer_count() != 1) 
-					{
-						continue; // could not suspect a circular reference
-					}
-					__reachability_analysis_recursive(component); // examine the circular reference
+				++l_batch_count;
+				if (l_batch_count >= host_p->m_gc_iter_per_frame)
+				{
+					l_delta_clock.end_clock();
+					host_p->m_gc_delta_time_milliseconds = l_delta_clock.get_delta_milliseconds();
+
+					host_p->m_ecs.m_fiber_lock.unlock();
+					boost::this_fiber::yield();
+					host_p->m_ecs.m_fiber_lock.lock();
+
+					l_delta_clock.start_clock();
+					l_current_idx += l_batch_count;
+					l_batch_count = l_batch_count xor l_batch_count; // reset batch count to zero
+					iterator = std::next(host_p->m_ecs.m_archetype_table.begin(), l_current_idx); // refresh the iterator after yielding
 				}
 			}
 		}
 
 		boost::this_fiber::yield();
+
+		{
+			var::uint64 l_batch_count = 0;
+			var::uint64 l_current_idx = 0;
+			std::lock_guard<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
+			for (auto iterator = host_p->m_ecs.m_component_table.begin(); iterator != host_p->m_ecs.m_component_table.end(); ++iterator)
+			{
+				for (FE::internal::ECS::components& components : iterator->second._second)
+				{
+					for (FE::component& component : components)
+					{
+						FE_ASSERT(component != nullptr, "Assertion failure: component pointers cannot be a nullptr.");
+						if (component.observer_count() == 0)
+						{
+							components.remove_component(component->m_metadata->_index);
+						}
+						else if (component->m_metadata->m_gc_metadata->_is_circular_reference.load(std::memory_order_acquire) == true)
+						{
+							components.remove_component(component->m_metadata->_index); // remove circular-referenced components
+						}
+
+						++l_batch_count;
+						if (l_batch_count >= host_p->m_gc_iter_per_frame)
+						{
+							l_delta_clock.end_clock();
+							host_p->m_gc_delta_time_milliseconds = l_delta_clock.get_delta_milliseconds();
+
+							host_p->m_ecs.m_fiber_lock.unlock();
+							boost::this_fiber::yield();
+							host_p->m_ecs.m_fiber_lock.lock();
+
+							l_delta_clock.start_clock();
+							l_current_idx += l_batch_count;
+							l_batch_count = l_batch_count xor l_batch_count; // reset batch count to zero
+							iterator = std::next(host_p->m_ecs.m_component_table.begin(), l_current_idx); // refresh the iterator after yielding
+						}
+					}
+				}
+			}
+		}
 	}
-	framework::framework_base::get_framework().get_memory_resource()->deallocate(l_args, sizeof(internal::processors::reachability_analysis_arguments));
 }
 
-void processors::__reachability_analysis_recursive(FE::component_view<FE::component_base> parent_p) noexcept
+void processors::__reachability_analysis_main(processors* const host_p) noexcept
 {
-	FE_ASSERT(parent_p.is_valid () == true, "Assertion failure: parent_p cannot be null.");
-	FE_ASSERT(parent_p->m_metadata != nullptr, "Assertion failure: parent_p's metadata cannot be null.");
-	FE_ASSERT(parent_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: parent_p's gc_metadata cannot be null.");
+	FE_ASSERT(host_p != nullptr, "Assertion failure: data_p cannot be null.");
 
-	for (FE::component_view<FE::component_base>* subcomponent_view : parent_p->m_metadata->m_gc_metadata->_member_components)
+	while (host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
-		if (parent_p.observer_count() != 2)
 		{
-			continue; // could not suspect a circular reference
+			std::lock_guard<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
+			for (auto iterator = host_p->m_ecs.m_component_table.begin(); iterator != host_p->m_ecs.m_component_table.end(); ++iterator)
+			{
+				for (FE::internal::ECS::components& components : iterator->second._second)
+				{
+					for (FE::component& component : components)
+					{
+						FE_ASSERT(component != nullptr);
+						if (component.observer_count() != 1)
+						{
+							continue; // could not suspect a circular reference
+						}
+						host_p->__reachability_analysis_recursive(component, component); // examine the circular reference
+					}
+				}
+			}
 		}
+		boost::this_fiber::yield();
+	}
+}
 
-		if (parent_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
+void processors::__reachability_analysis_recursive(FE::component_view<FE::component_base> root_p, FE::component_view<FE::component_base> child_p) noexcept
+{
+	FE_ASSERT(root_p.is_valid () == true, "Assertion failure: root_p cannot be null.");
+	FE_ASSERT(root_p->m_metadata != nullptr, "Assertion failure: root_p's metadata cannot be null.");
+	FE_ASSERT(root_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: root_p's gc_metadata cannot be null.");
+
+	FE_ASSERT(child_p.is_valid() == true, "Assertion failure: child_p cannot be null.");
+	FE_ASSERT(child_p->m_metadata != nullptr, "Assertion failure: child_p's metadata cannot be null.");
+	FE_ASSERT(child_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: child_p's gc_metadata cannot be null.");
+
+	static var::uint64 s_recursion_depth = 0;
+	static var::boolean s_should_exit = false;
+
+	if (s_should_exit == true)
+	{
+		--s_recursion_depth;
+		if (s_recursion_depth == 0)
 		{
-			parent_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+			s_should_exit = false;
+		}
+		return;
+	}
+	if (s_recursion_depth >= m_gc_iter_per_frame)
+	{
+		s_should_exit = true;
+		return;
+	}
+	++s_recursion_depth;
+
+
+	for (FE::component_view<FE::component_base>* subcomponent_view : child_p->m_metadata->m_gc_metadata->_member_components)
+	{
+		if (root_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
+		{
+			root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
 			return; // circular reference detected
 		}
-		__reachability_analysis_recursive(*subcomponent_view);
+		__reachability_analysis_recursive(root_p , *subcomponent_view);
 	}
 
-	for (FE::entity<FE::archetype_base>* subentity_view : parent_p->m_metadata->m_gc_metadata->_member_entities)
+	for (FE::entity<FE::archetype_base>* subentity_view : child_p->m_metadata->m_gc_metadata->_member_entities)
 	{
-		if (parent_p.observer_count() != 2)
+		for (auto iterator = (*subentity_view)->m_component_view_table.begin(); iterator != (*subentity_view)->m_component_view_table.end(); ++iterator)
 		{
-			continue; // could not suspect a circular reference
-		}
-
-		for (auto& [type_hash, component_view] : (*subentity_view)->m_component_view_table)
-		{
-			if (parent_p.operator->() == component_view.operator->()) // examine the circular reference
+			if (root_p.operator->() == iterator->second.operator->()) // examine the circular reference
 			{
-				parent_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+				root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
 				return; // circular reference detected
 			}
-			__reachability_analysis_recursive(component_view);
+			__reachability_analysis_recursive(root_p, iterator->second);
 		}
 	}
 }

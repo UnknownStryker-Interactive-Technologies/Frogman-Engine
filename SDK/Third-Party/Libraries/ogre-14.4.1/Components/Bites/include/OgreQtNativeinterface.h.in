@@ -1,2 +1,0 @@
-#pragma once
-#include <@QT_VERSION@/QtGui/qpa/qplatformnativeinterface.h>

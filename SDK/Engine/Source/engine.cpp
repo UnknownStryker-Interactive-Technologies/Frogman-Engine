@@ -11,12 +11,6 @@
 
 void nullsys(FE::component_base*) noexcept {}
 
-class engine_reference : public FE::component_base
-{
-public:
-	FE::engine* _engine;
-};
-
 
 
 
@@ -41,10 +35,10 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	(argc_p);
 	(argv_p);
 	__load_reflection_data();
-	m_game_memory = std::make_unique<FE::memory_resource>();
 
 	// Read the .froggy file and deserialize the m_entity_list and the m_system_list.
-	m_ecs = std::make_unique<framework::ECS>(m_entity_list, m_system_list, m_game_memory.get());
+	m_ecs = std::make_unique<framework::ECS>();
+	m_ecs->initialize(m_entity_list, m_system_list);
 
 	// Read the .froggy file and update the m_fiber_stack_size and m_gc_batch_count if specified in the file.
 	m_processors = std::make_unique<framework::processors>(*m_ecs, m_program_options.get_max_concurrency(), m_gc_batch_count, m_fiber_stack_size);
@@ -78,7 +72,7 @@ FE::int32 FE::engine::shutdown()
 
 void FE::engine::__renderer_main(FE::component_base* engine_reference_p) noexcept
 {
-	engine_reference* const l_engine_reference = FE::polymorphic_cast<engine_reference* const>(engine_reference_p);
+	FE::engine::reference* const l_engine_reference = FE::polymorphic_cast<FE::engine::reference* const>(engine_reference_p);
 	
 	while (l_engine_reference->_engine->m_processors->is_running() == true)
 	{
