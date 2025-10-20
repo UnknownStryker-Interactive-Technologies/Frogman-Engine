@@ -37,10 +37,12 @@ limitations under the License.
 #include <FE/farray.hxx>
 #include <FE/hash.hpp>
 #include <forward_list>
-#include <robin_hood.h>
+#include <unordered_map>
 #include <vector>
 
 #include <boost/fiber/recursive_mutex.hpp>
+
+#include <robin_hood.h>
 
 
 
@@ -59,7 +61,7 @@ class ECS
 {
 	friend class processors;
 
-	using archetype_table = robin_hood::unordered_map<std::pmr::string, archetype, FE::hash<std::pmr::string>>;
+	using archetype_table = std::pmr::unordered_map<std::pmr::string, FE::archetype, FE::hash<std::pmr::string>>;
 	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
 														FE::pair<	FE::scalable_pool<FE::align_16bytes>,
 																	std::pmr::forward_list<FE::internal::ECS::components>

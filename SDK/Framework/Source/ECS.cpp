@@ -35,14 +35,16 @@ ECS::ECS() noexcept
 		m_buffer(),
 		m_fiber_lock()
 {
-	m_archetype_table.reserve(10240);
-	m_component_table.reserve(10240);
-	m_system_table.reserve(10240);
 }
 
 
 void ECS::initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept
 {
+	m_archetype_table = archetype_table(&m_memory_resource);
+	m_archetype_table.reserve(10240);
+	m_component_table.reserve(10240);
+	m_system_table.reserve(10240);
+
 	m_archetype_default_entities = std::move(initializer_list_p);
 	m_buffer = std::pmr::string(&m_memory_resource);
 
