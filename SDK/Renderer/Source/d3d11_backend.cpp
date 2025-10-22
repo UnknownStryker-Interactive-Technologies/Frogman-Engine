@@ -44,7 +44,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 		m_present_params(),
 		m_clear_color{ 0.0f, 0.0f, 0.0f, 1.0f }
 {
-	UINT l_create_device_flags = 0/*D3D11_CREATE_DEVICE_SINGLETHREADED*/;
+	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
 #if defined(_RELEASE_) || defined(_MINSIZEREL_)

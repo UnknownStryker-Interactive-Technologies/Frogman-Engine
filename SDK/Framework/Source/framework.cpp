@@ -226,12 +226,3 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 	return l_exit_code;
 }
-
-
-
-
-extern "C"
-{
-	__declspec(selectany) unsigned long NvOptimusEnablement = 0x00000001;
-	__declspec(selectany) int AmdPowerXpressRequestHighPerformance = 0x00000001;
-}

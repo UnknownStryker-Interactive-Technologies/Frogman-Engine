@@ -65,8 +65,6 @@ FE::int32 FE::engine::run()
 FE::int32 FE::engine::shutdown()
 {
 	m_processors->join();
-	m_processors.reset();
-	m_ecs.reset();
 	return 0;
 }
 

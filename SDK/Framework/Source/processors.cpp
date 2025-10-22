@@ -23,6 +23,7 @@ task_queue::task_queue(std::pmr::memory_resource* const memory_resource_p) noexc
 {
 }
 
+
 void task_queue::push(framework::task task_p) noexcept
 {
 	switch (task_p._priority)
@@ -65,6 +66,7 @@ internal::processors::fiber_stack_allocator::fiber_stack_allocator(const std::si
 	: m_size(size)
 {
 }
+
 
 boost::context::stack_context internal::processors::fiber_stack_allocator::allocate() noexcept
 {
@@ -120,9 +122,17 @@ void processor::fork(processors& host_p, FE::size fiber_stack_size_p) noexcept
 		{
 			boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
 
-			for (var::int32 i = 0; i < fibers_per_thread; ++i)
+			for (var::uint32 i = 0; i < fibers_per_thread; ++i)
 			{
 				m_fibers[i] = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processor::__fiber_main, this, i);
+			}
+
+			for (boost::fibers::fiber& fiber : m_fibers)
+			{
+				if (fiber.joinable())
+				{
+					fiber.join();
+				}
 			}
 		}
 	);
@@ -134,13 +144,6 @@ void processor::join() noexcept
 	{
 		m_is_running.store(false, std::memory_order_release);
 
-		for (boost::fibers::fiber& fiber : m_fibers)
-		{
-			if (fiber.joinable())
-			{
-				fiber.join();
-			}
-		}
 		m_processor.join();
 	}
 }
@@ -163,7 +166,7 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 	{
 		if (host_p->m_queue.try_pop(task) == false) // no tasks in the queue
 		{
-			for (var::int32 i = 0; i < host_p->m_host->m_fiber_host_count; ++i) // steal other processor's task
+			for (var::uint32 i = 0; i < host_p->m_host->m_fiber_host_count; ++i) // steal other processor's task
 			{
 				if (host_p->m_host->m_processors[i].m_queue.try_pop(task) == false )
 				{
@@ -213,6 +216,11 @@ processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint3
 	m_game_systems.reserve(1024); // Preallocate some space to avoid frequent reallocations.
 }
 
+processors::~processors() noexcept
+{
+	join();
+}
+
 
 void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_p,
 						FE::system physics_p, FE::component_base* physics_args_p,
@@ -234,10 +242,17 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 
 	m_is_running.store(true, std::memory_order_release);
 
-	m_renderer_thread = std::thread(renderer_p, renderer_args_p);
-	m_physics_thread = std::thread(physics_p, physics_args_p);
 	m_audio_thread = std::thread(audio_p, audio_args_p);
+	m_audio_thread.detach();
+
+	m_renderer_thread = std::thread(renderer_p, renderer_args_p);
+	m_renderer_thread.detach();
+
+	m_physics_thread = std::thread(physics_p, physics_args_p);
+	m_physics_thread.detach();
+
 	m_networking_thread = std::thread(networking_p, networking_args_p);
+	m_networking_thread.detach();
 
 	for (_FE_MAYBE_UNUSED_ auto& [system_name, system_and_target_component_type_hash_list] : m_ecs.m_system_table)
 	{
@@ -253,7 +268,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	}
 
 	m_processors = std::make_unique<processor[]>( m_fiber_host_count );
-	for (var::int32 i = 0 ; i < m_fiber_host_count; ++i)
+	for (var::uint32 i = 0 ; i < m_fiber_host_count; ++i)
 	{
 		m_processors[i].fork(*this, m_fiber_stack_allocator.stack_size());
 	}
@@ -285,19 +300,9 @@ void processors::join() noexcept
 		m_gc_fiber.join();
 	}
 
-	if (m_physics_thread.joinable())
+	if (m_gc_reachability_analysis_fiber.joinable())
 	{
-		m_physics_thread.join();
-	}
-
-	if (m_networking_thread.joinable())
-	{
-		m_networking_thread.join();
-	}
-
-	if (m_renderer_thread.joinable())
-	{
-		m_renderer_thread.join();
+		m_gc_reachability_analysis_fiber.join();
 	}
 
 	if (m_audio_thread.joinable())
@@ -305,12 +310,28 @@ void processors::join() noexcept
 		m_audio_thread.join();
 	}
 
+	if (m_physics_thread.joinable())
+	{
+		m_physics_thread.join();
+	}
+
+	if (m_renderer_thread.joinable())
+	{
+		m_renderer_thread.join();
+	}
+
+	if (m_networking_thread.joinable())
+	{
+		m_networking_thread.join();
+	}
+
 	if (m_processors != nullptr)
 	{
-		for (var::int32 i = 0; i < m_fiber_host_count; ++i)
+		for (var::uint32 i = 0; i < m_fiber_host_count; ++i)
 		{
 			m_processors[i].join();
 		}
+		m_processors.reset();
 	}
 }
 
