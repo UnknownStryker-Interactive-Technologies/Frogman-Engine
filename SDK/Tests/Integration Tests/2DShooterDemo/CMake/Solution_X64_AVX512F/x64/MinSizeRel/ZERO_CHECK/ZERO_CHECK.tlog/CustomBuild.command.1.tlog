@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\DOCUMENTS\GITHUB\FROGMAN-ENGINE\SDK\TESTS\INTEGRATION TESTS\2DSHOOTERDEMO\CMAKE\SOLUTION_X64_AVX512F\CMAKEFILES\453FC98A6CF4E853858C8B18434F8380\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake" "-BC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/2DShooterDemo.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

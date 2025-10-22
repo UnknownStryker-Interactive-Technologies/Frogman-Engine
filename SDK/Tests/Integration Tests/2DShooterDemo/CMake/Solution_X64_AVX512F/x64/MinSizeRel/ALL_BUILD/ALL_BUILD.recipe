@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\Solution_X64_AVX512F\x64\MinSizeRel\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\MinSizeRel\2DShooterDemo.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\Solution_X64_AVX512F\x64\MinSizeRel\Engine</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\Solution_X64_AVX512F\x64\MinSizeRel\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

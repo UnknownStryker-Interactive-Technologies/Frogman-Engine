@@ -25,6 +25,8 @@ limitations under the License.
 	#include <FE/vulkan_backend.hpp>
 #endif
 
+#include <FE/clock.hpp>
+
 
 
 
@@ -48,7 +50,7 @@ struct window_config
 	FE::int32 _icon_image_count = 0;
 	FE::int32 _monitor_index = 0;
     FE::boolean _should_enable_vsync = false;
-    FE::boolean _is_on_the_top = true;
+    FE::boolean _is_on_the_top = false;
 	FE::boolean _should_scale_content_to_monitor_dpi = true;
 	FE::boolean _has_border = true;
 	FE::uint8 _swap_chain_buffer_count = 3;
@@ -79,13 +81,21 @@ private:
 	var::int32 m_monitor_count;
 	const GLFWvidmode* m_video_mode;
 	window_config m_window_config;
-	FE::internal::renderer::backend m_backend; // renderer backend
+	std::unique_ptr<FE::internal::renderer::backend> m_backend; // renderer backend
+	FE::clock m_render_delta_milliseconds;
+	var::float64 m_detla_milliseconds;
 
 public:
     renderer(const window_config& window_config_p) noexcept;
 	~renderer() noexcept;
 
-	_FE_FORCE_INLINE_ void render_frame() noexcept { m_backend.render_frame(); }
+	_FE_FORCE_INLINE_ void render_frame() noexcept 
+	{ 
+		m_render_delta_milliseconds.start_clock();
+		m_backend->render_frame(); 
+		m_render_delta_milliseconds.end_clock();
+		m_detla_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
+	}
 
 	_FE_FORCE_INLINE_ FE::boolean should_close() const noexcept
 	{

@@ -17,9 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.h>
 #ifdef _FE_ON_WINDOWS_X86_64_
-#pragma comment(lib, "d3d11.lib")         // Direct3D 11 core
-#pragma comment(lib, "dxgi.lib")          // DXGI for swap chain and adapter enumeration
-#pragma comment(lib, "d3dcompiler.lib")   // Shader compilation
 #include <d3d11_4.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
@@ -41,7 +38,7 @@ class d3d11_backend
     wrl::ComPtr<ID3D11Device5> m_device;
     wrl::ComPtr<ID3D11DeviceContext4> m_context;
     wrl::ComPtr<IDXGISwapChain4> m_swapchain;
-    wrl::ComPtr<ID3D11Texture2D> m_back_buffer;
+    wrl::ComPtr<ID3D11Texture2D1> m_back_buffer;
     wrl::ComPtr<ID3D11RenderTargetView> m_render_target_view;
     wrl::ComPtr<IDXGIFactory7> m_factory;
 	wrl::ComPtr<IDXGIAdapter4> m_adapter;
@@ -51,6 +48,7 @@ class d3d11_backend
     wrl::ComPtr<ID3D11Debug> m_debug;
 #endif
     DXGI_PRESENT_PARAMETERS m_present_params;
+    FE::float32 m_clear_color[4];
 
 public:
     d3d11_backend(class FE::renderer* const frontend_p) noexcept;

@@ -29,7 +29,9 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		m_monitor_count(1),
 		m_video_mode(),
 		m_window_config(window_config_p),
-		m_backend(this)
+		m_backend(),
+		m_render_delta_milliseconds(),
+		m_detla_milliseconds(0.0)
 {
 	FE_EXIT_IF(glfwInit() == GLFW_FALSE, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window initialization failed.");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // We do not want to create an OpenGL context
@@ -98,6 +100,7 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	}
 
 	glfwMakeContextCurrent(m_window);
+	m_backend = std::make_unique<FE::internal::renderer::backend>(this);
 }
 
 renderer::~renderer() noexcept

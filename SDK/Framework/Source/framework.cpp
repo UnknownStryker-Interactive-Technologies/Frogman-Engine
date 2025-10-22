@@ -108,7 +108,6 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		m_method_reflection(81920, get_memory_resource()), 
 		m_property_reflection(81920, get_memory_resource()),
 		m_enum_reflection(81920),
-		m_game_memory(),
 		m_ecs(),
 		m_processors()
 {

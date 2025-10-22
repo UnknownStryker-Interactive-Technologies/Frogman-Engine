@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "2DShooterDemo.dir\\MinSizeRel\\generated.obj",
+            "outputs": [
+                "2DShooterDemo.dir\\MinSizeRel\\"
+            ],
+            "requires": []
+        }
+    ]
+}

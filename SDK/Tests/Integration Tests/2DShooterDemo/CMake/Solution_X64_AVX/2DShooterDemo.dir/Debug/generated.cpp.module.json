@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "2DShooterDemo.dir\\Debug\\generated.obj",
+            "outputs": [
+                "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\2DShooterDemo.dir\\Debug\\vc143.pdb",
+                "2DShooterDemo.dir\\Debug\\"
+            ],
+            "requires": []
+        }
+    ]
+}

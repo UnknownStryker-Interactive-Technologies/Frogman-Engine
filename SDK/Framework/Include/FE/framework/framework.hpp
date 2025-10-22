@@ -86,7 +86,6 @@ protected:
 	reflection::property_registry m_property_reflection;
 	reflection::enum_registry m_enum_reflection;
 
-	std::unique_ptr<class FE::memory_resource> m_game_memory;
 	std::unique_ptr<class framework::ECS> m_ecs;
 	std::unique_ptr<class framework::processors> m_processors;
 
@@ -105,7 +104,6 @@ public:
 	_FE_FORCE_INLINE_ reflection::property_registry& get_property_reflection() noexcept { return m_property_reflection; }
 	_FE_FORCE_INLINE_ reflection::enum_registry& get_enum_reflection() noexcept { return m_enum_reflection; }
 
-	_FE_FORCE_INLINE_ class FE::memory_resource* get_game_memory() noexcept { return m_game_memory.get(); }
 	_FE_FORCE_INLINE_ class framework::ECS& get_ecs() noexcept { return *m_ecs; }
 	_FE_FORCE_INLINE_ class framework::processors& get_processors() noexcept { return *m_processors; }
 

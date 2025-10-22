@@ -64,16 +64,15 @@ FE::int32 FE::engine::run()
 
 FE::int32 FE::engine::shutdown()
 {
+	m_processors->join();
 	m_processors.reset();
 	m_ecs.reset();
-	m_game_memory.reset();
 	return 0;
 }
 
 void FE::engine::__renderer_main(FE::component_base* engine_reference_p) noexcept
 {
 	FE::engine::reference* const l_engine_reference = FE::polymorphic_cast<FE::engine::reference* const>(engine_reference_p);
-	
 	while (l_engine_reference->_engine->m_processors->is_running() == true)
 	{
 		l_engine_reference->_engine->m_renderer->render_frame();

@@ -19,6 +19,8 @@ limitations under the License.
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
+#include <FE/type_traits.hxx>
+
 
 
 
@@ -39,60 +41,68 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 #ifdef _DEBUG_
 		m_debug(),
 #endif
-		m_present_params()
+		m_present_params(),
+		m_clear_color{ 0.0f, 0.0f, 0.0f, 1.0f }
 {
-	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+	UINT l_create_device_flags = 0/*D3D11_CREATE_DEVICE_SINGLETHREADED*/;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
-#ifndef _DEBUG_
+#if defined(_RELEASE_) || defined(_MINSIZEREL_)
 	l_create_device_flags |= D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
-#else
+#elif defined(_RELWITHDEBINFO_)
 	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
-	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
+#elif defined(_DEBUG_)
+	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-
+	HRESULT l_result = 0;
 #ifdef _DEBUG_
-	FE_EXIT_IF(	CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&m_factory)) != S_OK,
+	l_result = CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&m_factory));
+	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
-				"Failed to create DXGI factory.");
+				"Failed to create DXGI factory; the error code is ${%d@0}.", &l_result);
 #else
-	FE_EXIT_IF(	CreateDXGIFactory2(0, IID_PPV_ARGS(&m_factory)) != S_OK,
+	l_result = CreateDXGIFactory2(0, IID_PPV_ARGS(&m_factory));
+	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
-				"Failed to create DXGI factory.");
+				"Failed to create DXGI factory; the error code is ${%d@0}.", &l_result);
 #endif
 									
-
-	FE_EXIT_IF(	m_factory->EnumAdapterByGpuPreference(0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&m_adapter)) != S_OK, 
+	l_result = m_factory->EnumAdapterByGpuPreference(0, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&m_adapter));
+	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
-				"Failed to detect a GPU.");
+				"Failed to detect a GPU; the error code is ${%d@0}.", &l_result);
 
-
-	FE_EXIT_IF(	m_adapter->GetDesc3(&m_adapter_desc) != S_OK, 
+	l_result = m_adapter->GetDesc3(&m_adapter_desc);
+	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
-				"Failed to retrieve the GPU description");
+				"Failed to retrieve the GPU description; the error code is ${%d@0}.", &l_result);
 
 
 	wrl::ComPtr<ID3D11Device> l_device;
 	wrl::ComPtr<ID3D11DeviceContext> l_context;
-	constexpr D3D_FEATURE_LEVEL l_feature_level = D3D_FEATURE_LEVEL_11_1;
+	constexpr D3D_FEATURE_LEVEL l_feature_level[] = { D3D_FEATURE_LEVEL_11_1 };
 	_FE_MAYBE_UNUSED_ D3D_FEATURE_LEVEL l_actual_feature_level;
-	FE_EXIT_IF(FAILED(D3D11CreateDevice(m_adapter.Get(),
-										D3D_DRIVER_TYPE_UNKNOWN, 
-										nullptr,
-										l_create_device_flags,
-										&l_feature_level,
-										1,
-										D3D11_SDK_VERSION,
-										&l_device,
-										&l_actual_feature_level,
-										&l_context)),
+	l_result = D3D11CreateDevice(m_adapter.Get(),
+		D3D_DRIVER_TYPE_UNKNOWN,
+		nullptr,
+		l_create_device_flags,
+		l_feature_level,
+		sizeof(l_feature_level) / sizeof(D3D_FEATURE_LEVEL),
+		D3D11_SDK_VERSION,
+		&l_device,
+		&l_actual_feature_level,
+		&l_context);
+	FE_EXIT_IF(FAILED(l_result),
 		FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
-		"Failed to create D3D11 device.");
-	FE_ASSERT(l_actual_feature_level == D3D_FEATURE_LEVEL_11_1, "D3D_FEATURE_LEVEL_11_1 unsupported.");
-	FE_EXIT_IF(FAILED(l_device.As(&m_device)), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "D3D11.4 unsupported.");
-	FE_EXIT_IF(FAILED(l_context.As(&m_context)), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "D3D11.4 unsupported.");
+		"Failed to create D3D11 device; the error code is ${%d@0}.", &l_result);
+
+	l_result = l_device.As(&m_device);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "D3D11.4 unsupported; the error code is ${%d@0}.", &l_result);
+	
+	l_result = l_context.As(&m_context);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "D3D11.4 unsupported; the error code is ${%d@0}.", &l_result);
 	
 	
 	m_factory->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &m_should_allow_tearing, sizeof(m_should_allow_tearing));
@@ -111,10 +121,10 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	l_swapchain_desc.Format = (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM;
 	l_swapchain_desc.Stereo = m_frontend->m_window_config._is_virtual_reality_mode;
 	l_swapchain_desc.SampleDesc.Count = 1; // No multi-sampling
-	l_swapchain_desc.SampleDesc.Quality = 0; // multi-samplin quality level
+	l_swapchain_desc.SampleDesc.Quality = 0; // multi-sampling quality level
 	l_swapchain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	l_swapchain_desc.BufferCount = m_frontend->m_window_config._swap_chain_buffer_count; 
-	l_swapchain_desc.Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
+	l_swapchain_desc.Scaling = DXGI_SCALING_STRETCH;
 	l_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	l_swapchain_desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	l_swapchain_desc.Flags = (m_should_allow_tearing == TRUE) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
@@ -128,15 +138,22 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	l_fullscreen_desc.Windowed = !(m_frontend->m_window_config._is_fullscreen);
 
 	wrl::ComPtr<IDXGISwapChain1> l_swap_chain;
-	FE_EXIT_IF(FAILED(m_factory->CreateSwapChainForHwnd(m_device.Get(), l_window_handle, &l_swapchain_desc, &l_fullscreen_desc, nullptr, &l_swap_chain)), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create a swap chain.");
-	FE_EXIT_IF(FAILED(l_swap_chain.As(&m_swapchain)), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "D3D11.4 unsupported.");
-	FE_EXIT_IF(FAILED(m_swapchain->GetBuffer(0, IID_PPV_ARGS(&m_back_buffer))), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create the back buffer.");
+
+	l_result = m_factory->CreateSwapChainForHwnd(m_device.Get(), l_window_handle, &l_swapchain_desc, &l_fullscreen_desc, nullptr, &l_swap_chain);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create a swap chain; the error code is ${%d@0}.", &l_result);
+
+	l_result = l_swap_chain.As(&m_swapchain);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "D3D11.4 unsupported; the error code is ${%d@0}.", &l_result);
+
+	l_result = m_swapchain->GetBuffer(0, IID_PPV_ARGS(&m_back_buffer));
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create the back buffer; the error code is ${%d@0}.", &l_result);
 	
 	_FE_MAYBE_UNUSED_ D3D11_TEXTURE2D_DESC l_desc{};
 	m_back_buffer->GetDesc(&l_desc);
-	FE_ASSERT(l_desc.Format == (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format.");
+	FE_ASSERT(l_desc.Format == (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format; the error code is ${%d@0}.", &l_result);
 
-	FE_EXIT_IF(FAILED(m_device->CreateRenderTargetView(m_back_buffer.Get(), nullptr, &m_render_target_view)), FE::ErrorCode::_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure, "Fail to create a render target view.");
+	l_result = m_device->CreateRenderTargetView(m_back_buffer.Get(), nullptr, &m_render_target_view);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure, "Fail to create a render target view; the error code is ${%d@0}.", &l_result);
 	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), nullptr);
 }
 
@@ -187,8 +204,7 @@ void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 n
 
 void d3d11_backend::render_frame() noexcept
 {
-	FE::float32 l_clear_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	m_context->ClearRenderTargetView(m_render_target_view.Get(), l_clear_color);
+	m_context->ClearRenderTargetView(m_render_target_view.Get(), m_clear_color);
 
 	m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
 							((m_frontend->m_window_config._should_enable_vsync  == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,
