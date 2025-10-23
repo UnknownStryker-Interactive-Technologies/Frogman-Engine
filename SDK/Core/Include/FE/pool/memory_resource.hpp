@@ -50,7 +50,7 @@ namespace internal
 
 /*
 The FE::memory_resource is a class template provides a memory resource that utilizes a bunch of pool allocators for efficient memory management
-inheriting from std::pmr::memory_resource and FE::internal::allocator_base.
+inheriting from std::pmr::memory_resource.
 */
 class memory_resource : public std::pmr::memory_resource
 {
@@ -75,15 +75,14 @@ public:
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
 
+	memory_resource(const memory_resource&) = delete;
+	memory_resource& operator=(const memory_resource&) = delete;
+
 protected:
 	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
 	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
 
 	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
-
-private:
-	memory_resource(const memory_resource&) = delete;
-	memory_resource& operator=(const memory_resource&) = delete;
 };
 
 

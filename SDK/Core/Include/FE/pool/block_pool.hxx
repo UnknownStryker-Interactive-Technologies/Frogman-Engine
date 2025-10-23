@@ -38,7 +38,7 @@ namespace internal::pool
     {
     public:
         constexpr static FE::size fixed_block_size_in_bytes = Alignment::size;
-        constexpr static FE::size page_capacity_in_bytes = 16 * FE::one_MiB;//FE::system_large_page_size;
+        constexpr static FE::size page_capacity_in_bytes = 64 * FE::one_MiB;//;
         constexpr static FE::size possible_address_count = page_capacity_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
@@ -111,7 +111,7 @@ public:
 
     constexpr static FE::int32 page_capacity = chunk_type::page_capacity_in_bytes;
     constexpr static FE::int32 possible_address_count = chunk_type::possible_address_count;
-    constexpr static FE::int32 maximum_page_count = (4ull * (FE::uint64)FE::one_GiB) / page_capacity;
+    constexpr static FE::int32 maximum_page_count = (512ull * (FE::uint64)FE::one_MiB) / page_capacity;
     static_assert(maximum_page_count > 0, "Static assertion failed: maximum_page_count is 0.");
 
 private:

@@ -23,6 +23,12 @@ limitations under the License.
 #include <FE/framework/system.hpp>
 
 #include <boost/fiber/fiber.hpp> // boost::fibers::fiber
+#include <boost/fiber/future/future.hpp> // boost::fibers::future
+#include <boost/fiber/future/promise.hpp> // boost::fibers::promise
+#include <boost/fiber/recursive_mutex.hpp> // boost::fibers::recursive_mutex
+
+#include <FE/memory.hpp> // FE::pmr_unique_ptr
+#include <FE/pool/memory_resource.hpp> // FE::memory_resource
 
 #include <concurrent_queue.h>
 
@@ -34,18 +40,50 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-enum struct TaskType : var::uint64
+enum struct TaskType : var::uint32
 {
 	_Urgent = 0,
 	_Ordinary = 1,
 	_Trivial = 2
 };
 
-struct task
+class processor;
+class processors;
+
+class task
 {
+	friend class processors;
+
+public:
+	using notifier = boost::fibers::promise<void>;
+	using handle = boost::fibers::future<void>;
+
+private:
+	std::shared_ptr<notifier> m_notifier;
+
+public:
 	TaskType _priority;
 	FE::system _system;
 	FE::component_base* _component;
+
+public:
+	task() noexcept = default;
+	~task() noexcept = default;
+
+	task(const task& other_p) noexcept;
+	task& operator=(const task& other_p) noexcept;
+
+	task(task&& other_p) noexcept;
+	task& operator=(task&& other_p) noexcept;
+
+	_FE_FORCE_INLINE_ FE::boolean is_waitable() const noexcept { return (m_notifier != nullptr); }
+	_FE_FORCE_INLINE_ void notify_completion() noexcept
+	{
+		if (m_notifier != nullptr)
+		{
+			m_notifier->set_value();
+		}
+	}
 };
 
 class task_queue
@@ -68,7 +106,7 @@ public:
 	FE::boolean try_pop(framework::task& out_task_p) noexcept;
 };
 
-constexpr FE::uint32 fibers_per_thread = 4;
+constexpr FE::uint32 fibers_per_thread = 3;
 
 
 
@@ -113,7 +151,7 @@ public:
 
 	void fork(processors& host_p, FE::size fiber_stack_size_p) noexcept;
 	void join() noexcept;
-	void push_task(framework::task task_p) noexcept;
+	void schedule_task(const framework::task& task_p) noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_time_milliseconds[fiber_index_p]; }
@@ -141,7 +179,7 @@ class processors
 	FE::uint32 m_fiber_host_count;
 	std::atomic_bool m_is_running;
 	std::unique_ptr<processor[]> m_processors;
-
+	
 	std::thread m_renderer_thread;
 	std::thread m_physics_thread;
 	std::thread m_audio_thread;
@@ -165,7 +203,8 @@ public:
 				FE::system physics_p, FE::component_base* physics_args_p,
 				FE::system audio_p, FE::component_base* audio_args_p,
 				FE::system networking_p, FE::component_base* networking_args_p) noexcept;
-	void push_task(framework::task task_p) noexcept;
+	void schedule_task(const framework::task& task_p) noexcept;
+	typename task::handle schedule_waitable_task(framework::task& task_p) noexcept;
 	void join() noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }

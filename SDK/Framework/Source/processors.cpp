@@ -16,6 +16,50 @@ BEGIN_NAMESPACE(FE::framework)
 
 
 
+task::task(const task& other_p) noexcept
+	:	m_notifier(other_p.m_notifier),
+		_priority(other_p._priority),
+		_system(other_p._system),
+		_component(other_p._component)
+{
+}
+task& task::operator=(const task& other_p) noexcept
+{
+	m_notifier = other_p.m_notifier;
+	_priority = other_p._priority;
+	_system = other_p._system;
+	_component = other_p._component;
+	return *this;
+}
+
+task::task(task&& other_p) noexcept
+	:	m_notifier(std::move(other_p.m_notifier)),
+		_priority(other_p._priority),
+		_system(other_p._system),
+		_component(other_p._component)
+{
+	other_p._priority = TaskType::_Ordinary;
+	other_p._system = nullptr;
+	other_p._component = nullptr;
+}
+task& task::operator=(task&& other_p) noexcept
+{
+	m_notifier = std::move(other_p.m_notifier);
+
+	_priority = other_p._priority;
+	other_p._priority = TaskType::_Ordinary;
+
+	_system = other_p._system;
+	other_p._system = nullptr;
+
+	_component = other_p._component;
+	other_p._component = nullptr;
+	return *this;
+}
+
+
+
+
 task_queue::task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept
 	:	m_urgent_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
 		m_ordinary_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
@@ -148,7 +192,7 @@ void processor::join() noexcept
 	}
 }
 
-void processor::push_task(framework::task task_p) noexcept
+void processor::schedule_task(const framework::task& task_p) noexcept
 {
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 	m_queue.push(task_p);
@@ -160,7 +204,7 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 
 	FE::clock l_delta_clock;
-	typename task_queue::value_type task{TaskType::_Ordinary, nullptr, nullptr};
+	typename task_queue::value_type task;
 
 	while(host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
@@ -182,6 +226,12 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 		l_delta_clock.start_clock();
 		task._system(task._component);
 		l_delta_clock.end_clock();
+
+		if (task.is_waitable())
+		{
+			task.notify_completion();
+		}
+
 		host_p->m_delta_time_milliseconds[fiber_index_p] = l_delta_clock.get_delta_milliseconds();
 	}
 }
@@ -279,13 +329,35 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	m_gc_reachability_analysis_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processors::__reachability_analysis_main, this);
 }
 
-void processors::push_task(framework::task task_p) noexcept
+void processors::schedule_task(const framework::task& task_p) noexcept
 {
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
 	static std::atomic_uint64_t s_next_processor_index{ 0 };
-	m_processors[ s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count ].push_task(task_p);
+	m_processors[ s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count ].schedule_task(task_p);
+}
+
+typename task::handle processors::schedule_waitable_task(framework::task& task_p) noexcept
+{
+	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
+	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
+
+	static boost::fibers::mutex s_task_pool_lock;
+	{
+		static FE::memory_resource s_task_pool;  // It is a crime not to allocate futures on the pool.
+		std::lock_guard<boost::fibers::mutex> l_lock(s_task_pool_lock);
+		task_p.m_notifier = std::allocate_shared<task::notifier>(	FE::polymorphic_allocator<task::notifier>(&s_task_pool), 
+																	std::allocator_arg_t(), FE::polymorphic_allocator<void>(&s_task_pool));
+		/* I found that the boost::fibers::promise allocates boost::fibers::detail::shared_state on the heap using the std::allocator and manages the object with the boost's intrusive_ptr.
+		   There's no way to let boost::fibers::promise new and delete the boost::fibers::detail::shared_state<void> for boost::fibers::future on every schedule_waitable_task() call.
+		   I wish there is way to remove this absurd heap allocation, without modifying the boost code; I will definitely rewrite some of the STL and boost TL for the Frogman Engine if I get to have spare time to do so; if you are interested in the template library development project, please checkout the XTL repository in the GitHub: https://github.com/UnknownStryker-Interactive-Technology/XTL. Although the repository is empty now.
+		   The FE::memory_resource reduces the allocate/deallocate overhead since it takes 0(1) time to allocate/deallocate objects that are smaller than 128 bytes.
+		*/
+	}
+	static std::atomic_uint64_t s_next_processor_index{ 0 };
+	m_processors[s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count].schedule_task(task_p);
+	return task_p.m_notifier->get_future();
 }
 
 void processors::join() noexcept

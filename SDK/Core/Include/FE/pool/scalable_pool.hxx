@@ -79,7 +79,7 @@ namespace internal::pool
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
     public:
-        constexpr static FE::int32 page_capacity_in_bytes = 128 * FE::one_MiB;
+        constexpr static FE::int32 page_capacity_in_bytes = 64 * FE::one_MiB;
         constexpr static FE::int32 possible_address_count = (page_capacity_in_bytes / Alignment::size);
         constexpr static FE::int32 free_list_capacity = possible_address_count;
 		static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
