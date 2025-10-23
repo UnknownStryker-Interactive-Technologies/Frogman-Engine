@@ -22,17 +22,19 @@ limitations under the License.
 #include <FE/framework/component_base.hpp>
 #include <FE/framework/system.hpp>
 
+#include <concurrent_queue.h>
+
 #include <boost/fiber/fiber.hpp> // boost::fibers::fiber
 #include <boost/fiber/future/future.hpp> // boost::fibers::future
 #include <boost/fiber/future/promise.hpp> // boost::fibers::promise
 #include <boost/fiber/recursive_mutex.hpp> // boost::fibers::recursive_mutex
 
+#include <boost/thread/thread.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+
 #include <FE/memory.hpp> // FE::pmr_unique_ptr
 #include <FE/pool/memory_resource.hpp> // FE::memory_resource
-
-#include <concurrent_queue.h>
-
-#include <thread> // std::thread
 
 
 
@@ -107,6 +109,7 @@ public:
 };
 
 constexpr FE::uint32 fibers_per_thread = 3;
+constexpr FE::uint32 bitflag_fibers_host_sleep = 0b111; // since the fibers_per_thread is 3, the bitwidth is 3.
 
 
 
@@ -137,13 +140,16 @@ namespace internal::processors
 class processor
 {
 	class processors* m_host;
-	std::thread m_processor;
-	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
+	boost::thread m_processor;
 	std::atomic_bool m_is_running;
+	std::bitset<fibers_per_thread> m_yield_status;
+	task_queue m_queue;
+	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
 
 	boost::fibers::fiber m_fibers[fibers_per_thread];
-	task_queue m_queue;
 	var::float64 m_delta_time_milliseconds[fibers_per_thread];
+
+	boost::condition_variable m_condition_variable;
 
 public:
 	processor() noexcept;
@@ -155,6 +161,7 @@ public:
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_time_milliseconds[fiber_index_p]; }
+	_FE_FORCE_INLINE_ void wake() noexcept { m_condition_variable.notify_one(); }
 
 private:
 	static void __fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept;
@@ -179,14 +186,8 @@ class processors
 	FE::uint32 m_fiber_host_count;
 	std::atomic_bool m_is_running;
 	std::unique_ptr<processor[]> m_processors;
-	
-	std::thread m_renderer_thread;
-	std::thread m_physics_thread;
-	std::thread m_audio_thread;
-	std::thread m_networking_thread;
-
-	game_system_exec_table m_game_systems; // the element index is the system execution order
 	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
+
 	boost::fibers::fiber m_game_fiber;
 	var::float64 m_delta_time_milliseconds;
 
@@ -194,6 +195,13 @@ class processors
 	boost::fibers::fiber m_gc_reachability_analysis_fiber;
 	var::float64 m_gc_delta_time_milliseconds;
 	var::uint64 m_gc_iter_per_frame;
+
+	game_system_exec_table m_game_systems; // the element index is the system execution order
+
+	boost::thread m_renderer_thread;
+	boost::thread m_physics_thread;
+	boost::thread m_audio_thread;
+	boost::thread m_networking_thread;
 
 public:
 	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept;

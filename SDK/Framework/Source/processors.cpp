@@ -137,12 +137,14 @@ void internal::processors::fiber_stack_allocator::deallocate(boost::context::sta
 processor::processor() noexcept
 	:	m_host(),
 		m_processor(),
-		m_fiber_stack_allocator(0),
 		m_is_running(false),
+		m_yield_status(0),
+		m_queue(framework_base::get_framework().get_memory_resource()),
+		m_fiber_stack_allocator(0),
 
 		m_fibers{},
-		m_queue(framework_base::get_framework().get_memory_resource()),
-		m_delta_time_milliseconds{ 0.0 }
+		m_delta_time_milliseconds( 0.0 ),
+		m_condition_variable()
 {
 }
 
@@ -160,7 +162,7 @@ void processor::fork(processors& host_p, FE::size fiber_stack_size_p) noexcept
 	FE_ASSERT(m_processor.joinable() == false, "Assertion failure: the processor is already running.");
 	m_is_running.store(true, std::memory_order_release);
 
-	m_processor = std::thread
+	m_processor = boost::thread
 	(
 		[this]()
 		{
@@ -203,33 +205,32 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 {
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 
+	boost::mutex l_mutex;
 	FE::clock l_delta_clock;
-	typename task_queue::value_type task;
+
+	typename task_queue::value_type l_task;
 
 	while(host_p->m_is_running.load(std::memory_order_acquire) == true)
 	{
-		if (host_p->m_queue.try_pop(task) == false) // no tasks in the queue
+		if (host_p->m_queue.try_pop(l_task) == false) // no tasks in the queue
 		{
-			for (var::uint32 i = 0; i < host_p->m_host->m_fiber_host_count; ++i) // steal other processor's task
-			{
-				if (host_p->m_host->m_processors[i].m_queue.try_pop(task) == false )
-				{
-					continue;
-				}
-				goto GotTask; // got a task from another processor
-			}
+			host_p->m_yield_status[fiber_index_p] = 1; // mark this fiber as yielded
 			boost::this_fiber::yield(); // yield if no tasks are available
+			if (host_p->m_yield_status.to_ulong() == bitflag_fibers_host_sleep) // all fibers have yielded
+			{
+				boost::unique_lock<boost::mutex> l_unique_lock(l_mutex);
+				host_p->m_condition_variable.wait(l_unique_lock); // wait until notified of new tasks
+			}
 			continue;
 		}
-	GotTask: // using the "goto" statement to break the nested scopes
-		FE_ASSERT(task._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
+		FE_ASSERT(l_task._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 		l_delta_clock.start_clock();
-		task._system(task._component);
+		l_task._system(l_task._component);
 		l_delta_clock.end_clock();
 
-		if (task.is_waitable())
+		if (l_task.is_waitable())
 		{
-			task.notify_completion();
+			l_task.notify_completion();
 		}
 
 		host_p->m_delta_time_milliseconds[fiber_index_p] = l_delta_clock.get_delta_milliseconds();
@@ -245,22 +246,22 @@ processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint3
 		m_fiber_host_count(m_concurrency - 4),
 		m_is_running(false),
 		m_processors(),
-
-		m_renderer_thread(),
-		m_physics_thread(),
-		m_audio_thread(),
-		m_networking_thread(),
-
-		m_game_systems(framework_base::get_framework().get_memory_resource()),
 		m_fiber_stack_allocator(fiber_stack_size_p),
+
 		m_game_fiber(),
 		m_delta_time_milliseconds(0.0),
 
 		m_gc_fiber(),
 		m_gc_reachability_analysis_fiber(),
 		m_gc_delta_time_milliseconds(0.0),
-		m_gc_iter_per_frame(gc_batch_count_p)
+		m_gc_iter_per_frame(gc_batch_count_p),
 
+		m_game_systems(framework_base::get_framework().get_memory_resource()),
+
+		m_renderer_thread(),
+		m_physics_thread(),
+		m_audio_thread(),
+		m_networking_thread()
 {
 	FE_ASSERT(concurrency_p >= 6, "Assertion failure: the software thread count must be greater than or equal to 6.");
 	m_game_systems.reserve(1024); // Preallocate some space to avoid frequent reallocations.
@@ -292,17 +293,53 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 
 	m_is_running.store(true, std::memory_order_release);
 
-	m_audio_thread = std::thread(audio_p, audio_args_p);
-	m_audio_thread.detach();
+	m_audio_thread = boost::thread
+	(
+		[=]() 
+		{ 
+			boost::fibers::fiber l_audio_fiber(audio_p, audio_args_p);
+			if (l_audio_fiber.joinable())
+			{
+				l_audio_fiber.join();
+			}
+		}
+	);
 
-	m_renderer_thread = std::thread(renderer_p, renderer_args_p);
-	m_renderer_thread.detach();
+	m_renderer_thread = boost::thread
+	(
+		[=]()
+		{
+			boost::fibers::fiber l_renderer_fiber(renderer_p, renderer_args_p);
+			if (l_renderer_fiber.joinable())
+			{
+				l_renderer_fiber.join();
+			}
+		}
+	);
 
-	m_physics_thread = std::thread(physics_p, physics_args_p);
-	m_physics_thread.detach();
+	m_physics_thread = boost::thread
+	(
+		[=]()
+		{
+			boost::fibers::fiber l_physics_fiber(physics_p, physics_args_p);
+			if (l_physics_fiber.joinable())
+			{
+				l_physics_fiber.join();
+			}
+		}
+	);
 
-	m_networking_thread = std::thread(networking_p, networking_args_p);
-	m_networking_thread.detach();
+	m_networking_thread = boost::thread
+	(
+		[=]()
+		{
+			boost::fibers::fiber l_networking_fiber(networking_p, networking_args_p);
+			if (l_networking_fiber.joinable())
+			{
+				l_networking_fiber.join();
+			}
+		}
+	);
 
 	for (_FE_MAYBE_UNUSED_ auto& [system_name, system_and_target_component_type_hash_list] : m_ecs.m_system_table)
 	{
@@ -334,8 +371,10 @@ void processors::schedule_task(const framework::task& task_p) noexcept
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
-	static std::atomic_uint64_t s_next_processor_index{ 0 };
-	m_processors[ s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count ].schedule_task(task_p);
+	static std::atomic_uint32_t l_s_next_processor_index{ 0 };
+	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count;
+	m_processors[ l_target_processor_index ].schedule_task(task_p);
+	m_processors[l_target_processor_index].wake();
 }
 
 typename task::handle processors::schedule_waitable_task(framework::task& task_p) noexcept
@@ -343,20 +382,22 @@ typename task::handle processors::schedule_waitable_task(framework::task& task_p
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
-	static boost::fibers::mutex s_task_pool_lock;
+	static boost::fibers::mutex l_s_task_pool_lock;
 	{
-		static FE::memory_resource s_task_pool;  // It is a crime not to allocate futures on the pool.
-		std::lock_guard<boost::fibers::mutex> l_lock(s_task_pool_lock);
-		task_p.m_notifier = std::allocate_shared<task::notifier>(	FE::polymorphic_allocator<task::notifier>(&s_task_pool), 
-																	std::allocator_arg_t(), FE::polymorphic_allocator<void>(&s_task_pool));
+		static FE::memory_resource l_s_task_pool;  // It is a crime not to allocate futures on the pool.
+		std::lock_guard<boost::fibers::mutex> l_lock(l_s_task_pool_lock);
+		task_p.m_notifier = std::allocate_shared<task::notifier>(	FE::polymorphic_allocator<task::notifier>(&l_s_task_pool), 
+																	std::allocator_arg_t(), FE::polymorphic_allocator<void>(&l_s_task_pool));
 		/* I found that the boost::fibers::promise allocates boost::fibers::detail::shared_state on the heap using the std::allocator and manages the object with the boost's intrusive_ptr.
 		   There's no way to let boost::fibers::promise new and delete the boost::fibers::detail::shared_state<void> for boost::fibers::future on every schedule_waitable_task() call.
 		   I wish there is way to remove this absurd heap allocation, without modifying the boost code; I will definitely rewrite some of the STL and boost TL for the Frogman Engine if I get to have spare time to do so; if you are interested in the template library development project, please checkout the XTL repository in the GitHub: https://github.com/UnknownStryker-Interactive-Technology/XTL. Although the repository is empty now.
 		   The FE::memory_resource reduces the allocate/deallocate overhead since it takes 0(1) time to allocate/deallocate objects that are smaller than 128 bytes.
 		*/
 	}
-	static std::atomic_uint64_t s_next_processor_index{ 0 };
-	m_processors[s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count].schedule_task(task_p);
+	static std::atomic_uint32_t l_s_next_processor_index{ 0 };
+	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count;
+	m_processors[l_target_processor_index].schedule_task(task_p);
+	m_processors[l_target_processor_index].wake();
 	return task_p.m_notifier->get_future();
 }
 
@@ -567,24 +608,24 @@ void processors::__reachability_analysis_recursive(FE::component_view<FE::compon
 	FE_ASSERT(child_p->m_metadata != nullptr, "Assertion failure: child_p's metadata cannot be null.");
 	FE_ASSERT(child_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: child_p's gc_metadata cannot be null.");
 
-	static var::uint64 s_recursion_depth = 0;
-	static var::boolean s_should_exit = false;
+	static var::uint64 l_s_recursion_depth = 0;
+	static var::boolean l_s_should_exit = false;
 
-	if (s_should_exit == true)
+	if (l_s_should_exit == true)
 	{
-		--s_recursion_depth;
-		if (s_recursion_depth == 0)
+		--l_s_recursion_depth;
+		if (l_s_recursion_depth == 0)
 		{
-			s_should_exit = false;
+			l_s_should_exit = false;
 		}
 		return;
 	}
-	if (s_recursion_depth >= m_gc_iter_per_frame)
+	if (l_s_recursion_depth >= m_gc_iter_per_frame)
 	{
-		s_should_exit = true;
+		l_s_should_exit = true;
 		return;
 	}
-	++s_recursion_depth;
+	++l_s_recursion_depth;
 
 
 	for (FE::component_view<FE::component_base>* subcomponent_view : child_p->m_metadata->m_gc_metadata->_member_components)

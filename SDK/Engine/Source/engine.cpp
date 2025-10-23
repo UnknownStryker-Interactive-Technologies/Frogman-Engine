@@ -103,6 +103,9 @@ void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 b
 
 void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
 {
+#ifdef _DEBUG_
+	std::cout << "x: " << x_p << "; " << "y: " << y_p << ".\n";
+#endif
 	(window_p);
 	(x_p);
 	(y_p);

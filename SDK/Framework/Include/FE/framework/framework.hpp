@@ -72,9 +72,6 @@ along with reflection capabilities for methods, properties, and enums.
 class framework_base
 {
 	friend int ::main(FE::int32 argc_p, FE::ASCII** argv_p);
-
-	static RestartOrNot s_restart_or_not;
-	static framework_base* s_framework;
 	
 protected:
 	program_options m_program_options;
@@ -94,18 +91,20 @@ public:
 	virtual ~framework_base() noexcept = default;
 
 	static void request_restart() noexcept;
-	_FE_FORCE_INLINE_ static framework_base& get_framework() noexcept { return *s_framework; }
+	static void cancel_restart() noexcept;
 
-	_FE_FORCE_INLINE_ const program_options& get_program_options() const noexcept { return m_program_options; }
-	_FE_FORCE_INLINE_ const std::locale& get_current_system_locale() const noexcept { return m_current_system_locale; }
+	static framework_base& get_framework() noexcept;
+
+	const program_options& get_program_options() const noexcept;
+	const std::locale& get_current_system_locale() const noexcept;
 
 	std::pmr::memory_resource* get_memory_resource() noexcept;
-	_FE_FORCE_INLINE_ reflection::method_registry& get_method_reflection() noexcept { return m_method_reflection; }
-	_FE_FORCE_INLINE_ reflection::property_registry& get_property_reflection() noexcept { return m_property_reflection; }
-	_FE_FORCE_INLINE_ reflection::enum_registry& get_enum_reflection() noexcept { return m_enum_reflection; }
+	reflection::method_registry& get_method_reflection() noexcept;
+	reflection::property_registry& get_property_reflection() noexcept;
+	reflection::enum_registry& get_enum_reflection() noexcept;
 
-	_FE_FORCE_INLINE_ class framework::ECS& get_ecs() noexcept { return *m_ecs; }
-	_FE_FORCE_INLINE_ class framework::processors& get_processors() noexcept { return *m_processors; }
+	class framework::ECS& get_ecs() noexcept;
+	class framework::processors& get_processors() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) = 0;

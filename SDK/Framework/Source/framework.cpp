@@ -95,8 +95,8 @@ FE::ASCII* program_options::view_max_concurrency_option_title() const noexcept
 
 
 
-framework_base* framework_base::s_framework = nullptr;
-RestartOrNot framework_base::s_restart_or_not = RestartOrNot::_NoOperation;
+static framework_base* s_framework = nullptr;
+static RestartOrNot s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 
@@ -127,9 +127,54 @@ void framework_base::request_restart() noexcept
 	s_restart_or_not = RestartOrNot::_HasToRestart;
 }
 
+void framework_base::cancel_restart() noexcept
+{
+	s_restart_or_not = RestartOrNot::_NoOperation;
+}
+
+framework_base& framework_base::get_framework() noexcept
+{
+	return *s_framework;
+}
+
+const program_options& framework_base::get_program_options() const noexcept
+{
+	return m_program_options;
+}
+
+const std::locale& framework_base::get_current_system_locale() const noexcept
+{
+	return m_current_system_locale;
+}
+
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
 	return &(m_memory[get_current_thread_id()]);
+}
+
+reflection::method_registry& framework_base::get_method_reflection() noexcept
+{
+	return m_method_reflection;
+}
+
+reflection::property_registry& framework_base::get_property_reflection() noexcept
+{
+	return m_property_reflection;
+}
+
+reflection::enum_registry& framework_base::get_enum_reflection() noexcept
+{
+	return m_enum_reflection;
+}
+
+framework::ECS& framework_base::get_ecs() noexcept
+{
+	return *m_ecs;
+}
+
+framework::processors& framework_base::get_processors() noexcept
+{
+	return *m_processors;
 }
 
 
@@ -188,41 +233,41 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 	do
 	{
-		FE::framework::framework_base::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
+		FE::framework::s_restart_or_not = FE::framework::RestartOrNot::_NoOperation;
 
-		FE::framework::framework_base::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
-		FE_EXIT_IF(FE::framework::framework_base::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "\nAn error from FE.Framework: An app pointer is a nullptr.\n");
+		FE::framework::s_framework = FE::framework::framework_base::allocate_framework()(argc_p, argv_p);
+		FE_EXIT_IF(FE::framework::s_framework == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_NullPtr, "\nAn error from FE.Framework: An app pointer is a nullptr.\n");
 		
-		l_exit_code = FE::framework::framework_base::s_framework->launch(argc_p, argv_p);
+		l_exit_code = FE::framework::s_framework->launch(argc_p, argv_p);
 
 		if (l_exit_code != 0)
 		{
 			std::cerr << "\nAn error from FE.Framework: failed to set up an app.\n";
-			delete FE::framework::framework_base::s_framework;
+			delete FE::framework::s_framework;
 			return l_exit_code;
 		}
 
-		l_exit_code = FE::framework::framework_base::s_framework->run();
+		l_exit_code = FE::framework::s_framework->run();
 
 		if (l_exit_code != 0)
 		{
 			std::cerr << "\nAn error from FE.Framework: there was an error during the runtime.\n";
-			delete FE::framework::framework_base::s_framework;
+			delete FE::framework::s_framework;
 			return l_exit_code;
 		}
 
-		l_exit_code = FE::framework::framework_base::s_framework->shutdown();
+		l_exit_code = FE::framework::s_framework->shutdown();
 
 		if (l_exit_code != 0)
 		{
 			std::cerr << "\nAn error from FE.Framework: unsuccessfully cleaned up an app.\n";
-			delete FE::framework::framework_base::s_framework;
+			delete FE::framework::s_framework;
 			return l_exit_code;
 		}
 
-		delete FE::framework::framework_base::s_framework;
+		delete FE::framework::s_framework;
 	}
-	while (FE::framework::framework_base::s_restart_or_not == FE::framework::RestartOrNot::_HasToRestart);
+	while (FE::framework::s_restart_or_not == FE::framework::RestartOrNot::_HasToRestart);
 
 	return l_exit_code;
 }
