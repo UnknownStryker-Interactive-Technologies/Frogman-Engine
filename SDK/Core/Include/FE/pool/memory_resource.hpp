@@ -45,6 +45,8 @@ namespace internal
 		_DZMMWordAllocator,
 		_ScalableAllocator
 	};
+
+	AllocatorType __select_allocator(std::size_t bytes_p) noexcept;
 }
 
 

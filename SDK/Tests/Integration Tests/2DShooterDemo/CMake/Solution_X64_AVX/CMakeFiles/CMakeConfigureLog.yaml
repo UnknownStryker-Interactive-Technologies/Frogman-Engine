@@ -75,7 +75,7 @@ events:
       The output was:
       0
       MSBuild version 17.14.23+b0019275e for .NET Framework
-      Build started 10/24/2025 11:53:01 AM.
+      Build started 10/24/2025 12:30:10 PM.
       
       Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -113,7 +113,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.72
+      Time Elapsed 00:00:00.74
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -834,8 +834,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-i7gb8q"
-      binary: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-i7gb8q"
+      source: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-ogi2a4"
+      binary: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-ogi2a4"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od"
@@ -845,42 +845,42 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-i7gb8q'
+        Change Dir: 'C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-ogi2a4'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_c8c2a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_90f38.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.14.23+b0019275e for .NET Framework
-        Build started 10/24/2025 11:53:02 AM.
+        Build started 10/24/2025 12:30:11 PM.
         
-        Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\cmTC_c8c2a.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\cmTC_90f38.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\".
-          Creating directory "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\".
+          Creating directory "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\".
+          Creating directory "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\unsuccessfulbuild".
+          Creating "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\unsuccessfulbuild".
         VcpkgTripletSelection:
           Using triplet "x64-windows" from "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\"
           Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_c8c2a.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\cmTC_c8c2a.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_90f38.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\cmTC_90f38.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35219 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_c8c2a.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\cmTC_c8c2a.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_90f38.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\cmTC_90f38.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\cmTC_c8c2a.exe" /INCREMENTAL /ILK:"cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.ilk" /NOLOGO /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-i7gb8q/Debug/cmTC_c8c2a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-i7gb8q/Debug/cmTC_c8c2a.lib" /MACHINE:X64 cmTC_c8c2a.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_c8c2a.vcxproj -> C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\cmTC_c8c2a.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\cmTC_90f38.exe" /INCREMENTAL /ILK:"cmTC_90f38.dir\\Debug\\cmTC_90f38.ilk" /NOLOGO /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-ogi2a4/Debug/cmTC_90f38.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX/CMakeFiles/CMakeScratch/TryCompile-ogi2a4/Debug/cmTC_90f38.lib" /MACHINE:X64 cmTC_90f38.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_90f38.vcxproj -> C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\cmTC_90f38.exe
         AppLocalFromInstalled:
-          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\cmTC_c8c2a.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\cmTC_c8c2a.write.1u.tlog" "cmTC_c8c2a.dir\\Debug\\vcpkg.applocal.log"
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\cmTC_90f38.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\cmTC_90f38.write.1u.tlog" "cmTC_90f38.dir\\Debug\\vcpkg.applocal.log"
           'pwsh.exe' is not recognized as an internal or external command,
           operable program or batch file.
-          The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\cmTC_c8c2a.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\cmTC_c8c2a.write.1u.tlog" "cmTC_c8c2a.dir\\Debug\\vcpkg.applocal.log"" exited with code 9009.
-          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\Debug\\cmTC_c8c2a.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\cmTC_c8c2a.write.1u.tlog" "cmTC_c8c2a.dir\\Debug\\vcpkg.applocal.log"
+          The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\cmTC_90f38.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\cmTC_90f38.write.1u.tlog" "cmTC_90f38.dir\\Debug\\vcpkg.applocal.log"" exited with code 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\Debug\\cmTC_90f38.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\cmTC_90f38.write.1u.tlog" "cmTC_90f38.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Deleting file "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\unsuccessfulbuild".
-          Touching "cmTC_c8c2a.dir\\Debug\\cmTC_c8c2a.tlog\\cmTC_c8c2a.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-i7gb8q\\cmTC_c8c2a.vcxproj" (default targets).
+          Deleting file "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\unsuccessfulbuild".
+          Touching "cmTC_90f38.dir\\Debug\\cmTC_90f38.tlog\\cmTC_90f38.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX\\CMakeFiles\\CMakeScratch\\TryCompile-ogi2a4\\cmTC_90f38.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)

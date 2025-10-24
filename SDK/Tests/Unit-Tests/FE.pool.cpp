@@ -18,6 +18,56 @@
 
 
 
+TEST(FE_Core_memory_resource, select_resource)
+{
+	for (int size = 1; size <= 128; ++size)
+	{
+		if (size <= FE::xmmword_size)
+		{
+			auto actual = FE::internal::__select_allocator(size);
+			if (FE::internal::AllocatorType::_XMMWordAllocator != actual)
+			{
+				EXPECT_TRUE(false);
+			}
+		}
+		else if (size <= FE::ymmword_size)
+		{
+			auto actual = FE::internal::__select_allocator(size);
+			if (FE::internal::AllocatorType::_YMMWordAllocator != actual)
+			{
+				EXPECT_TRUE(false);
+			}
+		}
+		else if (size <= FE::zmmword_size)
+		{
+			auto actual = FE::internal::__select_allocator(size);
+			if (FE::internal::AllocatorType::_ZMMWordAllocator != actual)
+			{
+				EXPECT_TRUE(false);
+			}
+		}
+		else if (size <= FE::dzmmword_size)
+		{
+			auto actual = FE::internal::__select_allocator(size);
+			if (FE::internal::AllocatorType::_DZMMWordAllocator != actual)
+			{
+				EXPECT_TRUE(false);
+			}
+		}
+		else
+		{
+			auto actual = FE::internal::__select_allocator(size);
+			if (FE::internal::AllocatorType::_ScalableAllocator != actual)
+			{
+				EXPECT_TRUE(false);
+			}
+		}
+	}
+}
+
+
+
+
 TEST(FE_Core_scalable_pool, __defragment)
 {
 	FE::scalable_pool<FE::SIMD_auto_alignment> l_pool;

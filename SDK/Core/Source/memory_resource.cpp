@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-_FE_FORCE_INLINE_ FE::internal::AllocatorType __select_allocator(std::size_t bytes_p) noexcept
+FE::internal::AllocatorType FE::internal::__select_allocator(std::size_t bytes_p) noexcept
 {
 	switch (bytes_p)
 	{
@@ -49,6 +49,12 @@ _FE_FORCE_INLINE_ FE::internal::AllocatorType __select_allocator(std::size_t byt
 			return FE::internal::AllocatorType::_ZMMWordAllocator;
 
 		case 4:
+			_FE_FALLTHROUGH_;
+		case 5:
+			_FE_FALLTHROUGH_;
+		case 6:
+			_FE_FALLTHROUGH_;
+		case 7:
 			return FE::internal::AllocatorType::_DZMMWordAllocator;
 
 		default:
@@ -83,7 +89,7 @@ void* FE::memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ st
 {
 	void* l_allocation_result;
 
-	switch (__select_allocator(bytes_p))
+	switch (FE::internal::__select_allocator(bytes_p))
 	{
 	case internal::AllocatorType::_XMMWordAllocator:
 		l_allocation_result = m_xmmword_block_pool.allocate< FE::align_as<xmmword_size, FE::align_16bytes> >();
@@ -117,7 +123,7 @@ void FE::memory_resource::do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MA
 {
 	bool l_deallocation_result;
 
-	switch (__select_allocator(bytes_p))
+	switch (FE::internal::__select_allocator(bytes_p))
 	{
 	case internal::AllocatorType::_XMMWordAllocator:
 		l_deallocation_result = m_xmmword_block_pool.deallocate< FE::align_as<xmmword_size, FE::align_16bytes> >( static_cast< FE::align_as<xmmword_size, FE::align_16bytes>* >( ptr_p ) );
