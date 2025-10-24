@@ -216,7 +216,7 @@ public:
 	void join() noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean is_running() const noexcept { return m_is_running.load(std::memory_order_acquire); }
-	_FE_FORCE_INLINE_ void shutdown() noexcept { m_is_running.store(false, std::memory_order_release); }
+	void shutdown() noexcept;
 	_FE_FORCE_INLINE_ FE::float64 get_delta_time_milliseconds() const noexcept { return m_delta_time_milliseconds; }
 	_FE_FORCE_INLINE_ FE::float64 get_gc_delta_time_milliseconds() const noexcept { return m_gc_delta_time_milliseconds; }
 

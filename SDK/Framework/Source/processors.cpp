@@ -189,7 +189,7 @@ void processor::join() noexcept
 	if (m_processor.joinable())
 	{
 		m_is_running.store(false, std::memory_order_release);
-
+		wake();
 		m_processor.join();
 	}
 }
@@ -218,6 +218,7 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 			boost::this_fiber::yield(); // yield if no tasks are available
 			if (host_p->m_yield_status.to_ulong() == bitflag_fibers_host_sleep) // all fibers have yielded
 			{
+				host_p->m_yield_status.reset();
 				boost::unique_lock<boost::mutex> l_unique_lock(l_mutex);
 				host_p->m_condition_variable.wait(l_unique_lock); // wait until notified of new tasks
 			}
@@ -304,6 +305,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 			}
 		}
 	);
+	m_audio_thread.detach();
 
 	m_renderer_thread = boost::thread
 	(
@@ -316,6 +318,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 			}
 		}
 	);
+	m_renderer_thread.detach();
 
 	m_physics_thread = boost::thread
 	(
@@ -328,6 +331,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 			}
 		}
 	);
+	m_physics_thread.detach();
 
 	m_networking_thread = boost::thread
 	(
@@ -340,6 +344,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 			}
 		}
 	);
+	m_networking_thread.detach();
 
 	for (_FE_MAYBE_UNUSED_ auto& [system_name, system_and_target_component_type_hash_list] : m_ecs.m_system_table)
 	{
@@ -418,26 +423,6 @@ void processors::join() noexcept
 		m_gc_reachability_analysis_fiber.join();
 	}
 
-	if (m_audio_thread.joinable())
-	{
-		m_audio_thread.join();
-	}
-
-	if (m_physics_thread.joinable())
-	{
-		m_physics_thread.join();
-	}
-
-	if (m_renderer_thread.joinable())
-	{
-		m_renderer_thread.join();
-	}
-
-	if (m_networking_thread.joinable())
-	{
-		m_networking_thread.join();
-	}
-
 	if (m_processors != nullptr)
 	{
 		for (var::uint32 i = 0; i < m_fiber_host_count; ++i)
@@ -445,6 +430,15 @@ void processors::join() noexcept
 			m_processors[i].join();
 		}
 		m_processors.reset();
+	}
+}
+
+void processors::shutdown() noexcept 
+{
+	m_is_running.store(false, std::memory_order_release); 
+	for (var::uint32 i = 0; i < m_fiber_host_count; ++i)
+	{
+		m_processors[i].wake();
 	}
 }
 

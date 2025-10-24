@@ -46,19 +46,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "message-v1"
     backtrace:
@@ -75,7 +75,7 @@ events:
       The output was:
       0
       MSBuild version 17.14.23+b0019275e for .NET Framework
-      Build started 10/22/2025 4:32:43 PM.
+      Build started 10/24/2025 11:53:25 AM.
       
       Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -85,12 +85,21 @@ events:
       InitializeBuildStatus:
         Creating "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         Touching "Debug\\CompilerIdCXX.tlog\\unsuccessfulbuild".
+      VcpkgTripletSelection:
+        Using triplet "x64-windows" from "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\"
+        Using normalized configuration "Release"
       ClCompile:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\\\" /Fd"Debug\\vc143.pdb" /external:W0 /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
         CMakeCXXCompilerId.cpp
       Link:
-        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
+        C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:".\\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\lib" /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\\CompilerIdCXX.lib" /MACHINE:X64 Debug\\CMakeCXXCompilerId.obj
         CompilerIdCXX.vcxproj -> C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe
+      AppLocalFromInstalled:
+        pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
+        'pwsh.exe' is not recognized as an internal or external command,
+        operable program or batch file.
+        The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"" exited with code 9009.
+        "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\4.2.0-rc1\\CompilerIdCXX\\CompilerIdCXX.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\bin" "Debug\\CompilerIdCXX.tlog\\CompilerIdCXX.write.1u.tlog" "Debug\\vcpkg.applocal.log"
       PostBuildEvent:
         for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
         :VCEnd
@@ -104,7 +113,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.52
+      Time Elapsed 00:00:00.68
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -147,19 +156,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
     searched_directories:
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.com"
     found: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
@@ -175,19 +184,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -221,19 +230,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
     searched_directories:
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.com"
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lld-link.exe"
@@ -268,9 +277,6 @@ events:
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.com"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link.exe"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/lld-link"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link.com"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.com"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link.exe"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/lld-link"
@@ -289,6 +295,9 @@ events:
       - "C:/Program Files/CMake/bin/lld-link.com"
       - "C:/Program Files/CMake/bin/lld-link.exe"
       - "C:/Program Files/CMake/bin/lld-link"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/lld-link"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/lld-link.com"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/lld-link.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/lld-link"
@@ -301,12 +310,12 @@ events:
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/lld-link.com"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/lld-link.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/lld-link"
-      - "C:/Users/leeho/.dotnet/tools/lld-link.com"
-      - "C:/Users/leeho/.dotnet/tools/lld-link.exe"
-      - "C:/Users/leeho/.dotnet/tools/lld-link"
       - "C:/Users/leeho/AppData/Local/Python/bin/lld-link.com"
       - "C:/Users/leeho/AppData/Local/Python/bin/lld-link.exe"
       - "C:/Users/leeho/AppData/Local/Python/bin/lld-link"
+      - "C:/Users/leeho/.dotnet/tools/lld-link.com"
+      - "C:/Users/leeho/.dotnet/tools/lld-link.exe"
+      - "C:/Users/leeho/.dotnet/tools/lld-link"
     found: false
     search_context:
       ENV{PATH}:
@@ -320,19 +329,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -364,19 +373,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
     searched_directories:
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.com"
     found: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe"
@@ -392,19 +401,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -436,19 +445,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
     searched_directories:
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.com"
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/mt.exe"
@@ -483,9 +492,6 @@ events:
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt.com"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt.exe"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/mt"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt.com"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt.com"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt.exe"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/mt"
@@ -504,6 +510,9 @@ events:
       - "C:/Program Files/CMake/bin/mt.com"
       - "C:/Program Files/CMake/bin/mt.exe"
       - "C:/Program Files/CMake/bin/mt"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/mt"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/mt.com"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/mt.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/mt"
@@ -516,12 +525,12 @@ events:
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/mt.com"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/mt.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/mt"
-      - "C:/Users/leeho/.dotnet/tools/mt.com"
-      - "C:/Users/leeho/.dotnet/tools/mt.exe"
-      - "C:/Users/leeho/.dotnet/tools/mt"
       - "C:/Users/leeho/AppData/Local/Python/bin/mt.com"
       - "C:/Users/leeho/AppData/Local/Python/bin/mt.exe"
       - "C:/Users/leeho/AppData/Local/Python/bin/mt"
+      - "C:/Users/leeho/.dotnet/tools/mt.com"
+      - "C:/Users/leeho/.dotnet/tools/mt.exe"
+      - "C:/Users/leeho/.dotnet/tools/mt"
     found: false
     search_context:
       ENV{PATH}:
@@ -535,19 +544,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -579,19 +588,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
     searched_directories:
       - "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.com"
     found: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe"
@@ -607,19 +616,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
   -
     kind: "find-v1"
     backtrace:
@@ -653,19 +662,19 @@ events:
       - "C:/Program Files/dotnet/"
       - "C:/Program Files/Git/cmd/"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/"
       - "C:/Program Files (x86)/PreEmptive Protection Dotfuscator Professional 7.3.0/"
       - "C:/Program Files/Bandizip/"
       - "C:/Program Files/NVIDIA Corporation/Nsight Compute 2025.3.1/"
       - "C:/Program Files/doxygen/bin/"
       - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/"
       - "C:/Users/leeho/AppData/Local/Microsoft/WindowsApps/"
       - "C:/Users/leeho/AppData/Local/GitHubDesktop/bin/"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/"
-      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Users/leeho/AppData/Local/Python/bin/"
+      - "C:/Users/leeho/.dotnet/tools/"
       - "C:/Program Files/bin/"
       - "C:/Program Files/sbin/"
       - "C:/Program Files/"
@@ -709,9 +718,6 @@ events:
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc.com"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc.exe"
       - "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common/rc"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
-      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc.com"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc.exe"
       - "C:/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR/rc"
@@ -730,6 +736,9 @@ events:
       - "C:/Program Files/CMake/bin/rc.com"
       - "C:/Program Files/CMake/bin/rc.exe"
       - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/rc.com"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/rc.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Python/Launcher/rc"
@@ -742,12 +751,12 @@ events:
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/rc.com"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/rc.exe"
       - "C:/Users/leeho/AppData/Local/Programs/Microsoft VS Code/bin/rc"
-      - "C:/Users/leeho/.dotnet/tools/rc.com"
-      - "C:/Users/leeho/.dotnet/tools/rc.exe"
-      - "C:/Users/leeho/.dotnet/tools/rc"
       - "C:/Users/leeho/AppData/Local/Python/bin/rc.com"
       - "C:/Users/leeho/AppData/Local/Python/bin/rc.exe"
       - "C:/Users/leeho/AppData/Local/Python/bin/rc"
+      - "C:/Users/leeho/.dotnet/tools/rc.com"
+      - "C:/Users/leeho/.dotnet/tools/rc.exe"
+      - "C:/Users/leeho/.dotnet/tools/rc"
       - "C:/Program Files/bin/rc.com"
       - "C:/Program Files/bin/rc.exe"
       - "C:/Program Files/bin/rc"
@@ -797,19 +806,19 @@ events:
         - "C:\\Program Files\\dotnet\\"
         - "C:\\Program Files\\Git\\cmd"
         - "C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common"
-        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Program Files\\NVIDIA Corporation\\NVIDIA App\\NvDLISR"
         - "C:\\Program Files (x86)\\PreEmptive Protection Dotfuscator Professional 7.3.0\\"
         - "C:\\Program Files\\Bandizip\\"
         - "C:\\Program Files\\NVIDIA Corporation\\Nsight Compute 2025.3.1\\"
         - "C:\\Program Files\\doxygen\\bin"
         - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Python\\Launcher\\"
         - "C:\\Users\\leeho\\AppData\\Local\\Microsoft\\WindowsApps"
         - "C:\\Users\\leeho\\AppData\\Local\\GitHubDesktop\\bin"
         - "C:\\Users\\leeho\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
-        - "C:\\Users\\leeho\\.dotnet\\tools"
         - "C:\\Users\\leeho\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\leeho\\.dotnet\\tools"
       CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/2DShooterDemo"
       CMAKE_SYSTEM_PREFIX_PATH:
         - "C:/Program Files"
@@ -825,8 +834,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-j7dql8"
-      binary: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-j7dql8"
+      source: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-uozvmd"
+      binary: "C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-uozvmd"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Ob0 /Od"
@@ -836,39 +845,48 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-j7dql8'
+        Change Dir: 'C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-uozvmd'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_5f1a0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_a15a1.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.14.23+b0019275e for .NET Framework
-        Build started 10/22/2025 4:32:43 PM.
+        Build started 10/24/2025 11:53:26 AM.
         
-        Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\cmTC_5f1a0.vcxproj" on node 1 (default targets).
+        Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\cmTC_a15a1.vcxproj" on node 1 (default targets).
         PrepareForBuild:
           Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
-          Creating directory "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\Debug\\".
-          Creating directory "cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.tlog\\".
+          Creating directory "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\".
+          Creating directory "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.tlog\\unsuccessfulbuild".
+          Creating "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\unsuccessfulbuild".
+        VcpkgTripletSelection:
+          Using triplet "x64-windows" from "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\"
+          Using normalized configuration "Debug"
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_5f1a0.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\cmTC_5f1a0.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
-          Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35217 for x64
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_a15a1.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\cmTC_a15a1.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35219 for x64
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_5f1a0.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\cmTC_5f1a0.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /I"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\include" /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D _MBCS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /std:c++20 /Fo"cmTC_a15a1.dir\\Debug\\\\" /Fd"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\cmTC_a15a1.dir\\Debug\\vc143.pdb" /external:W1 /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-4.2\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\Debug\\cmTC_5f1a0.exe" /INCREMENTAL /ILK:"cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-j7dql8/Debug/cmTC_5f1a0.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-j7dql8/Debug/cmTC_5f1a0.lib" /MACHINE:X64 cmTC_5f1a0.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_5f1a0.vcxproj -> C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\Debug\\cmTC_5f1a0.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /OUT:"C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\cmTC_a15a1.exe" /INCREMENTAL /ILK:"cmTC_a15a1.dir\\Debug\\cmTC_a15a1.ilk" /NOLOGO /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib" /LIBPATH:"C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\manual-link" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\lib\\*.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-uozvmd/Debug/cmTC_a15a1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /IMPLIB:"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/CMakeFiles/CMakeScratch/TryCompile-uozvmd/Debug/cmTC_a15a1.lib" /MACHINE:X64 cmTC_a15a1.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_a15a1.vcxproj -> C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\cmTC_a15a1.exe
+        AppLocalFromInstalled:
+          pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\cmTC_a15a1.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\cmTC_a15a1.write.1u.tlog" "cmTC_a15a1.dir\\Debug\\vcpkg.applocal.log"
+          'pwsh.exe' is not recognized as an internal or external command,
+          operable program or batch file.
+          The command "pwsh.exe -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\cmTC_a15a1.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\cmTC_a15a1.write.1u.tlog" "cmTC_a15a1.dir\\Debug\\vcpkg.applocal.log"" exited with code 9009.
+          "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -ExecutionPolicy Bypass -noprofile -File "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\scripts\\buildsystems\\msbuild\\applocal.ps1" "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\Debug\\cmTC_a15a1.exe" "C:\\Users\\leeho\\Documents\\GitHub\\misc\\vcpkg\\installed\\x64-windows\\debug\\bin" "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\cmTC_a15a1.write.1u.tlog" "cmTC_a15a1.dir\\Debug\\vcpkg.applocal.log"
         FinalizeBuildStatus:
-          Deleting file "cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.tlog\\unsuccessfulbuild".
-          Touching "cmTC_5f1a0.dir\\Debug\\cmTC_5f1a0.tlog\\cmTC_5f1a0.lastbuildstate".
-        Done Building Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-j7dql8\\cmTC_5f1a0.vcxproj" (default targets).
+          Deleting file "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\unsuccessfulbuild".
+          Touching "cmTC_a15a1.dir\\Debug\\cmTC_a15a1.tlog\\cmTC_a15a1.lastbuildstate".
+        Done Building Project "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\2DShooterDemo\\CMake\\Solution_X64_AVX512F\\CMakeFiles\\CMakeScratch\\TryCompile-uozvmd\\cmTC_a15a1.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.60
+        Time Elapsed 00:00:00.67
         
       exitCode: 0
   -
@@ -897,6 +915,6 @@ events:
       - "CMakeLists.txt:4 (PROJECT)"
     message: |
       Running the CXX compiler's linker: "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/HostX64/x64/link.exe" "-v"
-      Microsoft (R) Incremental Linker Version 14.44.35217.0
+      Microsoft (R) Incremental Linker Version 14.44.35219.0
       Copyright (C) Microsoft Corporation.  All rights reserved.
 ...

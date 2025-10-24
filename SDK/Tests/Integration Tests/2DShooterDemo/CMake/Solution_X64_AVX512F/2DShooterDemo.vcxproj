@@ -63,25 +63,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\X86-64\Windows\AVX512F\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">2DShooterDemo.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">2DShooterDemo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\X86-64\Windows\AVX512F\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">2DShooterDemo.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">2DShooterDemo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\X86-64\Windows\AVX512F\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">2DShooterDemo.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">2DShooterDemo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\X86-64\Windows\AVX512F\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">2DShooterDemo.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">2DShooterDemo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
@@ -147,7 +147,7 @@
       <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/Debug/2DShooterDemo.lib</ImportLibrary>
       <LinkErrorReporting></LinkErrorReporting>
-      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/Debug/2DShooterDemo.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/X86-64/Windows/AVX512F/Debug/2DShooterDemo.pdb</ProgramDataBaseFile>
       <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -216,7 +216,7 @@
       <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/RelWithDebInfo/2DShooterDemo.lib</ImportLibrary>
       <LinkErrorReporting></LinkErrorReporting>
-      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/RelWithDebInfo/2DShooterDemo.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/2DShooterDemo.pdb</ProgramDataBaseFile>
       <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -287,7 +287,7 @@
       <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/Release/2DShooterDemo.lib</ImportLibrary>
       <LinkErrorReporting></LinkErrorReporting>
-      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/Release/2DShooterDemo.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/X86-64/Windows/AVX512F/Release/2DShooterDemo.pdb</ProgramDataBaseFile>
       <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -357,7 +357,7 @@
       <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/CMake/Solution_X64_AVX512F/MinSizeRel/2DShooterDemo.lib</ImportLibrary>
       <LinkErrorReporting></LinkErrorReporting>
-      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/MinSizeRel/2DShooterDemo.pdb</ProgramDataBaseFile>
+      <ProgramDataBaseFile>C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/2DShooterDemo/Binaries/X86-64/Windows/AVX512F/MinSizeRel/2DShooterDemo.pdb</ProgramDataBaseFile>
       <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>

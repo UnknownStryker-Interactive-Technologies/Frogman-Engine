@@ -5,7 +5,7 @@
       <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\Solution_X64_AVX\x64\RelWithDebInfo\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\RelWithDebInfo\2DShooterDemo.exe</FullPath>
+      <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\Binaries\X86-64\Windows\AVX-SSE2\RelWithDebInfo\2DShooterDemo.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\Solution_X64_AVX\x64\RelWithDebInfo\Engine</FullPath>
