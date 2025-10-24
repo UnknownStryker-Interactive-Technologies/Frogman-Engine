@@ -1,4 +1,4 @@
-#include <FE/d3d11_backend.hpp>
+#include <FE/d3d11_backend.hxx>
 #ifdef _FE_ON_WINDOWS_X86_64_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -15,7 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/renderer.hpp>
+#include <FE/renderer.hxx>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 

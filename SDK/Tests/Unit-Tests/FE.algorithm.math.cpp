@@ -2,7 +2,7 @@
 #include <benchmark/benchmark.h>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#include <FE/algorithm/math.hpp>
+#include <FE/algorithm/math.hxx>
 
 // for performance comparison
 #include <algorithm>

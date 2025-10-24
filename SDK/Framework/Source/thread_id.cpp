@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/thread_id.hpp>
+#include <FE/framework/thread_id.hxx>
 #include <FE/fqueue.hxx>
 
 #include <atomic>

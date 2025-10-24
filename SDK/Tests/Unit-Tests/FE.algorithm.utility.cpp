@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
-#include <FE/algorithm/math.hpp>
+#include <FE/algorithm/math.hxx>
 #include <FE/algorithm/utility.hxx>
 
 // std::make_heap, std::push_heap, and std::pop_heap

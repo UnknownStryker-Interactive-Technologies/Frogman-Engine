@@ -2,9 +2,9 @@
 #include <benchmark/benchmark.h>
 
 #include <FE/function.hxx>
-#include <FE/framework/reflection.hpp>
+#include <FE/framework/reflection.hxx>
 
-#include <FE/framework.h>
+#include <FE/framework.hxx>
 
 // std
 #include <string>

@@ -13,9 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/log/logger.hpp>
+#include <FE/log/logger.hxx>
 #include <FE/algorithm/string.hxx>
-#include <FE/clock.hpp>
+#include <FE/clock.hxx>
 
 // boost
 #include <boost/stacktrace.hpp>

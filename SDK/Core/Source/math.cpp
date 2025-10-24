@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/algorithm/math.hpp>
+#include <FE/algorithm/math.hxx>
 
 #ifdef _FE_ON_X86_64_
 #include <immintrin.h>

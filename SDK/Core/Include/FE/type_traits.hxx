@@ -15,8 +15,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/definitions.h>
-#include <FE/log/log.h>
+#include <FE/definitions.hxx>
+#include <FE/log/log.hxx>
 #include <FE/types.hxx>
 #include <FE/private/strlen.hxx>
 

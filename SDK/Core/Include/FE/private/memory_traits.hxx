@@ -15,10 +15,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/prerequisites.h>
-#include <FE/algorithm/math.hpp>
+#include <FE/prerequisites.hxx>
+#include <FE/algorithm/math.hxx>
 #include <FE/iterator.hxx>
-#include <FE/memory.hpp>
+#include <FE/memory.hxx>
 
 
 

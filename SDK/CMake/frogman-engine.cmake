@@ -41,53 +41,6 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 
 
 
-SET(FE_FRAMEWORK_REFLECTION
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/reflection.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include/FE/framework/type_info.hpp
-)
-SOURCE_GROUP("FE.Framework.Reflection" FILES ${FE_FRAMEWORK_REFLECTION})
-
-
-
-
-SET(FE_ALGORITHM_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/string.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/utility.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/algorithm/math.hpp
-)
-SOURCE_GROUP("FE.Algorithm" FILES ${FE_ALGORITHM_HEADERS})
-
-SET(FE_LOG_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/format_string.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/log.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/log/logger.hpp
-)
-SOURCE_GROUP("FE.Log" FILES ${FE_LOG_HEADERS})
-
-SET(FE_LOG_SOURCES
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/format_string.cpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Source/logger.cpp
-)
-
-SET(FE_POOL_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/block_pool.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/scalable_pool.hxx
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/memory_resource.hpp
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/pool/private/pool_common.hxx
-)
-SOURCE_GROUP("FE.Pool" FILES ${FE_POOL_HEADERS})
-
-SET(FE_MISC_HEADERS
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/private/macro_restrictions.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/define_max_min.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/suppress_warnings.h
-${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/FE/miscellaneous/undefine_max_min.h
-)
-SOURCE_GROUP("FE.Misc" FILES ${FE_MISC_HEADERS})
-
-
-
-
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
     SET(ASSIMP

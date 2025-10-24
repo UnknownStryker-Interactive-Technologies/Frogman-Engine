@@ -214,7 +214,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 {
 	std::pmr::wstring l_generated_code(get_memory_resource());
 	l_generated_code.reserve(1 * FE::one_MiB);
-	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.h> \n#include <FE/framework.h> \n";
+	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.hxx> \n#include <FE/framework.hxx> \n";
 	for (const reflection_metadata& header_file : metadata_set_p) // #include <> statements gereration
 	{
 		l_generated_code += L"#include <";

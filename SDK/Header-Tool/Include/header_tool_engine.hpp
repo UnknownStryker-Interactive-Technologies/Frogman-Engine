@@ -21,7 +21,7 @@ limitations under the License.
 #include "vocabulary.hpp"
 
 // FE.Framework
-#include <FE/framework.h>
+#include <FE/framework.hxx>
 
 // FE.Core string algorithm
 #include <FE/algorithm/string.hxx>

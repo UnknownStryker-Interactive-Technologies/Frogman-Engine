@@ -4,22 +4,22 @@
     <CustomBuild Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Tests\Integration Tests\2DShooterDemo\CMake\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\math.hpp">
-      <Filter>FE.Algorithm</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\math.hxx">
+      <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\string.hxx">
-      <Filter>FE.Algorithm</Filter>
+      <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\algorithm\utility.hxx">
-      <Filter>FE.Algorithm</Filter>
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\clock.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\clock.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\concurrent_vector.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\definitions.h">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\definitions.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\do_once.hxx">
@@ -40,52 +40,52 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\function.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\hash.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\hash.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\iterator.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\format_string.h">
-      <Filter>FE.Log</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\log.h">
-      <Filter>FE.Log</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\logger.hpp">
-      <Filter>FE.Log</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\memory.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\format_string.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\define_max_min.h">
-      <Filter>FE.Misc</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\log.hxx">
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\private\macro_restrictions.h">
-      <Filter>FE.Misc</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\log\logger.hxx">
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\suppress_warnings.h">
-      <Filter>FE.Misc</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\memory.hxx">
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\undefine_max_min.h">
-      <Filter>FE.Misc</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\define_max_min.hxx">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\private\macro_restrictions.hxx">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\suppress_warnings.hxx">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\miscellaneous\undefine_max_min.hxx">
+      <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pair.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\block_pool.hxx">
-      <Filter>FE.Pool</Filter>
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\memory_resource.hpp">
-      <Filter>FE.Pool</Filter>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\memory_resource.hxx">
+      <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\private\pool_common.hxx">
-      <Filter>FE.Pool</Filter>
+      <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\pool\scalable_pool.hxx">
-      <Filter>FE.Pool</Filter>
+      <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\prerequisites.h">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\prerequisites.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\private\memory_traits.hxx">
@@ -127,46 +127,40 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Source\memory_resource.cpp">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework.h">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\ECS.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\ECS.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\archetype_base.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\archetype_base.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\component_base.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\component_base.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\framework.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\framework.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\game.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\processors.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\processors.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\reflection.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\reflection.hpp">
-      <Filter>FE.Framework.Reflection</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\reflection\private\load_reflection_data.h">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\reflection\private\load_reflection_data.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\smart_ptr.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\system.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\system.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\thread_id.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\thread_id.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\type_info.hpp">
-      <Filter>FE.Framework.Reflection</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\world.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\type_info.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\ECS.cpp">
@@ -181,9 +175,6 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\framework.cpp">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\game.cpp">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\processors.cpp">
       <Filter>Source Files</Filter>
     </None>
@@ -196,22 +187,43 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\type_info.cpp">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Source\world.cpp">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\engine.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\app.hpp">
       <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\async.hpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\ecs.hpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\engine.hxx">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\memory_resource.hpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\reflection.hpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\window_control.hpp">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\app.cpp">
+      <Filter>Source Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\engine.cpp">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\d3d11_backend.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\window_control.cpp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\d3d11_backend.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\renderer.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\renderer.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\vulkan_backend.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\vulkan_backend.hxx">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Source\d3d11_backend.cpp">
@@ -222,21 +234,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="FE.Algorithm">
-      <UniqueIdentifier>{3E4C491B-484A-30C2-B033-86D2118EB491}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FE.Framework.Reflection">
-      <UniqueIdentifier>{8D873977-DFC0-390E-8E3D-3BB72492FBC0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FE.Log">
-      <UniqueIdentifier>{9CE8445B-C9CE-353C-AEAF-056118F5857B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FE.Misc">
-      <UniqueIdentifier>{A9286430-EF40-3231-A7AA-648FCC67DC24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FE.Pool">
-      <UniqueIdentifier>{1B2B36F3-95F7-3962-A2F4-FBA5372607DC}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{4327824F-81F2-3FB5-BAEC-3EFEB3BC270F}</UniqueIdentifier>
     </Filter>

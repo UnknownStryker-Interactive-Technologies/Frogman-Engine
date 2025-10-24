@@ -1,4 +1,4 @@
-#include <FE/renderer.hpp>
+#include <FE/renderer.hxx>
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/prerequisites.h>
+#include <FE/prerequisites.hxx>
 
 
 
@@ -80,6 +80,7 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	if (m_window_config._is_fullscreen == true)
 	{
 		m_window = glfwCreateWindow(m_window_config._width, m_window_config._height, m_window_config._title.c_str(), m_primary_monitor, nullptr);
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	else
 	{

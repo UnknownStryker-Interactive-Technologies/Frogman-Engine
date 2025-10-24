@@ -1,11 +1,11 @@
 ﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
-#include <FE/framework/ECS.hpp>
-#include <FE/framework/archetype_base.hpp>
+#include <FE/framework/ECS.hxx>
+#include <FE/framework/archetype_base.hxx>
 
-#include <FE/framework/reflection.hpp>
-#include <FE/framework/framework.hpp>
+#include <FE/framework/reflection.hxx>
+#include <FE/framework/framework.hxx>
 
 #include "FE.ECS.hpp"
 

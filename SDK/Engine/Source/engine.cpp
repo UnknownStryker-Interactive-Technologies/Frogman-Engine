@@ -1,10 +1,25 @@
-#include <FE/engine.hpp>
+/*
+Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-#include <FE/framework/ECS.hpp>
-#include <FE/framework/processors.hpp>
-#include <FE/framework/reflection.hpp>
+Licensed under the Frogman Engine Apache License (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-#include <FE/pool/memory_resource.hpp>
+	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+#include <FE/engine.hxx>
+
+#include <FE/framework/ECS.hxx>
+#include <FE/framework/processors.hxx>
+#include <FE/framework/reflection.hxx>
+
+#include <FE/pool/memory_resource.hxx>
 
 
 
@@ -21,10 +36,8 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		m_entity_list(),
 		m_system_list(),
 		m_window_config(),
-		m_renderer(),
-		m_this_pointer(this)
-{
-}
+		m_renderer()
+{}
 
 FE::engine::~engine() noexcept
 {
@@ -50,12 +63,13 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	glfwSetKeyCallback(m_renderer->get_window(), &FE::engine::__key_callback);
 	glfwSetMouseButtonCallback(m_renderer->get_window(), &FE::engine::__mouse_button_callback);
 	glfwSetCursorPosCallback(m_renderer->get_window(), &FE::engine::__cursor_position_callback);
+
 	return 0;
 }
 
 FE::int32 FE::engine::run()
 {
-	m_processors->fork(	__renderer_main, &m_this_pointer, 
+	m_processors->fork(	__renderer_main, nullptr, 
 						nullsys, nullptr,
 						nullsys, nullptr, 
 						nullsys, nullptr);
@@ -68,13 +82,11 @@ FE::int32 FE::engine::shutdown()
 	return 0;
 }
 
-void FE::engine::__renderer_main(FE::component_base* engine_reference_p) noexcept
+void FE::engine::__renderer_main(_FE_MAYBE_UNUSED_ FE::component_base* engine_reference_p) noexcept
 {
-	FE::engine::reference* const l_engine_reference = FE::polymorphic_cast<FE::engine::reference* const>(engine_reference_p);
-
-	while (l_engine_reference->_engine->m_processors->is_running() == true)
+	while (FE::engine::__get_engine().m_processors->is_running() == true)
 	{
-		l_engine_reference->_engine->m_renderer->render_frame();
+		FE::engine::__get_engine().m_renderer->render_frame();
 	}
 }
 
@@ -91,6 +103,10 @@ void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE:
 	(scancode_p);
 	(action_p);
 	(mods_p);
+	if (action_p == GLFW_REPEAT)
+	{
+		std::cout << "this is repeat.";
+	}
 }
 
 void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept

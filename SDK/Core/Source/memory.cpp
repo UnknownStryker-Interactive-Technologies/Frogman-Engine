@@ -13,8 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/memory.hpp>
-#include <FE/clock.hpp>
+#include <FE/memory.hxx>
+#include <FE/clock.hxx>
 
 
 #ifdef _FE_ON_WINDOWS_X86_64_

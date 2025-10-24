@@ -1,8 +1,8 @@
-#include <FE/framework/processors.hpp>
+#include <FE/framework/processors.hxx>
 
-#include <FE/framework.h>
-#include <FE/memory.hpp>
-#include <FE/clock.hpp>
+#include <FE/framework.hxx>
+#include <FE/memory.hxx>
+#include <FE/clock.hxx>
 
 #include <boost/fiber/all.hpp>
 

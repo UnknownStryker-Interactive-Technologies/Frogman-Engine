@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework.h>
-#include <FE/framework/reflection/private/load_reflection_data.h>
+#include <FE/framework.hxx>
+#include <FE/framework/reflection/private/load_reflection_data.hxx>
 
 #include <FE/algorithm/string.hxx>
 #include <FE/algorithm/utility.hxx>
-#include <FE/clock.hpp>
+#include <FE/clock.hxx>
 #include <FE/do_once.hxx>
 #include <FE/fstream_guard.hxx>
-#include <FE/log/logger.hpp>
+#include <FE/log/logger.hxx>
 
 // boost
 #include <boost/stacktrace.hpp>

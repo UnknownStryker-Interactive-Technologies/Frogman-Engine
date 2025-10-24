@@ -13,8 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/component_base.hpp>
-#include <FE/framework.h>
+#include <FE/framework/component_base.hxx>
+#include <FE/framework.hxx>
 
 
 
@@ -32,8 +32,8 @@ FE::ASCII* component_base::get_memory_layout_version() const noexcept { return m
 
 
 internal::ECS::gc_metadata::gc_metadata() noexcept
-	:	_member_components(framework::framework_base::get_framework().get_memory_resource()),
-		_member_entities(framework::framework_base::get_framework().get_memory_resource()),
+	:	_member_components(),
+		_member_entities(),
 		_is_circular_reference(false)
 {
 }
