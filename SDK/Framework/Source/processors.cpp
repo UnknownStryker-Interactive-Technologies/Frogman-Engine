@@ -298,7 +298,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	(
 		[=]() 
 		{ 
-			boost::fibers::fiber l_audio_fiber(audio_p, audio_args_p);
+			boost::fibers::fiber l_audio_fiber(std::allocator_arg, m_fiber_stack_allocator, audio_p, audio_args_p);
 			if (l_audio_fiber.joinable())
 			{
 				l_audio_fiber.join();
@@ -311,7 +311,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	(
 		[=]()
 		{
-			boost::fibers::fiber l_renderer_fiber(renderer_p, renderer_args_p);
+			boost::fibers::fiber l_renderer_fiber(std::allocator_arg, m_fiber_stack_allocator, renderer_p, renderer_args_p);
 			if (l_renderer_fiber.joinable())
 			{
 				l_renderer_fiber.join();
@@ -324,7 +324,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	(
 		[=]()
 		{
-			boost::fibers::fiber l_physics_fiber(physics_p, physics_args_p);
+			boost::fibers::fiber l_physics_fiber(std::allocator_arg, m_fiber_stack_allocator, physics_p, physics_args_p);
 			if (l_physics_fiber.joinable())
 			{
 				l_physics_fiber.join();
@@ -337,7 +337,7 @@ void processors::fork(	FE::system renderer_p, FE::component_base* renderer_args_
 	(
 		[=]()
 		{
-			boost::fibers::fiber l_networking_fiber(networking_p, networking_args_p);
+			boost::fibers::fiber l_networking_fiber(std::allocator_arg, m_fiber_stack_allocator, networking_p, networking_args_p);
 			if (l_networking_fiber.joinable())
 			{
 				l_networking_fiber.join();
