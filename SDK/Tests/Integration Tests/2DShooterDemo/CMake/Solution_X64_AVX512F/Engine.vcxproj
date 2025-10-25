@@ -260,17 +260,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\engine.hxx">
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\memory_resource.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\memory.hpp">
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\reflection.hpp">
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\window_control.hpp">
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\app.cpp">
-    </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\engine.cpp">
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\window_control.cpp">
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\d3d11_backend.hxx">
     </None>

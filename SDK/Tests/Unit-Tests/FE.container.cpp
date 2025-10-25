@@ -6,6 +6,8 @@
 #include <FE/fqueue.hxx>
 #include <FE/fstack.hxx>
 
+#include<FE/pool/memory_resource.hxx>
+
 #include <FE/concurrent_vector.hxx>
 
 // ms ppl
@@ -517,6 +519,17 @@ static void std_unordered_map_insertion(benchmark::State& state)
 	}
 }
 BENCHMARK(std_unordered_map_insertion);
+
+static void std_pmr_unordered_map_insertion(benchmark::State& state)
+{
+	FE::memory_resource resource;
+	std::pmr::unordered_map<int, int> l_map(&resource);
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(std_pmr_unordered_map_insertion);
 
 
 

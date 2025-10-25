@@ -1,13 +1,13 @@
 // Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
-#include <FE/framework/reflection/private/load_reflection_data.h> 
-#include <FE/framework.h> 
+#include <FE/framework/reflection/private/load_reflection_data.hxx> 
+#include <FE/framework.hxx> 
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/system.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/smart_ptr.hxx>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/system.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/ECS.hxx>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/component_base.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/archetype_base.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/thread_id.hxx>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/component_base.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/framework.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection/private/load_reflection_data.hxx>

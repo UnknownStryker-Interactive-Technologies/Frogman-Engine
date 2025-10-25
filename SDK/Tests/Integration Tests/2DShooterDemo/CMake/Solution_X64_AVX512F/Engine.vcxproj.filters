@@ -199,7 +199,7 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\engine.hxx">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\memory_resource.hpp">
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\memory.hpp">
       <Filter>Header Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\reflection.hpp">
@@ -208,13 +208,7 @@
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Include\FE\window_control.hpp">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\app.cpp">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\engine.cpp">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Engine\Source\window_control.cpp">
       <Filter>Source Files</Filter>
     </None>
     <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Renderer\Include\FE\d3d11_backend.hxx">

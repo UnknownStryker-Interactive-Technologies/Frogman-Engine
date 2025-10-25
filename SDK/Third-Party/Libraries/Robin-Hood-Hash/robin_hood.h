@@ -34,6 +34,32 @@
 #ifndef ROBIN_HOOD_H_INCLUDED
 #define ROBIN_HOOD_H_INCLUDED
 
+
+
+
+// This robin_hood.h is modified by UNKNOWN STRYKER to tune the container for the Frogman Engine.
+#ifdef ROBIN_HOOD_ALIGNED_ALLOC
+#error ROBIN_HOOD_ALIGNED_ALLOC is a reserved macro function.
+#endif
+#ifdef ROBIN_HOOD_ALIGNED_FREE
+#error ROBIN_HOOD_ALIGNED_FREE is a reserved macro function.
+#endif
+
+#define ROBIN_HOOD_X64_CPU_CACHE_LINE_SIZE 64
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+#include <corecrt_malloc.h>
+#define ROBIN_HOOD_ALIGNED_ALLOC(size_p, alignment_p) ::_aligned_malloc(size_p, alignment_p)
+#define ROBIN_HOOD_ALIGNED_FREE(ptr_to_memory_p) ::_aligned_free(ptr_to_memory_p)
+#elif defined(_FE_ON_LINUX_X86_64_)
+#include <immintrin.h> // for _mm_malloc/_mm_free
+#define ROBIN_HOOD_ALIGNED_ALLOC(size_p, alignment_p) _mm_malloc(size_p, alignment_p)
+#define ROBIN_HOOD_ALIGNED_FREE(ptr_to_memory_p) _mm_free(ptr_to_memory_p)
+#endif
+
+
+
+
 // see https://semver.org/
 #define ROBIN_HOOD_VERSION_MAJOR 3  // for incompatible API changes
 #define ROBIN_HOOD_VERSION_MINOR 11 // for adding functionality in a backwards-compatible manner
@@ -383,8 +409,8 @@ public:
     void reset() noexcept {
         while (mListForFree) {
             T* tmp = *mListForFree;
-            ROBIN_HOOD_LOG("std::free")
-            std::free(mListForFree);
+            ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_FREE")
+            ROBIN_HOOD_ALIGNED_FREE(mListForFree);
             mListForFree = reinterpret_cast_no_cast_align_warning<T**>(tmp);
         }
         mHead = nullptr;
@@ -419,8 +445,8 @@ public:
         // calculate number of available elements in ptr
         if (numBytes < ALIGNMENT + ALIGNED_SIZE) {
             // not enough data for at least one element. Free and return.
-            ROBIN_HOOD_LOG("std::free")
-            std::free(ptr);
+            ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_FREE")
+            ROBIN_HOOD_ALIGNED_FREE(ptr);
         } else {
             ROBIN_HOOD_LOG("add to buffer")
             add(ptr, numBytes);
@@ -487,10 +513,10 @@ private:
 
         // alloc new memory: [prev |T, T, ... T]
         size_t const bytes = ALIGNMENT + ALIGNED_SIZE * numElementsToAlloc;
-        ROBIN_HOOD_LOG("std::malloc " << bytes << " = " << ALIGNMENT << " + " << ALIGNED_SIZE
+        ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_ALLOC " << bytes << " = " << ALIGNMENT << " + " << ALIGNED_SIZE
             << " * " << numElementsToAlloc)
 
-        void* mallocResult = std::malloc(bytes);
+        void* mallocResult = ROBIN_HOOD_ALIGNED_ALLOC( bytes, ROBIN_HOOD_X64_CPU_CACHE_LINE_SIZE );
 		assert( (mallocResult != nullptr) && "malloc failed" );
         add( mallocResult, bytes );
         return mHead;
@@ -528,8 +554,8 @@ struct NodeAllocator<T, MinSize, MaxSize, true> {
 
     // we are not using the data, so just free it.
     void addOrFree(void* ptr, size_t ROBIN_HOOD_UNUSED(numBytes) /*unused*/) noexcept {
-        ROBIN_HOOD_LOG("std::free")
-        std::free(ptr);
+        ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_FREE")
+        ROBIN_HOOD_ALIGNED_FREE(ptr);
     }
 };
 
@@ -1576,10 +1602,10 @@ public:
             auto const numElementsWithBuffer = calcNumElementsWithBuffer(o.mMask + 1);
             auto const numBytesTotal = calcNumBytesTotal(numElementsWithBuffer);
 
-            ROBIN_HOOD_LOG("std::malloc " << numBytesTotal << " = calcNumBytesTotal("
+            ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_ALLOC " << numBytesTotal << " = calcNumBytesTotal("
                                           << numElementsWithBuffer << ")")
             mHashMultiplier = o.mHashMultiplier;
-            mKeyVals = (Node*)std::malloc(numBytesTotal);
+            mKeyVals = (Node*)ROBIN_HOOD_ALIGNED_ALLOC( numBytesTotal, ROBIN_HOOD_X64_CPU_CACHE_LINE_SIZE );
             assert( (mKeyVals != nullptr) && "malloc failed" );
 
             // no need for calloc because clonData does memcpy
@@ -1629,15 +1655,15 @@ public:
             // no luck: we don't have the same array size allocated, so we need to realloc.
             if (0 != mMask) {
                 // only deallocate if we actually have data!
-                ROBIN_HOOD_LOG("std::free")
-                std::free(mKeyVals);
+                ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_FREE")
+                ROBIN_HOOD_ALIGNED_FREE(mKeyVals);
             }
 
             auto const numElementsWithBuffer = calcNumElementsWithBuffer(o.mMask + 1);
             auto const numBytesTotal = calcNumBytesTotal(numElementsWithBuffer);
-            ROBIN_HOOD_LOG("std::malloc " << numBytesTotal << " = calcNumBytesTotal("
+            ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_ALLOC " << numBytesTotal << " = calcNumBytesTotal("
                 << numElementsWithBuffer << ")")
-                mKeyVals = (Node*)std::malloc( numBytesTotal );
+                mKeyVals = (Node*)ROBIN_HOOD_ALIGNED_ALLOC( numBytesTotal, ROBIN_HOOD_X64_CPU_CACHE_LINE_SIZE );
             assert( (mKeyVals != nullptr) && "malloc failed" );
             
             // no need for calloc here because cloneData performs a memcpy.
@@ -2219,7 +2245,7 @@ private:
             if (oldKeyVals != reinterpret_cast_no_cast_align_warning<Node*>(&mMask)) {
                 // don't destroy old data: put it into the pool instead
                 if (forceFree) {
-                    std::free(oldKeyVals);
+                    ROBIN_HOOD_ALIGNED_FREE(oldKeyVals);
                 } else {
                     DataPool::addOrFree(oldKeyVals, calcNumBytesTotal(oldMaxElementsWithBuffer));
                 }
@@ -2297,7 +2323,7 @@ private:
         auto const numBytesTotal = calcNumBytesTotal(numElementsWithBuffer);
         ROBIN_HOOD_LOG("std::calloc " << numBytesTotal << " = calcNumBytesTotal("
                                       << numElementsWithBuffer << ")")
-        mKeyVals = (Node*)std::malloc(numBytesTotal);
+        mKeyVals = (Node*)ROBIN_HOOD_ALIGNED_ALLOC( numBytesTotal, ROBIN_HOOD_X64_CPU_CACHE_LINE_SIZE );
         assert( (mKeyVals != nullptr) && "malloc failed" );
 
         mInfo = reinterpret_cast<uint8_t*>(mKeyVals + numElementsWithBuffer);
@@ -2447,8 +2473,8 @@ private:
         // reports a compile error: attempt to free a non-heap object 'fm'
         // [-Werror=free-nonheap-object]
         if (mKeyVals != reinterpret_cast_no_cast_align_warning<Node*>(&mMask)) {
-            ROBIN_HOOD_LOG("std::free")
-            std::free(mKeyVals);
+            ROBIN_HOOD_LOG("ROBIN_HOOD_ALIGNED_FREE")
+            ROBIN_HOOD_ALIGNED_FREE(mKeyVals);
         }
     }
 
