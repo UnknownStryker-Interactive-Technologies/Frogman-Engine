@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_HXX_
+﻿#ifndef _FROGMAN_ENGINE_HXX_
 #define _FROGMAN_ENGINE_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -41,6 +41,7 @@ class engine final : public FE::framework::framework_base
     friend class memory;
     friend class FE::window_control;
 
+	std::atomic_bool m_should_exit;
     FE::uint32 m_gc_batch_count;
     std::size_t m_fiber_stack_size;
 
@@ -67,6 +68,7 @@ private: // Callbacks
 	static void __key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
 	static void __mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
 	static void __cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept;
+	static void __scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept;
 };
 
 

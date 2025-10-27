@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "BlenderDNA.h"
 #include "BlenderScene.h"

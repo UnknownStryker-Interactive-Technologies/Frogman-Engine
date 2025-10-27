@@ -141,14 +141,14 @@ private:
 	bool m_is_initialized;
 
 public:
-	_FE_CONSTEXPR20_ lazy_const() noexcept : m_data(), m_is_initialized(false) {}
-	_FE_CONSTEXPR20_ lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
-	_FE_CONSTEXPR20_ ~lazy_const() noexcept {};
+	constexpr lazy_const() noexcept : m_data(), m_is_initialized(false) {}
+	constexpr lazy_const(value_type&& data_p) noexcept : m_data(std::move(data_p)), m_is_initialized(true) {}
+	constexpr ~lazy_const() noexcept {};
 
-	_FE_CONSTEXPR20_ lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
-	_FE_CONSTEXPR20_ lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
+	constexpr lazy_const(const lazy_const& other_p) noexcept : m_data(other_p.m_data), m_is_initialized(true) {}
+	constexpr lazy_const(lazy_const&& rvalue_p) noexcept : m_data(std::move(rvalue_p.m_data)), m_is_initialized(true) {}
 
-	_FE_CONSTEXPR20_ lazy_const& operator=(value_type&& data_p) noexcept
+	constexpr lazy_const& operator=(value_type&& data_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{
@@ -162,7 +162,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR20_ lazy_const& operator=(const lazy_const& other_p) noexcept
+	constexpr lazy_const& operator=(const lazy_const& other_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{
@@ -176,7 +176,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR20_ lazy_const& operator=(lazy_const&& rvalue_p) noexcept
+	constexpr lazy_const& operator=(lazy_const&& rvalue_p) noexcept
 	{
 		if (m_is_initialized == true)
 		{

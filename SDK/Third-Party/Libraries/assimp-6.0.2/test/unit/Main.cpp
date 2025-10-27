@@ -1,4 +1,4 @@
-#include "../../include/assimp/DefaultLogger.hpp"
+﻿#include "../../include/assimp/DefaultLogger.hpp"
 #include "UnitTestPCH.h"
 #include <ctime>
 

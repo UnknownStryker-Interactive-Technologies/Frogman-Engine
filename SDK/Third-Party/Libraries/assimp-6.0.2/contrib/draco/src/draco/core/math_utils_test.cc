@@ -1,4 +1,4 @@
-#include "draco/core/math_utils.h"
+﻿#include "draco/core/math_utils.h"
 
 #include <cmath>
 #include <random>

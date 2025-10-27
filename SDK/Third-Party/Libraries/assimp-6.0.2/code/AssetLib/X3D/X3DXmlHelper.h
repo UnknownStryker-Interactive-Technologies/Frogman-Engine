@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <assimp/XmlParser.h>
 #include <assimp/types.h>

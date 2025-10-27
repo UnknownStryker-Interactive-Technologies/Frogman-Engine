@@ -1,4 +1,4 @@
-#ifndef DRACO_IO_FILE_WRITER_FACTORY_H_
+﻿#ifndef DRACO_IO_FILE_WRITER_FACTORY_H_
 #define DRACO_IO_FILE_WRITER_FACTORY_H_
 
 #include <memory>

@@ -334,11 +334,11 @@ public:
     using return_type = R;
     using arguments_type = FE::arguments<Arguments...>;
 
-    _FE_CONSTEXPR20_ function() noexcept = default;
+    constexpr function() noexcept = default;
     ~function() noexcept = default;
 
-    _FE_CONSTEXPR20_ function(function_type function_p) noexcept : m_function_pointer(function_p) {}
-    _FE_CONSTEXPR20_ function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
+    constexpr function(function_type function_p) noexcept : m_function_pointer(function_p) {}
+    constexpr function(const function& other_p) noexcept : m_function_pointer(other_p.m_function_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(Arguments&& ...arguments_p) noexcept
     {
@@ -366,36 +366,36 @@ public:
         }
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(function_type function_p) noexcept
+    _FE_FORCE_INLINE_ constexpr function& operator=(function_type function_p) noexcept
     {
         m_function_pointer = function_p;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(const function& other_p) noexcept
+    _FE_FORCE_INLINE_ constexpr function& operator=(const function& other_p) noexcept
     {
         m_function_pointer = other_p.m_function_pointer;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ function& operator=(function&& rvalue_p) noexcept
+    _FE_FORCE_INLINE_ constexpr function& operator=(function&& rvalue_p) noexcept
     {
         m_function_pointer = rvalue_p.m_function_pointer;
         rvalue_p.m_function_pointer = nullptr;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
+    _FE_FORCE_INLINE_ constexpr operator bool() const noexcept
     {
         return m_function_pointer != nullptr;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const function& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator==(const function& other_p) const noexcept
     {
         return (m_function_pointer == other_p.m_function_pointer) ? true : false;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const function& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator!=(const function& other_p) const noexcept
     {
         return (m_function_pointer != other_p.m_function_pointer) ? true : false;
     }
@@ -428,11 +428,11 @@ public:
     using arguments_type = FE::arguments<Arguments...>;
     using class_type = C;
 
-    _FE_CONSTEXPR20_ method() noexcept = default;
+    constexpr method() noexcept = default;
     ~method() noexcept = default;
 
-    _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+    constexpr method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    constexpr method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
@@ -460,36 +460,36 @@ public:
         }
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(method_type method_p) noexcept
     {
         m_method_pointer = method_p;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(const method& other_p) noexcept
     {
         m_method_pointer = other_p.m_method_pointer;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(method&& rvalue_p) noexcept
     {
         m_method_pointer = rvalue_p.m_method_pointer;
         rvalue_p.m_method_pointer = nullptr;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
+    _FE_FORCE_INLINE_ constexpr operator bool() const noexcept
     {
         return m_method_pointer != nullptr;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator==(const method& other_p) const noexcept
     {
         return (m_method_pointer == other_p.m_method_pointer) ? true : false;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator!=(const method& other_p) const noexcept
     {
         return (m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
@@ -515,11 +515,11 @@ public:
     using arguments_type = FE::arguments<Arguments...>;
     using class_type = C;
 
-    _FE_CONSTEXPR20_ method() noexcept = default;
+    constexpr method() noexcept = default;
     ~method() noexcept = default;
 
-    _FE_CONSTEXPR20_ method(method_type method_p) noexcept : m_method_pointer(method_p) {}
-    _FE_CONSTEXPR20_ method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
+    constexpr method(method_type method_p) noexcept : m_method_pointer(method_p) {}
+    constexpr method(const method& other_p) noexcept : m_method_pointer(other_p.m_method_pointer) {}
 
     _FE_FORCE_INLINE_ R operator()(class_type& host_class_instance_p, Arguments&& ...arguments_p) noexcept
     {
@@ -547,36 +547,36 @@ public:
         }
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method_type method_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(method_type method_p) noexcept
     {
         m_method_pointer = method_p;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(const method& other_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(const method& other_p) noexcept
     {
         m_method_pointer = other_p.m_method_pointer;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ method& operator=(method&& rvalue_p) noexcept
+    _FE_FORCE_INLINE_ constexpr method& operator=(method&& rvalue_p) noexcept
     {
         m_method_pointer = rvalue_p.m_method_pointer;
         rvalue_p.m_method_pointer = nullptr;
         return *this;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ operator bool() const noexcept
+    _FE_FORCE_INLINE_ constexpr operator bool() const noexcept
     {
         return m_method_pointer != nullptr;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const method& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator==(const method& other_p) const noexcept
     {
         return (m_method_pointer == other_p.m_method_pointer) ? true : false;
     }
 
-    _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const method& other_p) const noexcept
+    _FE_FORCE_INLINE_ constexpr boolean operator!=(const method& other_p) const noexcept
     {
         return (m_method_pointer != other_p.m_method_pointer) ? true : false;
     }
@@ -633,7 +633,7 @@ public:
     cpp_style_task() noexcept : m_method() {}
     virtual ~cpp_style_task() noexcept = default;
 
-    _FE_CONSTEXPR20_ cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
+    constexpr cpp_style_task(task_type task_p) noexcept : m_method(task_p) {}
 
 	_FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_method = task_p; }
 	_FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_method; }
@@ -830,7 +830,7 @@ public:
     c_style_task() noexcept : m_function() {}
     virtual ~c_style_task() noexcept = default;
 
-    _FE_CONSTEXPR20_ c_style_task(task_type task_p) noexcept : m_function(task_p) {}
+    constexpr c_style_task(task_type task_p) noexcept : m_function(task_p) {}
 
     _FE_FORCE_INLINE_ void set_task(task_type task_p) noexcept { m_function = task_p; }
     _FE_FORCE_INLINE_ task_type get_task() const noexcept { return m_function; }

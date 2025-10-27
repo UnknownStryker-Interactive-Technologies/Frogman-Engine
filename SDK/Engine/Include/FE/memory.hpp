@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_MEMORY_HPP_
+﻿#ifndef _FROGMAN_ENGINE_MEMORY_HPP_
 #define _FROGMAN_ENGINE_MEMORY_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -25,7 +25,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class memory
+class memory // memory API
 {
 public:
     _FE_FORCE_INLINE_ static std::pmr::memory_resource* get_thread_local_memory_resource() noexcept

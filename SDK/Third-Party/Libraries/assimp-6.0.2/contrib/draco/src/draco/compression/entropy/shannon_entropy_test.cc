@@ -1,4 +1,4 @@
-#include "draco/compression/entropy/shannon_entropy.h"
+﻿#include "draco/compression/entropy/shannon_entropy.h"
 
 #include "draco/core/draco_test_base.h"
 

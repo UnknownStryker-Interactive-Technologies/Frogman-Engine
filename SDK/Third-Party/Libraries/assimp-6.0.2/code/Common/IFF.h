@@ -1,4 +1,4 @@
-// Definitions for the Interchange File Format (IFF)
+﻿// Definitions for the Interchange File Format (IFF)
 // Alexander Gessler, 2006
 // Adapted to Assimp August 2008
 

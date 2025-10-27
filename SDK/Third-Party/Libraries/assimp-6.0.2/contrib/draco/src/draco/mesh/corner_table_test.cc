@@ -1,4 +1,4 @@
-#include "draco/mesh/corner_table.h"
+﻿#include "draco/mesh/corner_table.h"
 
 #include <memory>
 

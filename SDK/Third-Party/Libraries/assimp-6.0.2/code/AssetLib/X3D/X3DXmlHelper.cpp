@@ -1,4 +1,4 @@
-#include "X3DXmlHelper.h"
+﻿#include "X3DXmlHelper.h"
 #include "X3DImporter.hpp"
 
 #include <assimp/ParsingUtils.h>

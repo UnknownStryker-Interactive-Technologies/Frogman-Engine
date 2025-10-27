@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
 Licensed under the Frogman Engine Apache License (the "License");
@@ -63,13 +63,13 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	glfwSetKeyCallback(m_renderer->get_window(), &FE::engine::__key_callback);
 	glfwSetMouseButtonCallback(m_renderer->get_window(), &FE::engine::__mouse_button_callback);
 	glfwSetCursorPosCallback(m_renderer->get_window(), &FE::engine::__cursor_position_callback);
-
+	glfwSetScrollCallback(m_renderer->get_window(), &FE::engine::__scroll_callback);
 	return 0;
 }
 
 FE::int32 FE::engine::run()
 {
-	m_processors->fork(	__renderer_main, nullptr, 
+	m_processors->run(	__renderer_main, nullptr, 
 						nullsys, nullptr,
 						nullsys, nullptr, 
 						nullsys, nullptr);
@@ -78,13 +78,12 @@ FE::int32 FE::engine::run()
 
 FE::int32 FE::engine::shutdown()
 {
-	m_processors->join();
 	return 0;
 }
 
 void FE::engine::__renderer_main(_FE_MAYBE_UNUSED_ FE::component_base* engine_reference_p) noexcept
 {
-	while (FE::engine::__get_engine().m_processors->is_running() == true)
+	while (FE::engine::__get_engine().m_should_exit.load(std::memory_order_acquire) == false)
 	{
 		FE::engine::__get_engine().m_renderer->render_frame();
 	}
@@ -92,6 +91,7 @@ void FE::engine::__renderer_main(_FE_MAYBE_UNUSED_ FE::component_base* engine_re
 
 void FE::engine::__on_window_close(GLFWwindow* window_p) noexcept
 {
+	FE::engine::__get_engine().m_should_exit.store(true, std::memory_order_release);
 	FE::engine::__get_engine().m_processors->shutdown();
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
 }
@@ -103,10 +103,6 @@ void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE:
 	(scancode_p);
 	(action_p);
 	(mods_p);
-	if (action_p == GLFW_REPEAT)
-	{
-		std::cout << "this is repeat.";
-	}
 }
 
 void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
@@ -125,4 +121,11 @@ void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x
 	(window_p);
 	(x_p);
 	(y_p);
+}
+
+void FE::engine::__scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept
+{
+	(window_p);
+	(x_offset_p);
+	(y_offset_p);
 }

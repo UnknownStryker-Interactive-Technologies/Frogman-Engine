@@ -1,4 +1,4 @@
-/** @file dox_cmd.h
+﻿/** @file dox_cmd.h
  *  @brief General documentation for assimp_cmd
  */
 

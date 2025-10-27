@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_ASYNC_HPP_
+﻿#ifndef _FROGMAN_ENGINE_ASYNC_HPP_
 #define _FROGMAN_ENGINE_ASYNC_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -27,7 +27,7 @@ BEGIN_NAMESPACE(FE)
 
 using task_handle = typename framework::task::handle;
 
-class async
+class async // async API
 {
 public:
 	_FE_FORCE_INLINE_ static void schedule_task(const framework::task& task_p) noexcept

@@ -31,10 +31,10 @@ enforcing non-null assertions and supporting various iterator operations such as
 template <class Implementation>
 class iterator final : public Implementation
 {
-	FE_NEGATIVE_STATIC_ASSERT(std::is_class<Implementation>::value == false, "Static Assertion Failed: Illegal Implementation Detected.");
+	static_assert(std::is_class<Implementation>::value, "Static Assertion Failed: Illegal Implementation Detected.");
 public:
 	using base_type = Implementation;
-	using iterator_category = typename Implementation::category;
+	using iterator_category = typename Implementation::iterator_category;
 	using value_type = typename Implementation::value_type;
 	using difference_type = typename Implementation::difference_type;
 	using pointer = typename Implementation::pointer;
@@ -42,38 +42,38 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	iterator() noexcept : base_type() {}
-	iterator(const pointer value_p) noexcept : base_type(value_p) {}
-	iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
-	~iterator() noexcept {}
+	constexpr iterator() noexcept : base_type() {}
+	constexpr iterator(const pointer value_p) noexcept : base_type(value_p) {}
+	constexpr iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	constexpr iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
+	constexpr ~iterator() noexcept = default;
 	
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator*() noexcept
 	{
 		return Implementation::operator*();
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
+	_FE_FORCE_INLINE_ constexpr pointer operator->() noexcept
 	{
 		return Implementation::operator->();
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator*() const noexcept
 	{
 		return Implementation::operator*();
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_pointer operator->() const noexcept
 	{
 		return Implementation::operator->();
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator++() noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator++() noexcept
 	{
 		Implementation::operator++();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator++(int) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator operator++(int) noexcept
 	{
 		iterator l_temporary = *this;
 		Implementation::operator++();
@@ -81,12 +81,12 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator--() noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator--() noexcept
 	{
 		Implementation::operator--();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator--(int) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator--(int) noexcept
 	{
 		iterator l_temporary = *this;
 		Implementation::operator--();
@@ -94,57 +94,57 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator+(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator+(pointer_offset_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator+=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator operator-(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator-(pointer_offset_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator-=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr difference_type operator-(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator-(other_p);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator[](const difference_type index_p) const noexcept
 	{
 		return Implementation::operator[](index_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator[](const difference_type index_p) noexcept
 	{
 		return Implementation::operator[](index_p);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator=(const pointer value_p) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator=(const pointer value_p) noexcept
 	{
 		Implementation::operator=(value_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator=(const base_type& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator=(const base_type& other_p) noexcept
 	{
 		Implementation::operator=(other_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ iterator& operator=(base_type&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ constexpr iterator& operator=(base_type&& rvalue_p) noexcept
 	{
 		Implementation::operator=(rvalue_p);
 		rvalue_p = nullptr;
@@ -152,29 +152,29 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator==(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator==(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator!=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator!=(other_p);
 	}
@@ -184,10 +184,10 @@ public:
 template <class Implementation>
 class reverse_iterator final : public Implementation
 {
-	FE_NEGATIVE_STATIC_ASSERT(std::is_class<Implementation>::value == false, "Static Assertion Failed: Illegal Implementation Detected.");
+	static_assert(std::is_class<Implementation>::value, "Static Assertion Failed: Illegal Implementation Detected.");
 public:
 	using base_type = Implementation;
-	using iterator_category = typename Implementation::category;
+	using iterator_category = typename Implementation::iterator_category;
 	using value_type = typename Implementation::value_type;
 	using difference_type = typename Implementation::difference_type;
 	using pointer = typename Implementation::pointer;
@@ -195,38 +195,38 @@ public:
 	using const_pointer = typename Implementation::const_pointer;
 	using const_reference = typename Implementation::const_reference;
 
-	reverse_iterator() noexcept : base_type() {}
-	reverse_iterator(const pointer value_p) noexcept : base_type(value_p) {}
-	reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
-	reverse_iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
-	~reverse_iterator() noexcept {}
+	constexpr reverse_iterator() noexcept : base_type() {}
+	constexpr reverse_iterator(const pointer value_p) noexcept : base_type(value_p) {}
+	constexpr reverse_iterator(const base_type& other_p) noexcept : base_type(other_p) {}
+	constexpr reverse_iterator(base_type&& rvalue_p) noexcept : base_type(rvalue_p) {}
+	constexpr ~reverse_iterator() noexcept = default;
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator*() noexcept
 	{
 		return Implementation::operator*();
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
+	_FE_FORCE_INLINE_ constexpr pointer operator->() noexcept
 	{
 		return Implementation::operator->();
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator*() const noexcept
 	{
 		return Implementation::operator*();
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_pointer operator->() const noexcept
 	{
 		return Implementation::operator->();
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator++() noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator++() noexcept
 	{
 		Implementation::operator--();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator++(int) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator operator++(int) noexcept
 	{
 		reverse_iterator l_temporary = *this;
 		Implementation::operator--();
@@ -234,12 +234,12 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator--() noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator--() noexcept
 	{
 		Implementation::operator++();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator--(int) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator--(int) noexcept
 	{
 		reverse_iterator l_temporary = *this;
 		Implementation::operator++();
@@ -247,54 +247,54 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator-(pointer_offset_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator+(pointer_offset_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr difference_type operator-(const base_type& other_p) const noexcept
 	{
 		return other_p.operator-(*this);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator[](const difference_type index_p) noexcept
 	{
 		return *(operator+(index_p));
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator[](const difference_type index_p) const noexcept
 	{
 		return *(operator+(index_p));
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator=(const pointer value_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator=(const pointer value_p) noexcept
 	{
 		Implementation::operator=(value_p);
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator=(const base_type& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator=(const base_type& other_p) noexcept
 	{
 		Implementation::operator=(other_p);
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reverse_iterator& operator=(base_type&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reverse_iterator& operator=(base_type&& rvalue_p) noexcept
 	{
 		Implementation::operator=(rvalue_p);
 		rvalue_p = nullptr;
@@ -302,29 +302,29 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator==(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator==(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator!=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator!=(other_p);
 	}
@@ -334,10 +334,10 @@ public:
 template <class Implementation>
 class const_iterator final : public Implementation
 {
-	FE_NEGATIVE_STATIC_ASSERT(std::is_class<Implementation>::value == false, "Static Assertion Failed: Illegal Implementation Detected.");
+	static_assert(std::is_class<Implementation>::value, "Static Assertion Failed: Illegal Implementation Detected.");
 public:
 	using base_type = Implementation;
-	using iterator_category = typename Implementation::category;
+	using iterator_category = typename Implementation::iterator_category;
 	using value_type = typename Implementation::value_type;
 	using difference_type = typename Implementation::difference_type;
 	using pointer = typename Implementation::pointer;
@@ -352,24 +352,24 @@ public:
 	~const_iterator() noexcept {}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator*() const noexcept
 	{
 		return Implementation::operator*();
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_pointer operator->() const noexcept
 	{
 		return Implementation::operator->();
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator++() noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator++() noexcept
 	{
 		Implementation::operator++();
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator++(int) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator operator++(int) noexcept
 	{
 		iterator l_temporary = *this;
 		Implementation::operator++();
@@ -377,13 +377,13 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator--() noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator--() noexcept
 	{
 		Implementation::operator--();
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator--(int) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator--(int) noexcept
 	{
 		iterator l_temporary = *this;
 		Implementation::operator--();
@@ -391,54 +391,54 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator+(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator+(pointer_offset_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator+=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator operator-(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator-(pointer_offset_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator-=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr difference_type operator-(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator-(other_p);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator[](const difference_type index_p) const noexcept
 	{
 		return Implementation::operator[](index_p);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator=(const_pointer const value_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator=(const_pointer const value_p) noexcept
 	{
 		Implementation::operator=(value_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator=(const base_type& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator=(const base_type& other_p) noexcept
 	{
 		Implementation::operator=(other_p);
 		return *this;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator& operator=(base_type&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_iterator& operator=(base_type&& rvalue_p) noexcept
 	{
 		Implementation::operator=(rvalue_p);
 		rvalue_p = nullptr;
@@ -446,32 +446,32 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator==(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator==(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator!=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator!=(other_p);
 	}
@@ -481,10 +481,10 @@ public:
 template <class Implementation>
 class const_reverse_iterator final : public Implementation
 {
-	FE_NEGATIVE_STATIC_ASSERT(std::is_class<Implementation>::value == false, "Static Assertion Failed: Illegal Implementation Detected.");
+	static_assert(std::is_class<Implementation>::value, "Static Assertion Failed: Illegal Implementation Detected.");
 public:
 	using base_type = Implementation;
-	using iterator_category = typename Implementation::category;
+	using iterator_category = typename Implementation::iterator_category;
 	using value_type = typename Implementation::value_type;
 	using difference_type = typename Implementation::difference_type;
 	using pointer = typename Implementation::pointer;
@@ -499,22 +499,22 @@ public:
 	~const_reverse_iterator() noexcept {}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator*() const noexcept
 	{
 		return Implementation::operator*();
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_pointer operator->() const noexcept
 	{
 		return Implementation::operator->();
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator++() noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator++() noexcept
 	{
 		Implementation::operator--();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator++(int) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator operator++(int) noexcept
 	{
 		reverse_iterator l_temporary = *this;
 		Implementation::operator--();
@@ -522,12 +522,12 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator--() noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator--() noexcept
 	{
 		Implementation::operator++();
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator--(int) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator--(int) noexcept
 	{
 		const_reverse_iterator l_temporary = *this;
 		Implementation::operator++();
@@ -535,49 +535,49 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator operator+(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator-(pointer_offset_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator+=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator-=(pointer_offset_p);
 		return *this;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator operator-(const difference_type pointer_offset_p) const noexcept
 	{
 		return Implementation::operator+(pointer_offset_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator-=(const difference_type pointer_offset_p) noexcept
 	{
 		Implementation::operator+=(pointer_offset_p);
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr difference_type operator-(const base_type& other_p) const noexcept
 	{
 		return other_p.operator-(*this);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator[](const difference_type index_p) const noexcept
 	{
 		return *(operator+(index_p));
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator=(const_pointer const value_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator=(const_pointer const value_p) noexcept
 	{
 		Implementation::operator=(value_p);
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator=(const base_type& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator=(const base_type& other_p) noexcept
 	{
 		Implementation::operator=(other_p);
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator& operator=(base_type&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ constexpr const_reverse_iterator& operator=(base_type&& rvalue_p) noexcept
 	{
 		Implementation::operator=(rvalue_p);
 		rvalue_p = nullptr;
@@ -585,29 +585,29 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator<=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator>=(other_p);
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator==(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator==(other_p);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const base_type& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator!=(const base_type& other_p) const noexcept
 	{
 		return Implementation::operator!=(other_p);
 	}
@@ -623,7 +623,7 @@ template <typename T>
 class contiguous_iterator
 {
 public:
-	using category = contiguous_iterator<typename FE::remove_const_reference<T>::type>;
+	using iterator_category = std::random_access_iterator_tag;
 	using value_type = T;
 	using difference_type = var::ptrdiff;
 	using pointer = T*;
@@ -639,127 +639,133 @@ public:
 	_FE_CONSTEXPR17_ contiguous_iterator(const_pointer const value_p) noexcept : m_iterator(const_cast<pointer>(value_p)) {}
 	_FE_CONSTEXPR17_ contiguous_iterator(const contiguous_iterator& other_p) noexcept : m_iterator(other_p.m_iterator) {}
 	_FE_CONSTEXPR17_ contiguous_iterator(contiguous_iterator&& other_p) noexcept : m_iterator(other_p.m_iterator) { other_p.m_iterator = nullptr; }
-	_FE_CONSTEXPR20_ ~contiguous_iterator() noexcept {}
+	constexpr ~contiguous_iterator() noexcept {}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_null() const noexcept { return m_iterator == nullptr; }
+	_FE_FORCE_INLINE_ constexpr boolean is_null() const noexcept { return m_iterator == nullptr; }
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator*() noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator*() noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return *(m_iterator);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator->() noexcept
+	_FE_FORCE_INLINE_ constexpr pointer operator->() noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator*() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator*() const noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to dereference a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return *(m_iterator);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_pointer operator->() const noexcept
+	_FE_FORCE_INLINE_ constexpr const_pointer operator->() const noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: Unable to access a null iterator.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator++() noexcept
+	_FE_FORCE_INLINE_ constexpr void operator++() noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		++(m_iterator);
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator--() noexcept
+	_FE_FORCE_INLINE_ constexpr void operator--() noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		--(m_iterator);
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator+(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr pointer operator+(const difference_type pointer_offset_p) const noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator + pointer_offset_p;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator+=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void operator+=(const difference_type pointer_offset_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		m_iterator += pointer_offset_p;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ pointer operator-(const difference_type pointer_offset_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr pointer operator-(const difference_type pointer_offset_p) const noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator - pointer_offset_p;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void operator-=(const difference_type pointer_offset_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void operator-=(const difference_type pointer_offset_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		m_iterator -= pointer_offset_p;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ difference_type operator-(const contiguous_iterator& value_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr difference_type operator-(const contiguous_iterator& value_p) const noexcept
 	{
-		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator - value_p.m_iterator;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference operator[](const difference_type index_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr const_reference operator[](const difference_type index_p) const noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator[index_p];
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference operator[](const difference_type index_p) noexcept
+	_FE_FORCE_INLINE_ constexpr reference operator[](const difference_type index_p) noexcept
 	{
 		FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 		return m_iterator[index_p];
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator& operator=(const contiguous_iterator& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr contiguous_iterator& operator=(const contiguous_iterator& other_p) noexcept
 	{
 		m_iterator = other_p.m_iterator;
 		return *this;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ contiguous_iterator& operator=(contiguous_iterator&& rvalue_p) noexcept
+	_FE_FORCE_INLINE_ constexpr contiguous_iterator& operator=(contiguous_iterator&& rvalue_p) noexcept
 	{
 		m_iterator = rvalue_p.m_iterator;
 		return *this;
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator < other_p.m_iterator;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator<=(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator<=(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator <= other_p.m_iterator;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator > other_p.m_iterator;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator>=(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator>=(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator >= other_p.m_iterator;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator==(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator==(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator == other_p.m_iterator;
 	}
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean operator!=(const contiguous_iterator& other_p) const noexcept
+	_FE_FORCE_INLINE_ constexpr boolean operator!=(const contiguous_iterator& other_p) const noexcept
 	{
 		return m_iterator != other_p.m_iterator;
 	}
 };
 
 
+
+
+template <typename T, typename = void>
+struct has_iterator_category : std::false_type {};
+
+template <typename T>
+struct has_iterator_category<T, std::void_t<typename T::iterator_category>> : std::true_type {};
 
 
 template <typename Impl>
@@ -791,10 +797,10 @@ struct is_const_reverse_iterator<FE::const_reverse_iterator<Impl>> : std::true_t
 
 
 /*
-The FE::is_in_house_iterator<T> struct is a type trait that determines if a given type T is considered an "in-house" iterator by checking if it is an iterator, const iterator, reverse iterator, or const reverse iterator.
+The FE::is_frogman_iterator<T> struct is a type trait that determines if a given type T is considered an "in-house" iterator by checking if it is an iterator, const iterator, reverse iterator, or const reverse iterator.
 */
 template <typename T>
-struct is_in_house_iterator
+struct is_frogman_iterator 
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (
 		(FE::is_iterator<T>::value == true) ||
@@ -804,6 +810,12 @@ struct is_in_house_iterator
 		);
 
 };
+
+template <typename T, typename = void>
+struct is_frogman_iterator_wrapper : std::false_type {};
+
+template <typename T>
+struct is_frogman_iterator_wrapper<T, std::void_t<typename T::wrapped_iterator_type>> : std::true_type {};
 
 /* Possible conversions
 * 1. Pointer type -> Frogman Engine Iterator type
@@ -815,42 +827,65 @@ struct is_in_house_iterator
 
 */
 template<class To, class From>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR17_ To iterator_cast(From ptr_p) noexcept
+_FE_FORCE_INLINE_ constexpr To iterator_cast(From ptr_p) noexcept
 {
-	FE_NEGATIVE_STATIC_ASSERT(((std::is_class<From>::value == false) && (std::is_pointer<From>::value == false)), "Static assertion failure: template arguments must be a pointer type or an iterator type.");
-	FE_NEGATIVE_STATIC_ASSERT(((std::is_class<To>::value == false) && (std::is_pointer<To>::value == false)), "Static assertion failure: template arguments must be a pointer type or an iterator type.");
+	static_assert(FE::has_iterator_category<From>::value || std::is_pointer<From>::value, "Static assertion failure: template arguments must be a pointer type or an iterator type.");
+	static_assert(FE::has_iterator_category<To>::value || std::is_pointer<To>::value, "Static assertion failure: template arguments must be a pointer type or an iterator type.");
 
-	if constexpr (FE::is_in_house_iterator<From>::value == true)
+	if constexpr (FE::is_frogman_iterator<From>::value == true)
 	{
-		if constexpr (std::is_pointer<To>::value == true)
+		if constexpr (std::is_pointer_v<To> == true)
 		{
 			return const_cast<To>(ptr_p.operator->());
 		}
-		else if constexpr (std::is_class<To>::value == true)
+		else if constexpr (FE::is_frogman_iterator_wrapper<To>::value == true)
+		{
+			return To{ ptr_p };
+		}
+		else if constexpr (std::is_class_v<To> == true)
 		{
 			return To{ const_cast<typename To::pointer>(ptr_p.operator->()) };
 		}
 	}
-	else if constexpr (std::is_class<From>::value == true)
+	else if constexpr (FE::is_frogman_iterator_wrapper<From>::value == true)
 	{
-		if constexpr (std::is_pointer<To>::value == true)
+		if constexpr (std::is_pointer_v<To> == true)
+		{
+			return const_cast<To>( ptr_p.unwrap().operator->() );
+		}
+		else if constexpr (FE::is_frogman_iterator_wrapper<To>::value == true)
+		{
+			return To{ ptr_p.unwrap() };
+		}
+		else if constexpr (std::is_class_v<To> == true)
+		{
+			return To{ const_cast<typename To::pointer>( ptr_p.operator->() ) };
+		}
+	}
+	else if constexpr (std::is_class_v<From> == true)
+	{
+		if constexpr (std::is_pointer_v<To> == true)
 		{
 			return std::pointer_traits<To>::pointer_to(const_cast<typename From::reference>(*ptr_p));
 		}
-		else if constexpr (std::is_class<To>::value == true)
+		else if constexpr (std::is_class_v<To> == true)
 		{
 			return To{ std::pointer_traits<typename From::pointer>::pointer_to(const_cast<typename From::reference>(*ptr_p)) };
 		}
 	}
-	else if constexpr (std::is_pointer<From>::value == true)
+	else if constexpr (std::is_pointer_v<From> == true)
 	{
-		if constexpr (std::is_pointer<To>::value == true)
+		if constexpr (std::is_pointer_v<To> == true)
 		{
 			return (To)(ptr_p);
 		}
-		else if constexpr (std::is_class<To>::value == true)
+		else if constexpr (FE::is_frogman_iterator_wrapper<To>::value == true)
 		{
-			return To{ const_cast<typename std::remove_const<From>::type>(ptr_p) };
+			return To{ typename To::wrapped_iterator_type{ const_cast<typename std::remove_const_t<From>>(ptr_p) } };
+		}
+		else if constexpr (std::is_class_v<To> == true)
+		{
+			return To{ const_cast<typename std::remove_const_t<From>>(ptr_p) };
 		}
 	}
 }

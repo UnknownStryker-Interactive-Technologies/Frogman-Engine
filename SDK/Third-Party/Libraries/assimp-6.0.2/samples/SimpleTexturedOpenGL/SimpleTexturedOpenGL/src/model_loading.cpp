@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+﻿// ----------------------------------------------------------------------------
 // Another Assimp OpenGL sample including texturing.
 // Note that it is very basic and will only read and apply the model's diffuse
 // textures (by their material ids)

@@ -29,7 +29,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-
+// eXceptionless assertive concurrent vector
 template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>, class SharedMutex = std::shared_mutex>
 class concurrent_vector
 {
@@ -376,7 +376,8 @@ public: /* use cas to acquire the dictatorship over the pointer.
 
     }
     */
-    // Concurrently safe operations
+
+public: // Concurrently unsafe operations
     inline size_type size() const noexcept
     {
         /* read the comment in the try_emplace_back() */
@@ -393,7 +394,6 @@ public: /* use cas to acquire the dictatorship over the pointer.
         return m_capacity.load(std::memory_order_acquire);
     }
 
-public: // Concurrently unsafe operations
     inline const allocator_type& get_allocator() const noexcept
     {
         return m_allocator;

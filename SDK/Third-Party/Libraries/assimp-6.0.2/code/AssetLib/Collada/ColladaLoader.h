@@ -1,4 +1,4 @@
-/** Defines the collada loader class */
+﻿/** Defines the collada loader class */
 
 /*
 Open Asset Import Library (assimp)

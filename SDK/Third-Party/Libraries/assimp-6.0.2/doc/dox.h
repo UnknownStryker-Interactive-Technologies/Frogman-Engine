@@ -1,4 +1,4 @@
-/** @file dox.h
+﻿/** @file dox.h
  *  @brief General documentation built from a doxygen comment
  */
 

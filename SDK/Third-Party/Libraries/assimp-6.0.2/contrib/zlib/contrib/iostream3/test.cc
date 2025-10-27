@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Test program for gzifstream and gzofstream
  *
  * by Ludwig Schwardt <schwardt@sun.ac.za>

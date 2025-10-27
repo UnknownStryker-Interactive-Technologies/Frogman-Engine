@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // Copyright (C) 2002-2007 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine" and the "irrXML" project.

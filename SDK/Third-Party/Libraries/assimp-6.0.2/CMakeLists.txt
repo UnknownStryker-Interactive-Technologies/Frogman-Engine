@@ -217,7 +217,9 @@ IF (WIN32)
       add_compile_options(
           $<$<CONFIG:>:/MT>
           $<$<CONFIG:Debug>:/MTd>
+          $<$<CONFIG:RelWithDebInfo>:/MT>
           $<$<CONFIG:Release>:/MT>
+          $<$<CONFIG:MinSizeRel>:/MT>
       )
     endif()
   ENDIF()

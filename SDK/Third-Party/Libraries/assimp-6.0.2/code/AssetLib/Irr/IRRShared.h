@@ -1,4 +1,4 @@
-
+﻿
 
 /** @file  IRRShared.h
  * @brief Shared utilities for the IRR and IRRMESH loaders

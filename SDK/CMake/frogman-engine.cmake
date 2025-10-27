@@ -22,9 +22,14 @@ FILE(GLOB_RECURSE FE_ENGINE_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Sourc
 FILE(GLOB_RECURSE FE_RENDERER_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include/*.hxx")
 FILE(GLOB_RECURSE FE_RENDERER_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Source/*.cpp")
 
+FILE(GLOB_RECURSE FE_AUDIO_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include/*.hxx")
+FILE(GLOB_RECURSE FE_AUDIO_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Source/*.cpp")
 
 
 
+
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glm-1.0.1)
@@ -32,7 +37,10 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/hat-tri
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/backends)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-hood-hash)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-map-1.4.0/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/taskflow-3.8.0/taskflow)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/unordered_dense-4.7.0/include)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Include)
@@ -44,10 +52,10 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
     SET(ASSIMP
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Debug/assimp-vc143-mtd.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/RelWithDebInfo/assimp-vc143-mt.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/Release/assimp-vc143-mt.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Solution_X64/lib/MinSizeRel/assimp-vc143-mt.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
     )
 
     SET(BOOST_CHRONO 
@@ -100,15 +108,29 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
     )
 
     SET(IMGUI
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/Debug/ImGUI-1.91.6.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/RelWithDebInfo/ImGUI-1.91.6.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/Release/ImGUI-1.91.6.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/MinSizeRel/ImGUI-1.91.6.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Debug/ImGUI-1.91.6.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/ImGUI-1.91.6.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Release/ImGUI-1.91.6.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/ImGUI-1.91.6.lib>
     )
 
     SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib)
 
     IF(SIMD STREQUAL AVX512F)
+        SET(ASSIMP
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX512F/Debug/assimp-vc143-mtd.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/assimp-vc143-mt.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX512F/Release/assimp-vc143-mt.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX512F/MinSizeRel/assimp-vc143-mt.lib>
+        )
+
+        SET(IMGUI
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/Debug/ImGUI-1.91.6.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/ImGUI-1.91.6.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/Release/ImGUI-1.91.6.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/MinSizeRel/ImGUI-1.91.6.lib>
+        )
+
         SET(FE_CORE
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/Debug/FE.Core.lib>
             $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Core.lib>

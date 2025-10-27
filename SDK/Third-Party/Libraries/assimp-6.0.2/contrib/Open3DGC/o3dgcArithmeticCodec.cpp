@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2004 Amir Said (said@ieee.org) & William A. Pearlman (pearlw@ecse.rpi.edu)
 All rights reserved.
 

@@ -1,4 +1,4 @@
-#ifndef DRACO_IO_STDIO_FILE_WRITER_H_
+﻿#ifndef DRACO_IO_STDIO_FILE_WRITER_H_
 #define DRACO_IO_STDIO_FILE_WRITER_H_
 
 #include <cstddef>

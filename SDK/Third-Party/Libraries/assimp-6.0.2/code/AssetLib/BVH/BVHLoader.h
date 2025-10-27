@@ -1,4 +1,4 @@
-/** Defines the BHV motion capturing loader class */
+﻿/** Defines the BHV motion capturing loader class */
 
 /*
 Open Asset Import Library (assimp)

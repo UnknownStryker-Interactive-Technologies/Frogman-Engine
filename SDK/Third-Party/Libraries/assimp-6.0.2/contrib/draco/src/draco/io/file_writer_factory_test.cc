@@ -1,4 +1,4 @@
-#include "draco/io/file_writer_factory.h"
+﻿#include "draco/io/file_writer_factory.h"
 
 #include <cstdint>
 #include <memory>

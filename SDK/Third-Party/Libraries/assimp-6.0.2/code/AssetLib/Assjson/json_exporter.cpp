@@ -1,4 +1,4 @@
-/*
+﻿/*
 Assimp2Json
 Copyright (c) 2011, Alexander C. Gessler
 

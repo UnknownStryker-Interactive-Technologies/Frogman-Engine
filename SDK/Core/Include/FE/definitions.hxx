@@ -71,10 +71,10 @@ limitations under the License.
 #endif
 
 #ifdef _FE_HAS_CXX20_
-    #define _FE_CONSTEXPR20_ constexpr
+    #define _CONSTEXPR20_ constexpr
     #define _FE_CONSTEVAL20_ consteval
 #else
-    #define _FE_CONSTEXPR20_
+    #define constexpr
     #define _FE_CONSTEVAL20_
 #endif
 

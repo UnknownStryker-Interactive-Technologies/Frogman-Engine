@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_WINDOW_CONTROL_HPP_
+﻿#ifndef _FROGMAN_ENGINE_WINDOW_CONTROL_HPP_
 #define _FROGMAN_ENGINE_WINDOW_CONTROL_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -34,7 +34,7 @@ enum struct CursorMode : FE::int32
 	_VisibleAndConfined = GLFW_CURSOR_CAPTURED
 };
 
-class window_control final
+class window_control // window control API
 {
 public:
 	_FE_FORCE_INLINE_ static void set_window_cursor_mode(CursorMode mode_p) noexcept

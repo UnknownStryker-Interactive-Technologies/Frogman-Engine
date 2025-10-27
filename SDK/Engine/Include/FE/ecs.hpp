@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_ECS_HPP_
+﻿#ifndef _FROGMAN_ENGINE_ECS_HPP_
 #define _FROGMAN_ENGINE_ECS_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
@@ -25,7 +25,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class ecs
+class ecs // ECS API
 {
 public:
 
@@ -68,35 +68,6 @@ public:
 	_FE_FORCE_INLINE_ static FE::entity<Archetype> find_entity(FE::ASCII* const name_p) noexcept
 	{
 		return FE::engine::__get_engine().get_ecs().find_entity<Archetype>(name_p);
-	}
-
-	template <class Component, typename ...Arguments>
-	_FE_FORCE_INLINE_ static FE::component_view<Component> add_component(FE::entity<archetype_base> entity_p, Arguments&& ...arguments_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().add_component<Component>(entity_p, std::forward<Arguments&&>(arguments_p)...);
-	}
-
-	template <class Component>
-	_FE_FORCE_INLINE_ static FE::component_view<FE::component_base> create_component(FE::entity<archetype_base> entity_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().instanciate_component<Component>(entity_p);
-	}
-
-	template <class Component>
-	_FE_FORCE_INLINE_ static void destroy_component(FE::entity<archetype_base> entity_p) noexcept
-	{
-		FE::engine::__get_engine().get_ecs().remove_component(entity_p)
-	}
-
-	_FE_FORCE_INLINE_ static void attatch_component(FE::entity<archetype_base> entity_p, const FE::component_view<component_base>& to_attatch_p) noexcept
-	{
-		FE::engine::__get_engine().get_ecs().attatch_component(entity_p, to_attatch_p);
-	}
-
-	template <class Component>
-	_FE_FORCE_INLINE_ static FE::component_view<Component> detach_component(FE::entity<archetype_base> entity_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().detach_component<Component>(entity_p);
 	}
 
 	_FE_FORCE_INLINE_ static std::optional<FE::pair<FE::system, std::pmr::vector<std::size_t>>> find_system(FE::ASCII* const name_p) noexcept

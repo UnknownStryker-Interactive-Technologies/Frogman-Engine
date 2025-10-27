@@ -239,13 +239,16 @@ public:
 	}
 };
 
+class archetype_base;
+
 template <typename T>
 class smart_ptr<T, RefType::_Observer>
 {
 	static_assert(std::is_array_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to an array.");
     static_assert(std::is_reference_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a reference type variable.");
     static_assert(std::is_const_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a const type variable.");
-    
+   
+    friend class archetype_base;
     friend class smart_ptr;
 
 public:

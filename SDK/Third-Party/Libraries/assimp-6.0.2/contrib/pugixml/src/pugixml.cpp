@@ -1,4 +1,4 @@
-/**
+﻿/**
  * pugixml parser - version 1.15
  * --------------------------------------------------------
  * Copyright (C) 2006-2025, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)

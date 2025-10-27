@@ -39,7 +39,7 @@ public:
     using value_type = T;
 
     random_integer() noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }) {}
-    _FE_CONSTEXPR20_ ~random_integer() noexcept {}
+    constexpr ~random_integer() noexcept {}
 
     _FE_FORCE_INLINE_ T ranged_random_integer(T min_range_p, T max_range_p) noexcept
     {
@@ -61,7 +61,7 @@ public:
     using value_type = T;
 
     random_float() noexcept : m_value_generator(::std::mt19937_64{ static_cast<var::uint64>(time(NULL)) }) {}
-    _FE_CONSTEXPR20_ ~random_float() noexcept {};
+    constexpr ~random_float() noexcept {};
 
     _FE_FORCE_INLINE_ T ranged_random_float(T min_range_p, T max_range_p) noexcept
     {

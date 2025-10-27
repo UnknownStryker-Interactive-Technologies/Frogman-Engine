@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <assimp/vector2.h>
 #include <assimp/vector3.h>

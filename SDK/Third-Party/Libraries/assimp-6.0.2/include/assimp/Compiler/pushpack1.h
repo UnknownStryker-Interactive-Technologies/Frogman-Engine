@@ -1,4 +1,4 @@
-
+﻿
 
 // ===============================================================================
 // May be included multiple times - sets structure packing to 1

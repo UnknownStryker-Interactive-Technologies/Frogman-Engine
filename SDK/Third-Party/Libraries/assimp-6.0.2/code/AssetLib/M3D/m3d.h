@@ -1,4 +1,4 @@
-/*
+﻿/*
  * m3d.h
  *
  * Copyright (C) 2019 bzt (bztsrc@gitlab)

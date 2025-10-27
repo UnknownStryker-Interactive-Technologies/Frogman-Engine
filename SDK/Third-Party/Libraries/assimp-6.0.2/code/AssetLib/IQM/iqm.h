@@ -1,4 +1,4 @@
-#ifndef __IQM_H__
+﻿#ifndef __IQM_H__
 #define __IQM_H__
 
 #define IQM_MAGIC "INTERQUAKEMODEL"

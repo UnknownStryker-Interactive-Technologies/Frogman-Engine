@@ -1,4 +1,4 @@
-
+﻿
 // ===============================================================================
 // May be included multiple times - resets structure packing to the defaults
 // for all supported compilers. Reverts the changes made by #include <pushpack1.h>

@@ -1,4 +1,4 @@
-#include "X3DGeoHelper.h"
+﻿#include "X3DGeoHelper.h"
 #include "X3DImporter.hpp"
 
 #include <assimp/vector3.h>

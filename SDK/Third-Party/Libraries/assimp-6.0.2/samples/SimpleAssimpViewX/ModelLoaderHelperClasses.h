@@ -1,4 +1,4 @@
-//
+﻿//
 //  v002MeshHelper.h
 //  v002 Model Importer
 //

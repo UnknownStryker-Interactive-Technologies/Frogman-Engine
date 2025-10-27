@@ -152,7 +152,7 @@ logging a formatted message along with the file name and line number.
 	{ \
 		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 		FE_DEBUG_BREAK(); \
-		std::abort(); \
+		::std::abort(); \
 	} \
 }
 #else
@@ -185,7 +185,7 @@ FE_ASSERT is a macro that checks a given expression and logs a fatal error messa
 	{ \
 		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
 		FE_DEBUG_BREAK(); \
-		std::abort(); \
+		::std::abort(); \
 	} \
 }
 
@@ -251,6 +251,7 @@ namespace FE
 		_FatalMemoryError_1XX_InvalidSize = 106,
 		_FatalMemoryError_1XX_InvalidIterator = 107,
 		_FatalMemoryError_1XX_FalseDeallocation = 108,
+		_FatalMemoryError_1XX_InvalidIteratorOps = 109,
 
 		_FatalInputError_2XX_InvalidArgument = 200,
 		_FatalInputError_2XX_Null = 201,

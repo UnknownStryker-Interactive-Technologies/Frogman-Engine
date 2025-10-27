@@ -1,4 +1,4 @@
-/// \file   X3DExporter.hpp
+﻿/// \file   X3DExporter.hpp
 /// \brief  X3D-format files exporter for Assimp.
 /// \date   2016
 /// \author smal.root@gmail.com

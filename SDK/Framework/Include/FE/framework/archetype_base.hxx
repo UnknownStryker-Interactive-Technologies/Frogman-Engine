@@ -48,6 +48,7 @@ using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
 class archetype_base
 {
 	friend class framework::ECS;
+	friend class framework::game_thread;
 	friend class framework::processors;
 	using component_view_table = robin_hood::unordered_map<std::size_t, component_view<component_base>>;
 

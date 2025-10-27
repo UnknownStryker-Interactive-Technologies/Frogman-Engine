@@ -749,7 +749,7 @@ The calculate_aligned_memory_size_in_bytes function template computes the aligne
 ensuring that the memory alignment adheres to the specified Alignment.
 */
 template<typename T, class Alignment>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(uint64 elements_p) noexcept  
+_FE_FORCE_INLINE_ constexpr size calculate_aligned_memory_size_in_bytes(uint64 elements_p) noexcept  
 {
 	FE_NEGATIVE_ASSERT(elements_p == 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(elements_p));
 
@@ -761,7 +761,7 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_memory_size_in_bytes(u
 }
 
 template<typename T>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size calculate_aligned_size_of_T(uint64 alignment_p) noexcept
+_FE_FORCE_INLINE_ constexpr size calculate_aligned_size_of_T(uint64 alignment_p) noexcept
 {
 	FE_ASSERT(FE::is_power_of_two(alignment_p) == true, "Assertion failed: the alignment is not a power of two.");
 	var::size l_multiplier =  sizeof(T) / alignment_p;
@@ -877,7 +877,7 @@ with optimizations based on the alignment of the destination address.
 template<Address DestAddressAlignment = Address::_NotAligned>
 _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size bytes_p) noexcept  
 {
-	FE_STATIC_ASSERT(DestAddressAlignment == Address::_NotAligned, "Static Assertion Failure: address aligned memmove not supported.");
+	static_assert(DestAddressAlignment == Address::_NotAligned, "Static Assertion Failure: address aligned memmove not supported.");
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(bytes_p == 0, "${%s@0}: ${%s@1} is zero", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(bytes_p));
 
@@ -900,9 +900,9 @@ _FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size byte
 #endif
 
 
-_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_KiB = 1024;
-_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_MiB = 1048576;
-_FE_MAYBE_UNUSED_ constexpr FE::uint32 one_GiB = 1073741824;
+_FE_MAYBE_UNUSED_ constexpr ::FE::uint32 one_KiB = 1024;
+_FE_MAYBE_UNUSED_ constexpr ::FE::uint32 one_MiB = 1048576;
+_FE_MAYBE_UNUSED_ constexpr ::FE::uint32 one_GiB = 1073741824;
 
 
 _FE_FORCE_INLINE_ var::float64 convert_bytes_to_kilobytes(uint64 bytes_p) noexcept
@@ -929,8 +929,8 @@ void* __cdecl ::operator new[](size_t bytes_p);
 void ::operator delete(void* ptr_p) noexcept;
 void ::operator delete[](void* ptr_p) noexcept;
 
-void ::operator delete(void* ptr_p, std::size_t size_p) noexcept;
-void ::operator delete[](void* ptr_p, std::size_t size_p) noexcept;
+void ::operator delete(void* ptr_p, ::std::size_t size_p) noexcept;
+void ::operator delete[](void* ptr_p, ::std::size_t size_p) noexcept;
 
 
 namespace internal
@@ -959,10 +959,10 @@ namespace internal
 }
 
 template <typename T>
-using pmr_unique_ptr = std::unique_ptr<T, internal::pmr_deleter<T>>;
+using pmr_unique_ptr = ::std::unique_ptr<T, ::FE::internal::pmr_deleter<T>>;
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(::std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
 {
 	T* l_object = (T*)std::pmr::polymorphic_allocator<T>(memory_resource_p).allocate_bytes(sizeof(T));
 	new (l_object) T( std::forward<Arguments&&>(arguments_p)... );
@@ -1002,7 +1002,7 @@ public:
 	}
 
 
-	_FE_CONSTEXPR20_ ~polymorphic_allocator() noexcept = default;
+	constexpr ~polymorphic_allocator() noexcept = default;
 
 
 	constexpr polymorphic_allocator(const polymorphic_allocator& other_p) noexcept
@@ -1035,7 +1035,7 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ polymorphic_allocator& operator=(const polymorphic_allocator& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(const polymorphic_allocator& other_p) noexcept
 	{
 		m_resource = other_p.m_resource;
 		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
@@ -1043,7 +1043,7 @@ public:
 	}
 
 	template <typename U>
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ polymorphic_allocator& operator=(const polymorphic_allocator<U>& that_p) noexcept
+	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(const polymorphic_allocator<U>& that_p) noexcept
 	{
 		m_resource = that_p.m_resource;
 		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
@@ -1051,7 +1051,7 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ polymorphic_allocator& operator=(polymorphic_allocator&& other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(polymorphic_allocator&& other_p) noexcept
 	{
 		m_resource = other_p.m_resource;
 		other_p.m_resource = std::pmr::get_default_resource();
@@ -1060,7 +1060,7 @@ public:
 	}
 
 	template <typename U>
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ polymorphic_allocator& operator=(polymorphic_allocator<U>&& that_p) noexcept
+	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(polymorphic_allocator<U>&& that_p) noexcept
 	{
 		m_resource = that_p.m_resource;
 		that_p.m_resource = std::pmr::get_default_resource();
@@ -1069,13 +1069,13 @@ public:
 	}
 
 
-	_FE_FORCE_INLINE_ _FE_NODISCARD_ _FE_CONSTEXPR20_ T* allocate(FE::size count_p) noexcept
+	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
 	{
 		static_assert(sizeof(value_type) > 0, "Static assertion failed: value_type must be complete before calling allocate.");
 		return static_cast<T*>(m_resource->allocate(sizeof(T) * count_p, alignof(T)));
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void deallocate(T* const ptr_p, const size_t count_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, const size_t count_p) noexcept
 	{
 		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
 		m_resource->deallocate(ptr_p, sizeof(T) * count_p, alignof(T));

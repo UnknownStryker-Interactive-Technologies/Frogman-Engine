@@ -50,7 +50,7 @@ public:
 		
 		if constexpr (std::is_class<Iterator>::value == true)
 		{
-			if constexpr (std::is_same<typename Iterator::iterator_category, typename FE::contiguous_iterator<typename Iterator::value_type>::category>::value == true && sizeof(T) == sizeof(var::byte))
+			if constexpr (std::is_same<typename Iterator::iterator_category, std::random_access_iterator_tag>::value == true && sizeof(T) == sizeof(var::byte))
 			{
 				std::memset(iterator_cast<T*>(in_out_dest_first_p), (int8)value_p, (in_out_dest_last_p - in_out_dest_first_p) * sizeof(T));
 			}
@@ -93,7 +93,7 @@ public:
 		}
 		else if constexpr (std::is_class<Iterator>::value == true)
 		{
-			if constexpr (std::is_same<typename Iterator::iterator_category, typename FE::contiguous_iterator<typename Iterator::value_type>::category>::value == true)
+			if constexpr (std::is_same<typename Iterator::iterator_category, std::random_access_iterator_tag>::value == true)
 			{
 				FE::memcpy<DestAddressAlignment, SourceAddressAlignment>(	iterator_cast<T*>(out_dest_p), dest_capacity_p * sizeof(T), 
 																			iterator_cast<T*>(source_p), source_count_p * sizeof(T));
@@ -124,7 +124,7 @@ public:
 		}
 		else if constexpr (std::is_class<Iterator>::value == true)
 		{
-			if constexpr (std::is_same<typename Iterator::iterator_category, typename FE::contiguous_iterator<typename Iterator::value_type>::category>::value == true)
+			if constexpr (std::is_same<typename Iterator::iterator_category, std::random_access_iterator_tag>::value == true)
 			{
 				FE::memcpy<DestAddressAlignment, SourceAddressAlignment>(iterator_cast<T*>(out_dest_p), iterator_cast<T*>(source_p), count_to_copy_p * sizeof(T));
 			}

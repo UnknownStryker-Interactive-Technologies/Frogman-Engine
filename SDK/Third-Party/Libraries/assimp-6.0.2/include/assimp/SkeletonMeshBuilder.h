@@ -1,4 +1,4 @@
-/** Helper class to construct a dummy mesh for file formats containing only motion data */
+﻿/** Helper class to construct a dummy mesh for file formats containing only motion data */
 
 /*
 Open Asset Import Library (assimp)

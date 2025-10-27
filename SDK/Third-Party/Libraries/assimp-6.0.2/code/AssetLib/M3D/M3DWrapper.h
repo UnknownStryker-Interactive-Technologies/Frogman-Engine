@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /*
 Open Asset Import Library (assimp)
 ----------------------------------------------------------------------

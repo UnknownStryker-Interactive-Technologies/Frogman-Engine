@@ -1,4 +1,4 @@
-/** Implementation of the BVH loader */
+﻿/** Implementation of the BVH loader */
 /*
 ---------------------------------------------------------------------------
 Open Asset Import Library (assimp)

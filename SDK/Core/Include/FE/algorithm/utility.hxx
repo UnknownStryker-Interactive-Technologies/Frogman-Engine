@@ -64,7 +64,7 @@ enum struct IsolationVector : var::uint8
     Useful when element order matters (e.g., rendering, logic sequencing).
 */
 template<IsolationVector IsolationVector, class Iterator, class Predicate>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
+constexpr FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
 {
     if constexpr (IsolationVector == IsolationVector::_Right)
     {
@@ -136,7 +136,7 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable_if(Iterator begin
     Useful when element order matters (e.g., rendering, logic sequencing).
 */
 template<IsolationVector IsolationVector, class Iterator>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+constexpr FE::pair<Iterator, Iterator> partition_stable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
     return partition_stable_if<IsolationVector>(begin_p, end_p, [&](const auto& value_p) { return value_p == exclusion_target_p; });
    // if constexpr (IsolationVector == IsolationVector::_Right)
@@ -213,7 +213,7 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_stable(Iterator begin_p,
     Optimized for performance in large datasets or non-order-sensitive contexts.
 */
 template<IsolationVector IsolationVector, class Iterator, class Predicate> 
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
+constexpr FE::pair<Iterator, Iterator> partition_unstable_if(Iterator begin_p, Iterator end_p, Predicate predicate_p)
 {
     Iterator l_begin = begin_p;
     Iterator l_end = end_p;
@@ -283,7 +283,7 @@ _FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable_if(Iterator beg
     Optimized for performance in large datasets or non-order-sensitive contexts.
 */
 template<IsolationVector IsolationVector, class Iterator>
-_FE_CONSTEXPR20_ FE::pair<Iterator, Iterator> partition_unstable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
+constexpr FE::pair<Iterator, Iterator> partition_unstable(Iterator begin_p, Iterator end_p, const auto& exclusion_target_p)
 {
     return partition_unstable_if<IsolationVector>(begin_p, end_p, [&](const auto& value_p) { return value_p == exclusion_target_p; });
     //Iterator l_begin = begin_p;
@@ -368,7 +368,7 @@ struct real_info
 };
 
 
-_FE_CONSTEXPR20_ var::uint8 count_int_digit_length(var::int64 value_p) noexcept
+constexpr var::uint8 count_int_digit_length(var::int64 value_p) noexcept
 {
     var::uint8 l_length_of_n = 0;
     if (value_p < 0)
@@ -381,7 +381,7 @@ _FE_CONSTEXPR20_ var::uint8 count_int_digit_length(var::int64 value_p) noexcept
     return ++l_length_of_n;
 }
 
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::uint8 count_uint_digit_length(var::uint64 value_p) noexcept
+_FE_FORCE_INLINE_ constexpr var::uint8 count_uint_digit_length(var::uint64 value_p) noexcept
 {
     var::uint8 l_length_of_n = 0;
 
@@ -390,9 +390,9 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ var::uint8 count_uint_digit_length(var::uint6
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const integral_string_p) noexcept
+constexpr uint_info string_to_uint(const CharT* const integral_string_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
+    static_assert(FE::is_char<CharT>::value, "static assertion failed: the template argument CharT is not a character type.");
 
     const CharT* l_integral_string_pointer = integral_string_p;
     var::uint64 l_result = 0;
@@ -408,9 +408,9 @@ _FE_CONSTEXPR20_ uint_info string_to_uint(const CharT* const integral_string_p) 
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
+constexpr int_info string_to_int(const CharT* integral_string_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "static assertion failed: the template argument CharT is not a character type.");
+    static_assert(FE::is_char<CharT>::value, "static assertion failed: the template argument CharT is not a character type.");
 
     const CharT* l_integral_string_pointer = integral_string_p;
     var::int64 l_result = 0;
@@ -442,9 +442,9 @@ _FE_CONSTEXPR20_ int_info string_to_int(const CharT* integral_string_p) noexcept
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
+constexpr void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
     FE_NEGATIVE_ASSERT(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
 
@@ -471,9 +471,9 @@ _FE_CONSTEXPR20_ void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
+constexpr void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type of value_p assigned to the template argument CharT");
+    static_assert(FE::is_char<CharT>::value, "an illegal type of value_p assigned to the template argument CharT");
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
     var::uint8 l_integral_digits = algorithm::utility::count_uint_digit_length(value_p);
@@ -493,7 +493,7 @@ _FE_CONSTEXPR20_ void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED
 
 
 template<typename CharT>
-_FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
+constexpr real_info string_to_float(const CharT* float_string_p) noexcept
 {
     int_info l_integral_part_info = string_to_int(float_string_p);
 
@@ -528,9 +528,9 @@ _FE_CONSTEXPR20_ real_info string_to_float(const CharT* float_string_p) noexcept
 }
 
 template<typename CharT>
-_FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, uint64 input_string_capacity_p, float64 value_p) noexcept
+constexpr void float_to_string(CharT* const string_out_p, uint64 input_string_capacity_p, float64 value_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
 
     FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
 
@@ -551,31 +551,24 @@ _FE_CONSTEXPR20_ void float_to_string(CharT* const string_out_p, uint64 input_st
     algorithm::utility::int_to_string<CharT>(string_out_p + l_integral_part_string_length, input_string_capacity_p, static_cast<var::int64>(l_floating_point));
 }
 
-#pragma warning (disable: 4702)
+
 template<typename CharT>
-_FE_CONSTEXPR20_ FE::boolean string_to_boolean(const CharT* const string_p) noexcept
+constexpr FE::boolean string_to_boolean(const CharT* const string_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
 
-    if (((*string_p == 't') && (string_p[1] == 'r')) && ((string_p[2] == 'u') && (string_p[3] == 'e')))
-    {
-        return true;
-    }
-    else if (((*string_p == 'f') && (string_p[1] == 'a')) && ((string_p[2] == 'l') && (string_p[3] == 's')) && string_p[4] == 'e')
-    {
-        return false;
-    }
-
-    std::exit((int32)FE::ErrorCode::_FatalInputError_2XX_InvalidArgument);
-    return false;
+    char l_buffer[] = "true";
+    var::int32* const l_lhs = (var::int32* const)l_buffer;
+    var::int32* const l_rhs = (var::int32* const)string_p;
+    return ((*l_lhs) xor (*l_rhs)) == 0;
 }
 
 template<typename CharT>
-_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const CharT* boolean_to_string(boolean value_p) noexcept
+_FE_FORCE_INLINE_ constexpr const CharT* boolean_to_string(boolean value_p) noexcept
 {
-    FE_NEGATIVE_STATIC_ASSERT(FE::is_char<CharT>::value == false, "an illegal type assigned to the template argument CharT");
+    static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
 
-    return (value_p == true) ? static_cast<const CharT*>("true") : static_cast <const CharT*>("false");
+    return (value_p == true) ? static_cast<const CharT*>("true") : static_cast<const CharT*>("false");
 }
 
 

@@ -281,7 +281,7 @@ public:
     template<typename U>
     U* allocate(FE::int32 size_p = 1) noexcept
     {
-        FE_STATIC_ASSERT(std::is_array<U>::value == false, "Static Assertion Failed: The T must not be an array[] type.");
+        static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
 
         FE::int32 l_queried_allocation_size_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
         FE_EXIT_IF(l_queried_allocation_size_in_bytes > page_capacity, FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow, "Fatal Error: Unable to allocate ${%d0} bytes of memmory that exceeds the pool chunk's capacity.", &size_p);

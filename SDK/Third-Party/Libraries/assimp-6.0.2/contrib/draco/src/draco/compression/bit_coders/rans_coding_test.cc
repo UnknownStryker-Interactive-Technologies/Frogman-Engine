@@ -1,4 +1,4 @@
-#include "draco/compression/bit_coders/adaptive_rans_bit_decoder.h"
+﻿#include "draco/compression/bit_coders/adaptive_rans_bit_decoder.h"
 #include "draco/compression/bit_coders/adaptive_rans_bit_encoder.h"
 #include "draco/compression/bit_coders/rans_bit_decoder.h"
 #include "draco/compression/bit_coders/rans_bit_encoder.h"

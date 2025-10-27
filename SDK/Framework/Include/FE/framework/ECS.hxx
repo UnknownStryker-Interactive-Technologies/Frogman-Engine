@@ -50,7 +50,9 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
+class game_thread;
 class processors;
+
 
 using initializer = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
 using initializer_list = robin_hood::unordered_map<std::pmr::string, initializer>;
@@ -59,6 +61,7 @@ using system_table_initializer_list = robin_hood::unordered_map<std::pmr::string
 
 class ECS
 {
+	friend class game_thread;
 	friend class processors;
 
 	using archetype_table = std::pmr::unordered_map<std::pmr::string, FE::archetype, FE::hash<std::pmr::string>>;

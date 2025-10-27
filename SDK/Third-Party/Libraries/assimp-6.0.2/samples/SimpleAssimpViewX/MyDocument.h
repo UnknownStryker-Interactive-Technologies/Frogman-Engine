@@ -1,4 +1,4 @@
-//
+﻿//
 //  MyDocument.h
 //  DisplayLinkAsyncMoviePlayer
 //

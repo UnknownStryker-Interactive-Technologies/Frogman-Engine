@@ -31,6 +31,7 @@ BEGIN_NAMESPACE(FE)
 class archetype_base;
 class component_base;
 CLASS_FORWARD_DECLARATION(framework, ECS);
+CLASS_FORWARD_DECLARATION(framework, game_thread);
 CLASS_FORWARD_DECLARATION(framework, processors);
 CLASS_FORWARD_DECLARATION(internal::ECS, gc_metadata_proxy_table);
 CLASS_FORWARD_DECLARATION(internal::ECS, component_metadata);
@@ -40,6 +41,7 @@ class component_base
 {
 	friend class FE::archetype_base;
 	friend class framework::ECS;
+	friend class framework::game_thread;
 	friend class framework::processors;
 	friend class internal::ECS::gc_metadata_proxy_table;
 
@@ -111,6 +113,7 @@ namespace internal::ECS
 	class component_metadata
 	{
 		friend class gc_metadata_proxy_table;
+		friend class framework::game_thread;
 		friend class framework::processors;
 		friend class framework::ECS;
 

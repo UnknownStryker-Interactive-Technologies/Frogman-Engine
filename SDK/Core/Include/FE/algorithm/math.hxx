@@ -109,7 +109,7 @@ uint64 to_lower_prime(uint64 number_p) noexcept;
 
 
 template<typename T>
-_FE_CONSTEXPR20_ T select_minimum(std::initializer_list<T>&& initializer_list_p) noexcept
+constexpr T select_minimum(std::initializer_list<T>&& initializer_list_p) noexcept
 {
 	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
 	const T* const l_initializer_list_end = initializer_list_p.end();
@@ -129,7 +129,7 @@ _FE_CONSTEXPR20_ T select_minimum(std::initializer_list<T>&& initializer_list_p)
 }
 
 template<typename T>
-_FE_CONSTEXPR20_ T select_maximum(std::initializer_list<T>&& initializer_list_p) noexcept
+constexpr T select_maximum(std::initializer_list<T>&& initializer_list_p) noexcept
 {
 	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
 	const T* const l_initializer_list_end = initializer_list_p.end();

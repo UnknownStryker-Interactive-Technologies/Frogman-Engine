@@ -1,4 +1,4 @@
-#include "draco/compression/bit_coders/symbol_bit_decoder.h"
+﻿#include "draco/compression/bit_coders/symbol_bit_decoder.h"
 
 #include "draco/compression/entropy/symbol_decoding.h"
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Poly2Tri Copyright (c) 2009-2022, Poly2Tri Contributors
  * https://github.com/jhasse/poly2tri
  *

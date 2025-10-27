@@ -40,8 +40,8 @@ providing various constructors and assignment operators for initialization and e
 template<class T, size Capacity, class Traits = internal::memory_traits<T>>
 class fqueue final
 {
-	FE_NEGATIVE_STATIC_ASSERT((std::is_same<T, typename Traits::value_type>::value == false), "Static Assertion Failed: The template argument T and Traits' value_type have be the same type.");
-	FE_NEGATIVE_STATIC_ASSERT(std::is_class<Traits>::value == false, "Static Assertion Failed: The template argument Traits is not a class type.");
+	static_assert((std::is_same<T, typename Traits::value_type>::value), "Static Assertion Failed: The template argument T and Traits' value_type have be the same type.");
+	static_assert(std::is_class<Traits>::value, "Static Assertion Failed: The template argument Traits is not a class type.");
 
 public:
 	using value_type = T;
@@ -85,20 +85,20 @@ public:
 	}
 
 	template<class InputIterator>
-	fqueue(InputIterator first_p, InputIterator last_p) noexcept 
+	fqueue(InputIterator begin_p, InputIterator end_p) noexcept 
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_back_ptr(m_front_ptr + (last_p - first_p)), 
+			m_back_ptr(m_front_ptr + (end_p - begin_p)), 
 			m_absolute_begin_pointer(m_front_ptr), 
-			m_indirected_element_count(last_p - first_p)
+			m_indirected_element_count(end_p - begin_p)
 	{
-		FE_NEGATIVE_STATIC_ASSERT(std::is_class<InputIterator>::value == false, "Static Assertion Failure: The template argument InputIterator must be a class type.");
-		FE_NEGATIVE_STATIC_ASSERT((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value == false), "Static Assertion Failure: InputIterator's value_type has to be the same as fqueue's value_type.");
+		static_assert(std::is_class<InputIterator>::value, "Static Assertion Failure: The template argument InputIterator must be a class type.");
+		static_assert((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value), "Static Assertion Failure: InputIterator's value_type has to be the same as fqueue's value_type.");
 
-		FE_NEGATIVE_ASSERT(first_p >= last_p, "${%s@0}: The input iterator ${%s@1} must not be greater than ${%s@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator), TO_STRING(first_p), TO_STRING(last_p));
-		FE_NEGATIVE_ASSERT(static_cast<uint64>(last_p - first_p) > Capacity, "${%s@0}: The input size exceeds the fqueue capacity.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
+		FE_NEGATIVE_ASSERT(begin_p >= end_p, "${%s@0}: The input iterator ${%s@1} must not be greater than ${%s@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator), TO_STRING(begin_p), TO_STRING(end_p));
+		FE_NEGATIVE_ASSERT(static_cast<uint64>(end_p - begin_p) > Capacity, "${%s@0}: The input size exceeds the fqueue capacity.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
 
-		Traits::copy_construct(InputIterator{ m_absolute_begin_pointer }, first_p, last_p - first_p);
+		Traits::copy_construct(InputIterator{ m_absolute_begin_pointer }, begin_p, end_p - begin_p);
 	}
 
 	fqueue(fqueue& other_p) noexcept 
@@ -119,7 +119,7 @@ public:
 		__jump_back_pointer(other_p.m_back_ptr - other_p.m_front_ptr);
 	}
 
-	_FE_CONSTEXPR20_ fqueue(fqueue&& rvalue_p) noexcept
+	constexpr fqueue(fqueue&& rvalue_p) noexcept
 		:	m_memory(),
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr), 
@@ -149,7 +149,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR20_ fqueue& operator=(fqueue& other_p) noexcept
+	constexpr fqueue& operator=(fqueue& other_p) noexcept
 	{
 		if (other_p.is_empty())
 		{
@@ -161,7 +161,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR20_ fqueue& operator=(fqueue&& rvalue_p) noexcept
+	constexpr fqueue& operator=(fqueue&& rvalue_p) noexcept
 	{
 		if (rvalue_p.is_empty())
 		{
@@ -173,7 +173,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR20_ void push(const value_type& value_p) noexcept
+	constexpr void push(const value_type& value_p) noexcept
 	{
 		if (m_back_ptr >= m_absolute_begin_pointer + Capacity)
 		{
@@ -194,7 +194,7 @@ public:
 		++m_indirected_element_count;
 	}
 
-	_FE_CONSTEXPR20_ value_type pop() noexcept
+	constexpr value_type pop() noexcept
 	{
 		if ((m_absolute_begin_pointer + Capacity) == m_front_ptr)
 		{
@@ -214,7 +214,7 @@ public:
 		return l_return_value_buffer;
 	}
 
-	_FE_CONSTEXPR20_ void pop_all() noexcept
+	constexpr void pop_all() noexcept
 	{
 		if (is_empty() == false)
 		{
@@ -237,103 +237,103 @@ public:
 		}
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference front() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reference front() const noexcept
 	{
 		return *m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reference back() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reference back() const noexcept
 	{
 		return *(m_back_ptr - 1);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference front() noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr reference front() noexcept
 	{
 		return *m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ reference back() noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr reference back() noexcept
 	{
 		return *(m_back_ptr - 1);
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ boolean is_empty() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr boolean is_empty() const noexcept
 	{
 		return m_indirected_element_count == 0;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type count() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type count() const noexcept
 	{
 		return m_indirected_element_count;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type size() const noexcept
 	{
 		return m_indirected_element_count;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type max_size() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type max_size() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ size_type capacity() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type capacity() const noexcept
 	{
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cbegin() const noexcept
 	{
 		return m_front_ptr;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_iterator cend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cend() const noexcept
 	{
 		return m_front_ptr + Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crbegin() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crbegin() const noexcept
 	{
 		return (m_front_ptr + Capacity) - 1;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ const_reverse_iterator crend() const noexcept
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crend() const noexcept
 	{
 		return m_front_ptr - 1;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void swap(fqueue& in_out_other_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void swap(fqueue& in_out_other_p) noexcept
 	{
 		std::swap(*this, in_out_other_p);
 	}
 
-	_FE_NODISCARD_ _FE_CONSTEXPR20_ boolean operator==(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ constexpr boolean operator==(fqueue& other_p) const noexcept
 	{
 		return FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
 	}
 
-	_FE_NODISCARD_ _FE_CONSTEXPR20_ boolean operator!=(fqueue& other_p) const noexcept
+	_FE_NODISCARD_ constexpr boolean operator!=(fqueue& other_p) const noexcept
 	{
 		return !FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
 	}
 
 protected:
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __jump_front_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void __jump_front_pointer(difference_type ptrdiff_p) noexcept
 	{
 		m_front_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __set_front_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ constexpr void __set_front_pointer_to_zero() noexcept
 	{
 		m_front_ptr = m_absolute_begin_pointer;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __jump_back_pointer(difference_type ptrdiff_p) noexcept
+	_FE_FORCE_INLINE_ constexpr void __jump_back_pointer(difference_type ptrdiff_p) noexcept
 	{
 		m_back_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ _FE_CONSTEXPR20_ void __set_back_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ constexpr void __set_back_pointer_to_zero() noexcept
 	{
 		m_back_ptr = m_absolute_begin_pointer;
 	}

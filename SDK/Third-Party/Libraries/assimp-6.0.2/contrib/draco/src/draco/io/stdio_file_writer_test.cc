@@ -1,4 +1,4 @@
-#include "draco/io/stdio_file_writer.h"
+﻿#include "draco/io/stdio_file_writer.h"
 
 #include <cstdio>
 #include <cstring>

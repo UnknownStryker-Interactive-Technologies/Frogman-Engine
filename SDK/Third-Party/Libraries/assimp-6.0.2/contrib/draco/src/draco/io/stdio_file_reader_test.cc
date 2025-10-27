@@ -1,4 +1,4 @@
-#include "draco/io/stdio_file_reader.h"
+﻿#include "draco/io/stdio_file_reader.h"
 
 #include "draco/core/draco_test_base.h"
 #include "draco/core/draco_test_utils.h"

@@ -1,4 +1,4 @@
-/* blast.h -- interface for blast.c
+﻿/* blast.h -- interface for blast.c
   Copyright (C) 2003, 2012, 2013 Mark Adler
   version 1.3, 24 Aug 2013
 
