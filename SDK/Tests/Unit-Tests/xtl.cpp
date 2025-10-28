@@ -343,7 +343,7 @@ TEST(XTL_list_modifiers, resize_grows_and_shrinks)
     EXPECT_EQ(l.back(), 0);
 }
 
-TEST(XTL_list_modifiers, swap_and_swap_boundaries)
+TEST(XTL_list_modifiers, swap_and_swap_extremes)
 {
     // swap()
     FE::list<int> a{ 1, 2, 3 };
@@ -359,17 +359,17 @@ TEST(XTL_list_modifiers, swap_and_swap_boundaries)
         EXPECT_EQ(*it, expected_a[idx]);
     }
 
-    // swap_boundaries() size == 2
+    // swap_extremes() size == 2
     FE::list<int> s2{ 100, 200 };
-    s2.swap_boundaries();
+    s2.swap_extremes();
     EXPECT_EQ(s2.front(), 200);
     EXPECT_EQ(s2.back(), 100);
 
-    // swap_boundaries() size >= 3
+    // swap_extremes() size >= 3
     FE::list<int> s3{ 1, 2, 3, 4, 5 };
     int old_front = s3.front();
     int old_back = s3.back();
-    s3.swap_boundaries();
+    s3.swap_extremes();
     EXPECT_EQ(s3.front(), old_back);
     EXPECT_EQ(s3.back(), old_front);
 

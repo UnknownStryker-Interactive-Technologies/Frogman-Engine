@@ -14,7 +14,8 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_COMMON_H_
 #define ABSL_CONTAINER_INTERNAL_COMMON_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4324) 
 #include <cassert>
 #include <type_traits>
 
@@ -246,5 +247,5 @@ struct InsertReturnType {
 }  // namespace container_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
-
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_COMMON_H_

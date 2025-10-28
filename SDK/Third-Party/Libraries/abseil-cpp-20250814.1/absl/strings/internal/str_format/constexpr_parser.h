@@ -14,7 +14,8 @@
 
 #ifndef ABSL_STRINGS_INTERNAL_STR_FORMAT_CONSTEXPR_PARSER_H_
 #define ABSL_STRINGS_INTERNAL_STR_FORMAT_CONSTEXPR_PARSER_H_
-
+#pragma warning(push)  
+#pragma warning(disable : 4127) 
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -353,5 +354,5 @@ constexpr const char* ConsumeUnboundConversion(const char* p, const char* end,
 }  // namespace str_format_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
-
+#pragma warning(pop)
 #endif  // ABSL_STRINGS_INTERNAL_STR_FORMAT_CONSTEXPR_PARSER_H_

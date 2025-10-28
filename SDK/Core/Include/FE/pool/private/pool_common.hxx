@@ -18,13 +18,15 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/do_once.hxx>
 #include <FE/type_traits.hxx>
+#include <FE/hash.hxx>
 #include <FE/memory.hxx>
 
 // std
 #include <array>
-#include <cstring>
 #include <list>
 #include <memory>
+
+#include <absl/container/flat_hash_map.h> // absl::flat_hash_set for page base pointer validation
 
 #ifdef _FE_ON_WINDOWS_X86_64_
 #define WIN32_LEAN_AND_MEAN
@@ -45,22 +47,21 @@ enum struct PoolType : uint8
 	_ConcurrentBlock = 2
 };
 
+template<PoolType PoolType, class Alignment>
+class pool;
+
 
 namespace internal::pool
 {
+    template<PoolType PoolType, class Alignment>
+    class chunk;
+
     struct block_info
     {
         var::byte* _address;
-        var::int32 _size_in_bytes;
+        var::size _size_in_bytes;
     };
-
-    template<PoolType PoolType, class Alignment>
-    class chunk;
 }
-
-
-template<PoolType PoolType, class Alignment>
-class pool;
 
 
 END_NAMESPACE

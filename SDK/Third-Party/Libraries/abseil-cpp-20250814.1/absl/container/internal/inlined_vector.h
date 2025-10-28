@@ -14,7 +14,8 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_INLINED_VECTOR_H_
 #define ABSL_CONTAINER_INTERNAL_INLINED_VECTOR_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4127)  // conditional expression is constant
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
@@ -1098,5 +1099,5 @@ void Storage<T, N, A>::SwapInlinedElements(NotMemcpyPolicy policy,
 }  // namespace inlined_vector_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
-
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_INLINED_VECTOR_H_

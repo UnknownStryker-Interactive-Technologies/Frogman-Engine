@@ -108,7 +108,7 @@ void* FE::memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ st
 		break;
 
 	default:
-		return m_scalable_pool.allocate<std::byte>((FE::int32)bytes_p);
+		return m_scalable_pool.allocate<std::byte>(bytes_p);
 	}
 
 	if (l_allocation_result == nullptr) _FE_UNLIKELY_

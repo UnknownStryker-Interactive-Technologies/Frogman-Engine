@@ -1,17 +1,17 @@
 // Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.hxx> 
 #include <FE/framework.hxx> 
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/thread_id.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection/private/load_reflection_data.hxx>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/system.hxx>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework.hxx>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/thread_id.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/archetype_base.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/component_base.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/type_info.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/framework.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/processors.hxx>
-#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/ECS.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/smart_ptr.hxx>
+#include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/ECS.hxx>
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Framework/Include/FE/framework/reflection.hxx>
 
 
@@ -40,10 +40,10 @@ void load_reflection_data()
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::processor*)> >("destruct ::FE::framework::processor", &::std::destroy_at<::FE::framework::processor>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::internal::processors::fiber_stack_allocator*(::FE::framework::internal::processors::fiber_stack_allocator*)> >("construct ::FE::framework::internal::processors::fiber_stack_allocator", &::std::construct_at<::FE::framework::internal::processors::fiber_stack_allocator>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::internal::processors::fiber_stack_allocator*)> >("destruct ::FE::framework::internal::processors::fiber_stack_allocator", &::std::destroy_at<::FE::framework::internal::processors::fiber_stack_allocator>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::ECS*(::FE::framework::ECS*)> >("construct ::FE::framework::ECS", &::std::construct_at<::FE::framework::ECS>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::ECS*)> >("destruct ::FE::framework::ECS", &::std::destroy_at<::FE::framework::ECS>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::internal::smart_ptr::metadata*(::FE::internal::smart_ptr::metadata*)> >("construct ::FE::internal::smart_ptr::metadata", &::std::construct_at<::FE::internal::smart_ptr::metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::internal::smart_ptr::metadata*)> >("destruct ::FE::internal::smart_ptr::metadata", &::std::destroy_at<::FE::internal::smart_ptr::metadata>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::ECS*(::FE::framework::ECS*)> >("construct ::FE::framework::ECS", &::std::construct_at<::FE::framework::ECS>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::ECS*)> >("destruct ::FE::framework::ECS", &::std::destroy_at<::FE::framework::ECS>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::instance_metadata*(::FE::framework::reflection::instance_metadata*)> >("construct ::FE::framework::reflection::instance_metadata", &::std::construct_at<::FE::framework::reflection::instance_metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::framework::reflection::instance_metadata*)> >("destruct ::FE::framework::reflection::instance_metadata", &::std::destroy_at<::FE::framework::reflection::instance_metadata>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::framework::reflection::enum_metadata*(::FE::framework::reflection::enum_metadata*)> >("construct ::FE::framework::reflection::enum_metadata", &::std::construct_at<::FE::framework::reflection::enum_metadata>);

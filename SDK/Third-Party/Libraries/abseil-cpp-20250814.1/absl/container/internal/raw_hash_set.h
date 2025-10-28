@@ -177,6 +177,8 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
 #define ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
+#pragma warning(push)
+#pragma warning(disable : 4127) 
 
 #include <algorithm>
 #include <cassert>
@@ -3765,5 +3767,5 @@ ABSL_NAMESPACE_END
 #undef ABSL_SWISSTABLE_IGNORE_UNINITIALIZED
 #undef ABSL_SWISSTABLE_IGNORE_UNINITIALIZED_RETURN
 #undef ABSL_SWISSTABLE_ASSERT
-
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_

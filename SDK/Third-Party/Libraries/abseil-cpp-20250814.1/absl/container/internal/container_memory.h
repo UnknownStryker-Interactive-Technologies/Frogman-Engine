@@ -14,7 +14,8 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_CONTAINER_MEMORY_H_
 #define ABSL_CONTAINER_INTERNAL_CONTAINER_MEMORY_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4324)
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -551,5 +552,5 @@ size_t TypeErasedDerefAndApplyToSlotFn(const void* fn, void* slot_ptr,
 }  // namespace container_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
-
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_CONTAINER_MEMORY_H_

@@ -252,6 +252,7 @@ namespace FE
 		_FatalMemoryError_1XX_InvalidIterator = 107,
 		_FatalMemoryError_1XX_FalseDeallocation = 108,
 		_FatalMemoryError_1XX_InvalidIteratorOps = 109,
+		_FatalMemoryError_1XX_AllocationFailure = 110,
 
 		_FatalInputError_2XX_InvalidArgument = 200,
 		_FatalInputError_2XX_Null = 201,

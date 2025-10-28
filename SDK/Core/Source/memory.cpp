@@ -47,12 +47,12 @@ _FE_MAYBE_UNUSED_ FE::uint64 FE::system_large_page_size = []() -> FE::uint64
 
 void* __cdecl operator new(size_t bytes_p) 
 {
-	FE_ASSERT(bytes_p != 0, "Allocating zero bytes is not allowed.");
+	FE_ASSERT(bytes_p != 0, "Allocating zero byte is not allowed.");
 	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
 void* __cdecl operator new[](size_t bytes_p)
 {
-	FE_ASSERT(bytes_p != 0, "Allocating zero bytes is not allowed.");
+	FE_ASSERT(bytes_p != 0, "Allocating zero byte is not allowed.");
 	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
 
@@ -70,9 +70,26 @@ void operator delete(void* ptr_p, std::size_t size_p) noexcept
 	(void)size_p;
 	FE_ALIGNED_FREE(ptr_p);
 }
-
 void operator delete[](void* ptr_p, std::size_t size_p) noexcept
 {
 	(void)size_p;
 	FE_ALIGNED_FREE(ptr_p);
+}
+
+
+void* FE::cache_aligned_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept
+{
+	FE_ASSERT(bytes_p != 0, "Allocating zero byte is not allowed.");
+	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
+}
+
+void FE::cache_aligned_resource::do_deallocate(void* ptr_p, _FE_MAYBE_UNUSED_ std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept
+{
+	FE_ASSERT(bytes_p != 0, "Deallocating zero byte is not allowed.");
+	FE_ALIGNED_FREE(ptr_p);
+}
+
+bool FE::cache_aligned_resource::do_is_equal(const std::pmr::memory_resource& other_p) const noexcept
+{
+	return this == &other_p;
 }

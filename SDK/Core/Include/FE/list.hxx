@@ -35,45 +35,47 @@ BEGIN_NAMESPACE(FE)
 template <typename T, class Allocator = FE::polymorphic_allocator<T>>
 class list 
 {
-	static_assert(std::is_same_v<T, typename Allocator::value_type>,
-		"list<T, Allocator>" " requires that Allocator's value_type match " "T" " (See N4950 [container.alloc.reqmts]/5)" " Either fix the allocator value_type or define _ENFORCE_MATCHING_ALLOCATORS=0" " to suppress this error.");
-	
-	static_assert(std::is_object_v<T>, "The C++ Standard forbids containers of non-object types "
-		"because of [container.requirements].");
+	static_assert(std::is_same_v<T, typename Allocator::value_type>, "Static assertion failed: list<T, Allocator>" " requires that Allocator's value_type match " "T");
+	static_assert(std::is_object_v<T>, "Static assertion failed: the C++ Standard forbids containers of non-object types");
 	
 	class list_iterator;
-	class list_iterator_wapper;
 
 	class node
 	{
 		friend class list;
 		friend class list_iterator;
-		friend class list_iterator_wapper;
-
-		node* m_prev;
-		node* m_next;
 
 	public:
 		T _value;
+
+	private:
+		node* m_prev;
+		node* m_next;
 
 	public:
 		constexpr node() noexcept 
 			:	m_prev(nullptr),
 				m_next(nullptr),
 				_value()
-		{}
+		{
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+		}
 
 		constexpr node(const T& value_p) noexcept
 			:	m_prev(nullptr),
 				m_next(nullptr),
 				_value(value_p)
-		{}
+		{
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+		}
 
 		constexpr node(T&& value_p) noexcept
 			:	m_prev(nullptr),
 				m_next(nullptr),
 				_value( std::move(value_p) )
-		{}
+		{
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+		}
 
 		template <typename... Arguments>
 		constexpr node(Arguments&&... arguments_p) noexcept
@@ -82,6 +84,7 @@ class list
 				_value( std::forward<Arguments>(arguments_p)... )
 		{
 			//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
 		}
 
 
@@ -92,7 +95,6 @@ class list
 	{
 		friend class list;
 		friend class list_iterator;
-		friend class list_iterator_wapper;
 	public:
 		using iterator_category = std::bidirectional_iterator_tag;
 		using value_type = node;
@@ -260,7 +262,7 @@ class list
 	{
 		friend class list;
 		friend class list_iterator;
-		friend class list_iterator_wapper;
+
 	public:
 		using wrapped_iterator_type = WrappedIterator;
 		using iterator_category = typename WrappedIterator::iterator_category;
@@ -894,10 +896,6 @@ public: // Member functions
 		{
 			m_front = l_new; // update the front pointer
 		}
-		else if (pos_p == m_back) // inserted at the back
-		{
-			m_back = l_new; // update the back pointer
-		}
 		++m_size; // increase the size
 		return FE::iterator_cast<iterator>(l_new);
 	}
@@ -943,11 +941,6 @@ public: // Member functions
 
 	constexpr iterator erase(const_iterator first_p, const_iterator last_p) noexcept
 	{
-		if (last_p == nullptr) // see https://en.cppreference.com/w/cpp/container/list/erase.html
-		{
-			last_p = cend(); // end() for FE::list is a null pointer, thus no need to update the end() iterator.
-		}
-
 		if (first_p == last_p) // nothing to erase, return last_p as is.
 		{
 			return FE::iterator_cast<iterator>(last_p);
@@ -1106,7 +1099,7 @@ public: // Member functions
 			{
 				l_deletion_range_end = l_deletion_range_end->m_next;
 			}
-			__deallocate_and_destuct_from_begin_to_before_end(m_front, l_deletion_range_end); // trim this list.
+			__deallocate_and_destruct_from_begin_to_before_end(m_front, l_deletion_range_end); // trim this list.
 			m_front = l_deletion_range_end; // update the front pointer
 		}
 		else if (m_size < count_p) // this list is smaller than the request, append new nodes.
@@ -1141,7 +1134,7 @@ public: // Member functions
 
 
 	// Operations
-	void swap_boundaries() noexcept
+	void swap_extremes() noexcept
 	{
 		if (m_size < 2)
 		{
@@ -1206,7 +1199,7 @@ private: // these are private internal functions mean to operate on the given ar
 		return FE::pair<node*, node*>{ l_front, l_node };
 	}
 	// this does not modify the m_size
-	void __deallocate_and_destuct_from_begin_to_before_end(node* const begin_p, node* const end_p) const noexcept
+	void __deallocate_and_destruct_from_begin_to_before_end(node* const begin_p, node* const end_p) const noexcept
 	{
 		FE_ASSERT(begin_p != nullptr, "Assertion failed: front_p must not be nullptr.");
 		FE_ASSERT(end_p != nullptr, "Assertion failed: back_p must not be nullptr.");
@@ -1225,7 +1218,7 @@ private: // these are private internal functions mean to operate on the given ar
 	{
 		FE_ASSERT(first_p != nullptr, "Assertion failed: first_p must not be nullptr.");
 		FE_ASSERT(last_p != nullptr, "Assertion failed: last_p must not be nullptr.");
-		__deallocate_and_destuct_from_begin_to_before_end(first_p, last_p);
+		__deallocate_and_destruct_from_begin_to_before_end(first_p, last_p);
 		last_p->~node();
 		m_allocator.deallocate(last_p, 1);
 	}

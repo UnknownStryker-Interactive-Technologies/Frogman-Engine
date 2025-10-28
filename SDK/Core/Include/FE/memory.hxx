@@ -970,6 +970,77 @@ _FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(::std::pmr::memory_resource*
 }
 
 
+class cache_aligned_resource : public std::pmr::memory_resource
+{
+public:
+	cache_aligned_resource() noexcept = default;
+	virtual ~cache_aligned_resource() noexcept = default;
+
+	cache_aligned_resource(cache_aligned_resource&&) noexcept {}
+	cache_aligned_resource& operator=(cache_aligned_resource&&) noexcept {}
+	cache_aligned_resource(const cache_aligned_resource&) noexcept {}
+	cache_aligned_resource& operator=(const cache_aligned_resource&) noexcept {}
+
+protected:
+	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = FE::CPU_L1_cache_line::size) noexcept override;
+	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = FE::CPU_L1_cache_line::size) noexcept override;
+
+	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
+};
+
+
+template <typename T>
+class cache_aligned_allocator
+{
+	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because cache_aligned_allocator<const T> is ill-formed.");
+	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements.");
+	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements.");
+
+	template <typename>
+	friend class cache_aligned_allocator;
+
+public:
+	using value_type = T;
+	using size_type = var::size;
+	using difference_type = var::ptrdiff;
+	using propagate_on_container_move_assignment = std::true_type;
+
+public:
+	constexpr cache_aligned_allocator() noexcept = default;
+	constexpr ~cache_aligned_allocator() noexcept = default;
+
+	constexpr cache_aligned_allocator(const cache_aligned_allocator&) noexcept {}
+	constexpr cache_aligned_allocator(cache_aligned_allocator&&) noexcept {}
+
+	template <typename U>
+	constexpr cache_aligned_allocator(const cache_aligned_allocator<U>&) noexcept {}
+
+	template <typename U>
+	constexpr cache_aligned_allocator(cache_aligned_allocator<U>&&) noexcept {}
+
+	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(const cache_aligned_allocator&) noexcept { return *this; }
+	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(cache_aligned_allocator&&) noexcept { return *this; }
+
+	template <typename U>
+	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(const cache_aligned_allocator<U>&) noexcept { return *this; }
+
+	template <typename U>
+	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(cache_aligned_allocator<U>&&) noexcept { return *this; }
+
+	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
+	{
+		static_assert(sizeof(value_type) > 0, "Static assertion failed: value_type must be complete before calling allocate.");
+		return static_cast<T*>(FE_ALIGNED_ALLOC(sizeof(T) * count_p, FE::CPU_L1_cache_line::size));
+	}
+
+	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, _FE_MAYBE_UNUSED_ const size_t count_p) noexcept
+	{
+		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
+		FE_ALIGNED_FREE(ptr_p);
+	}
+};
+
+
 template <typename T>
 class polymorphic_allocator
 {
