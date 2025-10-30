@@ -52,7 +52,7 @@ namespace internal::pool
         var::byte* const _begin;
         var::byte* _page_iterator;
         var::byte* const _end;
-        var::uint16 _usage_in_bytes;
+        var::uint32 _usage_in_bytes;
 
     public:
         chunk() noexcept
@@ -79,14 +79,14 @@ namespace internal::pool
     public:
         void check_double_allocation(FE::byte* const address_p) noexcept
         {
-            FE::uint16 l_idx = static_cast<uint16>((address_p - _begin) / Alignment::size);
+            FE::uint32 l_idx = static_cast<uint32>((address_p - _begin) / Alignment::size);
             FE_ASSERT(m_double_free_tracker[l_idx] == false, "Double allocation detected: cannot allocate the same address twice.");
             m_double_free_tracker[l_idx] = true;
         }
 
         void check_double_free(FE::byte* const address_p) noexcept
         {
-            FE::uint16 l_idx = static_cast<uint16>((address_p - _begin) / Alignment::size);
+            FE::uint32 l_idx = static_cast<uint32>((address_p - _begin) / Alignment::size);
             FE_ASSERT(m_double_free_tracker[l_idx] == true, "Double free detected: cannot deallocate the same address twice.");
             m_double_free_tracker[l_idx] = false;
         }
@@ -113,9 +113,9 @@ class pool<PoolType::_Block, Alignment> : public std::pmr::memory_resource
     using block_pointer = typename chunk_type::block_pointer;
 
 public:
-    constexpr static FE::uint16 fixed_block_size_in_bytes = Alignment::size;
+    constexpr static FE::uint32 fixed_block_size_in_bytes = Alignment::size;
     static_assert(FE::is_power_of_two(fixed_block_size_in_bytes) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
-    constexpr static FE::uint16 page_capacity = chunk_type::page_capacity_in_bytes;
+    constexpr static FE::uint32 page_capacity = chunk_type::page_capacity_in_bytes;
 
     using alignment_type = Alignment;
 

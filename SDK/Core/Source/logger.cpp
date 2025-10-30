@@ -48,6 +48,7 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
     typename buffer_type::value_type l_source_code_line_info_buffer[line_info_buffer_size] = "\0";
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
+    std::memset(m_log_buffer.data(), null, m_log_buffer.capacity() * sizeof(typename buffer_type::value_type));
 
     FE::algorithm::string::concatenate<var::ASCII>
         (
@@ -87,13 +88,13 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     std::snprintf(l_source_code_line_info_buffer, line_info_buffer_size, "%u", line_p);
 
-    m_log_buffer.clear();
+    var::size l_message_length = 0;
 
     switch (severity)
     {
     case FE::log::Severity::_Info:
         {
-        FE::algorithm::string::concatenate<var::ASCII>
+        l_message_length = FE::algorithm::string::concatenate<var::ASCII>
             (
                 m_log_buffer.data(),
                 default_buffer_size,
@@ -108,7 +109,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     case FE::log::Severity::_Warning:
         {
-            FE::algorithm::string::concatenate<var::ASCII>
+        l_message_length = FE::algorithm::string::concatenate<var::ASCII>
             (
                 m_log_buffer.data(),
                 default_buffer_size,
@@ -123,7 +124,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
 
     case FE::log::Severity::_Error:
         {
-        FE::algorithm::string::concatenate<var::ASCII>
+        l_message_length = FE::algorithm::string::concatenate<var::ASCII>
             (
                 m_log_buffer.data(),
                 default_buffer_size,
@@ -141,6 +142,7 @@ void message_logger_base::do_log(ASCII* const message_p, ASCII* const file_name_
     } 
 
     std::cout << m_log_buffer.data();
+    std::memset(m_log_buffer.data(), null, l_message_length * sizeof(typename buffer_type::value_type));
 }
 
 

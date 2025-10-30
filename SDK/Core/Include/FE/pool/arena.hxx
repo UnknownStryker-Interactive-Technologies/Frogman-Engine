@@ -130,12 +130,16 @@ namespace internal::pool
 		FE::boolean retrieve_from_the_free_list(internal::pool::block_info& out_alloc_result_p, FE::uint32 requested_bytes_p) noexcept
 		{
             FE_ASSERT((requested_bytes_p % Alignment::size) == 0, "Critical Error in FE.Core.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &requested_bytes_p, &Alignment::size);
-            FE_ASSERT(m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
             
+            if (m_is_page_heapified == false)
+            {
+                return _FE_FAILED_;
+            }
+
             if (m_free_list_size == 0)
             {
-				out_alloc_result_p._address = nullptr;
-				out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
+                out_alloc_result_p._address = nullptr;
+                out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
                 return _FE_FAILED_;
             }
 
@@ -467,7 +471,8 @@ private:
                     __defragment(page_p);
                 }
 
-                if (page_p->get_free_list_size() > 0) // Isn't the free list empty?
+                if ((page_p->get_free_list_size() > 0) &&
+                    (page_p->is_page_heapified() == true)) // Is the free list not empty?
                 {
                     return page_p->retrieve_from_the_free_list(out_result_p, bytes_p); // Try allocating from the defragmented free list. Traverse to the nxt page if it fails.
                 }

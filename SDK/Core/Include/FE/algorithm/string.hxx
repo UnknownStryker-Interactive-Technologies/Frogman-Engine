@@ -375,12 +375,13 @@ _FE_FORCE_INLINE_ constexpr void concatenate(CharT* const out_dest_p, _FE_MAYBE_
 
 
 template<typename CharT>
-constexpr void concatenate(CharT* const out_string_buffer_p, _FE_MAYBE_UNUSED_ size string_buffer_size_p, ::std::initializer_list<const CharT* const>&& strings_p) noexcept
+constexpr FE::size concatenate(CharT* const out_string_buffer_p, _FE_MAYBE_UNUSED_ size string_buffer_size_p, ::std::initializer_list<const CharT* const>&& strings_p) noexcept
 {
     static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
     assert(out_string_buffer_p != nullptr);
 
     var::size l_current_begin_index = algorithm::string::length(out_string_buffer_p);
+	var::size l_total_length = 0;
 
     for (var::size i = 0; i < strings_p.size(); ++i)
     {
@@ -390,8 +391,10 @@ constexpr void concatenate(CharT* const out_string_buffer_p, _FE_MAYBE_UNUSED_ s
 
         std::memcpy(out_string_buffer_p + l_current_begin_index, strings_p.begin()[i], l_string_length_buffer * sizeof(CharT));
         l_current_begin_index += l_string_length_buffer;
+		l_total_length += l_string_length_buffer;
     }
     out_string_buffer_p[l_current_begin_index] = FE::null;
+    return l_total_length;
 }
 
 
@@ -862,7 +865,7 @@ _FE_CONSTEXPR17_ FE::boolean space_insensitive_comparison(const CharT* const lhs
 template<typename CharT>
 _FE_CONSTEXPR17_ FE::boolean space_insensitive_contains(const CharT* const str_p, const std::size_t str_len_p, const CharT* const target_substr_p) noexcept
 {
-    FE_STATIC_ASSERT(FE::is_char<CharT>::value == true, "CharT is not a valid character type");
+    static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
     FE_ASSERT(str_p != nullptr, "Assertion failure: the string is a nullptr.");
     FE_ASSERT(str_len_p > 0, "Assertion failure: the string length is zero.");
 
@@ -954,9 +957,7 @@ _FE_CONSTEXPR17_ FE::boolean space_insensitive_contains(const CharT* const str_p
 template<typename UTF>
 _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ UTF* skip_BOM(UTF* string_p) noexcept
 {
-	FE_STATIC_ASSERT(((std::is_same_v<UTF, var::UTF8> == true) || (std::is_same_v<UTF, FE::UTF8> == true) 
-                    || (std::is_same_v<UTF, var::UTF16> == true) || (std::is_same_v<UTF, FE::UTF16> == true)
-		|| (std::is_same_v<UTF, var::UTF32> == true) || (std::is_same_v<UTF, FE::UTF32> == true)), 
+	static_assert(std::is_same_v<UTF, FE::UTF8> || std::is_same_v<UTF, FE::UTF16> || std::is_same_v<UTF, FE::UTF32>,
         "the character type is not a valid UTF type");
     
     var::uint32 l_bom_size = 0;
