@@ -133,8 +133,20 @@ void header_tool_engine::__purge_string_literals(std::pmr::list<token>& out_list
 				break; 
 			}
 		}
+		FE_ASSERT(l_begin->_vocabulary == Vocabulary::_StringLiteral, "The first character of a string literal must start with \"");
+#ifdef _DEBUG_
+		//// for debugging purpose.
+		//std::cout << "Removing the string literal:\n";
+		//for (auto it = l_begin; it != l_end; ++it)
+		//{
+		//	std::cout << reinterpret_cast<const char*>(it->_code.c_str()) << "\n";
+		//}
+		//std::cout << reinterpret_cast<const char*>(l_end->_code.c_str()) << "\n";
+		//std::cout << "\n";
+#endif
+		FE_ASSERT(l_end->_vocabulary == Vocabulary::_StringLiteral, "The last character of a string literal must end with \"");
 		out_list_p.erase(l_begin, l_end);
-		out_list_p.erase(l_end); // erase the last string literal.
+		out_list_p.erase(l_end);
 	}
 }
 

@@ -116,16 +116,13 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 		__output_enum_struct_metadata(out_return_p, *node);
 	}
 
-	if (node_p._nested_namespaces != nullptr)
+	for (const std::optional<namespace_node>& node : node_p._nested_namespaces)
 	{
-		for (const std::optional<namespace_node>& node : *(node_p._nested_namespaces))
+		if (node == std::nullopt)
 		{
-			if (node == std::nullopt)
-			{
-				continue;
-			}
-			__output_namespace_metadata_recursive(out_return_p, *node);
+			continue;
 		}
+		__output_namespace_metadata_recursive(out_return_p, *node);
 	}
 
 	for (const  std::optional<identifier>& c_style_system_function : node_p._c_style_systems)

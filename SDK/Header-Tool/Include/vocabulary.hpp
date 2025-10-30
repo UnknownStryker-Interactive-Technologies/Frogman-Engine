@@ -77,7 +77,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_Enum },
 	{ ":", Vocabulary::_Colon }, { ";", Vocabulary::_Semicolon }, { ",", Vocabulary::_Comma },
 
-	{ "\"", Vocabulary::_StringLiteral }, { "\'", Vocabulary::_StringLiteral },
+	{ "\"", Vocabulary::_StringLiteral }, { "\'", Vocabulary::_CharLiteral },
 	{ "->", Vocabulary::_Access },
 	{ "=", Vocabulary::_AssignmentOperator },
 	{ "&&", Vocabulary::_LogicalAnd },

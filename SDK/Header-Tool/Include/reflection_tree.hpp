@@ -65,7 +65,7 @@ struct enum_struct_node
 struct namespace_node
 {
 	identifier _target_namespace_name;
-	std::unique_ptr< std::pmr::vector<std::optional<namespace_node>> > _nested_namespaces;
+	std::pmr::vector<std::optional<namespace_node>> _nested_namespaces;
 	std::pmr::vector<std::optional<class_node>> _classes;
 	std::pmr::vector<std::optional<struct_node>> _structs;
 	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;

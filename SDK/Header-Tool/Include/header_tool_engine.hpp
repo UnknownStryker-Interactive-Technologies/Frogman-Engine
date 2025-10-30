@@ -122,7 +122,7 @@ private:
 	};
 	_FE_NODISCARD_ symbol_count __try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p) const;
 	_FE_NODISCARD_ symbol_count __try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
-
+	
 	// ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) returns std::nullopt if paren_p is not a paren nor a bracket.
 	_FE_NODISCARD_ std::optional<FE::uint32> ___verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) const noexcept;
 	_FE_NODISCARD_ std::optional<FE::ASCII*> __validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept;

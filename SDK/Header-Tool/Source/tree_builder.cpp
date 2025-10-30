@@ -116,6 +116,16 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 			break;
 
 		case Vocabulary::_Template:
+			++iterator;
+			if (iterator == token_list_p.end())
+			{
+				break;
+			}
+
+			if (iterator->_vocabulary != Vocabulary::_BeginTemplateArgs)
+			{
+				break;
+			}
 			__skip_template_args(iterator);
 			l_is_template = true;
 			break;
@@ -219,7 +229,7 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 
 	// Allocate the necessary children nodes.
 	symbol_count l_nums = __try_count_the_current_scope_level_symbols(out_token_iterator_p, end_p);
-	l_node._nested_namespaces = (0 == l_nums._namespaces) ? nullptr : std::make_unique<std::pmr::vector< std::optional<namespace_node> >>();
+	l_node._nested_namespaces = std::pmr::vector< std::optional<namespace_node> >(get_memory_resource());
 	l_node._classes.reserve(l_nums._classes);
 	l_node._structs.reserve(l_nums._structs);
 	l_node._enum_structs.reserve(l_nums._enums);
@@ -274,7 +284,7 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
 			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'namespace.'", &(out_token_iterator_p->_line_number));
-			l_node._nested_namespaces->push_back( __try_build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
+			l_node._nested_namespaces.push_back( __try_build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_EndNamespace:
@@ -283,6 +293,16 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 			return l_node;
 
 		case Vocabulary::_Template:
+			++out_token_iterator_p;
+			if (out_token_iterator_p == end_p)
+			{
+				break;
+			}
+
+			if (out_token_iterator_p->_vocabulary != Vocabulary::_BeginTemplateArgs)
+			{
+				break;
+			}
 			__skip_template_args(out_token_iterator_p);
 			l_is_template = true;
 			break;

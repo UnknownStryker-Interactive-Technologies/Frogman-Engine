@@ -73,7 +73,7 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor(1/*m_program_options.get_max_concurrency() - 1*/); // exlude the main thread.
+	tf::Executor l_executor(m_program_options.get_max_concurrency() - 1); // exlude the main thread.
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = m_mapped_header_files.size();
 	std::mutex l_log_lock;
@@ -138,17 +138,28 @@ FE::int32 header_tool_engine::run()
 						return;
 					}
 					
+					if (__validate_parentheses(*l_tokens) != std::nullopt)
+					{
+						std::lock_guard<std::mutex> l_guard(l_log_lock);
+						std::cerr << "Frogman Engine Header Tool Error:\n\tThe error code is " << m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax) << '\n';
+						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
+						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax; 
+						return;
+					}
 
 					// removes /**/ and // comments.
 					__purge_comments(*l_tokens); // throws if */ is missing.
+					FE_ASSERT(__validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_comments might corrupted list");
 
 					__purge_string_literals(*l_tokens); // removes the string literals ( quoted texts ).
+					FE_ASSERT(__validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_string_literals might corrupted list");
 
 					// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
 					__purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
-										//// for debugging purpose.
+					FE_ASSERT(__validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_preprocessor_directives might corrupted list");
 
 					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
+					FE_ASSERT(__validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: erase_if might corrupted list");
 
 					//// for debugging purpose.
 					//for (auto& v : *l_tokens)

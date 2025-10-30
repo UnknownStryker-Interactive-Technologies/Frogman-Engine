@@ -94,6 +94,16 @@ _FE_NODISCARD_ header_tool_engine::symbol_count header_tool_engine::__try_count_
 			break;
 
 		case Vocabulary::_Template:
+			++begin_p;
+			if (begin_p == end_p)
+			{
+				break;
+			}
+
+			if (begin_p->_vocabulary != Vocabulary::_BeginTemplateArgs)
+			{
+				break;
+			}
 			__skip_template_args(begin_p);
 			l_is_template = true;
 			break;
@@ -240,48 +250,48 @@ _FE_NODISCARD_ std::optional<FE::ASCII*> header_tool_engine::__validate_parenthe
 
 
 
-	for (auto it = token_list_p.rbegin(), end = token_list_p.rend(); it != end; ++it)
-	{
-		switch (it->_vocabulary)
-		{
-		case Vocabulary::_RightParen:
-		case Vocabulary::_RightCurlyBracket:
-		case Vocabulary::_RightBracket:
-		//case Vocabulary::_EndTemplateArgs:
-			tl_s_stack.push_back(it->_vocabulary);
-			break;
+	//for (auto it = token_list_p.rbegin(), end = token_list_p.rend(); it != end; ++it)
+	//{
+	//	switch (it->_vocabulary)
+	//	{
+	//	case Vocabulary::_RightParen:
+	//	case Vocabulary::_RightCurlyBracket:
+	//	case Vocabulary::_RightBracket:
+	//	//case Vocabulary::_EndTemplateArgs:
+	//		tl_s_stack.push_back(it->_vocabulary);
+	//		break;
 
-		default:
-			if (tl_s_stack.empty() == true)
-			{
-				break;
-			}
+	//	default:
+	//		if (tl_s_stack.empty() == true)
+	//		{
+	//			break;
+	//		}
 
-			std::optional<FE::uint32> l_index = ___verify_if_token_is_a_paren_or_bracket(tl_s_stack.back());
-			if (l_index == std::nullopt) // The token is not a paren nor a bracket.
-			{
-				break;
-			}
+	//		std::optional<FE::uint32> l_index = ___verify_if_token_is_a_paren_or_bracket(tl_s_stack.back());
+	//		if (l_index == std::nullopt) // The token is not a paren nor a bracket.
+	//		{
+	//			break;
+	//		}
 
-			/*
-			* index 0: first == LeftParen, second == RightParen
-			* index 1: first == LeftCurlyBracket, second == RightCurlyBracket
-			* index 2: first == LeftBracket, second == RightBracket
-			* index 3: first == BeginTemplateArgs, second == EndTemplateArgs
-			*/
-			if (l_lookup[(*l_index)].first == it->_vocabulary) // is the paren or braket closed and complete?
-			{
-				tl_s_stack.pop_back(); // pop ), ], or }.
-				break;
-			}
-		}
-	}
+	//		/*
+	//		* index 0: first == LeftParen, second == RightParen
+	//		* index 1: first == LeftCurlyBracket, second == RightCurlyBracket
+	//		* index 2: first == LeftBracket, second == RightBracket
+	//		* index 3: first == BeginTemplateArgs, second == EndTemplateArgs
+	//		*/
+	//		if (l_lookup[(*l_index)].first == it->_vocabulary) // is the paren or braket closed and complete?
+	//		{
+	//			tl_s_stack.pop_back(); // pop ), ], or }.
+	//			break;
+	//		}
+	//	}
+	//}
 
- 	if (tl_s_stack.size() != 0)
-	{
-		return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
-	}
-	tl_s_stack.clear();
+ //	if (tl_s_stack.size() != 0)
+	//{
+	//	return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
+	//}
+	//tl_s_stack.clear();
 
 
 	return std::nullopt; // no syntax errors relevant to parentheses/brackets found.

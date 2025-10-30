@@ -235,7 +235,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
     IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
         # Print paths for debugging
-        SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/RelWithDebInfo/FE.HeaderTool.exe)
+        SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/Release/FE.HeaderTool.exe)
 
         MESSAGE(STATUS "The path to Frogman Engine Header Tool is: ${PATH_TO_HEADER_TOOL}")
         MESSAGE(STATUS "The target header files are: ${HEADER_FILES_PATHS}")
