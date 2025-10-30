@@ -17,16 +17,20 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/do_once.hxx>
-#include <FE/type_traits.hxx>
 #include <FE/hash.hxx>
+#include <FE/list.hxx>
 #include <FE/memory.hxx>
+#include <FE/type_traits.hxx>
+
+// third-party
+#include <absl/container/flat_hash_set.h> // absl::flat_hash_set for page base pointer validation
+#include <taskflow.hpp> // for parallel defragmentation
 
 // std
-#include <array>
-#include <list>
-#include <memory>
+#include <algorithm> //  std::sort() for defragmentation
+#include <execution> // std::execution::par
+#include <memory_resource> // std::pmr::memory_resource
 
-#include <absl/container/flat_hash_map.h> // absl::flat_hash_set for page base pointer validation
 
 #ifdef _FE_ON_WINDOWS_X86_64_
 #define WIN32_LEAN_AND_MEAN
@@ -44,7 +48,7 @@ enum struct PoolType : uint8
 {
     _Block = 0,
     _Scalable = 1,
-	_ConcurrentBlock = 2
+	_Arena = 2
 };
 
 template<PoolType PoolType, class Alignment>
@@ -59,8 +63,45 @@ namespace internal::pool
     struct block_info
     {
         var::byte* _address;
-        var::size _size_in_bytes;
+        var::uint32 _size_in_bytes;
     };
+
+    class from_low_address
+    {
+    public:
+        _FE_FORCE_INLINE_ bool operator()(const block_info& lhs_p, const block_info& rhs_p) noexcept
+        {
+            return lhs_p._address < rhs_p._address;
+        }
+    };
+
+    class less_than
+    {
+    public:
+        _FE_FORCE_INLINE_ bool operator()(const block_info& lhs_p, const block_info& rhs_p) noexcept
+        {
+            return lhs_p._size_in_bytes < rhs_p._size_in_bytes;
+        }
+    };
+
+    class greater_than
+    {
+    public:
+        _FE_FORCE_INLINE_ bool operator()(const block_info& lhs_p, const block_info& rhs_p) noexcept
+        {
+            return lhs_p._size_in_bytes > rhs_p._size_in_bytes;
+        }
+    };
+
+    _FE_FORCE_INLINE_ bool operator==(const block_info& lhs_p, const block_info& rhs_p) noexcept
+    {
+        return lhs_p._address == rhs_p._address;
+    }
+
+    _FE_FORCE_INLINE_ bool operator!=(const block_info& lhs_p, const block_info& rhs_p) noexcept
+    {
+        return lhs_p._address != rhs_p._address;
+    }
 }
 
 

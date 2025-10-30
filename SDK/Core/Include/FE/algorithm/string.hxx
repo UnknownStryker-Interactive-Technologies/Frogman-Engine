@@ -521,7 +521,11 @@ _FE_NODISCARD_ _FE_CONSTEXPR17_ std::optional<range> find_the_first(const CharT*
     const CharT* l_target_substr_iterator = target_substring_p;
     uint64 l_target_substr_length = length(target_substring_p);
 
-    FE_NEGATIVE_ASSERT((l_iterator == l_end_of_it) || (*l_iterator == null), "Assertion failed: the input string range length must not be zero.");
+    if ((l_iterator == l_end_of_it) || (*l_iterator == null))
+    {
+        return std::nullopt;
+    }
+
     if (l_target_substr_length > static_cast<uint64>(l_end_of_it - l_iterator))
     {
         return std::nullopt;

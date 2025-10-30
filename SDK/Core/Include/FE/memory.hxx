@@ -230,6 +230,11 @@ struct align_128bytes final
 	_FE_MAYBE_UNUSED_ static constexpr size size = 128;
 };
 
+struct page_alignment final
+{
+	_FE_MAYBE_UNUSED_ static constexpr size size = 4096;
+};
+
 struct CPU_L1_cache_line final
 {
 	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size;
@@ -968,6 +973,60 @@ _FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(::std::pmr::memory_resource*
 	new (l_object) T( std::forward<Arguments&&>(arguments_p)... );
 	return pmr_unique_ptr<T>{ l_object, internal::pmr_deleter<T>(memory_resource_p) };
 }
+
+
+template <typename T>
+class page_aligned_allocator
+{
+	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because page_aligned_allocator<const T> is ill-formed.");
+	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements.");
+	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements.");
+	static_assert(sizeof(T) >= (4 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
+
+	template <typename>
+	friend class page_aligned_allocator;
+
+public:
+	using value_type = T;
+	using size_type = var::size;
+	using difference_type = var::ptrdiff;
+	using propagate_on_container_move_assignment = std::true_type;
+
+public:
+	constexpr page_aligned_allocator() noexcept = default;
+	constexpr ~page_aligned_allocator() noexcept = default;
+
+	constexpr page_aligned_allocator(const page_aligned_allocator&) noexcept {}
+	constexpr page_aligned_allocator(page_aligned_allocator&&) noexcept {}
+
+	template <typename U>
+	constexpr page_aligned_allocator(const page_aligned_allocator<U>&) noexcept {}
+
+	template <typename U>
+	constexpr page_aligned_allocator(page_aligned_allocator<U>&&) noexcept {}
+
+	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(const page_aligned_allocator&) noexcept { return *this; }
+	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(page_aligned_allocator&&) noexcept { return *this; }
+
+	template <typename U>
+	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(const page_aligned_allocator<U>&) noexcept { return *this; }
+
+	template <typename U>
+	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(page_aligned_allocator<U>&&) noexcept { return *this; }
+
+	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
+	{
+		static_assert(FE::page_alignment::size == 4096);
+		FE::size l_bytes = FE::calculate_aligned_memory_size_in_bytes<T, FE::page_alignment>(count_p);
+		return (T*)VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	}
+
+	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, _FE_MAYBE_UNUSED_ const size_t count_p) noexcept
+	{
+		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
+		VirtualFree(ptr_p, 0, MEM_RELEASE);
+	}
+};
 
 
 class cache_aligned_resource : public std::pmr::memory_resource

@@ -269,6 +269,9 @@ namespace FE
 		_FatalMemoryError_4XX_VirtualLockFailure = 404,
 		_FatalMemoryError_4XX_VirtualUnlockFailure = 405,
 		_FatalMemoryError_4XX_VirtualFreeFailure = 406,
+		_FatalWinAPI_Error_4XX_GetTokenInformationFailure = 407,
+		_FatalWinAPI_Error_4XX_LsaOpenPolicyFailure = 408,
+		_FatalWinAPI_Error_4XX_LsaAddAccountRights = 409,
 
 		_FatalRendererError_5XX_GLFW_InitializationFailure = 500,
 		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,

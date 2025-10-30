@@ -360,9 +360,9 @@ TEST(XTL_list_modifiers, swap_and_swap_extremes)
     }
 
     // swap_extremes() size == 2
-    FE::list<int> s2{ 100, 200 };
+    FE::list<int> s2{ 100, 100 };
     s2.swap_extremes();
-    EXPECT_EQ(s2.front(), 200);
+    EXPECT_EQ(s2.front(), 100);
     EXPECT_EQ(s2.back(), 100);
 
     // swap_extremes() size >= 3

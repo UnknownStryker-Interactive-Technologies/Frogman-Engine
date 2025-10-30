@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
+#include <FE/pool/arena.hxx>
 #include <FE/pool/block_pool.hxx>
 #include <FE/pool/scalable_pool.hxx>
 
@@ -43,7 +44,8 @@ namespace internal
 		_YMMWordAllocator,
 		_ZMMWordAllocator,
 		_DZMMWordAllocator,
-		_ScalableAllocator
+		_ScalableAllocator,
+		_ArenaAllocator // the arena allocator can allocate memory up to 1GiB, 256MiB at once.
 	};
 
 	AllocatorType __select_allocator(std::size_t bytes_p) noexcept;
@@ -62,6 +64,7 @@ public:
 	using zmmword_pool_type = FE::block_pool<zmmword_size, FE::align_64bytes>;
 	using dzmmword_pool_type = FE::block_pool<dzmmword_size, FE::align_128bytes>;
 	using scalable_pool_type = FE::scalable_pool<FE::SIMD_auto_alignment>;
+	using arena_pool_type = FE::arena_pool<FE::SIMD_auto_alignment>;
 
 private:
 	xmmword_pool_type m_xmmword_block_pool;
@@ -69,6 +72,7 @@ private:
 	zmmword_pool_type m_zmmword_block_pool;
 	dzmmword_pool_type m_dzmmword_block_pool;
 	scalable_pool_type m_scalable_pool;
+	arena_pool_type m_arena_pool;
 
 public:
 	memory_resource() noexcept = default;

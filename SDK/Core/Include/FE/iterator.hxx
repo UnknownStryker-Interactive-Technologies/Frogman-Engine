@@ -851,7 +851,7 @@ _FE_FORCE_INLINE_ constexpr To iterator_cast(From ptr_p) noexcept
 	{
 		if constexpr (std::is_pointer_v<To> == true)
 		{
-			return const_cast<To>( ptr_p.unwrap().operator->() );
+			return const_cast<To>( ptr_p.unwrap().operator->());
 		}
 		else if constexpr (FE::is_frogman_iterator_wrapper<To>::value == true)
 		{

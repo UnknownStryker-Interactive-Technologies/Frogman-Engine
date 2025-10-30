@@ -12,7 +12,9 @@
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/algorithm/utility.hxx>
+#include <FE/pool/arena.hxx>
 #include <FE/pool/block_pool.hxx>
+#include <FE/pool/scalable_pool.hxx>
 #include <FE/pool/memory_resource.hxx>
 
 
@@ -114,7 +116,7 @@ BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_accumulation_test)->It
 
 void boost_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::list<std::string, boost::pool_allocator<std::string>> l_strings;
+	std::list<std::string, boost::pool_allocator<std::string, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
 
 
@@ -153,6 +155,29 @@ void boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::
 	}
 }
 BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(10000);
+
+void FE_arena_pool_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
+{
+	FE::arena_pool<FE::SIMD_auto_alignment> l_allocator;
+	benchmark::DoNotOptimize(l_allocator);
+
+	std::pmr::list<std::string> l_strings(&l_allocator);
+	benchmark::DoNotOptimize(l_strings);
+
+
+	for (auto _ : state_p)
+	{
+		for (int i = 0; i < 500; ++i)
+		{
+			l_strings.push_back(std::string());
+		}
+		for (int i = 0; i < 500; ++i)
+		{
+			l_strings.pop_back();
+		}
+	}
+}
+BENCHMARK(FE_arena_pool_extreme_fixed_sized_accumulation_test)->Iterations(10000);
 
 void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -293,7 +318,7 @@ BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_test)->Iterations(1000
 
 void boost_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
-	std::list<std::string, boost::pool_allocator<std::string>> l_strings;
+	std::list<std::string, boost::pool_allocator<std::string, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
 
 
@@ -335,6 +360,22 @@ void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexc
 	}
 }
 BENCHMARK(FE_pool_allocator_extreme_fixed_sized_test)->Iterations(10000);
+
+void FE_arena_pool_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
+{
+	FE::arena_pool<FE::SIMD_auto_alignment> l_allocator;
+	benchmark::DoNotOptimize(l_allocator);
+
+	std::pmr::list<std::string> l_strings(&l_allocator);
+	benchmark::DoNotOptimize(l_strings);
+
+	for (auto _ : state_p)
+	{
+		l_strings.push_back(std::string());
+		l_strings.pop_back();
+	}
+}
+BENCHMARK(FE_arena_pool_extreme_fixed_sized_test)->Iterations(10000);
 
 void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexcept
 {
@@ -419,6 +460,23 @@ void aligned_malloc_aligned_free_random_size_test(benchmark::State& state_p) noe
 }
 BENCHMARK(aligned_malloc_aligned_free_random_size_test)->Iterations(10000);
 
+void FE_arena_pool_random_size_test(benchmark::State& state_p) noexcept
+{
+	FE::arena_pool<FE::SIMD_auto_alignment> l_allocator;
+	benchmark::DoNotOptimize(l_allocator);
+
+	std::pmr::vector<std::byte> l_vector(&l_allocator);
+	benchmark::DoNotOptimize(l_vector);
+
+
+	for (auto _ : state_p)
+	{
+		FE::int32 l_random_size = (rand() % FE::system_page_size / 2);
+		l_vector.resize(l_random_size);
+	}
+}
+BENCHMARK(FE_arena_pool_random_size_test)->Iterations(10000);
+
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 {
@@ -458,8 +516,10 @@ BENCHMARK(FE_pmr_memory_resource_random_size_test)->Iterations(10000);
 // Random size allocation and deallocation benchmark for boost::pool_allocator
 void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::vector<std::byte, boost::pool_allocator<std::byte, boost::default_user_allocator_new_delete, boost
-		::details::pool::null_mutex>> l_vector;
+	std::vector<std::byte, 
+		boost::pool_allocator<std::byte, 
+		boost::default_user_allocator_new_delete, 
+		boost::details::pool::null_mutex>> l_vector;
 	benchmark::DoNotOptimize(l_vector);
 
 
@@ -484,7 +544,7 @@ void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexc
 		l_vector.resize(l_random_size);
 	}
 }
-BENCHMARK(boost_fast_pool_allocator_random_size_test)->Iterations(100);
+BENCHMARK(boost_fast_pool_allocator_random_size_test)->Iterations(10000);
 
 
 
@@ -514,6 +574,32 @@ void aligned_malloc_aligned_free_random_size_accumulation_test(benchmark::State&
 	}
 }
 BENCHMARK(aligned_malloc_aligned_free_random_size_accumulation_test)->Iterations(1000);
+
+void FE_arena_pool_random_size_accumulation_test(benchmark::State& state_p) noexcept
+{
+	FE::arena_pool<FE::SIMD_auto_alignment> l_allocator;
+	benchmark::DoNotOptimize(l_allocator);
+
+	std::pmr::vector< std::pmr::vector<std::byte> > l_vector(&l_allocator);
+	benchmark::DoNotOptimize(l_vector);
+	l_vector.reserve(state_p.max_iterations);
+
+	for (auto _ : state_p)
+	{
+		for (int i = 0; i < state_p.max_iterations; ++i)
+		{
+			FE::int32 l_random_size = (rand() % FE::system_page_size / 2);
+			std::pmr::vector<std::byte> l_temp_vector(&l_allocator);
+			l_temp_vector.resize(l_random_size);
+			l_vector.emplace_back(l_temp_vector);
+		}
+		for (int i = 0; i < state_p.max_iterations; ++i)
+		{
+			l_vector.pop_back();
+		}
+	}
+}
+BENCHMARK(FE_arena_pool_random_size_accumulation_test)->Iterations(1000);
 
 // Random size allocation and deallocation benchmark for FE::scalable_pool
 void FE_scalable_pool_random_size_accumulation_test(benchmark::State& state_p) noexcept
@@ -576,8 +662,11 @@ BENCHMARK(FE_pmr_memory_resource_random_size_accumulation_test)->Iterations(1000
 // Random size allocation and deallocation benchmark for boost::pool_allocator
 void boost_pool_allocator_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::vector< std::vector<std::byte, boost::pool_allocator<std::byte, boost::default_user_allocator_new_delete, boost
-		::details::pool::null_mutex>> > l_vector;
+	std::vector< std::vector<std::byte, 
+		boost::pool_allocator<std::byte, 
+		boost::default_user_allocator_new_delete, 
+		boost::details::pool::null_mutex>> > l_vector;
+
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
 
@@ -587,8 +676,11 @@ void boost_pool_allocator_random_size_accumulation_test(benchmark::State& state_
 		for (int i = 0; i < state_p.max_iterations; ++i)
 		{
 			FE::int32 l_random_size = (rand() % FE::system_page_size / 2);
-			std::vector<std::byte, boost::pool_allocator<std::byte, boost::default_user_allocator_new_delete, boost
-				::details::pool::null_mutex>> l_temp_vector;
+			std::vector<std::byte, 
+				boost::pool_allocator<std::byte, 
+				boost::default_user_allocator_new_delete, 
+				boost::details::pool::null_mutex>> l_temp_vector;
+
 			l_temp_vector.resize(l_random_size);
 			l_vector.emplace_back(l_temp_vector);
 		}
@@ -604,7 +696,7 @@ BENCHMARK(boost_pool_allocator_random_size_accumulation_test)->Iterations(1000);
 // Random size allocation and deallocation benchmark for boost::fast_pool_allocator
 void boost_fast_pool_allocator_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::vector< std::vector<std::byte, boost::fast_pool_allocator<std::byte>> > l_vector;
+	std::vector< std::vector<std::byte, boost::fast_pool_allocator<std::byte>> > l_vector; // the code does not compile with the boost pool's null_mutex
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
 
