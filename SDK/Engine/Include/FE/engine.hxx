@@ -20,7 +20,7 @@ limitations under the License.
 #include <FE/game.hpp>
 #include <FE/renderer.hxx>
 
-#include <simdjson.h> // read game configurations from .froggy file
+#include <boost/json.hpp> // read game configurations from .froggy file
 
 
 #define FROGMAN_ENGINE() CUSTOM_ENGINE(FE::engine)
@@ -81,6 +81,7 @@ class engine final : public FE::framework::framework_base
 
     std::pmr::string m_runtime_path;
     std::pmr::string m_froggy_path;
+    std::pmr::string m_froggy;
 
     FE::smart_ptr<FE::engine_info, FE::RefType::_Owner> m_engine_info;
 	FE::smart_ptr<FE::project_info, FE::RefType::_Owner> m_project_info;

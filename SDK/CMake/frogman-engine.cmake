@@ -38,7 +38,7 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/backends)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-hood-hash)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-map-1.4.0/include)
-INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/include)
+# INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/include) # Removed SIMDJSON include to avoid the MSVC C++ compiler bug: https://developercommunity.visualstudio.com/t/The-MSVC-C-v143-compiler-is-unable-to-/10994292
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/taskflow-3.8.0/taskflow)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/unordered_dense-4.7.0/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include)
@@ -58,11 +58,39 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_87.lib>
     )
 
+     SET(BOOST_CONTAINER 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_87.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
+    )
+    
+    SET(BOOST_CONTEXT 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-sgd-x64-1_87.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
+    )
+
     SET(BOOST_LOCALE
         $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_locale-vc143-mt-sgd-x64-1_87.lib>
         $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
         $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
+    )
+
+    SET(BOOST_FIBER 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-sgd-x64-1_87.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
+    )
+
+    SET(BOOST_JSON 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_87.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
     )
 
     SET(BOOST_STACKTRACE 
@@ -79,19 +107,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_87.lib>
     )
 
-    SET(BOOST_FIBER 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_fiber-vc143-mt-s-x64-1_87.lib>
-    )
-
-    SET(BOOST_CONTEXT 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_context-vc143-mt-s-x64-1_87.lib>
-    )
 
     SET(GLFW
         $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
@@ -303,31 +318,35 @@ ENDFUNCTION()
 
 FUNCTION(ADD_FROGMAN_EXECUTABLE TARGET_PROJECT_NAME)
 
-SET(FROGMAN_ENGINE
-${FE_CORE_HEADERS}
-${FE_CORE_SOURCES}
-${FE_FRAMEWORK_HEADERS}
-${FE_FRAMEWORK_SOURCES}
-${FE_ENGINE_HEADERS}
-${FE_ENGINE_SOURCES}
-${FE_RENDERER_HEADERS}
-${FE_RENDERER_SOURCES}
-)
-ADD_LIBRARY("Engine" INTERFACE ${FROGMAN_ENGINE})
+	IF( SHIPPING_BUILD STREQUAL "ON" )
+		ADD_LINK_OPTIONS(/SUBSYSTEM:WINDOWS)
+	ENDIF()
+
+    SET(FROGMAN_ENGINE
+    ${FE_CORE_HEADERS}
+    ${FE_CORE_SOURCES}
+    ${FE_FRAMEWORK_HEADERS}
+    ${FE_FRAMEWORK_SOURCES}
+    ${FE_ENGINE_HEADERS}
+    ${FE_ENGINE_SOURCES}
+    ${FE_RENDERER_HEADERS}
+    ${FE_RENDERER_SOURCES}
+    )
+    ADD_LIBRARY("Engine" INTERFACE ${FROGMAN_ENGINE})
 
 
-SET(PRIVATE
-${CMAKE_CURRENT_SOURCE_DIR}/generated.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-)
-SOURCE_GROUP("Private" FILES ${PRIVATE})
-ADD_LINK_OPTIONS(/MANIFEST:EMBED /MANIFESTUAC:level='requireAdministrator')
-ADD_EXECUTABLE(${TARGET_PROJECT_NAME} ${ARGN} ${PRIVATE})
+    SET(PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/generated.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    )
+    SOURCE_GROUP("Private" FILES ${PRIVATE})
+    ADD_LINK_OPTIONS(/MANIFEST:EMBED /MANIFESTUAC:level='requireAdministrator')
+    ADD_EXECUTABLE(${TARGET_PROJECT_NAME} ${ARGN} ${PRIVATE})
 
 ENDFUNCTION()
 
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} ${SIMD_JSON})
+SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTAINER} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_JSON} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI})
 SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

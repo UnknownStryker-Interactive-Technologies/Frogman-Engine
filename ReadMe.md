@@ -70,9 +70,6 @@ https://github.com/Tessil/robin-map/releases/tag/v1.4.0
 - Unordered Dense 4.7.0  
 https://github.com/martinus/unordered_dense/releases  
 
-- SIMD JSON 4.2.0  
-https://github.com/simdjson/simdjson/releases/tag/v4.2.0 
-
 - Task Flow 3.8.0  
 https://github.com/taskflow/taskflow/releases/tag/v3.8.0  
 

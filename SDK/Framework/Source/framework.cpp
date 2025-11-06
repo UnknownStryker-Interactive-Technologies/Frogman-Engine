@@ -35,6 +35,7 @@ limitations under the License.
 #ifdef _FE_ON_WINDOWS_X86_64_
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shellapi.h>
 #undef WIN32_LEAN_AND_MEAN
 #endif
 
@@ -271,3 +272,59 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 
 	return l_exit_code;
 }
+
+
+
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+
+FE::int32 __count_command_line_arguments(FE::ASCII* cmd_line_p)
+{
+	var::int32 l_argc = 0;
+	
+	if ((*cmd_line_p != ' ') || (*cmd_line_p != '\0'))
+	{
+		++l_argc;
+	}
+
+	for (FE::ASCII* it = cmd_line_p; *it != '\0'; ++it)
+	{
+		if (*it == ';')
+		{
+			++l_argc;
+		}
+	}
+	return l_argc;
+}
+
+int WINAPI WinMain(_FE_MAYBE_UNUSED_ HINSTANCE hInstance, _FE_MAYBE_UNUSED_ HINSTANCE hPrevInstance, LPSTR lpCmdLine, _FE_MAYBE_UNUSED_ int nShowCmd)
+{
+	var::int32 l_argc = __count_command_line_arguments(lpCmdLine);
+	std::unique_ptr<FE::ASCII*[]> l_argv = std::make_unique<FE::ASCII*[]>( (l_argc == 0) ? 1 : l_argc );
+
+	if (l_argc > 0)
+	{
+		l_argv[0] = lpCmdLine;
+	}
+
+	var::int32 l_index = 1;
+	for (var::ASCII* it = lpCmdLine; *it != '\0';)
+	{
+		if (*it == ';')
+		{
+			*it = '\0';
+			++it;
+
+			if (*it != '\0')
+			{
+				l_argv[l_index] = it;
+				++l_index;
+			}
+			continue;
+		}
+		++it;
+	}
+	return main(l_argc, l_argv.get());
+}
+
+#endif
