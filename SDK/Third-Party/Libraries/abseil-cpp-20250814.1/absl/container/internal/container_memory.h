@@ -1,4 +1,4 @@
-﻿// Copyright 2018 The Abseil Authors.
+// Copyright 2018 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
 #ifndef ABSL_CONTAINER_INTERNAL_CONTAINER_MEMORY_H_
 #define ABSL_CONTAINER_INTERNAL_CONTAINER_MEMORY_H_
 #pragma warning(push)
-#pragma warning(disable : 4324)
+#pragma warning(disable : 4324) // structure was padded due to alignment specifier
+#pragma warning(disable : 4702) // unreachable code
+
 #include <cassert>
 #include <cstddef>
 #include <cstdint>

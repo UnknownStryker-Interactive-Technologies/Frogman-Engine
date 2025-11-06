@@ -45,32 +45,32 @@ _FE_MAYBE_UNUSED_ FE::uint64 FE::system_large_page_size = []() -> FE::uint64
 	}();
 
 
-void* __cdecl operator new(size_t bytes_p) 
+_FE_NODISCARD_ void* _FE_CDECL_ operator new(size_t bytes_p)
 {
 	FE_ASSERT(bytes_p != 0, "Allocating zero byte is not allowed.");
 	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
-void* __cdecl operator new[](size_t bytes_p)
+_FE_NODISCARD_ void* _FE_CDECL_ operator new[](size_t bytes_p)
 {
 	FE_ASSERT(bytes_p != 0, "Allocating zero byte is not allowed.");
 	return FE_ALIGNED_ALLOC(bytes_p, FE::CPU_L1_cache_line::size);
 }
 
-void operator delete(void* ptr_p) noexcept
+void _FE_CDECL_ operator delete(void* ptr_p) noexcept
 {
 	FE_ALIGNED_FREE(ptr_p);
 }
-void operator delete[](void* ptr_p) noexcept
+void _FE_CDECL_ operator delete[](void* ptr_p) noexcept
 {
 	FE_ALIGNED_FREE(ptr_p);
 }
 
-void operator delete(void* ptr_p, std::size_t size_p) noexcept
+void _FE_CDECL_ operator delete(void* ptr_p, std::size_t size_p) noexcept
 {
 	(void)size_p;
 	FE_ALIGNED_FREE(ptr_p);
 }
-void operator delete[](void* ptr_p, std::size_t size_p) noexcept
+void _FE_CDECL_ operator delete[](void* ptr_p, std::size_t size_p) noexcept
 {
 	(void)size_p;
 	FE_ALIGNED_FREE(ptr_p);

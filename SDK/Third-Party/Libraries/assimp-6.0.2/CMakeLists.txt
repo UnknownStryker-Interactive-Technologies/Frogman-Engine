@@ -198,6 +198,16 @@ IF (WIN32)
   ADD_DEFINITIONS( -DWIN32_LEAN_AND_MEAN )
 
   IF(MSVC)
+
+    IF((SIMD STREQUAL "AVX512F") AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x64"))
+      ADD_COMPILE_OPTIONS(/arch:AVX512)
+
+    ELSEIF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+      ADD_COMPILE_OPTIONS(/arch:AVX)
+
+    ENDIF()
+
+
     OPTION( ASSIMP_INSTALL_PDB
       "Create MSVC debug symbol files and add to Install target."
       ON )
@@ -354,8 +364,7 @@ ELSEIF(MSVC)
     message("-- MSVC PDB generation disabled. Release binary will not be debuggable.")
   endif()
   if(NOT /utf-8 IN_LIST CMAKE_CXX_FLAGS)
-    # Source code is encoded in UTF-8
-    ADD_COMPILE_OPTIONS(/source-charset:utf-8)
+    ADD_COMPILE_OPTIONS(/utf-8)
   endif ()
 
 ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )

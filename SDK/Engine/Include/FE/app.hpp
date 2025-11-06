@@ -24,6 +24,9 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+FE::uint32 get_directory_of_current_executable(var::ASCII* out_buffer_p, FE::uint32 buffer_size_p) noexcept;
+
+
 _FE_FORCE_INLINE_ void schedule_app_restart() noexcept
 {
 	FE::framework::framework_base::get_framework().request_restart();

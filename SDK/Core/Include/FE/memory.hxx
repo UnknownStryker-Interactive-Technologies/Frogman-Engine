@@ -286,7 +286,7 @@ enum struct Address : bool
 
 #if defined(_AVX_) && defined(_SSE2_)
 
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memzero_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
@@ -320,7 +320,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memzero_AVX_SSE2(void* out_dest_p, var
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_aligned_memzero_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
@@ -354,7 +354,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memzero_AVX_SSE2(void* out_dest_p, var::
 }
 
 
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -384,7 +384,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX_SSE2(void* out_dest_p, cons
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -416,7 +416,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX_SSE2(void* out_dest_p, const 
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_dest_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -447,7 +447,7 @@ _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX_SSE2(void* out_dest_p, c
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_source_aligned_memcpy_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -493,7 +493,7 @@ memmove iterates and copies the data in the reverse order of memcpy operation.
 	++++++++++++++++++++++++++++
 low address               high address
 */
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_move_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, const void* source_p, size bytes_to_move_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -533,7 +533,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX_SSE2(void* out_dest_p, con
 
 
 #if defined(_AVX512F_)
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, FE::size bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, FE::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is a nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
@@ -553,7 +553,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memzero_AVX512_AVX_SSE2(void* out_dest
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_aligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) == 0, "${%s@0}: ${%s@1} is not aligned by 64.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_IncorrectAddressAlignment), TO_STRING(out_dest_p));
@@ -575,7 +575,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memzero_AVX512_AVX_SSE2(void* out_dest_p
 }
 
 
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -599,7 +599,7 @@ _FE_FORCE_INLINE_ void __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -625,7 +625,7 @@ _FE_FORCE_INLINE_ void __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p,
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -650,7 +650,7 @@ _FE_FORCE_INLINE_ void __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_de
 	}
 }
 
-_FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -676,7 +676,7 @@ _FE_FORCE_INLINE_ void __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_
 }
 
 
-_FE_FORCE_INLINE_ void __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, FE::size bytes_to_move_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, FE::size bytes_to_move_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -754,7 +754,7 @@ The calculate_aligned_memory_size_in_bytes function template computes the aligne
 ensuring that the memory alignment adheres to the specified Alignment.
 */
 template<typename T, class Alignment>
-_FE_FORCE_INLINE_ constexpr size calculate_aligned_memory_size_in_bytes(uint64 elements_p) noexcept  
+_FE_FORCE_INLINE_ constexpr size _FE_VECTOR_CALL_ calculate_aligned_memory_size_in_bytes(uint64 elements_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(elements_p == 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(elements_p));
 
@@ -766,7 +766,7 @@ _FE_FORCE_INLINE_ constexpr size calculate_aligned_memory_size_in_bytes(uint64 e
 }
 
 template<typename T>
-_FE_FORCE_INLINE_ constexpr size calculate_aligned_size_of_T(uint64 alignment_p) noexcept
+_FE_FORCE_INLINE_ constexpr size _FE_VECTOR_CALL_ calculate_aligned_size_of_T(uint64 alignment_p) noexcept
 {
 	FE_ASSERT(FE::is_power_of_two(alignment_p) == true, "Assertion failed: the alignment is not a power of two.");
 	var::size l_multiplier =  sizeof(T) / alignment_p;
@@ -775,7 +775,7 @@ _FE_FORCE_INLINE_ constexpr size calculate_aligned_size_of_T(uint64 alignment_p)
 }
 
 template<class ConstIterator>
-FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept  
+FE::boolean _FE_VECTOR_CALL_ memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_iterator_end_p, ConstIterator right_iterator_begin_p, ConstIterator right_iterator_end_p) noexcept
 {
 	static_assert(std::is_class<ConstIterator>::value == true);
 	FE_NEGATIVE_ASSERT(left_iterator_begin_p == nullptr, "ERROR: left_iterator_begin_p is nullptr.");
@@ -805,7 +805,7 @@ FE::boolean memcmp(ConstIterator left_iterator_begin_p, ConstIterator left_itera
 }
 
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, uint64 source_capacity_in_bytes_p) noexcept  
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, uint64 source_capacity_in_bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(source_p));
@@ -833,7 +833,7 @@ The FE::memcpy function is a template function that performs memory copying betw
 while also ensuring that neither pointer is null.
 */
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memcpy(void* out_dest_p, const void* source_p, uint64 bytes_p) noexcept  
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, const void* source_p, uint64 bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(source_p));
@@ -861,7 +861,7 @@ The FE::memzero function is a template function that initializes a specified num
 with support for both aligned and unaligned memory addresses based on the specified template parameter.
 */
 template<Address DestAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memzero(void* out_dest_p, uint64 bytes_p) noexcept  
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memzero(void* out_dest_p, uint64 bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 
@@ -880,7 +880,7 @@ The FE::memmove function is a template function that safely copies a specified n
 with optimizations based on the alignment of the destination address.
 */
 template<Address DestAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void memmove(void* out_dest_p, const void* source_p, size bytes_p) noexcept  
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memmove(void* out_dest_p, const void* source_p, size bytes_p) noexcept
 {
 	static_assert(DestAddressAlignment == Address::_NotAligned, "Static Assertion Failure: address aligned memmove not supported.");
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
@@ -928,14 +928,14 @@ _FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexce
 The operator new function allocates a specified number of bytes of memory
 aligned to the size of the CPU's L1 cache line.
 */
-void* __cdecl ::operator new(size_t bytes_p);
-void* __cdecl ::operator new[](size_t bytes_p);
+_FE_NODISCARD_ void* _FE_CDECL_ ::operator new(size_t bytes_p);
+_FE_NODISCARD_ void* _FE_CDECL_ ::operator new[](size_t bytes_p);
 
-void ::operator delete(void* ptr_p) noexcept;
-void ::operator delete[](void* ptr_p) noexcept;
+void _FE_CDECL_ ::operator delete(void* ptr_p) noexcept;
+void _FE_CDECL_ ::operator delete[](void* ptr_p) noexcept;
 
-void ::operator delete(void* ptr_p, ::std::size_t size_p) noexcept;
-void ::operator delete[](void* ptr_p, ::std::size_t size_p) noexcept;
+void _FE_CDECL_ ::operator delete(void* ptr_p, size_t size_p) noexcept;
+void _FE_CDECL_ ::operator delete[](void* ptr_p, size_t size_p) noexcept;
 
 
 namespace internal
@@ -958,20 +958,48 @@ namespace internal
 				return;
 			}
 
+			if (m_allocator == nullptr) _FE_UNLIKELY_
+			{
+				return;
+			}
+
+			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
+		}
+	};
+
+
+	template<typename T>
+	class pmr_deleter<T[]>
+	{
+		std::pmr::memory_resource* m_allocator;
+	public:
+		_FE_FORCE_INLINE_ pmr_deleter() noexcept = default;
+		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p) noexcept
+			: m_allocator(((memory_resource_p == nullptr) ? std::pmr::get_default_resource() : memory_resource_p))
+		{
+		}
+
+		_FE_FORCE_INLINE_ void operator()(T* ptr_p) noexcept
+		{
+			if (ptr_p == nullptr)
+			{
+				return;
+			}
+
 			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
 		}
 	};
 }
 
 template <typename T>
-using pmr_unique_ptr = ::std::unique_ptr<T, ::FE::internal::pmr_deleter<T>>;
+using unique_ptr = ::std::unique_ptr<T, ::FE::internal::pmr_deleter<T>>;
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ pmr_unique_ptr<T> make_pmr_unique(::std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ unique_ptr<T> _FE_VECTOR_CALL_ make_unique(::std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
 {
 	T* l_object = (T*)std::pmr::polymorphic_allocator<T>(memory_resource_p).allocate_bytes(sizeof(T));
-	new (l_object) T( std::forward<Arguments&&>(arguments_p)... );
-	return pmr_unique_ptr<T>{ l_object, internal::pmr_deleter<T>(memory_resource_p) };
+	new (l_object) T(std::forward<Arguments&&>(arguments_p)...);
+	return unique_ptr<T>{ l_object, internal::pmr_deleter<T>(memory_resource_p) };
 }
 
 

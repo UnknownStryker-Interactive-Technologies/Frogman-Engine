@@ -38,6 +38,7 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/backends)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-hood-hash)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/robin-map-1.4.0/include)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/taskflow-3.8.0/taskflow)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/unordered_dense-4.7.0/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include)
@@ -50,24 +51,6 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 
 
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
-    FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/*.lib")
-    FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/*.lib")
-    FILE(GLOB ABSL_RELEASE          "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/Release/*.lib")
-    FILE(GLOB ABSL_RELWITHDEBINFO   "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/*.lib")
-    SET(ABSL_LIBRARIES
-        $<$<CONFIG:DEBUG>:			${ABSL_DEBUG}>
-        $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
-        $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
-        $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
-    )
-
-    SET(ASSIMP
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
-    )
-
     SET(BOOST_CHRONO 
         $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_87.lib>
         $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.87.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_87.lib>
@@ -117,13 +100,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/lib-vc2022/glfw3_mt.lib>
     )
 
-    SET(IMGUI
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Debug/ImGUI-1.91.6.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/ImGUI-1.91.6.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Release/ImGUI-1.91.6.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/ImGUI-1.91.6.lib>
-    )
-
     SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib)
 
     IF(SIMD STREQUAL AVX512F)
@@ -152,6 +128,14 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/MinSizeRel/ImGUI-1.91.6.lib>
         )
 
+        SET(SIMD_JSON
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/Debug/simdjson.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/simdjson.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/Release/simdjson.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/MinSizeRel/simdjson.lib>
+        )
+
+
         SET(FE_CORE
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/Debug/FE.Core.lib>
             $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Core.lib>
@@ -179,7 +163,41 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/Release/FE.Engine.lib>
             $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Engine.lib>
         )
+
     ELSE()
+        FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/*.lib")
+        FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/*.lib")
+        FILE(GLOB ABSL_RELEASE          "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/Release/*.lib")
+        FILE(GLOB ABSL_RELWITHDEBINFO   "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20250814.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/*.lib")
+        SET(ABSL_LIBRARIES
+            $<$<CONFIG:DEBUG>:			${ABSL_DEBUG}>
+            $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
+            $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
+            $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
+        )
+
+        SET(ASSIMP
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.2/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
+        )
+
+        SET(IMGUI
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Debug/ImGUI-1.91.6.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/ImGUI-1.91.6.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Release/ImGUI-1.91.6.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/ImGUI-1.91.6.lib>
+        )
+
+        SET(SIMD_JSON
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/simdjson.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/simdjson.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Release/simdjson.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/simdjson.lib>
+        )
+
+
         SET(FE_CORE
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Core.lib>
             $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Core.lib>
@@ -311,5 +329,5 @@ ENDFUNCTION()
 
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI})
+SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${ASSIMP} ${BOOST_CHRONO} ${BOOST_CONTEXT} ${BOOST_FIBER} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} ${SIMD_JSON})
 SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE})

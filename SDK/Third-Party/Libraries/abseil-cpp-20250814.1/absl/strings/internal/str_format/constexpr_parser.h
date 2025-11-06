@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Abseil Authors
+// Copyright 2022 The Abseil Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 #ifndef ABSL_STRINGS_INTERNAL_STR_FORMAT_CONSTEXPR_PARSER_H_
 #define ABSL_STRINGS_INTERNAL_STR_FORMAT_CONSTEXPR_PARSER_H_
-#pragma warning(push)  
-#pragma warning(disable : 4127) 
+#pragma warning(push)
+#pragma warning(disable : 4127)  // conditional expression is constant
 #include <cassert>
 #include <cstdint>
 #include <cstdio>

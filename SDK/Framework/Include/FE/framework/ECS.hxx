@@ -16,33 +16,211 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-
-// E, C, and S
-#include <FE/framework/archetype_base.hxx>
-#include <FE/framework/component_base.hxx>
-#include <FE/framework/system.hxx>
-
-// ECS smart pointer
-#include <FE/framework/smart_ptr.hxx>
-
 #include <FE/framework/framework.hxx>
+#include <FE/memory.hxx>
+#include <FE/pool/memory_resource.hxx> // game memory pool
 
-// FE::reflection::type_id<Archetype>()
-#include <FE/framework/type_info.hxx>
-
-// game memory pool
-#include <FE/pool/memory_resource.hxx>
+#include <FE/framework/smart_ptr.hxx>
+#include <FE/framework/type_info.hxx> // FE::reflection::type_id<Archetype>()
 
 // ECS data structures
 #include <FE/farray.hxx>
 #include <FE/hash.hxx>
 #include <forward_list>
-#include <unordered_map>
+#include <string>
 #include <vector>
 
-#include <boost/fiber/recursive_mutex.hpp>
+#include <absl/container/flat_hash_map.h>
+#include <absl/container/node_hash_map.h>
 
-#include <robin_hood.h>
+#include <boost/fiber/recursive_mutex.hpp> // fiber lock
+
+
+
+
+CLASS_FORWARD_DECLARATION(FE, archetype_base);
+CLASS_FORWARD_DECLARATION(FE, component_base);
+CLASS_FORWARD_DECLARATION(FE::framework, ECS);
+CLASS_FORWARD_DECLARATION(FE::framework, game_thread);
+CLASS_FORWARD_DECLARATION(FE::fframework, processors);
+
+
+
+
+BEGIN_NAMESPACE(FE)
+
+
+
+CLASS_FORWARD_DECLARATION(internal::ECS, gc_metadata_proxy_table);
+CLASS_FORWARD_DECLARATION(internal::ECS, component_metadata);
+
+
+class component_base
+{
+	friend class FE::archetype_base;
+	friend class framework::ECS;
+	friend class framework::game_thread;
+	friend class framework::processors;
+	friend class internal::ECS::gc_metadata_proxy_table;
+
+	FE::smart_ptr<class internal::ECS::component_metadata, FE::RefType::_Owner> m_metadata;
+
+public:
+	component_base() noexcept;
+	virtual ~component_base() noexcept = default;
+
+	FE::ASCII* get_typename() const noexcept;
+	FE::ASCII* get_memory_layout_version() const noexcept;
+};
+
+using component = FE::smart_ptr<FE::component_base, FE::RefType::_Owner>;
+using system = void(*)(class FE::component_base*);
+
+
+namespace internal::ECS
+{
+	class components
+	{
+	public:
+		_FE_MAYBE_UNUSED_ static constexpr FE::size max_components = 509; // Total size of components node in a FE::list is 4KiB, which is the system page size on x64 Windows.
+
+	private:
+		FE::component m_components[max_components];
+		var::size m_current_size = 0;
+
+	public:
+		components() noexcept = default;
+		~components() noexcept = default;
+
+		FE::size add_component(FE::component&& comp_p) noexcept
+		{
+			FE_ASSERT(m_current_size < max_components);
+
+			m_components[m_current_size] = std::move(comp_p);
+			return m_current_size++;
+		}
+
+		void remove_component(FE::size index_p) noexcept
+		{
+			FE_ASSERT(index_p < m_current_size);
+
+			m_components[index_p].reset();
+			last().swap(m_components[index_p]);
+		}
+
+		_FE_FORCE_INLINE_ FE::component& last() { return m_components[m_current_size - 1]; }
+
+		_FE_FORCE_INLINE_ var::size get_size() const { return m_current_size; }
+
+		_FE_FORCE_INLINE_ FE::component* begin() noexcept { return static_cast<FE::component*>(m_components); }
+		_FE_FORCE_INLINE_ FE::component* end() noexcept { return static_cast<FE::component*>(m_components) + m_current_size; }
+	};
+
+
+	class gc_metadata
+	{
+	public: // replace the lists with FE::deque to avoid frequent reallocations.
+		using member_component_list_type = FE::list< FE::smart_ptr<class FE::component_base, FE::RefType::_Observer> >;
+		using member_entity_list_type = FE::list< FE::smart_ptr<class FE::archetype_base, FE::RefType::_Observer> >;
+
+		member_component_list_type _member_components;
+		member_entity_list_type _member_entities;
+		std::atomic_bool _is_circular_reference;
+
+		gc_metadata() noexcept;
+		~gc_metadata() noexcept = default;
+	};
+
+
+	class component_metadata
+	{
+		friend class gc_metadata_proxy_table;
+		friend class framework::game_thread;
+		friend class framework::processors;
+		friend class framework::ECS;
+
+		FE::smart_ptr<class gc_metadata, FE::RefType::_Owner> m_gc_metadata;
+
+	public:
+		std::pmr::forward_list<FE::internal::ECS::components>::iterator _group;
+		var::size _index;
+		FE::ASCII* _typename;
+		FE::ASCII* _memory_layout_version; /* modify the string value when the memory layout of the component changes; this ensures correct auto serialization.
+			the intial value is set to "default"
+		*/
+		component_metadata() noexcept;
+		~component_metadata() noexcept = default;
+	};
+
+
+	class gc_metadata_proxy_table
+	{
+	public: // reserve and add watch at a batch in the component base constructor.
+		template <typename T>
+		_FE_FORCE_INLINE_ static void add_watch(FE::component_base* const host_p, T& property_p) noexcept
+		{
+			if constexpr (FE::is_observer_smart_ptr_v<T> == true)
+			{
+				if constexpr (std::is_base_of_v<FE::component_base, typename T::element_type> == true)
+				{
+					host_p->m_metadata->m_gc_metadata->_member_components.emplace_back( FE::upcast_observer<class FE::component_base>(property_p) );
+				}
+				else if constexpr (std::is_base_of_v<FE::archetype_base, typename T::element_type> == true)
+				{
+					host_p->m_metadata->m_gc_metadata->_member_entities.emplace_back( FE::upcast_observer<class FE::archetype_base>(property_p) );
+				}
+			}
+		}
+	};
+}
+
+
+
+
+template <class Archetype>
+using entity = FE::smart_ptr<Archetype, FE::RefType::_Observer>; // pointers can be though of as integers or handles
+using archetype = FE::smart_ptr<FE::archetype_base, FE::RefType::_Owner>;
+
+template<class Component>
+using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
+
+
+class archetype_base
+{
+	friend class framework::ECS;
+	friend class framework::game_thread;
+	friend class framework::processors;
+	using component_view_table = absl::flat_hash_map<	std::size_t, component_view<component_base>,
+		FE::hash<std::size_t>,
+		std::equal_to<std::size_t>,
+		FE::polymorphic_allocator< std::pair< const std::size_t, component_view<component_base> > >
+	>;
+
+private:
+	component_view_table m_component_view_table;
+	std::pmr::string m_name;
+
+public:
+	archetype_base() noexcept;
+	virtual ~archetype_base() noexcept;
+
+	const std::pmr::string& get_name() const noexcept { return m_name; }
+
+	template <class Component>
+	component_view<Component> get_component() noexcept
+	{
+		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+		typename component_view_table::iterator l_probe_result = m_component_view_table.find(FE::framework::reflection::type_id<Component>().hash_code());
+		if (l_probe_result != m_component_view_table.end())
+		{
+			return FE::downcast_observer<Component>(l_probe_result->second);
+		}
+		return component_view<Component>();
+	}
+};
+
+
+END_NAMESPACE
 
 
 
@@ -50,13 +228,23 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-class game_thread;
-class processors;
+using initializer = absl::flat_hash_map<std::pmr::string, std::pmr::string, 
+										FE::hash<std::pmr::string>,
+										std::equal_to<std::pmr::string>, 
+										FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
+>;
 
+using initializer_list = absl::flat_hash_map<	std::pmr::string, initializer,
+												FE::hash<std::pmr::string>,
+												std::equal_to<std::pmr::string>,
+												FE::cache_aligned_allocator< std::pair<const std::pmr::string, initializer> >
+>;
 
-using initializer = robin_hood::unordered_map<std::pmr::string, std::pmr::string>;
-using initializer_list = robin_hood::unordered_map<std::pmr::string, initializer>;
-using system_table_initializer_list = robin_hood::unordered_map<std::pmr::string, std::pmr::string>; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
+using system_table_initializer_list = absl::flat_hash_map<	std::pmr::string, std::pmr::string,
+															FE::hash<std::pmr::string>,
+															std::equal_to<std::pmr::string>,
+															FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
+>; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
 
 
 class ECS
@@ -64,29 +252,37 @@ class ECS
 	friend class game_thread;
 	friend class processors;
 
-	using archetype_table = std::pmr::unordered_map<std::pmr::string, FE::archetype, FE::hash<std::pmr::string>>;
-	using component_table = robin_hood::unordered_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
-														FE::pair<	FE::scalable_pool<FE::align_16bytes>,
+	using archetype_table = absl::node_hash_map<std::pmr::string, FE::archetype, 
+												FE::hash<std::pmr::string>,
+												std::equal_to<std::pmr::string>,
+												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::archetype> >
+	>;
+
+	using component_table = absl::flat_hash_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
+														FE::pair<	FE::memory_resource,
 																	std::pmr::forward_list<FE::internal::ECS::components>
 																	>
 														>;
-	using system_table = robin_hood::unordered_map< std::pmr::string,
-													FE::pair<FE::system, std::pmr::vector<std::size_t>> 
-													>;
+	using system_table = absl::flat_hash_map<	std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>> ,
+												FE::hash<std::pmr::string>,
+												std::equal_to<std::pmr::string>,
+												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>>> >
+												>;
 
-	FE::scalable_pool<FE::align_16bytes> m_memory_resource;
-	FE::scalable_pool<FE::align_16bytes> m_archetype_pool;
+	FE::memory_resource m_memory_resource;
+	FE::memory_resource m_archetype_pool;
 
 	archetype_table m_archetype_table;
 	component_table m_component_table;
 	system_table m_system_table;
-
+	
 	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
 	boost::fibers::recursive_mutex m_fiber_lock;
+	FE::size m_max_entities;
 
 public:
-	ECS() noexcept;
+	ECS(FE::size max_entities_p = 10000, FE::size component_type_count_hint_p = 1000, FE::size system_count_hint_p = 1000) noexcept;
 	void initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept;
 	~ECS() noexcept = default;
 
@@ -99,8 +295,10 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		FE_ASSERT(m_archetype_table.size() <= m_max_entities, "Assertion failed: cannot instantiate entities more than the value specified by the m_max_entities.");
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, std::forward<Arguments>(arguments_p)... );
+		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
 		l_alloc_result->m_name = std::pmr::string( &m_memory_resource );
 		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
 
@@ -265,9 +463,9 @@ public:
 			}
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
-			l_alloc_result->m_metadata = FE::make_pmr_unique<FE::internal::ECS::component_metadata>( &m_memory_resource );
+			l_alloc_result->m_metadata = FE::make_owner<FE::internal::ECS::component_metadata>( &m_memory_resource );
 			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
-			l_alloc_result->m_metadata->m_gc_metadata = FE::make_pmr_unique<FE::internal::ECS::gc_metadata>(&m_memory_resource);
+			l_alloc_result->m_metadata->m_gc_metadata = FE::make_owner<FE::internal::ECS::gc_metadata>(&m_memory_resource);
 			l_alloc_result->m_metadata->m_gc_metadata->_member_components = typename FE::internal::ECS::gc_metadata::member_component_list_type(&m_memory_resource);
 			l_alloc_result->m_metadata->m_gc_metadata->_member_entities = typename FE::internal::ECS::gc_metadata::member_entity_list_type(&m_memory_resource);
 
@@ -294,9 +492,9 @@ public:
 			l_probe_result->second._second.emplace_front();
 
 			l_alloc_result = FE::make_owner<Component>(&(l_probe_result->second._first), std::forward<Arguments>(arguments_p)...);
-			l_alloc_result->m_metadata = FE::make_pmr_unique<FE::internal::ECS::component_metadata>( &m_memory_resource );
+			l_alloc_result->m_metadata = FE::make_owner<FE::internal::ECS::component_metadata>( &m_memory_resource );
 			l_alloc_result->m_metadata->_typename = FE::framework::reflection::type_id<Component>().name();
-			l_alloc_result->m_metadata->m_gc_metadata = FE::make_pmr_unique<FE::internal::ECS::gc_metadata>(&m_memory_resource);
+			l_alloc_result->m_metadata->m_gc_metadata = FE::make_owner<FE::internal::ECS::gc_metadata>(&m_memory_resource);
 			l_alloc_result->m_metadata->m_gc_metadata->_member_components = typename FE::internal::ECS::gc_metadata::member_component_list_type(&m_memory_resource);
 			l_alloc_result->m_metadata->m_gc_metadata->_member_entities = typename FE::internal::ECS::gc_metadata::member_entity_list_type(&m_memory_resource);
 

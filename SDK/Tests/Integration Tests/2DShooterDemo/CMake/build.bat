@@ -10,7 +10,7 @@ cmake -DCMAKE_SYSTEM_PROCESSOR=x64 -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_CXX_STAND
 cmake --build . --config Debug -j8
 cmake --build . --config RelWithDebInfo -j8
 cmake --build . --config MinSizeRel -j8
-cmake --build . --config Release -j8
+cmake --build . --config Release -j8 -DSHIPPING_BUILD=ON
 
 
 
@@ -23,6 +23,6 @@ cmake -DCMAKE_SYSTEM_PROCESSOR=x64 -DSIMD=AVX512F -DCMAKE_SYSTEM_NAME=Windows -D
 cmake --build . --config Debug -j8
 cmake --build . --config RelWithDebInfo -j8
 cmake --build . --config MinSizeRel -j8
-cmake --build . --config Release -j8
+cmake --build . --config Release -j8 -DSHIPPING_BUILD=ON
 
 endlocal

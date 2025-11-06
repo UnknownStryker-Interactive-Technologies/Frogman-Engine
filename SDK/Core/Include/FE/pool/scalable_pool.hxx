@@ -121,7 +121,7 @@ namespace internal::pool
             return static_cast<FE::uint32>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
         }
 
-        void add_to_the_free_list(const block_info& block_p) noexcept
+        void _FE_VECTOR_CALL_ add_to_the_free_list(const block_info& block_p) noexcept
         {
             FE_NEGATIVE_ASSERT(m_free_list_size == possible_address_count, "Assertion Failure: The free list is full.");
             block_info* const l_position = static_cast<block_info*>(m_free_list) + m_free_list_size;
@@ -138,7 +138,7 @@ namespace internal::pool
         }
 
 		// Time complexity: O(2 log n)
-		FE::boolean retrieve_from_the_free_list(internal::pool::block_info& out_alloc_result_p, FE::uint32 requested_bytes_p) noexcept
+		FE::boolean _FE_VECTOR_CALL_ retrieve_from_the_free_list(internal::pool::block_info& out_alloc_result_p, FE::uint32 requested_bytes_p) noexcept
 		{
             FE_ASSERT((requested_bytes_p % Alignment::size) == 0, "Critical Error in FE.Core.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &requested_bytes_p, &Alignment::size);
 
@@ -256,7 +256,7 @@ public:
     pool& operator=(const pool&) noexcept = delete;
 
     template<typename U>
-    U* allocate(FE::size size_p) noexcept
+    U* _FE_VECTOR_CALL_ allocate(FE::size size_p) noexcept
     {
         static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
         FE::uint32 l_queried_allocation_size_in_bytes = (FE::uint32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
@@ -300,7 +300,7 @@ public:
 
     // Incorrect type will cause a critical runtime error.
     template <typename T> 
-    void deallocate(T* pointer_p, FE::size count_p) noexcept
+    void _FE_VECTOR_CALL_ deallocate(T* pointer_p, FE::size count_p) noexcept
     {
         FE_ASSERT(pointer_p != nullptr, "Critical Error in FE.Core.scalable_pool: Unable to deallocate() a nullptr.");
         FE_ASSERT(count_p > 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(count_p));
@@ -391,7 +391,7 @@ private:
 	Best: O(1)
 	Worst: O(5n + n log n) + O(2 log n)
     */
-    static FE::boolean __try_allocation_from_page(page_pointer page_p, internal::pool::block_info& out_result_p, FE::uint32 bytes_p) noexcept
+    static FE::boolean _FE_VECTOR_CALL_ __try_allocation_from_page(page_pointer page_p, internal::pool::block_info& out_result_p, FE::uint32 bytes_p) noexcept
     {
         FE_ASSERT((bytes_p % Alignment::size) == 0, "Critical Error in FE.Core.scalable_pool: the requested allocation size '${%lu@0}' is not properly aligned by ${%lu@1}.", &bytes_p, &Alignment::size);
         if (page_p->is_page_heapified() == true)
@@ -444,7 +444,7 @@ private:
     }
 
 	// Time complexity: O(5n + n log n).
-    static void __defragment(page_pointer page_p) noexcept
+    static void _FE_VECTOR_CALL_ __defragment(page_pointer page_p) noexcept
     {
         if (page_p->get_free_list_size() <= 1) _FE_UNLIKELY_
         {

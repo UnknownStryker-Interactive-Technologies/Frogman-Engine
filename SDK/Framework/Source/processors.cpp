@@ -136,12 +136,13 @@ processor::processor() noexcept
 	:	m_host(),
 		m_processor(),
 		m_should_terminate(false),
+		m_fibers_per_thread(0),
 		m_yield_status(0),
 		m_queue(framework_base::get_framework().get_memory_resource()),
 		m_fiber_stack_allocator(0),
 
-		m_fibers{},
-		m_delta_ms( 0.0 ),
+		m_fibers(),
+		m_delta_ms(),
 		m_condition_variable()
 {
 }
@@ -152,13 +153,18 @@ processor::~processor() noexcept
 }
 
 
-void processor::fork(processors& host_p, FE::size fiber_stack_size_p) noexcept
+void processor::fork(processors& host_p, FE::uint16 fibers_per_thread_p, FE::size fiber_stack_size_p) noexcept
 {
 	m_host = &host_p;
-	m_fiber_stack_allocator = fiber_stack_size_p;
 
 	FE_ASSERT(m_processor.joinable() == false, "Assertion failure: the processor is already running.");
 	m_should_terminate.store(false, std::memory_order_release);
+
+	m_fibers_per_thread = fibers_per_thread_p;
+	m_fiber_stack_allocator = fiber_stack_size_p;
+
+	m_fibers = std::make_unique<boost::fibers::fiber[]>(fibers_per_thread_p);
+	m_delta_ms = std::make_unique<var::float64[]>(fibers_per_thread_p);
 
 	m_processor = boost::thread
 	(
@@ -166,16 +172,16 @@ void processor::fork(processors& host_p, FE::size fiber_stack_size_p) noexcept
 		{
 			boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
 
-			for (var::uint32 i = 0; i < fibers_per_thread; ++i)
+			for (var::uint32 i = 0; i < m_fibers_per_thread; ++i)
 			{
 				m_fibers[i] = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processor::__fiber_main, this, i);
 			}
 
-			for (boost::fibers::fiber& fiber : m_fibers)
+			for (var::uint32 i = 0; i < m_fibers_per_thread; ++i)
 			{
-				if (fiber.joinable())
+				if (m_fibers[i].joinable())
 				{
-					fiber.join();
+					m_fibers[i].join();
 				}
 			}
 		}
@@ -198,25 +204,39 @@ void processor::schedule_task(const framework::task& task_p) noexcept
 	m_queue.push(task_p);
 }
 
+FE::uint64 __create_fibers_host_sleep_mask(FE::uint16 fibers_per_thread_p) noexcept
+{
+	var::uint64 l_mask = 0;
+	for (var::uint16 i = 0; i < fibers_per_thread_p; ++i)
+	{
+		l_mask = l_mask | 1;
+		l_mask = l_mask << 1;
+	}
+	return l_mask;
+}
 
 void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept
 {
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
+	FE_ASSERT(fiber_index_p >= 0, "Assertion failure: host_p cannot be null.");
 
 	boost::mutex l_mutex;
 	FE::clock l_delta_clock;
-
+	FE::uint64 l_fibers_host_sleep_mask = __create_fibers_host_sleep_mask(host_p->m_fibers_per_thread);
+	host_p->m_yield_status = host_p->m_yield_status xor host_p->m_yield_status;
 	typename task_queue::value_type l_task;
 
 	while (host_p->m_should_terminate.load(std::memory_order_acquire) == false)
 	{
 		if (host_p->m_queue.try_pop(l_task) == false) // no tasks in the queue
 		{
-			host_p->m_yield_status[fiber_index_p] = 1; // mark this fiber as yielded
+			host_p->m_yield_status = host_p->m_yield_status | 1; // mark this fiber as yielded
+			host_p->m_yield_status = host_p->m_yield_status << 1;
+
 			boost::this_fiber::yield(); // yield if no tasks are available
-			if (host_p->m_yield_status.to_ulong() == bitflag_fibers_host_sleep) // all fibers have yielded
+			if (host_p->m_yield_status == l_fibers_host_sleep_mask) // all fibers have yielded
 			{
-				host_p->m_yield_status.reset();
+				host_p->m_yield_status = host_p->m_yield_status xor host_p->m_yield_status;
 				boost::unique_lock<boost::mutex> l_unique_lock(l_mutex);
 				host_p->m_condition_variable.wait(l_unique_lock); // wait until notified of new tasks
 			}
@@ -355,7 +375,7 @@ void game_thread::__gc_main(game_thread* const host_p) noexcept
 
 				if (iterator->second.observer_count() == 0)
 				{
-					iterator = host_p->m_ecs.m_archetype_table.erase(iterator); // remove expired entities
+					host_p->m_ecs.m_archetype_table.erase(iterator); // remove expired entities
 				}
 
 				++l_batch_count;
@@ -448,66 +468,67 @@ void game_thread::__reachability_analysis_main(game_thread* const host_p) noexce
 	}
 }
 // TODO: refactor to be non-recursive
-void game_thread::__reachability_analysis_recursive(FE::component_view<FE::component_base> root_p, FE::component_view<FE::component_base> child_p) noexcept
+void game_thread::__reachability_analysis_recursive(_FE_MAYBE_UNUSED_ FE::component_view<FE::component_base> root_p, _FE_MAYBE_UNUSED_ FE::component_view<FE::component_base> child_p) noexcept
 {
-	FE_ASSERT(root_p.is_valid() == true, "Assertion failure: root_p cannot be null.");
-	FE_ASSERT(root_p->m_metadata != nullptr, "Assertion failure: root_p's metadata cannot be null.");
-	FE_ASSERT(root_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: root_p's gc_metadata cannot be null.");
+	//FE_ASSERT(root_p.is_valid() == true, "Assertion failure: root_p cannot be null.");
+	//FE_ASSERT(root_p->m_metadata != nullptr, "Assertion failure: root_p's metadata cannot be null.");
+	//FE_ASSERT(root_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: root_p's gc_metadata cannot be null.");
 
-	FE_ASSERT(child_p.is_valid() == true, "Assertion failure: child_p cannot be null.");
-	FE_ASSERT(child_p->m_metadata != nullptr, "Assertion failure: child_p's metadata cannot be null.");
-	FE_ASSERT(child_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: child_p's gc_metadata cannot be null.");
+	//FE_ASSERT(child_p.is_valid() == true, "Assertion failure: child_p cannot be null.");
+	//FE_ASSERT(child_p->m_metadata != nullptr, "Assertion failure: child_p's metadata cannot be null.");
+	//FE_ASSERT(child_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: child_p's gc_metadata cannot be null.");
 
-	static var::uint64 l_s_recursion_depth = 0;
-	static var::boolean l_s_should_exit = false;
+	//static var::uint64 l_s_recursion_depth = 0;
+	//static var::boolean l_s_should_exit = false;
 
-	if (l_s_should_exit == true)
-	{
-		--l_s_recursion_depth;
-		if (l_s_recursion_depth == 0)
-		{
-			l_s_should_exit = false;
-		}
-		return;
-	}
-	if (l_s_recursion_depth >= m_gc_iter_per_frame)
-	{
-		l_s_should_exit = true;
-		return;
-	}
-	++l_s_recursion_depth;
+	//if (l_s_should_exit == true)
+	//{
+	//	--l_s_recursion_depth;
+	//	if (l_s_recursion_depth == 0)
+	//	{
+	//		l_s_should_exit = false;
+	//	}
+	//	return;
+	//}
+	//if (l_s_recursion_depth >= m_gc_iter_per_frame)
+	//{
+	//	l_s_should_exit = true;
+	//	return;
+	//}
+	//++l_s_recursion_depth;
 
 
-	for (FE::component_view<FE::component_base>* subcomponent_view : child_p->m_metadata->m_gc_metadata->_member_components)
-	{
-		if (root_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
-		{
-			root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
-			return; // circular reference detected
-		}
-		__reachability_analysis_recursive(root_p, *subcomponent_view);
-	}
+	//for (FE::component_view<FE::component_base>* subcomponent_view : child_p->m_metadata->m_gc_metadata->_member_components)
+	//{
+	//	if (root_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
+	//	{
+	//		root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+	//		return; // circular reference detected
+	//	}
+	//	__reachability_analysis_recursive(root_p, *subcomponent_view);
+	//}
 
-	for (FE::entity<FE::archetype_base>* subentity_view : child_p->m_metadata->m_gc_metadata->_member_entities)
-	{
-		for (auto iterator = (*subentity_view)->m_component_view_table.begin(); iterator != (*subentity_view)->m_component_view_table.end(); ++iterator)
-		{
-			if (root_p.operator->() == iterator->second.operator->()) // examine the circular reference
-			{
-				root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
-				return; // circular reference detected
-			}
-			__reachability_analysis_recursive(root_p, iterator->second);
-		}
-	}
+	//for (FE::entity<FE::archetype_base>* subentity_view : child_p->m_metadata->m_gc_metadata->_member_entities)
+	//{
+	//	for (auto iterator = (*subentity_view)->m_component_view_table.begin(); iterator != (*subentity_view)->m_component_view_table.end(); ++iterator)
+	//	{
+	//		if (root_p.operator->() == iterator->second.operator->()) // examine the circular reference
+	//		{
+	//			root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
+	//			return; // circular reference detected
+	//		}
+	//		__reachability_analysis_recursive(root_p, iterator->second);
+	//	}
+	//}
 }
 
 
 
 
-processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept
+processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept
 	:	m_concurrency(concurrency_p),
 		m_fiber_host_count(m_concurrency - 4),
+		m_fibers_per_thread(fibers_per_thread_p),
 		m_processors(),
 		m_fiber_stack_allocator(fiber_stack_size_p),
 
@@ -518,6 +539,11 @@ processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint3
 		m_networking_thread()
 {
 	FE_ASSERT(concurrency_p >= 6, "Assertion failure: the software thread count must be greater than or equal to 6.");
+	FE_ASSERT(fibers_per_thread_p > 0, "Assertion failure: fibers_per_thread_p must be greater than zero.");
+	FE_ASSERT(gc_batch_count_p > 0, "Assertion failure: gc_batch_count_p must be greater than zero.");
+	FE_ASSERT(fiber_stack_size_p > 0, "Assertion failure: fiber_stack_size_p must be at least 1 MiB.");
+
+	FE_ASSERT(fibers_per_thread_p <= 64, "Assertion failure: cannot create more than 64 fibers per thread.");
 }
 
 
@@ -586,9 +612,9 @@ void processors::run(	FE::system renderer_p, FE::component_base* renderer_args_p
 	);
 
 	m_processors = std::make_unique<processor[]>(m_fiber_host_count);
-	for (var::uint32 i = 0; i < m_fiber_host_count; ++i)
+	for (var::uint32 i = 1; i < m_fiber_host_count; ++i)
 	{
-		m_processors[i].fork(*this, m_fiber_stack_allocator.stack_size());
+		m_processors[i].fork(*this, m_fibers_per_thread, m_fiber_stack_allocator.stack_size());
 	}
 
 	m_game_thread.run();

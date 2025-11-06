@@ -16,11 +16,10 @@
 
 # https://github.com/google/oss-policies-info/blob/main/foundational-cxx-support-matrix.md
 # As of 2024-07-01, CMake 3.16 is the minimum supported version.
-cmake_minimum_required(VERSION 3.16...4.2.0)
+cmake_minimum_required(VERSION 3.16)
 
-GET_FILENAME_COMPONENT(CMAKE_CURRENT_LIST ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)
-INCLUDE("${CMAKE_CURRENT_LIST}/../../../CMake/predefined-settings.cmake")
-INCLUDE("${CMAKE_CURRENT_LIST}/../../../CMake/frogman-engine.cmake")
+GET_FILENAME_COMPONENT(ABSL_CMAKE_CURRENT_LIST_DIR ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE) # inject Frogman Engine build settings
+INCLUDE("${ABSL_CMAKE_CURRENT_LIST_DIR}/../../../CMake/predefined-settings.cmake")
 
 # Allow the user to specify the CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
 if (POLICY CMP0141)

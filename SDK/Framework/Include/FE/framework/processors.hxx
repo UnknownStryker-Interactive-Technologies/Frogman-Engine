@@ -31,7 +31,7 @@ limitations under the License.
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/mutex.hpp>
 
-#include <FE/memory.hxx> // FE::pmr_unique_ptr
+#include <FE/memory.hxx> // FE::unique_ptr
 #include <FE/pool/memory_resource.hxx> // FE::memory_resource
 
 
@@ -106,9 +106,6 @@ public:
 	FE::boolean try_pop(framework::task& out_task_p) noexcept;
 };
 
-constexpr FE::uint32 fibers_per_thread = 3;
-constexpr FE::uint32 bitflag_fibers_host_sleep = 0b111; // since the fibers_per_thread is 3, the bitwidth is 3.
-
 
 
 
@@ -140,20 +137,22 @@ class processor
 	class processors* m_host;
 	boost::thread m_processor;
 	std::atomic_bool m_should_terminate;
-	std::bitset<fibers_per_thread> m_yield_status;
+	var::uint16 m_fibers_per_thread;
+	var::uint64 m_yield_status;
 	task_queue m_queue;
 	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
 
-	boost::fibers::fiber m_fibers[fibers_per_thread];
-	var::float64 m_delta_ms[fibers_per_thread];
+	std::unique_ptr<boost::fibers::fiber[]> m_fibers;
+	std::unique_ptr<var::float64[]> m_delta_ms;
 
 	boost::condition_variable m_condition_variable;
+
 
 public:
 	processor() noexcept;
 	~processor() noexcept;
 
-	void fork(processors& host_p, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
+	void fork(processors& host_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
 	void join() noexcept;
 	void schedule_task(const framework::task& task_p) noexcept;
 
@@ -222,6 +221,7 @@ class processors
 													>;
 	FE::uint32 m_concurrency;
 	FE::uint32 m_fiber_host_count;
+	FE::uint16 m_fibers_per_thread;
 	std::unique_ptr<processor[]> m_processors;
 	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
 
@@ -232,7 +232,7 @@ class processors
 	boost::thread m_networking_thread;
 
 public:
-	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint32 gc_batch_count_p = 100, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
+	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p = 3, FE::uint32 gc_batch_count_p = 100, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
 	~processors() noexcept = default;
 
 	void run(	FE::system renderer_p, FE::component_base* renderer_args_p,

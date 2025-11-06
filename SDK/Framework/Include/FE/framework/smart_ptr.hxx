@@ -201,7 +201,7 @@ public:
 
 private:
     template <typename... Arguments>
-    control_block_type* __allocate_new_block(std::pmr::memory_resource* const resource_p, Arguments&&... arguments_p) noexcept
+    control_block_type* _FE_VECTOR_CALL_ __allocate_new_block(std::pmr::memory_resource* const resource_p, Arguments&&... arguments_p) noexcept
     {
 		FE_ASSERT(resource_p != nullptr, "Assertion failed: cannot create a new smart_ptr data block with a null memory_resource.");
 		FE::size l_total_size_in_bytes = sizeof(T) + sizeof(control_block_type);
@@ -533,7 +533,7 @@ private:
 };
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner> make_owner(std::pmr::memory_resource* resource_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ smart_ptr<std::remove_all_extents_t<T>, RefType::_Owner> _FE_VECTOR_CALL_ make_owner(std::pmr::memory_resource* resource_p = std::pmr::get_default_resource(), Arguments&&... arguments_p) noexcept
 {
     static_assert(std::is_reference_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a reference type variable.");
     static_assert(std::is_const_v<T> == false, "Static assertion failed: smart_ptr cannot hold a pointer to a const type variable.");

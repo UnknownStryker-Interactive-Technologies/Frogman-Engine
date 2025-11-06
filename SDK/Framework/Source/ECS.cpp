@@ -24,7 +24,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-ECS::ECS() noexcept
+ECS::ECS(FE::size max_entities_p, FE::size component_type_count_hint_p, FE::size system_count_hint_p) noexcept
 	:	m_memory_resource(),
 		m_archetype_pool(),
 
@@ -33,18 +33,17 @@ ECS::ECS() noexcept
 		m_system_table(),
 		m_archetype_default_entities(),
 		m_buffer(),
-		m_fiber_lock()
+		m_fiber_lock(),
+		m_max_entities(max_entities_p)
 {
+	m_archetype_table.reserve(m_max_entities);
+	m_component_table.reserve(component_type_count_hint_p);
+	m_system_table.reserve(system_count_hint_p);
 }
 
 
 void ECS::initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept
 {
-	m_archetype_table = archetype_table(&m_memory_resource);
-	m_archetype_table.reserve(10240);
-	m_component_table.reserve(10240);
-	m_system_table.reserve(10240);
-
 	m_archetype_default_entities = std::move(initializer_list_p);
 	m_buffer = std::pmr::string(&m_memory_resource);
 
@@ -160,7 +159,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 	constexpr FE::ASCII* l_class = "class";
 	constexpr FE::ASCII* l_struct = "struct";
 
-	robin_hood::unordered_map<std::pmr::string, std::pmr::string> l_serialized_components;
+	initializer l_serialized_components;
 
 	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
@@ -253,5 +252,58 @@ void ECS::deserialize_entity(initializer& serialized_components_p, FE::entity<ar
 		*/
 	}
 }
+
+
+END_NAMESPACE
+
+
+
+
+BEGIN_NAMESPACE(FE)
+
+
+archetype_base::archetype_base() noexcept
+	:	m_component_view_table(),
+		m_name()
+{
+}
+
+archetype_base::~archetype_base() noexcept
+{
+	for (auto& pair : m_component_view_table)
+	{
+		pair.second->m_metadata->_group->remove_component(pair.second->m_metadata->_index);
+	}
+}
+
+
+
+
+component_base::component_base() noexcept
+	: m_metadata()
+{
+}
+
+FE::ASCII* component_base::get_typename() const noexcept { return m_metadata->_typename; }
+FE::ASCII* component_base::get_memory_layout_version() const noexcept { return m_metadata->_memory_layout_version; }
+
+
+internal::ECS::gc_metadata::gc_metadata() noexcept
+	: _member_components(),
+	_member_entities(),
+	_is_circular_reference(false)
+{
+}
+
+
+internal::ECS::component_metadata::component_metadata() noexcept
+	: m_gc_metadata(),
+	_group(),
+	_index(0),
+	_typename(nullptr),
+	_memory_layout_version("default")
+{
+}
+
 
 END_NAMESPACE

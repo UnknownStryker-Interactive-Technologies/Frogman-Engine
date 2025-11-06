@@ -5,6 +5,35 @@
 
 // robin hood
 #include <robin_hood.h>
+#include <absl/container/node_hash_map.h>
+
+
+
+
+TEST(absl, node_hash_map)
+{
+	constexpr size_t capacity = 1000;
+
+	absl::node_hash_map<int, void*> map;
+	map.reserve(capacity); // Reserve space for 100k elements
+
+	for(int i = 0; i < capacity; ++i)
+	{
+		// Insert and delete repeatedly
+		for (int j = 0; j < capacity; ++j)
+		{
+			map.emplace(j, nullptr);
+		}
+
+		FE_ASSERT(map.size() == capacity);
+
+		for (int j = 0; j < capacity; ++j)
+		{
+			map.erase(j);
+		}
+	}
+}
+
 
 
 
@@ -52,3 +81,76 @@ void robin_hood_hash_benchmark(benchmark::State& state_p)
 }
 
 BENCHMARK(robin_hood_hash_benchmark);
+
+
+
+
+
+
+
+
+
+
+static void robin_hood_insertion(benchmark::State& state)
+{
+	robin_hood::unordered_map<int, int> l_map;
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(robin_hood_insertion);
+
+static void std_unordered_map_insertion(benchmark::State& state)
+{
+	std::unordered_map<int, int> l_map;
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(std_unordered_map_insertion);
+
+static void std_pmr_unordered_map_insertion(benchmark::State& state)
+{
+	std::pmr::unsynchronized_pool_resource resource;
+	std::pmr::unordered_map<int, int> l_map(&resource);
+	for (auto _ : state)
+	{
+		l_map.insert({ 42, 3 });
+	}
+}
+BENCHMARK(std_pmr_unordered_map_insertion);
+
+
+
+
+static void robin_hood_lookup(benchmark::State& state)
+{
+	robin_hood::unordered_map<int, int> l_map;
+	l_map.insert({ 42, 3 });
+	for (auto _ : state)
+	{
+		auto l_iterator = l_map.find(42);
+		if (l_iterator != l_map.end())
+		{
+			benchmark::DoNotOptimize(l_iterator->second);
+		}
+	}
+}
+BENCHMARK(robin_hood_lookup);
+
+static void std_unordered_map_lookup(benchmark::State& state)
+{
+	std::unordered_map<int, int> l_map;
+	l_map.insert({ 42, 3 });
+	for (auto _ : state)
+	{
+		auto l_iterator = l_map.find(42);
+		if (l_iterator != l_map.end())
+		{
+			benchmark::DoNotOptimize(l_iterator->second);
+		}
+	}
+}
+BENCHMARK(std_unordered_map_lookup);

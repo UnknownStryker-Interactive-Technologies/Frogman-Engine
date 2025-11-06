@@ -40,24 +40,9 @@ public:
 		FE::engine::__get_engine().m_processors->schedule_waitable_task(task_p);
 	}
 
-	_FE_FORCE_INLINE_ static FE::boolean is_async_system_active() noexcept
-	{ 
-		return FE::engine::__get_engine().m_processors->is_running();
-	}
-
 	_FE_FORCE_INLINE_ static void shutdown() noexcept
 	{
 		FE::engine::__get_engine().m_processors->shutdown();
-	}
-
-	_FE_FORCE_INLINE_ static FE::float64 get_delta_milliseconds() noexcept 
-	{ 
-		return FE::engine::__get_engine().m_processors->get_delta_time_milliseconds();
-	}
-
-	_FE_FORCE_INLINE_ static FE::float64 get_GC_delta_milliseconds() noexcept 
-	{ 
-		return FE::engine::__get_engine().m_processors->get_gc_delta_time_milliseconds();
 	}
 
 public:

@@ -49,7 +49,7 @@ limitations under the License.
 // ronbin hood hash map
 #include <robin_hood.h>
 
-// array hash map
+#include <absl/container/flat_hash_map.h>
 #include <tsl/array-hash/array_map.h>
 
 
@@ -71,7 +71,10 @@ public:
 
 private:
 	using lock_type = std::shared_mutex;
-	using internal_map_type = robin_hood::unordered_map<std::pmr::string, FE::task_base*>;
+	using internal_map_type = absl::flat_hash_map<std::pmr::string, FE::task_base*,
+		FE::hash<std::pmr::string>,
+		std::equal_to<std::pmr::string>,
+		FE::cache_aligned_allocator<std::pmr::string>>;
 
 	lock_type m_lock;
 	std::pmr::memory_resource* m_pool;
@@ -97,7 +100,7 @@ public:
 	template<class TaskType>
 	void register_task(const std::string_view& task_name_p, typename TaskType::task_type function_p) noexcept
 	{
-		FE_NEGATIVE_STATIC_ASSERT((std::is_base_of<FE::task_base, TaskType>::value == false), "An invalid method type detected.");
+		static_assert(std::is_base_of_v<FE::task_base, TaskType>, "An invalid method type detected.");
 		std::lock_guard<lock_type> l_lock(m_lock);
 		TaskType* const l_task = std::pmr::polymorphic_allocator<TaskType>{ m_pool }.allocate(1);
 		new(l_task) TaskType(function_p);
@@ -190,7 +193,7 @@ public:
 	template<typename T, class C>
 	T* get_property_of(C& instance_p, const std::string_view& property_name_p) noexcept
 	{
-		FE_STATIC_ASSERT(std::is_class<C>::value == true, "Static assertion failure: the typename 'class C' must be a class type.");
+		static_assert(std::is_class_v<C>, "Static assertion failure: the typename 'class C' must be a class type.");
 		for (typename internal_map_type::iterator it = m_property_lut.find(property_name_p); it != m_property_lut.end(); ++it)
 		{
 			if (property_name_p == it.value()->_name)
@@ -217,7 +220,11 @@ public:
 	It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
 	by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 	*/
-	using internal_map_type = robin_hood::unordered_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>>;
+	using internal_map_type = absl::flat_hash_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>,
+		FE::hash<std::pmr::string>,
+		std::equal_to<std::pmr::string>,
+		FE::cache_aligned_allocator<std::pmr::string>>;
+
 	using class_name_type = internal_map_type::key_type;
 	using class_property_list = internal_map_type::mapped_type;
 	using class_property_offset_type = typename class_property_list::key_type;
@@ -263,15 +270,15 @@ public:
 	template<class C, typename T>
 	void register_property(const C& host_class_instance_p, const T& property_p, const std::string_view& property_name_p) noexcept
 	{
-		FE_NEGATIVE_STATIC_ASSERT(std::is_class<C>::value == false, "Primitive data types cannot be registered as the host classes/structs.");
-		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "Static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
-		FE_NEGATIVE_STATIC_ASSERT((FE::is_trivial<T>::value == false) && (std::is_array<T>::value == true), "Static assertion failure: fixed-sized non-trivial arrays are not serializable nor deserializable.");
+		static_assert(std::is_class_v<C>, "Primitive data types cannot be registered as the host classes/structs.");
+		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "Static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		static_assert(! ((FE::is_trivial<T>::value == false) && (std::is_array_v<T>)), "Static assertion failure: fixed-sized non-trivial arrays are not serializable nor deserializable.");
 		FE_ASSERT(property_name_p.empty() != true, "Assertion failure: property name cannot be null.");
 		
 		property_metadata l_property_meta_data;
 		l_property_meta_data._is_trivial = static_cast<TypeTriviality>(FE::is_trivial<T>::value);
 		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
-		FE_STATIC_ASSERT(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
+		static_assert(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
 		l_property_meta_data._name = property_name_p.data();
@@ -337,8 +344,8 @@ public:
 	template<typename T>
 	void serialize(std::pmr::string& out_ret_buffer_p, const T& object_p, FE::ASCII* const version_p) noexcept
 	{
-		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be serialized.");
-		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		static_assert(std::is_class_v<T>, "Non-class/struct field variables cannot be serialized.");
+		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 		out_ret_buffer_p.clear();
 		out_ret_buffer_p.reserve(one_KiB); // Pre-allocate 1 KiB.
 
@@ -384,8 +391,8 @@ public:
 	template<typename T>
 	void deserialize(const std::pmr::string& data_p, T& out_object_p, _FE_MAYBE_UNUSED_ FE::ASCII* const version_p) noexcept
 	{
-		FE_NEGATIVE_STATIC_ASSERT(std::is_class<T>::value == false, "Non-class/struct field variables cannot be deserialized.");
-		FE_NEGATIVE_STATIC_ASSERT((std::is_reference<T>::value == true) || (std::is_pointer<T>::value == true), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		static_assert(std::is_class_v<T>, "Non-class/struct field variables cannot be serialized.");
+		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
 
 		if (data_p.empty() == true)
 		{
@@ -685,7 +692,7 @@ private:
 	void __serialize_by_foreach_mutually_recursive(std::pmr::string& out_ret_buffer_p, const void* const data_p) noexcept
 	{
 		//FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
-		FE_NEGATIVE_STATIC_ASSERT(FE::is_serializable<Container>::value == false, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
+		static_assert(FE::is_serializable<Container>::value, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
 		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
 		const Container* const l_container = static_cast<const Container* const>(data_p);
 
@@ -727,7 +734,7 @@ private:
 	void __deserialize_by_foreach_mutually_recursive(void* const data_p) noexcept
 	{
 		//FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
-		FE_NEGATIVE_STATIC_ASSERT(FE::is_serializable<Container>::value == false, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
+		static_assert(FE::is_serializable<Container>::value, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
 		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
 		Container* const l_container = static_cast<Container* const>(data_p);
 

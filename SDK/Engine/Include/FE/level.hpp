@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/framework/ECS.hxx>
 
 
 
@@ -23,7 +24,12 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-
+class level : public FE::archetype_base
+{
+public:
+	level() noexcept = default;
+	virtual ~level() noexcept override = default;
+};
 
 
 END_NAMESPACE

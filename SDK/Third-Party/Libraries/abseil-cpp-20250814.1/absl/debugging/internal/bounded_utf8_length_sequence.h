@@ -1,4 +1,4 @@
-﻿// Copyright 2024 The Abseil Authors
+// Copyright 2024 The Abseil Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ class BoundedUtf8LengthSequence {
   //
   // Example: rep_ = {0xb1, ... the rest zeroes ...} represents the sequence
   // (2, 1, 4, 3, ... the rest 1's ...).  Constructing the sequence of Unicode
-  // code points "Ã€aðŸ‚»ä¸­" = {U+00C0, U+0061, U+1F0BB, U+4E2D} (among many
+  // code points "Àa🂻中" = {U+00C0, U+0061, U+1F0BB, U+4E2D} (among many
   // other examples) would yield this value of rep_.
   static_assert(max_elements > 0 && max_elements % 32 == 0,
                 "max_elements must be a positive multiple of 32");

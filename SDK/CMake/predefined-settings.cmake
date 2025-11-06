@@ -10,7 +10,7 @@ GET_FILENAME_COMPONENT(FROGMAN_ENGINE_PREDEFINED_SETTINGS_CMAKE_DIR ${CMAKE_CURR
 MESSAGE("
 Define a cmake macro if you want to make changes to the settings.
 Available -D macro options:
--DENABLE_MEMORY_TRACKER=1
+-DSHIPPING_BUILD=ON/OFF (Default: OFF)
 
 Frogman Engine SIMD Extension Requirements:
 an x86-64 cpu with AVX and SSE2 (AVX-512F is optional). Please Check if the x86-64 cpu has ymm and xmm vector registers.
@@ -45,9 +45,8 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 	ADD_COMPILE_OPTIONS(/D_FE_ON_WINDOWS_X86_64_ /D_ALLOWED_DIRECTORY_LENGTH_=256)
 
 
-	IF(ENABLE_MEMORY_TRACKER STREQUAL "yes")
-		MESSAGE(STATUS "Enabled the option: ENABLE_MEMORY_TRACKER")
-		ADD_COMPILE_OPTIONS(/D_ENABLE_MEMORY_TRACKER_)
+	IF(SHIPPING_BUILD EQUAL ON)
+		ADD_LINK_OPTIONS(/SUBSYSTEM:WINDOWS)
 	ENDIF()
 
 
@@ -66,21 +65,21 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 	# /Ob0: Disable inline function expansion 
 	# /Oi: Generate intrinsic functions
 	# /Oy-: Disable frame pointer omission  
-	# /Gr: Enable calling convention fastcall
+	# /Gv: Enable calling convention vectorcall
 	# /GR: Enable RTTI
 
-	# Common Compile Options
-	ADD_COMPILE_OPTIONS(/D_HAS_EXCEPTIONS=0 /DNOMINMAX /D_V143_=1 /std:c17 /Zc:__cplusplus /WX /W4 /MP /GF /Gy /Oi /Gr /GR /utf-8) #  /utf-8
+	# Common Compile Options. The ABSL prevents compile when /Gv is enabled.
+	ADD_COMPILE_OPTIONS(/D_HAS_EXCEPTIONS=0 /DNOMINMAX /D_V143_=1 /std:c17 /Zc:__cplusplus /WX /W4 /MP /GF /Gy /Oi /Gr /GR /utf-8) # /utf-8 /Gv
 
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:/D_DEBUG_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/D_RELWITHDEBINFO_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:/D_RELEASE_;/D_ENABLE_EXIT_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/D_MINSIZEREL_;/D_ENABLE_EXIT_>")
 
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:/Od;/Ob0;/Oy-;/MTd>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/O2;/Ob2;/Ot;/Oy-;/MT>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:/Ox;/Ob2;/Ot;/Oy;/GL;/MT>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/Os;/Ob2;/Oy;/MT>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:/Od;/Oy-;/MTd>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:/O2;/Oy-;/MT>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:/Ox;/GL;/MT>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:/O1;/MT>")
 
 
 	# Common Linker Options

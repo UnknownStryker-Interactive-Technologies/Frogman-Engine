@@ -91,8 +91,8 @@ protected:
 	reflection::property_registry m_property_reflection;
 	reflection::enum_registry m_enum_reflection;
 
-	std::unique_ptr<class framework::ECS> m_ecs;
-	std::unique_ptr<class framework::processors> m_processors;
+	FE::unique_ptr<class framework::ECS> m_ecs;
+	FE::unique_ptr<class framework::processors> m_processors;
 
 public:
 	framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;

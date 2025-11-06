@@ -17,7 +17,10 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework.hxx>
+#include <FE/game.hpp>
 #include <FE/renderer.hxx>
+
+#include <simdjson.h> // read game configurations from .froggy file
 
 
 #define FROGMAN_ENGINE() CUSTOM_ENGINE(FE::engine)
@@ -34,6 +37,41 @@ class memory;
 class window_control;
 
 
+struct engine_info // fields are immutable after window creation; modifying these values will not affect any.
+{
+    std::pmr::string _version;
+	std::pmr::string _installation_path;
+};
+
+struct project_info // fields are immutable after window creation; modifying these values will not affect any.
+{
+    std::pmr::string _type;
+	std::pmr::string _name;
+    std::pmr::string _path;
+    std::pmr::string _entry_world_path;
+};
+
+struct path_lut // fields are immutable after window creation; modifying these values will not affect any.
+{
+    std::pmr::vector<std::pmr::string> _world_paths;
+    std::pmr::vector<std::pmr::string> _module_paths;
+};
+
+struct project_config // fields are immutable after window creation; modifying these values will not affect any.
+{
+	FE::system _compression_method = nullptr;
+    FE::system _decompression_method = nullptr;
+	FE::system _encryption_method = nullptr;
+    FE::system _decryption_method = nullptr;
+    FE::uint64 _max_entities = 10240;
+    FE::uint64 _max_component_type_count_hint = 1024;
+	FE::uint64 _max_system_count_hint = 1024;
+	FE::uint32 _gc_iterations_per_frame = 30;
+	FE::uint64 _fiber_stack_size = FE::one_MiB;
+    FE::uint16 _fibers_per_thread = 3;
+};
+
+
 class engine final : public FE::framework::framework_base
 {
     friend class async;
@@ -41,15 +79,18 @@ class engine final : public FE::framework::framework_base
     friend class memory;
     friend class FE::window_control;
 
+    std::pmr::string m_runtime_path;
+    std::pmr::string m_froggy_path;
+
+    FE::smart_ptr<FE::engine_info, FE::RefType::_Owner> m_engine_info;
+	FE::smart_ptr<FE::project_info, FE::RefType::_Owner> m_project_info;
+	FE::smart_ptr<FE::path_lut, FE::RefType::_Owner> m_path_lut;
+	FE::smart_ptr<FE::project_config, FE::RefType::_Owner> m_project_config;
+    FE::smart_ptr<FE::window_config, FE::RefType::_Owner> m_window_config;
+
 	std::atomic_bool m_should_exit;
-    FE::uint32 m_gc_batch_count;
-    std::size_t m_fiber_stack_size;
-
-    framework::initializer_list m_entity_list;
-	framework::system_table_initializer_list m_system_list;
-
-    std::unique_ptr<window_config> m_window_config;
-    std::unique_ptr<FE::renderer> m_renderer;
+    FE::smart_ptr<FE::renderer, FE::RefType::_Owner> m_renderer;
+    FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 
 public:
     engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
@@ -61,6 +102,8 @@ private:
     virtual FE::int32 shutdown() override;
 
     _FE_FORCE_INLINE_ static FE::engine& __get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
+	void __read_froggy() noexcept;
+	void __initialize_window_and_renderer() noexcept;
 
 private: // Callbacks
 	static void __renderer_main(FE::component_base* engine_reference_p) noexcept;

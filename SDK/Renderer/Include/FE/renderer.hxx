@@ -43,9 +43,9 @@ namespace internal::renderer
 }
 
 
-struct window_config
+struct window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
-    const std::pmr::string _title = "Frogman Game";
+    std::pmr::string _title = "Frogman Game";
 	GLFWimage* _icon_images = nullptr;
 	FE::int32 _icon_image_count = 0;
 	FE::int32 _monitor_index = 0;

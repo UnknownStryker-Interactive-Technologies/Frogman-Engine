@@ -1,4 +1,4 @@
-﻿// Copyright 2018 The Abseil Authors.
+// Copyright 2018 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,8 +31,7 @@
 
 #ifndef ABSL_CONTAINER_FLAT_HASH_SET_H_
 #define ABSL_CONTAINER_FLAT_HASH_SET_H_
-#pragma warning(push)
-#pragma warning(disable : 4127)
+
 #include <cstddef>
 #include <memory>
 #include <type_traits>
@@ -577,5 +576,5 @@ struct IsUnorderedContainer<absl::flat_hash_set<Key, Hash, KeyEqual, Allocator>>
 
 ABSL_NAMESPACE_END
 }  // namespace absl
-#pragma warning(pop)
+
 #endif  // ABSL_CONTAINER_FLAT_HASH_SET_H_

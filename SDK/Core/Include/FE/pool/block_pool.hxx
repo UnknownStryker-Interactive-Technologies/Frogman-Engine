@@ -191,7 +191,7 @@ protected:
 
 public:
     template<typename U>
-    U* allocate() noexcept
+    U* _FE_VECTOR_CALL_ allocate() noexcept
     {
         static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         static_assert(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
@@ -237,7 +237,7 @@ public:
 
     // Incorrect type will cause a critical runtime error.
     template<typename U> 
-    void deallocate(U* const pointer_p) noexcept 
+    void _FE_VECTOR_CALL_ deallocate(U* const pointer_p) noexcept
     {
         static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
 		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.Core.block_pool: Unable to deallocate() a nullptr.");

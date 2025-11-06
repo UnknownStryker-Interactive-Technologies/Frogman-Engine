@@ -58,7 +58,7 @@ class list
 				m_next(nullptr),
 				_value()
 		{
-			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
 		constexpr node(const T& value_p) noexcept
@@ -66,7 +66,7 @@ class list
 				m_next(nullptr),
 				_value(value_p)
 		{
-			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
 		constexpr node(T&& value_p) noexcept
@@ -74,7 +74,7 @@ class list
 				m_next(nullptr),
 				_value( std::move(value_p) )
 		{
-			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
 		template <typename... Arguments>
@@ -84,7 +84,7 @@ class list
 				_value( std::forward<Arguments>(arguments_p)... )
 		{
 			//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
-			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependant classes.");
+			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
 
@@ -203,12 +203,12 @@ class list
 
 		_FE_DEPRECATED_ constexpr const reference operator[](const difference_type index_p) const noexcept
 		{
-			FE_EXIT_IF(true, ErrorCode::_FatalMemoryError_1XX_InvalidIteratorOps, "Assertion failed: list_iterator does not support the ramdom access [] index operator.");
+			FE_EXIT_IF(true, ErrorCode::_FatalMemoryError_1XX_InvalidIteratorOps, "Assertion failed: list_iterator does not support the random access [] index operator.");
 			return m_iterator[0];
 		}
 		_FE_DEPRECATED_ constexpr reference operator[](const difference_type index_p) noexcept
 		{
-			FE_EXIT_IF(true, ErrorCode::_FatalMemoryError_1XX_InvalidIteratorOps, "Assertion failed: list_iterator does not support the ramdom access [] index operator.");
+			FE_EXIT_IF(true, ErrorCode::_FatalMemoryError_1XX_InvalidIteratorOps, "Assertion failed: list_iterator does not support the random access [] index operator.");
 			return m_iterator[0];
 		}
 
@@ -792,7 +792,7 @@ public: // Member functions
 		return FE::iterator_cast<iterator>(l_new);
 	}
 
-	_FE_FORCE_INLINE_ constexpr iterator insert(const_iterator pos_p, const T& value_p) noexcept
+	constexpr iterator insert(const_iterator pos_p, const T& value_p) noexcept
 	{
 		if (pos_p == cend())
 		{
@@ -960,7 +960,7 @@ public: // Member functions
 	}
 	
 	
-	_FE_FORCE_INLINE_ constexpr void push_back(const T& value_p) noexcept 
+	constexpr void push_back(const T& value_p) noexcept 
 	{
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
@@ -981,7 +981,7 @@ public: // Member functions
 		++m_size;
 	}
 
-	_FE_FORCE_INLINE_ constexpr void push_back(T&& value_p) noexcept
+	constexpr void push_back(T&& value_p) noexcept
 	{
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
@@ -1004,7 +1004,7 @@ public: // Member functions
 
 
 	template <typename... Arguments>
-	_FE_FORCE_INLINE_ constexpr reference emplace_back(Arguments&&... arguments_p) noexcept
+	constexpr reference emplace_back(Arguments&&... arguments_p) noexcept
 	{
 		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
 
@@ -1051,7 +1051,7 @@ public: // Member functions
 
 
 	template <typename... Arguments>
-	_FE_FORCE_INLINE_ constexpr reference emplace_front(Arguments&&... arguments_p) noexcept
+	constexpr reference emplace_front(Arguments&&... arguments_p) noexcept
 	{
 		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
 

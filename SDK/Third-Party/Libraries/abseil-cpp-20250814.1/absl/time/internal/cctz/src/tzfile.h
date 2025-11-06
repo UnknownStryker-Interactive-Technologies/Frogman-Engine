@@ -1,4 +1,4 @@
-﻿/* Layout and location of TZif files.  */
+/* Layout and location of TZif files.  */
 
 #ifndef TZFILE_H
 

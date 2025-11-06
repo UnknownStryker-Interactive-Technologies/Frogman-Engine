@@ -14,8 +14,8 @@ using namespace FE;
 
 TEST(memmove, string_insertion)
 {
-	FE::pmr_unique_ptr<std::string> x;
-	x = FE::make_pmr_unique<std::string>(std::pmr::get_default_resource(), "Hello World");
+	FE::unique_ptr<std::string> x;
+	x = FE::make_unique<std::string>(std::pmr::get_default_resource(), "Hello World");
 
 	std::unique_ptr<char[]> l_string(new char[64] {"Freddy's Pizza\0"});
 	ASCII l_string2[] = " Fazbear";

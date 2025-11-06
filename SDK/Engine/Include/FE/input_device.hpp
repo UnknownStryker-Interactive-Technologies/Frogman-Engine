@@ -16,8 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/framework/archetype_base.hxx>
-#include <FE/framework/component_base.hxx>
+#include <FE/framework/ECS.hxx>
 #include <GLFW/glfw3.h>
 
 

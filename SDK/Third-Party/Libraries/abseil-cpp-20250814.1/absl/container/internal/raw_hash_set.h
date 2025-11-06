@@ -1,4 +1,4 @@
-﻿// Copyright 2018 The Abseil Authors.
+// Copyright 2018 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -178,7 +178,8 @@
 #ifndef ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
 #define ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
 #pragma warning(push)
-#pragma warning(disable : 4127) 
+#pragma warning(disable : 4127)  // conditional expression is constant
+#pragma warning(disable : 4702)  // unreachable code
 
 #include <algorithm>
 #include <cassert>

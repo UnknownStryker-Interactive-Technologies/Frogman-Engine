@@ -23,7 +23,9 @@ limitations under the License.
 #include <FE/type_traits.hxx>
 
 // third-party
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 #include <absl/container/flat_hash_set.h> // absl::flat_hash_set for page base pointer validation
+#endif
 #include <taskflow.hpp> // for parallel defragmentation
 
 // std

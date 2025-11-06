@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/framework/ECS.hxx>
+#include <FE/world.hpp>
 
 
 
@@ -23,7 +25,20 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+class game : public FE::archetype_base
+{
+	framework::initializer_list m_entity_list;
+	framework::system_table_initializer_list m_system_list;
 
+	std::pmr::vector< FE::smart_ptr<FE::world, FE::RefType::_Owner> > m_world_list;
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> m_active_world;
+
+	// player list, current player
+
+public:
+	game() noexcept;
+	virtual ~game() noexcept override = default;
+};
 
 
 END_NAMESPACE

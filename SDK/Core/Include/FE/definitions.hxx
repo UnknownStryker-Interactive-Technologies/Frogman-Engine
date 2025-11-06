@@ -136,6 +136,8 @@ limitations under the License.
 #define ENUM_STRUCT_FORWARD_DECLARATION(namespace_p, enum_struct_p) namespace namespace_p { enum struct enum_struct_p; }
 #define _SOURCE_CODE_LOCATION_ __FILE__, __func__, __LINE__
 
+#define _MAX_PATH_LENGTH_ 4096 // hard-code the limit regardless of platform.
+
 
 
 

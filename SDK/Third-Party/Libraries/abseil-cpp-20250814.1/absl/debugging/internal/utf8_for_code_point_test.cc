@@ -1,4 +1,4 @@
-﻿// Copyright 2024 The Abseil Authors
+// Copyright 2024 The Abseil Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ TEST(Utf8ForCodePointTest, RecognizesTheSmallestTwoByteCodePoint) {
 TEST(Utf8ForCodePointTest, RecognizesSmallNWithTilde) {
   Utf8ForCodePoint utf8(uint64_t{0xf1});
   ASSERT_EQ(utf8.length, 2);
-  const char* want = "Ã±";
+  const char* want = "ñ";
   EXPECT_EQ(utf8.bytes[0], want[0]);
   EXPECT_EQ(utf8.bytes[1], want[1]);
 }
@@ -60,7 +60,7 @@ TEST(Utf8ForCodePointTest, RecognizesSmallNWithTilde) {
 TEST(Utf8ForCodePointTest, RecognizesCapitalPi) {
   Utf8ForCodePoint utf8(uint64_t{0x3a0});
   ASSERT_EQ(utf8.length, 2);
-  const char* want = "Î ";
+  const char* want = "Π";
   EXPECT_EQ(utf8.bytes[0], want[0]);
   EXPECT_EQ(utf8.bytes[1], want[1]);
 }
@@ -83,7 +83,7 @@ TEST(Utf8ForCodePointTest, RecognizesTheSmallestThreeByteCodePoint) {
 TEST(Utf8ForCodePointTest, RecognizesTheChineseCharacterZhong1AsInZhong1Wen2) {
   Utf8ForCodePoint utf8(uint64_t{0x4e2d});
   ASSERT_EQ(utf8.length, 3);
-  const char* want = "ä¸­";
+  const char* want = "中";
   EXPECT_EQ(utf8.bytes[0], want[0]);
   EXPECT_EQ(utf8.bytes[1], want[1]);
   EXPECT_EQ(utf8.bytes[2], want[2]);
@@ -135,7 +135,7 @@ TEST(Utf8ForCodePointTest, RecognizesTheSmallestFourByteCodePoint) {
 TEST(Utf8ForCodePointTest, RecognizesTheJackOfHearts) {
   Utf8ForCodePoint utf8(uint64_t{0x1f0bb});
   ASSERT_EQ(utf8.length, 4);
-  const char* want = "ðŸ‚»";
+  const char* want = "🂻";
   EXPECT_EQ(utf8.bytes[0], want[0]);
   EXPECT_EQ(utf8.bytes[1], want[1]);
   EXPECT_EQ(utf8.bytes[2], want[2]);
