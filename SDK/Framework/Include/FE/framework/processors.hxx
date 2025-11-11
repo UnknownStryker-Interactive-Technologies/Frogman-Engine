@@ -175,7 +175,7 @@ class game_thread
 {
 	friend class processor;
 	using game_system_exec_table = std::pmr::vector< FE::pair<	FE::system, // the system function pointer
-																std::pmr::vector< std::pmr::forward_list<FE::internal::ECS::components>* > // the list of components the system will operate on
+																std::pmr::vector< FE::list<FE::internal::ECS::components>* > // the list of components the system will operate on
 																>
 													>;
 	framework::ECS& m_ecs;
@@ -216,7 +216,7 @@ class processors
 {
 	friend class processor;
 	using game_system_exec_table = std::pmr::vector< FE::pair<	FE::system, // the system function pointer
-																std::pmr::vector< std::pmr::forward_list<FE::internal::ECS::components>* > // the list of components the system will operate on
+																std::pmr::vector< FE::list<FE::internal::ECS::components>* > // the list of components the system will operate on
 																>
 													>;
 	FE::uint32 m_concurrency;

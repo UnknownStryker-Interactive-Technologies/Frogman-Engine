@@ -1,0 +1,5 @@
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/ALL_BUILD.dir
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/ZERO_CHECK.dir
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/src/CMakeFiles/glfw.dir
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/src/CMakeFiles/update_mappings.dir
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/docs/CMakeFiles/docs.dir

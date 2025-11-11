@@ -1,0 +1,6 @@
+*.o
+*.obj
+*.exe
+
+Solution_X64_AVX512F/
+Solution_X64/

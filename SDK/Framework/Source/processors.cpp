@@ -332,7 +332,7 @@ void game_thread::__game_main(game_thread* const host_p) noexcept
 		{
 			FE_ASSERT(system_and_components._first != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
-			for (std::pmr::forward_list<FE::internal::ECS::components>* const component_list : system_and_components._second)
+			for (FE::list<FE::internal::ECS::components>* const component_list : system_and_components._second)
 			{
 				for (FE::internal::ECS::components& components : *component_list)
 				{

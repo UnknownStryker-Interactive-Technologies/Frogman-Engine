@@ -26,6 +26,7 @@ BEGIN_NAMESPACE(FE)
 
 class level : public FE::archetype_base
 {
+
 public:
 	level() noexcept = default;
 	virtual ~level() noexcept override = default;

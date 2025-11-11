@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\CMakeFiles\e71b0c46cd58b02b0fdba73752b14fac\update_mappings.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src\mappings.h.in">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\CMake\GenerateMappings.cmake" />
+    <None Include="C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src\CMakeFiles\update_mappings" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{47870083-DC75-35A4-B261-2A5F579486EC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{FD27BF8B-5390-37B4-ADA9-46D3AA25FB99}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

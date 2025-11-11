@@ -82,8 +82,18 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 
 	__load_reflection_data();
 	__read_froggy();
-	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_memory_resource(), m_project_config->_max_entities, m_project_config->_max_component_type_count_hint, m_project_config->_max_system_count_hint);
-	m_processors = FE::make_unique<framework::processors>(framework_base::get_memory_resource(), *m_ecs, m_program_options.get_max_concurrency(), m_project_config->_fibers_per_thread, m_project_config->_gc_iterations_per_frame, m_project_config->_fiber_stack_size);
+	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_memory_resource(), 
+											m_project_config->_max_entities, 
+											m_project_config->_max_component_type_count_hint, m_project_config->_max_system_count_hint);
+
+	m_game_instance = FE::make_owner<FE::game>(	framework_base::get_memory_resource(), *m_ecs,
+												m_project_info->_entry_world_path,
+												m_path_lut->_world_paths);
+
+	m_processors = FE::make_unique<framework::processors>(	framework_base::get_memory_resource(), 
+															*m_ecs, m_program_options.get_max_concurrency(), 
+															m_project_config->_fibers_per_thread, m_project_config->_gc_iterations_per_frame, m_project_config->_fiber_stack_size);
+
 	__initialize_window_and_renderer();
 	return 0;
 }

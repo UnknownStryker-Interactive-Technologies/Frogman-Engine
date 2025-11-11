@@ -17,7 +17,9 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/ECS.hxx>
+#include <FE/controller.hpp>
 #include <FE/level.hpp>
+#include <FE/mode.hpp>
 
 
 
@@ -29,12 +31,18 @@ BEGIN_NAMESPACE(FE)
 //m_ecs->initialize(m_entity_list, m_system_list);
 class world : public FE::archetype_base
 {
+	using base_type = FE::archetype_base;
+
 	FE::framework::ECS m_ecs;
 	std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> > m_levels;
+	FE::smart_ptr<FE::mode, FE::RefType::_Observer> m_game_mode;
+	FE::smart_ptr<FE::controller, FE::RefType::_Observer> m_controller;
 
 public:
-	world() noexcept = default;
-	virtual ~world() noexcept override = default;
+	world(	framework::ECS& engine_ecs_p, FE::size max_entities_p,
+			framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p,
+			FE::size component_type_count_hint_p = 1000, FE::size system_count_hint_p = 1000) noexcept;
+	~world() noexcept = default;
 };
 
 

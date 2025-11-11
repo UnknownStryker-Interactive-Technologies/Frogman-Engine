@@ -33,9 +33,11 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 | Ubuntu-Linux | X86-64        | Discontinued     |
 
 # This project leverages:
-
 - abseil 20250814.1  
 https://github.com/abseil/abseil-cpp/releases/tag/20250814.1  
+
+- AES  
+https://github.com/mrdcvlsc/AES
 
 - Assimp 6.0.2  
 https://github.com/assimp/assimp/releases/tag/v6.0.2  
@@ -58,6 +60,9 @@ https://github.com/Tessil/hat-trie
 - Dear ImGUI 1.91.6  
 https://github.com/ocornut/imgui/releases/tag/v1.91.6  
 
+- lz4 1.10.0  
+https://github.com/lz4/lz4/releases/tag/v1.10.0
+
 - Wwise SDK  
 https://www.audiokinetic.com/en/download  
 
@@ -66,6 +71,9 @@ https://github.com/martinus/robin-hood-hashing
 
 - Robin Map 1.4.0  
 https://github.com/Tessil/robin-map/releases/tag/v1.4.0  
+
+- stb image  
+https://github.com/nothings/stb
 
 - Unordered Dense 4.7.0  
 https://github.com/martinus/unordered_dense/releases  

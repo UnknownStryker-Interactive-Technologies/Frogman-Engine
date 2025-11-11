@@ -1,13 +1,13 @@
 ﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
+#include <FE/framework/ECS.hxx>
 #include <FE/framework/smart_ptr.hxx>
 #include <memory_resource>
 
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/memory.hxx>
 #include <FE/algorithm/string.hxx>
-using namespace FE;
 
 
 
@@ -18,25 +18,25 @@ TEST(memmove, string_insertion)
 	x = FE::make_unique<std::string>(std::pmr::get_default_resource(), "Hello World");
 
 	std::unique_ptr<char[]> l_string(new char[64] {"Freddy's Pizza\0"});
-	ASCII l_string2[] = " Fazbear";
-	uint64 l_string2_len = algorithm::string::length(l_string2);
+	FE::ASCII l_string2[] = " Fazbear";
+	FE::uint64 l_string2_len = FE::algorithm::string::length(l_string2);
 
-	uint64 l_target_location = algorithm::string::find_the_first(l_string.get(), "'")->_begin;
-	auto l_rest = algorithm::string::find_the_first(l_string.get(), "'s Pizza");
-	uint64 l_rest_length = l_rest->_end - l_rest->_begin;
+	FE::uint64 l_target_location = FE::algorithm::string::find_the_first(l_string.get(), "'")->_begin;
+	auto l_rest = FE::algorithm::string::find_the_first(l_string.get(), "'s Pizza");
+	FE::uint64 l_rest_length = l_rest->_end - l_rest->_begin;
 
 	FE::memmove(l_string.get() + l_target_location + l_string2_len, l_string.get() + l_target_location, l_rest_length);
 
 	FE::memcpy(l_string.get() + l_target_location, l_string2, l_string2_len);
 
-	EXPECT_TRUE(algorithm::string::compare(l_string.get(), "Freddy Fazbear's Pizza"));
+	EXPECT_TRUE(FE::algorithm::string::compare(l_string.get(), "Freddy Fazbear's Pizza"));
 }
 
 TEST(memmove, General)
 {
 	std::unique_ptr<var::int64[]> l_array(new var::int64[]{ 1, 0, 1, 2, 3, 4, 5, 1, 1, 1, 1, 1 });
 
-	FE::memmove(l_array.get() + 3, l_array.get() + 1, sizeof(int64) * 6);
+	FE::memmove(l_array.get() + 3, l_array.get() + 1, sizeof(FE::int64) * 6);
 
 	EXPECT_EQ(l_array.get()[0], 1);
 	EXPECT_EQ(l_array.get()[1], 0);
@@ -158,7 +158,7 @@ void std_memset_benchmark(benchmark::State& state_p) noexcept
 
 	for (auto _ : state_p)
 	{
-		std::memset(l_dest, null, _MAGICAL_SIZE_);
+		std::memset(l_dest, FE::null, _MAGICAL_SIZE_);
 		std::memset(l_dest, 1, _MAGICAL_SIZE_);
 	}
 }

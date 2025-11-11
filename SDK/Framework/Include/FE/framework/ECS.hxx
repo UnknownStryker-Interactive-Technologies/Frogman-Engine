@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/framework.hxx>
+#include <FE/list.hxx>
 #include <FE/memory.hxx>
 #include <FE/pool/memory_resource.hxx> // game memory pool
 
@@ -26,7 +27,6 @@ limitations under the License.
 // ECS data structures
 #include <FE/farray.hxx>
 #include <FE/hash.hxx>
-#include <forward_list>
 #include <string>
 #include <vector>
 
@@ -50,9 +50,30 @@ CLASS_FORWARD_DECLARATION(FE::fframework, processors);
 BEGIN_NAMESPACE(FE)
 
 
-
 CLASS_FORWARD_DECLARATION(internal::ECS, gc_metadata_proxy_table);
 CLASS_FORWARD_DECLARATION(internal::ECS, component_metadata);
+
+
+namespace framework
+{
+	using initializer = absl::flat_hash_map<std::pmr::string, std::pmr::string,
+		FE::hash<std::pmr::string>,
+		std::equal_to<std::pmr::string>,
+		FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
+	>;
+
+	using initializer_list = absl::flat_hash_map<	std::pmr::string, initializer,
+		FE::hash<std::pmr::string>,
+		std::equal_to<std::pmr::string>,
+		FE::cache_aligned_allocator< std::pair<const std::pmr::string, initializer> >
+	>;
+
+	using system_table_initializer_list = absl::flat_hash_map<	std::pmr::string, std::pmr::string,
+		FE::hash<std::pmr::string>,
+		std::equal_to<std::pmr::string>,
+		FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
+	>; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
+}
 
 
 class component_base
@@ -142,7 +163,7 @@ namespace internal::ECS
 		FE::smart_ptr<class gc_metadata, FE::RefType::_Owner> m_gc_metadata;
 
 	public:
-		std::pmr::forward_list<FE::internal::ECS::components>::iterator _group;
+		FE::list<FE::internal::ECS::components>::iterator _group;
 		var::size _index;
 		FE::ASCII* _typename;
 		FE::ASCII* _memory_layout_version; /* modify the string value when the memory layout of the component changes; this ensures correct auto serialization.
@@ -199,12 +220,15 @@ class archetype_base
 private:
 	component_view_table m_component_view_table;
 	std::pmr::string m_name;
-
+	class framework::ECS* const m_host;
+	
 public:
-	archetype_base() noexcept;
+	archetype_base(framework::ECS& host_p) noexcept;
 	virtual ~archetype_base() noexcept;
 
+
 	const std::pmr::string& get_name() const noexcept { return m_name; }
+
 
 	template <class Component>
 	component_view<Component> get_component() noexcept
@@ -217,6 +241,23 @@ public:
 		}
 		return component_view<Component>();
 	}
+
+
+	template <class Component, typename ...Arguments>
+	FE::component_view<Component> add_component(Arguments&& ...arguments_p) noexcept;
+
+	template <class Component>
+	void destroy_component() noexcept;
+
+
+	void attatch_component(const FE::component_view<component_base>& to_attatch_p) noexcept;
+
+	template <class Component>
+	FE::component_view<Component> detach_component() noexcept;
+
+
+	FE::framework::initializer serialize_entity() noexcept;
+	void deserialize_entity(FE::framework::initializer& serialized_components_p) noexcept;
 };
 
 
@@ -226,25 +267,6 @@ END_NAMESPACE
 
 
 BEGIN_NAMESPACE(FE::framework)
-
-
-using initializer = absl::flat_hash_map<std::pmr::string, std::pmr::string, 
-										FE::hash<std::pmr::string>,
-										std::equal_to<std::pmr::string>, 
-										FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
->;
-
-using initializer_list = absl::flat_hash_map<	std::pmr::string, initializer,
-												FE::hash<std::pmr::string>,
-												std::equal_to<std::pmr::string>,
-												FE::cache_aligned_allocator< std::pair<const std::pmr::string, initializer> >
->;
-
-using system_table_initializer_list = absl::flat_hash_map<	std::pmr::string, std::pmr::string,
-															FE::hash<std::pmr::string>,
-															std::equal_to<std::pmr::string>,
-															FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
->; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
 
 
 class ECS
@@ -260,10 +282,10 @@ class ECS
 
 	using component_table = absl::flat_hash_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
 														FE::pair<	FE::memory_resource,
-																	std::pmr::forward_list<FE::internal::ECS::components>
+																	FE::list<FE::internal::ECS::components>
 																	>
 														>;
-	using system_table = absl::flat_hash_map<	std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>> ,
+	using system_table = absl::flat_hash_map<	std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>>,
 												FE::hash<std::pmr::string>,
 												std::equal_to<std::pmr::string>,
 												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>>> >
@@ -297,7 +319,7 @@ public:
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 		FE_ASSERT(m_archetype_table.size() <= m_max_entities, "Assertion failed: cannot instantiate entities more than the value specified by the m_max_entities.");
 
-		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, std::forward<Arguments>(arguments_p)... );
+		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, *this, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
 		l_alloc_result->m_name = std::pmr::string( &m_memory_resource );
 		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
@@ -448,7 +470,7 @@ public:
 			*----------------------------------------------------------*
 			*/
 			typename component_table::mapped_type& l_list_and_allocator = m_component_table[FE::framework::reflection::type_id<Component>().hash_code()];
-			l_list_and_allocator._second = std::pmr::forward_list<FE::internal::ECS::components>(&l_list_and_allocator._first);
+			l_list_and_allocator._second = std::move(FE::list<FE::internal::ECS::components>(&l_list_and_allocator._first));
 			l_list_and_allocator._second.emplace_front(); // allocate a component pool.
 			l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		}
@@ -570,6 +592,54 @@ public:
 	FE::framework::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
 	void deserialize_entity(FE::framework::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
 };
+
+
+END_NAMESPACE
+
+
+
+
+BEGIN_NAMESPACE(FE)
+
+
+template <class Component, typename ...Arguments>
+FE::component_view<Component> FE::archetype_base::add_component(Arguments&& ...arguments_p) noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	auto l_component_view = m_host->add_component<Component>(l_self, std::forward<Arguments>(arguments_p)...);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+	return l_component_view;
+}
+
+template <class Component>
+void FE::archetype_base::destroy_component() noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	m_host->remove_component<Component>(l_self);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);	
+}
+
+
+template <class Component>
+FE::component_view<Component> FE::archetype_base::detach_component() noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	auto l_component_view = m_host->detach_component<Component>(l_self);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+	return l_component_view;
+}
 
 
 END_NAMESPACE

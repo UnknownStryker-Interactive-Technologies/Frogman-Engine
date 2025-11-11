@@ -17,7 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/ECS.hxx>
-#include <FE/player_controller.hpp>
 
 
 
@@ -27,12 +26,13 @@ BEGIN_NAMESPACE(FE)
 
 class mode : FE::archetype_base
 {
-	FE::smart_ptr<FE::player_controller, FE::RefType::_Observer> m_player_controller;
+	using base_type = FE::archetype_base;
 
 public:
-	mode() noexcept = default;
-	virtual ~mode() noexcept override = default;
+	mode(framework::ECS& host_p) noexcept;
+	virtual ~mode() noexcept override;
 };
+
 
 END_NAMESPACE
 #endif

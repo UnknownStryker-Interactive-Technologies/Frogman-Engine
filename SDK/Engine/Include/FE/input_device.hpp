@@ -270,7 +270,7 @@ public:
 };
 
 
-class keyboard final : FE::component_base
+class keyboard final : public FE::component_base
 {
 public:
 	keyboard_callbacks _keyboard_callbacks;

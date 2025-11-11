@@ -1,0 +1,24 @@
+^C:\USERS\LEEHO\DOCUMENTS\GITHUB\FROGMAN-ENGINE\SDK\THIRD-PARTY\LIBRARIES\GLFW-3.4\SOLUTION_X64_AVX\DOCS\DOXYFILE
+setlocal
+cd C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\docs
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\doxygen\bin\doxygen.exe"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\LEEHO\DOCUMENTS\GITHUB\FROGMAN-ENGINE\SDK\THIRD-PARTY\LIBRARIES\GLFW-3.4\DOCS\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4 -BC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX --check-stamp-file C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/docs/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

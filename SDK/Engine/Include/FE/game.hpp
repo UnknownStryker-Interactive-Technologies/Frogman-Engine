@@ -27,16 +27,16 @@ BEGIN_NAMESPACE(FE)
 
 class game : public FE::archetype_base
 {
-	framework::initializer_list m_entity_list;
-	framework::system_table_initializer_list m_system_list;
+	using base_type = FE::archetype_base;
 
 	std::pmr::vector< FE::smart_ptr<FE::world, FE::RefType::_Owner> > m_world_list;
-	FE::smart_ptr<FE::world, FE::RefType::_Observer> m_active_world;
-
 	// player list, current player
 
 public:
-	game() noexcept;
+	game(	framework::ECS& engine_ecs_p, 
+			const std::pmr::string& entry_world_path_p, 
+			const std::pmr::vector<std::pmr::string>& world_paths_p) noexcept;
+
 	virtual ~game() noexcept override = default;
 };
 

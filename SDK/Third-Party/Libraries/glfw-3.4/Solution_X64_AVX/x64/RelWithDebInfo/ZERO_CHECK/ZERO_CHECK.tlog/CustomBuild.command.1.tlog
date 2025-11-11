@@ -1,0 +1,10 @@
+^C:\USERS\LEEHO\DOCUMENTS\GITHUB\FROGMAN-ENGINE\SDK\THIRD-PARTY\LIBRARIES\GLFW-3.4\SOLUTION_X64_AVX\CMAKEFILES\68BDFFFF793320D29251F80A4B9B904A\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4 -BC:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/GLFW.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

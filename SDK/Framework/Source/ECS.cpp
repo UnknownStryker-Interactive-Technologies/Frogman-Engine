@@ -262,9 +262,10 @@ END_NAMESPACE
 BEGIN_NAMESPACE(FE)
 
 
-archetype_base::archetype_base() noexcept
+archetype_base::archetype_base(framework::ECS& host_p) noexcept
 	:	m_component_view_table(),
-		m_name()
+		m_name(),
+		m_host(&host_p)
 {
 }
 
@@ -277,12 +278,49 @@ archetype_base::~archetype_base() noexcept
 }
 
 
+void FE::archetype_base::attatch_component(const FE::component_view<component_base>& to_attatch_p) noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	m_host->attatch_component(l_self, to_attatch_p);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+}
+
+
+FE::framework::initializer FE::archetype_base::serialize_entity() noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	auto l_initializer = m_host->serialize_entity(l_self);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+	return l_initializer;
+}
+
+void FE::archetype_base::deserialize_entity(FE::framework::initializer& serialized_components_p) noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = this;
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	m_host->deserialize_entity(serialized_components_p, l_self);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+}
+
+
 
 
 component_base::component_base() noexcept
 	: m_metadata()
 {
 }
+
 
 FE::ASCII* component_base::get_typename() const noexcept { return m_metadata->_typename; }
 FE::ASCII* component_base::get_memory_layout_version() const noexcept { return m_metadata->_memory_layout_version; }
