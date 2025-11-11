@@ -8,6 +8,13 @@ Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.
 **The Frogman Engine is licensed under a modified Apache License 2.0.**  
 ⚠️ **NOTICE**: The contents of this repository **MAY NOT BE USED** for **training AI(Artificial Intelligence) models** or **developing any AI(Artificial Intelligence)-relevant products** without prior written permission. Please contact unknownstryker416@gmail.com to request for the permission.  
 The **Frogman Engine Game Development Kit** is **TOTALLY FREE** without any licensing fees if conforming to the **License** and if used for **game development and AI-irrelevant software development**. Otherwise the license fees may apply.
+
+**Frogman Engine GDK has these two major GUI utility apps**  
+- Frogman Engine Installer: https://github.com/UnknownStryker-Interactive-Technologies/Installer  
+- Frogman Engine Launcher: https://github.com/UnknownStryker-Interactive-Technologies/Launcher  
+  
+If you prefer installing and setting up the engine with just a few clicks, those  tools will be the right choice for you to get started. Please send me an email to **unknownstryker416@gmail.com** if you finds some bugs or the installer does not properly download or build libraries on your system.
+
 <img width="833" height="835" alt="Frogman Engine Installer Transparent" src="https://github.com/user-attachments/assets/4f8bb252-cf21-43c2-ae88-b59395a0b116" />
 
 # Frogman Engine Website (incomplete)
@@ -19,8 +26,7 @@ https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394ee
 1. CMake 3.25.0 or the latest.  
 2. The latest Visual Studio 2022.  
 3. Git and Git LFS.
-4. Boost Libraries 1.87.0  
-5. Microsoft Parallel Patterns Library.  
+4. Microsoft Parallel Patterns Library.  
 
 # C++ standard version: 
 C++ 20 or the latest.  
