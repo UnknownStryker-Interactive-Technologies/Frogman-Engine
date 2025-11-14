@@ -1,18 +1,22 @@
 #include <FE/controller.hpp>
+#include <FE/engine.hxx>
 
 
 
 
-FE::controller::controller(ControllerType device_type_p, framework::ECS& host_p) noexcept
+FE::controller::controller(framework::ECS& host_p, ControllerType device_type_p) noexcept
 	:	base_type(host_p),
 		m_device_type(device_type_p),
-		m_player()
+		m_player(),
+
+		m_keyboard_view(),
+		m_mouse_view()
 {
 	switch (device_type_p)
 	{
 	case ControllerType::_KeyboardAndMouse:
-		add_component<input_device::keyboard>();
-		add_component<input_device::mouse>();
+		m_keyboard_view = add_component<input_device::keyboard>();
+		m_mouse_view = add_component<input_device::mouse>();
 		break;
 
 	default:
@@ -21,15 +25,4 @@ FE::controller::controller(ControllerType device_type_p, framework::ECS& host_p)
 }
 
 FE::controller::~controller() noexcept
-{
-	switch (m_device_type)
-	{
-	case ControllerType::_KeyboardAndMouse:
-		destroy_component<input_device::keyboard>();
-		destroy_component<input_device::mouse>();
-		break;
-
-	default:
-		break;
-	}
-}
+{}

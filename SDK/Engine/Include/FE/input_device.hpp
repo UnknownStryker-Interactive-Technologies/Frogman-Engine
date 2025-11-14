@@ -303,7 +303,11 @@ class mouse_callbacks final : public FE::component_base
 {
 public:
 	using action = void(*)(Button button_p, ButtonState state_p, KeyMode mode_p);
+	using cursor_action = void(*)(FE::float64 x_p, FE::float64 y_p);
+	using scroll_action = void(*)(FE::float64 x_offset_p, FE::float64 y_offset_p);
 
+	cursor_action _cursor_position_callback;
+	scroll_action _scroll_callback;
 	action _button_left, _button_right, _button_middle;
 	action	_button_4th, _button_5th, _button_6th, _button_7th, _button_8th;
 
@@ -316,6 +320,10 @@ public:
 class mouse_state final : public FE::component_base
 {
 public:
+	var::float64 _cursor_coordinate_x;
+	var::float64 _cursor_coordinate_y;
+	var::float64 _scroll_x_offset;
+	var::float64 _scroll_y_offset;
 	KeyMode _current_mode;
 
 	ButtonState _button_left	: 1;

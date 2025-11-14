@@ -188,12 +188,12 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 
 		case Vocabulary::_LeftParen:
 			{
-				std::optional<identifier> l_system_function_name = __try_build_c_style_system_function_node(u8"", iterator, token_list_p.end());
+				std::optional<system_node> l_system_function_name = __try_build_c_style_system_function_node(u8"", iterator, token_list_p.end());
 				if (l_system_function_name == std::nullopt)
 				{
 					break;
 				}
-				l_root._c_style_systems.push_back(l_system_function_name);
+				l_root._system_fptrs.push_back(l_system_function_name);
 			}
 			break;
 
@@ -359,12 +359,12 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 
 		case Vocabulary::_LeftParen:
 			{
-				std::optional<identifier> l_system_function_name = __try_build_c_style_system_function_node(l_node._target_namespace_name, out_token_iterator_p, end_p);
+				std::optional<system_node> l_system_function_name = __try_build_c_style_system_function_node(l_node._target_namespace_name, out_token_iterator_p, end_p);
 				if (l_system_function_name == std::nullopt)
 				{
 					break;
 				}
-				l_node._c_style_systems.push_back(l_system_function_name);
+				l_node._system_fptrs.push_back(l_system_function_name);
 
 				while (out_token_iterator_p->_vocabulary != Vocabulary::_Semicolon)
 				{
@@ -719,7 +719,7 @@ _FE_NODISCARD_ std::optional<enum_struct_node> header_tool_engine::__try_build_e
 	return l_node;
 }
 
-_FE_NODISCARD_ std::optional<identifier> header_tool_engine::__try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+_FE_NODISCARD_ std::optional<system_node> header_tool_engine::__try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
 	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_LeftParen);
 	typename std::pmr::list<token>::const_iterator l_iterator = out_token_iterator_p;
@@ -737,20 +737,19 @@ _FE_NODISCARD_ std::optional<identifier> header_tool_engine::__try_build_c_style
 		l_system_parameter += out_token_iterator_p->_code;
 	}
 
-	identifier l_node;
+	system_node l_node;
 	if (l_system_parameter.length() == 0)
 	{
 		return std::nullopt;
 	}
-	l_node = identifier(get_memory_resource());
-	l_node.reserve(64);
-	l_node = parent_namespace_p;
-	l_node += u8"::";
+	l_node._sysname = identifier(get_memory_resource());
+	l_node._sysname.reserve(64);
+	l_node._sysname = parent_namespace_p;
+	l_node._sysname += u8"::";
 
 	if ((false == FE::algorithm::string::space_insensitive_contains(l_system_parameter.c_str(), l_system_parameter.length(), u8"component_base* const"))
 		|| (identifier::npos != l_system_parameter.find(','))) // it is not a valid C-style system function if there are multiple parameters.)
 	{
-		l_node.clear();
 		return std::nullopt;
 	}
 
@@ -759,18 +758,124 @@ _FE_NODISCARD_ std::optional<identifier> header_tool_engine::__try_build_c_style
 	--l_iterator;
 	if (l_iterator->_vocabulary == Vocabulary::_RightParen)
 	{
-		l_node.clear();
-		return std::nullopt; // it is not a valid C-style system function if there is no return type; it is a system_base's virtual function.
+		return std::nullopt; // it is not a valid C-style system function if there is no return type.
 	}
 
-	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_Undefined);
-	l_node += l_iterator->_code;
+	if (l_iterator->_vocabulary != Vocabulary::_Undefined)
+	{
+		return std::nullopt; // it is not a valid C-style system function if there is no return type.
+	}
+	l_node._sysname += l_iterator->_code;
 
 	--l_iterator;
 	if (l_iterator->_code != u8"void")
 	{
-		l_node.clear();
 		return std::nullopt; // it is not a valid C-style system function if the return type is not 'void'.
+	}
+
+
+
+
+	while (l_iterator->_vocabulary != Vocabulary::_FrogmanEngineSystemAttributeMacro)
+	{
+		switch (l_iterator->_vocabulary)
+		{
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndOfCode:
+			return std::nullopt; // it is not a valid C-style system function.
+
+		default:
+			break;
+		}
+
+		++l_iterator;
+	}
+	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_FrogmanEngineSystemAttributeMacro);
+
+	while (l_iterator->_vocabulary != Vocabulary::_LeftParen)
+	{
+		switch (l_iterator->_vocabulary)
+		{
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndOfCode:
+			return std::nullopt; // it is not a valid C-style system function.
+
+		default:
+			break;
+		}
+
+		++l_iterator;
+	}
+	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_LeftParen);
+	++l_iterator;
+	if (l_iterator == end_p)
+	{
+		return std::nullopt;
+	}
+
+	while (l_iterator->_vocabulary != Vocabulary::_Comma)
+	{
+		switch (l_iterator->_vocabulary)
+		{
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndOfCode:
+			return std::nullopt; // it is not a valid C-style system function.
+
+		default:
+			break;
+		}
+		l_node._syscall_phase += l_iterator->_code;
+		++l_iterator;
+	}
+	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_Comma);
+	++l_iterator;
+	if (l_iterator == end_p)
+	{
+		return std::nullopt;
+	}
+
+	while (l_iterator->_vocabulary != Vocabulary::_RightParen)
+	{
+		switch (l_iterator->_vocabulary)
+		{
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndOfCode:
+			return std::nullopt; // it is not a valid C-style system function.
+
+		default:
+			break;
+		}
+		l_node._systarget += l_iterator->_code;
+		++l_iterator;
+	}
+
+	while (out_token_iterator_p != end_p)
+	{
+		switch (out_token_iterator_p->_vocabulary)
+		{
+		case Vocabulary::_Semicolon:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_LeftCurlyBracket:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_EndOfCode:
+			return l_node; // it is not a valid C-style system function.
+
+		default:
+			break;
+		}
+		++out_token_iterator_p;
 	}
 
 	return l_node;

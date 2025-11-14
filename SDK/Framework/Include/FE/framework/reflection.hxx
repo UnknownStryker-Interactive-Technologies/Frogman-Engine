@@ -31,33 +31,77 @@ limitations under the License.
 #include <FE/framework/type_info.hxx>
 
 // std
-#include <deque>
 #include <filesystem>
 #include <fstream>
 #include <map>
 #include <memory_resource>
 #include <mutex>
 #include <optional>
-#include <shared_mutex>
 #include <string>
 #include <string_view>
 #include <vector>
 
 // boost::shared_lock_guard
+#include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/shared_lock_guard.hpp>
 
 // ronbin hood hash map
 #include <robin_hood.h>
 
 #include <absl/container/flat_hash_map.h>
+#include <absl/container/node_hash_map.h>
 #include <tsl/array-hash/array_map.h>
 
 
 
 
+#ifdef FE_SYSTEM
+#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
+#else
+#define FE_SYSTEM(syscall_phase, target_component_type) // This macro is an indicator for the Frogman Engine Header Tool. It must be placed before the '{' and after the ')'. Incorrectly placing the arguments will fail the generated code compilation.
+
+#endif
+
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
 
+namespace FE
+{
+	enum struct SystemCallPhase : FE::uint32
+	{
+		_EngineInitialization = 0,
+		_GameInitialization = 1,
+		_WorldInitialization = 2,
+		_WorldDefaultEntityInitialization = 3,
+
+		_GameBegin = 4,
+		_WorldBegin = 5,
+		_EntitySetUp = 6,
+		_EntityControllerSetUp = 7,
+
+		_GameTick = 8,
+		_WorldTick = 9,
+		_EntityTick = 11,
+		_EntityControllerTick = 11,
+		_PrePhysics = 12,
+		_StartPhysics = 13,
+		_Physics = 14,
+		_EndPhysics = 15,
+		_PostPhysics = 16,
+		_PostEntityTick = 17,
+
+		_NewlySpawnedEntities = 18,
+		_PreRender = 19,
+		_PostRender = 20,
+
+		_EntityCleanUp = 21,
+		_WorldCleanUp = 22,
+		_GameCleanUp = 23,
+		_EngineCleanUp = 24
+	};
+
+	constexpr static var::uint64 syscall_phase_count = 25;
+}
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
@@ -70,15 +114,23 @@ public:
 	using alignment_type = FE::align_8bytes;
 
 private:
-	using lock_type = std::shared_mutex;
+	using lock_type = boost::shared_mutex;
 	using internal_map_type = absl::flat_hash_map<std::pmr::string, FE::task_base*,
 		FE::hash<std::pmr::string>,
 		std::equal_to<std::pmr::string>,
 		FE::cache_aligned_allocator<std::pmr::string>>;
 
+	using system_table = std::pmr::vector<absl::flat_hash_map<void(*)(class ::FE::component_base* const), var::size,
+														FE::hash<void(*)(class ::FE::component_base* const)>,
+														std::equal_to<void(*)(class ::FE::component_base* const)>,
+														FE::polymorphic_allocator< std::pair<void(*)(class ::FE::component_base* const), var::size> >
+														>
+	>;
+
 	lock_type m_lock;
 	std::pmr::memory_resource* m_pool;
 	internal_map_type m_method_registry;
+	system_table m_system_table;
 
 public:
 	method_registry(FE::size map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
@@ -120,6 +172,16 @@ public:
 
 	// This method may return a nullptr.
 	FE::task_base* retrieve(const std::string_view& key_p) noexcept;
+
+
+	template<class TargetComponent>
+	void associate_system(SystemCallPhase syscall_phase_p, void(*system_function_p)(class ::FE::component_base* const)) noexcept
+	{
+		static_assert(std::is_base_of_v<::FE::component_base, TargetComponent>, "Static assertion failure: 'TargetComponent' must be derived from 'FE::component_base'.");
+		FE_ASSERT(static_cast<var::uint32>(syscall_phase_p) < FE::syscall_phase_count, "Static assertion failure: 'syscall_phase_p' is out of range.");
+		std::lock_guard<lock_type> l_lock(m_lock);
+		m_system_table[(FE::uint32)syscall_phase_p].emplace(system_function_p, FE::framework::reflection::type_id<TargetComponent>().hash_code());
+	}
 };
 
 
@@ -220,7 +282,7 @@ public:
 	It is worth noting that, FE::string's contents can be allocated on a thread local memory pool
 	by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 	*/
-	using internal_map_type = absl::flat_hash_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>,
+	using internal_map_type = absl::node_hash_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>,
 		FE::hash<std::pmr::string>,
 		std::equal_to<std::pmr::string>,
 		FE::cache_aligned_allocator<std::pmr::string>>;
@@ -248,7 +310,7 @@ private:
 	input_buffer_type m_input_buffer;
 	input_buffer_iterator_type m_position;
 
-	robin_hood::unordered_map<std::pmr::string, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
+	absl::node_hash_map<std::pmr::string, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
 
 public:
 	property_registry(FE::size reflection_map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
@@ -790,43 +852,62 @@ public:
 
 private:
 	std::string_view m_typename;
-	tsl::array_map< var::ASCII, std::array<var::byte, field_max_size> > m_string_to_value_map;
-	robin_hood::unordered_map< std::array<var::byte, field_max_size>, std::string_view, FE::hash<std::array<var::byte, field_max_size>> > m_value_to_string_map;
+	absl::flat_hash_map< std::string_view, std::array<var::byte, field_max_size>,
+		FE::hash<std::string_view>,
+		std::equal_to<std::string_view>,
+		FE::polymorphic_allocator<std::pair<const std::string_view, std::array<var::byte, field_max_size>>>> m_string_to_value_map;
+
+	absl::flat_hash_map<std::array<var::byte, field_max_size>, std::string_view, 
+						FE::hash<std::array<var::byte, field_max_size>>, 
+						std::equal_to<std::array<var::byte, field_max_size>>,
+						FE::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
+						> m_value_to_string_map;
 
 public:
-	enum_metadata() noexcept;
+	enum_metadata(std::pmr::memory_resource* const resource_p) noexcept;
 	_FE_FORCE_INLINE_ FE::ASCII* get_typename() const noexcept { return m_typename.data(); }
 
 	template<typename EnumStrut>
 	std::optional<EnumStrut> string_to_enum(const std::string_view& enum_value_string_p) const noexcept
 	{
-		for (auto it = m_string_to_value_map.find(enum_value_string_p); it != m_string_to_value_map.end(); ++it)
+		static_assert(sizeof(EnumStrut) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
+
+		auto l_result = m_string_to_value_map.find(enum_value_string_p);
+		if (l_result == m_string_to_value_map.end())
 		{
-			if ( enum_value_string_p == it.key() )
-			{
-				std::array<var::byte, field_max_size> l_result = it.value();
-				EnumStrut l_ret;
-				FE::memcpy(&l_ret, sizeof(EnumStrut), l_result.data(), l_result.size());
-				return l_ret;
-			}
+			return std::nullopt;
 		}
+
+		if (l_result->first == enum_value_string_p)
+		{
+			std::array<var::byte, field_max_size> l_result = l_result->second;
+			EnumStrut l_ret;
+			FE::memcpy(&l_ret, sizeof(EnumStrut), l_result.data(), l_result.size());
+			return l_ret;
+		}
+
 		return std::nullopt;
 	}
 
 	template<typename EnumStrut>
 	FE::ASCII* enum_to_string(const EnumStrut value_p) const noexcept
 	{
+		static_assert(sizeof(EnumStrut) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
+
 		std::array<var::byte, field_max_size> l_enum_bits = { 0 };
 		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStrut));
 
-		for (auto it = m_value_to_string_map.find(l_enum_bits); it != m_value_to_string_map.end(); ++it)
+		auto l_result = m_value_to_string_map.find(l_enum_bits);
+		if (l_result == m_value_to_string_map.end())
 		{
-			std::array<var::byte, field_max_size> l_key = it->first;
-			if ( std::memcmp( l_enum_bits.data(), l_key.data(), l_enum_bits.size() ) == 0)
-			{
-				return it->second.data();
-			}
+			return nullptr;
 		}
+
+		if (std::memcmp(l_enum_bits.data(), l_result->first.data(), l_enum_bits.size()) == 0)
+		{
+			return l_result->second.data();
+		}
+
 		return nullptr;
 	}
 };
@@ -835,18 +916,17 @@ public:
 class enum_registry
 {
 	tsl::array_map< var::ASCII, enum_metadata > m_enum_registry;
+	std::pmr::memory_resource* m_resource;
 
 public:
-	enum_registry() noexcept = default;
-	enum_registry(FE::size capacity_p) noexcept;
-
+	enum_registry(std::pmr::memory_resource* const resource_p, FE::size capacity_p) noexcept;
 	~enum_registry() noexcept = default;
 
 	template<typename EnumStrut>
 	void register_enum_struct(const std::string_view& enum_struct_name_p,
 		                      std::initializer_list< FE::pair<EnumStrut, FE::ASCII*> >&& field_list_p)
 	{
-		enum_metadata l_enum_struct_metadata;
+		enum_metadata l_enum_struct_metadata(m_resource);
 		l_enum_struct_metadata.m_typename = enum_struct_name_p;
 		for (const FE::pair<EnumStrut, FE::ASCII*>& field : field_list_p)
 		{
@@ -997,27 +1077,6 @@ public: \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this; \
 friend class property_metadata_##property_name;
-#endif
-
-
-#ifdef FE_SYSTEM
-	#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
-#else
-	#define FE_SYSTEM(function_name) \
-class system_##function_name \
-{ \
-public: \
-	_FE_FORCE_INLINE_ system_##function_name() noexcept \
-	{ \
-		::FE::framework::framework_base::get_framework().get_method_reflection() \
-                                                .register_task< ::FE::c_style_task<void(class ::FE::component_base* const)> > \
-                                                 ( #function_name, &function_name ); \
-	} \
-private: \
-	::std::string_view m_system_name = #function_name; \
-public: \
-	const ::std::string_view& get_system_name() const noexcept { return m_system_name; } \
-}; 
 #endif
 
 

@@ -8,6 +8,99 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/memory.hxx>
 #include <FE/algorithm/string.hxx>
+#include <FE/bitmask.hxx>
+
+using FE::bitmask;
+
+
+TEST(BitmaskSmallMode, ReadWriteBits)
+{
+	bitmask<> b;
+	EXPECT_FALSE(b.read_at(0));
+
+	b.write_at(0, true);
+	EXPECT_TRUE(b.read_at(0));
+
+	b.write_at(0, false);
+	EXPECT_FALSE(b.read_at(0));
+
+	// boundary bits in small mode
+	b.write_at(63, true);
+	EXPECT_TRUE(b.read_at(63));
+	b.write_at(63, false);
+	EXPECT_FALSE(b.read_at(63));
+}
+
+TEST(BitmaskConstructFromUint64, MSB_and_LSB)
+{
+	// index 0 is leftmost (MSB), index 63 is rightmost (LSB)
+	constexpr uint64 value = (uint64(1) << 63) | uint64(1);
+	bitmask<> b(value);
+
+	EXPECT_TRUE(b.read_at(0));   // MSB
+	EXPECT_TRUE(b.read_at(63));  // LSB
+	EXPECT_FALSE(b.read_at(1));
+	EXPECT_FALSE(b.read_at(62));
+}
+
+TEST(BitmaskReservePreserve, SmallToLarge)
+{
+	// start with small mode, then reserve larger capacity and ensure bits are preserved
+	bitmask<> b(1);
+	EXPECT_TRUE(b.read_at(0));
+
+	b.reserve(128); // transition to large mode
+	EXPECT_TRUE(b.read_at(0)); // original bit preserved
+
+	b.write_at(100, true);
+	EXPECT_TRUE(b.read_at(100));
+	b.write_at(100, false);
+	EXPECT_FALSE(b.read_at(100));
+}
+
+TEST(BitmaskBitwiseOperatorsSmall, AndOrXor)
+{
+	bitmask<> a;
+	bitmask<> c;
+
+	a.write_at(0, true);
+	a.write_at(5, true);
+
+	c.write_at(5, true);
+	c.write_at(7, true);
+
+	// AND
+	bitmask<> and_copy = a;
+	and_copy &= c;
+	EXPECT_FALSE(and_copy.read_at(0));
+	EXPECT_TRUE(and_copy.read_at(5));
+	EXPECT_FALSE(and_copy.read_at(7));
+
+	// OR
+	bitmask<> or_copy = a;
+	or_copy |= c;
+	EXPECT_TRUE(or_copy.read_at(0));
+	EXPECT_TRUE(or_copy.read_at(5));
+	EXPECT_TRUE(or_copy.read_at(7));
+
+	// XOR
+	bitmask<> xor_copy = a;
+	xor_copy ^= c;
+	EXPECT_TRUE(xor_copy.read_at(0));
+	EXPECT_FALSE(xor_copy.read_at(5)); // was set in both -> cleared
+	EXPECT_TRUE(xor_copy.read_at(7));
+}
+
+TEST(BitmaskEqualityAndHash, EqualSmall)
+{
+	const uint64 v = 0x0123456789ABCDEFULL;
+	bitmask<> a(v);
+	bitmask<> b(v);
+
+	EXPECT_TRUE(a == b);
+	EXPECT_FALSE(a != b);
+	EXPECT_EQ(a.hash_code(), b.hash_code());
+}
 
 
 
@@ -81,7 +174,7 @@ TEST(memzero, General)
 
 #define _MAGICAL_SIZE_ 102400
 
-void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept
+void FE_aligned_memcpy_benchmark(benchmark::State& state_p) noexcept // faster than the GCC STL std::memcpy (version g++ 6) when compiled with the Ubuntu Clang.
 {
 	alignas(64) static std::byte l_dest[_MAGICAL_SIZE_];
 	benchmark::DoNotOptimize(l_dest);

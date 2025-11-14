@@ -29,6 +29,7 @@ BEGIN_NAMESPACE(FE::reflection)
 using object = framework::reflection::instance_metadata;
 using enum_struct = framework::reflection::enum_metadata;
 
+
 template<typename T>
 _FE_FORCE_INLINE_ object* get_object() noexcept // This method may return a nullptr.
 {

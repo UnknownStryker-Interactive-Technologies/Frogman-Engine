@@ -42,7 +42,7 @@ CLASS_FORWARD_DECLARATION(FE, archetype_base);
 CLASS_FORWARD_DECLARATION(FE, component_base);
 CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE::framework, game_thread);
-CLASS_FORWARD_DECLARATION(FE::fframework, processors);
+CLASS_FORWARD_DECLARATION(FE::framework, processors);
 
 
 
@@ -54,25 +54,27 @@ CLASS_FORWARD_DECLARATION(internal::ECS, gc_metadata_proxy_table);
 CLASS_FORWARD_DECLARATION(internal::ECS, component_metadata);
 
 
+template <class Archetype>
+using entity = FE::smart_ptr<Archetype, FE::RefType::_Observer>; // pointers can be though of as integers or handles
+using archetype = FE::smart_ptr<FE::archetype_base, FE::RefType::_Owner>;
+
+template <class Component>
+using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
+
+
 namespace framework
 {
 	using initializer = absl::flat_hash_map<std::pmr::string, std::pmr::string,
 		FE::hash<std::pmr::string>,
 		std::equal_to<std::pmr::string>,
-		FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
+		FE::polymorphic_allocator< std::pair<const std::pmr::string, std::pmr::string> >
 	>;
 
 	using initializer_list = absl::flat_hash_map<	std::pmr::string, initializer,
 		FE::hash<std::pmr::string>,
 		std::equal_to<std::pmr::string>,
-		FE::cache_aligned_allocator< std::pair<const std::pmr::string, initializer> >
+		FE::polymorphic_allocator< std::pair<const std::pmr::string, initializer> >
 	>;
-
-	using system_table_initializer_list = absl::flat_hash_map<	std::pmr::string, std::pmr::string,
-		FE::hash<std::pmr::string>,
-		std::equal_to<std::pmr::string>,
-		FE::cache_aligned_allocator< std::pair<const std::pmr::string, std::pmr::string> >
-	>; // key: system function name, value: component type names; e.g. "TransformComponent,RenderComponent".
 }
 
 
@@ -87,8 +89,16 @@ class component_base
 	FE::smart_ptr<class internal::ECS::component_metadata, FE::RefType::_Owner> m_metadata;
 
 public:
-	component_base() noexcept;
+	component_base() noexcept = default;
 	virtual ~component_base() noexcept = default;
+
+	component_base(component_base&& other_p) noexcept;
+
+	_FE_FORCE_INLINE_ component_base& operator=(component_base&& other_p) noexcept
+	{
+		m_metadata = std::move(other_p.m_metadata);
+		return *this;
+	}
 
 	FE::ASCII* get_typename() const noexcept;
 	FE::ASCII* get_memory_layout_version() const noexcept;
@@ -100,6 +110,59 @@ using system = void(*)(class FE::component_base*);
 
 namespace internal::ECS
 {
+	class entities
+	{
+	public:
+		_FE_MAYBE_UNUSED_ static constexpr FE::size max_entities = 509; // Total size of entities node in a FE::list is 4KiB, which is the system page size on x64 Windows.
+
+	private:
+		FE::entity<FE::archetype_base> m_entities[max_entities];
+		var::size m_current_size = 0;
+
+	public:
+		entities() noexcept = default;
+		~entities() noexcept = default;
+
+		_FE_FORCE_INLINE_ FE::size add_entity(FE::entity<FE::archetype_base>&& comp_p) noexcept
+		{
+			FE_ASSERT(m_current_size < max_entities);
+
+			m_entities[m_current_size] = std::move(comp_p);
+			return m_current_size++;
+		}
+
+		_FE_FORCE_INLINE_ void remove_entity(FE::size index_p) noexcept
+		{
+			FE_ASSERT(index_p < m_current_size);
+
+			m_entities[index_p].reset();
+			last().swap(m_entities[index_p]);
+		}
+
+		_FE_FORCE_INLINE_ FE::entity<FE::archetype_base>& last() { return m_entities[m_current_size - 1]; }
+
+		_FE_FORCE_INLINE_ var::size get_size() const { return m_current_size; }
+
+		_FE_FORCE_INLINE_ FE::entity<FE::archetype_base>* begin() noexcept { return static_cast<FE::entity<FE::archetype_base>*>(m_entities); }
+		_FE_FORCE_INLINE_ FE::entity<FE::archetype_base>* end() noexcept { return static_cast<FE::entity<FE::archetype_base>*>(m_entities) + m_current_size; }
+	};
+
+
+	class entity_metadata
+	{
+		friend class framework::game_thread;
+		friend class framework::processors;
+		friend class framework::ECS;
+
+	public:
+		FE::list<FE::internal::ECS::entities>::iterator _group;
+		var::size _index;
+		// FE::bitmask<Alloc> m_archetype; // bitmask of components that the entity has
+		entity_metadata() noexcept;
+		~entity_metadata() noexcept = default;
+	};
+
+
 	class components
 	{
 	public:
@@ -113,7 +176,7 @@ namespace internal::ECS
 		components() noexcept = default;
 		~components() noexcept = default;
 
-		FE::size add_component(FE::component&& comp_p) noexcept
+		_FE_FORCE_INLINE_ FE::size add_component(FE::component&& comp_p) noexcept
 		{
 			FE_ASSERT(m_current_size < max_components);
 
@@ -121,7 +184,7 @@ namespace internal::ECS
 			return m_current_size++;
 		}
 
-		void remove_component(FE::size index_p) noexcept
+		_FE_FORCE_INLINE_ void remove_component(FE::size index_p) noexcept
 		{
 			FE_ASSERT(index_p < m_current_size);
 
@@ -138,17 +201,25 @@ namespace internal::ECS
 	};
 
 
-	class gc_metadata
+	enum struct CircularReferenceClass
 	{
-	public: // replace the lists with FE::deque to avoid frequent reallocations.
+		_NotAGarbage = 0,
+		_ProbGarbage = 1,
+		_CertGarbage = 2
+	};
+
+
+	class gc_metadata // GC circular reference analyzer thread traverses this object.
+	{
+	public: // these lists' nodes are memory pooled; replace it with FE::forward_list later.
 		using member_component_list_type = FE::list< FE::smart_ptr<class FE::component_base, FE::RefType::_Observer> >;
 		using member_entity_list_type = FE::list< FE::smart_ptr<class FE::archetype_base, FE::RefType::_Observer> >;
 
 		member_component_list_type _member_components;
 		member_entity_list_type _member_entities;
-		std::atomic_bool _is_circular_reference;
+		std::atomic<CircularReferenceClass> _circular_reference_class;
 
-		gc_metadata() noexcept;
+		gc_metadata() noexcept = default;
 		~gc_metadata() noexcept = default;
 	};
 
@@ -166,6 +237,7 @@ namespace internal::ECS
 		FE::list<FE::internal::ECS::components>::iterator _group;
 		var::size _index;
 		FE::ASCII* _typename;
+		var::size _typeid;
 		FE::ASCII* _memory_layout_version; /* modify the string value when the memory layout of the component changes; this ensures correct auto serialization.
 			the intial value is set to "default"
 		*/
@@ -198,14 +270,6 @@ namespace internal::ECS
 
 
 
-template <class Archetype>
-using entity = FE::smart_ptr<Archetype, FE::RefType::_Observer>; // pointers can be though of as integers or handles
-using archetype = FE::smart_ptr<FE::archetype_base, FE::RefType::_Owner>;
-
-template<class Component>
-using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
-
-
 class archetype_base
 {
 	friend class framework::ECS;
@@ -220,11 +284,20 @@ class archetype_base
 private:
 	component_view_table m_component_view_table;
 	std::pmr::string m_name;
-	class framework::ECS* const m_host;
+	class framework::ECS* m_host;
 	
 public:
+	archetype_base() noexcept = default;
 	archetype_base(framework::ECS& host_p) noexcept;
 	virtual ~archetype_base() noexcept;
+
+	archetype_base(archetype_base&& other_p) noexcept;
+	archetype_base& operator=(archetype_base&& other_p) noexcept;
+
+	archetype_base(framework::ECS& host_p, FE::ASCII* const name_p, const FE::framework::initializer& other_p) noexcept;
+
+	archetype_base(const archetype_base& other_p) noexcept;
+	archetype_base& operator=(const archetype_base& other_p) noexcept;
 
 
 	const std::pmr::string& get_name() const noexcept { return m_name; }
@@ -257,7 +330,11 @@ public:
 
 
 	FE::framework::initializer serialize_entity() noexcept;
-	void deserialize_entity(FE::framework::initializer& serialized_components_p) noexcept;
+	void deserialize_entity(const FE::framework::initializer& serialized_components_p) noexcept;
+
+protected:
+	FE::memory_resource* get_ecs_memory_resource() noexcept;
+	_FE_FORCE_INLINE_ void switch_ecs_host(framework::ECS& new_host_p) noexcept { m_host = &new_host_p; }
 };
 
 
@@ -271,32 +348,27 @@ BEGIN_NAMESPACE(FE::framework)
 
 class ECS
 {
+	friend class ::FE::archetype_base;
 	friend class game_thread;
 	friend class processors;
-
-	using archetype_table = absl::node_hash_map<std::pmr::string, FE::archetype, 
+	// using archetype_table = absl::flat_hash_map<FE::bitmask, FE::internal::ECS::entities, ...>
+	using entity_table = absl::node_hash_map<std::pmr::string, FE::archetype, 
 												FE::hash<std::pmr::string>,
 												std::equal_to<std::pmr::string>,
-												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::archetype> >
+												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::archetype> > // to do: delete!
 	>;
 
-	using component_table = absl::flat_hash_map<	std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
-														FE::pair<	FE::memory_resource,
-																	FE::list<FE::internal::ECS::components>
-																	>
-														>;
-	using system_table = absl::flat_hash_map<	std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>>,
-												FE::hash<std::pmr::string>,
-												std::equal_to<std::pmr::string>,
-												FE::polymorphic_allocator< std::pair<const std::pmr::string, FE::pair<FE::system, std::pmr::vector<std::size_t>>> >
+	using component_table = absl::node_hash_map<std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
+												FE::pair<	FE::memory_resource,
+															FE::list<FE::internal::ECS::components> 
+														>
 												>;
-
+	
 	FE::memory_resource m_memory_resource;
 	FE::memory_resource m_archetype_pool;
 
-	archetype_table m_archetype_table;
+	entity_table m_entity_table;
 	component_table m_component_table;
-	system_table m_system_table;
 	
 	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
@@ -304,8 +376,8 @@ class ECS
 	FE::size m_max_entities;
 
 public:
-	ECS(FE::size max_entities_p = 10000, FE::size component_type_count_hint_p = 1000, FE::size system_count_hint_p = 1000) noexcept;
-	void initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept;
+	ECS(FE::size max_entities_p, FE::size component_type_count_hint_p) noexcept;
+	void initialize(framework::initializer_list&& initializer_list_p) noexcept;
 	~ECS() noexcept = default;
 
 	ECS(const ECS&) noexcept = delete;
@@ -317,16 +389,13 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
-		FE_ASSERT(m_archetype_table.size() <= m_max_entities, "Assertion failed: cannot instantiate entities more than the value specified by the m_max_entities.");
+		FE_ASSERT(m_entity_table.size() <= m_max_entities, "Assertion failed: cannot instantiate entities more than the value specified by the m_max_entities.");
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, *this, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
-		l_alloc_result->m_name = std::pmr::string( &m_memory_resource );
-		l_alloc_result->m_name.reserve( std::strlen(FE::framework::reflection::type_id<Archetype>().name()) + 1 + std::strlen(entity_name_p) );
+		l_alloc_result->m_name = std::pmr::string( entity_name_p, &m_memory_resource);
 
-		l_alloc_result->m_name = FE::framework::reflection::type_id<Archetype>().name();
-		l_alloc_result->m_name += entity_name_p;
-		std::pair<typename archetype_table::iterator, bool> l_result = m_archetype_table.emplace( l_alloc_result->m_name, std::move(l_alloc_result) );
+		std::pair<typename entity_table::iterator, bool> l_result = m_entity_table.emplace( l_alloc_result->m_name, std::move(l_alloc_result) );
 		
 		if (l_result.second == true) // The emplace() was successful. 
 		{
@@ -337,7 +406,7 @@ public:
 	}
 
 	template <class Archetype>
-	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, FE::framework::initializer& serialized_entity_p) noexcept
+	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(FE::ASCII* const entity_name_p, const FE::framework::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
@@ -402,12 +471,12 @@ public:
 
 
 	template <class Archetype>
-	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer& default_values_p) noexcept
+	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer&& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = default_values_p;
+		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = std::move(default_values_p);
 	}
 
 	template <class Archetype>
@@ -431,13 +500,11 @@ public:
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
 		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-		m_buffer.reserve( std::strlen( FE::framework::reflection::type_id<Archetype>().name() ) + std::strlen(entity_name_p) );
-		m_buffer = FE::framework::reflection::type_id<Archetype>().name();
-		m_buffer += entity_name_p;
+		m_buffer = entity_name_p;
 
-		typename archetype_table::iterator l_probe_result = m_archetype_table.find(m_buffer);
+		typename entity_table::iterator l_probe_result = m_entity_table.find(m_buffer);
 		m_buffer.clear();
-		if (l_probe_result != m_archetype_table.end())
+		if (l_probe_result != m_entity_table.end())
 		{
 			return FE::downcast_owner_to_observer<Archetype>(l_probe_result->second);
 		}
@@ -503,6 +570,7 @@ public:
 			FE::size l_idx = components->add_component(std::move(l_alloc_result));
 			l_view->m_metadata->_group = components;
 			l_view->m_metadata->_index = l_idx;
+			l_view->m_metadata->_typeid = FE::framework::reflection::type_id<Component>().component_typeid();
 			return l_view;
 		}
 
@@ -532,6 +600,7 @@ public:
 			FE::size l_idx = l_probe_result->second._second.front().add_component(std::move(l_alloc_result));
 			l_view->m_metadata->_group = l_probe_result->second._second.begin();
 			l_view->m_metadata->_index = l_idx;
+			l_view->m_metadata->_typeid = FE::framework::reflection::type_id<Component>().component_typeid();
 			return l_view;
 		}
 
@@ -590,7 +659,7 @@ public:
 
 
 	FE::framework::initializer serialize_entity(FE::entity<archetype_base> entt_p) noexcept;
-	void deserialize_entity(FE::framework::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
+	void deserialize_entity(const FE::framework::initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept;
 };
 
 
@@ -605,6 +674,7 @@ BEGIN_NAMESPACE(FE)
 template <class Component, typename ...Arguments>
 FE::component_view<Component> FE::archetype_base::add_component(Arguments&& ...arguments_p) noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;
@@ -618,6 +688,7 @@ FE::component_view<Component> FE::archetype_base::add_component(Arguments&& ...a
 template <class Component>
 void FE::archetype_base::destroy_component() noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;
@@ -631,6 +702,7 @@ void FE::archetype_base::destroy_component() noexcept
 template <class Component>
 FE::component_view<Component> FE::archetype_base::detach_component() noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;

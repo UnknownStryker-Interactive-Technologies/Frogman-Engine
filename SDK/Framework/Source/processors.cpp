@@ -132,7 +132,7 @@ void internal::processors::fiber_stack_allocator::deallocate(boost::context::sta
 
 
 
-processor::processor() noexcept
+internal::processors::processor::processor() noexcept
 	:	m_host(),
 		m_processor(),
 		m_should_terminate(false),
@@ -147,13 +147,13 @@ processor::processor() noexcept
 {
 }
 
-processor::~processor() noexcept
+internal::processors::processor::~processor() noexcept
 {
 	join();
 }
 
 
-void processor::fork(processors& host_p, FE::uint16 fibers_per_thread_p, FE::size fiber_stack_size_p) noexcept
+void internal::processors::processor::fork(::FE::framework::processors& host_p, FE::uint16 fibers_per_thread_p, FE::size fiber_stack_size_p) noexcept
 {
 	m_host = &host_p;
 
@@ -188,7 +188,7 @@ void processor::fork(processors& host_p, FE::uint16 fibers_per_thread_p, FE::siz
 	);
 }
 
-void processor::join() noexcept
+void internal::processors::processor::join() noexcept
 {
 	if (m_processor.joinable())
 	{
@@ -198,7 +198,7 @@ void processor::join() noexcept
 	}
 }
 
-void processor::schedule_task(const framework::task& task_p) noexcept
+void internal::processors::processor::schedule_task(const framework::task& task_p) noexcept
 {
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 	m_queue.push(task_p);
@@ -206,23 +206,25 @@ void processor::schedule_task(const framework::task& task_p) noexcept
 
 FE::uint64 __create_fibers_host_sleep_mask(FE::uint16 fibers_per_thread_p) noexcept
 {
+	FE_ASSERT(fibers_per_thread_p <= 64, "Cannot assign fibers more than 64 per thread.");
+
 	var::uint64 l_mask = 0;
 	for (var::uint16 i = 0; i < fibers_per_thread_p; ++i)
 	{
-		l_mask = l_mask | 1;
+		l_mask = l_mask | 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000001;
 		l_mask = l_mask << 1;
 	}
 	return l_mask;
 }
 
-void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept
+void internal::processors::processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept
 {
 	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
 	FE_ASSERT(fiber_index_p >= 0, "Assertion failure: host_p cannot be null.");
 
 	boost::mutex l_mutex;
 	FE::clock l_delta_clock;
-	FE::uint64 l_fibers_host_sleep_mask = __create_fibers_host_sleep_mask(host_p->m_fibers_per_thread);
+	FE::uint64 l_fibers_host_sleep_mask = __create_fibers_host_sleep_mask(host_p->m_fibers_per_thread); // if 3 fibers are assigned to a thread, the mask is 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000111;
 	host_p->m_yield_status = host_p->m_yield_status xor host_p->m_yield_status;
 	typename task_queue::value_type l_task;
 
@@ -230,13 +232,13 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 	{
 		if (host_p->m_queue.try_pop(l_task) == false) // no tasks in the queue
 		{
-			host_p->m_yield_status = host_p->m_yield_status | 1; // mark this fiber as yielded
-			host_p->m_yield_status = host_p->m_yield_status << 1;
+			host_p->m_yield_status = host_p->m_yield_status | 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000001; // mark this fiber as yielded
+			host_p->m_yield_status = host_p->m_yield_status << 1; // shift the bit to the left by one.
 
 			boost::this_fiber::yield(); // yield if no tasks are available
 			if (host_p->m_yield_status == l_fibers_host_sleep_mask) // all fibers have yielded
 			{
-				host_p->m_yield_status = host_p->m_yield_status xor host_p->m_yield_status;
+				host_p->m_yield_status = host_p->m_yield_status xor host_p->m_yield_status; // set all bits to zero.
 				boost::unique_lock<boost::mutex> l_unique_lock(l_mutex);
 				host_p->m_condition_variable.wait(l_unique_lock); // wait until notified of new tasks
 			}
@@ -259,384 +261,57 @@ void processor::__fiber_main(processor* const host_p, FE::int32 fiber_index_p) n
 
 
 
-game_thread::game_thread(framework::ECS& ecs_p, var::uint64 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept
-	:	m_ecs(ecs_p),
-		m_fiber_stack_allocator(fiber_stack_size_p),
-		m_should_terminate(false),
-		m_game_fiber(),
-		m_delta_ms(0.0),
-		m_gc_fiber(),
-		m_gc_reachability_analysis_fiber(),
-		m_gc_delta_ms(0.0),
-		m_gc_iter_per_frame(gc_batch_count_p),
-		m_game_systems(framework_base::get_framework().get_memory_resource())
+void thread::fork(FE::system system_p, FE::component_base* const arguments_p, FE::size fiber_stack_size_p) noexcept
 {
-	m_game_systems.reserve(1024); // Preallocate some space to avoid frequent reallocations.
+	FE_ASSERT(m_host.joinable() == false, "Assertion failure: the thread is already running.");
+
+	m_host = boost::thread(__thread_main, system_p, arguments_p, fiber_stack_size_p);
 }
 
-void game_thread::run() noexcept
+void thread::join() noexcept
 {
-	FE_ASSERT(m_game_systems.empty() == true);
-	m_should_terminate.store(false, std::memory_order_release);
-
-	for (_FE_MAYBE_UNUSED_ auto& [system_name, system_and_target_component_type_hash_list] : m_ecs.m_system_table)
+	if (m_host.joinable())
 	{
-		typename game_system_exec_table::value_type::second_type l_components_group_list{ framework_base::get_framework().get_memory_resource() };
-
-		for (auto& component_type_hash : system_and_target_component_type_hash_list._second)
-		{
-			_FE_MAYBE_UNUSED_ auto l_result = m_ecs.m_component_table.find(component_type_hash);
-			FE_ASSERT(l_result != m_ecs.m_component_table.end(), "Assertion failed: the component table must have this component type.");
-			l_components_group_list.emplace_back(&(l_result->second._second));
-		}
-		m_game_systems.emplace_back(system_and_target_component_type_hash_list._first, std::move(l_components_group_list));
-	}
-
-	boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
-	m_game_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &game_thread::__game_main, this);
-	m_gc_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &game_thread::__gc_main, this);
-	m_gc_reachability_analysis_fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &game_thread::__reachability_analysis_main, this);
-
-	if (m_game_fiber.joinable())
-	{
-		m_game_fiber.join();
-	}
-
-	if (m_gc_fiber.joinable())
-	{
-		m_gc_fiber.join();
-	}
-
-	if (m_gc_reachability_analysis_fiber.joinable())
-	{
-		m_gc_reachability_analysis_fiber.join();
+		m_host.join();
 	}
 }
 
-void game_thread::shutdown() noexcept
+void thread::__thread_main(FE::system system_p, FE::component_base* const arguments_p, FE::size fiber_stack_size_p) noexcept
 {
-	m_should_terminate.store(true, std::memory_order_release);
-}
-
-
-void game_thread::__game_main(game_thread* const host_p) noexcept
-{
-	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
-	FE::clock l_delta_clock;
-
-	while (host_p->m_should_terminate.load(std::memory_order_acquire) == false)
+	boost::fibers::fiber l_fiber(std::allocator_arg, internal::processors::fiber_stack_allocator(fiber_stack_size_p), system_p, arguments_p);
+	if (l_fiber.joinable())
 	{
-		l_delta_clock.start_clock();
-		glfwPollEvents();
-		for (typename game_system_exec_table::value_type& system_and_components : host_p->m_game_systems)
-		{
-			FE_ASSERT(system_and_components._first != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
-
-			for (FE::list<FE::internal::ECS::components>* const component_list : system_and_components._second)
-			{
-				for (FE::internal::ECS::components& components : *component_list)
-				{
-					for (FE::component& component : components)
-					{
-						FE_ASSERT(component != nullptr, "Assertion failure: component pointers cannot be a nullptr.");
-						if (component.observer_count() == 0)
-						{
-							continue; // skip expired components
-						}
-						system_and_components._first(component.operator->());
-					}
-				}
-			}
-		}
-		l_delta_clock.end_clock();
-		host_p->m_delta_ms = l_delta_clock.get_delta_milliseconds();
-		boost::this_fiber::yield();
+		l_fiber.join();
 	}
 }
 
-void game_thread::__gc_main(game_thread* const host_p) noexcept
-{
-	FE_ASSERT(host_p != nullptr, "Assertion failure: host_p cannot be null.");
-	FE::clock l_delta_clock;
-
-	while (host_p->m_should_terminate.load(std::memory_order_acquire) == false)
-	{
-		l_delta_clock.start_clock();
-		{
-			var::uint64 l_batch_count = 0;
-			var::uint64 l_current_idx = 0;
-			std::unique_lock<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
-			for (auto iterator = host_p->m_ecs.m_archetype_table.begin(); iterator != host_p->m_ecs.m_archetype_table.end(); ++iterator)
-			{
-				if (iterator->second == nullptr)
-				{
-					continue; // skip expired entities
-				}
-
-				if (iterator->second.observer_count() == 0)
-				{
-					host_p->m_ecs.m_archetype_table.erase(iterator); // remove expired entities
-				}
-
-				++l_batch_count;
-				if (l_batch_count >= host_p->m_gc_iter_per_frame)
-				{
-					l_delta_clock.end_clock();
-					host_p->m_gc_delta_ms = l_delta_clock.get_delta_milliseconds();
-
-					l_lock.unlock();
-					boost::this_fiber::yield();
-					l_lock.lock();
-
-					l_delta_clock.start_clock();
-					l_current_idx += l_batch_count;
-					l_batch_count = l_batch_count xor l_batch_count; // reset batch count to zero
-					iterator = std::next(host_p->m_ecs.m_archetype_table.begin(), l_current_idx); // refresh the iterator after yielding
-				}
-			}
-		}
-
-		boost::this_fiber::yield();
-
-		{
-			var::uint64 l_batch_count = 0;
-			var::uint64 l_current_idx = 0;
-			std::unique_lock<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
-			for (auto iterator = host_p->m_ecs.m_component_table.begin(); iterator != host_p->m_ecs.m_component_table.end(); ++iterator)
-			{
-				for (FE::internal::ECS::components& components : iterator->second._second)
-				{
-					for (FE::component& component : components)
-					{
-						FE_ASSERT(component != nullptr, "Assertion failure: component pointers cannot be a nullptr.");
-						if (component.observer_count() == 0)
-						{
-							components.remove_component(component->m_metadata->_index);
-						}
-						else if (component->m_metadata->m_gc_metadata->_is_circular_reference.load(std::memory_order_acquire) == true)
-						{
-							components.remove_component(component->m_metadata->_index); // remove circular-referenced components
-						}
-
-						++l_batch_count;
-						if (l_batch_count >= host_p->m_gc_iter_per_frame)
-						{
-							l_delta_clock.end_clock();
-							host_p->m_gc_delta_ms = l_delta_clock.get_delta_milliseconds();
-
-							l_lock.unlock();
-							boost::this_fiber::yield();
-							l_lock.lock();
-
-							l_delta_clock.start_clock();
-							l_current_idx += l_batch_count;
-							l_batch_count = l_batch_count xor l_batch_count; // reset batch count to zero
-							iterator = std::next(host_p->m_ecs.m_component_table.begin(), l_current_idx); // refresh the iterator after yielding
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-void game_thread::__reachability_analysis_main(game_thread* const host_p) noexcept
-{
-	FE_ASSERT(host_p != nullptr, "Assertion failure: data_p cannot be null.");
-
-	while (host_p->m_should_terminate.load(std::memory_order_acquire) == false)
-	{
-		{
-			std::lock_guard<boost::fibers::recursive_mutex> l_lock(host_p->m_ecs.m_fiber_lock);
-			for (auto iterator = host_p->m_ecs.m_component_table.begin(); iterator != host_p->m_ecs.m_component_table.end(); ++iterator)
-			{
-				for (FE::internal::ECS::components& components : iterator->second._second)
-				{
-					for (FE::component& component : components)
-					{
-						FE_ASSERT(component != nullptr);
-						if (component.observer_count() != 1)
-						{
-							continue; // could not suspect a circular reference
-						}
-						host_p->__reachability_analysis_recursive(component, component); // examine the circular reference
-					}
-				}
-			}
-		}
-		boost::this_fiber::yield();
-	}
-}
-// TODO: refactor to be non-recursive
-void game_thread::__reachability_analysis_recursive(_FE_MAYBE_UNUSED_ FE::component_view<FE::component_base> root_p, _FE_MAYBE_UNUSED_ FE::component_view<FE::component_base> child_p) noexcept
-{
-	//FE_ASSERT(root_p.is_valid() == true, "Assertion failure: root_p cannot be null.");
-	//FE_ASSERT(root_p->m_metadata != nullptr, "Assertion failure: root_p's metadata cannot be null.");
-	//FE_ASSERT(root_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: root_p's gc_metadata cannot be null.");
-
-	//FE_ASSERT(child_p.is_valid() == true, "Assertion failure: child_p cannot be null.");
-	//FE_ASSERT(child_p->m_metadata != nullptr, "Assertion failure: child_p's metadata cannot be null.");
-	//FE_ASSERT(child_p->m_metadata->m_gc_metadata != nullptr, "Assertion failure: child_p's gc_metadata cannot be null.");
-
-	//static var::uint64 l_s_recursion_depth = 0;
-	//static var::boolean l_s_should_exit = false;
-
-	//if (l_s_should_exit == true)
-	//{
-	//	--l_s_recursion_depth;
-	//	if (l_s_recursion_depth == 0)
-	//	{
-	//		l_s_should_exit = false;
-	//	}
-	//	return;
-	//}
-	//if (l_s_recursion_depth >= m_gc_iter_per_frame)
-	//{
-	//	l_s_should_exit = true;
-	//	return;
-	//}
-	//++l_s_recursion_depth;
-
-
-	//for (FE::component_view<FE::component_base>* subcomponent_view : child_p->m_metadata->m_gc_metadata->_member_components)
-	//{
-	//	if (root_p.operator->() == subcomponent_view->operator->()) // examine the circular reference
-	//	{
-	//		root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
-	//		return; // circular reference detected
-	//	}
-	//	__reachability_analysis_recursive(root_p, *subcomponent_view);
-	//}
-
-	//for (FE::entity<FE::archetype_base>* subentity_view : child_p->m_metadata->m_gc_metadata->_member_entities)
-	//{
-	//	for (auto iterator = (*subentity_view)->m_component_view_table.begin(); iterator != (*subentity_view)->m_component_view_table.end(); ++iterator)
-	//	{
-	//		if (root_p.operator->() == iterator->second.operator->()) // examine the circular reference
-	//		{
-	//			root_p->m_metadata->m_gc_metadata->_is_circular_reference.store(true, std::memory_order_release);
-	//			return; // circular reference detected
-	//		}
-	//		__reachability_analysis_recursive(root_p, iterator->second);
-	//	}
-	//}
-}
 
 
 
-
-processors::processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p, FE::uint32 gc_batch_count_p, FE::size fiber_stack_size_p) noexcept
-	:	m_concurrency(concurrency_p),
-		m_fiber_host_count(m_concurrency - 4),
+processors::processors(FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p, FE::size fiber_stack_size_p) noexcept
+	:	m_concurrency((FE::uint16)concurrency_p),
 		m_fibers_per_thread(fibers_per_thread_p),
-		m_processors(),
-		m_fiber_stack_allocator(fiber_stack_size_p),
-
-		m_game_thread(ecs_p, gc_batch_count_p, fiber_stack_size_p),
-		m_renderer_thread(),
-		m_physics_thread(),
-		m_audio_thread(),
-		m_networking_thread()
+		m_fiber_stack_size((FE::uint32)fiber_stack_size_p),
+		m_processors()
 {
-	FE_ASSERT(concurrency_p >= 6, "Assertion failure: the software thread count must be greater than or equal to 6.");
-	FE_ASSERT(fibers_per_thread_p > 0, "Assertion failure: fibers_per_thread_p must be greater than zero.");
-	FE_ASSERT(gc_batch_count_p > 0, "Assertion failure: gc_batch_count_p must be greater than zero.");
-	FE_ASSERT(fiber_stack_size_p > 0, "Assertion failure: fiber_stack_size_p must be at least 1 MiB.");
+	FE_ASSERT(concurrency_p > 0, "Assertion failure: fibers_per_thread_p must be greater than zero.");
 
 	FE_ASSERT(fibers_per_thread_p <= 64, "Assertion failure: cannot create more than 64 fibers per thread.");
+	FE_ASSERT(fibers_per_thread_p > 0, "Assertion failure: cannot create 0 fiber per thread.");
+
+	FE_ASSERT(fiber_stack_size_p >= FE::one_KiB, "Assertion failure: fiber_stack_size_p must be at least 1 KiB.");
+	FE_ASSERT(fiber_stack_size_p <= 4*FE::one_GiB, "Assertion failure: fiber_stack_size_p must be at less than 4 GiB.");
 }
 
 
-void processors::run(	FE::system renderer_p, FE::component_base* renderer_args_p,
-						FE::system physics_p, FE::component_base* physics_args_p,
-						FE::system audio_p, FE::component_base* audio_args_p,
-						FE::system networking_p, FE::component_base* networking_args_p) noexcept
+void processors::run() noexcept
 {
-	FE_ASSERT(renderer_p != nullptr, "Assertion failure: renderer_p cannot be null.");
-	FE_ASSERT(physics_p != nullptr, "Assertion failure: renderer_p cannot be null.");
-	FE_ASSERT(audio_p != nullptr, "Assertion failure: renderer_p cannot be null.");
-	FE_ASSERT(networking_p != nullptr, "Assertion failure: renderer_p cannot be null.");
-	
-	FE_ASSERT(m_renderer_thread.joinable() == false);
-	FE_ASSERT(m_physics_thread.joinable() == false);
-	FE_ASSERT(m_audio_thread.joinable() == false);
-	FE_ASSERT(m_networking_thread.joinable() == false);
-	FE_ASSERT(m_processors == nullptr);
+	FE_ASSERT(m_processors == nullptr, "Assertion failure: the processors have already been initialized. Call shutdown() first.");
 
-	m_renderer_thread = boost::thread
-	(
-		[=]()
-		{
-			boost::fibers::fiber l_renderer_fiber(std::allocator_arg, m_fiber_stack_allocator, renderer_p, renderer_args_p);
-			if (l_renderer_fiber.joinable())
-			{
-				l_renderer_fiber.join();
-			}
-		}
-	);
-
-	m_audio_thread = boost::thread
-	(
-		[=]() 
-		{ 
-			boost::fibers::fiber l_audio_fiber(std::allocator_arg, m_fiber_stack_allocator, audio_p, audio_args_p);
-			if (l_audio_fiber.joinable())
-			{
-				l_audio_fiber.join();
-			}
-		}
-	);
-
-	m_physics_thread = boost::thread
-	(
-		[=]()
-		{
-			boost::fibers::fiber l_physics_fiber(std::allocator_arg, m_fiber_stack_allocator, physics_p, physics_args_p);
-			if (l_physics_fiber.joinable())
-			{
-				l_physics_fiber.join();
-			}
-		}
-	);
-
-	m_networking_thread = boost::thread
-	(
-		[=]()
-		{
-			boost::fibers::fiber l_networking_fiber(std::allocator_arg, m_fiber_stack_allocator, networking_p, networking_args_p);
-			if (l_networking_fiber.joinable())
-			{
-				l_networking_fiber.join();
-			}
-		}
-	);
-
-	m_processors = std::make_unique<processor[]>(m_fiber_host_count);
-	for (var::uint32 i = 1; i < m_fiber_host_count; ++i)
+	m_processors = std::make_unique<internal::processors::processor[]>(m_concurrency);
+	for (var::uint32 i = 0; i < m_concurrency; ++i)
 	{
-		m_processors[i].fork(*this, m_fibers_per_thread, m_fiber_stack_allocator.stack_size());
-	}
-
-	m_game_thread.run();
-
-	if (m_networking_thread.joinable())
-	{
-		m_networking_thread.join();
-	}
-
-	if (m_audio_thread.joinable())
-	{
-		m_audio_thread.join();
-	}
-
-	if (m_physics_thread.joinable())
-	{
-		m_physics_thread.join();
-	}
-
-	if (m_renderer_thread.joinable())
-	{
-		m_renderer_thread.join();
+		m_processors[i].fork(*this, m_fibers_per_thread, m_fiber_stack_size);
 	}
 }
 
@@ -646,7 +321,7 @@ void processors::schedule_task(const framework::task& task_p) noexcept
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
 	static std::atomic_uint32_t l_s_next_processor_index{ 0 };
-	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count;
+	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_concurrency;
 	m_processors[ l_target_processor_index ].schedule_task(task_p);
 	m_processors[l_target_processor_index].wake();
 }
@@ -669,7 +344,7 @@ typename task::handle processors::schedule_waitable_task(framework::task& task_p
 		*/
 	}
 	static std::atomic_uint32_t l_s_next_processor_index{ 0 };
-	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_fiber_host_count;
+	FE::uint32 l_target_processor_index = l_s_next_processor_index.fetch_add(1, std::memory_order_acq_rel) % m_concurrency;
 	m_processors[l_target_processor_index].schedule_task(task_p);
 	m_processors[l_target_processor_index].wake();
 	return task_p.m_notifier->get_future();
@@ -677,15 +352,16 @@ typename task::handle processors::schedule_waitable_task(framework::task& task_p
 
 void processors::shutdown() noexcept 
 {
-	m_game_thread.shutdown();
-	if (m_processors != nullptr)
+	if (m_processors == nullptr)
 	{
-		for (var::uint32 i = 0; i < m_fiber_host_count; ++i)
-		{
-			m_processors[i].join();
-		}
-		m_processors.reset();
+		return;
 	}
+
+	for (var::uint32 i = 0; i < m_concurrency; ++i)
+	{
+		m_processors[i].join();
+	}
+	m_processors.reset();
 }
 
 

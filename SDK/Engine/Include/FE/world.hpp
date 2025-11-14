@@ -26,24 +26,69 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-//// Read the .froggy file from m_froggy and deserialize the m_entity_list and the m_system_list.
-//m_ecs = std::make_unique<framework::ECS>();
-//m_ecs->initialize(m_entity_list, m_system_list);
-class world : public FE::archetype_base
+class world;
+CLASS_FORWARD_DECLARATION(internal::world, proxy_getter);
+CLASS_FORWARD_DECLARATION(internal, game_processor);
+
+
+class world
 {
+	friend class internal::world::proxy_getter;
+
 	using base_type = FE::archetype_base;
 
 	FE::framework::ECS m_ecs;
 	std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> > m_levels;
-	FE::smart_ptr<FE::mode, FE::RefType::_Observer> m_game_mode;
-	FE::smart_ptr<FE::controller, FE::RefType::_Observer> m_controller;
+	FE::smart_ptr<FE::mode, FE::RefType::_Owner> m_game_mode;
+
 
 public:
 	world(	framework::ECS& engine_ecs_p, FE::size max_entities_p,
-			framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p,
-			FE::size component_type_count_hint_p = 1000, FE::size system_count_hint_p = 1000) noexcept;
+			framework::initializer_list&& initializer_list_p,
+			FE::size component_type_count_hint_p) noexcept;
 	~world() noexcept = default;
+
+public:
+	void dispatch_systems() noexcept;
+
+public:
+	_FE_FORCE_INLINE_ const FE::mode& get_game_mode() const noexcept { return *m_game_mode; }
+	_FE_FORCE_INLINE_ FE::mode& get_game_mode() noexcept { return *m_game_mode; }
 };
+
+
+namespace internal::world
+{
+	class proxy_getter
+	{
+		friend class ::FE::internal::game_processor;
+
+		FE::smart_ptr<FE::world, FE::RefType::_Observer> m_current_world;
+
+	private:
+		proxy_getter(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
+			: m_current_world(world_p)
+		{}
+
+		~proxy_getter() noexcept = default;
+
+	private:
+		_FE_FORCE_INLINE_ void switch_world(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
+		{
+			m_current_world = world_p;
+		}
+
+		_FE_FORCE_INLINE_ class FE::framework::ECS& get_ecs() noexcept
+		{
+			return m_current_world->m_ecs;
+		}
+
+		_FE_FORCE_INLINE_ std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> >& get_levels() noexcept
+		{
+			return m_current_world->m_levels;
+		}
+	};
+}
 
 
 END_NAMESPACE

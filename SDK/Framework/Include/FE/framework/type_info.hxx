@@ -17,6 +17,8 @@ limitations under the License.
 */
 #include <FE/definitions.hxx>
 #include <FE/do_once.hxx>
+#include <FE/hash.hxx>
+#include <FE/memory.hxx>
 #include <FE/types.hxx>
 #include <FE/type_traits.hxx>
 
@@ -32,7 +34,7 @@ limitations under the License.
 #include <boost/thread/shared_lock_guard.hpp>
 
 // ronbin hood hash
-#include <robin_hood.h>
+#include <absl/container/node_hash_map.h>
 
 // windows
 #ifdef _FE_ON_WINDOWS_X86_64_
@@ -45,6 +47,9 @@ limitations under the License.
 
 
 
+CLASS_FORWARD_DECLARATION(FE, component_base);
+
+
 BEGIN_NAMESPACE(FE::framework::reflection)
 
 
@@ -55,22 +60,28 @@ namespace internal::type_info
     public:
         using string_type = std::pmr::string;
 
-        thread_local static std::shared_ptr<std::pmr::monotonic_buffer_resource> tl_s_resource;
+        thread_local static std::shared_ptr<std::pmr::unsynchronized_pool_resource> tl_s_resource;
+		static std::atomic_uint64_t s_type_id_counter;
 
         string_type _typename;
         string_type _base_typename;
         std::size_t _hashed_name = 0;
 		std::size_t _hashed_base_name = 0;
+		var::uint64 _component_type_id = 0;
     };
 }
 
 
 class type_info
 {
-    using table_type = robin_hood::unordered_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata>;
+    using table_type = absl::node_hash_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata,
+                                            FE::hash<typename internal::type_info::metadata::string_type>,
+                                            std::equal_to<typename internal::type_info::metadata::string_type>,
+		                                    FE::polymorphic_allocator< std::pair<const typename internal::type_info::metadata::string_type, internal::type_info::metadata> >
+    >;
     using lock_type = std::shared_mutex;
 
-	std::shared_ptr<std::pmr::monotonic_buffer_resource> m_resource;
+	std::shared_ptr<std::pmr::unsynchronized_pool_resource> m_resource;
     internal::type_info::metadata m_info;
    
     thread_local static table_type tl_s_type_information;
@@ -81,7 +92,7 @@ public:
     {
         if (internal::type_info::metadata::tl_s_resource == nullptr)
         {
-			internal::type_info::metadata::tl_s_resource = std::make_shared<std::pmr::monotonic_buffer_resource>();
+			internal::type_info::metadata::tl_s_resource = std::make_shared<std::pmr::unsynchronized_pool_resource>();
         }
 		m_resource = internal::type_info::metadata::tl_s_resource;
     }
@@ -97,7 +108,7 @@ private:
         out_ret_p = typename internal::type_info::metadata::string_type( static_cast<var::ASCII*>(l_buffer), m_resource.get() );
     }
 
-    template<typename T>
+    template <typename T>
     void set() noexcept
     {
         __demangle_type_name( m_info._typename, typeid(T).name() );
@@ -107,6 +118,12 @@ private:
         { 
             __demangle_type_name( m_info._base_typename, typeid(typename T::base_type).name() );
 			m_info._hashed_base_name = robin_hood::hash_bytes(m_info._base_typename.data(), m_info._base_typename.length());
+        }
+
+        if constexpr (std::is_base_of_v<FE::component_base, T> == true)
+        {
+            m_info._component_type_id = internal::type_info::metadata::s_type_id_counter;
+            ++internal::type_info::metadata::s_type_id_counter;
         }
 
         type_info::tl_s_type_information.emplace(m_info._typename, m_info);
@@ -131,6 +148,13 @@ public:
     _FE_FORCE_INLINE_ std::size_t base_hash_code() const noexcept
     {
 		return m_info._hashed_base_name;
+    }
+
+	template <class Component>
+    _FE_FORCE_INLINE_ var::uint64 component_typeid() const noexcept
+    {
+        static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+		return m_info._component_type_id;
     }
 
     static FE::ASCII* get_base_name_of(const std::string_view& this_type_name_p) noexcept

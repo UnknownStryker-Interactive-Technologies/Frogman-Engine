@@ -27,6 +27,9 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
+class archetype_base;
+
+
 namespace internal::smart_ptr
 {
 	template<typename T>

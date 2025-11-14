@@ -61,6 +61,12 @@ struct enum_struct_node
 	std::pmr::vector<identifier> _enum_struct_fields;
 };
 
+struct system_node
+{
+	identifier _sysname;
+	identifier _systarget;
+	identifier _syscall_phase;
+};
 
 struct namespace_node
 {
@@ -69,7 +75,7 @@ struct namespace_node
 	std::pmr::vector<std::optional<class_node>> _classes;
 	std::pmr::vector<std::optional<struct_node>> _structs;
 	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
-	std::pmr::vector<std::optional<identifier>> _c_style_systems;
+	std::pmr::vector<std::optional<system_node>> _system_fptrs;
 };
 
 
@@ -80,7 +86,7 @@ struct header_file_root
 	std::pmr::vector<std::optional<class_node>> _classes;
 	std::pmr::vector<std::optional<struct_node>> _structs;
 	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
-	std::pmr::vector<std::optional<identifier>> _c_style_systems;
+	std::pmr::vector<std::optional<system_node>> _system_fptrs;
 };
 
 

@@ -5,14 +5,23 @@
 
 
 
-FE::game::game(	FE::framework::ECS& engine_ecs_p, 
-				const std::pmr::string& entry_world_path_p, 
-				const std::pmr::vector<std::pmr::string>& world_paths_p) noexcept
-	:	base_type(engine_ecs_p),
-		m_world_list(FE::memory::get_thread_local_memory_resource())
-{
-	// TO DO: load worlds from the specified paths.
+FE::game::game(FE::framework::ECS& engine_ecs_p) noexcept
+	:	base_type(engine_ecs_p)
+{}
 
-	(entry_world_path_p);
-	(world_paths_p);
+FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::get_current_world() noexcept
+{
+	FE_ASSERT(m_world_list.empty() == false);
+	return m_world_list[0];
+}
+
+FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::create_world(const std::filesystem::path & path_to_world_file_p) noexcept
+{
+	(path_to_world_file_p);
+	return FE::smart_ptr<FE::world, FE::RefType::_Observer>();
+}
+
+void FE::game::transition_world(const FE::smart_ptr<FE::world, FE::RefType::_Observer>& new_world_p) noexcept
+{
+	(new_world_p);
 }

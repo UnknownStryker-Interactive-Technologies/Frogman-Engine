@@ -37,7 +37,7 @@ limitations under the License.
 // Microsoft Parallel Patterns Library. This header is specific to the Microsoft Visual Studio.
 //#include <concurrent_vector.h>
 
-#include <FE/concurrent_vector.hxx> // The in-house replacement for the Microsoft PPL concurrent_vector
+#include <FE/concurrent_vector.hxx>
 
 
 
@@ -77,7 +77,7 @@ The header_tool_engine class is a specialized tool for enforcing copyright notic
 while utilizing parallel task execution for efficiency.
 */
 
-// The header_tool_engine will be refactored into multiple smaller classes in the future; this is absurdly large.
+// The header_tool_engine will be refactored in the future; this is absurdly large.
 class header_tool_engine : public FE::framework::framework_base
 {
 	FE::uint8 m_UTF8_with_BOM[3];
@@ -147,7 +147,7 @@ private:
 	_FE_NODISCARD_ std::optional<class_node> __try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 	_FE_NODISCARD_ std::optional<struct_node> __try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 	_FE_NODISCARD_ std::optional<enum_struct_node> __try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-	_FE_NODISCARD_ std::optional<identifier> __try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ std::optional<system_node> __try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	void __skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p) const;
 	void __skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) const noexcept;
@@ -156,13 +156,20 @@ private:
 private:
 	struct reflection_metadata
 	{
+		struct system_info
+		{
+			std::pmr::wstring _system_name;
+			std::pmr::wstring _system_target;
+			std::pmr::wstring _system_call_phase;
+		};
+
 		directory_t _header_file_path;
 		std::pmr::vector<std::pmr::wstring> _archetype_base_children;
 		std::pmr::vector<std::pmr::wstring> _component_base_children;
-		std::pmr::vector<std::pmr::wstring> _system_base_children;
+		//std::pmr::vector<std::pmr::wstring> _system_base_children; 
 		std::pmr::vector<std::pmr::wstring> _class_and_structs;
 		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
-		std::pmr::vector<std::pmr::wstring> _c_style_system_functions;
+		std::pmr::vector<system_info> _system_fptrs;
 	};
 	using reflection_metadata_set_t = FE::concurrent_vector<reflection_metadata>;
 	reflection_metadata_set_t m_reflection_metadata_set;

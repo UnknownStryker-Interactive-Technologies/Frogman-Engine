@@ -108,7 +108,7 @@ framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		m_memory(std::make_unique<FE::memory_resource[]>( m_program_options.get_max_concurrency() )), 
 		m_method_reflection(81920, get_memory_resource()), 
 		m_property_reflection(81920, get_memory_resource()),
-		m_enum_reflection(81920),
+		m_enum_reflection(get_memory_resource(), 81920),
 		m_ecs(),
 		m_processors()
 {

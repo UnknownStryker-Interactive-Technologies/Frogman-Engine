@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/ECS.hxx>
+#include <FE/controller.hpp>
 
 
 
@@ -28,9 +29,15 @@ class mode : FE::archetype_base
 {
 	using base_type = FE::archetype_base;
 
+	FE::controller m_controller;
+
 public:
-	mode(framework::ECS& host_p) noexcept;
+	mode(framework::ECS& host_p, ControllerType type_p = FE::ControllerType::_KeyboardAndMouse) noexcept;
 	virtual ~mode() noexcept override;
+
+public:
+	_FE_FORCE_INLINE_ const FE::controller& get_controller() const noexcept { return m_controller; }
+	_FE_FORCE_INLINE_ FE::controller& get_controller() noexcept { return m_controller; }
 };
 
 

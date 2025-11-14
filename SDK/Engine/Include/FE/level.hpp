@@ -24,12 +24,13 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class level : public FE::archetype_base
+class level
 {
+	FE::list<FE::internal::ECS::entities, FE::page_aligned_allocator<FE::internal::ECS::entities>> m_level_entities;
 
 public:
 	level() noexcept = default;
-	virtual ~level() noexcept override = default;
+	~level() noexcept = default;
 };
 
 

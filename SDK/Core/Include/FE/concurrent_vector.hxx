@@ -357,7 +357,7 @@ private:
         m_allocator.deallocate(target_p, target_capacity_p);
     }
 
-public: /* use cas to acquire the dictatorship over the pointer.
+public: /* use cas to acquire the dictatorship over the pointer; when acquired, you literally dictate the pointer at the moment.
     bool try_resize( size_type new_size_p ) noexcept
     {
     }

@@ -40,6 +40,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
+class processor;
+class processors;
+
+
 enum struct TaskType : var::uint32
 {
 	_Urgent = 0,
@@ -47,8 +51,6 @@ enum struct TaskType : var::uint32
 	_Trivial = 2
 };
 
-class processor;
-class processors;
 
 class task
 {
@@ -85,6 +87,7 @@ public:
 		}
 	}
 };
+
 
 class task_queue
 {
@@ -127,118 +130,76 @@ namespace internal::processors
 
 		std::size_t stack_size() const noexcept { return m_size; }
 	};
+
+
+	class processor
+	{
+		class processors* m_host;
+		boost::thread m_processor;
+		std::atomic_bool m_should_terminate;
+		var::uint16 m_fibers_per_thread;
+		var::uint64 m_yield_status;
+		task_queue m_queue;
+		internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
+
+		std::unique_ptr<boost::fibers::fiber[]> m_fibers;
+		std::unique_ptr<var::float64[]> m_delta_ms;
+
+		boost::condition_variable m_condition_variable;
+
+
+	public:
+		processor() noexcept;
+		~processor() noexcept;
+
+		void fork(::FE::framework::processors& host_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
+		void join() noexcept;
+		void schedule_task(const framework::task& task_p) noexcept;
+
+		_FE_FORCE_INLINE_ FE::boolean should_terminate() const noexcept { return m_should_terminate.load(std::memory_order_acquire); }
+		_FE_FORCE_INLINE_ FE::float64 get_delta_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_ms[fiber_index_p]; }
+		_FE_FORCE_INLINE_ void wake() noexcept { m_condition_variable.notify_one(); }
+
+	private:
+		static void __fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept;
+
+	public:
+		processor(const processor&) = delete;
+		processor& operator=(const processor&) = delete;
+	};
 }
 
 
-
-
-class processor
+class thread
 {
-	class processors* m_host;
-	boost::thread m_processor;
-	std::atomic_bool m_should_terminate;
-	var::uint16 m_fibers_per_thread;
-	var::uint64 m_yield_status;
-	task_queue m_queue;
-	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
-
-	std::unique_ptr<boost::fibers::fiber[]> m_fibers;
-	std::unique_ptr<var::float64[]> m_delta_ms;
-
-	boost::condition_variable m_condition_variable;
-
+	boost::thread m_host;
 
 public:
-	processor() noexcept;
-	~processor() noexcept;
+	thread() noexcept = default;
+	~thread() noexcept = default;
 
-	void fork(processors& host_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
+	void fork(FE::system system_p, FE::component_base* const arguments_p = nullptr, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
 	void join() noexcept;
-	void schedule_task(const framework::task& task_p) noexcept;
-
-	_FE_FORCE_INLINE_ FE::boolean should_terminate() const noexcept { return m_should_terminate.load(std::memory_order_acquire); }
-	_FE_FORCE_INLINE_ FE::float64 get_delta_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_ms[fiber_index_p]; }
-	_FE_FORCE_INLINE_ void wake() noexcept { m_condition_variable.notify_one(); }
 
 private:
-	static void __fiber_main(processor* const host_p, FE::int32 fiber_index_p) noexcept;
-
-public:
-	processor(const processor&) = delete;
-	processor& operator=(const processor&) = delete;
+	static void __thread_main(FE::system system_p, FE::component_base* const arguments_p, FE::size fiber_stack_size_p) noexcept;
 };
-
-
-
-
-class game_thread
-{
-	friend class processor;
-	using game_system_exec_table = std::pmr::vector< FE::pair<	FE::system, // the system function pointer
-																std::pmr::vector< FE::list<FE::internal::ECS::components>* > // the list of components the system will operate on
-																>
-													>;
-	framework::ECS& m_ecs;
-	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
-	std::atomic_bool m_should_terminate;
-	boost::fibers::fiber m_game_fiber;
-	var::float64 m_delta_ms;
-
-	boost::fibers::fiber m_gc_fiber;
-	boost::fibers::fiber m_gc_reachability_analysis_fiber;
-	var::float64 m_gc_delta_ms;
-	var::uint64 m_gc_iter_per_frame;
-
-	game_system_exec_table m_game_systems; // the element index is the system execution order
-
-public:
-	game_thread(framework::ECS& ecs_p, var::uint64 gc_batch_count_p = 100, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
-	~game_thread() noexcept = default;
-
-public:
-	void run() noexcept;
-	void shutdown() noexcept;
-
-private:
-	_FE_FORCE_INLINE_ FE::float64 get_delta_milliseconds() const noexcept { return m_delta_ms; }
-	_FE_FORCE_INLINE_ FE::float64 get_gc_delta_milliseconds() const noexcept { return m_gc_delta_ms; }
-
-	static void __game_main(game_thread* const host_p) noexcept;
-	static void __gc_main(game_thread* const host_p) noexcept;
-	static void __reachability_analysis_main(game_thread* const host_p) noexcept;
-	void __reachability_analysis_recursive(FE::component_view<FE::component_base> root_p, FE::component_view<FE::component_base> child_p) noexcept; // TODO: refactor to be non-recursive
-};
-
-
 
 
 class processors
 {
 	friend class processor;
-	using game_system_exec_table = std::pmr::vector< FE::pair<	FE::system, // the system function pointer
-																std::pmr::vector< FE::list<FE::internal::ECS::components>* > // the list of components the system will operate on
-																>
-													>;
-	FE::uint32 m_concurrency;
-	FE::uint32 m_fiber_host_count;
-	FE::uint16 m_fibers_per_thread;
-	std::unique_ptr<processor[]> m_processors;
-	internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
 
-	game_thread m_game_thread;
-	boost::thread m_renderer_thread;
-	boost::thread m_physics_thread;
-	boost::thread m_audio_thread;
-	boost::thread m_networking_thread;
+	FE::uint16 m_concurrency;
+	FE::uint16 m_fibers_per_thread;
+	FE::uint32 m_fiber_stack_size;
+	std::unique_ptr<internal::processors::processor[]> m_processors; // TODO: replace it with FE::smart_ptr.
 
 public:
-	processors(framework::ECS& ecs_p, FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p = 3, FE::uint32 gc_batch_count_p = 100, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
+	processors(FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
 	~processors() noexcept = default;
 
-	void run(	FE::system renderer_p, FE::component_base* renderer_args_p,
-				FE::system physics_p, FE::component_base* physics_args_p,
-				FE::system audio_p, FE::component_base* audio_args_p,
-				FE::system networking_p, FE::component_base* networking_args_p) noexcept;
+	void run() noexcept;
 	void schedule_task(const framework::task& task_p) noexcept;
 	typename task::handle schedule_waitable_task(framework::task& task_p) noexcept;
 	void shutdown() noexcept;

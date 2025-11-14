@@ -23,6 +23,9 @@ class terrorist : public FE::archetype_base
 {
 public:
 	terrorist() = default;
+	terrorist(FE::framework::ECS& ecs_p) 
+		: FE::archetype_base(ecs_p)
+	{}
 	~terrorist() = default;
 };
 
@@ -30,13 +33,19 @@ class AK47 : public FE::archetype_base
 {
 public:
 	AK47() = default;
+	AK47(FE::framework::ECS& ecs_p) 
+		: FE::archetype_base(ecs_p)
+	{}
 	~AK47() = default;
 };
 
 class ak_ammo : public FE::archetype_base
 {
 public:
-	ak_ammo() = default;
+	ak_ammo() {};
+	ak_ammo(FE::framework::ECS& ecs_p) 
+		: FE::archetype_base(ecs_p)
+	{}
 	~ak_ammo() = default;
 };
 
@@ -45,7 +54,7 @@ class ak_magazine : public FE::component_base
 	FE_PROPERTY(_rounds);
 	std::vector<ak_ammo> _rounds;
 public:
-	ak_magazine() = default;
+	ak_magazine() : _rounds() {};
 	~ak_magazine() = default;
 };
 
@@ -55,7 +64,10 @@ public:
 class player : public FE::archetype_base
 {
 public:
-	player() noexcept = default;
+	player() = default;
+	player(FE::framework::ECS& ecs_p) noexcept
+		: FE::archetype_base(ecs_p)
+	{ }
 	virtual ~player() noexcept override = default;
 };
 
@@ -66,7 +78,6 @@ public:
 	int _health;
 
 	health() noexcept = default;
-
 	health(int health) noexcept
 		: _health(health)
 	{
@@ -109,4 +120,27 @@ public:
 };
 
 
-void take_damage(FE::component_base* const component_p) noexcept;
+void take_damage(FE::component_base* const component_p) noexcept 
+FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) 
+{
+	(component_p);
+}
+
+void take_damage2(FE::component_base* const component_p) FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) noexcept
+{
+	(component_p);
+}
+//
+//void take_damage3(FE::component_base* const component_p) FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) noexcept;
+//
+//void take_damage4(FE::component_base* const component_p) noexcept FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health);
+
+//void faulty_system_registration(FE::component_base* const component_p) noexcept FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, player)
+//{
+//	(component_p);
+//}
+//
+//void faulty_system_registration2(FE::component_base* const component_p) noexcept FE_SYSTEM(health, FE::SystemCallPhase::_WorldBegin)
+//{
+//	(component_p);
+//}

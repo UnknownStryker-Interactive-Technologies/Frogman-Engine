@@ -9,7 +9,8 @@ BEGIN_NAMESPACE(FE::framework::reflection)
 method_registry::method_registry(FE::size map_capacity_p, std::pmr::memory_resource* pool_p) noexcept
 	: m_lock(),
 	m_pool(pool_p),
-	m_method_registry(map_capacity_p)
+	m_method_registry(map_capacity_p),
+	m_system_table(syscall_phase_count, typename system_table::value_type(map_capacity_p, pool_p), pool_p)
 {
 }
 
@@ -85,16 +86,19 @@ std::string_view property_registry::__get_deserialization_task_name(const std::s
 
 
 
-enum_metadata::enum_metadata() noexcept
+enum_metadata::enum_metadata(std::pmr::memory_resource* const resource_p) noexcept
 	: m_typename(),
-	m_string_to_value_map(),
-	m_value_to_string_map()
+	m_string_to_value_map(resource_p),
+	m_value_to_string_map(resource_p)
 {
+	FE_ASSERT(resource_p != nullptr, "Assertion failed: memory resource cannot be a nullptr.");
 }
 
-enum_registry::enum_registry(FE::size capacity_p) noexcept
-	: m_enum_registry(capacity_p)
+enum_registry::enum_registry(std::pmr::memory_resource* const resource_p, FE::size capacity_p) noexcept
+	:	m_enum_registry(capacity_p),
+		m_resource(resource_p)
 {
+	FE_ASSERT(resource_p != nullptr, "Assertion failed: memory resource cannot be a nullptr.");
 }
 
 

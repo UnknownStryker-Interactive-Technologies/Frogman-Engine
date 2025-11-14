@@ -30,14 +30,17 @@ class game : public FE::archetype_base
 	using base_type = FE::archetype_base;
 
 	std::pmr::vector< FE::smart_ptr<FE::world, FE::RefType::_Owner> > m_world_list;
+	
 	// player list, current player
 
 public:
-	game(	framework::ECS& engine_ecs_p, 
-			const std::pmr::string& entry_world_path_p, 
-			const std::pmr::vector<std::pmr::string>& world_paths_p) noexcept;
+	game(framework::ECS& engine_ecs_p) noexcept;
 
 	virtual ~game() noexcept override = default;
+
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() noexcept;
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const std::filesystem::path& path_to_world_file_p) noexcept;
+	void transition_world(const FE::smart_ptr<FE::world, FE::RefType::_Observer>& new_world_p) noexcept;
 };
 
 

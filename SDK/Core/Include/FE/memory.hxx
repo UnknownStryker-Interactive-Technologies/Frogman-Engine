@@ -15,12 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
+/*
+* These algorithms are little bit faster than the GCC STL(version g++ 6) when compiled with the clang++ compiler with - O3 optimization level.
+* However, they perform poorly when compiled with MSVC v143, even with /Ox optimization level.
+*/
 #ifdef FE_UNALIGNED_MEMZERO
-	#error FE_UNALIGNED_MEMSET is a reserved Frogman Engine macro keyword.
+	#error FE_ALIGNED_MEMZERO is a reserved Frogman Engine macro keyword.
 #endif
 #ifdef FE_ALIGNED_MEMZERO
-	#error FE_ALIGNED_MEMSET is a reserved Frogman Engine macro keyword.
+	#error FE_ALIGNED_MEMZERO is a reserved Frogman Engine macro keyword.
 #endif
 #ifdef FE_UNALIGNED_MEMCPY
 	#error FE_UNALIGNED_MEMCPY is a reserved Frogman Engine macro keyword.
@@ -39,6 +42,11 @@ limitations under the License.
 #endif
 #ifdef FE_UNALIGNED_MEMMOVE
 	#error FE_UNALIGNED_MEMMOVE is a reserved Frogman Engine macro keyword.
+#endif
+
+
+#ifdef FE_BITWISE_AND
+	#error FE_BITWISE_AND is a reserved Frogman Engine macro keyword.
 #endif
 
 
@@ -184,6 +192,11 @@ using extend = size;
 // The FE::is_power_of_two function is a constexpr function that checks if a given size_t value is a power of two by using a bitwise operation.
 _FE_CONSTEXPR17_ FE::boolean is_power_of_two(FE::size value_p) noexcept
 {
+	if (value_p == 0)
+	{
+		return false;
+	}
+
 	/* Since 4 is a power of 2 and
 		0b0001 == 1
 		0b0010 == 2
@@ -232,12 +245,12 @@ struct align_128bytes final
 
 struct page_alignment final
 {
-	_FE_MAYBE_UNUSED_ static constexpr size size = 4096;
+	_FE_MAYBE_UNUSED_ static constexpr size size = 4096; // Might be incorrect non-windows systems but this is true for most gaming systems. Reference FE::system_page_size for accurate value.
 };
 
 struct CPU_L1_cache_line final
 {
-	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size;
+	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size; // not available in llvm clang.
 };
 
 /*
@@ -284,13 +297,420 @@ enum struct Address : bool
 
 
 
+#if defined(_AVX2_) && defined(_SSE2_)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_and_AVX2_SSE2(	void* out_dest_p, FE::size dest_capacity_in_bytes_p, 
+																void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+																void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+	
+	// __FE_DIVIDE_BY_32(l_bytes_to_process) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+							_mm256_and_si256(	_mm256_loadu_si256( static_cast<const __m256i*>(lhs_p) ),
+												_mm256_loadu_si256( static_cast<const __m256i*>(rhs_p) )
+												)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(	static_cast<__m128i*>(out_dest_p),
+							_mm_and_si128(	_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+											_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) & *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_AND(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_and_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_or_AVX2_SSE2(void* out_dest_p, FE::size dest_capacity_in_bytes_p,
+	void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+	void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+
+	// __FE_DIVIDE_BY_32(l_bytes_to_process) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+							_mm256_or_si256(_mm256_loadu_si256(static_cast<const __m256i*>(lhs_p)),
+											_mm256_loadu_si256(static_cast<const __m256i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+						_mm_or_si128(	_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+										_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) | *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_OR(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_or_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_xor_AVX2_SSE2(void* out_dest_p, FE::size dest_capacity_in_bytes_p,
+	void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+	void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+
+	// __FE_DIVIDE_BY_32(l_bytes_to_process) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+							_mm256_xor_si256(	_mm256_loadu_si256(static_cast<const __m256i*>(lhs_p)),
+												_mm256_loadu_si256(static_cast<const __m256i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+						_mm_xor_si128(	_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+										_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) xor *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_XOR(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_xor_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_not_AVX2_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+
+	alignas(sizeof(__m256i)) __m256i l_mask = _mm256_set1_epi32(0xF); // 0b1111'1111
+
+	// __FE_DIVIDE_BY_32(l_bytes_to_process) == SIMD operation count
+	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+							_mm256_xor_si256(	l_mask, 
+												_mm256_loadu_si256(static_cast<const __m256i*>(out_dest_p))
+							)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+	}
+
+	bytes_p = __FE_MODULO_BY_32(bytes_p);
+	if (bytes_p >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+			_mm_xor_si128(_mm_load_si128(reinterpret_cast<const __m128i*>(&l_mask)), // _mm_load_si128 because l_mask is aligned
+										_mm_loadu_si128(static_cast<const __m128i*>(out_dest_p))
+						)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		bytes_p -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + bytes_p; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(out_dest_p) xor 0xFF; // 0b1111'1111
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+	}
+}
+#define FE_BITWISE_NOT(out_dest_p, bytes_p) ::FE::__x86_64_bitwise_not_AVX2_SSE2(out_dest_p, bytes_p)
+
+
+#ifdef _AVX512F_
+	#undef FE_BITWISE_AND
+	#undef FE_BITWISE_OR
+	#undef FE_BITWISE_XOR
+	#undef FE_BITWISE_NOT
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_and_AVX512F_AVX2_SSE2(void* out_dest_p, FE::size dest_capacity_in_bytes_p,
+	void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+	void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+
+	// __FE_DIVIDE_BY_64(l_bytes_to_process) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p),
+			_mm512_and_si512(_mm512_loadu_si512(static_cast<const __m512i*>(lhs_p)),
+				_mm512_loadu_si512(static_cast<const __m512i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m512i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m512i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_64(l_bytes_to_process);
+	if (l_bytes_to_process >= 32)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+			_mm256_and_si256(_mm256_loadu_si256(static_cast<const __m256i*>(lhs_p)),
+				_mm256_loadu_si256(static_cast<const __m256i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+		l_bytes_to_process -= 32;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+			_mm_and_si128(_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+				_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) & *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_AND(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_and_AVX512F_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_or_AVX512F_AVX2_SSE2(void* out_dest_p, FE::size dest_capacity_in_bytes_p,
+	void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+	void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+
+	// __FE_DIVIDE_BY_64(l_bytes_to_process) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p),
+			_mm512_or_si512(_mm512_loadu_si512(static_cast<const __m512i*>(lhs_p)),
+				_mm512_loadu_si512(static_cast<const __m512i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m512i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m512i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_64(l_bytes_to_process);
+	if (l_bytes_to_process >= 32)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+			_mm256_or_si256(_mm256_loadu_si256(static_cast<const __m256i*>(lhs_p)),
+				_mm256_loadu_si256(static_cast<const __m256i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+		l_bytes_to_process -= 32;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+			_mm_or_si128(_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+				_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) | *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_OR(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_or_AVX512F_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_xor_AVX512F_AVX2_SSE2(void* out_dest_p, FE::size dest_capacity_in_bytes_p,
+	void* lhs_p, FE::size lhs_capacity_in_bytes_p,
+	void* rhs_p, FE::size rhs_capacity_in_bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+	var::size l_bytes_to_process = FE::algorithm::math::min(dest_capacity_in_bytes_p, FE::algorithm::math::min(lhs_capacity_in_bytes_p, rhs_capacity_in_bytes_p));
+
+	// __FE_DIVIDE_BY_64(l_bytes_to_process) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(l_bytes_to_process); out_dest_p != end;)
+	{
+		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p),
+			_mm512_xor_si512(_mm512_loadu_si512(static_cast<const __m512i*>(lhs_p)),
+				_mm512_loadu_si512(static_cast<const __m512i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m512i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m512i*>(rhs_p) + 1;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_64(l_bytes_to_process);
+	if (l_bytes_to_process >= 32)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+			_mm256_xor_si256(_mm256_loadu_si256(static_cast<const __m256i*>(lhs_p)),
+				_mm256_loadu_si256(static_cast<const __m256i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m256i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m256i*>(rhs_p) + 1;
+		l_bytes_to_process -= 32;
+	}
+
+	l_bytes_to_process = __FE_MODULO_BY_32(l_bytes_to_process);
+	if (l_bytes_to_process >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+			_mm_xor_si128(_mm_loadu_si128(static_cast<const __m128i*>(lhs_p)),
+				_mm_loadu_si128(static_cast<const __m128i*>(rhs_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		lhs_p = static_cast<__m128i*>(lhs_p) + 1;
+		rhs_p = static_cast<__m128i*>(rhs_p) + 1;
+		l_bytes_to_process -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + l_bytes_to_process; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(lhs_p) xor *static_cast<byte*>(rhs_p);
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+		lhs_p = static_cast<var::byte*>(lhs_p) + 1;
+		rhs_p = static_cast<var::byte*>(rhs_p) + 1;
+	}
+}
+#define FE_BITWISE_XOR(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p) ::FE::__x86_64_bitwise_xor_AVX512F_AVX2_SSE2(out_dest_p, dest_capacity_in_bytes_p, lhs_p, lhs_capacity_in_bytes_p, rhs_p, rhs_capacity_in_bytes_p)
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_bitwise_not_AVX512F_AVX2_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+{
+	FE_ASSERT(out_dest_p != nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
+
+	alignas(sizeof(__m512i)) __m512i l_mask = _mm512_set1_epi32(0xF); // 0b1111'1111 __m256i
+
+	// __FE_DIVIDE_BY_64(l_bytes_to_process) == SIMD operation count
+	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
+	{
+		_mm512_storeu_si512(static_cast<__m512i*>(out_dest_p),
+			_mm512_xor_si512(l_mask,
+				_mm512_loadu_si512(static_cast<const __m512i*>(out_dest_p))
+			)
+		);
+		out_dest_p = static_cast<__m512i*>(out_dest_p) + 1;
+	}
+
+	bytes_p = __FE_MODULO_BY_64(bytes_p);
+	if (bytes_p >= 32)
+	{
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
+			_mm256_xor_si256(_mm256_load_si256(reinterpret_cast<const __m256i*>(&l_mask)), // _mm256_load_si256 because l_mask is aligned
+				_mm256_loadu_si256(static_cast<const __m256i*>(out_dest_p))
+			)
+		);
+		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
+		bytes_p -= 32;
+	}
+
+	bytes_p = __FE_MODULO_BY_32(bytes_p);
+	if (bytes_p >= 16)
+	{
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),
+			_mm_xor_si128(_mm_load_si128(reinterpret_cast<const __m128i*>(&l_mask)), // _mm_load_si128 because l_mask is aligned
+				_mm_loadu_si128(static_cast<const __m128i*>(out_dest_p))
+			)
+		);
+		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
+		bytes_p -= 16;
+	}
+
+	for (var::byte* const end = static_cast<var::byte*>(out_dest_p) + bytes_p; out_dest_p != end;)
+	{
+		*static_cast<var::byte*>(out_dest_p) = *static_cast<byte*>(out_dest_p) xor 0xFF; // 0b1111'1111
+		out_dest_p = static_cast<var::byte*>(out_dest_p) + 1;
+	}
+}
+#define FE_BITWISE_NOT(out_dest_p, bytes_p) ::FE::__x86_64_bitwise_not_AVX512F_AVX2_SSE2(out_dest_p, bytes_p)
+
+#endif
+#endif
+
+
+
+
 #if defined(_AVX_) && defined(_SSE2_)
 
 _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
-	// __FE_DIVIDE_BY_32(bytes_to_copy_p) == SIMD operation count
+	// __FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
 	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
 	{
 		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
@@ -533,7 +953,8 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX_SSE2(void
 
 
 #if defined(_AVX512F_)
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, FE::size bytes_p) noexcept
+
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX512F_AVX_SSE2(void* out_dest_p, FE::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is a nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
@@ -553,7 +974,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX512_AVX_SS
 	}
 }
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX512_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX512F_AVX_SSE2(void* out_dest_p, var::size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) == 0, "${%s@0}: ${%s@1} is not aligned by 64.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_IncorrectAddressAlignment), TO_STRING(out_dest_p));
@@ -575,14 +996,10 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX512_AVX_SSE2
 }
 
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memcpy_AVX512F_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
-	//if(FE_UNLIKELY(out_dest_p == source_p)) _FE_UNLIKELY_
-	//{
- //   	return;
-	//}
 
 	// __FE_DIVIDE_BY_64(bytes_to_copy_p) == SIMD operation count
 	for (__m512i* const end = static_cast<__m512i*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_to_copy_p); out_dest_p != end;)
@@ -599,7 +1016,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memcpy_AVX512_AVX_SSE
 	}
 }
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memcpy_AVX512F_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -625,7 +1042,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memcpy_AVX512_AVX_SSE2(
 	}
 }
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_dest_aligned_memcpy_AVX512F_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -650,7 +1067,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_dest_aligned_memcpy_AVX512_AVX_
 	}
 }
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_source_aligned_memcpy_AVX512F_AVX_SSE2(void* out_dest_p, const void* source_p, var::size bytes_to_copy_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -676,7 +1093,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_source_aligned_memcpy_AVX512_AV
 }
 
 
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX512_AVX_SSE2(void* out_dest_p, const void* source_p, FE::size bytes_to_move_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX512F_AVX_SSE2(void* out_dest_p, const void* source_p, FE::size bytes_to_move_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(source_p));
@@ -726,11 +1143,11 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memmove_AVX512_AVX_SS
 #if defined(_AVX512F_) && defined(_AVX_) && defined(_SSE2_)
 	#define FE_UNALIGNED_MEMZERO(out_dest_p, bytes_p) ::FE::__x86_64_unaligned_memzero_AVX_SSE2(out_dest_p, bytes_p)
 	#define FE_ALIGNED_MEMZERO(out_dest_p, bytes_p) ::FE::__x86_64_aligned_memzero_AVX_SSE2(out_dest_p, bytes_p)
-	#define FE_UNALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_unaligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
-	#define FE_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_aligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
-	#define FE_DEST_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_dest_aligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
-	#define FE_SOURCE_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_source_aligned_memcpy_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
-	#define FE_UNALIGNED_MEMMOVE(out_dest_p, source_p, bytes_to_move_p) ::FE::__x86_64_unaligned_memmove_AVX512_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p)
+	#define FE_UNALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_unaligned_memcpy_AVX512F_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
+	#define FE_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_aligned_memcpy_AVX512F_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
+	#define FE_DEST_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_dest_aligned_memcpy_AVX512F_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
+	#define FE_SOURCE_ALIGNED_MEMCPY(out_dest_p, source_p, bytes_to_copy_p) ::FE::__x86_64_source_aligned_memcpy_AVX512F_AVX_SSE2(out_dest_p, source_p, bytes_to_copy_p)
+	#define FE_UNALIGNED_MEMMOVE(out_dest_p, source_p, bytes_to_move_p) ::FE::__x86_64_unaligned_memmove_AVX512F_AVX_SSE2(out_dest_p, source_p, bytes_to_move_p)
 #elif defined(_AVX_) && defined(_SSE2_)
 	#define FE_UNALIGNED_MEMZERO(out_dest_p, bytes_p) ::FE::__x86_64_unaligned_memzero_AVX_SSE2(out_dest_p, bytes_p)
 	#define FE_ALIGNED_MEMZERO(out_dest_p, bytes_p) ::FE::__x86_64_aligned_memzero_AVX_SSE2(out_dest_p, bytes_p)
@@ -805,7 +1222,7 @@ FE::boolean _FE_VECTOR_CALL_ memcmp(ConstIterator left_iterator_begin_p, ConstIt
 }
 
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, uint64 source_capacity_in_bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, size dest_capacity_in_bytes_p, const void* source_p, size source_capacity_in_bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(source_p));
@@ -833,7 +1250,7 @@ The FE::memcpy function is a template function that performs memory copying betw
 while also ensuring that neither pointer is null.
 */
 template<Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, const void* source_p, uint64 bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memcpy(void* out_dest_p, const void* source_p, size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 	FE_NEGATIVE_ASSERT(source_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(source_p));
@@ -861,7 +1278,7 @@ The FE::memzero function is a template function that initializes a specified num
 with support for both aligned and unaligned memory addresses based on the specified template parameter.
 */
 template<Address DestAddressAlignment = Address::_NotAligned>
-_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memzero(void* out_dest_p, uint64 bytes_p) noexcept
+_FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ memzero(void* out_dest_p, size bytes_p) noexcept
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(out_dest_p));
 
@@ -1009,7 +1426,7 @@ class page_aligned_allocator
 	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because page_aligned_allocator<const T> is ill-formed.");
 	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements.");
 	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements.");
-	static_assert(sizeof(T) >= (4 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
+	static_assert(sizeof(T) >= (3 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
 
 	template <typename>
 	friend class page_aligned_allocator;

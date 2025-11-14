@@ -40,9 +40,21 @@ class controller : public FE::archetype_base
 	ControllerType m_device_type;
 	FE::entity<FE::archetype_base> m_player;
 
+	FE::component_view<FE::input_device::keyboard> m_keyboard_view;
+	FE::component_view<FE::input_device::mouse> m_mouse_view;
+
 public:
-    controller(ControllerType device_type_p, framework::ECS& host_p) noexcept;
+    controller(framework::ECS& host_p, ControllerType device_type_p) noexcept;
 	virtual ~controller() noexcept override;
+
+	_FE_FORCE_INLINE_ ControllerType get_device_type() const noexcept { return m_device_type; }
+
+	_FE_FORCE_INLINE_ FE::entity<FE::archetype_base> get_player() const noexcept { return m_player; }
+	_FE_FORCE_INLINE_ FE::entity<FE::archetype_base> get_player() noexcept { return m_player; }
+	_FE_FORCE_INLINE_ void set_player(const FE::entity<FE::archetype_base>& player_p) noexcept { m_player = player_p; }
+
+	_FE_FORCE_INLINE_ FE::input_device::keyboard& get_keyboard() noexcept { return *m_keyboard_view; }
+	_FE_FORCE_INLINE_ FE::input_device::mouse& get_mouse() noexcept { return *m_mouse_view; }
 };
 
 

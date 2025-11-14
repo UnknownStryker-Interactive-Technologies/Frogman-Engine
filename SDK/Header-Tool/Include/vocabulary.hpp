@@ -62,6 +62,7 @@ enum struct Vocabulary : FE::uint32
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
+	_FrogmanEngineSystemAttributeMacro,
 	_PreprocessorDirective, _PreprocessorNextLine
 };
 
@@ -105,6 +106,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
+	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemAttributeMacro },
 	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine },
 
 	{ "__", Vocabulary::_CallingConvention }

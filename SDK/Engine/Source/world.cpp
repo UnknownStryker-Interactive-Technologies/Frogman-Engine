@@ -20,12 +20,19 @@ limitations under the License.
 
 
 FE::world::world(	framework::ECS& engine_ecs_p, FE::size max_entities_p,
-					FE::framework::initializer_list& initializer_list_p, FE::framework::system_table_initializer_list& system_table_initializer_p, 
-					FE::size component_type_count_hint_p, FE::size system_count_hint_p) noexcept
-	:	base_type(engine_ecs_p),
-		m_ecs(max_entities_p, component_type_count_hint_p, system_count_hint_p),
+					FE::framework::initializer_list&& initializer_list_p,
+					FE::size component_type_count_hint_p) noexcept
+	:	m_ecs(max_entities_p, component_type_count_hint_p),
 		m_levels(FE::memory::get_thread_local_memory_resource()),
-		m_game_mode()
+		m_game_mode(FE::make_owner<FE::mode>(FE::memory::get_thread_local_memory_resource(), engine_ecs_p, FE::ControllerType::_KeyboardAndMouse))
 {
-	m_ecs.initialize(initializer_list_p, system_table_initializer_p);
+	m_ecs.initialize(std::move(initializer_list_p));
+	// call the decryption method to decrypt the world if the functor is not null.
+}
+
+void FE::world::dispatch_systems() noexcept
+{
+	// see SystemCallPhase
+	// fiter entities by their components and call the systems accordingly.
+	// a linked list of each component type can be accessed via an archetype bitmask.
 }

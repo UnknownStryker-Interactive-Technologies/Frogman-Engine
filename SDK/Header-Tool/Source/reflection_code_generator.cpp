@@ -69,18 +69,25 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 		__output_namespace_metadata_recursive(l_reflection_metadata, *node);
 	}
 
-	for (const std::optional<identifier>& c_style_system_function : tree_p._c_style_systems)
+	for (const std::optional<system_node>& c_style_system_function : tree_p._system_fptrs)
 	{
 		if (c_style_system_function == std::nullopt)
 		{
 			continue;
 		}
 
-		std::pmr::wstring l_identifier(get_memory_resource());
-		l_identifier.resize( c_style_system_function->length() + 1 );
-		std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->data()), c_style_system_function->length() );
-		l_identifier = l_identifier.c_str();
-		l_reflection_metadata._c_style_system_functions.push_back( std::move(l_identifier) );
+		typename reflection_metadata::system_info l_system_node{ std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()) };
+
+		l_system_node._system_name.resize(c_style_system_function->_sysname.length());
+		std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
+
+		l_system_node._system_target.resize(c_style_system_function->_systarget.length());
+		std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_systarget.data()), c_style_system_function->_systarget.length());
+
+		l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
+		std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
+
+		l_reflection_metadata._system_fptrs.push_back( std::move(l_system_node) );
 	}
 
 	return l_reflection_metadata;
@@ -125,18 +132,25 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 		__output_namespace_metadata_recursive(out_return_p, *node);
 	}
 
-	for (const  std::optional<identifier>& c_style_system_function : node_p._c_style_systems)
+	for (const  std::optional<system_node>& c_style_system_function : node_p._system_fptrs)
 	{
 		if (c_style_system_function == std::nullopt)
 		{
 			continue;
 		}
 
-		std::pmr::wstring l_identifier(get_memory_resource());
-		l_identifier.resize(c_style_system_function->length() + 1);
-		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->data()), c_style_system_function->length());
-		l_identifier = l_identifier.c_str();
-		out_return_p._c_style_system_functions.push_back(std::move(l_identifier));
+		typename reflection_metadata::system_info l_system_node{ std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()) };
+
+		l_system_node._system_name.resize(c_style_system_function->_sysname.length());
+		std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
+
+		l_system_node._system_target.resize(c_style_system_function->_systarget.length());
+		std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_systarget.data()), c_style_system_function->_systarget.length());
+
+		l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
+		std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
+
+		out_return_p._system_fptrs.push_back(std::move(l_system_node));
 	}
 }
 
@@ -144,10 +158,9 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 void header_tool_engine::__output_class_metadata(reflection_metadata& out_return_p, const class_node& node_p) noexcept
 {
 	std::pmr::wstring l_identifier(get_memory_resource());
-	l_identifier.resize( node_p._this_class_name.length() + 1 );
+	l_identifier.resize( node_p._this_class_name.length());
 
 	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._this_class_name.data()), node_p._this_class_name.length() );
-	l_identifier = l_identifier.c_str();
 
 	switch (node_p._class_type)
 	{
@@ -159,9 +172,9 @@ void header_tool_engine::__output_class_metadata(reflection_metadata& out_return
 		out_return_p._component_base_children.push_back( std::move(l_identifier) );
 		break;
 
-	case ClassType::_ChildOfSystemBase:
-		out_return_p._system_base_children.push_back( std::move(l_identifier) );
-		break;
+	//case ClassType::_ChildOfSystemBase:
+	//	out_return_p._system_base_children.push_back( std::move(l_identifier) );
+	//	break;
 
 	case ClassType::_ChildOfCppClass:
 		_FE_FALLTHROUGH_;
@@ -175,20 +188,18 @@ void header_tool_engine::__output_class_metadata(reflection_metadata& out_return
 void header_tool_engine::__output_struct_metadata(reflection_metadata& out_return_p, const struct_node& node_p) noexcept
 {
 	std::pmr::wstring l_identifier(get_memory_resource());
-	l_identifier.resize( node_p._target_struct_name.length() + 1 );
+	l_identifier.resize( node_p._target_struct_name.length());
 
 	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._target_struct_name.data()), node_p._target_struct_name.length() );
-	l_identifier = l_identifier.c_str();
 	out_return_p._class_and_structs.push_back( std::move(l_identifier) );
 }
 
 void header_tool_engine::__output_enum_struct_metadata(reflection_metadata& out_return_p, const enum_struct_node& node_p) noexcept
 {
 	std::pmr::wstring l_identifier(get_memory_resource());
-	l_identifier.resize( node_p._target_enum_struct_name.length() + 1 );
+	l_identifier.resize( node_p._target_enum_struct_name.length());
 
 	std::mbstowcs( l_identifier.data(), reinterpret_cast<const char*>(node_p._target_enum_struct_name.data()), node_p._target_enum_struct_name.length() );
-	l_identifier = l_identifier.c_str();
 
 	out_return_p._enum_structs.emplace_back( std::pmr::vector<std::pmr::wstring>{ get_memory_resource() } );
 	out_return_p._enum_structs.back().push_back( std::move(l_identifier) );
@@ -262,7 +273,7 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		for (const std::pmr::wstring& identifier : header_file._archetype_base_children) // Archetypes
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
-			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, ::FE::framework::initializer&)> >(\"";
+			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, const ::FE::framework::initializer&)> >(\"";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::framework::ECS::instanciate_entity_from_initializer<";
 			l_generated_code += identifier;
@@ -312,12 +323,14 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		}
 
 
-		for (const std::pmr::wstring& identifier : header_file._c_style_system_functions) // C-style system functions reflection
+		for (const typename reflection_metadata::system_info& system_node : header_file._system_fptrs) // C-style system functions reflection
 		{
-			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::component_base* const)> >(\"";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &";
-			l_generated_code += identifier;
+			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<";
+			l_generated_code += system_node._system_target;
+			l_generated_code += L">(";
+			l_generated_code += system_node._system_call_phase;
+			l_generated_code += L", &";
+			l_generated_code += system_node._system_name;
 			l_generated_code += L");\n";
 		}
 

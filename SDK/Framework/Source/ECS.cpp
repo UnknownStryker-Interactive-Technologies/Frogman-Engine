@@ -24,25 +24,23 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-ECS::ECS(FE::size max_entities_p, FE::size component_type_count_hint_p, FE::size system_count_hint_p) noexcept
+ECS::ECS(FE::size max_entities_p, FE::size component_type_count_hint_p) noexcept
 	:	m_memory_resource(),
 		m_archetype_pool(),
 
-		m_archetype_table(),
+		m_entity_table(),
 		m_component_table(),
-		m_system_table(),
 		m_archetype_default_entities(),
 		m_buffer(),
 		m_fiber_lock(),
 		m_max_entities(max_entities_p)
 {
-	m_archetype_table.reserve(m_max_entities);
+	m_entity_table.reserve(m_max_entities);
 	m_component_table.reserve(component_type_count_hint_p);
-	m_system_table.reserve(system_count_hint_p);
 }
 
 
-void ECS::initialize(framework::initializer_list& initializer_list_p, framework::system_table_initializer_list& system_table_initializer_p) noexcept
+void ECS::initialize(framework::initializer_list&& initializer_list_p) noexcept
 {
 	m_archetype_default_entities = std::move(initializer_list_p);
 	m_buffer = std::pmr::string(&m_memory_resource);
@@ -81,38 +79,6 @@ void ECS::initialize(framework::initializer_list& initializer_list_p, framework:
 		(*l_entity_creator)(this, &l_entity, &l_arguments); // Boom! Magcic!
 		FE_ASSERT(l_entity.is_valid() == true, "Assertion failed: the entity could not be instanciated from the initializer list.");
 	}
-
-
-	for (auto& [system_name, component_type_names] : system_table_initializer_p)
-	{
-		m_buffer.clear();
-		m_buffer.reserve(component_type_names.length());
-
-		FE::task_base* l_task = framework::framework_base::get_framework().get_method_reflection().retrieve(system_name);
-		FE_ASSERT(l_task != nullptr, "Assertion failed: the system function is not found. The system may not be registered.");
-
-		FE::system l_system = l_task->try_get_as_system();
-		FE_ASSERT(l_system != nullptr, "Assertion failed: the system function signature is invalid. The system function must have the signature: void system_name(FE::component_base* const).");
-
-		FE::pair<FE::system, std::pmr::vector<std::size_t>> l_value{ l_system, std::pmr::vector<std::size_t>(&m_memory_resource) };
-		l_value._second.reserve(32);
-		std::pmr::string::size_type l_name_pos = 0;
-		std::pmr::string::size_type l_next_name_pos = component_type_names.find(',', l_name_pos);
-		std::pmr::string::size_type l_name_length = 0;
-
-		while (l_next_name_pos != std::pmr::string::npos)
-		{
-			l_name_length = l_next_name_pos - l_name_pos;
-			m_buffer.resize(l_name_length + 1); // +1 for the null terminator
-			component_type_names.copy(m_buffer.data(), l_name_length, l_name_pos);
-			l_value._second.emplace_back(robin_hood::hash_bytes(m_buffer.c_str(), m_buffer.length()));
-			l_name_pos = l_next_name_pos + 1;
-			l_next_name_pos = component_type_names.find(',', l_name_pos);
-		}
-
-		_FE_MAYBE_UNUSED_ auto l_result = m_system_table.emplace(std::pmr::string(system_name, &m_memory_resource), l_value);
-		FE_ASSERT(l_result.second == true, "Assertion failed: the system was already registered.");
-	}
 }
 
 void ECS::destruct_entity(FE::entity<archetype_base> entt_p) noexcept
@@ -120,11 +86,11 @@ void ECS::destruct_entity(FE::entity<archetype_base> entt_p) noexcept
 	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
 	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-	typename archetype_table::iterator l_probe_result = m_archetype_table.find(entt_p->get_name());
+	typename entity_table::iterator l_probe_result = m_entity_table.find(entt_p->get_name());
 
 	if (l_probe_result->first == entt_p->get_name())
 	{
-		m_archetype_table.erase(l_probe_result);
+		m_entity_table.erase(l_probe_result);
 		return;
 	}
 }
@@ -141,25 +107,13 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const FE::compone
 }
 
 
-std::optional< FE::pair<FE::system, std::pmr::vector<std::size_t>> > ECS::find_system(FE::ASCII* const system_name_p) noexcept
-{
-	m_buffer = system_name_p;
-	auto l_result = m_system_table.find(m_buffer);
-	if (l_result == m_system_table.end())
-	{
-		return std::nullopt;
-	}
-	return l_result->second;
-}
-
-
 initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 {
 	constexpr FE::ASCII* l_function_prefix = "serialize_component_";
 	constexpr FE::ASCII* l_class = "class";
 	constexpr FE::ASCII* l_struct = "struct";
 
-	initializer l_serialized_components;
+	initializer l_serialized_components(&m_memory_resource);
 
 	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
@@ -201,10 +155,10 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 		* The third argument is the memory layout version of the component.
 		*/
 	}
-	return l_serialized_components;
+	return std::move(l_serialized_components);
 }
 // const robin_hood::unordered_map<std::pmr::string, std::pmr::string>& does not compile
-void ECS::deserialize_entity(initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept
+void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept
 {
 	constexpr FE::ASCII* l_function_prefix = "deserialize_component_";
 	constexpr FE::ASCII* l_class = "class";
@@ -277,9 +231,61 @@ archetype_base::~archetype_base() noexcept
 	}
 }
 
+archetype_base::archetype_base(archetype_base&& other_p) noexcept
+	:	m_component_view_table(std::move(other_p.m_component_view_table)),
+		m_name(std::move(other_p.m_name)),
+		m_host(other_p.m_host)
+{}
+
+archetype_base& archetype_base::operator=(archetype_base && other_p) noexcept
+{
+	m_component_view_table = std::move(other_p.m_component_view_table);
+	m_name = std::move(other_p.m_name);
+	m_host = other_p.m_host;
+	return *this;
+}
+
+archetype_base::archetype_base(const archetype_base& other_p) noexcept
+	: m_component_view_table(other_p.m_component_view_table),
+	m_name(other_p.m_name),
+	m_host(other_p.m_host)
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = const_cast<archetype_base*>(&other_p);
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	FE::framework::initializer l_components = other_p.m_host->serialize_entity(l_self);
+	deserialize_entity(l_components);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+}
+
+archetype_base& archetype_base::operator=(const archetype_base& other_p) noexcept
+{
+	FE::entity<FE::archetype_base> l_self;
+	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
+	l_forged_metadata._data = const_cast<archetype_base*>(&other_p);
+	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
+
+	FE::framework::initializer l_components = other_p.m_host->serialize_entity(l_self);
+	deserialize_entity(l_components);
+	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
+	return *this;
+}
+
+archetype_base::archetype_base(framework::ECS& host_p, FE::ASCII* const name_p, const FE::framework::initializer& other_p) noexcept
+	:	m_component_view_table(),
+		m_name(&(host_p.m_memory_resource)),
+		m_host(&host_p)
+{
+	m_name = name_p;
+	deserialize_entity(other_p);
+}
+
 
 void FE::archetype_base::attatch_component(const FE::component_view<component_base>& to_attatch_p) noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;
@@ -292,6 +298,7 @@ void FE::archetype_base::attatch_component(const FE::component_view<component_ba
 
 FE::framework::initializer FE::archetype_base::serialize_entity() noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;
@@ -302,8 +309,9 @@ FE::framework::initializer FE::archetype_base::serialize_entity() noexcept
 	return l_initializer;
 }
 
-void FE::archetype_base::deserialize_entity(FE::framework::initializer& serialized_components_p) noexcept
+void FE::archetype_base::deserialize_entity(const FE::framework::initializer& serialized_components_p) noexcept
 {
+	FE_ASSERT(m_host != nullptr, "Assertion failed: the archetype's host ECS is null.");
 	FE::entity<FE::archetype_base> l_self;
 	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
 	l_forged_metadata._data = this;
@@ -313,25 +321,28 @@ void FE::archetype_base::deserialize_entity(FE::framework::initializer& serializ
 	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
 }
 
+FE::memory_resource* archetype_base::get_ecs_memory_resource() noexcept { return &m_host->m_memory_resource; }
 
 
 
-component_base::component_base() noexcept
-	: m_metadata()
-{
-}
 
+component_base::component_base(component_base&& other_p) noexcept
+	:	m_metadata(std::move(other_p.m_metadata))
+{}
 
 FE::ASCII* component_base::get_typename() const noexcept { return m_metadata->_typename; }
 FE::ASCII* component_base::get_memory_layout_version() const noexcept { return m_metadata->_memory_layout_version; }
 
 
-internal::ECS::gc_metadata::gc_metadata() noexcept
-	: _member_components(),
-	_member_entities(),
-	_is_circular_reference(false)
+
+
+internal::ECS::entity_metadata::entity_metadata() noexcept
+	:	_group(),
+		_index(0)
 {
 }
+
+
 
 
 internal::ECS::component_metadata::component_metadata() noexcept
@@ -339,9 +350,9 @@ internal::ECS::component_metadata::component_metadata() noexcept
 	_group(),
 	_index(0),
 	_typename(nullptr),
+	_typeid(),
 	_memory_layout_version("default")
-{
-}
+{}
 
 
 END_NAMESPACE

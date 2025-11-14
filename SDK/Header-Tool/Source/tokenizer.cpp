@@ -329,6 +329,8 @@ token header_tool_engine::__tokenize_identifiable(typename file_buffer_t::const_
 		case Vocabulary::_FrogmanEngineMethodReflectionMacro:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
+			_FE_FALLTHROUGH_;
+		case Vocabulary::_FrogmanEngineSystemAttributeMacro:
 			if (FE::algorithm::string::compare_ranged( (FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
 													   tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() } ) == true)
 			{

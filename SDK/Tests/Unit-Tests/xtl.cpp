@@ -51,7 +51,7 @@ TEST(XTL_list, default_constructor)
 {
     FE::list<int> my_list;
     EXPECT_EQ(my_list.size(), 0u);
-    EXPECT_TRUE(my_list.empty());
+    EXPECT_TRUE(my_list.is_empty());
     EXPECT_EQ(my_list.begin(), my_list.end());
 }
 
@@ -60,7 +60,7 @@ TEST(XTL_list, allocator_constructor)
     FE::list<int>::allocator_type alloc;
     FE::list<int> l(alloc);
     EXPECT_EQ(l.size(), 0u);
-    EXPECT_TRUE(l.empty());
+    EXPECT_TRUE(l.is_empty());
 }
 
 TEST(XTL_list, count_value_constructor)
@@ -117,7 +117,7 @@ TEST(XTL_list, move_constructor_leaves_source_empty)
     FE::list<int> moved = std::move(src);
     EXPECT_EQ(moved.size(), 2u);
     EXPECT_EQ(src.size(), 0u);
-    EXPECT_TRUE(src.empty());
+    EXPECT_TRUE(src.is_empty());
     EXPECT_EQ(moved.front(), 5);
     EXPECT_EQ(moved.back(), 6);
 }
@@ -172,7 +172,7 @@ TEST(XTL_list_modifiers, clear_resets_list)
     EXPECT_EQ(l.size(), 5u);
     l.clear();
     EXPECT_EQ(l.size(), 0u);
-    EXPECT_TRUE(l.empty());
+    EXPECT_TRUE(l.is_empty());
     EXPECT_EQ(l.begin(), l.end());
 }
 

@@ -32,12 +32,11 @@ limitations under the License.
 #include <FE/framework/reflection.hxx>
 #include <FE/framework/thread_id.hxx>
 
-CLASS_FORWARD_DECLARATION(FE, archetype_base);
 CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE::framework::internal::processors, fiber_stack_allocator);
-CLASS_FORWARD_DECLARATION(FE::framework, game_thread);
+CLASS_FORWARD_DECLARATION(FE::framework::internal::processors, processor);
+CLASS_FORWARD_DECLARATION(FE::internal, game_processor);
 CLASS_FORWARD_DECLARATION(FE, memory_resource);
-CLASS_FORWARD_DECLARATION(FE::framework, processor);
 CLASS_FORWARD_DECLARATION(FE::framework, processors);
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
 
@@ -66,19 +65,13 @@ public:
 };
 
 
-/*
-The framework_base class serves as a foundational component for a framework
-managing program options, memory resources, and task scheduling, while providing mechanisms for launching, running, and shutting down the framework
-along with reflection capabilities for methods, properties, and enums.
-*/
 class framework_base
 {
 	friend int ::main(FE::int32 argc_p, FE::ASCII** argv_p);
 
-	friend class archetype_base;
 	friend class FE::framework::internal::processors::fiber_stack_allocator;
-	friend class game_thread;
-	friend class processor;
+	friend class FE::framework::internal::processors::processor;
+	friend class FE::internal::game_processor;
 	friend class processors;
 	
 protected:

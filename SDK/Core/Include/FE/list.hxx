@@ -690,7 +690,7 @@ public: // Member functions
 	}
 
 
-	_FE_FORCE_INLINE_ constexpr allocator_type get_allocator() const noexcept { return m_allocator; }
+	_FE_FORCE_INLINE_ constexpr const allocator_type& get_allocator() const noexcept { return m_allocator; }
 
 
 
@@ -745,7 +745,7 @@ public: // Member functions
 
 
 	// Capacity
-	_FE_FORCE_INLINE_ constexpr boolean empty() const noexcept { return m_size == 0; }
+	_FE_FORCE_INLINE_ constexpr boolean is_empty() const noexcept { return m_size == 0; }
 	_FE_FORCE_INLINE_ constexpr size_type size() const noexcept { return m_size; }
 
 
