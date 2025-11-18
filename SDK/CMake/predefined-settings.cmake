@@ -15,17 +15,16 @@ Available -D macro options:
 Frogman Engine SIMD Extension Requirements:
 an x86-64 cpu with AVX and SSE2 (AVX-512F is optional). Please Check if the x86-64 cpu has ymm and xmm vector registers.
 
-This project uses AVX and SSE2 as the default SIMD on x86-64 CPUs.
+This project uses AVX, AVX2, and SSE2 on x86-64 CPUs by the default.
 The intrinsics option can be added by -DSIMD=
-The available x86-64 SIMD options for this project:
--DSIMD=AVX2
+The available x86-64 SIMD option for this project:
 -DSIMD=AVX512F
 ")
 
-IF(NOT ((CMAKE_CXX_STANDARD EQUAL 17) OR (CMAKE_CXX_STANDARD EQUAL 20) OR (CMAKE_CXX_STANDARD EQUAL 23)))
-    MESSAGE("Frogman Engine supports C++ 17, C++ 20, and C++ 23.")
-	MESSAGE(WARNING "No C++ standard version has been specified: this project will use C++17 as the standard.")
-	SET(CMAKE_CXX_STANDARD 17)
+IF(NOT ((CMAKE_CXX_STANDARD EQUAL 20) OR (CMAKE_CXX_STANDARD EQUAL 23)))
+    MESSAGE("Frogman Engine supports C++ 20 and C++ 23.")
+	MESSAGE(WARNING "No C++ standard version has been specified: this project will use C++20 as the standard.")
+	SET(CMAKE_CXX_STANDARD 20)
 ENDIF()
 
 IF(NOT ((CMAKE_SYSTEM_PROCESSOR STREQUAL "x64") OR (CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")))
@@ -86,25 +85,17 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 	ADD_LINK_OPTIONS("$<$<CONFIG:MINSIZEREL>:/NODEFAULTLIB:libcmtd.lib>")
 
 
-	IF(SIMD STREQUAL AVX2)
-		ADD_COMPILE_OPTIONS(/arch:AVX2)
-		MESSAGE(STATUS "AVX-2 has been selected.")
-
-	ELSEIF(SIMD STREQUAL AVX512F)
+	IF(SIMD STREQUAL AVX512F)
 		ADD_COMPILE_OPTIONS(/arch:AVX512)
 		MESSAGE(STATUS "AVX-512F has been selected.")
 
 	ELSE()
-		ADD_COMPILE_OPTIONS(/arch:AVX)
-		MESSAGE(STATUS "AVX has been selected.")
+		ADD_COMPILE_OPTIONS(/arch:AVX2)
+		MESSAGE(STATUS "AVX2 has been selected.")
 	ENDIF()
 
 
-	IF(CMAKE_CXX_STANDARD EQUAL 17)
-		ADD_COMPILE_OPTIONS(/std:c++17)
-		MESSAGE(STATUS "C++17 has been selected.")
-
-	ELSEIF(CMAKE_CXX_STANDARD EQUAL 20)
+	IF(CMAKE_CXX_STANDARD EQUAL 20)
 		ADD_COMPILE_OPTIONS(/std:c++20)
 		MESSAGE(STATUS "C++20 has been selected.")
 
@@ -129,13 +120,7 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x
         MESSAGE(FATAL_ERROR "Could Not Find Any of Executable Clang C++ compilers.")
     ENDIF()
 
-
-	IF(DEFINED ENABLE_MEMORY_TRACKER)
-		MESSAGE(STATUS "Enabled the option: ENABLE_MEMORY_TRACKER")
-		ADD_COMPILE_OPTIONS(-D_ENABLE_MEMORY_TRACKER_)
-	ENDIF()
-
-
+	
 	# Common Compile Options.
 	ADD_COMPILE_OPTIONS(-D_CLANG_=1 -march=x86-64 -msse2 -mavx -frtti -ffunction-sections -finput-charset=UTF-8 -fexec-charset=UTF-8)
 
@@ -159,25 +144,17 @@ ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x
 	ADD_LINK_OPTIONS(-pthread -ldl)
 	
 
-	IF(SIMD STREQUAL AVX2)
-		ADD_COMPILE_OPTIONS(-mavx2)
-		MESSAGE(STATUS "AVX-2 has been added to the SIMD intrinsic extension list.")
-
-	ELSEIF(SIMD STREQUAL AVX512F)
+	IF(SIMD STREQUAL AVX512F)
 		ADD_COMPILE_OPTIONS(-mavx512f )
 		MESSAGE(STATUS "AVX-512F has been added to the SIMD intrinsic extension list.")
 
 	ELSE()
-		ADD_COMPILE_OPTIONS(-mavx)
-		MESSAGE(STATUS "AVX has been added to the SIMD intrinsic extension list.")
+		ADD_COMPILE_OPTIONS(-mavx -mavx2)
+		MESSAGE(STATUS "AVX and AVX2 have been added to the SIMD intrinsic extension list.")
 	ENDIF()
 
 
-	IF(CMAKE_CXX_STANDARD EQUAL 17)
-		ADD_COMPILE_OPTIONS(-std=c++17)
-		MESSAGE(STATUS "C++17 has been selected.")
-
-	ELSEIF(CMAKE_CXX_STANDARD EQUAL 20)
+	IF(CMAKE_CXX_STANDARD EQUAL 20)
 		ADD_COMPILE_OPTIONS(-std=c++20)
 		MESSAGE(STATUS "C++20 has been selected.")
 
