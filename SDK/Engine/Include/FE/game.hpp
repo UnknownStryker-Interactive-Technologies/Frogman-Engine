@@ -19,6 +19,10 @@ limitations under the License.
 #include <FE/framework/ECS.hxx>
 #include <FE/world.hpp>
 
+#include <absl/container/flat_hash_map.h>
+
+#include <boost/filesystem/path.hpp>
+
 
 
 
@@ -29,18 +33,22 @@ class game : public FE::archetype_base
 {
 	using base_type = FE::archetype_base;
 
-	std::pmr::vector< FE::smart_ptr<FE::world, FE::RefType::_Owner> > m_world_list;
-	
+	absl::flat_hash_map<std::pmr::string, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
+	FE::hash<std::pmr::string>,
+	std::equal_to<std::pmr::string>,
+		std::pmr::polymorphic_allocator < std::pair<const std::pmr::string, FE::smart_ptr<FE::world, FE::RefType::_Owner>> >> m_world_list;
+
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> m_current_world;
 	// player list, current player
 
 public:
 	game(framework::ECS& engine_ecs_p) noexcept;
-
 	virtual ~game() noexcept override = default;
 
-	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() noexcept;
-	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const std::filesystem::path& path_to_world_file_p) noexcept;
-	void transition_world(const FE::smart_ptr<FE::world, FE::RefType::_Observer>& new_world_p) noexcept;
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() const noexcept { return m_current_world; }
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() noexcept { return m_current_world; }
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const std::pmr::string& path_to_world_file_p) noexcept;
+	void transition_world(const std::pmr::string& new_world_p) noexcept;
 };
 
 

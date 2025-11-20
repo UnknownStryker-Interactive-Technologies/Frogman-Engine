@@ -27,6 +27,8 @@ limitations under the License.
 // robin hood hash
 #include <robin_hood.h>
 
+#include <FE/bitmask.hxx>
+
 
 
 
@@ -38,23 +40,28 @@ enum struct HashInputDataType : uint8
 	_Address = 0,
 	_CString = 1,
 	_StringClass = 2,	
-	_Binary = 3
+	_Binary = 3,
+	_Bitmask = 4
 };
 
 template<typename T>
 _FE_FORCE_INLINE_ constexpr HashInputDataType evaluate_hash_input_data_type()
 {
-	if constexpr (FE::is_constant_string<T>::value == true)
+	if constexpr (FE::is_constant_string_v<T>)
 	{
 		return HashInputDataType::_CString;
 	}
-	else if constexpr (std::is_pointer<T>::value == true)
+	else if constexpr (std::is_pointer_v<T>)
 	{
 		return HashInputDataType::_Address;
 	}
-	else if constexpr (FE::is_string_class<T>::value == true)
+	else if constexpr (FE::is_string_class_v<T>)
 	{
 		return HashInputDataType::_StringClass;
+	}
+	else if constexpr (std::same_as<T, FE::bitmask>)
+	{
+		return HashInputDataType::_Bitmask;
 	}
 
 	return HashInputDataType::_Binary;
@@ -142,6 +149,26 @@ public:
 };
 
 template<typename T, HasherType HasherType>
+class hash<T, HasherType, HashInputDataType::_Bitmask> : public hash_base
+{
+public:
+	using base = hash_base;
+	static constexpr HashInputDataType hash_input_data_type = HashInputDataType::_Bitmask;
+
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
+	{
+		if constexpr (HasherType == HasherType::_MurmurHash)
+		{
+			return robin_hood::hash_bytes(value_p.data(), value_p.capacity_in_bytes());
+		}
+		else if constexpr (HasherType == HasherType::_CityHash)
+		{
+			return CityHash64(reinterpret_cast<const char*>(value_p.data()), value_p.capacity_in_bytes());
+		}
+	}
+};
+
+template<typename T, HasherType HasherType>
 class hash<T, HasherType, HashInputDataType::_Binary> : public hash_base
 {
 public:
@@ -150,6 +177,8 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(const T& value_p) const noexcept
 	{
+		static_assert(std::is_trivially_copyable_v<T>, "Static assertion failed: only trivially copyable types can be hashed using binary hashing.");
+
 		if constexpr (HasherType == HasherType::_MurmurHash)
 		{
 			return robin_hood::hash_bytes(&value_p, sizeof(T));

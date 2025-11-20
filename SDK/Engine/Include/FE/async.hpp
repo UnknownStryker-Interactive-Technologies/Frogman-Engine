@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/processors.hxx>
-#include <FE/engine.hxx>
+#include <FE/engine.hpp>
 
 
 
@@ -32,17 +32,17 @@ class async // async API
 public:
 	_FE_FORCE_INLINE_ static void schedule_task(const framework::task& task_p) noexcept
 	{
-		FE::engine::__get_engine().m_processors->schedule_task(task_p);
+		FE::engine::get_engine().get_processors().schedule_task(task_p);
 	}
 
-	_FE_FORCE_INLINE_ static task_handle schedule_waitable_task(framework::task& task_p) noexcept
+	_FE_FORCE_INLINE_ static task_handle schedule_waitable_task(const framework::task& task_p) noexcept
 	{
-		FE::engine::__get_engine().m_processors->schedule_waitable_task(task_p);
+		FE::engine::get_engine().get_processors().schedule_waitable_task(task_p);
 	}
 
-	_FE_FORCE_INLINE_ static void shutdown() noexcept
+	_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
 	{
-		FE::engine::__get_engine().m_processors->shutdown();
+		return FE::engine::get_engine().get_async_processor_count();
 	}
 
 public:

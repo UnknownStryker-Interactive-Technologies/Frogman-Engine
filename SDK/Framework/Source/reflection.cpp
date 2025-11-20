@@ -10,7 +10,7 @@ method_registry::method_registry(FE::size map_capacity_p, std::pmr::memory_resou
 	: m_lock(),
 	m_pool(pool_p),
 	m_method_registry(map_capacity_p),
-	m_system_table(syscall_phase_count, typename system_table::value_type(map_capacity_p, pool_p), pool_p)
+	m_system_table(pool_p)
 {
 }
 

@@ -13,21 +13,9 @@ INCLUDE_DIRECTORIES(${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include)
 
 RUN_FROGMAN_HEADER_TOOL(${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/error_code.hpp -fno-copyright-notice) 
 
-SET(FHT_SOURCE_FILES
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/error_code.hpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/header_tool_engine.hpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/program_options.hpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/reflection_tree.hpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/vocabulary.hpp
-
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/read_copyright_notice.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/header_tool_engine.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/main.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/tokenizer.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/program_options.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/reflection_code_generator.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/symbol_counter.cpp
-${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/tree_builder.cpp
+FILE(GLOB FHT_SOURCE_FILES
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Include/*.hpp
+${FE_HEADER_TOOL_CMAKE_CURRENT_LIST_DIR}/../Source/*.cpp
 )
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} ${FHT_SOURCE_FILES} generated.cpp)

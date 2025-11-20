@@ -186,7 +186,7 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 			__skip_code_block(iterator, token_list_p.end());
 			break;
 
-		case Vocabulary::_LeftParen:
+		case Vocabulary::_FrogmanEngineSystemAttributeMacro:
 			{
 				std::optional<system_node> l_system_function_name = __try_build_c_style_system_function_node(u8"", iterator, token_list_p.end());
 				if (l_system_function_name == std::nullopt)
@@ -194,6 +194,17 @@ _FE_NODISCARD_ header_file_root header_tool_engine::__try_build_reflection_tree(
 					break;
 				}
 				l_root._system_fptrs.push_back(l_system_function_name);
+
+				while (iterator->_vocabulary != Vocabulary::_Semicolon)
+				{
+					if (iterator->_vocabulary == Vocabulary::_LeftCurlyBracket)
+					{
+						__skip_code_block(iterator, token_list_p.end());
+						break;
+					}
+					THROW_CPP_SYNTAX_ERROR(iterator->_vocabulary == Vocabulary::_EndOfCode, "C++ code syntax Error: \nThe line number: ${%u32@0} \n';' is missing from the end of the C-style system function declaration.", &(iterator->_line_number));
+					++iterator;
+				}
 			}
 			break;
 
@@ -275,7 +286,6 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 	_FE_NODEFAULT_;
 	}
 
-	bool l_is_template = false;
 	for (; out_token_iterator_p != end_p; ++out_token_iterator_p)
 	{
 		switch (out_token_iterator_p->_vocabulary)
@@ -283,7 +293,6 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 		case Vocabulary::_Namespace:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_BeginNamespace:
-			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'namespace.'", &(out_token_iterator_p->_line_number));
 			l_node._nested_namespaces.push_back( __try_build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
@@ -303,52 +312,36 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 			{
 				break;
 			}
+
 			__skip_template_args(out_token_iterator_p);
-			l_is_template = true;
+			if (__is_forward_declaration(out_token_iterator_p) == false)
+			{
+				__skip_code_block(out_token_iterator_p, end_p);
+			}
 			break;
 
 		case Vocabulary::_Semicolon:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_Using:
-			l_is_template = false;
 			break;
 
 		case Vocabulary::_Class:
 			if (__is_forward_declaration(out_token_iterator_p) == true)
 			{
-				l_is_template = false;
 				break;
 			}
-
-			if (l_is_template == true)
-			{
-				__skip_code_block(out_token_iterator_p, end_p);
-				l_is_template = false;
-				break;
-			}
-
 			l_node._classes.push_back( __try_build_class_node_mutually_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_Struct:
 			if (__is_forward_declaration(out_token_iterator_p) == true)
 			{
-				l_is_template = false;
 				break;
 			}
-
-			if (l_is_template == true)
-			{
-				__skip_code_block(out_token_iterator_p, end_p);
-				l_is_template = false;
-				break;
-			}
-
 			l_node._structs.push_back( __try_build_struct_node_mutually_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
 		case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
-			THROW_CPP_SYNTAX_ERROR(l_is_template == true, "C++ code syntax Error: \nThe line number: ${%u32@0} \nCan't place 'template' before 'FE_ENUM_STRUCT().'", &(out_token_iterator_p->_line_number));
 			l_node._enum_structs.push_back( __try_build_enum_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p) );
 			break;
 
@@ -357,7 +350,7 @@ _FE_NODISCARD_ std::optional<namespace_node> header_tool_engine::__try_build_nam
 			__skip_code_block(out_token_iterator_p, end_p);
 			break;
 
-		case Vocabulary::_LeftParen:
+		case Vocabulary::_FrogmanEngineSystemAttributeMacro:
 			{
 				std::optional<system_node> l_system_function_name = __try_build_c_style_system_function_node(l_node._target_namespace_name, out_token_iterator_p, end_p);
 				if (l_system_function_name == std::nullopt)
@@ -721,79 +714,10 @@ _FE_NODISCARD_ std::optional<enum_struct_node> header_tool_engine::__try_build_e
 
 _FE_NODISCARD_ std::optional<system_node> header_tool_engine::__try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 {
-	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_LeftParen);
-	typename std::pmr::list<token>::const_iterator l_iterator = out_token_iterator_p;
-
-	identifier l_system_parameter(get_memory_resource());
-	l_system_parameter.reserve(64);
-
-	while (out_token_iterator_p != end_p)
-	{
-		++out_token_iterator_p;
-		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightParen)
-		{
-			break;
-		}
-		l_system_parameter += out_token_iterator_p->_code;
-	}
+	FE_ASSERT(out_token_iterator_p->_vocabulary == Vocabulary::_FrogmanEngineSystemAttributeMacro);
 
 	system_node l_node;
-	if (l_system_parameter.length() == 0)
-	{
-		return std::nullopt;
-	}
-	l_node._sysname = identifier(get_memory_resource());
-	l_node._sysname.reserve(64);
-	l_node._sysname = parent_namespace_p;
-	l_node._sysname += u8"::";
-
-	if ((false == FE::algorithm::string::space_insensitive_contains(l_system_parameter.c_str(), l_system_parameter.length(), u8"component_base* const"))
-		|| (identifier::npos != l_system_parameter.find(','))) // it is not a valid C-style system function if there are multiple parameters.)
-	{
-		return std::nullopt;
-	}
-
-
-	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_LeftParen);
-	--l_iterator;
-	if (l_iterator->_vocabulary == Vocabulary::_RightParen)
-	{
-		return std::nullopt; // it is not a valid C-style system function if there is no return type.
-	}
-
-	if (l_iterator->_vocabulary != Vocabulary::_Undefined)
-	{
-		return std::nullopt; // it is not a valid C-style system function if there is no return type.
-	}
-	l_node._sysname += l_iterator->_code;
-
-	--l_iterator;
-	if (l_iterator->_code != u8"void")
-	{
-		return std::nullopt; // it is not a valid C-style system function if the return type is not 'void'.
-	}
-
-
-
-
-	while (l_iterator->_vocabulary != Vocabulary::_FrogmanEngineSystemAttributeMacro)
-	{
-		switch (l_iterator->_vocabulary)
-		{
-		case Vocabulary::_Semicolon:
-			_FE_FALLTHROUGH_;
-		case Vocabulary::_LeftCurlyBracket:
-			_FE_FALLTHROUGH_;
-		case Vocabulary::_EndOfCode:
-			return std::nullopt; // it is not a valid C-style system function.
-
-		default:
-			break;
-		}
-
-		++l_iterator;
-	}
-	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_FrogmanEngineSystemAttributeMacro);
+	typename std::pmr::list<token>::const_iterator l_iterator = out_token_iterator_p;
 
 	while (l_iterator->_vocabulary != Vocabulary::_LeftParen)
 	{
@@ -843,7 +767,7 @@ _FE_NODISCARD_ std::optional<system_node> header_tool_engine::__try_build_c_styl
 		return std::nullopt;
 	}
 
-	while (l_iterator->_vocabulary != Vocabulary::_RightParen)
+	while (l_iterator->_vocabulary != Vocabulary::_Comma)
 	{
 		switch (l_iterator->_vocabulary)
 		{
@@ -861,22 +785,74 @@ _FE_NODISCARD_ std::optional<system_node> header_tool_engine::__try_build_c_styl
 		++l_iterator;
 	}
 
-	while (out_token_iterator_p != end_p)
+	while (l_iterator->_vocabulary != Vocabulary::_RightParen)
 	{
-		switch (out_token_iterator_p->_vocabulary)
+		switch (l_iterator->_vocabulary)
 		{
 		case Vocabulary::_Semicolon:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_LeftCurlyBracket:
 			_FE_FALLTHROUGH_;
 		case Vocabulary::_EndOfCode:
-			return l_node; // it is not a valid C-style system function.
+			return std::nullopt; // it is not a valid C-style system function.
 
 		default:
 			break;
 		}
-		++out_token_iterator_p;
+		l_node._world_category += l_iterator->_code;
+		++l_iterator;
 	}
+
+
+
+
+	identifier l_system_parameter(get_memory_resource());
+	l_system_parameter.reserve(64);
+
+	while (out_token_iterator_p != end_p)
+	{
+		++out_token_iterator_p;
+		if (out_token_iterator_p->_vocabulary == Vocabulary::_RightParen)
+		{
+			break;
+		}
+		l_system_parameter += out_token_iterator_p->_code;
+	}
+
+	if (l_system_parameter.length() == 0)
+	{
+		return std::nullopt;
+	}
+	l_node._sysname = identifier(get_memory_resource());
+	l_node._sysname.reserve(64);
+	l_node._sysname = parent_namespace_p;
+	l_node._sysname += u8"::";
+
+	if ((false == FE::algorithm::string::space_insensitive_contains(l_system_parameter.c_str(), l_system_parameter.length(), u8"component_base* const"))
+		|| (identifier::npos != l_system_parameter.find(','))) // it is not a valid C-style system function if there are multiple parameters.)
+	{
+		return std::nullopt;
+	}
+
+	FE_ASSERT(l_iterator->_vocabulary == Vocabulary::_LeftParen);
+	--l_iterator;
+	if (l_iterator->_vocabulary == Vocabulary::_RightParen)
+	{
+		return std::nullopt; 
+	}
+
+	if (l_iterator->_vocabulary != Vocabulary::_Undefined)
+	{
+		return std::nullopt;
+	}
+	l_node._sysname += l_iterator->_code;
+
+	--l_iterator;
+	if (l_iterator->_code != u8"void")
+	{
+		return std::nullopt; // it is not a valid C-style system function if the return type is not 'void'.
+	}
+
 
 	return l_node;
 }

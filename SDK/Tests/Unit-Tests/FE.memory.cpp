@@ -10,12 +10,10 @@
 #include <FE/algorithm/string.hxx>
 #include <FE/bitmask.hxx>
 
-using FE::bitmask;
-
 
 TEST(BitmaskSmallMode, ReadWriteBits)
 {
-	bitmask<> b;
+	FE::bitmask b;
 	EXPECT_FALSE(b.read_at(0));
 
 	b.write_at(0, true);
@@ -35,7 +33,7 @@ TEST(BitmaskConstructFromUint64, MSB_and_LSB)
 {
 	// index 0 is leftmost (MSB), index 63 is rightmost (LSB)
 	constexpr uint64 value = (uint64(1) << 63) | uint64(1);
-	bitmask<> b(value);
+	FE::bitmask b(value);
 
 	EXPECT_TRUE(b.read_at(0));   // MSB
 	EXPECT_TRUE(b.read_at(63));  // LSB
@@ -46,7 +44,7 @@ TEST(BitmaskConstructFromUint64, MSB_and_LSB)
 TEST(BitmaskReservePreserve, SmallToLarge)
 {
 	// start with small mode, then reserve larger capacity and ensure bits are preserved
-	bitmask<> b(1);
+	FE::bitmask b(1);
 	EXPECT_TRUE(b.read_at(0));
 
 	b.reserve(128); // transition to large mode
@@ -60,8 +58,8 @@ TEST(BitmaskReservePreserve, SmallToLarge)
 
 TEST(BitmaskBitwiseOperatorsSmall, AndOrXor)
 {
-	bitmask<> a;
-	bitmask<> c;
+	FE::bitmask a;
+	FE::bitmask c;
 
 	a.write_at(0, true);
 	a.write_at(5, true);
@@ -70,21 +68,21 @@ TEST(BitmaskBitwiseOperatorsSmall, AndOrXor)
 	c.write_at(7, true);
 
 	// AND
-	bitmask<> and_copy = a;
+	FE::bitmask and_copy = a;
 	and_copy &= c;
 	EXPECT_FALSE(and_copy.read_at(0));
 	EXPECT_TRUE(and_copy.read_at(5));
 	EXPECT_FALSE(and_copy.read_at(7));
 
 	// OR
-	bitmask<> or_copy = a;
+	FE::bitmask or_copy = a;
 	or_copy |= c;
 	EXPECT_TRUE(or_copy.read_at(0));
 	EXPECT_TRUE(or_copy.read_at(5));
 	EXPECT_TRUE(or_copy.read_at(7));
 
 	// XOR
-	bitmask<> xor_copy = a;
+	FE::bitmask xor_copy = a;
 	xor_copy ^= c;
 	EXPECT_TRUE(xor_copy.read_at(0));
 	EXPECT_FALSE(xor_copy.read_at(5)); // was set in both -> cleared
@@ -94,8 +92,8 @@ TEST(BitmaskBitwiseOperatorsSmall, AndOrXor)
 TEST(BitmaskEqualityAndHash, EqualSmall)
 {
 	const uint64 v = 0x0123456789ABCDEFULL;
-	bitmask<> a(v);
-	bitmask<> b(v);
+	FE::bitmask a(v);
+	FE::bitmask b(v);
 
 	EXPECT_TRUE(a == b);
 	EXPECT_FALSE(a != b);

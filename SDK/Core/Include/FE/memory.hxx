@@ -185,10 +185,6 @@ _FE_MAYBE_UNUSED_ extern FE::uint64 system_page_size;
 _FE_MAYBE_UNUSED_ extern FE::uint64 system_large_page_size;
 
 
-using reserve = size;
-using resize_to = size;
-using extend = size;
-
 // The FE::is_power_of_two function is a constexpr function that checks if a given size_t value is a power of two by using a bitwise operation.
 _FE_CONSTEXPR17_ FE::boolean is_power_of_two(FE::size value_p) noexcept
 {
@@ -1655,6 +1651,8 @@ public:
 		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
 		m_resource->deallocate(ptr_p, sizeof(T) * count_p, alignof(T));
 	}
+
+	_FE_NODISCARD_ _FE_FORCE_INLINE_ std::pmr::memory_resource* resource() const noexcept { return m_resource; }
 };
 
 

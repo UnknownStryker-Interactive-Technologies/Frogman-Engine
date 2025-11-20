@@ -76,7 +76,14 @@ _FE_NODISCARD_ header_tool_engine::reflection_metadata header_tool_engine::__gen
 			continue;
 		}
 
-		typename reflection_metadata::system_info l_system_node{ std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()) };
+		typename reflection_metadata::system_info l_system_node
+		{ 
+			std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()), 
+			std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource())
+		};
+
+		l_system_node._world_category.resize(c_style_system_function->_world_category.length());
+		std::mbstowcs(l_system_node._world_category.data(), reinterpret_cast<const char*>(c_style_system_function->_world_category.data()), c_style_system_function->_world_category.length());
 
 		l_system_node._system_name.resize(c_style_system_function->_sysname.length());
 		std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
@@ -139,7 +146,14 @@ void header_tool_engine::__output_namespace_metadata_recursive(reflection_metada
 			continue;
 		}
 
-		typename reflection_metadata::system_info l_system_node{ std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()) };
+		typename reflection_metadata::system_info l_system_node
+		{
+			std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource()),
+			std::pmr::wstring(get_memory_resource()), std::pmr::wstring(get_memory_resource())
+		};
+
+		l_system_node._world_category.resize(c_style_system_function->_world_category.length());
+		std::mbstowcs(l_system_node._world_category.data(), reinterpret_cast<const char*>(c_style_system_function->_world_category.data()), c_style_system_function->_world_category.length());
 
 		l_system_node._system_name.resize(c_style_system_function->_sysname.length());
 		std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
@@ -273,16 +287,11 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 		for (const std::pmr::wstring& identifier : header_file._archetype_base_children) // Archetypes
 		{
 			l_generated_code += l_ECS_reflection_registry_frame; // Archetype instantiator reflection
-			l_generated_code += L"::FE::entity<::FE::archetype_base>(::FE::ASCII* const, const ::FE::framework::initializer&)> >(\"";
+			l_generated_code += L"::FE::entity<::FE::archetype_base>(const ::FE::framework::initializer&)> >(\"";
 			l_generated_code += identifier;
 			l_generated_code += L"\", &::FE::framework::ECS::instanciate_entity_from_initializer<";
 			l_generated_code += identifier;
 			l_generated_code += L">);\n";
-
-			l_generated_code += l_ECS_reflection_registry_frame; // Archetype destructor reflection
-			l_generated_code += L"void(::FE::entity<::FE::archetype_base>)> >(\"~";
-			l_generated_code += identifier;
-			l_generated_code += L"\", &::FE::framework::ECS::destruct_entity);\n\n";
 		}
 
 
@@ -328,6 +337,8 @@ void header_tool_engine::__generate_reflection_code(const reflection_metadata_se
 			l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<";
 			l_generated_code += system_node._system_target;
 			l_generated_code += L">(";
+			l_generated_code += system_node._world_category;
+			l_generated_code += L", ";
 			l_generated_code += system_node._system_call_phase;
 			l_generated_code += L", &";
 			l_generated_code += system_node._system_name;

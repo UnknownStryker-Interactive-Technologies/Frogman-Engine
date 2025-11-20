@@ -39,7 +39,7 @@ class window_control // window control API
 public:
 	_FE_FORCE_INLINE_ static void set_window_cursor_mode(CursorMode mode_p) noexcept
 	{
-		glfwSetInputMode(FE::engine::__get_engine().m_renderer->get_window(), GLFW_CURSOR, static_cast<FE::int32>(mode_p));
+		glfwSetInputMode(FE::engine::get_engine().m_renderer->get_window(), GLFW_CURSOR, static_cast<FE::int32>(mode_p));
 	}
 
 public:

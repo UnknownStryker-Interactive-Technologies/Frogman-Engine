@@ -14,50 +14,6 @@
 BEGIN_NAMESPACE(FE::framework)
 
 
-task::task(const task& other_p) noexcept
-	:	m_notifier(other_p.m_notifier),
-		_priority(other_p._priority),
-		_system(other_p._system),
-		_component(other_p._component)
-{
-}
-task& task::operator=(const task& other_p) noexcept
-{
-	m_notifier = other_p.m_notifier;
-	_priority = other_p._priority;
-	_system = other_p._system;
-	_component = other_p._component;
-	return *this;
-}
-
-task::task(task&& other_p) noexcept
-	:	m_notifier(std::move(other_p.m_notifier)),
-		_priority(other_p._priority),
-		_system(other_p._system),
-		_component(other_p._component)
-{
-	other_p._priority = TaskType::_Ordinary;
-	other_p._system = nullptr;
-	other_p._component = nullptr;
-}
-task& task::operator=(task&& other_p) noexcept
-{
-	m_notifier = std::move(other_p.m_notifier);
-
-	_priority = other_p._priority;
-	other_p._priority = TaskType::_Ordinary;
-
-	_system = other_p._system;
-	other_p._system = nullptr;
-
-	_component = other_p._component;
-	other_p._component = nullptr;
-	return *this;
-}
-
-
-
-
 task_queue::task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept
 	:	m_urgent_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
 		m_ordinary_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
@@ -326,7 +282,7 @@ void processors::schedule_task(const framework::task& task_p) noexcept
 	m_processors[l_target_processor_index].wake();
 }
 
-typename task::handle processors::schedule_waitable_task(framework::task& task_p) noexcept
+typename task::handle processors::schedule_waitable_task(const framework::task& task_p) noexcept
 {
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");

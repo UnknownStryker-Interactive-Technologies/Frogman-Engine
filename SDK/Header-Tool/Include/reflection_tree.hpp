@@ -63,6 +63,7 @@ struct enum_struct_node
 
 struct system_node
 {
+	identifier _world_category;
 	identifier _sysname;
 	identifier _systarget;
 	identifier _syscall_phase;

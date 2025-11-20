@@ -26,8 +26,6 @@ BEGIN_NAMESPACE(FE)
 
 class level
 {
-	FE::list<FE::internal::ECS::entities, FE::page_aligned_allocator<FE::internal::ECS::entities>> m_level_entities;
-
 public:
 	level() noexcept = default;
 	~level() noexcept = default;

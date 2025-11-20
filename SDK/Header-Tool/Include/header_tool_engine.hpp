@@ -47,7 +47,7 @@ using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 
 
 
-// To Do - Eating my own dog food: integrate the FE ECS.
+
 struct token
 {
 	Vocabulary _vocabulary;
@@ -69,7 +69,7 @@ struct token
 
 /*
 * Test arguments:
--fno-code-style-guide -fno-copyright-notice -path-to-project=C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Framework\Include\FE\framework\archetype_base.hpp
+-fno-copyright-notice -path-to-project=C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\list.hxx
 */
 
 /*
@@ -158,6 +158,7 @@ private:
 	{
 		struct system_info
 		{
+			std::pmr::wstring _world_category;
 			std::pmr::wstring _system_name;
 			std::pmr::wstring _system_target;
 			std::pmr::wstring _system_call_phase;

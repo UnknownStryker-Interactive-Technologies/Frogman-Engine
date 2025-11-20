@@ -227,11 +227,29 @@ public:
         }
 
         FE_LOG(FE::log::Severity::_Warning, "The initial attempts to allocating memory failed. Creating a new page.");
-        m_pages.emplace_back(); // Create a new page at the end of the list; O(1).
+		/* this sort the list in the new-to-old order; the newest page is always at the front of the list.
+		* This sorting strategy relies on the assumption that recently used pages are more likely to have free blocks available.
+   
+        * 0. // swap_extremes()
+        * 1. (page 1) // emplace_front()
+        * 
+        * 2. (page 1) // swap_extremes()
+		* 3. (page 2) (page 1) // emplace_front()
+        * 
+		* 4. (page 1) (page 2) // swap_extremes()
+        * 5. (page 3) (page 1) (page 2) // emplace_front()
+        * 
+        * 6. (page 2) (page 1) (page 3) // swap_extremes()
+        * 7. (page 4) (page 2) (page 1) (page 3) // emplace_front()
+        * 
+        * 8. (page 3) (page 2) (page 1) (page 4) // swap_extremes()
+		* 9. (page 5) (page 3) (page 2) (page 1) (page 4) // emplace_front()
+        */
+        m_pages.swap_extremes();
+        m_pages.emplace_front();
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        m_page_validation_table.insert(&m_pages.back());
+        m_page_validation_table.insert(&m_pages.front());
 #endif
-        m_pages.swap_extremes(); // Swap the newly created page pointer with the front pointer of the list; O(1).
         return allocate<U>();
     }
 

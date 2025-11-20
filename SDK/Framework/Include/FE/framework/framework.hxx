@@ -52,13 +52,13 @@ enum struct RestartOrNot : uint8
 	_HasToRestart = 1,
 };
 
-class program_options
+class max_concurrency_option
 {
 	FE::pair<FE::ASCII*, var::uint32> m_max_concurrency;
 
 public:
-	program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
-	~program_options() noexcept = default;
+	max_concurrency_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+	~max_concurrency_option() noexcept = default;
 
 	FE::uint32 get_max_concurrency() const noexcept;
 	FE::ASCII* view_max_concurrency_option_title() const noexcept;
@@ -75,7 +75,7 @@ class framework_base
 	friend class processors;
 	
 protected:
-	program_options m_program_options;
+	max_concurrency_option m_max_concurrency;
 	std::locale m_current_system_locale;
 
 	std::unique_ptr<class FE::memory_resource[]> m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
@@ -98,20 +98,19 @@ public:
 	static void request_restart() noexcept;
 	static void cancel_restart() noexcept;
 
-	const program_options& get_program_options() const noexcept;
+	const max_concurrency_option& get_program_options() const noexcept;
 	const std::locale& get_current_system_locale() const noexcept;
 
-protected:
-	std::pmr::memory_resource* get_memory_resource() noexcept;
-
 public:
+	std::pmr::memory_resource* get_memory_resource() noexcept;
+	class framework::processors& get_processors() noexcept;
+
 	reflection::method_registry& get_method_reflection() noexcept;
 	reflection::property_registry& get_property_reflection() noexcept;
 	reflection::enum_registry& get_enum_reflection() noexcept;
 
 protected:
 	class framework::ECS& get_ecs() noexcept;
-	class framework::processors& get_processors() noexcept;
 
 protected:
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) = 0;

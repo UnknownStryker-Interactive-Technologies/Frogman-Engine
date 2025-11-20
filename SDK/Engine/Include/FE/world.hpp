@@ -26,66 +26,65 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+
 class world;
-CLASS_FORWARD_DECLARATION(internal::world, proxy_getter);
+CLASS_FORWARD_DECLARATION(internal::world, observer_base);
 CLASS_FORWARD_DECLARATION(internal, game_processor);
+CLASS_FORWARD_DECLARATION(internal, garbage_collector);
+
+
+using world_tag = FE::uint64;
 
 
 class world
 {
-	friend class internal::world::proxy_getter;
+	friend class internal::world::observer_base;
 
 	using base_type = FE::archetype_base;
 
+	world_tag m_world_tag;
 	FE::framework::ECS m_ecs;
-	std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> > m_levels;
 	FE::smart_ptr<FE::mode, FE::RefType::_Owner> m_game_mode;
-
+	std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> > m_levels;
 
 public:
-	world(	framework::ECS& engine_ecs_p, FE::size max_entities_p,
+	world(	world_tag world_tag_p,
 			framework::initializer_list&& initializer_list_p,
 			FE::size component_type_count_hint_p) noexcept;
 	~world() noexcept = default;
 
 public:
-	void dispatch_systems() noexcept;
+	void spawn_entity() noexcept;
 
 public:
+	_FE_FORCE_INLINE_ world_tag get_world_tag() const noexcept { return m_world_tag; }
+
 	_FE_FORCE_INLINE_ const FE::mode& get_game_mode() const noexcept { return *m_game_mode; }
 	_FE_FORCE_INLINE_ FE::mode& get_game_mode() noexcept { return *m_game_mode; }
+
 };
 
 
 namespace internal::world
 {
-	class proxy_getter
+	class observer_base
 	{
-		friend class ::FE::internal::game_processor;
-
 		FE::smart_ptr<FE::world, FE::RefType::_Observer> m_current_world;
 
-	private:
-		proxy_getter(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
-			: m_current_world(world_p)
+	public:
+		observer_base(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
+			:	m_current_world(world_p)
 		{}
+		virtual ~observer_base() noexcept = default; 
 
-		~proxy_getter() noexcept = default;
-
-	private:
-		_FE_FORCE_INLINE_ void switch_world(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
+		void notify_world_transition(FE::smart_ptr<FE::world, FE::RefType::_Observer> world_p) noexcept
 		{
 			m_current_world = world_p;
-		}
-
+		} 
+		
 		_FE_FORCE_INLINE_ class FE::framework::ECS& get_ecs() noexcept
 		{
 			return m_current_world->m_ecs;
-		}
-
-		_FE_FORCE_INLINE_ std::pmr::vector< FE::smart_ptr<FE::level, FE::RefType::_Owner> >& get_levels() noexcept
-		{
-			return m_current_world->m_levels;
 		}
 	};
 }

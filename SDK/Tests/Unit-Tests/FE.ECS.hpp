@@ -120,16 +120,16 @@ public:
 };
 
 
-void take_damage(FE::component_base* const component_p) noexcept 
-FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) 
-{
-	(component_p);
-}
-
-void take_damage2(FE::component_base* const component_p) FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) noexcept
-{
-	(component_p);
-}
+//void take_damage(FE::component_base* const component_p) noexcept 
+//FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) 
+//{
+//	(component_p);
+//}
+//
+//void take_damage2(FE::component_base* const component_p) FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) noexcept
+//{
+//	(component_p);
+//}
 //
 //void take_damage3(FE::component_base* const component_p) FE_SYSTEM(FE::SystemCallPhase::_WorldBegin, health) noexcept;
 //

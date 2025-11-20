@@ -18,7 +18,7 @@ limitations under the License.
 
 #include <FE/prerequisites.hxx>
 #include <FE/framework/ECS.hxx>
-#include <FE/engine.hxx>
+#include <FE/engine.hpp>
 
 
 
@@ -31,59 +31,33 @@ class ecs // ECS API
 public:
 
 	template <class Archetype, typename ...Arguments>
-	_FE_FORCE_INLINE_ static FE::entity<Archetype> create_entity(FE::ASCII* const name_p, Arguments&& ...arguments_p) noexcept
+	_FE_FORCE_INLINE_ static FE::entity<Archetype> create_entity(Arguments&& ...arguments_p) noexcept
 	{
-		return FE::engine::__get_engine().get_ecs().instanciate_entity(name_p, std::forward<Arguments&&>(arguments_p)...);
+		return FE::engine::get_engine().get_ecs().instanciate_entity(std::forward<Arguments&&>(arguments_p)...);
 	}
 
 	template <class Archetype>
-	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_entity_from_initializer(FE::ASCII* const name_p, FE::framework::initializer& serialized_entity_p) noexcept
+	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_entity_from_initializer(const FE::framework::initializer& serialized_entity_p) noexcept
 	{
-		return FE::engine::__get_engine().get_ecs().instanciate_entity_from_initializer(name_p, serialized_entity_p);
+		return FE::engine::get_engine().get_ecs().instanciate_entity_from_initializer(serialized_entity_p);
 	}
 
 	template <class Archetype> // ADE: Archetype Default Entity
-	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_ADE(FE::ASCII* const name_p) noexcept
+	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_ADE() noexcept
 	{
-		return FE::engine::__get_engine().get_ecs().instanciate_archetype_default_entity(name_p);
-	}
-
-	_FE_FORCE_INLINE_ static void destroy_entity(FE::entity<archetype_base> entity_p) noexcept
-	{
-		FE::engine::__get_engine().get_ecs().destruct_entity(entity_p);
+		return FE::engine::get_engine().get_ecs().instanciate_archetype_default_entity();
 	}
 
 	template <class Archetype>
 	_FE_FORCE_INLINE_ static void set_ADE(FE::framework::initializer& default_values_p) noexcept
 	{
-		FE::engine::__get_engine().get_ecs().set_archetype_default_entity(default_values_p);
+		FE::engine::get_engine().get_ecs().set_archetype_default_entity(default_values_p);
 	}
 
 	template <class Archetype>
 	_FE_FORCE_INLINE_ static FE::framework::initializer* const get_ADE_initializer() noexcept
 	{
-		return FE::engine::__get_engine().get_ecs().get_archetype_default_entity();
-	}
-
-	template <class Archetype>
-	_FE_FORCE_INLINE_ static FE::entity<Archetype> find_entity(FE::ASCII* const name_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().find_entity<Archetype>(name_p);
-	}
-
-	_FE_FORCE_INLINE_ static std::optional<FE::pair<FE::system, std::pmr::vector<std::size_t>>> find_system(FE::ASCII* const name_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().find_system(name_p);
-	}
-
-	_FE_FORCE_INLINE_ static FE::framework::initializer serialize_entity(FE::entity<archetype_base> entity_p) noexcept
-	{
-		return FE::engine::__get_engine().get_ecs().serialize_entity(entity_p);
-	}
-
-	_FE_FORCE_INLINE_ static void deserialize_entity(FE::framework::initializer& serialized_components_p, FE::entity<archetype_base> out_entity_p) noexcept
-	{
-		FE::engine::__get_engine().get_ecs().deserialize_entity(serialized_components_p, out_entity_p);
+		return FE::engine::get_engine().get_ecs().get_archetype_default_entity();
 	}
 
 public:

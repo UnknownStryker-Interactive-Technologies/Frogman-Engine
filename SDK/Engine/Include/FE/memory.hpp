@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/engine.hxx>
+#include <FE/engine.hpp>
 
 
 
@@ -30,7 +30,7 @@ class memory // memory API
 public:
     _FE_FORCE_INLINE_ static std::pmr::memory_resource* get_thread_local_memory_resource() noexcept
 	{
-		return FE::engine::__get_engine().get_memory_resource();
+		return FE::engine::get_engine().get_memory_resource();
 	}
 
 public:

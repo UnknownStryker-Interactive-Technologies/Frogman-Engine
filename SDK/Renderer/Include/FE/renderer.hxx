@@ -26,6 +26,7 @@ limitations under the License.
 #endif
 
 #include <FE/clock.hxx>
+#include <FE/framework/processors.hxx>
 
 
 
@@ -46,7 +47,7 @@ namespace internal::renderer
 struct window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
     std::pmr::string _title = "Frogman Game";
-	GLFWimage* _icon_images = nullptr;
+	std::pmr::string _icon_path = nullptr;
 	FE::int32 _icon_image_count = 0;
 	FE::int32 _monitor_index = 0;
     FE::boolean _should_enable_vsync = false;
@@ -54,7 +55,7 @@ struct window_config // fields are immutable after window creation; modifying th
 	FE::boolean _should_scale_content_to_monitor_dpi = true;
 	FE::boolean _has_border = true;
 	FE::uint8 _swap_chain_buffer_count = 3;
-	FE::boolean _is_virtual_reality_mode = false;
+	_FE_MAYBE_UNUSED_ FE::boolean _is_virtual_reality_mode = false;
 	FE::boolean _should_enable_hdr = false;
 
     FE::int32 _width = 0;
@@ -85,9 +86,14 @@ private:
 	FE::clock m_render_delta_milliseconds;
 	var::float64 m_detla_milliseconds;
 
+	FE::framework::thread m_renderer_thread;
+
 public:
     renderer(const window_config& window_config_p) noexcept;
 	~renderer() noexcept;
+
+	void run(FE::size fiber_stack_size_p) noexcept;
+	void shutdown() noexcept;
 
 	_FE_FORCE_INLINE_ void render_frame() noexcept 
 	{ 
@@ -104,6 +110,10 @@ public:
 	}
 
 	_FE_FORCE_INLINE_ GLFWwindow* get_window() const noexcept { return m_window; }
+
+private:
+	static void __on_window_close(GLFWwindow* window_p) noexcept;
+	static void __renderer_main(class FE::component_base* const) noexcept;
 };
 
 

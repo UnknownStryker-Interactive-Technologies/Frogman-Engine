@@ -122,8 +122,8 @@ private:
 
         if constexpr (std::is_base_of_v<FE::component_base, T> == true)
         {
-            m_info._component_type_id = internal::type_info::metadata::s_type_id_counter;
             ++internal::type_info::metadata::s_type_id_counter;
+            m_info._component_type_id = internal::type_info::metadata::s_type_id_counter;
         }
 
         type_info::tl_s_type_information.emplace(m_info._typename, m_info);
@@ -150,10 +150,9 @@ public:
 		return m_info._hashed_base_name;
     }
 
-	template <class Component>
     _FE_FORCE_INLINE_ var::uint64 component_typeid() const noexcept
     {
-        static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: T must be derived from FE::component_base.");
+        FE_ASSERT(m_info._component_type_id > 0, "Assertion failed: the current type is not a valid component type.");
 		return m_info._component_type_id;
     }
 

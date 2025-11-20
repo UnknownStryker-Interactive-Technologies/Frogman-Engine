@@ -29,9 +29,9 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-// eXceptionless assertive concurrent vector
+// concurrent_vector is a contiguous, eXceptionless assertive dynamic array.
 template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>, class SharedMutex = std::shared_mutex>
-class concurrent_vector
+class concurrent_vector // TODO: allocate array chunks instead of locking the whole array when resizing; try remove the length modifier lock.
 {
 public:
     using allocator_type = Allocator;
@@ -54,7 +54,7 @@ private:
     std::atomic<pointer> m_reserved;
     std::atomic<size_type> m_size;
     std::atomic<size_type> m_capacity;
-    SharedMutex m_length_modifier_lock;
+	SharedMutex m_length_modifier_lock; // capacity modification lock
     Allocator m_allocator;
 
 public:
@@ -132,8 +132,7 @@ private: // Concurrently unsafe methods
         }
     }
 
-public: // Concurrently safe methods
-    // use cas to acquire the dictatorship over the pointer.
+public: // Concurrently safe methods; use the length modifier lock.
     /*
         concurrent_vector( concurrent_vector&& other_p ) noexcept
         {
@@ -274,13 +273,13 @@ public:
         return l_idx;
     }
 
-    bool try_reserve(size_type new_capacity_p) noexcept
+    bool try_reserve(const size_type new_capacity_p) noexcept
     {
         pointer l_nullptr = nullptr;
 
         if (new_capacity_p <= m_capacity.load(std::memory_order_acquire))
         {
-            return false;
+            return true;
         }
 
         if (m_reserved.compare_exchange_strong(l_nullptr, reinterpret_cast<pointer>(this), std::memory_order_acq_rel) == true)
@@ -357,7 +356,7 @@ private:
         m_allocator.deallocate(target_p, target_capacity_p);
     }
 
-public: /* use cas to acquire the dictatorship over the pointer; when acquired, you literally dictate the pointer at the moment.
+public: /* use the length modifier lock.
     bool try_resize( size_type new_size_p ) noexcept
     {
     }
@@ -377,7 +376,7 @@ public: /* use cas to acquire the dictatorship over the pointer; when acquired, 
     }
     */
 
-public: // Concurrently unsafe operations
+public:
     inline size_type size() const noexcept
     {
         /* read the comment in the try_emplace_back() */
@@ -394,6 +393,7 @@ public: // Concurrently unsafe operations
         return m_capacity.load(std::memory_order_acquire);
     }
 
+    // concurrency-unsafe methods
     inline const allocator_type& get_allocator() const noexcept
     {
         return m_allocator;

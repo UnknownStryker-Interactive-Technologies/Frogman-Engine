@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/engine.hpp>
 
 
 
@@ -31,7 +32,8 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		m_window_config(window_config_p),
 		m_backend(),
 		m_render_delta_milliseconds(),
-		m_detla_milliseconds(0.0)
+		m_detla_milliseconds(0.0),
+		m_renderer_thread()
 {
 	FE_EXIT_IF(glfwInit() == GLFW_FALSE, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window initialization failed.");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // We do not want to create an OpenGL context
@@ -91,23 +93,56 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	FE_EXIT_IF(m_window == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_WindowCreationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window creation failed.");
 	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE); // Enable sticky keys input mode; the value remains until retrieved.
 	
-	if (m_window_config._icon_images == nullptr)
-	{
-		glfwSetWindowIcon(m_window, 0, nullptr);
-	}
-	else
-	{
-		glfwSetWindowIcon(m_window, m_window_config._icon_image_count, m_window_config._icon_images);
-	}
+	//if (m_window_config._icon_images == nullptr)
+	//{
+	//	glfwSetWindowIcon(m_window, 0, nullptr);
+	//}
+	//else
+	//{
+	//	glfwSetWindowIcon(m_window, m_window_config._icon_image_count, m_window_config._icon_images);
+	//}
 
 	glfwMakeContextCurrent(m_window);
 	m_backend = std::make_unique<FE::internal::renderer::backend>(this);
+
+	glfwSetWindowCloseCallback(m_window, &__on_window_close);
+	glfwSetKeyCallback(m_window, &FE::engine::__key_callback);
+	glfwSetMouseButtonCallback(m_window, &FE::engine::__mouse_button_callback);
+	glfwSetCursorPosCallback(m_window, &FE::engine::__cursor_position_callback);
+	glfwSetScrollCallback(m_window, &FE::engine::__scroll_callback);
 }
 
 renderer::~renderer() noexcept
 {
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
+}
+
+
+void renderer::run(FE::size fiber_stack_size_p) noexcept
+{
+	m_renderer_thread.fork(__renderer_main, nullptr, fiber_stack_size_p);
+}
+
+void renderer::shutdown() noexcept
+{
+	m_renderer_thread.join();
+}
+
+
+void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
+{
+	FE::engine::get_engine().m_should_exit.store(true, std::memory_order_release);
+	FE::engine::get_engine().m_processors->shutdown();
+	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
+}
+
+void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
+{
+	while (FE::engine::get_engine().m_should_exit.load(std::memory_order_acquire) == false) // TO DO: retrieve render target data from the game thread stash.
+	{
+		FE::engine::get_engine().m_renderer->render_frame();
+	}
 }
 
 

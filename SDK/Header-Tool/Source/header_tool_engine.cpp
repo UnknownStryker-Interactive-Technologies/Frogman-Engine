@@ -73,7 +73,7 @@ FE::int32 header_tool_engine::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor(m_program_options.get_max_concurrency() - 1); // exlude the main thread.
+	tf::Executor l_executor(m_max_concurrency.get_max_concurrency() - 1); // exlude the main thread.
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = m_mapped_header_files.size();
 	std::mutex l_log_lock;

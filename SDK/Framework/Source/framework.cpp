@@ -45,7 +45,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() >> 1 }
+max_concurrency_option::max_concurrency_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() >> 1 }
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
@@ -83,12 +83,12 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	}
 }
 
-FE::uint32 program_options::get_max_concurrency() const noexcept
+FE::uint32 max_concurrency_option::get_max_concurrency() const noexcept
 {
 	return m_max_concurrency._second;
 }
 
-FE::ASCII* program_options::view_max_concurrency_option_title() const noexcept
+FE::ASCII* max_concurrency_option::view_max_concurrency_option_title() const noexcept
 {
 	return m_max_concurrency._first;
 }
@@ -103,9 +103,9 @@ static RestartOrNot s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	:	m_program_options(argc_p, argv_p), 
+	:	m_max_concurrency(argc_p, argv_p), 
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
-		m_memory(std::make_unique<FE::memory_resource[]>( m_program_options.get_max_concurrency() )), 
+		m_memory(std::make_unique<FE::memory_resource[]>( m_max_concurrency.get_max_concurrency() )), 
 		m_method_reflection(81920, get_memory_resource()), 
 		m_property_reflection(81920, get_memory_resource()),
 		m_enum_reflection(get_memory_resource(), 81920),
@@ -138,9 +138,9 @@ framework_base& framework_base::get_framework() noexcept
 	return *s_framework;
 }
 
-const program_options& framework_base::get_program_options() const noexcept
+const max_concurrency_option& framework_base::get_program_options() const noexcept
 {
-	return m_program_options;
+	return m_max_concurrency;
 }
 
 const std::locale& framework_base::get_current_system_locale() const noexcept

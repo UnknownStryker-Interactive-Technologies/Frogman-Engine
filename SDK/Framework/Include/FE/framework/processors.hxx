@@ -52,32 +52,22 @@ enum struct TaskType : var::uint32
 };
 
 
-class task
+struct task
 {
 	friend class processors;
-
 public:
 	using notifier = boost::fibers::promise<void>;
 	using handle = boost::fibers::future<void>;
 
 private:
-	std::shared_ptr<notifier> m_notifier;
+	mutable std::shared_ptr<notifier> m_notifier;
 
 public:
 	TaskType _priority;
 	FE::system _system;
 	FE::component_base* _component;
 
-public:
-	task() noexcept = default;
-	~task() noexcept = default;
-
-	task(const task& other_p) noexcept;
-	task& operator=(const task& other_p) noexcept;
-
-	task(task&& other_p) noexcept;
-	task& operator=(task&& other_p) noexcept;
-
+	// helper functions
 	_FE_FORCE_INLINE_ FE::boolean is_waitable() const noexcept { return (m_notifier != nullptr); }
 	_FE_FORCE_INLINE_ void notify_completion() noexcept
 	{
@@ -201,7 +191,7 @@ public:
 
 	void run() noexcept;
 	void schedule_task(const framework::task& task_p) noexcept;
-	typename task::handle schedule_waitable_task(framework::task& task_p) noexcept;
+	typename task::handle schedule_waitable_task(const framework::task& task_p) noexcept;
 	void shutdown() noexcept;
 
 public:

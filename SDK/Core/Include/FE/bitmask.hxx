@@ -25,15 +25,13 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-template<class Allocator = FE::polymorphic_allocator<var::byte>>
 class bitmask // this is a dynamic bit set designed to be used as archetype ids; expects faster performance than std::vector<bool>
 {
-	static_assert(std::is_same_v<typename Allocator::value_type, var::byte>, "Static Assertion Failed: The Allocator's value_type must be 'FE::byte'.");
 public:
-	using allocator_type = Allocator;
+	using allocator_type = FE::polymorphic_allocator<var::byte>;
 
 private:
-	_FE_NO_UNIQUE_ADDRESS_ Allocator m_allocator;
+	allocator_type m_allocator;
 	var::byte* m_bitmask;
 	var::size m_capacity_in_bits;
 	var::uint64 m_64bit_buffer;
@@ -417,13 +415,27 @@ public:
 		return m_64bit_buffer != other_p.m_64bit_buffer;
 	}
 
-	FE::uint64 hash_code() const noexcept
+	_FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
 	{
 		if (__large_bitset_engaged())
 		{
 			return CityHash64((FE::ASCII*)m_bitmask, __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
 		}
 		return robin_hood::hash_int(m_64bit_buffer);
+	}
+
+	_FE_FORCE_INLINE_ FE::byte* data() const noexcept
+	{
+		if (__large_bitset_engaged())
+		{
+			return m_bitmask;
+		}
+		return reinterpret_cast<FE::byte*>(&m_64bit_buffer);
+	}
+
+	_FE_FORCE_INLINE_ FE::size capacity_in_bytes() const noexcept
+	{
+		return __calculate_size_of_bits_in_bytes(m_capacity_in_bits);
 	}
 
 private:

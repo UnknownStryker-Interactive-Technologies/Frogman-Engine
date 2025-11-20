@@ -24,19 +24,20 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::framework)
 
 
-ECS::ECS(FE::size max_entities_p, FE::size component_type_count_hint_p) noexcept
-	:	m_memory_resource(),
+ECS::ECS(FE::size component_type_count_hint_p) noexcept
+	:	m_gc_root(),
+
+		m_memory_resource(),
 		m_archetype_pool(),
 
-		m_entity_table(),
+		m_entity_list(),
 		m_component_table(),
+
 		m_archetype_default_entities(),
 		m_buffer(),
-		m_fiber_lock(),
-		m_max_entities(max_entities_p)
+		m_fiber_lock()
 {
-	m_entity_table.reserve(m_max_entities);
-	m_component_table.reserve(component_type_count_hint_p);
+	m_component_table.reserve(component_type_count_hint_p * 2);
 }
 
 
@@ -81,33 +82,19 @@ void ECS::initialize(framework::initializer_list&& initializer_list_p) noexcept
 	}
 }
 
-void ECS::destruct_entity(FE::entity<archetype_base> entt_p) noexcept
-{
-	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-	typename entity_table::iterator l_probe_result = m_entity_table.find(entt_p->get_name());
-
-	if (l_probe_result->first == entt_p->get_name())
-	{
-		m_entity_table.erase(l_probe_result);
-		return;
-	}
-}
-
-
-void ECS::attatch_component(FE::entity<archetype_base> entt_p, const FE::component_view<component_base>& to_attatch_p) noexcept
+void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::component_view<component_base>& to_attatch_p) noexcept
 {
 	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
 	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
-	_FE_MAYBE_UNUSED_ auto l_result = entt_p->m_component_view_table.emplace( robin_hood::hash_bytes( to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename) ), to_attatch_p );
-	FE_ASSERT(l_result.second == true, "Assertion failed: the component to attatch already exists in the entity.");
+	const std::size_t l_hash_code = robin_hood::hash_bytes(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
+	entt_p->m_component_view_table[l_hash_code] = to_attatch_p;
 }
 
 
-initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
+initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* const entity_memory_layout_version) noexcept
 {
 	constexpr FE::ASCII* l_function_prefix = "serialize_component_";
 	constexpr FE::ASCII* l_class = "class";
@@ -147,7 +134,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 		FE_ASSERT(l_result.second == true, "Assertion failed: the component type was already serialized. This should never happen.");
 		l_arguments._first = l_serialized_components[component->get_typename()];
 		l_arguments._second = component.operator->();
-		l_arguments._third = component->get_memory_layout_version();
+		l_arguments._third = entity_memory_layout_version;
 		(*l_component_serializer)(nullptr, &l_arguments); // Boom! Magcic!
 		/*
 		* The first argument is a reference to the serialized component datavbuffer.
@@ -158,7 +145,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p) noexcept
 	return std::move(l_serialized_components);
 }
 // const robin_hood::unordered_map<std::pmr::string, std::pmr::string>& does not compile
-void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p) noexcept
+void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p, FE::ASCII* const entity_memory_layout_version) noexcept
 {
 	constexpr FE::ASCII* l_function_prefix = "deserialize_component_";
 	constexpr FE::ASCII* l_class = "class";
@@ -197,7 +184,7 @@ void ECS::deserialize_entity(const initializer& serialized_components_p, FE::ent
 		FE::arguments<const std::pmr::string&, FE::component_base*, FE::ASCII*> l_arguments;
 		l_arguments._first = l_probe_result->second;
 		l_arguments._second = component.operator->();
-		l_arguments._third = component->get_memory_layout_version();
+		l_arguments._third = entity_memory_layout_version;
 		(*l_component_deserializer)(nullptr, &l_arguments);
 		/*
 		* The first argument is a reference to the serialized component datavbuffer.
@@ -218,68 +205,30 @@ BEGIN_NAMESPACE(FE)
 
 archetype_base::archetype_base(framework::ECS& host_p) noexcept
 	:	m_component_view_table(),
-		m_name(),
-		m_host(&host_p)
+		m_host(&host_p),
+		m_memory_layout_version("v0.0.0"),
+		m_group(),
+		m_index()
 {
+	//m_component_view_table.try_reserve(128);
+
 }
 
 archetype_base::~archetype_base() noexcept
-{
-	for (auto& pair : m_component_view_table)
-	{
-		pair.second->m_metadata->_group->remove_component(pair.second->m_metadata->_index);
-	}
-}
-
-archetype_base::archetype_base(archetype_base&& other_p) noexcept
-	:	m_component_view_table(std::move(other_p.m_component_view_table)),
-		m_name(std::move(other_p.m_name)),
-		m_host(other_p.m_host)
 {}
 
-archetype_base& archetype_base::operator=(archetype_base && other_p) noexcept
-{
-	m_component_view_table = std::move(other_p.m_component_view_table);
-	m_name = std::move(other_p.m_name);
-	m_host = other_p.m_host;
-	return *this;
-}
 
-archetype_base::archetype_base(const archetype_base& other_p) noexcept
-	: m_component_view_table(other_p.m_component_view_table),
-	m_name(other_p.m_name),
-	m_host(other_p.m_host)
-{
-	FE::entity<FE::archetype_base> l_self;
-	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
-	l_forged_metadata._data = const_cast<archetype_base*>(&other_p);
-	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
-
-	FE::framework::initializer l_components = other_p.m_host->serialize_entity(l_self);
-	deserialize_entity(l_components);
-	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
-}
-
-archetype_base& archetype_base::operator=(const archetype_base& other_p) noexcept
-{
-	FE::entity<FE::archetype_base> l_self;
-	FE::internal::smart_ptr::metadata<FE::archetype_base> l_forged_metadata{};
-	l_forged_metadata._data = const_cast<archetype_base*>(&other_p);
-	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
-
-	FE::framework::initializer l_components = other_p.m_host->serialize_entity(l_self);
-	deserialize_entity(l_components);
-	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
-	return *this;
-}
-
-archetype_base::archetype_base(framework::ECS& host_p, FE::ASCII* const name_p, const FE::framework::initializer& other_p) noexcept
+archetype_base::archetype_base(framework::ECS& host_p, const FE::framework::initializer& other_p) noexcept
 	:	m_component_view_table(),
-		m_name(&(host_p.m_memory_resource)),
 		m_host(&host_p)
 {
-	m_name = name_p;
 	deserialize_entity(other_p);
+}
+
+archetype_base& archetype_base::operator=(const FE::framework::initializer& other_p) noexcept
+{
+	deserialize_entity(other_p);
+	return *this;
 }
 
 
@@ -304,7 +253,7 @@ FE::framework::initializer FE::archetype_base::serialize_entity() noexcept
 	l_forged_metadata._data = this;
 	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
 
-	auto l_initializer = m_host->serialize_entity(l_self);
+	auto l_initializer = m_host->serialize_entity(l_self, m_memory_layout_version);
 	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
 	return l_initializer;
 }
@@ -317,7 +266,7 @@ void FE::archetype_base::deserialize_entity(const FE::framework::initializer& se
 	l_forged_metadata._data = this;
 	l_self.m_ptr.store(&l_forged_metadata, std::memory_order_relaxed);
 
-	m_host->deserialize_entity(serialized_components_p, l_self);
+	m_host->deserialize_entity(serialized_components_p, l_self, m_memory_layout_version);
 	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
 }
 
@@ -331,28 +280,14 @@ component_base::component_base(component_base&& other_p) noexcept
 {}
 
 FE::ASCII* component_base::get_typename() const noexcept { return m_metadata->_typename; }
-FE::ASCII* component_base::get_memory_layout_version() const noexcept { return m_metadata->_memory_layout_version; }
 
 
 
 
-internal::ECS::entity_metadata::entity_metadata() noexcept
-	:	_group(),
-		_index(0)
+internal::ECS::gc_metadata::gc_metadata() noexcept
+	:	_member_components(),
+		_garbage_class(::FE::internal::GarbageClass::_NotAGarbage)
 {
 }
-
-
-
-
-internal::ECS::component_metadata::component_metadata() noexcept
-	: m_gc_metadata(),
-	_group(),
-	_index(0),
-	_typename(nullptr),
-	_typeid(),
-	_memory_layout_version("default")
-{}
-
 
 END_NAMESPACE
