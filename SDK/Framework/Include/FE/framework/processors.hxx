@@ -43,13 +43,13 @@ BEGIN_NAMESPACE(FE::framework)
 class processor;
 class processors;
 
-
-enum struct TaskType : var::uint32
-{
-	_Urgent = 0,
-	_Ordinary = 1,
-	_Trivial = 2
-};
+// I will implement a prioriry-based task fiber scheduling system later; the previous implementation actually breaks the priority when fibers yield the code control flow.
+//enum struct TaskType : var::uint32
+//{
+//	_Urgent = 0,
+//	_Ordinary = 1,
+//	_Trivial = 2
+//};
 
 
 struct task
@@ -60,10 +60,9 @@ public:
 	using handle = boost::fibers::future<void>;
 
 private:
-	mutable std::shared_ptr<notifier> m_notifier;
+	mutable std::shared_ptr<notifier> m_notifier; // will be replaced with FE::shared_ptr later.
 
 public:
-	TaskType _priority;
 	FE::system _system;
 	FE::component_base* _component;
 
@@ -82,14 +81,12 @@ public:
 class task_queue
 {
 public:
-	using queue_type = concurrency::concurrent_queue<task, std::pmr::polymorphic_allocator<task>>;
+	using queue_type = concurrency::concurrent_queue<task, std::pmr::polymorphic_allocator<task>>; // will be using a custom lock-free queue later.
 	using value_type = queue_type::value_type;
 	using size_type = queue_type::size_type;
 
 private:
-	queue_type m_urgent_tasks;
-	queue_type m_ordinary_tasks;
-	queue_type m_trivial_tasks;
+	queue_type m_queue;
 
 public:
 	task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept;

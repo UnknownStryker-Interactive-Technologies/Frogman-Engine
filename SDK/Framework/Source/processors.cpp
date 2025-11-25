@@ -15,46 +15,19 @@ BEGIN_NAMESPACE(FE::framework)
 
 
 task_queue::task_queue(std::pmr::memory_resource* const memory_resource_p) noexcept
-	:	m_urgent_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
-		m_ordinary_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p)),
-		m_trivial_tasks(std::pmr::polymorphic_allocator<task>(memory_resource_p))
+	:	m_queue(std::pmr::polymorphic_allocator<task>(memory_resource_p))
 {
 }
 
 
 void task_queue::push(const framework::task& task_p) noexcept
 {
-	switch (task_p._priority)
-	{
-	case TaskType::_Urgent:
-		m_urgent_tasks.push(task_p);
-		break;
-
-	case TaskType::_Ordinary:
-		m_ordinary_tasks.push(task_p);
-		break;
-	
-	case TaskType::_Trivial:
-		m_trivial_tasks.push(task_p);
-		break;
-
-	default:
-		break;
-	}
+	m_queue.push(task_p); // sorry for this poor wapper class, I will implement priority-based task queue later.
 }
 
 FE::boolean task_queue::try_pop(framework::task& out_task_p) noexcept
 {
-	var::boolean l_was_successful = m_urgent_tasks.try_pop(out_task_p);
-	if (l_was_successful == false)
-	{
-		l_was_successful = m_ordinary_tasks.try_pop(out_task_p);
-		if (l_was_successful == false)
-		{
-			l_was_successful = m_trivial_tasks.try_pop(out_task_p);
-		}
-	}
-	return l_was_successful;
+	return m_queue.try_pop(out_task_p);
 }
 
 
