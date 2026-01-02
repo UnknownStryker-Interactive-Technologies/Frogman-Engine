@@ -1,5 +1,5 @@
-﻿#ifndef _FE_FREE_PROCESSORS_HXX_
-#define _FE_FREE_PROCESSORS_HXX_
+﻿#ifndef _FE_FRAMEWORK_PROCESSORS_HXX_
+#define _FE_FRAMEWORK_PROCESSORS_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -20,7 +20,7 @@ limitations under the License.
 
 #include <FE/framework/ECS.hxx>
 
-#include <concurrent_queue.h>
+#include <concurrent_priority_queue.h>
 
 #include <boost/fiber/fiber.hpp> // boost::fibers::fiber
 #include <boost/fiber/future/future.hpp> // boost::fibers::future
@@ -43,16 +43,17 @@ BEGIN_NAMESPACE(FE::framework)
 class processor;
 class processors;
 
-// I will implement a prioriry-based task fiber scheduling system later; the previous implementation actually breaks the priority when fibers yield the code control flow.
-//enum struct TaskType : var::uint32
-//{
-//	_Urgent = 0,
-//	_Ordinary = 1,
-//	_Trivial = 2
-//};
+
+enum struct TaskType : var::int32
+{
+	_RealTime = 1,
+	_Urgent = 2,
+	_Ordinary = 3,
+	_Trivial = 4
+};
 
 
-struct task
+class task
 {
 	friend class processors;
 public:
@@ -60,11 +61,12 @@ public:
 	using handle = boost::fibers::future<void>;
 
 private:
-	mutable std::shared_ptr<notifier> m_notifier; // will be replaced with FE::shared_ptr later.
+	mutable std::shared_ptr<notifier> m_notifier;
 
 public:
 	FE::system _system;
 	FE::component_base* _component;
+	TaskType _task_type;
 
 	// helper functions
 	_FE_FORCE_INLINE_ FE::boolean is_waitable() const noexcept { return (m_notifier != nullptr); }
@@ -75,13 +77,18 @@ public:
 			m_notifier->set_value();
 		}
 	}
+
+	_FE_FORCE_INLINE_ friend bool operator>(const task& lhs_p, const task& rhs_p) noexcept
+	{
+		return static_cast<var::int32>(lhs_p._task_type) > static_cast<var::int32>(rhs_p._task_type);
+	}
 };
 
 
 class task_queue
 {
 public:
-	using queue_type = concurrency::concurrent_queue<task, std::pmr::polymorphic_allocator<task>>; // will be using a custom lock-free queue later.
+	using queue_type = concurrency::concurrent_priority_queue<task, std::greater<task>, std::pmr::polymorphic_allocator<task>>;
 	using value_type = queue_type::value_type;
 	using size_type = queue_type::size_type;
 
@@ -119,6 +126,14 @@ namespace internal::processors
 	};
 
 
+	struct fiber
+	{
+		boost::fibers::fiber _fiber;
+		var::float64 _delta_ms = 0.0;
+		TaskType _current_task_type = TaskType::_Trivial;
+	};
+
+
 	class processor
 	{
 		class processors* m_host;
@@ -128,12 +143,9 @@ namespace internal::processors
 		var::uint64 m_yield_status;
 		task_queue m_queue;
 		internal::processors::fiber_stack_allocator m_fiber_stack_allocator;
-
-		std::unique_ptr<boost::fibers::fiber[]> m_fibers;
-		std::unique_ptr<var::float64[]> m_delta_ms;
+		std::pmr::vector<fiber> m_fibers;
 
 		boost::condition_variable m_condition_variable;
-
 
 	public:
 		processor() noexcept;
@@ -141,10 +153,15 @@ namespace internal::processors
 
 		void fork(::FE::framework::processors& host_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
 		void join() noexcept;
-		void schedule_task(const framework::task& task_p) noexcept;
+
+		_FE_FORCE_INLINE_ void schedule_task(const framework::task& task_p) noexcept
+		{
+			FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
+			m_queue.push(task_p);
+		}
 
 		_FE_FORCE_INLINE_ FE::boolean should_terminate() const noexcept { return m_should_terminate.load(std::memory_order_acquire); }
-		_FE_FORCE_INLINE_ FE::float64 get_delta_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_delta_ms[fiber_index_p]; }
+		_FE_FORCE_INLINE_ FE::float64 get_delta_milliseconds(FE::int32 fiber_index_p) const noexcept { return m_fibers[fiber_index_p]._delta_ms; }
 		_FE_FORCE_INLINE_ void wake() noexcept { m_condition_variable.notify_one(); }
 
 	private:
@@ -180,7 +197,7 @@ class processors
 	FE::uint16 m_concurrency;
 	FE::uint16 m_fibers_per_thread;
 	FE::uint32 m_fiber_stack_size;
-	std::unique_ptr<internal::processors::processor[]> m_processors; // TODO: replace it with FE::smart_ptr.
+	std::unique_ptr<internal::processors::processor[]> m_processors; 
 
 public:
 	processors(FE::int32 concurrency_p, FE::uint16 fibers_per_thread_p = 3, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;

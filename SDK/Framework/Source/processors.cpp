@@ -69,9 +69,8 @@ internal::processors::processor::processor() noexcept
 		m_yield_status(0),
 		m_queue(framework_base::get_framework().get_memory_resource()),
 		m_fiber_stack_allocator(0),
+		m_fibers(framework_base::get_framework().get_memory_resource()),
 
-		m_fibers(),
-		m_delta_ms(),
 		m_condition_variable()
 {
 }
@@ -92,25 +91,27 @@ void internal::processors::processor::fork(::FE::framework::processors& host_p, 
 	m_fibers_per_thread = fibers_per_thread_p;
 	m_fiber_stack_allocator = fiber_stack_size_p;
 
-	m_fibers = std::make_unique<boost::fibers::fiber[]>(fibers_per_thread_p);
-	m_delta_ms = std::make_unique<var::float64[]>(fibers_per_thread_p);
+	m_fibers.reserve(fibers_per_thread_p);
 
 	m_processor = boost::thread
 	(
 		[this]()
 		{
-			boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>();
+			boost::fibers::use_scheduling_algorithm<boost::fibers::algo::round_robin>(); // I hate to see the boost libraries allcating small object on the heap.
 
 			for (var::uint32 i = 0; i < m_fibers_per_thread; ++i)
 			{
-				m_fibers[i] = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processor::__fiber_main, this, i);
+				m_fibers[i] = 
+				{
+					._fiber = boost::fibers::fiber(std::allocator_arg, m_fiber_stack_allocator, &processor::__fiber_main, this, i)
+				};
 			}
 
 			for (var::uint32 i = 0; i < m_fibers_per_thread; ++i)
 			{
-				if (m_fibers[i].joinable())
+				if (m_fibers[i]._fiber.joinable())
 				{
-					m_fibers[i].join();
+					m_fibers[i]._fiber.join();
 				}
 			}
 		}
@@ -125,12 +126,6 @@ void internal::processors::processor::join() noexcept
 		wake();
 		m_processor.join();
 	}
-}
-
-void internal::processors::processor::schedule_task(const framework::task& task_p) noexcept
-{
-	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
-	m_queue.push(task_p);
 }
 
 FE::uint64 __create_fibers_host_sleep_mask(FE::uint16 fibers_per_thread_p) noexcept
@@ -159,6 +154,7 @@ void internal::processors::processor::__fiber_main(processor* const host_p, FE::
 
 	while (host_p->m_should_terminate.load(std::memory_order_acquire) == false)
 	{
+	Top:
 		if (host_p->m_queue.try_pop(l_task) == false) // no tasks in the queue
 		{
 			host_p->m_yield_status = host_p->m_yield_status | 0b00000000'00000000'00000000'00000000'00000000'00000000'00000000'00000001; // mark this fiber as yielded
@@ -173,6 +169,18 @@ void internal::processors::processor::__fiber_main(processor* const host_p, FE::
 			}
 			continue;
 		}
+		host_p->m_fibers[fiber_index_p]._current_task_type = l_task._task_type;
+
+		for (auto& fiber : host_p->m_fibers) // reject lower-priority tasks
+		{
+			if (fiber._current_task_type < l_task._task_type)
+			{
+				host_p->m_queue.push(l_task);
+				boost::this_fiber::yield();
+				goto Top; // cannot "continue" the while loop.
+			}
+		}
+
 		FE_ASSERT(l_task._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 		l_delta_clock.start_clock();
 		l_task._system(l_task._component);
@@ -183,7 +191,7 @@ void internal::processors::processor::__fiber_main(processor* const host_p, FE::
 			l_task.notify_completion();
 		}
 
-		host_p->m_delta_ms[fiber_index_p] = l_delta_clock.get_delta_milliseconds();
+		host_p->m_fibers[fiber_index_p]._delta_ms = l_delta_clock.get_delta_milliseconds();
 	}
 }
 
@@ -260,12 +268,11 @@ typename task::handle processors::schedule_waitable_task(const framework::task& 
 	FE_ASSERT(m_processors != nullptr, "Assertion failure: the processors have not been initialized. Call fork() first.");
 	FE_ASSERT(task_p._system != nullptr, "Assertion failure: ECS system function pointers cannot be a nullptr.");
 
-	static boost::fibers::mutex l_s_task_pool_lock;
 	{
-		static FE::memory_resource l_s_task_pool;  // It is a crime not to allocate futures on the pool.
-		std::lock_guard<boost::fibers::mutex> l_lock(l_s_task_pool_lock);
-		task_p.m_notifier = std::allocate_shared<task::notifier>(	FE::polymorphic_allocator<task::notifier>(&l_s_task_pool), 
-																	std::allocator_arg_t(), FE::polymorphic_allocator<void>(&l_s_task_pool));
+		thread_local static FE::memory_resource tl_s_task_pool;  // It is a crime not to allocate futures on the pool.
+
+		task_p.m_notifier = std::allocate_shared<task::notifier>(FE::polymorphic_allocator<task::notifier>(&tl_s_task_pool),
+			std::allocator_arg_t(), FE::polymorphic_allocator<void>(&tl_s_task_pool));
 		/* I found that the boost::fibers::promise allocates boost::fibers::detail::shared_state on the heap using the std::allocator and manages the object with the boost's intrusive_ptr.
 		   There's no way to let boost::fibers::promise new and delete the boost::fibers::detail::shared_state<void> for boost::fibers::future on every schedule_waitable_task() call.
 		   I wish there is way to remove this absurd heap allocation, without modifying the boost code; I will definitely rewrite some of the STL and boost TL for the Frogman Engine if I get to have spare time to do so; if you are interested in the template library development project, please checkout the XTL repository in the GitHub: https://github.com/UnknownStryker-Interactive-Technology/XTL. Although the repository is empty now.
