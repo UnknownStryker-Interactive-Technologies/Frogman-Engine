@@ -30,7 +30,7 @@ FILE(GLOB_RECURSE SOURCE_FILES "${FE_CMAKE_CURRENT_LIST_DIR}/../Source/*.cpp")
 # -path-to-copyright-notice=PATH: specifies the path to the copyright notice file to be used for checking.
 # -fno-op: does not perform any operation.
 # -fno-write: does not write any output files.
-RUN_FROGMAN_HEADER_TOOL(${HEADER_FILES} -fno-copyright-notice -max-concurrency=8 )
+# RUN_FROGMAN_HEADER_TOOL(${HEADER_FILES} -fno-copyright-notice -max-concurrency=8 )
 
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${HEADER_FILES}
     ${SOURCE_FILES}

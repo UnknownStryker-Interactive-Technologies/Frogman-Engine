@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/cmake_install.cmake",
-		"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/src/cmake_install.cmake",
-		"C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/docs/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
