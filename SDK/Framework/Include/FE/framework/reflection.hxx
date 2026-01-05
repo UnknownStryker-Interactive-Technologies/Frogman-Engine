@@ -62,7 +62,7 @@ limitations under the License.
 #define FE_SYSTEM(SysCallPhase, TargetComponentType, WorldTagEnum) /* This macro is an indicator for the Frogman Engine Header Tool. Incorrectly placing the arguments will fail the generated code compilation. */ \
 static_assert(::std::is_same_v<decltype(SysCallPhase), enum struct ::FE::SystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
 static_assert(::std::is_base_of_v<class ::FE::component_base, TargetComponentType>, "Frogman Engine C++: the TargetComponentType must be derived from FE::component_base."); \
-static_assert(sizeof(WorldTagEnum) <= sizeof(::FE::uint64), "Frogman Engine C++: the WorldTagEnum is not a valid enum value");
+static_assert(::std::is_enum_v< decltype(WorldTagEnum) >, "Frogman Engine C++: the WorldTagEnum is not a valid enum value");
 #endif
 
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
