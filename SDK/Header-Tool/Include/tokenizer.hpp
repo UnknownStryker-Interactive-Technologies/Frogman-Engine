@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 
+#include "scope_context.hpp"
 #include "token.hpp"
 #include "vocabulary.hpp"
 
@@ -42,15 +43,15 @@ namespace FHT::tokenizer
 
 	void purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
 
-	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
-	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
-	void tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	void tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
-	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept;
+	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
-	FE::boolean verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p) noexcept;
+	FE::boolean verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p, FHT::context_stack_t& context_stack_p) noexcept;
 }
 
 #endif

@@ -136,7 +136,7 @@ FE::int32 header_tool::run()
 
 					if (l_tokens == std::nullopt)
 					{
-						std::lock_guard<std::mutex> l_guard(l_log_lock);
+						std::lock_guard<std::mutex> l_guard(l_log_lock);						// self-reflection: the FHT enabling the enum reflection for itself! It actually works!
 						std::cerr << "Frogman Engine Header Tool Error:\n\tThe error code is " << m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_TokenizationFailure) << '\n';
 						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
 						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_TokenizationFailure; 

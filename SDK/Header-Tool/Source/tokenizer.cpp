@@ -15,6 +15,7 @@ limitations under the License.
 */
 #include "header_tool.hpp"
 #include "file_io.hpp"
+#include "scope_context.hpp"
 #include "tokenizer.hpp"
 
 
@@ -29,7 +30,11 @@ namespace FHT::tokenizer
 			return std::nullopt;
 		}
 
-		std::pmr::list<token> l_list(framework::get_framework().get_memory_resource());
+		context_stack_t l_context_stack{ framework::get_framework().get_memory_resource() };
+		l_context_stack.reserve(64);
+		l_context_stack.emplace_back(FHT::ScopeContext::_Global);
+
+		std::pmr::list<token> l_list{ framework::get_framework().get_memory_resource() };
 
 		auto l_end = file_p.c_str() + file_p.size();
 		token l_token;
@@ -40,26 +45,31 @@ namespace FHT::tokenizer
 			{
 				if (*iterator == '\n')
 				{
-					l_token._vocabulary = Vocabulary::_LineEnd;
-					l_token._line_number = l_line_number; // Set the line number for the token.
-					l_token._code = file_buffer_t(framework::get_framework().get_memory_resource());
-					l_token._code = *iterator;
-					l_token._header_file_path = path_p.c_str(); // Set the header file path for the token.
-					l_list.push_back(std::move(l_token));
+					l_token = 
+					{
+						._vocabulary = Vocabulary::_LineEnd,
+						._line_number = l_line_number, // Set the line number for the token.
+						._code = file_buffer_t
+						{
+							/*Length:*/1, /*Value:*/*iterator, /*Allocator:*/framework::get_framework().get_memory_resource()
+						},
+						._header_file_path = path_p.c_str() // Set the header file path for the token.
+					};
+					l_list.push_back( std::move(l_token) );
 					++l_line_number; // Increment the line number.
 				}
 				++iterator;
 				continue;
 			}
 
-			l_token = tokenize_identifiable(iterator);
+			l_token = tokenize_identifiable(iterator, l_context_stack);
 			l_token._line_number = l_line_number;
 			l_token._header_file_path = path_p.c_str();
 
 			if (l_token._vocabulary == Vocabulary::_Undefined)
 			{
 				//l_list.emplace_back(Vocabulary::_ContractedSpace, l_line_number, u8" ", path_p.c_str());
-				l_token = tokenize_unidentifiable(iterator);
+				l_token = tokenize_unidentifiable(iterator, l_context_stack);
 				l_token._line_number = l_line_number;
 				l_token._header_file_path = path_p.c_str();
 				iterator += l_token._code.size();
@@ -78,32 +88,28 @@ namespace FHT::tokenizer
 	// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT are purged from the token list.
 	void purge_comments(std::pmr::list<token>& out_list_p) noexcept
 	{
-		const auto l_is_comment_begin = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentBegin; };
-		const auto l_is_comment_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_CommentEnd; };
-
-		auto l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_begin);
-		auto l_comment_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_end);
-
-		while ((l_comment_begin != out_list_p.end()) && (l_comment_end != out_list_p.end()))
+		for (auto it = out_list_p.begin(); it != out_list_p.end();) // purge all comment lines except the "*/"
 		{
-			//FE_ASSERT(l_comment_begin <= l_comment_end, "Assertion failure: the token iterators are transposed.");
-			out_list_p.erase(l_comment_begin, std::next(l_comment_end, 1) /* + 1 includes the last element to be deleted. */);
-			l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_begin);
-			l_comment_end = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_comment_end);
-		}
+			switch (it->_vocabulary)
+			{
+			case Vocabulary::_CommentBegin:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_CommentEnd:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_LineComment:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_CommentBody:
+				{
+					auto l_to_erase = it;
+					++it;
+					out_list_p.erase(l_to_erase);
+				}
+				continue;
 
-		const auto l_is_line_comment = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineComment; };
-		const auto l_is_line_end = [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; };
-
-		l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_comment);
-		l_comment_end = std::find_if(l_comment_begin, out_list_p.end(), l_is_line_end);
-
-		while ((l_comment_begin != out_list_p.end()) && (l_comment_end != out_list_p.end()))
-		{
-			//FE_ASSERT(l_comment_begin <= l_comment_end, "Assertion failure: the token iterators are transposed.");
-			out_list_p.erase(l_comment_begin, l_comment_end);
-			l_comment_begin = std::find_if(out_list_p.begin(), out_list_p.end(), l_is_line_comment);
-			l_comment_end = std::find_if(l_comment_begin, out_list_p.end(), l_is_line_end);
+			default:
+				++it;
+				continue;
+			}
 		}
 	}
 
@@ -220,174 +226,221 @@ namespace FHT::tokenizer
 		}
 	}
 
-	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, context_stack_t& context_stack_p) noexcept
 	{
-		token l_token;
-		l_token._vocabulary = Vocabulary::_Undefined;
-		l_token._code = file_buffer_t(u8"\0", framework::get_framework().get_memory_resource());
+		token l_token = 
+		{ 
+			._vocabulary = Vocabulary::_Undefined,
+			._code = file_buffer_t(u8"\0", framework::get_framework().get_memory_resource())
+		};
 
-		// The top priority is filtering out the comments.
-		tokenize_comment(l_token, code_iterator_p);
+		// The top priority is marking out the comments.
+		tokenize_comment(l_token, code_iterator_p, context_stack_p);
 		if (l_token._vocabulary != Vocabulary::_Undefined)
 		{
-			return l_token;
+			return l_token; // return if the text is a comment.
 		}
 
-		tokenize_operator(l_token, code_iterator_p);
-		if (l_token._vocabulary != Vocabulary::_Undefined)
-		{
-			return l_token;
-		}
+		//auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+		//thread_local static std::string tl_s_key_buffer;
 
-		auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
-		thread_local static std::string tl_s_key_buffer;
+		//for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
+		//{
+		//	it.key(tl_s_key_buffer);
+		//	switch (it.value())
+		//	{
+		//	case Vocabulary::_Namespace:
+		//		context_stack_p.emplace_back(ScopeContext::_Namespace);
+		//		break;
 
-		for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
-		{
-			it.key(tl_s_key_buffer);
-			switch (it.value())
-			{
-				// letter-non-contigous keywords.
-			case Vocabulary::_Override:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Final:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Constexpr:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Consteval:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Constinit:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_EndNamespace:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Namespace:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Class:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Struct:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Enum:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Static:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_ThreadLocal:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Virtual:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Using:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_StaticAssert:
-				if (verify_key_equivalence(code_iterator_p, tl_s_key_buffer.c_str()) == true)
-				{
-					l_token._vocabulary = it.value();
-					l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
-					return l_token;
-				}
-				break;
+		//	case Vocabulary::_Class:
+		//		context_stack_p.emplace_back(ScopeContext::_Class);
+		//		break;
 
-			case Vocabulary::_CallingConvention: /* __cdecl __stdcall __fastcall __thiscall __vectorcall */
-			{
-				constexpr static std::array<FE::ASCII*, 5> l_calling_conventions =
-				{
-					"__cdecl", "__stdcall", "__fastcall", "__thiscall", "__vectorcall"
-				};
+		//	case Vocabulary::_Struct:
+		//		context_stack_p.emplace_back(ScopeContext::_Struct);
+		//		break;
 
-				for (FE::ASCII* calling_convention : l_calling_conventions)
-				{
-					if (verify_key_equivalence(code_iterator_p, calling_convention) == true)
-					{
-						l_token._vocabulary = it.value();
-						l_token._code = reinterpret_cast<FE::UTF8*>(calling_convention);
-						return l_token;
-					}
-				}
-			}
-			break;
+		//	case Vocabulary::_Enum:
+		//		context_stack_p.emplace_back(ScopeContext::_EnumStruct);
+		//		break;
 
-			// letter-contigous keywords.
-			case Vocabulary::_BeginNamespace:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_NamespaceConcatenator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Template:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Private:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Protected:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Public:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Const:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Volatile:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Noexcept:
-				_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Template:
+		//		context_stack_p.emplace_back(ScopeContext::_TemplateArgs);
 
-			case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_FrogmanEngineMethodReflectionMacro:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_FrogmanEngineSystemAttributeMacro:
-				if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
-					tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
-				{
-					l_token._vocabulary = it.value();
-					l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
-					return l_token;
-				}
-				break;
+		//		break;
 
-			default:
-				break;
-			}
-		}
+		//	case Vocabulary::_StringLiteral:
+		//		context_stack_p.emplace_back(ScopeContext::_StringLiteral);
+
+		//		break;
+
+		//	case Vocabulary::_CharLiteral:
+		//		context_stack_p.emplace_back(ScopeContext::_CharLiteral);
+
+		//		break;
+
+		//	case Vocabulary::_PreprocessorDirective:
+		//		context_stack_p.emplace_back(ScopeContext::_PreprocessorContents);
+		//		
+		//		break;
+		//	}
+		//}
+
+		//tokenize_operator(l_token, code_iterator_p, context_stack_p);
+		//if (l_token._vocabulary != Vocabulary::_Undefined)
+		//{
+		//	return l_token;
+		//}
+
+		//for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
+		//{
+		//	it.key(tl_s_key_buffer);
+		//	switch (it.value())
+		//	{
+		//		// letter-non-contigous keywords.
+		//	case Vocabulary::_Override:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Final:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Constexpr:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Consteval:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Constinit:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_EndNamespace:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Namespace:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Class:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Struct:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Enum:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Static:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_ThreadLocal:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Virtual:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Using:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_StaticAssert:
+		//		if (verify_key_equivalence(code_iterator_p, tl_s_key_buffer.c_str(), context_stack_p) == true)
+		//		{
+		//			l_token._vocabulary = it.value();
+		//			l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+		//			return l_token;
+		//		}
+		//		break;
+
+		//	case Vocabulary::_CallingConvention: /* __cdecl __stdcall __fastcall __thiscall __vectorcall */
+		//	{
+		//		constexpr static std::array<FE::ASCII*, 5> l_calling_conventions =
+		//		{
+		//			"__cdecl", "__stdcall", "__fastcall", "__thiscall", "__vectorcall"
+		//		};
+
+		//		for (FE::ASCII* calling_convention : l_calling_conventions)
+		//		{
+		//			if (verify_key_equivalence(code_iterator_p, calling_convention, context_stack_p) == true)
+		//			{
+		//				l_token._vocabulary = it.value();
+		//				l_token._code = reinterpret_cast<FE::UTF8*>(calling_convention);
+		//				return l_token;
+		//			}
+		//		}
+		//	}
+		//	break;
+
+		//	// letter-contigous keywords.
+		//	case Vocabulary::_BeginNamespace:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_NamespaceConcatenator:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Template:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Private:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Protected:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Public:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Const:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Volatile:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Noexcept:
+		//		_FE_FALLTHROUGH_;
+
+		//	case Vocabulary::_FrogmanEngineBaseClassReflectionMacro:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_FrogmanEnginePropertyReflectionMacro:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_FrogmanEngineStaticMethodReflectionMacro:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_FrogmanEngineMethodReflectionMacro:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_FrogmanEngineSystemAttributeMacro:
+		//		if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+		//			tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
+		//		{
+		//			l_token._vocabulary = it.value();
+		//			l_token._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+		//			return l_token;
+		//		}
+		//		break;
+
+		//	default:
+		//		break;
+		//	}
+		//}
 
 
-		for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
-		{
-			it.key(tl_s_key_buffer);
-			switch (it.value())
-			{
-				// Miscellaneous keywords.
-			case Vocabulary::_Semicolon:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Colon:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_Comma:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_CharLiteral:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_StringLiteral:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_PreprocessorNextLine:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_PreprocessorDirective:
-				l_token._vocabulary = it.value();
-				l_token._code = static_cast<FE::UTF8>(*tl_s_key_buffer.c_str());
-				return l_token;
+		//for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
+		//{
+		//	it.key(tl_s_key_buffer);
+		//	switch (it.value())
+		//	{
+		//		// Miscellaneous keywords.
+		//	case Vocabulary::_Semicolon:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Colon:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_Comma:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_CharLiteral:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_StringLiteral:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_PreprocessorNextLine:
+		//		_FE_FALLTHROUGH_;
+		//	case Vocabulary::_PreprocessorDirective:
+		//		l_token._vocabulary = it.value();
+		//		l_token._code = static_cast<FE::UTF8>(*tl_s_key_buffer.c_str());
+		//		return l_token;
 
-			default:
-				break;
-			}
-		}
+		//	default:
+		//		break;
+		//	}
+		//}
 
 		return l_token; // Vocabulary::_Undefined
 	}
 
-	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p, context_stack_t& context_stack_p) noexcept
 	{
-		token l_token;
-		l_token._vocabulary = Vocabulary::_Undefined;
-		l_token._code = file_buffer_t(framework::get_framework().get_memory_resource());
-
-		while ((tokenize_identifiable(code_iterator_p)._vocabulary == Vocabulary::_Undefined) &&
+		token l_token = 
+		{
+			._vocabulary = Vocabulary::_Undefined,
+			._code = file_buffer_t(framework::get_framework().get_memory_resource())
+		};
+	
+		while ((tokenize_identifiable(code_iterator_p, context_stack_p)._vocabulary == Vocabulary::_Undefined) &&
 			(*code_iterator_p > ' '))
 		{
 			l_token._code += *code_iterator_p;
@@ -396,42 +449,70 @@ namespace FHT::tokenizer
 		return l_token;
 	}
 
-	void tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	void tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept
 	{
-		// Check if the string is a comment.
-		auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 		thread_local static std::string tl_s_key_buffer;
 
-		for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
+		// Check if the string starts with /
+		auto l_prefix_iterators = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
+
+		for (auto it = l_prefix_iterators.first; it != l_prefix_iterators.second; ++it) // iterate all candidates.
 		{
-			it.key(tl_s_key_buffer);
-			switch (it.value())
+			it.key(tl_s_key_buffer); // populate the key buffer.
+			switch (it.value()) // Check if it matches the Vocabulary enum value.
 			{
 			case Vocabulary::_CommentBegin:
 				_FE_FALLTHROUGH_;
-			case Vocabulary::_CommentEnd:
-				_FE_FALLTHROUGH_;
 			case Vocabulary::_LineComment:
-				if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
-					tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
+				if (FE::algorithm::string::compare_ranged(	(FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+																tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 				{
+					context_stack_p.emplace_back(FHT::ScopeContext::_CommentBlock);
 					out_token_p._vocabulary = it.value();
 					out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
 					return;
 				}
 				break;
 
+
+			case Vocabulary::_CommentEnd:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_LineEnd:
+				if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
+					tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
+				{
+					if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+					{
+						context_stack_p.pop_back();
+						return;
+					}
+				}
+				break;
+
+
 			default:
+				if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+				{
+					goto MarkAsComment;
+				}
 				break;
 			}
 		}
+
+		if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+		{
+		MarkAsComment:
+			out_token_p._vocabulary = Vocabulary::_CommentBody;
+			out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+			return;
+		}
 	}
 
-	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept
 	{
 		auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 		thread_local static std::string tl_s_key_buffer;
-
+		(void)context_stack_p;
 		for (auto it = l_prefix_iterator_range.first; it != l_prefix_iterator_range.second; ++it)
 		{
 			it.key(tl_s_key_buffer);
@@ -547,10 +628,10 @@ namespace FHT::tokenizer
 		}
 	}
 
-	_FE_NODISCARD_ FE::boolean verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p) noexcept
+	_FE_NODISCARD_ FE::boolean verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p, FHT::context_stack_t& context_stack_p) noexcept
 	{
 		static_assert(std::is_same_v<typename file_buffer_t::value_type, var::UTF8>, "static assertion failure, the header files must be encoded in UTF8.");
-
+		(void)context_stack_p;
 		FE::uint64 l_length = FE::algorithm::string::length(key_p);
 
 		if ((subject_p[-1] <= ' ') && (subject_p[l_length] <= ' ') ||

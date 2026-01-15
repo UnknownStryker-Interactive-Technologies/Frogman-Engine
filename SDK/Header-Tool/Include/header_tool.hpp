@@ -58,7 +58,7 @@ class header_tool : public FE::framework::framework_base
 {
 	program_options m_header_tool_options;
 	file_buffer_t m_copyright_notice;
-
+	
 	std::pmr::vector<directory_t> m_header_file_list;
 	std::pmr::vector<file_buffer_t> m_mapped_header_files;
 	FE::framework::reflection::enum_metadata* m_FHT_error_codes;

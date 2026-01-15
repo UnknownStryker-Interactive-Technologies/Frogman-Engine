@@ -22,16 +22,6 @@ limitations under the License.
 
 namespace FHT::parser
 {
-	enum struct ScopeContext
-	{
-		_Global,
-		_Namespace,
-		_Class,
-		_Struct,
-		_EnumStruct,
-		_Function,
-	};
-
 	void skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
 
 	bool is_forward_declaration(typename std::pmr::list<token>::const_iterator& out_token_iterator_p);

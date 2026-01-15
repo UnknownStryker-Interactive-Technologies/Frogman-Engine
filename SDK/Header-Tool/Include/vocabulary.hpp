@@ -28,6 +28,7 @@ enum struct Vocabulary : FE::uint32
 	_Undefined, _EndOfCode, _ContractedSpace,
 	_LineComment, _LineEnd,
 	_CommentBegin, _CommentEnd,
+	_CommentBody,
 	_BeginNamespace, _EndNamespace,
 	_Namespace, _NamespaceConcatenator,
 	_Template, _BeginTemplateArgs, _Typename, _EndTemplateArgs,
@@ -58,6 +59,8 @@ enum struct Vocabulary : FE::uint32
 	_StaticAssert, _Using,
 
 	_FrogmanEngineBaseClassReflectionMacro,
+	_FrogmanEngineClassReflectionMacro,
+	_FrogmanEngineStructReflectionMacro,
 	_FrogmanEnginePropertyReflectionMacro,
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
@@ -102,6 +105,8 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "static_assert", Vocabulary::_StaticAssert }, { "using", Vocabulary::_Using },
 
 	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
+	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },
+	{ "FE_STRUCT", Vocabulary::_FrogmanEngineStructReflectionMacro },
 	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
