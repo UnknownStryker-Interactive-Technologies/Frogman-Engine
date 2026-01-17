@@ -25,17 +25,22 @@ namespace FHT
 	enum struct ScopeContext : FE::uint16
 	{
 		_Global,
-		_Using,
+
+		_CommentBlock,
+		_Preprocessor,
+
 		_Namespace,
 		_Class,
 		_Struct,
 		_EnumStruct,
+
 		_Function,
+
+		_Template,
 		_TemplateArgs,
-		_CommentBlock,
+
 		_StringLiteral,
-		_CharLiteral,
-		_PreprocessorContents
+		_CharLiteral
 	};
 
 	using context_stack_t = std::pmr::vector<ScopeContext>;

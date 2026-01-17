@@ -156,13 +156,13 @@ FE::int32 header_tool::run()
 					FHT::tokenizer::purge_comments(*l_tokens); // throws if */ is missing.
 					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_comments might corrupted list");
 
-					FHT::tokenizer::purge_string_literals(*l_tokens); // removes the string literals ( quoted texts ).
-					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_string_literals might corrupted list");
-
 					// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
 					FHT::tokenizer::purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
 					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_preprocessor_directives might corrupted list");
 
+					FHT::tokenizer::purge_string_literals(*l_tokens); // removes the string literals ( quoted texts ).
+					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_string_literals might corrupted list");
+		
 					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
 					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: erase_if might corrupted list");
 

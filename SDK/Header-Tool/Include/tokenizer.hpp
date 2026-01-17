@@ -39,15 +39,17 @@ namespace FHT::tokenizer
 	// const char* p = "/* text */", f = "//text"; the 'text' is recognized as comments by FHT are purged from the token list.
 	void purge_comments(std::pmr::list<token>& out_list_p) noexcept;
 
-	void purge_string_literals(std::pmr::list<token>& out_list_p) noexcept;
-
 	void purge_preprocessor_directives(std::pmr::list<token>& out_list_p);
+
+	void purge_string_literals(std::pmr::list<token>& out_list_p) noexcept;
 
 	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
 	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
 	void tokenize_comment(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
+
+	void tokenize_preprocessor(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
 	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 

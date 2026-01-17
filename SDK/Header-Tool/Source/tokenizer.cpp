@@ -45,6 +45,11 @@ namespace FHT::tokenizer
 			{
 				if (*iterator == '\n')
 				{
+					if (l_context_stack.back() == FHT::ScopeContext::_Preprocessor)
+					{
+						l_context_stack.pop_back();
+					}
+
 					l_token = 
 					{
 						._vocabulary = Vocabulary::_LineEnd,
@@ -113,6 +118,31 @@ namespace FHT::tokenizer
 		}
 	}
 
+	void purge_preprocessor_directives(std::pmr::list<token>& out_list_p)
+	{
+		for (auto it = out_list_p.begin(); it != out_list_p.end();) // purge all comment lines except the "*/"
+		{
+			switch (it->_vocabulary)
+			{
+			case Vocabulary::_PreprocessorDirective:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Preprocessor:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_PreprocessorNextLine:
+			{
+				auto l_to_erase = it;
+				++it;
+				out_list_p.erase(l_to_erase);
+			}
+			continue;
+
+			default:
+				++it;
+				continue;
+			}
+		}
+	}
+
 	void purge_string_literals(std::pmr::list<token>& out_list_p) noexcept
 	{
 		using iterator = typename std::pmr::list<token>::iterator;
@@ -160,72 +190,6 @@ namespace FHT::tokenizer
 		}
 	}
 
-	void purge_preprocessor_directives(std::pmr::list<token>& out_list_p)
-	{
-		using range = std::pair< typename std::pmr::list<token>::iterator, typename std::pmr::list<token>::iterator >;
-		std::pmr::vector<range> l_ranges(framework::get_framework().get_memory_resource());
-
-		for (auto it = out_list_p.begin(); it != out_list_p.end(); ++it)
-		{
-			if (it->_vocabulary == Vocabulary::_PreprocessorDirective)
-			{
-				//std::cout << "Removing the preprocessor directive:\n";
-				range l_range;
-				l_range.first = it; // Start of the preprocessor directive.
-
-				auto l_line_end_indicator = std::find_if(l_range.first, out_list_p.end(), [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
-				auto l_preprocessor_nextline_indicator = std::find_if(l_range.first, out_list_p.end(), [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorNextLine; });
-
-				if (l_preprocessor_nextline_indicator != out_list_p.end())
-				{
-					var::ptrdiff l_line_end_indicator_offset = std::distance(l_range.first, l_line_end_indicator);
-					var::ptrdiff l_preprocessor_nextline_indicator_offset = std::distance(l_range.first, l_preprocessor_nextline_indicator);
-
-					// while "#directive \ \n" is true.
-					while (l_preprocessor_nextline_indicator_offset < l_line_end_indicator_offset)
-					{
-						// conttinue searching for the next preprocessor directive.
-						l_line_end_indicator = std::find_if(std::next(l_line_end_indicator, 1), out_list_p.end(), [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
-						l_preprocessor_nextline_indicator = std::find_if(std::next(l_preprocessor_nextline_indicator, 1), out_list_p.end(), [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_PreprocessorNextLine; });
-
-						if (l_preprocessor_nextline_indicator == out_list_p.end())
-						{
-							break; // No more preprocessor directives.
-						}
-
-						l_line_end_indicator_offset = std::distance(l_range.first, l_line_end_indicator);
-						l_preprocessor_nextline_indicator_offset = std::distance(l_range.first, l_preprocessor_nextline_indicator);
-					}
-				}
-
-				l_range.second = l_line_end_indicator; // End of the preprocessor directive.
-				l_ranges.push_back(l_range);
-				it = l_line_end_indicator; // Move the iterator to the end of the preprocessor directive.
-
-				//// for debugging purpose.
-				//while (l_range.first != l_range.second)
-				//{
-				//	std::cout << reinterpret_cast<const char*>(l_range.first->_code.c_str()) << "\n";
-				//	++l_range.first;
-				//}
-				//std::cout << "\n";
-			}
-
-			if (it == out_list_p.end())
-			{
-				break;
-			}
-		}
-
-		for (range& l_range : l_ranges)
-		{
-			if (l_range.first != out_list_p.end() && l_range.second != out_list_p.end())
-			{
-				out_list_p.erase(l_range.first, l_range.second);
-			}
-		}
-	}
-
 	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, context_stack_t& context_stack_p) noexcept
 	{
 		token l_token = 
@@ -239,6 +203,12 @@ namespace FHT::tokenizer
 		if (l_token._vocabulary != Vocabulary::_Undefined)
 		{
 			return l_token; // return if the text is a comment.
+		}
+
+		tokenize_preprocessor(l_token, code_iterator_p, context_stack_p);
+		if (l_token._vocabulary != Vocabulary::_Undefined)
+		{
+			return l_token; // return if the text is a preprocessor directive.
 		}
 
 		//auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
@@ -281,7 +251,7 @@ namespace FHT::tokenizer
 		//		break;
 
 		//	case Vocabulary::_PreprocessorDirective:
-		//		context_stack_p.emplace_back(ScopeContext::_PreprocessorContents);
+		//		context_stack_p.emplace_back(ScopeContext::_Preprocessor);
 		//		
 		//		break;
 		//	}
@@ -453,7 +423,6 @@ namespace FHT::tokenizer
 	{
 		thread_local static std::string tl_s_key_buffer;
 
-		// Check if the string starts with /
 		auto l_prefix_iterators = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 
 		for (auto it = l_prefix_iterators.first; it != l_prefix_iterators.second; ++it) // iterate all candidates.
@@ -508,6 +477,52 @@ namespace FHT::tokenizer
 		}
 	}
 
+	void tokenize_preprocessor(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept
+	{
+		switch (*code_iterator_p)
+		{
+		case '#':
+			if (context_stack_p.back() != FHT::ScopeContext::_Preprocessor)
+			{
+				context_stack_p.emplace_back(FHT::ScopeContext::_Preprocessor);
+			}
+			out_token_p._vocabulary = Vocabulary::_PreprocessorDirective;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '\\':
+			if (context_stack_p.back() == FHT::ScopeContext::_Preprocessor)
+			{
+				out_token_p._vocabulary = Vocabulary::_PreprocessorNextLine;
+				out_token_p._code = *code_iterator_p;
+				context_stack_p.emplace_back(FHT::ScopeContext::_Preprocessor);
+			}
+			break;
+
+		default:
+			if (context_stack_p.back() == FHT::ScopeContext::_Preprocessor)
+			{
+				out_token_p._vocabulary = Vocabulary::_Preprocessor;
+				auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\n');
+
+				if (l_rng != std::nullopt) _FE_LIKELY_
+				{
+					out_token_p._code.assign(code_iterator_p, l_rng->_begin);
+				}
+				else
+				{
+					out_token_p._code = code_iterator_p; // EOF
+				}
+				
+				if (out_token_p._code.back() == '\\')
+				{
+					out_token_p._code.pop_back();
+				}
+			}
+			break;
+		}
+	}
+
 	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept
 	{
 		auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
@@ -518,38 +533,6 @@ namespace FHT::tokenizer
 			it.key(tl_s_key_buffer);
 			switch (it.value())
 			{
-			case Vocabulary::_Access:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_AddAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_SubAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_MulAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_DivAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_ModAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BitwiseAndAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BitwiseOrAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BitwiseXorAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BitShiftAssignmentOperator:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_LogicalAnd:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_IsEqualTo:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_IsNotEqualTo:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_IsLessThanOrEqualTo:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_IsGreaterThanOrEqualTo:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BitShiftOperator:
-				_FE_FALLTHROUGH_;
 			case Vocabulary::_LeftParen:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_RightParen:

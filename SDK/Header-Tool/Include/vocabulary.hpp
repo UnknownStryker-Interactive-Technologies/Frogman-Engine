@@ -25,35 +25,40 @@ limitations under the License.
 
 enum struct Vocabulary : FE::uint32
 {
-	_Undefined, _EndOfCode, _ContractedSpace,
+	_Undefined, _EndOfCode,
+
 	_LineComment, _LineEnd,
 	_CommentBegin, _CommentEnd,
 	_CommentBody,
+
 	_BeginNamespace, _EndNamespace,
 	_Namespace, _NamespaceConcatenator,
-	_Template, _BeginTemplateArgs, _Typename, _EndTemplateArgs,
+
+	_Template, _BeginTemplateArgs, _Typename, _TemplateArg, _EndTemplateArgs,
+
 	_Class, _Struct, _Enum,
+
 	_Colon, _Semicolon, _Comma,
 
 	_StringLiteral, _CharLiteral, _NumberValue,
-	_Access, _Operator,
-	_AssignmentOperator,
-	_LogicalAnd,
-	_BitShiftOperator,
-	_BitShiftAssignmentOperator, _BitwiseAndAssignmentOperator, _BitwiseOrAssignmentOperator, _BitwiseXorAssignmentOperator,
-	_AddAssignmentOperator, _SubAssignmentOperator, _MulAssignmentOperator, _DivAssignmentOperator, _ModAssignmentOperator,
-	_IsEqualTo, _IsNotEqualTo, _IsGreaterThanOrEqualTo, _IsLessThanOrEqualTo,
+	_Operator, _AssignmentOperator,
 
 	_Virtual, _Override, _Final,
+
 	_Private, _Protected, _Public,
+
 	_Static, _ThreadLocal,
+
 	_Const, _Volatile,
 	_Reference, _Pointer,
+
 	_Noexcept,
 	_Constexpr, _Consteval, _Constinit,
+
 	_LeftParen, _RightParen,
 	_LeftBracket, _RightBracket,
 	_LeftCurlyBracket, _RightCurlyBracket,
+
 	_CallingConvention,
 
 	_StaticAssert, _Using,
@@ -66,7 +71,9 @@ enum struct Vocabulary : FE::uint32
 	_FrogmanEngineMethodReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
 	_FrogmanEngineSystemAttributeMacro,
-	_PreprocessorDirective, _PreprocessorNextLine
+
+	_PreprocessorDirective, _PreprocessorNextLine,
+	_Preprocessor,
 };
 
 
@@ -75,29 +82,32 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 
 	{ "//", Vocabulary::_LineComment }, { "\n", Vocabulary::_LineEnd },
 	{ "/*", Vocabulary::_CommentBegin }, { "*/", Vocabulary::_CommentEnd },
+
 	{ "BEGIN_NAMESPACE", Vocabulary::_BeginNamespace }, { "END_NAMESPACE", Vocabulary::_EndNamespace },
 	{ "namespace", Vocabulary::_Namespace }, { "::", Vocabulary::_NamespaceConcatenator },
-	{ "template", Vocabulary::_Template }, { "<", Vocabulary::_BeginTemplateArgs }, { ">", Vocabulary::_EndTemplateArgs },
+
+	{ "template", Vocabulary::_Template }, { "<", Vocabulary::_BeginTemplateArgs }, { "typename", Vocabulary::_Typename }, { ">", Vocabulary::_EndTemplateArgs },
+
 	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_Enum },
+
 	{ ":", Vocabulary::_Colon }, { ";", Vocabulary::_Semicolon }, { ",", Vocabulary::_Comma },
 
 	{ "\"", Vocabulary::_StringLiteral }, { "\'", Vocabulary::_CharLiteral },
-	{ "->", Vocabulary::_Access },
+
 	{ "=", Vocabulary::_AssignmentOperator },
-	{ "&&", Vocabulary::_LogicalAnd },
-	{ ">>", Vocabulary::_BitShiftOperator }, { "<<", Vocabulary::_BitShiftOperator },
-	{ ">>=", Vocabulary::_BitShiftAssignmentOperator }, { "<<=", Vocabulary::_BitShiftAssignmentOperator },
-	{ "&=", Vocabulary::_BitwiseAndAssignmentOperator }, { "|=", Vocabulary::_BitwiseOrAssignmentOperator }, { "^=", Vocabulary::_BitwiseXorAssignmentOperator },
-	{ "+=", Vocabulary::_AddAssignmentOperator }, { "-=", Vocabulary::_SubAssignmentOperator }, { "*=", Vocabulary::_MulAssignmentOperator }, { "/=", Vocabulary::_DivAssignmentOperator }, { "%=", Vocabulary::_ModAssignmentOperator },
-	{ "==", Vocabulary::_IsEqualTo }, { "!=", Vocabulary::_IsNotEqualTo }, { ">=", Vocabulary::_IsGreaterThanOrEqualTo }, { "<=", Vocabulary::_IsLessThanOrEqualTo },
 
 	{ "virtual", Vocabulary::_Virtual}, { "override", Vocabulary::_Override}, { "final", Vocabulary::_Final},
-	{ "private", Vocabulary::_Private }, { "public", Vocabulary::_Public }, { "protected", Vocabulary::_Protected },
+
+	{ "private", Vocabulary::_Private }, { "protected", Vocabulary::_Protected }, { "public", Vocabulary::_Public },
+
 	{ "static", Vocabulary::_Static }, { "thread_local", Vocabulary::_ThreadLocal },
+
 	{ "const", Vocabulary::_Const }, { "volatile", Vocabulary::_Volatile},
 	{ "&", Vocabulary::_Reference }, { "*", Vocabulary::_Pointer },
+
 	{ "noexcept", Vocabulary::_Noexcept },
 	{ "constexpr", Vocabulary::_Constexpr }, { "consteval", Vocabulary::_Consteval }, { "constinit", Vocabulary::_Constinit },
+
 	{ "(", Vocabulary::_LeftParen }, { ")", Vocabulary::_RightParen },
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
@@ -112,9 +122,8 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
 	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemAttributeMacro },
-	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine },
 
-	{ "__", Vocabulary::_CallingConvention }
+	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine },
 };
 
 
