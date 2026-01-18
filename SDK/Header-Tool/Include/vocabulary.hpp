@@ -42,6 +42,7 @@ enum struct Vocabulary : FE::uint32
 
 	_BackSlash,
 
+	_RawTextLiteralPrefix, _TextLiteralPrefix,
 	_StringLiteral, _CharLiteral, _NumberValue,
 	_Operator, _AssignmentOperator,
 

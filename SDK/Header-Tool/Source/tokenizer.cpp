@@ -37,7 +37,6 @@ namespace FHT::tokenizer
 		std::pmr::list<token> l_list{ framework::get_framework().get_memory_resource() };
 
 		auto l_end = file_p.c_str() + file_p.size();
-		token l_token;
 		var::uint32 l_line_number = 1;
 		for (FE::UTF8* iterator = FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 		{
@@ -48,7 +47,7 @@ namespace FHT::tokenizer
 			}
 
 
-			l_token = tokenize_identifiable(iterator, l_context_stack);
+			token l_token = tokenize_identifiable(iterator, l_context_stack);
 			l_token._header_file_path = path_p.c_str();
 			l_token._line_number = l_line_number;
 			if (l_token._vocabulary != Vocabulary::_Undefined)
@@ -61,7 +60,7 @@ namespace FHT::tokenizer
 					if (*iterator == '\n')
 					{
 						l_token._vocabulary = Vocabulary::_LineEnd;
-						l_token._code = *iterator;
+						l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
 						l_token._header_file_path = path_p.c_str();
 						l_token._line_number = l_line_number;
 
@@ -85,7 +84,7 @@ namespace FHT::tokenizer
 				if (*iterator == '\n')
 				{
 					l_token._vocabulary = Vocabulary::_LineEnd;
-					l_token._code = *iterator;
+					l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
 					l_token._header_file_path = path_p.c_str();
 					l_token._line_number = l_line_number;
 
@@ -569,12 +568,15 @@ namespace FHT::tokenizer
 	// implement poping the context
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
+		// tokenize _TextLiteralPrefix
+
+
 		switch (*code_iterator_p)
 		{
 		case '\"':
 			if (context_stack_p.back() == FHT::ScopeContext::_StringLiteral)
 			{
-				if (code_iterator_p[-1] != '\\') // not escaped quote; is accessible when "" or "\"".
+				if (code_iterator_p[-1] != '\\') // is accessible when "" or "\"".
 				{
 					context_stack_p.pop_back();
 				}
@@ -591,7 +593,7 @@ namespace FHT::tokenizer
 		case '\'':
 			if (context_stack_p.back() == FHT::ScopeContext::_CharLiteral)
 			{
-				if (code_iterator_p[-1] != '\\') // not escaped quote; is accessible when '' or '\''.
+				if (code_iterator_p[-1] != '\\') // is accessible when '' or '\''.
 				{
 					context_stack_p.pop_back();
 				}

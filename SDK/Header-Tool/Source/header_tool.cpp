@@ -133,34 +133,28 @@ FE::int32 header_tool::run()
 
 					try
 					{
+						//---------------- Throwable Methods Below This Line ----------------//
 						// throws if the header file is ill-formed.
 						auto l_tokens = FHT::tokenizer::tokenize_header(l_file, l_path);	// tokenize the header file to get the tokens.
-
-
-						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
-						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
 
 
 						//---------------- Noexcept Methods Below This Line ----------------//
 						// removes /**/ and // comments.
 						FHT::tokenizer::purge_comments(l_tokens);
-						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_comments might has corrupted the list");
-
 
 						// removes the # preprocessor directives and its contents.
 						FHT::tokenizer::purge_preprocessor(l_tokens); 
-						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_preprocessor might has corrupted the list");
-
 
 						FHT::tokenizer::purge_string_literals_and_backslashes(l_tokens); // removes the \, characters, and strings.
-						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_string_literals_and_backslashes might has corrupted the list");
 
+
+						//---------------- Throwable Methods Below This Line ----------------//
+						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
+						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
 
 						std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; }); // It is a bug if this function throws.
 						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: erase_if might has corrupted the list");
 					
-
-						//---------------- Throwable Methods Below This Line ----------------//
 						header_file_root l_reflection_tree;
 						l_reflection_tree = FHT::parser::try_build_reflection_tree(l_path, l_tokens); // Parse the header; throws if the C++ header file is ill-formed.
 					
