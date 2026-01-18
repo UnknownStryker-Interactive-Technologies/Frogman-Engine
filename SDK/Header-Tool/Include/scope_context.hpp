@@ -29,6 +29,9 @@ namespace FHT
 		_CommentBlock,
 		_Preprocessor,
 
+		_StringLiteral,
+		_CharLiteral,
+
 		_Namespace,
 		_Class,
 		_Struct,
@@ -37,10 +40,7 @@ namespace FHT
 		_Function,
 
 		_Template,
-		_TemplateArgs,
-
-		_StringLiteral,
-		_CharLiteral
+		_TemplateArgs
 	};
 
 	using context_stack_t = std::pmr::vector<ScopeContext>;

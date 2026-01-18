@@ -55,6 +55,6 @@ namespace FHT::reflexcode_generator
 	void output_struct_metadata(metadata& out_return_p, const struct_node& node_p) noexcept;
 	void output_enum_struct_metadata(metadata& out_return_p, const enum_struct_node& node_p) noexcept;
 
-	void generate_reflection_code(const metadata_set_t& metadata_set_p) noexcept;
+	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept;
 } 
 #endif

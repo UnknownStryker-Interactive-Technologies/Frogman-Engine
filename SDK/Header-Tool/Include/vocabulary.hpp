@@ -40,6 +40,8 @@ enum struct Vocabulary : FE::uint32
 
 	_Colon, _Semicolon, _Comma,
 
+	_BackSlash,
+
 	_StringLiteral, _CharLiteral, _NumberValue,
 	_Operator, _AssignmentOperator,
 
@@ -121,9 +123,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
-	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemAttributeMacro },
-
-	{ "#", Vocabulary::_PreprocessorDirective }, { "\\", Vocabulary::_PreprocessorNextLine },
+	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemAttributeMacro }
 };
 
 

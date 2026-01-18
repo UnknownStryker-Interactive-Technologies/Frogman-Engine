@@ -238,7 +238,7 @@ namespace FHT::reflexcode_generator
 
 
 
-	void generate_reflection_code(const metadata_set_t& metadata_set_p) noexcept
+	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept
 	{
 		std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
 		l_generated_code.reserve(1 * FE::one_MiB);

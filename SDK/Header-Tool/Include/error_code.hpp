@@ -26,6 +26,7 @@ limitations under the License.
 FE_ENUM_STRUCT();
 enum struct FrogmanEngineHeaderToolError : FE::int32
 {
+	_EmptyHeaderFile = 999,
 	_FatalCmdInputError_NoProgramOptionsAreGiven = 1000,
 	_FatalCmdInputError_NoFilesAreGiven = 1001,
 	_FatalCmdInputError_InvalidPathToCMakeProject = 1002,

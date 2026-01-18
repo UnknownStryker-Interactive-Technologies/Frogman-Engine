@@ -131,54 +131,45 @@ FE::int32 header_tool::run()
 					file_buffer_t& l_file = m_mapped_header_files[i];
 					directory_t& l_path = m_header_file_list[i];
 
-					// tokenize the header file to get the tokens.
-					auto l_tokens = FHT::tokenizer::tokenize_header(l_file, l_path);
-
-					if (l_tokens == std::nullopt)
+					try
 					{
-						std::lock_guard<std::mutex> l_guard(l_log_lock);						// self-reflection: the FHT enabling the enum reflection for itself! It actually works!
-						std::cerr << "Frogman Engine Header Tool Error:\n\tThe error code is " << m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_TokenizationFailure) << '\n';
-						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
-						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_TokenizationFailure; 
-						return;
-					}
+						// throws if the header file is ill-formed.
+						auto l_tokens = FHT::tokenizer::tokenize_header(l_file, l_path);	// tokenize the header file to get the tokens.
+
+
+						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
+						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
+
+
+						//---------------- Noexcept Methods Below This Line ----------------//
+						// removes /**/ and // comments.
+						FHT::tokenizer::purge_comments(l_tokens);
+						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_comments might has corrupted the list");
+
+
+						// removes the # preprocessor directives and its contents.
+						FHT::tokenizer::purge_preprocessor(l_tokens); 
+						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_preprocessor might has corrupted the list");
+
+
+						FHT::tokenizer::purge_string_literals_and_backslashes(l_tokens); // removes the \, characters, and strings.
+						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: purge_string_literals_and_backslashes might has corrupted the list");
+
+
+						std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; }); // It is a bug if this function throws.
+						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: erase_if might has corrupted the list");
 					
-					if (FHT::symbol_counter::validate_parentheses(*l_tokens) != std::nullopt)
-					{
-						std::lock_guard<std::mutex> l_guard(l_log_lock);
-						std::cerr << "Frogman Engine Header Tool Error:\n\tThe error code is " << m_FHT_error_codes->enum_to_string(FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax) << '\n';
-						std::wcerr << L"\033[33mSkipping the header file at: " << l_path.c_str() << "\033[0m\n\n";
-						l_exit_code = (int)FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax; 
-						return;
+
+						//---------------- Throwable Methods Below This Line ----------------//
+						header_file_root l_reflection_tree;
+						l_reflection_tree = FHT::parser::try_build_reflection_tree(l_path, l_tokens); // Parse the header; throws if the C++ header file is ill-formed.
+					
+
+						//---------------- Noexcept Methods Below This Line ----------------//
+						// generate and add the reflection metadata to the in-house concurrent vector. 
+						m_metadata_set.push_back( FHT::reflexcode_generator::generate_metadata(l_reflection_tree) );
 					}
-
-					// removes /**/ and // comments.
-					FHT::tokenizer::purge_comments(*l_tokens); // throws if */ is missing.
-					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_comments might corrupted list");
-
-					// removes the # preprocessor directives and its contents. It cannot remove the text after the \.
-					FHT::tokenizer::purge_preprocessor_directives(*l_tokens); // throws if 'text' after # is missing.
-					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_preprocessor_directives might corrupted list");
-
-					FHT::tokenizer::purge_string_literals(*l_tokens); // removes the string literals ( quoted texts ).
-					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: __purge_string_literals might corrupted list");
-		
-					std::erase_if(*l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
-					FE_ASSERT(FHT::symbol_counter::validate_parentheses(*l_tokens) == std::nullopt, "Assertion failed: erase_if might corrupted list");
-
-					//// for debugging purpose.
-					//for (auto& v : *l_tokens)
-					//{
-					//	std::cout << reinterpret_cast<const char*>(v._code.c_str()) << "\n";
-					//}
-					//std::cout << "\n";
-
-					header_file_root l_reflection_tree;
-					try // The exceptions must be thrown if the input header files have C++ syntax errors.
-					{
-						l_reflection_tree = FHT::parser::try_build_reflection_tree(l_path, *l_tokens); // throws if C++ syntax is incorrect.
-					}
-					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p)
+					catch (const FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>& error_p) // The exceptions must be thrown if the input header files have C++ syntax errors.
 					{
 						std::lock_guard<std::mutex> l_guard(l_log_lock);
 						std::cerr << error_p._second << '\n';
@@ -186,9 +177,13 @@ FE::int32 header_tool::run()
 						l_exit_code = (int)error_p._first;
 						return; 
 					}
-
-					// generate the reflection metadata set. m_metadata_set is a concurrent vector. 
-					m_metadata_set.push_back(FHT::reflexcode_generator::generate_metadata(l_reflection_tree) );
+					
+					//// for debugging purpose.
+					//for (auto& v : *l_tokens)
+					//{
+					//	std::cout << reinterpret_cast<const char*>(v._code.c_str()) << "\n";
+					//}
+					//std::cout << "\n";
 				}
 			);
 		}
@@ -205,7 +200,7 @@ FE::int32 header_tool::run()
 		// generate the reflection code in the generated.cpp file.
 		if (m_header_tool_options.is_fno_write_defined() == false)
 		{
-			FHT::reflexcode_generator::generate_reflection_code(m_metadata_set);
+			FHT::reflexcode_generator::generate_reflexcode(m_metadata_set);
 		}
 	}
 
