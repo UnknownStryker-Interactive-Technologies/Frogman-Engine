@@ -159,6 +159,8 @@ namespace FHT::tokenizer
 		{
 			switch (it->_vocabulary)
 			{
+			case Vocabulary::_TextLiteralPrefix:
+				_FE_FALLTHROUGH_;
 			case Vocabulary::_StringLiteral:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_CharLiteral:
@@ -404,11 +406,10 @@ namespace FHT::tokenizer
 			._code = file_buffer_t(framework::get_framework().get_memory_resource())
 		};
 	
-		while ((tokenize_identifiable(code_iterator_p, context_stack_p)._vocabulary == Vocabulary::_Undefined) &&
-			(*code_iterator_p > ' '))
+		for (;(tokenize_identifiable(code_iterator_p, context_stack_p)._vocabulary == Vocabulary::_Undefined) &&
+			(*code_iterator_p > ' '); ++code_iterator_p)
 		{
 			l_token._code += *code_iterator_p;
-			++code_iterator_p;
 		}
 		return l_token;
 	}
@@ -565,26 +566,120 @@ namespace FHT::tokenizer
 			break;
 		}
 	}
-	// implement poping the context
+
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
 		// tokenize _TextLiteralPrefix
+		switch (*code_iterator_p)
+		{
+		case 'L':
+			_FE_FALLTHROUGH_;
+		case 'u':
+			_FE_FALLTHROUGH_;
+		case 'U': 
+			_FE_FALLTHROUGH_;
+
+		case 'R':
+			{
+				auto l_quote = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
+				auto l_line_end = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\n');
+
+				if (!(l_quote->_begin < l_line_end->_begin)) // doesn't the first " comes before \n in the current line?
+				{
+					break;
+				}
+
+
+				out_token_p._code.assign(code_iterator_p, l_quote->_begin); // copy until ".
+
+				while (out_token_p._code.back() == ' ') // the first character is the case value. Purge all trailing spaces between the prefix and the quote.
+				{
+					out_token_p._code.pop_back();
+				}
+
+
+				switch (out_token_p._code.length()) // test the length of the purged string.
+				{
+				case 1:
+					out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+
+					if (out_token_p._code.back() == 'R') // is R
+					{
+						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+					}
+					return;
+
+
+				case 2:
+					if (out_token_p._code.back() == '8') // is u8
+					{
+						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						return;
+					}
+
+					if (out_token_p._code.back() == 'R') // is LR, uR, or UR
+					{
+						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						return;
+					}
+
+					out_token_p._code.clear(); // is not a valid prefix.
+					break;
+
+
+				case 3:
+					if (out_token_p._code == u8"u8R")
+					{
+						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						return;
+					}
+					out_token_p._code.clear(); // is not a valid prefix.
+					break;
+					
+
+				default:
+					out_token_p._code.clear(); // is not a valid prefix.
+					break;
+				}
+			}
+			break;
+
+
+		default:
+			break; 
+		}
+
+
 
 
 		switch (*code_iterator_p)
 		{
 		case '\"':
-			if (context_stack_p.back() == FHT::ScopeContext::_StringLiteral)
+			switch (context_stack_p.back())
 			{
-				if (code_iterator_p[-1] != '\\') // is accessible when "" or "\"".
+			case FHT::ScopeContext::_StringLiteral:
+				if (code_iterator_p[-1] != '\\')
 				{
-					context_stack_p.pop_back();
+					context_stack_p.pop_back(); // is accessible when "".
 				}
-			}
-			else
-			{
+				break;
+
+			case FHT::ScopeContext::_RawTextLiteral:
+				// "FHT Error: the Frogman Engine Header Tool does not allow the use of C++ raw text custom delimiters."
+				if (code_iterator_p[-1] == ')') // does not have any delimiters; is the previous character ')'?
+				{
+					context_stack_p.pop_back(); // is accessible when R"()"
+					break;
+				}
+				break;
+
+			default:
 				context_stack_p.emplace_back(FHT::ScopeContext::_StringLiteral);
+				break;
 			}
+
 			out_token_p._vocabulary = Vocabulary::_StringLiteral;
 			out_token_p._code = *code_iterator_p;
 			break;
@@ -616,6 +711,8 @@ namespace FHT::tokenizer
 				break;
 
 			case FHT::ScopeContext::_StringLiteral:
+				_FE_FALLTHROUGH_;
+			case FHT::ScopeContext::_RawTextLiteral:
 				out_token_p._vocabulary = Vocabulary::_StringLiteral;
 				{
 					auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');

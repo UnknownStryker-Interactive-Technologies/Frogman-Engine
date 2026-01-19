@@ -24,7 +24,7 @@ limitations under the License.
 namespace FHT::test
 {
 	constexpr std::string_view test_cases_basic_strings[] = {
-		R"(const char* str = "hello world";)",
+		"const char* str = \"hello world\";",
 		R"(const char* str = ;)",
 		R"(const char* empty = "";)",
 		R"(const char* empty = ;)",
@@ -32,40 +32,38 @@ namespace FHT::test
 		R"(std::string msg = ;)"
 	};
 
-	constexpr std::string_view test_cases_character_literals[] = {
-		R"(char c = 'a';)",
-		R"(char c = ;)",
-		R"(char newline = '\n';)",
-		R"(char newline = ;)",
-		R"(char quote = '\'';)",
-		R"(char quote = ;)"
+	constexpr std::wstring_view test_cases_character_literals[] = {
+		L"char c = 'a';",
+		LR"(char c = ;)",
+		LR"(char newline = '\n';)",
+		LR"(char newline = ;)",
+		LR"(char quote = '\'';)",
+		LR"(char quote = ;)"
 	};
 
-	constexpr std::string_view test_cases_escaped_sequences[] = {
-		R"(const char* path = "C:\\Users\\file.txt";)",
-		R"(const char* path = ;)",
-		R"(const char* json = "{\"key\": \"value\"}";)",
-		R"(const char* json = ;)",
-		R"(const char* tabs = "line1\tline2\n";)",
-		R"(const char* tabs = ;)"
+	constexpr std::u8string_view test_cases_escaped_sequences[] = {
+		u8"const char* path = \"C:\\Users\\file.txt\";",
+		u8R"(const char* path = ;)",
+		u8R"(const char* json = "{\"key\": \"value\"}";)",
+		u8R"(const char* json = ;)",
+		u8R"(const char* tabs = "line1\tline2\n";)",
+		u8R"(const char* tabs = ;)"
 	};
 
-	constexpr std::string_view test_cases_raw_strings[] = {
-		R"delim(const char* raw = R"(Hello "world")";)delim",
-		R"(const char* raw = ;)",
-		R"delim(const char* multiline = R"(Line1
-Line2
-Line3)";)delim",
-		R"(const char* multiline = ;)"
+	constexpr std::u16string_view test_cases_raw_strings[] = {
+		u"const char* raw = R\"(Hello \"world\")\";",
+		uR"(const char* raw = ;)",
+		uR"(const char* multiline = R"(Line1Line2Line3)";)",
+		uR"(const char* multiline = ;)"
 	};
 
-	constexpr std::string_view test_cases_mixed_code[] = {
-		R"(int x = 10; const char* str = "value"; return x;)",
-		R"(int x = 10; const char* str = ; return x;)",
-		R"(if (name == "test") { char c = 'x'; })",
-		R"(if (name == ) { char c = ; })",
-		R"(printf("Result: %d\n", value);)",
-		R"(printf(, value);)"
+	constexpr std::u32string_view test_cases_mixed_code[] = {
+		U"int x = 10; const char* str = \"value\"; return x;",
+		UR"(int x = 10; const char* str = ; return x;)",
+		UR"(if (name == "test") { char c = 'x'; })",
+		UR"(if (name == ) { char c = ; })",
+		UR"(printf("Result: %d\n", value);)",
+		UR"(printf(, value);)"
 	};
 
 	constexpr std::string_view test_cases_edge_cases[] = {
