@@ -25,16 +25,16 @@ namespace FHT::test
 {
 	constexpr std::string_view test_cases_basic_strings[] = {
 		"const char* str = \"hello world\";",
-		R"(const char* str = ;)",
-		R"(const char* empty = "";)",
-		R"(const char* empty = ;)",
-		R"(std::string msg = "Error: failed";)",
+		R"IHateDelim(const char* str = ;)IHateDelim",
+		R"( R"IHateDelim()IHateDelim\" )",
+		R"( R"IHateDelim(const char* empty = ;)IHateDelim\" )",
+		R"IHateDelim( R"IHateDelim()IHateDelim\" )IHateDelim",
 		R"(std::string msg = ;)"
 	};
 
 	constexpr std::wstring_view test_cases_character_literals[] = {
 		L"char c = 'a';",
-		LR"(char c = ;)",
+		LR"IHateDelim(char c = ;)IHateDelim",
 		LR"(char newline = '\n';)",
 		LR"(char newline = ;)",
 		LR"(char quote = '\'';)",
@@ -43,7 +43,7 @@ namespace FHT::test
 
 	constexpr std::u8string_view test_cases_escaped_sequences[] = {
 		u8"const char* path = \"C:\\Users\\file.txt\";",
-		u8R"(const char* path = ;)",
+		u8R"IHateDelim(const char* path = ;)IHateDelim",
 		u8R"(const char* json = "{\"key\": \"value\"}";)",
 		u8R"(const char* json = ;)",
 		u8R"(const char* tabs = "line1\tline2\n";)",
@@ -52,14 +52,14 @@ namespace FHT::test
 
 	constexpr std::u16string_view test_cases_raw_strings[] = {
 		u"const char* raw = R\"(Hello \"world\")\";",
-		uR"(const char* raw = ;)",
-		uR"(const char* multiline = R"(Line1Line2Line3)";)",
+		uR"IHateDelim(const char* raw = ;)IHateDelim",
+		uR"(const char* multiline = R"(Line1Line2Line3)\";)",
 		uR"(const char* multiline = ;)"
 	};
 
 	constexpr std::u32string_view test_cases_mixed_code[] = {
 		U"int x = 10; const char* str = \"value\"; return x;",
-		UR"(int x = 10; const char* str = ; return x;)",
+		UR"IHateDelim(int x = 10; const char* str = ; return x;)IHateDelim",
 		UR"(if (name == "test") { char c = 'x'; })",
 		UR"(if (name == ) { char c = ; })",
 		UR"(printf("Result: %d\n", value);)",
@@ -68,7 +68,7 @@ namespace FHT::test
 
 	constexpr std::string_view test_cases_edge_cases[] = {
 		R"(const char* quote = "He said \"hello\"";)",
-		R"(const char* quote = ;)",
+		R"IHateDelim(const char* quote = ;)IHateDelim",
 		R"(char backslash = '\\';)",
 		R"(char backslash = ;)",
 		R"("unclosed string)",
@@ -79,7 +79,7 @@ namespace FHT::test
 
 	constexpr std::string_view test_cases_concatenated[] = {
 		R"(const char* str = "Hello " "World";)",
-		R"(const char* str = ;)",
+		R"IHateDelim(const char* str = ;)IHateDelim",
 		R"(auto msg = "Line1\n"
                    "Line2\n";)",
 		R"(auto msg = ;)"
@@ -87,7 +87,7 @@ namespace FHT::test
 
 	constexpr std::string_view test_cases_preprocessor[] = {
 		R"(#define MSG "Error message")",
-		R"(#define MSG )",
+		R"IHateDelim(#define MSG )IHateDelim",
 		R"(#include "header.hpp")",
 		R"(#include )",
 		R"(#error "Compilation failed")",

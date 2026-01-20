@@ -53,6 +53,8 @@ namespace FHT::tokenizer
 
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
 
+	void extract_raw_text_delimiter_from_the_left_quote(file_buffer_t& out_return_p, typename file_buffer_t::const_pointer code_iterator_p);
+
 	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
 	FE::boolean verify_key_equivalence(typename file_buffer_t::const_pointer subject_p, FE::ASCII* key_p, FHT::context_stack_t& context_stack_p) noexcept;

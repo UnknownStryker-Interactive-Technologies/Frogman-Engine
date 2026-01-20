@@ -569,6 +569,8 @@ namespace FHT::tokenizer
 
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
+		thread_local static file_buffer_t tl_s_delimiter;
+
 		// tokenize _TextLiteralPrefix
 		switch (*code_iterator_p)
 		{
@@ -606,7 +608,10 @@ namespace FHT::tokenizer
 					if (out_token_p._code.back() == 'R') // is R
 					{
 						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
+						return;
 					}
+					tl_s_delimiter.clear();
 					return;
 
 
@@ -614,6 +619,7 @@ namespace FHT::tokenizer
 					if (out_token_p._code.back() == '8') // is u8
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						tl_s_delimiter.clear();
 						return;
 					}
 
@@ -621,9 +627,11 @@ namespace FHT::tokenizer
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
 						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
 						return;
 					}
 
+					tl_s_delimiter.clear();
 					out_token_p._code.clear(); // is not a valid prefix.
 					break;
 
@@ -633,13 +641,17 @@ namespace FHT::tokenizer
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
 						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
 						return;
 					}
+
+					tl_s_delimiter.clear();
 					out_token_p._code.clear(); // is not a valid prefix.
 					break;
 					
 
 				default:
+					tl_s_delimiter.clear();
 					out_token_p._code.clear(); // is not a valid prefix.
 					break;
 				}
@@ -667,7 +679,23 @@ namespace FHT::tokenizer
 				break;
 
 			case FHT::ScopeContext::_RawTextLiteral:
-				// "FHT Error: the Frogman Engine Header Tool does not allow the use of C++ raw text custom delimiters."
+				if (tl_s_delimiter.length() > 0)
+				{
+					auto l_pos = code_iterator_p - tl_s_delimiter.length();
+					if (FE::algorithm::string::compare_ranged(
+						l_pos,
+						FE::algorithm::string::range{ ._begin = 0, ._end = tl_s_delimiter.length() },
+
+						tl_s_delimiter.c_str(),
+						FE::algorithm::string::range{ ._begin = 0, ._end = tl_s_delimiter.length() }
+					) == true)
+					{
+						context_stack_p.pop_back(); // is accessible when R"delimiter()delimiter"
+						tl_s_delimiter.clear();
+						break;
+					}
+				}
+
 				if (code_iterator_p[-1] == ')') // does not have any delimiters; is the previous character ')'?
 				{
 					context_stack_p.pop_back(); // is accessible when R"()"
@@ -724,6 +752,26 @@ namespace FHT::tokenizer
 			}
 			break;
 		}
+	}
+
+	void extract_raw_text_delimiter_from_the_left_quote(file_buffer_t& out_return_p, typename file_buffer_t::const_pointer code_iterator_p)
+	{
+		auto l_start = code_iterator_p;
+		while (*l_start != '\"')
+		{
+			THROW_CPP_SYNTAX_ERROR(*l_start == '\0', "C++ code syntax Error C2001: the raw text literal delimiter is incomplete.");
+			++l_start;
+		}
+		++l_start; // skip "
+
+		auto l_end = l_start;
+		while (*l_end != '(')
+		{
+			THROW_CPP_SYNTAX_ERROR(*l_end == '\0', "C++ code syntax Error C2001: the raw text literal delimiter is incomplete.");
+			++l_end;
+		}
+
+		out_return_p.assign(l_start, l_end);
 	}
 
 	void tokenize_operator(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept
