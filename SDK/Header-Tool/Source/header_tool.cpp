@@ -147,6 +147,12 @@ FE::int32 header_tool::run()
 
 						FHT::tokenizer::purge_string_literals_and_backslashes(l_tokens); // removes the \, characters, and strings.
 
+						FHT::tokenizer::purge_template(l_tokens); // removes the template declarations.
+
+						FHT::tokenizer::purge_forward_declaration(l_tokens); // removes the forward declarations.
+
+						FHT::tokenizer::purge_function_bodies(l_tokens); // removes the function bodies.
+
 
 						//---------------- Throwable Methods Below This Line ----------------//
 						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);

@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 
-#include "scope_context.hpp"
+#include "context.hpp"
 #include "token.hpp"
 #include "vocabulary.hpp"
 
@@ -43,6 +43,13 @@ namespace FHT::tokenizer
 
 	void purge_string_literals_and_backslashes(std::pmr::list<token>& out_list_p) noexcept;
 
+	void purge_forward_declaration(std::pmr::list<token>& out_list_p) noexcept;
+
+	void purge_template(std::pmr::list<token>& out_list_p) noexcept;
+
+	void purge_function_bodies(std::pmr::list<token>& out_list_p) noexcept;
+
+
 	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
 
 	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
@@ -52,6 +59,17 @@ namespace FHT::tokenizer
 	void tokenize_preprocessor(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p) noexcept;
 
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+	
+	void tokenize_template(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+
+	void tokenize_forward_declaration(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+
+	void tokenize_function_body(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+
+	void tokenize_class_or_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+
+	void tokenize_enum_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
+
 
 	void extract_raw_text_delimiter_from_the_left_quote(file_buffer_t& out_return_p, typename file_buffer_t::const_pointer code_iterator_p);
 

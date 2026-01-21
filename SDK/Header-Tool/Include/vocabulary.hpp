@@ -35,6 +35,7 @@ enum struct Vocabulary : FE::uint32
 	_Namespace, _NamespaceConcatenator,
 
 	_Template, _BeginTemplateArgs, _Typename, _TemplateArg, _EndTemplateArgs,
+	_TemplateBody,
 
 	_Class, _Struct, _Enum,
 

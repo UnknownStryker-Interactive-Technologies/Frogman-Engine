@@ -15,7 +15,7 @@ limitations under the License.
 */
 #include "header_tool.hpp"
 #include "file_io.hpp"
-#include "scope_context.hpp"
+#include "context.hpp"
 #include "tokenizer.hpp"
 
 
@@ -32,7 +32,7 @@ namespace FHT::tokenizer
 
 		context_stack_t l_context_stack{ framework::get_framework().get_memory_resource() };
 		l_context_stack.reserve(64);
-		l_context_stack.emplace_back(FHT::ScopeContext::_Global);
+		l_context_stack.emplace_back(FHT::Context::_Global);
 
 		std::pmr::list<token> l_list{ framework::get_framework().get_memory_resource() };
 
@@ -180,6 +180,48 @@ namespace FHT::tokenizer
 		}
 	}
 
+	void purge_forward_declaration(std::pmr::list<token>& out_list_p) noexcept
+	{
+		(out_list_p);
+	}
+
+	void purge_template(std::pmr::list<token>& out_list_p) noexcept
+	{
+		for (auto it = out_list_p.begin(); it != out_list_p.end();)
+		{
+			switch (it->_vocabulary)
+			{
+			case Vocabulary::_Template:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_BeginTemplateArgs:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Typename:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_TemplateArg:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_EndTemplateArgs:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_TemplateBody:
+			{
+				auto l_to_erase = it;
+				++it;
+				out_list_p.erase(l_to_erase);
+			}
+			continue;
+
+			default:
+				++it;
+				continue;
+			}
+		}
+	}
+
+	void purge_function_bodies(std::pmr::list<token>& out_list_p) noexcept
+	{
+		(out_list_p);
+	}
+
+
 	_FE_NODISCARD_ token tokenize_identifiable(typename file_buffer_t::const_pointer code_iterator_p, context_stack_t& context_stack_p)
 	{
 		token l_token = 
@@ -207,6 +249,24 @@ namespace FHT::tokenizer
 			return l_token; // return if the text is a string literal.
 		}
 
+		tokenize_template(l_token, code_iterator_p, context_stack_p);
+		if (l_token._vocabulary != Vocabulary::_Undefined)
+		{
+			return l_token; // return if the text is a template declaration.
+		}
+
+		tokenize_forward_declaration(l_token, code_iterator_p, context_stack_p);
+		if (l_token._vocabulary != Vocabulary::_Undefined)
+		{
+			return l_token; // return if the text is a forward declaration.
+		}
+
+		tokenize_function_body(l_token, code_iterator_p, context_stack_p);
+		if (l_token._vocabulary != Vocabulary::_Undefined)
+		{
+			return l_token; // return if the text is a function body.
+		}
+
 		//auto l_prefix_iterator_range = g_vocabulary.equal_prefix_range_ks(FE::iterator_cast<FE::ASCII*>(code_iterator_p), 1);
 		//thread_local static std::string tl_s_key_buffer;
 
@@ -216,38 +276,38 @@ namespace FHT::tokenizer
 		//	switch (it.value())
 		//	{
 		//	case Vocabulary::_Namespace:
-		//		context_stack_p.emplace_back(ScopeContext::_Namespace);
+		//		context_stack_p.emplace_back(Context::_Namespace);
 		//		break;
 
 		//	case Vocabulary::_Class:
-		//		context_stack_p.emplace_back(ScopeContext::_Class);
+		//		context_stack_p.emplace_back(Context::_Class);
 		//		break;
 
 		//	case Vocabulary::_Struct:
-		//		context_stack_p.emplace_back(ScopeContext::_Struct);
+		//		context_stack_p.emplace_back(Context::_Struct);
 		//		break;
 
 		//	case Vocabulary::_Enum:
-		//		context_stack_p.emplace_back(ScopeContext::_EnumStruct);
+		//		context_stack_p.emplace_back(Context::_EnumStruct);
 		//		break;
 
 		//	case Vocabulary::_Template:
-		//		context_stack_p.emplace_back(ScopeContext::_TemplateArgs);
+		//		context_stack_p.emplace_back(Context::_TemplateArgs);
 
 		//		break;
 
 		//	case Vocabulary::_StringLiteral:
-		//		context_stack_p.emplace_back(ScopeContext::_StringLiteral);
+		//		context_stack_p.emplace_back(Context::_StringLiteral);
 
 		//		break;
 
 		//	case Vocabulary::_CharLiteral:
-		//		context_stack_p.emplace_back(ScopeContext::_CharLiteral);
+		//		context_stack_p.emplace_back(Context::_CharLiteral);
 
 		//		break;
 
 		//	case Vocabulary::_PreprocessorDirective:
-		//		context_stack_p.emplace_back(ScopeContext::_Preprocessor);
+		//		context_stack_p.emplace_back(Context::_Preprocessor);
 		//		
 		//		break;
 		//	}
@@ -429,7 +489,7 @@ namespace FHT::tokenizer
 				if (FE::algorithm::string::compare_ranged(	(FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
 																tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 				{
-					context_stack_p.emplace_back(FHT::ScopeContext::_CommentBlock);
+					context_stack_p.emplace_back(FHT::Context::_CommentBlock);
 					out_token_p._vocabulary = it.value();
 					out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
 					return;
@@ -441,7 +501,7 @@ namespace FHT::tokenizer
 				if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
 					tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 				{
-					if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+					if (context_stack_p.back() == FHT::Context::_CommentBlock)
 					{
 						context_stack_p.pop_back();
 						out_token_p._vocabulary = it.value();
@@ -473,7 +533,7 @@ namespace FHT::tokenizer
 
 
 			default:
-				if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+				if (context_stack_p.back() == FHT::Context::_CommentBlock)
 				{
 					goto MarkAsComment;
 				}
@@ -481,7 +541,7 @@ namespace FHT::tokenizer
 			}
 		}
 
-		if (context_stack_p.back() == FHT::ScopeContext::_CommentBlock)
+		if (context_stack_p.back() == FHT::Context::_CommentBlock)
 		{
 		MarkAsComment:
 			out_token_p._vocabulary = Vocabulary::_CommentBody;
@@ -509,9 +569,9 @@ namespace FHT::tokenizer
 	{
 		switch (context_stack_p.back())
 		{
-		case FHT::ScopeContext::_StringLiteral:
+		case FHT::Context::_StringLiteral:
 			_FE_FALLTHROUGH_;
-		case FHT::ScopeContext::_CharLiteral:
+		case FHT::Context::_CharLiteral:
 			return; // Preprocessor directives are not recognized inside string literals or char literals.
 
 		default:
@@ -521,9 +581,9 @@ namespace FHT::tokenizer
 		switch (*code_iterator_p)
 		{
 		case '#':
-			if (context_stack_p.back() != FHT::ScopeContext::_Preprocessor)
+			if (context_stack_p.back() != FHT::Context::_Preprocessor)
 			{
-				context_stack_p.emplace_back(FHT::ScopeContext::_Preprocessor);
+				context_stack_p.emplace_back(FHT::Context::_Preprocessor);
 			}
 			out_token_p._vocabulary = Vocabulary::_PreprocessorDirective;
 			out_token_p._code = *code_iterator_p;
@@ -531,7 +591,7 @@ namespace FHT::tokenizer
 
 
 		case '\\':
-			if (context_stack_p.back() == FHT::ScopeContext::_Preprocessor)
+			if (context_stack_p.back() == FHT::Context::_Preprocessor)
 			{
 				out_token_p._vocabulary = Vocabulary::_PreprocessorNextLine;
 				out_token_p._code = *code_iterator_p;
@@ -540,7 +600,7 @@ namespace FHT::tokenizer
 
 
 		default:
-			if (context_stack_p.back() == FHT::ScopeContext::_Preprocessor)
+			if (context_stack_p.back() == FHT::Context::_Preprocessor)
 			{
 				out_token_p._vocabulary = Vocabulary::_Preprocessor;
 				auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\n');
@@ -607,7 +667,7 @@ namespace FHT::tokenizer
 
 					if (out_token_p._code.back() == 'R') // is R
 					{
-						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						context_stack_p.push_back(FHT::Context::_RawTextLiteral);
 						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
 						return;
 					}
@@ -626,7 +686,7 @@ namespace FHT::tokenizer
 					if (out_token_p._code.back() == 'R') // is LR, uR, or UR
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
-						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						context_stack_p.push_back(FHT::Context::_RawTextLiteral);
 						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
 						return;
 					}
@@ -640,7 +700,7 @@ namespace FHT::tokenizer
 					if (out_token_p._code == u8"u8R")
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
-						context_stack_p.push_back(FHT::ScopeContext::_RawTextLiteral);
+						context_stack_p.push_back(FHT::Context::_RawTextLiteral);
 						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
 						return;
 					}
@@ -671,14 +731,14 @@ namespace FHT::tokenizer
 		case '\"':
 			switch (context_stack_p.back())
 			{
-			case FHT::ScopeContext::_StringLiteral:
+			case FHT::Context::_StringLiteral:
 				if (code_iterator_p[-1] != '\\')
 				{
 					context_stack_p.pop_back(); // is accessible when "".
 				}
 				break;
 
-			case FHT::ScopeContext::_RawTextLiteral:
+			case FHT::Context::_RawTextLiteral:
 				if (tl_s_delimiter.length() > 0)
 				{
 					auto l_pos = code_iterator_p - tl_s_delimiter.length();
@@ -704,7 +764,7 @@ namespace FHT::tokenizer
 				break;
 
 			default:
-				context_stack_p.emplace_back(FHT::ScopeContext::_StringLiteral);
+				context_stack_p.emplace_back(FHT::Context::_StringLiteral);
 				break;
 			}
 
@@ -714,7 +774,7 @@ namespace FHT::tokenizer
 
 
 		case '\'':
-			if (context_stack_p.back() == FHT::ScopeContext::_CharLiteral)
+			if (context_stack_p.back() == FHT::Context::_CharLiteral)
 			{
 				if (code_iterator_p[-1] != '\\') // is accessible when '' or '\''.
 				{
@@ -723,7 +783,7 @@ namespace FHT::tokenizer
 			}
 			else
 			{
-				context_stack_p.emplace_back(FHT::ScopeContext::_CharLiteral);
+				context_stack_p.emplace_back(FHT::Context::_CharLiteral);
 			}
 			out_token_p._vocabulary = Vocabulary::_CharLiteral;
 			out_token_p._code = *code_iterator_p;
@@ -733,14 +793,14 @@ namespace FHT::tokenizer
 		default:
 			switch (context_stack_p.back())
 			{
-			case FHT::ScopeContext::_CharLiteral:
+			case FHT::Context::_CharLiteral:
 				out_token_p._vocabulary = Vocabulary::_CharLiteral;
 				out_token_p._code = *code_iterator_p;
 				break;
 
-			case FHT::ScopeContext::_StringLiteral:
+			case FHT::Context::_StringLiteral:
 				_FE_FALLTHROUGH_;
-			case FHT::ScopeContext::_RawTextLiteral:
+			case FHT::Context::_RawTextLiteral:
 				out_token_p._vocabulary = Vocabulary::_StringLiteral;
 				{
 					auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
@@ -752,6 +812,113 @@ namespace FHT::tokenizer
 			}
 			break;
 		}
+	}
+
+	void tokenize_template(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		constexpr FE::UTF8* l_template_keyword = u8"template";
+		FE::algorithm::string::range l_template = { 0, FE::algorithm::string::length(l_template_keyword) };
+		if (FE::algorithm::string::compare_ranged<FE::UTF8>(code_iterator_p, l_template,
+			l_template_keyword, l_template)
+			== true)
+		{
+			out_token_p._vocabulary = Vocabulary::_Template;
+			out_token_p._code = l_template_keyword;
+			context_stack_p.emplace_back(FHT::Context::_Template);
+			return;
+		}
+
+
+		switch (context_stack_p.back())
+		{
+		case FHT::Context::_Template:
+			_FE_FALLTHROUGH_;
+		case FHT::Context::_TemplateArgs:
+			if (*code_iterator_p == '<')
+			{
+				out_token_p._vocabulary = Vocabulary::_BeginTemplateArgs;
+				out_token_p._code = *code_iterator_p;
+				context_stack_p.emplace_back(FHT::Context::_TemplateArgs);
+				return;
+			}
+			break;
+
+		default:
+			break;
+		}
+
+
+		// pop the context when the stack top if it encounters '>' within the template context.
+		if (context_stack_p.back() == FHT::Context::_TemplateArgs)
+		{
+			if (*code_iterator_p == '>')
+			{
+				out_token_p._vocabulary = Vocabulary::_EndTemplateArgs;
+				out_token_p._code = *code_iterator_p;
+				context_stack_p.pop_back();
+				return;
+			}
+		}
+
+
+		// copy until < or >.
+		if (context_stack_p.back() == FHT::Context::_TemplateArgs)
+		{
+			auto l_end_args = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '>');
+			auto l_nested_begin_args = FE::algorithm::string::find_the_first_within_range<FE::UTF8>(code_iterator_p, FE::algorithm::string::range{0, l_end_args->_begin}, '<');
+
+			THROW_CPP_SYNTAX_ERROR(l_end_args == std::nullopt, "C++ code syntax Error C2988: the template argument list is incomplete.");
+
+			if (l_nested_begin_args == std::nullopt) // not found '<'
+			{
+				// found '>'; copy until '>'
+				out_token_p._vocabulary = Vocabulary::_TemplateArg;
+				out_token_p._code.assign(code_iterator_p, l_end_args->_begin);
+				return;
+			}
+			
+			out_token_p._vocabulary = Vocabulary::_TemplateArg;
+			out_token_p._code.assign(code_iterator_p, l_nested_begin_args->_begin); // found '<'; copy until '<'
+			return;
+		}
+	}
+
+	void tokenize_forward_declaration(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		(out_token_p);
+		(code_iterator_p);
+		(context_stack_p);
+		// mark them as forward declarations: class, struct, enum, and function.
+	}
+
+	void tokenize_function_body(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		(out_token_p);
+		(code_iterator_p);
+
+		if (context_stack_p.back() == FHT::Context::_Template)
+		{
+			// discard all
+		}
+	}
+
+	void tokenize_class_or_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		(out_token_p);
+		(code_iterator_p);
+
+		if (context_stack_p.back() == FHT::Context::_Template)
+		{
+			// discard all
+		}
+	}
+
+	void tokenize_enum_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		(out_token_p);
+		(code_iterator_p);
+
+		THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_Template, "C++ Code Syntax Error C3113: an 'enum' cannot be a template");
 	}
 
 	void extract_raw_text_delimiter_from_the_left_quote(file_buffer_t& out_return_p, typename file_buffer_t::const_pointer code_iterator_p)
