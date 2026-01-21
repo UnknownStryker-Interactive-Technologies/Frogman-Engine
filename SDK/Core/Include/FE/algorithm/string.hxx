@@ -879,56 +879,16 @@ _FE_CONSTEXPR17_ FE::boolean space_insensitive_contains(const CharT* const str_p
 
     while ((l_str_iter != l_str_end) && (*l_target_substr != '\0'))
     {
-        switch (*l_str_iter)
+        if (*l_str_iter <= ' ')
         {
-        case ' ':
-            _FE_FALLTHROUGH_;
-        case '\a':
-            _FE_FALLTHROUGH_;
-        case '\b':
-            _FE_FALLTHROUGH_;
-        case '\f':
-            _FE_FALLTHROUGH_;
-        case '\n':
-            _FE_FALLTHROUGH_;
-        case '\r':
-            _FE_FALLTHROUGH_;
-        case '\t':
-            _FE_FALLTHROUGH_;
-        case '\v':
-            _FE_FALLTHROUGH_;
-        case '\0':
             ++l_str_iter;
             continue;
-
-        default:
-            break;
         }
 
-        switch (*l_target_substr)
+        if (*l_target_substr <= ' ')
         {
-        case ' ':
-            _FE_FALLTHROUGH_;
-		case '\a':
-            _FE_FALLTHROUGH_;
-		case '\b':
-			_FE_FALLTHROUGH_;
-		case '\f':
-			_FE_FALLTHROUGH_;
-		case '\n':
-			_FE_FALLTHROUGH_;
-		case '\r':
-			_FE_FALLTHROUGH_;
-		case '\t':
-			_FE_FALLTHROUGH_;
-		case '\v':
-            _FE_FALLTHROUGH_;
-		case '\0':
             ++l_target_substr;
             continue;
-
-        default:
-            break;
         }
 
         if (*l_str_iter == *l_target_substr)
