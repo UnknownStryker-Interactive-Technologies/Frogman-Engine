@@ -6,12 +6,8 @@
 # Frogman-Engine
 Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
 **The Frogman Engine is licensed under a modified Apache License 2.0.**  
-⚠️ **NOTICE**: The contents of this repository **MAY NOT BE USED** for **training AI(Artificial Intelligence) models** or **developing any AI(Artificial Intelligence)-relevant products** without prior written permission. Please contact unknownstryker416@gmail.com to request for the permission.  
-The **Frogman Engine Game Development Kit** is **TOTALLY FREE** without any licensing fees if conforming to the **License** and if used for **game development and AI-irrelevant software development**. Otherwise the license fees apply.
-### How to calculate Frogman Engine license fees for AI training and development
-x = number of engineering months since the creation of the Frogman Engine repository.  
-license fee per AI model = x times $1000 USD.  
-This is a reasonable price since I have been putting years of effort. If you are not a pirate, please pay the price for the years of labor.
+⚠️ **NOTICE**: The contents of this repository **MAY NOT BE USED** for **training AI(Artificial Intelligence) models** without prior written permission. Please contact unknownstryker416@gmail.com to request for the permission.  
+The **Frogman Engine Game Development Kit** is **TOTALLY FREE** without any licensing fees if conforming to the **License** and if used for **game development**. Otherwise license fees apply.
 
 ### Frogman Engine GDK has these two major GUI utility apps  
 - Frogman Engine Installer: https://github.com/UnknownStryker-Interactive-Technologies/Installer  
