@@ -1,5 +1,5 @@
-#ifndef _FE_HEADER_TOOL_REFLECTION_HPP_
-#define _FE_HEADER_TOOL_REFLECTION_HPP_
+#ifndef _FE_HEADER_TOOL_REFLEXCODE_GENERATOR_HPP_
+#define _FE_HEADER_TOOL_REFLEXCODE_GENERATOR_HPP_
 /*
 Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -18,7 +18,7 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/concurrent_vector.hxx>
 
-#include "reflection_tree.hpp"
+#include "reflextree.hpp"
 #include "token.hpp"
 
 #include <string>

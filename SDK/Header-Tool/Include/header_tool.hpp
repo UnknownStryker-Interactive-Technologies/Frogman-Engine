@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "reflection_tree.hpp"
+#include "reflextree.hpp"
 #include "reflexcode_generator.hpp"
 #include "program_options.hpp"
 #include "token.hpp"
