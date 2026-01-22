@@ -92,7 +92,7 @@ namespace FHT::symbol_counter
 				++l_count._structs;
 				break;
 
-			case Vocabulary::_Enum:
+			case Vocabulary::_EnumStruct:
 				if (FHT::parser::is_forward_declaration(begin_p) == true)
 				{
 					break;

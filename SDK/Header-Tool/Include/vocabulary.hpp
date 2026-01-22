@@ -37,7 +37,9 @@ enum struct Vocabulary : FE::uint32
 	_Template, _BeginTemplateArgs, _Typename, _TemplateArg, _EndTemplateArgs,
 	_TemplateBody,
 
-	_Class, _Struct, _Enum,
+	_Class, _Struct, _EnumStruct,
+	_ClassStructEnumForwardDeclaration,
+	_FieldType, _FieldIdentifier, _EnumStructField,
 
 	_Colon, _Semicolon, _Comma,
 
@@ -63,9 +65,9 @@ enum struct Vocabulary : FE::uint32
 	_LeftBracket, _RightBracket,
 	_LeftCurlyBracket, _RightCurlyBracket,
 
-	_CallingConvention,
+	_CallingConvention, _FnReturnType, _FnIdentifier, _FnParameterList, _FnBody,
 
-	_StaticAssert, _Using,
+	_StaticAssert,
 
 	_FrogmanEngineBaseClassReflectionMacro,
 	_FrogmanEngineClassReflectionMacro,
@@ -92,7 +94,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 
 	{ "template", Vocabulary::_Template }, { "<", Vocabulary::_BeginTemplateArgs }, { "typename", Vocabulary::_Typename }, { ">", Vocabulary::_EndTemplateArgs },
 
-	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_Enum },
+	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_EnumStruct },
 
 	{ ":", Vocabulary::_Colon }, { ";", Vocabulary::_Semicolon }, { ",", Vocabulary::_Comma },
 
@@ -116,7 +118,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
 	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
 
-	{ "static_assert", Vocabulary::_StaticAssert }, { "using", Vocabulary::_Using },
+	{ "static_assert", Vocabulary::_StaticAssert },
 
 	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
 	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },

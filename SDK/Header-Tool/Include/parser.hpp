@@ -22,10 +22,6 @@ limitations under the License.
 
 namespace FHT::parser
 {
-	void skip_code_block(typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p) noexcept;
-
-	bool is_forward_declaration(typename std::pmr::list<token>::const_iterator& out_token_iterator_p);
-
 	_FE_NODISCARD_ header_file_root try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
 
 	_FE_NODISCARD_ std::optional<namespace_node> try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
@@ -37,7 +33,5 @@ namespace FHT::parser
 	_FE_NODISCARD_ std::optional<enum_struct_node> try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	_FE_NODISCARD_ std::optional<system_node> try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
-
-	void skip_template_args(typename std::pmr::list<token>::const_iterator& iterator_p);
 }
 #endif
