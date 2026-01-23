@@ -799,7 +799,8 @@ namespace FHT::tokenizer
 		}
 
 
-		tokenize_class_struct_enum_forward_declaration(out_token_p, code_iterator_p + out_token_p._code.length());
+		code_iterator_p += out_token_p._code.length();
+		tokenize_class_struct_enum_forward_decl_and_using_namespace(out_token_p, code_iterator_p);
 		if (out_token_p._vocabulary != Vocabulary::_Undefined)
 		{
 			return; // return if the text is a forward declaration.
@@ -810,7 +811,6 @@ namespace FHT::tokenizer
 		{
 			out_token_p._vocabulary = Vocabulary::_TemplateBody;
 			out_token_p._code.reserve(100);
-			code_iterator_p += out_token_p._code.length();
 
 			while (*code_iterator_p != '{')
 			{
@@ -857,8 +857,6 @@ namespace FHT::tokenizer
 			++code_iterator_p;
 		}
 
-
-
 		context_stack_p.emplace_back(FHT::Context::_Class);
 	}
 
@@ -874,7 +872,8 @@ namespace FHT::tokenizer
 		}
 
 
-		tokenize_class_struct_enum_forward_declaration(out_token_p, code_iterator_p + out_token_p._code.length());
+		code_iterator_p += out_token_p._code.length();
+		tokenize_class_struct_enum_forward_decl_and_using_namespace(out_token_p, code_iterator_p);
 		if (out_token_p._vocabulary != Vocabulary::_Undefined)
 		{
 			return; // return if the text is a forward declaration.
@@ -885,7 +884,6 @@ namespace FHT::tokenizer
 		{
 			out_token_p._vocabulary = Vocabulary::_TemplateBody;
 			out_token_p._code.reserve(100);
-			code_iterator_p += out_token_p._code.length();
 
 			while (*code_iterator_p != '{')
 			{
@@ -932,8 +930,6 @@ namespace FHT::tokenizer
 			++code_iterator_p;
 		}
 
-
-
 		context_stack_p.emplace_back(FHT::Context::_Struct);
 	}
 
@@ -952,7 +948,8 @@ namespace FHT::tokenizer
 		THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_Template, "C++ Code Syntax Error C3113: an 'enum' cannot be a template");
 
 
-		tokenize_class_struct_enum_forward_declaration(out_token_p, code_iterator_p + out_token_p._code.length());
+		code_iterator_p += out_token_p._code.length();
+		tokenize_class_struct_enum_forward_decl_and_using_namespace(out_token_p, code_iterator_p);
 		if (out_token_p._vocabulary != Vocabulary::_Undefined)
 		{
 			return; // return if the text is a forward declaration.
@@ -990,9 +987,37 @@ namespace FHT::tokenizer
 
 	void tokenize_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
+		auto l_potential_namespace = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, u8' ');
+		out_token_p._code.assign(code_iterator_p, l_potential_namespace->_begin);
+
+		if (FE::algorithm::string::space_insensitive_contains(out_token_p._code.c_str(), out_token_p._code.length(), u8"namespace") == false)
+		{
+			out_token_p._code.clear();
+			return; // not a namespace.
+		}
+
+		THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_Template, "C++ Code Syntax Error C2988: unrecognizable template declaration/definition");
+
+
+		code_iterator_p += out_token_p._code.length();
+		tokenize_class_struct_enum_forward_decl_and_using_namespace(out_token_p, code_iterator_p);
+		if (out_token_p._vocabulary != Vocabulary::_Undefined)
+		{
+			return; // return if the text is a using statement.
+		}
+
+
+		// copy until '{'
+		while (*code_iterator_p != '{')
+		{
+			out_token_p._code += *code_iterator_p;
+			++code_iterator_p;
+		}
+
+		context_stack_p.emplace_back(FHT::Context::_Namespace);
 	}
 
-	void tokenize_class_struct_enum_forward_declaration(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p)
+	void tokenize_class_struct_enum_forward_decl_and_using_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p)
 	{
 		const auto l_begin = code_iterator_p;
 

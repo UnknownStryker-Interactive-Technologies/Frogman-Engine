@@ -79,7 +79,7 @@ namespace FHT::tokenizer
 
 	void tokenize_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
 
-	void tokenize_class_struct_enum_forward_declaration(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p);
+	void tokenize_class_struct_enum_forward_decl_and_using_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p);
 
 
 	void tokenize_function(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p);
