@@ -41,7 +41,9 @@ namespace FHT
 		_Function,
 
 		_Template,
-		_TemplateArgs
+		_TemplateArgs,
+
+		_FrogmanEngineSystemMacro
 	};
 
 	using context_stack_t = std::pmr::vector<Context>;

@@ -76,7 +76,7 @@ enum struct Vocabulary : FE::uint32
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
-	_FrogmanEngineSystemAttributeMacro,
+	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgTargetComponentType, _FrogmanEngineSystemArgWorldTagEnumType,
 
 	_PreprocessorDirective, _PreprocessorNextLine,
 	_Preprocessor,
@@ -85,22 +85,8 @@ enum struct Vocabulary : FE::uint32
 
 const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 {
-
-	{ "//", Vocabulary::_LineComment }, { "\n", Vocabulary::_LineEnd },
-	{ "/*", Vocabulary::_CommentBegin }, { "*/", Vocabulary::_CommentEnd },
-
 	{ "BEGIN_NAMESPACE", Vocabulary::_BeginNamespace }, { "END_NAMESPACE", Vocabulary::_EndNamespace },
-	{ "namespace", Vocabulary::_Namespace }, { "::", Vocabulary::_NamespaceConcatenator },
-
-	{ "template", Vocabulary::_Template }, { "<", Vocabulary::_BeginTemplateArgs }, { "typename", Vocabulary::_Typename }, { ">", Vocabulary::_EndTemplateArgs },
-
-	{ "class", Vocabulary::_Class }, { "struct", Vocabulary::_Struct }, { "enum", Vocabulary::_EnumStruct },
-
-	{ ":", Vocabulary::_Colon }, { ";", Vocabulary::_Semicolon }, { ",", Vocabulary::_Comma },
-
-	{ "\"", Vocabulary::_StringLiteral }, { "\'", Vocabulary::_CharLiteral },
-
-	{ "=", Vocabulary::_AssignmentOperator },
+	{ "::", Vocabulary::_NamespaceConcatenator },
 
 	{ "virtual", Vocabulary::_Virtual}, { "override", Vocabulary::_Override}, { "final", Vocabulary::_Final},
 
@@ -109,14 +95,9 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "static", Vocabulary::_Static }, { "thread_local", Vocabulary::_ThreadLocal },
 
 	{ "const", Vocabulary::_Const }, { "volatile", Vocabulary::_Volatile},
-	{ "&", Vocabulary::_Reference }, { "*", Vocabulary::_Pointer },
 
 	{ "noexcept", Vocabulary::_Noexcept },
 	{ "constexpr", Vocabulary::_Constexpr }, { "consteval", Vocabulary::_Consteval }, { "constinit", Vocabulary::_Constinit },
-
-	{ "(", Vocabulary::_LeftParen }, { ")", Vocabulary::_RightParen },
-	{ "[", Vocabulary::_LeftBracket }, { "]", Vocabulary::_RightBracket },
-	{ "{", Vocabulary::_LeftCurlyBracket }, { "}", Vocabulary::_RightCurlyBracket },
 
 	{ "static_assert", Vocabulary::_StaticAssert },
 
@@ -127,7 +108,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
 	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
-	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemAttributeMacro }
+	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemMacro }
 };
 
 

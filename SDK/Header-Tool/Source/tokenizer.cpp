@@ -294,6 +294,12 @@ namespace FHT::tokenizer
 			return l_token; // return if the text is an operator.
 		}
 
+		tokenize_reflection_macros(l_token, code_iterator_p, context_stack_p);
+		if (l_token._vocabulary != Vocabulary::_Undefined)
+		{
+			return l_token;
+		}
+
 		tokenize_class(l_token, code_iterator_p, context_stack_p);
 		if (l_token._vocabulary != Vocabulary::_Undefined)
 		{
@@ -319,12 +325,6 @@ namespace FHT::tokenizer
 		}
 
 		tokenize_function(l_token, code_iterator_p, context_stack_p);
-		if (l_token._vocabulary != Vocabulary::_Undefined)
-		{
-			return l_token;
-		}
-
-		tokenize_reflection_macros(l_token, code_iterator_p, context_stack_p);
 		if (l_token._vocabulary != Vocabulary::_Undefined)
 		{
 			return l_token;
@@ -784,6 +784,157 @@ namespace FHT::tokenizer
 
 	void tokenize_operators(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
+		switch (*code_iterator_p)
+		{
+		case '{':
+			out_token_p._vocabulary = Vocabulary::_LeftCurlyBracket;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '}':
+			out_token_p._vocabulary = Vocabulary::_RightCurlyBracket;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+
+		case '(':
+			out_token_p._vocabulary = Vocabulary::_LeftParen;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case ')':
+			out_token_p._vocabulary = Vocabulary::_RightParen;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+
+		case '[':
+			out_token_p._vocabulary = Vocabulary::_LeftBracket;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case ']':
+			out_token_p._vocabulary = Vocabulary::_RightBracket;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+
+		case ';':
+			out_token_p._vocabulary = Vocabulary::_Semicolon;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case ':':
+			out_token_p._vocabulary = Vocabulary::_Colon;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case ',':
+			out_token_p._vocabulary = Vocabulary::_Comma;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '=':
+			out_token_p._vocabulary = Vocabulary::_AssignmentOperator;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '.':
+			_FE_FALLTHROUGH_;
+		case '+':
+			_FE_FALLTHROUGH_;
+		case '-':
+			_FE_FALLTHROUGH_;
+		case '*':
+			_FE_FALLTHROUGH_;
+		case '/':
+			_FE_FALLTHROUGH_;
+		case '%':
+			_FE_FALLTHROUGH_;
+		case '&':
+			_FE_FALLTHROUGH_;
+		case '|':
+			_FE_FALLTHROUGH_;
+		case '^':
+			_FE_FALLTHROUGH_;
+		case '!':
+			_FE_FALLTHROUGH_;
+		case '<':
+			_FE_FALLTHROUGH_;
+		case '>':
+			out_token_p._vocabulary = Vocabulary::_Operator;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		default:
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,2 }, u8"::")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_NamespaceConcatenator;
+				out_token_p._code = *code_iterator_p;
+			}
+			break;
+		}
+	}
+
+
+	void tokenize_reflection_macros(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
+	{
+		auto l_prefix_iterators = g_vocabulary.equal_prefix_range_ks("FE_", 3);
+		thread_local static std::string tl_s_key_buffer;
+
+		for (auto it = l_prefix_iterators.first; it != l_prefix_iterators.second; ++it) // iterate all candidates.
+		{
+			it.key(tl_s_key_buffer); // populate the key buffer.
+			if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, tl_s_key_buffer.length(), tl_s_key_buffer.c_str()) == true)
+			{
+				out_token_p._vocabulary = it.value();
+				out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
+
+				if (out_token_p._vocabulary == Vocabulary::_FrogmanEngineSystemMacro)
+				{
+					context_stack_p.push_back(FHT::Context::_FrogmanEngineSystemMacro);
+				}
+				return;
+			}
+		}
+
+
+		if (context_stack_p.back() == FHT::Context::_FrogmanEngineSystemMacro)
+		{
+			thread_local static var::int32 tl_s_arg_index = 0;
+			auto l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ',');
+			out_token_p._code.assign(code_iterator_p, l_comma->_begin);
+
+			switch (tl_s_arg_index)
+			{
+			case 0:
+				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
+				++tl_s_arg_index;
+				return;
+
+			case 1:
+				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgTargetComponentType;
+				++tl_s_arg_index;
+				return;
+
+			case 2:
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
+				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
+				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnumType;
+				++tl_s_arg_index;
+				return;
+
+			default: // EOR; reset.
+				tl_s_arg_index = 0;
+				break;
+			}
+			context_stack_p.pop_back();
+		}
 	}
 
 
@@ -856,8 +1007,6 @@ namespace FHT::tokenizer
 			out_token_p._code += *code_iterator_p;
 			++code_iterator_p;
 		}
-
-		context_stack_p.emplace_back(FHT::Context::_Class);
 	}
 
 	void tokenize_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
@@ -929,8 +1078,6 @@ namespace FHT::tokenizer
 			out_token_p._code += *code_iterator_p;
 			++code_iterator_p;
 		}
-
-		context_stack_p.emplace_back(FHT::Context::_Struct);
 	}
 
 	void tokenize_enum_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
@@ -983,12 +1130,36 @@ namespace FHT::tokenizer
 		}
 
 		THROW_CPP_SYNTAX_ERROR(*code_iterator_p != ';', "C++ Code Syntax Error C2143: missing ';' after enum struct declaration");
+		context_stack_p.pop_back();
 	}
 
 	void tokenize_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
 		auto l_potential_namespace = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, u8' ');
 		out_token_p._code.assign(code_iterator_p, l_potential_namespace->_begin);
+
+		auto l_pos = out_token_p._code.find(u8"END_NAMESPACE");
+		if (l_pos != std::string::npos) _FE_UNLIKELY_ // found
+		{
+			out_token_p._vocabulary = Vocabulary::_EndNamespace;
+			return;
+		}
+
+
+		constexpr FE::UTF8* l_begin_namespace_keyword = u8"BEGIN_NAMESPACE";
+		l_pos = out_token_p._code.find(l_begin_namespace_keyword);
+		if (l_pos != std::string::npos) // found
+		{
+			out_token_p._code.replace(l_pos, FE::algorithm::string::length(l_begin_namespace_keyword), u8"namespace");
+
+			l_pos = out_token_p._code.find('(');
+			THROW_CPP_SYNTAX_ERROR(l_pos == std::string::npos, "C++ Code Syntax Error C2059: unrecognizable BEGIN_NAMESPACE macro usage.");
+			out_token_p._code.replace(l_pos, 1, 1, ' ');
+
+			l_pos = out_token_p._code.find(')');
+			THROW_CPP_SYNTAX_ERROR(l_pos == std::string::npos, "C++ Code Syntax Error C2059: unrecognizable BEGIN_NAMESPACE macro usage.");
+			out_token_p._code.replace(l_pos, 1, 1, '{');
+		}
 
 		if (FE::algorithm::string::space_insensitive_contains(out_token_p._code.c_str(), out_token_p._code.length(), u8"namespace") == false)
 		{
@@ -1014,7 +1185,7 @@ namespace FHT::tokenizer
 			++code_iterator_p;
 		}
 
-		context_stack_p.emplace_back(FHT::Context::_Namespace);
+		out_token_p._vocabulary = Vocabulary::_Namespace;
 	}
 
 	void tokenize_class_struct_enum_forward_decl_and_using_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p)
@@ -1029,6 +1200,7 @@ namespace FHT::tokenizer
 				out_token_p._code.assign(l_begin, code_iterator_p - l_begin);
 				return;
 			}
+
 			++code_iterator_p;
 		}
 	}
@@ -1043,10 +1215,5 @@ namespace FHT::tokenizer
 		{
 			// discard all
 		}
-	}
-
-
-	void tokenize_reflection_macros(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
-	{
 	}
 }
