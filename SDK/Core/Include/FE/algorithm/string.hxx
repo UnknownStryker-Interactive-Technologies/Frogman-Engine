@@ -867,10 +867,12 @@ _FE_CONSTEXPR17_ FE::boolean space_insensitive_contains(const CharT* const str_p
 {
     static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
     FE_ASSERT(str_p != nullptr, "Assertion failure: the string is a nullptr.");
-    FE_ASSERT(str_len_p > 0, "Assertion failure: the string length is zero.");
-
     FE_ASSERT(target_substr_p != nullptr, "Assertion failure: the string is a nullptr.");
 
+    if (str_len_p <= 0) _FE_UNLIKELY_
+    {
+        return false;
+    }
 
     const CharT* l_str_iter = str_p;
     const CharT* const l_str_end = str_p + str_len_p;
