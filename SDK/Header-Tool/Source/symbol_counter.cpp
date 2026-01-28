@@ -35,140 +35,17 @@ namespace FHT::symbol_counter
 	symbol_count try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
 		symbol_count l_count{ 0, 0, 0 };
-		bool l_is_template = false;
-		bool l_is_enum = false;
-
-		while (begin_p != end_p)
-		{
-			switch (begin_p->_vocabulary)
-			{
-			case Vocabulary::_Namespace:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BeginNamespace:
-				++l_count._namespaces;
-				break;
-
-			case Vocabulary::_Class:
-				if (l_is_enum == true)
-				{
-					l_is_enum = false;
-					break;
-				}
-
-				if (l_is_template == true)
-				{
-					FHT::parser::skip_code_block(begin_p, end_p);
-					l_is_template = false;
-					break;
-				}
-
-				if (FHT::parser::is_forward_declaration(begin_p) == true)
-				{
-					break;
-				}
-
-				++l_count._classes;
-				break;
-
-			case Vocabulary::_Struct:
-				if (l_is_enum == true)
-				{
-					l_is_enum = false;
-					break;
-				}
-
-				if (l_is_template == true)
-				{
-					FHT::parser::skip_code_block(begin_p, end_p);
-					l_is_template = false;
-					break;
-				}
-
-				if (FHT::parser::is_forward_declaration(begin_p) == true)
-				{
-					break;
-				}
-
-				++l_count._structs;
-				break;
-
-			case Vocabulary::_EnumStruct:
-				if (FHT::parser::is_forward_declaration(begin_p) == true)
-				{
-					break;
-				}
-
-				++l_count._enums;
-				l_is_enum = true;
-				break;
-
-			case Vocabulary::_Template:
-				++begin_p;
-				if (begin_p == end_p)
-				{
-					break;
-				}
-
-				if (begin_p->_vocabulary != Vocabulary::_BeginTemplateArgs)
-				{
-					break;
-				}
-				FHT::parser::skip_template_args(begin_p);
-				l_is_template = true;
-				break;
-
-			case Vocabulary::_LineEnd:
-				goto Return;
-
-			default:
-				break;
-			}
-
-			if (begin_p == end_p)
-			{
-				return l_count;
-			}
-			++begin_p;
-		}
-	Return:
+		(begin_p);
+		(end_p);
 		return l_count;
 	}
 
 	symbol_count try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
-		std::pmr::vector<Vocabulary> l_scope_stack(framework::get_framework().get_memory_resource());
-		auto l_iterator = begin_p;
-
-		while (l_iterator != end_p)
-		{
-			switch (l_iterator->_vocabulary)
-			{
-			case Vocabulary::_LeftCurlyBracket:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BeginNamespace:
-				l_scope_stack.push_back(Vocabulary::_LeftCurlyBracket);
-				break;
-
-			case Vocabulary::_RightCurlyBracket:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_EndNamespace:
-				l_scope_stack.pop_back();
-				if (l_scope_stack.empty() == true)
-				{
-					goto Return;
-				}
-				break;
-
-			default:
-				break;
-			}
-			++l_iterator;
-		}
-
-	Return:
-		symbol_count l_result = try_count_all_symbols(begin_p, l_iterator);
-		l_result._namespaces -= 1;
-		return l_result;
+		symbol_count l_count{ 0, 0, 0 };
+		(begin_p);
+		(end_p);
+		return l_count;
 	}
 
 	std::optional<FE::uint32> verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) noexcept

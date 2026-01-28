@@ -53,10 +53,12 @@ namespace FHT::parser
 
 		for (auto iterator = token_list_p.begin(); iterator != token_list_p.end(); ++iterator)
 		{
-			switch (iterator->_vocabulary)
-			{
-			
-			}
+			(iterator);
+			//switch (iterator->_vocabulary)
+			//{
+			//default:
+			//	break;
+			//}
 		}
 
 		return l_root;

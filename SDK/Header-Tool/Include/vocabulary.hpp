@@ -85,6 +85,9 @@ enum struct Vocabulary : FE::uint32
 
 const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 {
+	{"//", Vocabulary::_LineComment},
+	{"/*", Vocabulary::_CommentBegin}, {"*/", Vocabulary::_CommentEnd},
+
 	{ "BEGIN_NAMESPACE", Vocabulary::_BeginNamespace }, { "END_NAMESPACE", Vocabulary::_EndNamespace },
 	{ "::", Vocabulary::_NamespaceConcatenator },
 

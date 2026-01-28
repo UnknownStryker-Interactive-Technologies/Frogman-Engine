@@ -30,7 +30,7 @@ using file_buffer_t = std::pmr::basic_string<var::UTF8>;
 struct token
 {
 	Vocabulary _vocabulary;
-	var::uint32 _line_number;
+	var::uint32 _token_number;
 	file_buffer_t _code;
 	FE::wchar* _header_file_path;
 

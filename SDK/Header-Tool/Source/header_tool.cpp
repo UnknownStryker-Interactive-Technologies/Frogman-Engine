@@ -151,9 +151,7 @@ FE::int32 header_tool::run()
 
 						FHT::tokenizer::purge_forward_declaration(l_tokens); // removes the forward declarations.
 
-						FHT::tokenizer::purge_function_bodies(l_tokens); // removes the function bodies.
-
-
+	
 						//---------------- Throwable Methods Below This Line ----------------//
 						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
 						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
