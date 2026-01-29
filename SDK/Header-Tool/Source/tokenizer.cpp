@@ -741,6 +741,17 @@ namespace FHT::tokenizer
 			l_template_keyword, l_template)
 			== true)
 		{
+			auto l_code_line_end = FE::algorithm::string::find_the_first(code_iterator_p, u8';');
+			THROW_CPP_SYNTAX_ERROR(l_code_line_end == std::nullopt, "C++ code syntax Error C2143: the template declaration is incomplete; ; is missing.");
+
+			if (FE::algorithm::string::space_insensitive_contains(code_iterator_p, l_code_line_end->_begin, u8"template<") == false)
+			{
+				// is a template class forward declaration: template class BasicTemplateTypename<int>;
+				out_token_p._vocabulary = Vocabulary::_ClassStructEnumForwardDeclaration;
+				out_token_p._code.assign(code_iterator_p, l_code_line_end->_end);
+				return;
+			}
+
 			out_token_p._vocabulary = Vocabulary::_Template;
 			out_token_p._code = l_template_keyword;
 			context_stack_p.emplace_back(FHT::Context::_Template);
@@ -751,8 +762,6 @@ namespace FHT::tokenizer
 		switch (context_stack_p.back())
 		{
 		case FHT::Context::_Template:
-			_FE_FALLTHROUGH_;
-		case FHT::Context::_TemplateArgs:
 			if (*code_iterator_p == '<')
 			{
 				out_token_p._vocabulary = Vocabulary::_BeginTemplateArgs;
@@ -762,14 +771,8 @@ namespace FHT::tokenizer
 			}
 			break;
 
-		default:
-			break;
-		}
 
-
-		// pop the context when the stack top if it encounters '>' within the template context.
-		if (context_stack_p.back() == FHT::Context::_TemplateArgs)
-		{
+		case FHT::Context::_TemplateArgs:
 			if (*code_iterator_p == '>')
 			{
 				out_token_p._vocabulary = Vocabulary::_EndTemplateArgs;
@@ -786,28 +789,29 @@ namespace FHT::tokenizer
 				}
 				return;
 			}
-		}
-
-
-		// copy until < or >.
-		if (context_stack_p.back() == FHT::Context::_TemplateArgs)
-		{
-			auto l_end_args = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '>');
-			auto l_nested_begin_args = FE::algorithm::string::find_the_first_within_range<FE::UTF8>(code_iterator_p, FE::algorithm::string::range{0, l_end_args->_begin}, '<');
-
-			THROW_CPP_SYNTAX_ERROR(l_end_args == std::nullopt, "C++ code syntax Error C2988: the template argument list is incomplete.");
-
-			if (l_nested_begin_args == std::nullopt) // not found '<'
+			else
 			{
-				// found '>'; copy until '>'
+				auto l_end_args = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '>');
+				auto l_nested_begin_args = FE::algorithm::string::find_the_first_within_range<FE::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0, l_end_args->_begin }, '<');
+
+				THROW_CPP_SYNTAX_ERROR(l_end_args == std::nullopt, "C++ code syntax Error C2988: the template argument list is incomplete.");
+
+				if (l_nested_begin_args == std::nullopt) // not found '<'
+				{
+					// found '>'; copy until '>'
+					out_token_p._vocabulary = Vocabulary::_TemplateArg;
+					out_token_p._code.assign(code_iterator_p, l_end_args->_begin);
+					return;
+				}
+
 				out_token_p._vocabulary = Vocabulary::_TemplateArg;
-				out_token_p._code.assign(code_iterator_p, l_end_args->_begin);
+				out_token_p._code.assign(code_iterator_p, l_nested_begin_args->_end); // found '<'; copy until '<'
 				return;
 			}
-			
-			out_token_p._vocabulary = Vocabulary::_TemplateArg;
-			out_token_p._code.assign(code_iterator_p, l_nested_begin_args->_begin); // found '<'; copy until '<'
-			return;
+
+
+		default:
+			break;
 		}
 	}
 
