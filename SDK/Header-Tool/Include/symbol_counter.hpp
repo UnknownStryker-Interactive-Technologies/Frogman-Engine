@@ -33,7 +33,7 @@ namespace FHT::symbol_counter
 		var::uint16 _namespaces;
 		var::uint16 _classes;
 		var::uint16 _structs;
-		var::uint16 _enums;
+		var::uint16 _enum_structs;
 		var::uint16 _systems;
 	};
 

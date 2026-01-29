@@ -151,17 +151,16 @@ FE::int32 header_tool::run()
 
 						FHT::tokenizer::purge_forward_declaration(l_tokens); // removes the forward declarations.
 
-	
-						//---------------- Throwable Methods Below This Line ----------------//
+						
 						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
+						//---------------- Throwable Methods Below This Line ----------------//
 						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
 
 						std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; }); // It is a bug if this function throws.
-						FE_ASSERT(FHT::symbol_counter::validate_parentheses(l_tokens) == std::nullopt, "Assertion failed: erase_if might has corrupted the list");
-					
+						
 						header_file_root l_reflection_tree;
 						l_reflection_tree = FHT::parser::try_build_reflection_tree(l_path, l_tokens); // Parse the header; throws if the C++ header file is ill-formed.
-					
+												
 
 						//---------------- Noexcept Methods Below This Line ----------------//
 						// generate and add the reflection metadata to the in-house concurrent vector. 

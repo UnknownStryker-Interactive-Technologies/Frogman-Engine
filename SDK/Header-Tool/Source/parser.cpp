@@ -29,7 +29,7 @@ namespace FHT::parser
 		std::optional<FE::ASCII*> l_error_message = FHT::symbol_counter::validate_parentheses(token_list_p);
 		if (l_error_message != std::nullopt)
 		{
-			throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, * l_error_message};
+			throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, *l_error_message};
 		}
 
 		{
@@ -41,7 +41,7 @@ namespace FHT::parser
 			std::cout << "Frogman Engine Header Tool: the total number of namespaces is " << l_total_nums._namespaces << '\n';
 			std::cout << "Frogman Engine Header Tool: the total number of classes is " << l_total_nums._classes << '\n';
 			std::cout << "Frogman Engine Header Tool: the total number of structs is " << l_total_nums._structs << "\n";
-			std::cout << "Frogman Engine Header Tool: the total number of enum structs is " << l_total_nums._enums << "\n\n";
+			std::cout << "Frogman Engine Header Tool: the total number of enum structs is " << l_total_nums._enum_structs << "\n\n";
 		}
 
 		header_file_root l_root;
@@ -78,7 +78,7 @@ namespace FHT::parser
 		l_node._nested_namespaces = std::pmr::vector< std::optional<namespace_node> >(framework::get_framework().get_memory_resource());
 		l_node._classes.reserve(l_nums._classes);
 		l_node._structs.reserve(l_nums._structs);
-		l_node._enum_structs.reserve(l_nums._enums);
+		l_node._enum_structs.reserve(l_nums._enum_structs);
 
 
 		return l_node;

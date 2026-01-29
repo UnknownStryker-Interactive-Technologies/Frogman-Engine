@@ -35,16 +35,85 @@ namespace FHT::symbol_counter
 	symbol_count try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
 		symbol_count l_count{ 0, 0, 0 };
-		(begin_p);
-		(end_p);
+
+		while (begin_p != end_p)
+		{
+			switch (begin_p->_vocabulary)
+			{
+			case Vocabulary::_Namespace:
+				++l_count._namespaces;
+				break;
+
+			case Vocabulary::_Class:
+				++l_count._classes;
+				break;
+
+			case Vocabulary::_Struct:
+				++l_count._structs;
+				break;
+
+			case Vocabulary::_EnumStruct:
+				++l_count._enum_structs;
+				break;
+
+			case Vocabulary::_FrogmanEngineSystemMacro:
+				++l_count._systems;
+				break;
+			}
+		}
 		return l_count;
 	}
 
 	symbol_count try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
+		//FE_ASSERT(begin_p->_vocabulary == Vocabulary::_LeftCurlyBracket);
+		while (begin_p != end_p) // wind until {
+		{
+			if (begin_p->_vocabulary == Vocabulary::_LeftCurlyBracket)
+			{
+				break;
+			}
+		}
+
 		symbol_count l_count{ 0, 0, 0 };
-		(begin_p);
-		(end_p);
+		file_buffer_t l_scope_stack{ framework::get_framework().get_memory_resource() };
+
+		do
+		{
+			switch (begin_p->_vocabulary)
+			{
+			case Vocabulary::_Namespace:
+				++l_count._namespaces;
+				break;
+
+			case Vocabulary::_Class:
+				++l_count._classes;
+				break;
+
+			case Vocabulary::_Struct:
+				++l_count._structs;
+				break;
+
+			case Vocabulary::_EnumStruct:
+				++l_count._enum_structs;
+				break;
+
+			case Vocabulary::_FrogmanEngineSystemMacro:
+				++l_count._systems;
+				break;
+
+
+			case Vocabulary::_LeftCurlyBracket:
+				l_scope_stack.push_back('{');
+				break;
+
+			case Vocabulary::_RightCurlyBracket:
+				l_scope_stack.pop_back();
+				break;
+			}
+		} 
+		while (l_scope_stack.size() > 0);
+
 		return l_count;
 	}
 
@@ -132,53 +201,6 @@ namespace FHT::symbol_counter
 			return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
 		}
 		tl_s_stack.clear();
-
-
-
-
-		//for (auto it = token_list_p.rbegin(), end = token_list_p.rend(); it != end; ++it)
-		//{
-		//	switch (it->_vocabulary)
-		//	{
-		//	case Vocabulary::_RightParen:
-		//	case Vocabulary::_RightCurlyBracket:
-		//	case Vocabulary::_RightBracket:
-		//	//case Vocabulary::_EndTemplateArgs:
-		//		tl_s_stack.push_back(it->_vocabulary);
-		//		break;
-
-		//	default:
-		//		if (tl_s_stack.empty() == true)
-		//		{
-		//			break;
-		//		}
-
-		//		std::optional<FE::uint32> l_index = ___verify_if_token_is_a_paren_or_bracket(tl_s_stack.back());
-		//		if (l_index == std::nullopt) // The token is not a paren nor a bracket.
-		//		{
-		//			break;
-		//		}
-
-		//		/*
-		//		* index 0: first == LeftParen, second == RightParen
-		//		* index 1: first == LeftCurlyBracket, second == RightCurlyBracket
-		//		* index 2: first == LeftBracket, second == RightBracket
-		//		* index 3: first == BeginTemplateArgs, second == EndTemplateArgs
-		//		*/
-		//		if (l_lookup[(*l_index)].first == it->_vocabulary) // is the paren or braket closed and complete?
-		//		{
-		//			tl_s_stack.pop_back(); // pop ), ], or }.
-		//			break;
-		//		}
-		//	}
-		//}
-
-	 //	if (tl_s_stack.size() != 0)
-		//{
-		//	return "Frogman Engine Header Tool C++ syntax error C1075: the parentheses/brackets in the current header file are not closed or properly organized.";
-		//}
-		//tl_s_stack.clear();
-
 
 		return std::nullopt; // no syntax errors relevant to parentheses/brackets found.
 	}
