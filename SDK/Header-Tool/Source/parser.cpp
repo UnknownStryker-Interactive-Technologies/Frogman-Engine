@@ -25,16 +25,8 @@ namespace FHT::parser
 {
 	_FE_NODISCARD_ header_file_root try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p)
 	{
-		// returns an optional error message object.
-		std::optional<FE::ASCII*> l_error_message = FHT::symbol_counter::validate_parentheses(token_list_p);
-		if (l_error_message != std::nullopt)
+		FHT::symbol_counter::symbol_count l_total_nums = FHT::symbol_counter::try_count_all_symbols(token_list_p.begin(), token_list_p.cend());
 		{
-			throw FE::pair<FrogmanEngineHeaderToolError, FE::ASCII*>{FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, *l_error_message};
-		}
-
-		{
-			FHT::symbol_counter::symbol_count l_total_nums = FHT::symbol_counter::try_count_all_symbols(token_list_p.begin(), token_list_p.cend());
-
 			static std::mutex l_s_log_lock;
 			std::lock_guard<std::mutex> l_guard(l_s_log_lock);
 			std::wcout << L"Frogman Engine Header Tool: In the file located at '" << file_path_p.c_str() << "'\n";
@@ -50,6 +42,11 @@ namespace FHT::parser
 		l_root._classes = std::pmr::vector< std::optional<class_node> >(framework::get_framework().get_memory_resource());
 		l_root._structs = std::pmr::vector< std::optional<struct_node> >(framework::get_framework().get_memory_resource());
 		l_root._enum_structs = std::pmr::vector< std::optional<enum_struct_node> >(framework::get_framework().get_memory_resource());
+
+		l_root._namespaces.reserve(l_total_nums._namespaces);
+		l_root._classes.reserve(l_total_nums._classes);
+		l_root._structs.reserve(l_total_nums._structs);
+		l_root._enum_structs.reserve(l_total_nums._enum_structs);
 
 		for (auto iterator = token_list_p.begin(); iterator != token_list_p.end(); ++iterator)
 		{

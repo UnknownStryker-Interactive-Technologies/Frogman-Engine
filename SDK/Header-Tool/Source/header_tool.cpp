@@ -152,10 +152,6 @@ FE::int32 header_tool::run()
 						FHT::tokenizer::purge_forward_declaration(l_tokens); // removes the forward declarations.
 
 						
-						auto l_error_code = FHT::symbol_counter::validate_parentheses(l_tokens);
-						//---------------- Throwable Methods Below This Line ----------------//
-						THROW_CPP_SYNTAX_ERROR(l_error_code != std::nullopt, *l_error_code); // C2059; throws if the header file is ill-formed.
-
 						std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; }); // It is a bug if this function throws.
 						
 						header_file_root l_reflection_tree;

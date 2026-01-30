@@ -39,7 +39,5 @@ namespace FHT::symbol_counter
 
 	symbol_count try_count_all_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
 	symbol_count try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p);
-	std::optional<FE::uint32> verify_if_token_is_a_paren_or_bracket(Vocabulary paren_p) noexcept;
-	std::optional<FE::ASCII*> validate_parentheses(const std::pmr::list<token>& token_list_p) noexcept;
 }
 #endif
