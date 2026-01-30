@@ -60,6 +60,7 @@ namespace FHT::symbol_counter
 				++l_count._systems;
 				break;
 			}
+			++begin_p;
 		}
 		return l_count;
 	}
@@ -73,6 +74,7 @@ namespace FHT::symbol_counter
 			{
 				break;
 			}
+			++begin_p;
 		}
 
 		symbol_count l_count{ 0, 0, 0 };
@@ -111,6 +113,7 @@ namespace FHT::symbol_counter
 				l_scope_stack.pop_back();
 				break;
 			}
+			++begin_p;
 		} 
 		while (l_scope_stack.size() > 0);
 

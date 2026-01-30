@@ -233,3 +233,6 @@ In order to build boost libraries using Microsoft Visual Studio 2022 Clang CL (t
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug  
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release  
 ```
+
+# Research Papers
+- The Frogman Engine Runtime Reflection System: https://1drv.ms/w/c/1b09399108712a7a/IQBmG2Q_gzsIQ7W7kQiyZHB9AXMtVIBznT0S6xE1SgKal3Q?e=udDhw0
