@@ -20,6 +20,7 @@ limitations under the License.
 #include <cstdint>
 #include <string>
 
+
 // ============================================================================
 // SECTION 1: Global Namespace Declarations
 // ============================================================================
@@ -160,6 +161,7 @@ private:
 // Forward declarations - global
 struct GlobalForwardStruct;
 class GlobalForwardClass;
+
 
 // ============================================================================
 // SECTION 2: Single-Level Namespace
@@ -700,13 +702,16 @@ private:
 
 END_NAMESPACE
 
+
 // ============================================================================
 // SECTION 3: Nested Namespaces
 // ============================================================================
 
 BEGIN_NAMESPACE(FE::Test::Nested)
 
-enum struct NestedColor
+enum
+	struct
+	NestedColor
 {
 	Cyan,
 	Magenta,
@@ -714,13 +719,15 @@ enum struct NestedColor
 	Black
 };
 
-struct NestedPoint
+struct
+	NestedPoint
 {
 	int _x;
 	int _y;
 };
 
-class NestedClass
+class
+	NestedClass
 {
 public:
 	NestedClass();
@@ -755,11 +762,28 @@ public:
 
 END_NAMESPACE
 
+
 // ============================================================================
 // SECTION 4: Edge Cases and Complex Scenarios
 // ============================================================================
 
 BEGIN_NAMESPACE(FE::Test::EdgeCases)
+
+
+template <typename T>
+class BraceInjectionAttackClass
+{
+	char _bowoh = '}';
+	const char* _waer = "asdadsa}d";
+};
+
+template <typename T>
+struct BraceInjectionAttackStruct
+{
+	char _bowoh = '}';
+	const char* _waer = "asdadsa}d";
+};
+
 
 // Struct with nested structs
 struct OuterStruct
@@ -803,6 +827,11 @@ enum struct LargeEnum : uint64_t
 	Medium = 1000000,
 	Large = 1000000000,
 	VeryLarge = 18446744073709551615ULL
+};
+
+enum struct Fake : char
+{
+	NerfThis = '}'
 };
 
 // Struct with array members

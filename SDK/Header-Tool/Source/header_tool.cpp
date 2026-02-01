@@ -152,10 +152,11 @@ FE::int32 header_tool::run()
 						FHT::tokenizer::purge_forward_declaration(l_tokens); // removes the forward declarations.
 
 						
+						//---------------- Throwable Methods Below This Line ----------------//
 						std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; }); // It is a bug if this function throws.
 						
 						header_file_root l_reflection_tree;
-						l_reflection_tree = FHT::parser::try_build_reflection_tree(l_path, l_tokens); // Parse the header; throws if the C++ header file is ill-formed.
+						l_reflection_tree = FHT::parser::build_reflextree(l_path, l_tokens); // Parse the header; throws if the C++ header file is ill-formed.
 												
 
 						//---------------- Noexcept Methods Below This Line ----------------//

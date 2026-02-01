@@ -32,16 +32,16 @@ namespace FHT
 		_RawTextLiteral,
 		_StringLiteral,
 		_CharLiteral,
+		
+		_Template,
+		_TemplateArgs,
+
+		_Function,
 
 		_Namespace,
 		_Class,
 		_Struct,
 		_EnumStruct,
-
-		_Function,
-
-		_Template,
-		_TemplateArgs,
 
 		_FrogmanEngineSystemMacro
 	};

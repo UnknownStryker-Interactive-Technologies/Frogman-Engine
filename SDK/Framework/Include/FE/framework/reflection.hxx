@@ -71,7 +71,7 @@ CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 namespace FE
 {
 	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
-	enum struct SystemCallPhase : var::uint32
+	enum SystemCallPhase : var::uint32
 	{
 		_EngineInitialization = 0,
 		_GameInitialization = 1,

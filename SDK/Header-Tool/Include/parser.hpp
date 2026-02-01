@@ -16,22 +16,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include "context.hpp"
 
 
 
 
 namespace FHT::parser
 {
-	_FE_NODISCARD_ header_file_root try_build_reflection_tree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
+	_FE_NODISCARD_ header_file_root build_reflextree(const directory_t& file_path_p, const std::pmr::list<token>& token_list_p);
 
-	_FE_NODISCARD_ std::optional<namespace_node> try_build_namespace_node_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ namespace_node build_namespace_node_recursive(const identifier& parent_namespace_p,
+																 typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
+											  					 context_stack_t& context_stack_p);
 
-	_FE_NODISCARD_ std::optional<class_node> try_build_class_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ class_node build_class_node_mutually_recursive(const identifier& parent_namespace_p, 
+																  typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
+												    			  context_stack_t& context_stack_p);
 
-	_FE_NODISCARD_ std::optional<struct_node> try_build_struct_node_mutually_recursive(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ struct_node build_struct_node_mutually_recursive(const identifier& parent_namespace_p, 
+		                                                            typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
+																    context_stack_t& context_stack_p);
 
-	_FE_NODISCARD_ std::optional<enum_struct_node> try_build_enum_struct_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ enum_struct_node build_enum_struct_node(const identifier& parent_namespace_p, 
+		                                                   typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
+														   context_stack_t& context_stack_p);
 
-	_FE_NODISCARD_ std::optional<system_node> try_build_c_style_system_function_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+	_FE_NODISCARD_ system_node build_ecs_system_node(const identifier& parent_namespace_p, 
+		                                                          typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
+													              context_stack_t& context_stack_p);
 }
 #endif

@@ -72,22 +72,22 @@ struct system_node
 struct namespace_node
 {
 	identifier _target_namespace_name;
-	std::pmr::vector<std::optional<namespace_node>> _nested_namespaces;
-	std::pmr::vector<std::optional<class_node>> _classes;
-	std::pmr::vector<std::optional<struct_node>> _structs;
-	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
-	std::pmr::vector<std::optional<system_node>> _system_fptrs;
+	std::pmr::vector<namespace_node> _nested_namespaces;
+	std::pmr::vector<class_node> _classes;
+	std::pmr::vector<struct_node> _structs;
+	std::pmr::vector<enum_struct_node> _enum_structs;
+	std::pmr::vector<system_node> _system_fptrs;
 };
 
 
 struct header_file_root
 {
 	std::wstring_view _path_to_the_header_file;
-	std::pmr::vector<std::optional<namespace_node>> _namespaces;
-	std::pmr::vector<std::optional<class_node>> _classes;
-	std::pmr::vector<std::optional<struct_node>> _structs;
-	std::pmr::vector<std::optional<enum_struct_node>> _enum_structs;
-	std::pmr::vector<std::optional<system_node>> _system_fptrs;
+	std::pmr::vector<namespace_node> _namespaces;
+	std::pmr::vector<class_node> _classes;
+	std::pmr::vector<struct_node> _structs;
+	std::pmr::vector<enum_struct_node> _enum_structs;
+	std::pmr::vector<system_node> _system_fptrs;
 };
 
 
