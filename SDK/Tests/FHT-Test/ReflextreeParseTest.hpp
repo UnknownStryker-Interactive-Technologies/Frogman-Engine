@@ -20,6 +20,8 @@ limitations under the License.
 #include <cstdint>
 
 
+
+
 // ============================================================================
 // SECTION 0: FE_SYSTEM
 // ============================================================================
@@ -29,6 +31,20 @@ void system(FE::component_base* const comptr_p) noexcept
 {
 	// System implementation
 }
+
+FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
+void           system2(FE::component_base* const comptr_p) noexcept;
+
+FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
+void system3(FE::component_base* const comptr_p);
+
+FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
+void system4(FE::component_base* const comptr_p)
+{
+
+}
+
+
 
 
 // ============================================================================
@@ -45,6 +61,54 @@ enum struct GlobalGameState
 	GameOver
 };
 
+FE_ENUM_STRUCT()
+enum struct [[nodiscard]] GlobalGameState2
+{
+	MainMenu,
+	InGame,
+	Paused,
+	GameOver
+};
+
+FE_ENUM_STRUCT()
+enum struct _NODISCARD_ GlobalGameState3
+{
+	MainMenu,
+	InGame,
+	Paused,
+	GameOver
+};
+
+FE_ENUM_STRUCT()
+enum struct _NODISCARD_ _MAYBE_UNUSED_ GlobalGameState4
+{
+	MainMenu,
+	InGame,
+	Paused,
+	GameOver
+};
+
+FE_ENUM_STRUCT()
+enum struct [[nodiscard]] _MAYBE_UNUSED_ GlobalGameState5
+{
+	MainMenu,
+	InGame,
+	Paused,
+	GameOver
+};
+
+FE_ENUM_STRUCT()
+enum struct _NODISCARD_ [[maybe_unused]] GlobalGameState6
+{
+	MainMenu,
+	InGame,
+	Paused,
+	GameOver
+};
+
+
+
+
 // Global enum struct with explicit type
 FE_ENUM_STRUCT()
 enum struct GlobalEntityType : uint16_t
@@ -55,6 +119,36 @@ enum struct GlobalEntityType : uint16_t
 	Pickup = 200
 };
 
+FE_ENUM_STRUCT()
+enum struct [[nodiscard]] GlobalEntityType2 : uint16_t
+{
+	Player = 0,
+	Enemy = 1,
+	Projectile = 100,
+	Pickup = 200
+};
+
+FE_ENUM_STRUCT()
+enum struct _NODISCARD_ GlobalEntityType3 : uint16_t
+{
+	Player = 0,
+	Enemy = 1,
+	Projectile = 100,
+	Pickup = 200
+};
+
+FE_ENUM_STRUCT()
+enum struct _NODISCARD_ _MAYBE_UNUSED_ GlobalEntityType4 : uint16_t
+{
+	Player = 0,
+	Enemy = 1,
+	Projectile = 100,
+	Pickup = 200
+};
+
+
+
+
 // Global struct with FE macro - POD style
 FE_STRUCT()
 struct GlobalTransform2D
@@ -63,6 +157,9 @@ struct GlobalTransform2D
 	float _y;
 	float _rotation;
 };
+
+
+
 
 // Global struct with FE macro - with methods
 FE_STRUCT()
@@ -92,6 +189,9 @@ struct GlobalRigidBody : public GlobalVelocity
 	virtual void apply_force(float fx_p, float fy_p);
 };
 
+
+
+
 // Global class with FE macro - simple
 FE_CLASS()
 class GlobalGameObject
@@ -108,6 +208,106 @@ private:
 	uint32_t _object_id;
 	GlobalGameState _state;
 };
+
+// Global class with FE macro - attr
+FE_CLASS()
+class [[no_unique_address]] GlobalGameObject2
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+FE_CLASS()
+class [[no_unique_address]] [[maybe_unused]] GlobalGameObject3
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+FE_CLASS()
+class _NO_UNIQUE_ADDRESS GlobalGameObject4
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+FE_CLASS()
+class _NO_UNIQUE_ADDRESS _MAYBE_UNUSED_ GlobalGameObject5
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+FE_CLASS()
+class [[no_unique_address]] _MAYBE_UNUSED_ GlobalGameObject6
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+FE_CLASS()
+class _NO_UNIQUE_ADDRESS [[maybe_unused]] GlobalGameObject7
+{
+public:
+	GlobalGameObject();
+	~GlobalGameObject();
+
+	void set_active(bool active_p);
+	bool is_active() const;
+
+private:
+	bool _is_active;
+	uint32_t _object_id;
+	GlobalGameState _state;
+};
+
+
+
 
 // Global class with FE macro - with multiple access specifiers
 FE_CLASS()
@@ -177,11 +377,18 @@ private:
 };
 
 
+
+
 // ============================================================================
 // SECTION 2: Namespace with FE Macros
 // ============================================================================
 
 BEGIN_NAMESPACE(FE::Test)
+
+void escape()
+{
+
+}
 
 // Enum struct with FE macro - simple
 FE_ENUM_STRUCT()
@@ -520,6 +727,11 @@ public:
 	virtual uint32_t get_priority() const = 0;
 };
 
+union att
+{
+
+};
+
 // Class with FE macro - implementing interface
 FE_CLASS()
 class RenderSystem : public IGameSystem
@@ -541,7 +753,10 @@ private:
 	bool _is_initialized;
 };
 
+
 END_NAMESPACE
+
+
 
 
 // ============================================================================
@@ -605,6 +820,8 @@ public:
 };
 
 END_NAMESPACE
+
+
 
 
 // ============================================================================

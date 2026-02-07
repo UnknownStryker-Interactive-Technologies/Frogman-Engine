@@ -64,7 +64,7 @@ namespace FHT::symbol_counter
 				break;
 
 			default:
-				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "Frogman Engine Header Tool C++ syntax error C1075: the curly braces in the current header file are not closed or properly organized.");
+				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "FHT C++ Syntax Error C1075: the curly braces in the current header file are not closed or properly organized.");				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "Frogman Engine Header Tool C++ Syntax Error C1075: the curly braces in the current header file are not closed or properly organized.");
 				break;
 			}
 			++begin_p;
@@ -123,7 +123,7 @@ namespace FHT::symbol_counter
 				break;
 
 			default:
-				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "Frogman Engine Header Tool C++ syntax error C1075: the curly braces in the current header file are not closed or properly organized.");
+				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "FHT C++ syntax error C1075: the curly braces in the current header file are not closed or properly organized.");
 				break;
 			}
 			++begin_p;

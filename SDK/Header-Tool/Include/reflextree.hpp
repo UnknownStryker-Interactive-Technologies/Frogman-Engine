@@ -33,7 +33,7 @@ enum struct ClassType : FE::int32
 	_None = 0,
 	_ChildOfArchetypeBase = 1,
 	_ChildOfComponentBase = 2,
-	_ChildOfSystemBase = 3,
+	//_ChildOfSystemBase = 3,
 	_ChildOfCppClass = 4
 };
 
@@ -51,7 +51,7 @@ struct class_node
 
 struct struct_node
 {
-	identifier _target_struct_name;
+	identifier _identifier;
 };
 
 
@@ -63,10 +63,11 @@ struct enum_struct_node
 
 struct system_node
 {
-	identifier _world_category;
-	identifier _sysname;
-	identifier _systarget;
 	identifier _syscall_phase;
+	identifier _target_component_type;
+	identifier _world_tag_enum_type;
+
+	identifier _sysname;
 };
 
 struct namespace_node

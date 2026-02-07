@@ -27,6 +27,8 @@ enum struct Vocabulary : FE::uint32
 {
 	_Undefined, _EndOfCode,
 
+	_AnyDecl,
+
 	_LineComment, _LineEnd,
 	_CommentBegin, _CommentEnd,
 	_CommentBody,
@@ -39,7 +41,7 @@ enum struct Vocabulary : FE::uint32
 
 	_Class, _Struct, _EnumStruct,
 	_ClassStructEnumForwardDeclaration,
-	_FieldType, _FieldIdentifier, _EnumStructField,
+	_FieldType, _FieldIdentifier, _EnumStructField, _EnumStructFieldInitialValue,
 
 	_Colon, _Semicolon, _Comma,
 
@@ -104,12 +106,8 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 
 	{ "static_assert", Vocabulary::_StaticAssert },
 
-	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
 	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },
 	{ "FE_STRUCT", Vocabulary::_FrogmanEngineStructReflectionMacro },
-	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
-	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },
-	{ "FE_METHOD", Vocabulary::_FrogmanEngineMethodReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
 	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemMacro }
 };

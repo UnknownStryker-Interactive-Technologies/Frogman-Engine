@@ -29,20 +29,16 @@ namespace FHT::parser
 																 typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
 											  					 context_stack_t& context_stack_p);
 
-	_FE_NODISCARD_ class_node build_class_node_mutually_recursive(const identifier& parent_namespace_p, 
-																  typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
-												    			  context_stack_t& context_stack_p);
+	_FE_NODISCARD_ class_node build_class_node(const identifier& parent_namespace_p, 
+																  typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
-	_FE_NODISCARD_ struct_node build_struct_node_mutually_recursive(const identifier& parent_namespace_p, 
-		                                                            typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
-																    context_stack_t& context_stack_p);
+	_FE_NODISCARD_ struct_node build_struct_node(const identifier& parent_namespace_p, 
+		                                                            typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	_FE_NODISCARD_ enum_struct_node build_enum_struct_node(const identifier& parent_namespace_p, 
-		                                                   typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
-														   context_stack_t& context_stack_p);
+		                                                   typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 
 	_FE_NODISCARD_ system_node build_ecs_system_node(const identifier& parent_namespace_p, 
-		                                                          typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p,
-													              context_stack_t& context_stack_p);
+		                                                          typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 }
 #endif

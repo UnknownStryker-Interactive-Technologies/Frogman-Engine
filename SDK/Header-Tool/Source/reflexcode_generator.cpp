@@ -88,14 +88,14 @@ namespace FHT::reflexcode_generator
 				std::pmr::wstring(framework::get_framework().get_memory_resource()), std::pmr::wstring(framework::get_framework().get_memory_resource())
 			};
 
-			l_system_node._world_category.resize(c_style_system_function->_world_category.length());
-			std::mbstowcs(l_system_node._world_category.data(), reinterpret_cast<const char*>(c_style_system_function->_world_category.data()), c_style_system_function->_world_category.length());
+			l_system_node._world_tag_enum_type.resize(c_style_system_function->_world_tag_enum_type.length());
+			std::mbstowcs(l_system_node._world_tag_enum_type.data(), reinterpret_cast<const char*>(c_style_system_function->_world_tag_enum_type.data()), c_style_system_function->_world_tag_enum_type.length());
 
 			l_system_node._system_name.resize(c_style_system_function->_sysname.length());
 			std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
 
-			l_system_node._system_target.resize(c_style_system_function->_systarget.length());
-			std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_systarget.data()), c_style_system_function->_systarget.length());
+			l_system_node._system_target.resize(c_style_system_function->_target_component_type.length());
+			std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_target_component_type.data()), c_style_system_function->_target_component_type.length());
 
 			l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
 			std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
@@ -158,14 +158,14 @@ namespace FHT::reflexcode_generator
 				std::pmr::wstring(framework::get_framework().get_memory_resource()), std::pmr::wstring(framework::get_framework().get_memory_resource())
 			};
 
-			l_system_node._world_category.resize(c_style_system_function->_world_category.length());
-			std::mbstowcs(l_system_node._world_category.data(), reinterpret_cast<const char*>(c_style_system_function->_world_category.data()), c_style_system_function->_world_category.length());
+			l_system_node._world_tag_enum_type.resize(c_style_system_function->_world_tag_enum_type.length());
+			std::mbstowcs(l_system_node._world_tag_enum_type.data(), reinterpret_cast<const char*>(c_style_system_function->_world_tag_enum_type.data()), c_style_system_function->_world_tag_enum_type.length());
 
 			l_system_node._system_name.resize(c_style_system_function->_sysname.length());
 			std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
 
-			l_system_node._system_target.resize(c_style_system_function->_systarget.length());
-			std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_systarget.data()), c_style_system_function->_systarget.length());
+			l_system_node._system_target.resize(c_style_system_function->_target_component_type.length());
+			std::mbstowcs(l_system_node._system_target.data(), reinterpret_cast<const char*>(c_style_system_function->_target_component_type.data()), c_style_system_function->_target_component_type.length());
 
 			l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
 			std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
@@ -208,9 +208,9 @@ namespace FHT::reflexcode_generator
 	void output_struct_metadata(metadata& out_return_p, const struct_node& node_p) noexcept
 	{
 		std::pmr::wstring l_identifier(framework::get_framework().get_memory_resource());
-		l_identifier.resize(node_p._target_struct_name.length());
+		l_identifier.resize(node_p._identifier.length());
 
-		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._target_struct_name.data()), node_p._target_struct_name.length());
+		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._identifier.data()), node_p._identifier.length());
 		out_return_p._class_and_structs.push_back(std::move(l_identifier));
 	}
 
@@ -343,7 +343,7 @@ namespace FHT::reflexcode_generator
 				l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<";
 				l_generated_code += system_node._system_target;
 				l_generated_code += L">(";
-				l_generated_code += system_node._world_category;
+				l_generated_code += system_node._world_tag_enum_type;
 				l_generated_code += L", ";
 				l_generated_code += system_node._system_call_phase;
 				l_generated_code += L", &";

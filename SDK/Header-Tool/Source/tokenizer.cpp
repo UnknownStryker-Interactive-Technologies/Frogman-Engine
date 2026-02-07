@@ -255,11 +255,13 @@ namespace FHT::tokenizer
 			return l_token; // return if the text is a preprocessor directive.
 		}
 
-
-		tokenize_string_literal(l_token, code_iterator_p, context_stack_p);
-		if (l_token._vocabulary != Vocabulary::_Undefined)
+		if (context_stack_p.back() != FHT::Context::_EnumStructFieldInitialValue)
 		{
-			return l_token; // return if the text is a string literal.
+			tokenize_string_literal(l_token, code_iterator_p, context_stack_p);
+			if (l_token._vocabulary != Vocabulary::_Undefined)
+			{
+				return l_token; // return if the text is a string literal.
+			}
 		}
 
 		tokenize_template(l_token, code_iterator_p, context_stack_p);
@@ -310,7 +312,97 @@ namespace FHT::tokenizer
 
 
 		tokenize_template_body(l_token, code_iterator_p, context_stack_p);
-		return l_token; // Vocabulary::_Undefined
+
+
+
+		// tokenize union/functions as undefined
+		l_token._code.reserve(100);
+		while (*code_iterator_p != '{')
+		{
+			if (*code_iterator_p == ';')
+			{
+				l_token._vocabulary = Vocabulary::_AnyDecl;
+				return l_token;
+			}
+			l_token._code += *code_iterator_p;
+			++code_iterator_p;
+		}
+		file_buffer_t l_brace_stack(framework::get_framework().get_memory_resource());
+		token l_tmp = { ._code{ framework::get_framework().get_memory_resource()} };
+
+		do
+		{
+			switch (*code_iterator_p)
+			{
+			case '(':
+				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
+					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
+				{
+					l_brace_stack.push_back('(');
+				}
+				break;
+
+			case ')':
+				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
+					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
+				{
+					if (l_brace_stack.back() == '(')
+					{
+						l_brace_stack.pop_back();
+					}
+				}
+				break;
+
+
+			case '{':
+				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
+					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
+				{
+					l_brace_stack.push_back('{');
+				}
+				break;
+
+			case '}':
+				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
+					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
+				{
+					if (l_brace_stack.back() == '{')
+					{
+						l_brace_stack.pop_back();
+					}
+				}
+				break;
+
+			default:
+				l_tmp._vocabulary = Vocabulary::_Undefined;
+				tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+				switch (l_tmp._vocabulary)
+				{
+				case Vocabulary::_CharLiteral:
+					l_token._code += *code_iterator_p;
+					++code_iterator_p;
+					continue;
+
+				case Vocabulary::_StringLiteral:
+					l_token._code += l_tmp._code;
+					code_iterator_p += l_tmp._code.length();
+					l_tmp._code.clear();
+					continue;
+
+				default:
+					break;
+				}
+				break;
+			}
+			l_token._code += *code_iterator_p;
+			++code_iterator_p;
+			THROW_CPP_SYNTAX_ERROR(*code_iterator_p == '\0', "C++ Code Syntax Error C1075: missing '}' in class declaration, or found an explicit null terminator \0");
+		} 
+		while (l_brace_stack.size() > 0);
+		l_token._code += *code_iterator_p;
+		l_token._vocabulary = Vocabulary::_AnyDecl;
+
+		return l_token; 
 	}
 
 	_FE_NODISCARD_ token tokenize_unidentifiable(typename file_buffer_t::const_pointer code_iterator_p, context_stack_t& context_stack_p)
@@ -669,7 +761,7 @@ namespace FHT::tokenizer
 				{
 					auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
 
-					THROW_CPP_SYNTAX_ERROR(l_rng == std::nullopt, "C++ code syntax Error C2001: the string literal is incomplete.")
+					THROW_CPP_SYNTAX_ERROR(l_rng == std::nullopt, "FHT C++ Code Syntax Error C2001: the string literal is incomplete.")
 					out_token_p._code.assign(code_iterator_p, l_rng->_begin);
 				}
 				break;
@@ -927,21 +1019,20 @@ namespace FHT::tokenizer
 			switch (tl_s_arg_index)
 			{
 			case 0:
-				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
 				++tl_s_arg_index;
 				return;
 
 			case 1:
-				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgTargetComponentType;
 				++tl_s_arg_index;
 				return;
 
 			case 2:
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
-				THROW_CPP_SYNTAX_ERROR(l_comma != std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnumType;
 				++tl_s_arg_index;
@@ -1028,7 +1119,7 @@ namespace FHT::tokenizer
 
 	void tokenize_enum_struct(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
-		if (context_stack_p.back() != FHT::Context::_EnumStruct)
+		if ((context_stack_p.back() != FHT::Context::_EnumStruct) && (context_stack_p.back() != FHT::Context::_EnumStructFieldInitialValue))
 		{
 			auto l_enum_keyword_end_pos = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, u8'\n');
 			out_token_p._code.assign(code_iterator_p, l_enum_keyword_end_pos->_end);
@@ -1066,19 +1157,63 @@ namespace FHT::tokenizer
 			return;
 		}
 		
-
+		
 		while (*code_iterator_p != '}')
 		{
-			if ((*code_iterator_p == '=') || (*code_iterator_p == ','))
+			if (*code_iterator_p == ',')
 			{
 				out_token_p._vocabulary = Vocabulary::_EnumStructField;
 				return;
 			}
 
-			tokenize_string_literal(out_token_p, code_iterator_p, context_stack_p);
-			if (out_token_p._vocabulary != Vocabulary::_Undefined)
+			if (*code_iterator_p == '=')
 			{
-				return; // return if the text is a string literal.
+				context_stack_p.emplace_back(FHT::Context::_EnumStructFieldInitialValue);
+				out_token_p._vocabulary = Vocabulary::_EnumStructField;
+				return;
+			}
+
+			if (context_stack_p.back() == FHT::Context::_EnumStructFieldInitialValue)
+			{
+				while (*code_iterator_p != '\n')
+				{
+					if (*code_iterator_p == ',')
+					{
+						break;
+					}
+
+					token l_tmp;
+					tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+
+					if (l_tmp._vocabulary != Vocabulary::_CharLiteral)
+					{
+						out_token_p._code += *code_iterator_p;
+						++code_iterator_p;
+						continue;
+					}
+
+					while (l_tmp._vocabulary == Vocabulary::_CharLiteral)
+					{
+						out_token_p._code += l_tmp._code;
+						l_tmp._code.clear(); 
+						l_tmp._vocabulary = Vocabulary::_Undefined;
+						++code_iterator_p;
+						tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+					} 
+				
+
+					if (*code_iterator_p == '}')
+					{
+						context_stack_p.pop_back();
+						out_token_p._code += *code_iterator_p;
+						++code_iterator_p;
+						break;
+					}
+					++code_iterator_p;
+				}
+				context_stack_p.pop_back();
+				out_token_p._vocabulary = Vocabulary::_EnumStructFieldInitialValue;
+				return;
 			}
 
 			out_token_p._code += *code_iterator_p;

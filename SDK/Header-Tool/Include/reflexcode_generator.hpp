@@ -33,7 +33,7 @@ namespace FHT::reflexcode_generator
 	{
 		struct system_info
 		{
-			std::pmr::wstring _world_category;
+			std::pmr::wstring _world_tag_enum_type;
 			std::pmr::wstring _system_name;
 			std::pmr::wstring _system_target;
 			std::pmr::wstring _system_call_phase;
