@@ -74,16 +74,6 @@ namespace FHT::symbol_counter
 
 	symbol_count try_count_the_current_scope_level_symbols(typename std::pmr::list<token>::const_iterator begin_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
-		//FE_ASSERT(begin_p->_vocabulary == Vocabulary::_LeftCurlyBracket);
-		while (begin_p != end_p) // wind until {
-		{
-			if (begin_p->_vocabulary == Vocabulary::_LeftCurlyBracket)
-			{
-				break;
-			}
-			++begin_p;
-		}
-
 		symbol_count l_count{ 0, 0, 0 };
 		file_buffer_t l_scope_stack{ framework::get_framework().get_memory_resource() };
 
@@ -92,10 +82,25 @@ namespace FHT::symbol_counter
 			switch (begin_p->_vocabulary)
 			{
 			case Vocabulary::_Namespace:
-				_FE_FALLTHROUGH_;
-			case Vocabulary::_BeginNamespace:
 				++l_count._namespaces;
 				break;
+
+			case Vocabulary::_LeftCurlyBracket:
+				l_scope_stack.push_back('{');
+				break;
+
+			case Vocabulary::_BeginNamespace:
+				l_scope_stack.push_back('{');
+				++l_count._namespaces;
+				break;
+
+
+			case Vocabulary::_EndNamespace:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_RightCurlyBracket:
+				l_scope_stack.pop_back();
+				break;
+
 
 			case Vocabulary::_Class:
 				++l_count._classes;
@@ -114,20 +119,13 @@ namespace FHT::symbol_counter
 				break;
 
 
-			case Vocabulary::_LeftCurlyBracket:
-				l_scope_stack.push_back('{');
-				break;
-
-			case Vocabulary::_RightCurlyBracket:
-				l_scope_stack.pop_back();
-				break;
-
 			default:
-				THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "FHT C++ syntax error C1075: the curly braces in the current header file are not closed or properly organized.");
 				break;
 			}
 			++begin_p;
-		} while (l_scope_stack.size() > 0);
+			THROW_CPP_SYNTAX_ERROR(begin_p == end_p, "FHT C++ syntax error C1075: the curly braces in the current header file are not closed or properly organized.");
+		} 
+		while (l_scope_stack.size() > 0);
 
 		return l_count;
 	}

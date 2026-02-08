@@ -19,8 +19,9 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <cstdint>
 
-
-
+#define _NO_UNIQUE_ADDRESS_
+#define _MAYBE_UNUSED_ [[maybe_unused]]
+#define _NODISCARD_ [[nodiscard]]
 
 // ============================================================================
 // SECTION 0: FE_SYSTEM
@@ -211,11 +212,11 @@ private:
 
 // Global class with FE macro - attr
 FE_CLASS()
-class [[no_unique_address]] GlobalGameObject2
+class GlobalGameObject2
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject2();
+	~GlobalGameObject2();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -227,11 +228,11 @@ private:
 };
 
 FE_CLASS()
-class [[no_unique_address]] [[maybe_unused]] GlobalGameObject3
+class [[maybe_unused]] GlobalGameObject3
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject3();
+	~GlobalGameObject3();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -243,11 +244,11 @@ private:
 };
 
 FE_CLASS()
-class _NO_UNIQUE_ADDRESS GlobalGameObject4
+class GlobalGameObject4
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject4();
+	~GlobalGameObject4();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -259,11 +260,11 @@ private:
 };
 
 FE_CLASS()
-class _NO_UNIQUE_ADDRESS _MAYBE_UNUSED_ GlobalGameObject5
+class _MAYBE_UNUSED_ GlobalGameObject5
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject5();
+	~GlobalGameObject5();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -275,11 +276,11 @@ private:
 };
 
 FE_CLASS()
-class [[no_unique_address]] _MAYBE_UNUSED_ GlobalGameObject6
+class _MAYBE_UNUSED_ GlobalGameObject6
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject6();
+	~GlobalGameObject6();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -291,11 +292,11 @@ private:
 };
 
 FE_CLASS()
-class _NO_UNIQUE_ADDRESS [[maybe_unused]] GlobalGameObject7
+class [[maybe_unused]] GlobalGameObject7
 {
 public:
-	GlobalGameObject();
-	~GlobalGameObject();
+	GlobalGameObject7();
+	~GlobalGameObject7();
 
 	void set_active(bool active_p);
 	bool is_active() const;
@@ -835,7 +836,7 @@ FE_STRUCT()
 struct OuterData
 {
 	FE_STRUCT()
-	struct InnerData
+		struct InnerData
 	{
 		int _value;
 	};
@@ -850,7 +851,7 @@ class OuterSystem
 {
 public:
 	FE_CLASS()
-	class InnerSystem
+		class InnerSystem
 	{
 	public:
 		InnerSystem();
@@ -879,6 +880,7 @@ enum struct LargeIDType : uint64_t
 	Maximum = 18446744073709551615ULL
 };
 
+
 // Enum struct with FE macro - character type
 FE_ENUM_STRUCT()
 enum struct CharacterEnum : char
@@ -894,7 +896,7 @@ struct ArrayContainer
 {
 	int _simple_array[10];
 	float _matrix[4][4];
-	const uint32_t _constant_buffer[64];
+	uint32_t _constant_buffer[64];
 };
 
 // Class with FE macro - complex pointer types

@@ -7,28 +7,8 @@
 
 void load_reflection_data()
 {
-    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system2);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system3);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system4);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject*(::GlobalGameObject*)> >("construct ::GlobalGameObject", &::std::construct_at<::GlobalGameObject>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject*)> >("destruct ::GlobalGameObject", &::std::destroy_at<::GlobalGameObject>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject2*(::GlobalGameObject2*)> >("construct ::GlobalGameObject2", &::std::construct_at<::GlobalGameObject2>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject2*)> >("destruct ::GlobalGameObject2", &::std::destroy_at<::GlobalGameObject2>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject3*(::GlobalGameObject3*)> >("construct ::GlobalGameObject3", &::std::construct_at<::GlobalGameObject3>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject3*)> >("destruct ::GlobalGameObject3", &::std::destroy_at<::GlobalGameObject3>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject4*(::GlobalGameObject4*)> >("construct ::GlobalGameObject4", &::std::construct_at<::GlobalGameObject4>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject4*)> >("destruct ::GlobalGameObject4", &::std::destroy_at<::GlobalGameObject4>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject5*(::GlobalGameObject5*)> >("construct ::GlobalGameObject5", &::std::construct_at<::GlobalGameObject5>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject5*)> >("destruct ::GlobalGameObject5", &::std::destroy_at<::GlobalGameObject5>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject6*(::GlobalGameObject6*)> >("construct ::GlobalGameObject6", &::std::construct_at<::GlobalGameObject6>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject6*)> >("destruct ::GlobalGameObject6", &::std::destroy_at<::GlobalGameObject6>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject7*(::GlobalGameObject7*)> >("construct ::GlobalGameObject7", &::std::construct_at<::GlobalGameObject7>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject7*)> >("destruct ::GlobalGameObject7", &::std::destroy_at<::GlobalGameObject7>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalComponentBase*(::GlobalComponentBase*)> >("construct ::GlobalComponentBase", &::std::construct_at<::GlobalComponentBase>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalComponentBase*)> >("destruct ::GlobalComponentBase", &::std::destroy_at<::GlobalComponentBase>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalRenderableComponent*(::GlobalRenderableComponent*)> >("construct ::GlobalRenderableComponent", &::std::construct_at<::GlobalRenderableComponent>);
-    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalRenderableComponent*)> >("destruct ::GlobalRenderableComponent", &::std::destroy_at<::GlobalRenderableComponent>);
+
+
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::final*(::final*)> >("construct ::final", &::std::construct_at<::final>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::final*)> >("destruct ::final", &::std::destroy_at<::final>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalTransform2D*(::GlobalTransform2D*)> >("construct ::GlobalTransform2D", &::std::construct_at<::GlobalTransform2D>);
@@ -91,6 +71,8 @@ void load_reflection_data()
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::Test::EdgeCases::PointerManager*)> >("destruct ::FE::Test::EdgeCases::PointerManager", &::std::destroy_at<::FE::Test::EdgeCases::PointerManager>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::Test::EdgeCases::OuterData*(::FE::Test::EdgeCases::OuterData*)> >("construct ::FE::Test::EdgeCases::OuterData", &::std::construct_at<::FE::Test::EdgeCases::OuterData>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::Test::EdgeCases::OuterData*)> >("destruct ::FE::Test::EdgeCases::OuterData", &::std::destroy_at<::FE::Test::EdgeCases::OuterData>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::Test::EdgeCases::ArrayContainer*(::FE::Test::EdgeCases::ArrayContainer*)> >("construct ::FE::Test::EdgeCases::ArrayContainer", &::std::construct_at<::FE::Test::EdgeCases::ArrayContainer>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::Test::EdgeCases::ArrayContainer*)> >("destruct ::FE::Test::EdgeCases::ArrayContainer", &::std::destroy_at<::FE::Test::EdgeCases::ArrayContainer>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::FE::Test::EdgeCases::CallbackContainer*(::FE::Test::EdgeCases::CallbackContainer*)> >("construct ::FE::Test::EdgeCases::CallbackContainer", &::std::construct_at<::FE::Test::EdgeCases::CallbackContainer>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::FE::Test::EdgeCases::CallbackContainer*)> >("destruct ::FE::Test::EdgeCases::CallbackContainer", &::std::destroy_at<::FE::Test::EdgeCases::CallbackContainer>);
 
@@ -254,17 +236,6 @@ void load_reflection_data()
     {
         { ::FE::Test::EdgeCases::CharacterEnum::TypeA , "TypeA " },
         { ::FE::Test::EdgeCases::CharacterEnum::TypeB , "TypeB " },
-        { ::FE::Test::EdgeCases::CharacterEnum::TypeC , "TypeC " },
-        { ::FE::Test::EdgeCases::CharacterEnum::struct ArrayContainer
-{
-	int _simple_array[10];
-	float _matrix[4][4];
-	const uint32_t _constant_buffer[64];
-, "struct ArrayContainer
-{
-	int _simple_array[10];
-	float _matrix[4][4];
-	const uint32_t _constant_buffer[64];
-" }
+        { ::FE::Test::EdgeCases::CharacterEnum::TypeC , "TypeC " }
     });
 }

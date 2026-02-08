@@ -1187,6 +1187,14 @@ namespace FHT::tokenizer
 
 					if (l_tmp._vocabulary != Vocabulary::_CharLiteral)
 					{
+						if (*code_iterator_p == '}')
+						{
+							context_stack_p.pop_back();
+							out_token_p._code += *code_iterator_p;
+							++code_iterator_p;
+							break;
+						}
+
 						out_token_p._code += *code_iterator_p;
 						++code_iterator_p;
 						continue;
@@ -1201,14 +1209,6 @@ namespace FHT::tokenizer
 						tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
 					} 
 				
-
-					if (*code_iterator_p == '}')
-					{
-						context_stack_p.pop_back();
-						out_token_p._code += *code_iterator_p;
-						++code_iterator_p;
-						break;
-					}
 					++code_iterator_p;
 				}
 				context_stack_p.pop_back();
