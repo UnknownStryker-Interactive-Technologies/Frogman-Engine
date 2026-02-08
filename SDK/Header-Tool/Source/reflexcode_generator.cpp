@@ -43,6 +43,12 @@ namespace FHT::reflexcode_generator
 			{
 				continue;
 			}
+
+			if (node->_has_pure_virtual == true)
+			{
+				continue; // skip pure virtual classes
+			}
+
 			output_class_metadata(l_metadata, *node);
 		}
 
@@ -115,6 +121,12 @@ namespace FHT::reflexcode_generator
 			{
 				continue;
 			}
+
+			if (node->_has_pure_virtual == true)
+			{
+				continue; // skip pure virtual classes
+			}
+
 			output_class_metadata(out_return_p, *node);
 		}
 

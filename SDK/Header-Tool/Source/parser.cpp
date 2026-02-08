@@ -286,85 +286,102 @@ namespace FHT::parser
 			._base_class_name{ framework::get_framework().get_memory_resource() }
 		};
 
+
+		{	// trim 'class'
+			constexpr auto l_class = u8"class";
+			auto l_class_keyword_len = l_node._this_class_name.find(l_class);
+			FE_ASSERT(l_class_keyword_len != std::string::npos);
+
+			l_class_keyword_len += FE::algorithm::string::length(l_class);
+			l_node._this_class_name.erase(0, l_class_keyword_len);
+		}
+
+		auto l_attr_pos = l_node._this_class_name.rfind(u8']');
+		if (l_attr_pos != std::string::npos) // has attributes
 		{
-			{	// trim 'class'
-				constexpr auto l_class = u8"class";
-				auto l_class_keyword_len = l_node._this_class_name.find(l_class);
-				FE_ASSERT(l_class_keyword_len != std::string::npos);
+			l_node._this_class_name.erase(0, l_attr_pos + 1); // remove the attributes
+		}
 
-				l_class_keyword_len += FE::algorithm::string::length(l_class);
-				l_node._this_class_name.erase(0, l_class_keyword_len);
-			}
-
-			auto l_attr_pos = l_node._this_class_name.rfind(u8']');
-			if (l_attr_pos != std::string::npos) // has attributes
+		{	// trim spaces at front
+			var::uint64 l_space_length = 0;
+			for (auto character : l_node._this_class_name)
 			{
-				l_node._this_class_name.erase(0, l_attr_pos + 1); // remove the attributes
-			}
-
-			{	// trim spaces at front
-				var::uint64 l_space_length = 0;
-				for (auto character : l_node._this_class_name)
+				if ((character <= ' ') == false)
 				{
-					if ((character <= ' ') == false)
-					{
-						break;
-					}
-					++l_space_length;
+					break;
 				}
-				l_node._this_class_name.erase(0, l_space_length);
+				++l_space_length;
+			}
+			l_node._this_class_name.erase(0, l_space_length);
+		}
+
+		{
+			auto l_class_extension = l_node._this_class_name.find(':');
+			if (l_class_extension != std::string::npos)
+			{
+				l_node._base_class_name.assign(l_node._this_class_name.c_str() + (l_class_extension + 1));
+				l_node._this_class_name.erase(l_class_extension, l_node._this_class_name.length() - l_class_extension);
+				l_node._class_type = ClassType::_ChildOfCppClass;
+			}
+			else
+			{
+				l_node._class_type = ClassType::_None;
+			}
+		}
+
+		while (l_node._this_class_name.back() <= ' ')
+		{
+			l_node._this_class_name.pop_back();
+		}
+
+		{	// count class identifier length
+			var::uint64 l_name_length = 0;
+			for (auto character = l_node._this_class_name.rbegin(); character != l_node._this_class_name.rend(); ++character)
+			{
+				if (*character <= ' ')
+				{
+					++l_name_length;
+					break;
+				}
+				++l_name_length;
 			}
 
+			if (l_name_length != l_node._this_class_name.length())
 			{
-				auto l_class_extension = l_node._this_class_name.rfind(':');
-				if (l_class_extension != std::string::npos)
+				auto l_second_word_pos = (l_node._this_class_name.length() - l_name_length) + 1;
+				constexpr auto l_final = u8"final";
+				auto l_final_keyword_pos = FE::algorithm::string::find_the_first<var::UTF8>(l_node._this_class_name.c_str() + l_second_word_pos, l_final);
+				if (l_final_keyword_pos != std::nullopt)
 				{
-					l_node._base_class_name.assign(l_node._this_class_name.c_str() + (l_class_extension + 1));
-					l_node._this_class_name.erase(l_class_extension, l_node._this_class_name.length() - l_class_extension);
-					l_node._class_type = ClassType::_ChildOfCppClass;
+					l_node._this_class_name.erase(l_second_word_pos + l_final_keyword_pos->_begin, l_final_keyword_pos->_end - l_final_keyword_pos->_begin);
 				}
 				else
 				{
-					l_node._class_type = ClassType::_None;
+					l_node._this_class_name.erase(0, l_second_word_pos);
 				}
-			}
 
-			while (l_node._this_class_name.back() <= ' ')
-			{
-				l_node._this_class_name.pop_back();
-			}
-
-			{	// count class identifier length
-				var::uint64 l_name_length = 0;
-				for (auto character = l_node._this_class_name.rbegin(); character != l_node._this_class_name.rend(); ++character)
+				while (l_node._this_class_name.length() > 0)
 				{
-					if (*character <= ' ')
+					if (l_node._this_class_name.back() <= ' ')
 					{
-						++l_name_length;
-						break;
+						l_node._this_class_name.pop_back();
+						continue;
 					}
-					++l_name_length;
+					break;
 				}
-
-				if (l_name_length != l_node._this_class_name.length())
-				{
-					l_node._this_class_name.erase(0, (l_node._this_class_name.length() - l_name_length) + 1);
-				}
-
 			}
-			l_node._this_class_name.insert(0, parent_namespace_p);
+
 		}
+		l_node._this_class_name.insert(0, parent_namespace_p);
 
 		
+		if (l_node._base_class_name.find(u8"archetype_base") != std::string::npos)
 		{
-			if (l_node._base_class_name.find(u8"archetype_base") != std::string::npos)
-			{
-				l_node._class_type = ClassType::_ChildOfComponentBase;
-			}
-			else if (l_node._base_class_name.find(u8"component_base") != std::string::npos)
-			{
-				l_node._class_type = ClassType::_ChildOfComponentBase;
-			}
+			l_node._class_type = ClassType::_ChildOfComponentBase;
+		}
+		else if (l_node._base_class_name.find(u8"component_base") != std::string::npos)
+		{
+			l_node._class_type = ClassType::_ChildOfComponentBase;
 		}
 
 
@@ -380,6 +397,33 @@ namespace FHT::parser
 
 			case Vocabulary::_RightCurlyBracket:
 				l_stack.pop_back();
+				break;
+
+			case Vocabulary::_AnyDecl:
+				{
+					auto l_virtual_keyword_pos = out_token_iterator_p->_code.find(u8"virtual");
+					if (l_virtual_keyword_pos == std::string::npos) // break if it does not contain "virtual"; and
+					{
+						break;
+					}
+
+					if (FE::algorithm::string::space_insensitive_contains(	out_token_iterator_p->_code.c_str() + l_virtual_keyword_pos,
+																			out_token_iterator_p->_code.length() - l_virtual_keyword_pos,
+																			u8"()"
+																			) == false) // break if it does not contain "()"; and
+					{
+						break;
+					}
+
+					if (FE::algorithm::string::space_insensitive_contains(	out_token_iterator_p->_code.c_str() + l_virtual_keyword_pos,
+																			out_token_iterator_p->_code.length() - l_virtual_keyword_pos,
+																			u8"=0"
+																			) == false) // break if it does not contain "=0".
+					{
+						break;
+					}
+					l_node._has_pure_virtual = true;
+				}
 				break;
 
 			default:
@@ -430,7 +474,7 @@ namespace FHT::parser
 			}
 
 			{
-				auto l_struct_extension = l_node._identifier.rfind(':');
+				auto l_struct_extension = l_node._identifier.find(':');
 				if (l_struct_extension != std::string::npos)
 				{
 					l_node._identifier.erase(l_struct_extension, l_node._identifier.length() - l_struct_extension);
@@ -526,7 +570,7 @@ namespace FHT::parser
 		}
 
 		{	// trim enum struct extension
-			auto l_enum_struct_extension = l_node._target_enum_struct_name.rfind(':');
+			auto l_enum_struct_extension = l_node._target_enum_struct_name.find(':');
 			if (l_enum_struct_extension != std::string::npos)
 			{
 				l_node._target_enum_struct_name.erase(l_enum_struct_extension, l_node._target_enum_struct_name.length() - l_enum_struct_extension);

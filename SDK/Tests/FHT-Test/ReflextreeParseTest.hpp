@@ -591,8 +591,8 @@ FE_CLASS()
 class EntityBase
 {
 public:
-	EntityBase();
-	virtual ~EntityBase();
+	EntityBase() {}
+	virtual ~EntityBase() {}
 
 	virtual void on_spawn();
 	virtual void on_tick(float delta_p) = 0;

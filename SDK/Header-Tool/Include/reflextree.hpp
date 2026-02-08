@@ -44,6 +44,7 @@ using identifier = std::pmr::basic_string<var::UTF8>;
 struct class_node
 {
 	ClassType _class_type = ClassType::_None;
+	var::boolean _has_pure_virtual = false;
 	identifier _this_class_name;
 	identifier _base_class_name;
 };
