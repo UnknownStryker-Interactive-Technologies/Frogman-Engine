@@ -319,8 +319,8 @@ protected:
 	uint64_t _component_id;
 
 public:
-	GlobalComponentBase();
-	virtual ~GlobalComponentBase();
+	GlobalComponentBase() {}
+	virtual ~GlobalComponentBase() {}
 
 	virtual void on_create() = 0;
 	virtual void on_update(float delta_p) = 0;
@@ -668,8 +668,8 @@ public:
 	static constexpr float s_spawn_radius = 100.0f;
 
 private:
-	EntityFactory();
-	~EntityFactory();
+	EntityFactory() {}
+	~EntityFactory() {}
 
 	static int s_next_id;
 	static void register_type(int type_id_p);

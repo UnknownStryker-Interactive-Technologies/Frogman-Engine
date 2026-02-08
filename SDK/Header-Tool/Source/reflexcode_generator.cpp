@@ -381,6 +381,11 @@ namespace FHT::reflexcode_generator
 			constexpr FE::wchar* l_enum_reflexpr_frame = L"\n    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";
 			for (const std::pmr::vector<std::pmr::wstring>& enum_struct : header_file._enum_structs) // Enum structs reflection
 			{
+				if (enum_struct.size() == 1) _FE_UNLIKELY_
+				{
+					continue;
+				}
+
 				// The first element of the enum_struct vector is the name of the enum struct, and the rest are the enum values.
 				const std::pmr::wstring& identifier = enum_struct.front();
 				l_generated_code += l_enum_reflexpr_frame;

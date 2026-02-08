@@ -1216,7 +1216,10 @@ namespace FHT::tokenizer
 				return;
 			}
 
-			out_token_p._code += *code_iterator_p;
+			if ((*code_iterator_p <= ' ') == false)
+			{
+				out_token_p._code += *code_iterator_p;
+			}
 			++code_iterator_p;
 		}
 		out_token_p._vocabulary = Vocabulary::_EnumStructField;

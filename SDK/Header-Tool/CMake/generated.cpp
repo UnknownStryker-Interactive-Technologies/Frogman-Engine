@@ -7,8 +7,28 @@
 
 void load_reflection_data()
 {
-
-
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system2);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system3);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system<TargetComponentType>(WorldTagEnumType, _EngineInitialization, &::system4);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject*(::GlobalGameObject*)> >("construct ::GlobalGameObject", &::std::construct_at<::GlobalGameObject>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject*)> >("destruct ::GlobalGameObject", &::std::destroy_at<::GlobalGameObject>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject2*(::GlobalGameObject2*)> >("construct ::GlobalGameObject2", &::std::construct_at<::GlobalGameObject2>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject2*)> >("destruct ::GlobalGameObject2", &::std::destroy_at<::GlobalGameObject2>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject3*(::GlobalGameObject3*)> >("construct ::GlobalGameObject3", &::std::construct_at<::GlobalGameObject3>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject3*)> >("destruct ::GlobalGameObject3", &::std::destroy_at<::GlobalGameObject3>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject4*(::GlobalGameObject4*)> >("construct ::GlobalGameObject4", &::std::construct_at<::GlobalGameObject4>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject4*)> >("destruct ::GlobalGameObject4", &::std::destroy_at<::GlobalGameObject4>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject5*(::GlobalGameObject5*)> >("construct ::GlobalGameObject5", &::std::construct_at<::GlobalGameObject5>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject5*)> >("destruct ::GlobalGameObject5", &::std::destroy_at<::GlobalGameObject5>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject6*(::GlobalGameObject6*)> >("construct ::GlobalGameObject6", &::std::construct_at<::GlobalGameObject6>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject6*)> >("destruct ::GlobalGameObject6", &::std::destroy_at<::GlobalGameObject6>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalGameObject7*(::GlobalGameObject7*)> >("construct ::GlobalGameObject7", &::std::construct_at<::GlobalGameObject7>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalGameObject7*)> >("destruct ::GlobalGameObject7", &::std::destroy_at<::GlobalGameObject7>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalComponentBase*(::GlobalComponentBase*)> >("construct ::GlobalComponentBase", &::std::construct_at<::GlobalComponentBase>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalComponentBase*)> >("destruct ::GlobalComponentBase", &::std::destroy_at<::GlobalComponentBase>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalRenderableComponent*(::GlobalRenderableComponent*)> >("construct ::GlobalRenderableComponent", &::std::construct_at<::GlobalRenderableComponent>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::GlobalRenderableComponent*)> >("destruct ::GlobalRenderableComponent", &::std::destroy_at<::GlobalRenderableComponent>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::final*(::final*)> >("construct ::final", &::std::construct_at<::final>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::final*)> >("destruct ::final", &::std::destroy_at<::final>);
     ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::GlobalTransform2D*(::GlobalTransform2D*)> >("construct ::GlobalTransform2D", &::std::construct_at<::GlobalTransform2D>);
@@ -81,9 +101,7 @@ void load_reflection_data()
         { ::GlobalGameState::MainMenu, "MainMenu" },
         { ::GlobalGameState::InGame, "InGame" },
         { ::GlobalGameState::Paused, "Paused" },
-        { ::GlobalGameState::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalGameState2 >("::GlobalGameState2",
@@ -91,9 +109,7 @@ void load_reflection_data()
         { ::GlobalGameState2::MainMenu, "MainMenu" },
         { ::GlobalGameState2::InGame, "InGame" },
         { ::GlobalGameState2::Paused, "Paused" },
-        { ::GlobalGameState2::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState2::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalGameState3 >("::GlobalGameState3",
@@ -101,9 +117,7 @@ void load_reflection_data()
         { ::GlobalGameState3::MainMenu, "MainMenu" },
         { ::GlobalGameState3::InGame, "InGame" },
         { ::GlobalGameState3::Paused, "Paused" },
-        { ::GlobalGameState3::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState3::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalGameState4 >("::GlobalGameState4",
@@ -111,9 +125,7 @@ void load_reflection_data()
         { ::GlobalGameState4::MainMenu, "MainMenu" },
         { ::GlobalGameState4::InGame, "InGame" },
         { ::GlobalGameState4::Paused, "Paused" },
-        { ::GlobalGameState4::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState4::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalGameState5 >("::GlobalGameState5",
@@ -121,9 +133,7 @@ void load_reflection_data()
         { ::GlobalGameState5::MainMenu, "MainMenu" },
         { ::GlobalGameState5::InGame, "InGame" },
         { ::GlobalGameState5::Paused, "Paused" },
-        { ::GlobalGameState5::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState5::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalGameState6 >("::GlobalGameState6",
@@ -131,41 +141,39 @@ void load_reflection_data()
         { ::GlobalGameState6::MainMenu, "MainMenu" },
         { ::GlobalGameState6::InGame, "InGame" },
         { ::GlobalGameState6::Paused, "Paused" },
-        { ::GlobalGameState6::GameOver
-, "GameOver
-" }
+        { ::GlobalGameState6::GameOver, "GameOver" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalEntityType >("::GlobalEntityType",
     {
-        { ::GlobalEntityType::Player , "Player " },
-        { ::GlobalEntityType::Enemy , "Enemy " },
-        { ::GlobalEntityType::Projectile , "Projectile " },
-        { ::GlobalEntityType::Pickup , "Pickup " }
+        { ::GlobalEntityType::Player, "Player" },
+        { ::GlobalEntityType::Enemy, "Enemy" },
+        { ::GlobalEntityType::Projectile, "Projectile" },
+        { ::GlobalEntityType::Pickup, "Pickup" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalEntityType2 >("::GlobalEntityType2",
     {
-        { ::GlobalEntityType2::Player , "Player " },
-        { ::GlobalEntityType2::Enemy , "Enemy " },
-        { ::GlobalEntityType2::Projectile , "Projectile " },
-        { ::GlobalEntityType2::Pickup , "Pickup " }
+        { ::GlobalEntityType2::Player, "Player" },
+        { ::GlobalEntityType2::Enemy, "Enemy" },
+        { ::GlobalEntityType2::Projectile, "Projectile" },
+        { ::GlobalEntityType2::Pickup, "Pickup" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalEntityType3 >("::GlobalEntityType3",
     {
-        { ::GlobalEntityType3::Player , "Player " },
-        { ::GlobalEntityType3::Enemy , "Enemy " },
-        { ::GlobalEntityType3::Projectile , "Projectile " },
-        { ::GlobalEntityType3::Pickup , "Pickup " }
+        { ::GlobalEntityType3::Player, "Player" },
+        { ::GlobalEntityType3::Enemy, "Enemy" },
+        { ::GlobalEntityType3::Projectile, "Projectile" },
+        { ::GlobalEntityType3::Pickup, "Pickup" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::GlobalEntityType4 >("::GlobalEntityType4",
     {
-        { ::GlobalEntityType4::Player , "Player " },
-        { ::GlobalEntityType4::Enemy , "Enemy " },
-        { ::GlobalEntityType4::Projectile , "Projectile " },
-        { ::GlobalEntityType4::Pickup , "Pickup " }
+        { ::GlobalEntityType4::Player, "Player" },
+        { ::GlobalEntityType4::Enemy, "Enemy" },
+        { ::GlobalEntityType4::Projectile, "Projectile" },
+        { ::GlobalEntityType4::Pickup, "Pickup" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::InputState >("::FE::Test::InputState",
@@ -173,36 +181,28 @@ void load_reflection_data()
         { ::FE::Test::InputState::Released, "Released" },
         { ::FE::Test::InputState::Pressed, "Pressed" },
         { ::FE::Test::InputState::Held, "Held" },
-        { ::FE::Test::InputState::JustReleased
-, "JustReleased
-" }
+        { ::FE::Test::InputState::JustReleased, "JustReleased" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::RenderLayer >("::FE::Test::RenderLayer",
     {
-        { ::FE::Test::RenderLayer::Background , "Background " },
-        { ::FE::Test::RenderLayer::Gameplay , "Gameplay " },
-        { ::FE::Test::RenderLayer::UI , "UI " },
-        { ::FE::Test::RenderLayer::Debug , "Debug " },
-        { ::FE::Test::RenderLayer::PostProcess , "PostProcess " }
+        { ::FE::Test::RenderLayer::Background, "Background" },
+        { ::FE::Test::RenderLayer::Gameplay, "Gameplay" },
+        { ::FE::Test::RenderLayer::UI, "UI" },
+        { ::FE::Test::RenderLayer::Debug, "Debug" },
+        { ::FE::Test::RenderLayer::PostProcess, "PostProcess" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::EntityID >("::FE::Test::EntityID",
     {
-        { ::FE::Test::EntityID::Invalid , "Invalid " },
-        { ::FE::Test::EntityID::First , "First " },
-        { ::FE::Test::EntityID::MaxEntities , "MaxEntities " }
+        { ::FE::Test::EntityID::Invalid, "Invalid" },
+        { ::FE::Test::EntityID::First, "First" },
+        { ::FE::Test::EntityID::MaxEntities, "MaxEntities" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::DefaultWorldTag >("::FE::Test::DefaultWorldTag",
     {
-        { ::FE::Test::DefaultWorldTag::MainWorld
-, "MainWorld
-" }
-    });
-
-    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::ReservedEnum >("::FE::Test::ReservedEnum",
-    
+        { ::FE::Test::DefaultWorldTag::MainWorld, "MainWorld" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::Nested::NestedInputType >("::FE::Test::Nested::NestedInputType",
@@ -210,32 +210,28 @@ void load_reflection_data()
         { ::FE::Test::Nested::NestedInputType::Keyboard, "Keyboard" },
         { ::FE::Test::Nested::NestedInputType::Mouse, "Mouse" },
         { ::FE::Test::Nested::NestedInputType::Gamepad, "Gamepad" },
-        { ::FE::Test::Nested::NestedInputType::Touch
-, "Touch
-" }
+        { ::FE::Test::Nested::NestedInputType::Touch, "Touch" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::Nested::Deep::DeepActionType >("::FE::Test::Nested::Deep::DeepActionType",
     {
         { ::FE::Test::Nested::Deep::DeepActionType::Move, "Move" },
-        { ::FE::Test::Nested::Deep::DeepActionType::Attack
-, "Attack
-" }
+        { ::FE::Test::Nested::Deep::DeepActionType::Attack, "Attack" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::EdgeCases::LargeIDType >("::FE::Test::EdgeCases::LargeIDType",
     {
-        { ::FE::Test::EdgeCases::LargeIDType::None , "None " },
-        { ::FE::Test::EdgeCases::LargeIDType::Small , "Small " },
-        { ::FE::Test::EdgeCases::LargeIDType::Medium , "Medium " },
-        { ::FE::Test::EdgeCases::LargeIDType::Large , "Large " },
-        { ::FE::Test::EdgeCases::LargeIDType::Maximum , "Maximum " }
+        { ::FE::Test::EdgeCases::LargeIDType::None, "None" },
+        { ::FE::Test::EdgeCases::LargeIDType::Small, "Small" },
+        { ::FE::Test::EdgeCases::LargeIDType::Medium, "Medium" },
+        { ::FE::Test::EdgeCases::LargeIDType::Large, "Large" },
+        { ::FE::Test::EdgeCases::LargeIDType::Maximum, "Maximum" }
     });
 
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FE::Test::EdgeCases::CharacterEnum >("::FE::Test::EdgeCases::CharacterEnum",
     {
-        { ::FE::Test::EdgeCases::CharacterEnum::TypeA , "TypeA " },
-        { ::FE::Test::EdgeCases::CharacterEnum::TypeB , "TypeB " },
-        { ::FE::Test::EdgeCases::CharacterEnum::TypeC , "TypeC " }
+        { ::FE::Test::EdgeCases::CharacterEnum::TypeA, "TypeA" },
+        { ::FE::Test::EdgeCases::CharacterEnum::TypeB, "TypeB" },
+        { ::FE::Test::EdgeCases::CharacterEnum::TypeC, "TypeC" }
     });
 }
