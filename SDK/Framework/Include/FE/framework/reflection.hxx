@@ -340,7 +340,7 @@ public:
 	using class_property_metadata_type = typename class_property_list::mapped_type;
 
 	using class_layer_stack = std::pmr::vector< FE::pair<class_property_list*, typename class_property_list::iterator> >;
-	using data_on_heap_size_record = std::pmr::deque<var::size>; // Used std::pmr::deque beause std::queue does not support pmr.
+	using data_on_heap_size_record = std::pmr::deque<var::size>; // Used std::pmr::deque because std::queue does not support pmr.
 
 	using lock_type = std::mutex;
 	using file_handler = std::fstream;
@@ -914,10 +914,10 @@ public:
 	enum_metadata(std::pmr::memory_resource* const resource_p) noexcept;
 	_FE_FORCE_INLINE_ FE::ASCII* get_typename() const noexcept { return m_typename.data(); }
 
-	template<typename EnumStrut>
-	std::optional<EnumStrut> string_to_enum(const std::string_view& enum_value_string_p) const noexcept
+	template<typename EnumStruct>
+	std::optional<EnumStruct> string_to_enum(const std::string_view& enum_value_string_p) const noexcept
 	{
-		static_assert(sizeof(EnumStrut) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
+		static_assert(sizeof(EnumStruct) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
 
 		auto l_result = m_string_to_value_map.find(enum_value_string_p);
 		if (l_result == m_string_to_value_map.end())
@@ -928,21 +928,21 @@ public:
 		if (l_result->first == enum_value_string_p)
 		{
 			std::array<var::byte, field_max_size> l_result = l_result->second;
-			EnumStrut l_ret;
-			FE::memcpy(&l_ret, sizeof(EnumStrut), l_result.data(), l_result.size());
+			EnumStruct l_ret;
+			FE::memcpy(&l_ret, sizeof(EnumStruct), l_result.data(), l_result.size());
 			return l_ret;
 		}
 
 		return std::nullopt;
 	}
 
-	template<typename EnumStrut>
-	FE::ASCII* enum_to_string(const EnumStrut value_p) const noexcept
+	template<typename EnumStruct>
+	FE::ASCII* enum_to_string(const EnumStruct value_p) const noexcept
 	{
-		static_assert(sizeof(EnumStrut) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
+		static_assert(sizeof(EnumStruct) <= field_max_size, "Static assertion failure: the enum size exceeds the maximum supported size.");
 
 		std::array<var::byte, field_max_size> l_enum_bits = { 0 };
-		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStrut));
+		FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &value_p, sizeof(EnumStruct));
 
 		auto l_result = m_value_to_string_map.find(l_enum_bits);
 		if (l_result == m_value_to_string_map.end())
@@ -969,23 +969,23 @@ public:
 	enum_registry(std::pmr::memory_resource* const resource_p, FE::size capacity_p) noexcept;
 	~enum_registry() noexcept = default;
 
-	template<typename EnumStrut>
+	template<typename EnumStruct>
 	void register_enum_struct(const std::string_view& enum_struct_name_p,
-		                      std::initializer_list< FE::pair<EnumStrut, FE::ASCII*> >&& field_list_p)
+		                      std::initializer_list< FE::pair<EnumStruct, FE::ASCII*> >&& field_list_p)
 	{
 		enum_metadata l_enum_struct_metadata(m_resource);
 		l_enum_struct_metadata.m_typename = enum_struct_name_p;
-		for (const FE::pair<EnumStrut, FE::ASCII*>& field : field_list_p)
+		for (const FE::pair<EnumStruct, FE::ASCII*>& field : field_list_p)
 		{
 			FE_ASSERT(field._second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
 			std::array<var::byte, enum_metadata::field_max_size> l_enum_bits{0};
-			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field._first, sizeof(EnumStrut));
+			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field._first, sizeof(EnumStruct));
 			l_enum_struct_metadata.m_string_to_value_map.emplace(field._second, l_enum_bits);
 			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
 		}
 
 		FE_EXIT_IF(m_enum_registry.insert(enum_struct_name_p, l_enum_struct_metadata).second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
+			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have occurred in the FE runtime reflection metadata loader function, during the initialization. Please reach out to the FE developer.");
 	}
 
 	// This method may return a nullptr.
