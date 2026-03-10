@@ -154,7 +154,7 @@ class list
 		_FE_FORCE_INLINE_ constexpr pointer operator+(const difference_type pointer_offset_p) const noexcept
 		{
 			node* l_result = m_iterator;
-			for (size_type i = 0; i < pointer_offset_p; ++i)
+			for (difference_type i = 0; i < pointer_offset_p; ++i)
 			{
 				FE_NEGATIVE_ASSERT(l_result == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 				l_result = l_result->m_next;
@@ -163,7 +163,7 @@ class list
 		}
 		_FE_FORCE_INLINE_ constexpr void operator+=(const difference_type pointer_offset_p) noexcept
 		{
-			for (size_type i = 0; i < pointer_offset_p; ++i)
+			for (difference_type i = 0; i < pointer_offset_p; ++i)
 			{
 				FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 				m_iterator = m_iterator->m_next;
@@ -174,7 +174,7 @@ class list
 		_FE_FORCE_INLINE_ constexpr pointer operator-(const difference_type pointer_offset_p) const noexcept
 		{
 			node* l_result = m_iterator;
-			for (size_type i = 0; i < pointer_offset_p; ++i)
+			for (difference_type i = 0; i < pointer_offset_p; ++i)
 			{
 				FE_NEGATIVE_ASSERT(l_result == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 				l_result = l_result->m_prev;
@@ -183,7 +183,7 @@ class list
 		}
 		_FE_FORCE_INLINE_ constexpr void operator-=(const difference_type pointer_offset_p) noexcept
 		{
-			for (size_type i = 0; i < pointer_offset_p; ++i)
+			for (difference_type i = 0; i < pointer_offset_p; ++i)
 			{
 				FE_NEGATIVE_ASSERT(m_iterator == nullptr, "${%s@0}: The iterator was null.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 				m_iterator = m_iterator->m_prev;
@@ -1175,6 +1175,126 @@ public: // Member functions
 		m_front->m_prev = nullptr;
 		m_back->m_next = nullptr;
 	}
+
+	constexpr void splice(const_iterator pos_p, list& other_p, const_iterator it_p) noexcept
+	{
+		FE_ASSERT(other_p.is_empty() == false, "Assertion failed: the input source container must not be empty.");
+		FE_ASSERT(it_p != other_p.cend(), "Assertion failed: it_p must not be other_p.cend().");
+
+#ifdef _DEBUG_
+		if (is_empty() == false)
+		{
+			auto l_it = cbegin();
+			for (; l_it != cend(); ++l_it)
+			{
+				if (l_it == pos_p)
+				{
+					break;
+				}
+			}
+
+			FE_ASSERT(l_it != cend(), "Assertion failed: pos_p does not belong to *this; please refer to: https://en.cppreference.com/w/cpp/container/list/splice.html");
+		}
+#endif
+
+		if ( ( pos_p == it_p ) ||
+			 ( pos_p == (it_p+1) ) )
+		{
+			if ( ((pos_p == nullptr) && (is_empty() == true)) == false )
+			{
+				return; // has no effect; see: https://en.cppreference.com/w/cpp/container/list/splice.html
+			}
+		}
+
+		other_p.m_size -= 1;
+		node* l_input = nullptr;
+
+		if (&(other_p.front()) == &(*it_p))
+		{
+			l_input = other_p.m_front;
+
+			other_p.m_front = other_p.m_front->m_next;
+
+			if (other_p.m_front != nullptr) 
+			{
+				other_p.m_front->m_prev = nullptr;
+			}
+			else // the list is emptied; other_p.m_front is nullptr.
+			{
+				other_p.m_back = nullptr;
+			}
+
+			l_input->m_next = nullptr;
+			l_input->m_prev = nullptr;
+		}
+		else if (&(other_p.back()) == &(*it_p))
+		{
+			l_input = other_p.m_back;
+
+			other_p.m_back = other_p.m_back->m_prev;
+
+			if (other_p.m_back != nullptr)
+			{
+				other_p.m_back->m_next = nullptr;
+			}
+			else // the list is emptied; other_p.m_back is nullptr.
+			{
+				other_p.m_front = nullptr;
+			}
+
+			l_input->m_next = nullptr;
+			l_input->m_prev = nullptr;
+		}
+		else // in between
+		{
+			l_input = FE::iterator_cast<node*>(it_p);
+
+			l_input->m_prev->m_next = l_input->m_next;
+			l_input->m_next->m_prev = l_input->m_prev;
+
+			l_input->m_next = nullptr;
+			l_input->m_prev = nullptr;
+		}
+
+
+		FE_ASSERT(l_input != nullptr);
+		if (is_empty() == true)
+		{
+			m_front = l_input;
+			m_back = l_input;
+			++m_size;
+			return;
+		}
+		else if (&front() == &(*pos_p))
+		{
+			m_front->m_prev = l_input;
+			l_input->m_next = m_front;
+
+			m_front = l_input; // update the front pointer
+			++m_size;
+			return;
+		}
+		else if (&back() == &(*pos_p))
+		{
+			m_back->m_next = l_input;
+			l_input->m_prev = m_back;
+
+			m_back = l_input; // update the back pointer
+			++m_size;
+			return;
+		}
+		else // in between
+		{
+			node* l_destination = FE::iterator_cast<node*>(pos_p);
+			l_destination->m_next->m_prev = l_input;
+			l_input->m_next = l_destination->m_next;
+
+			l_destination->m_next = l_input;
+			l_input->m_prev = l_destination;
+			++m_size;
+		}
+	}
+
 
 private: // these are private internal functions mean to operate on the given arguments; these never directly modify the member variables, except for the m_allocator's state.
 	FE::pair<node*, node*> __allocate_and_construct_nodes(const size_type count_p, const T& value_p = T()) const noexcept

@@ -378,6 +378,86 @@ TEST(XTL_list_modifiers, swap_and_swap_extremes)
     EXPECT_EQ(*it, 2);
 }
 
+TEST(XTL_list_modifiers, splice)
+{
+    // front to front
+    {
+        FE::list<int> a{ 1, 2, 3 };
+        FE::list<int> b{ 10, 20, 30 };
+
+        a.splice(a.cbegin(), b, b.cbegin());
+
+        EXPECT_EQ(a.size(), 4u);
+        EXPECT_EQ(b.size(), 2u);
+
+        std::vector<int> expected_a{ 10, 1, 2, 3 };
+        size_t idx = 0;
+        for (auto it = a.begin(); it != a.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_a[idx]);
+        }
+
+        std::vector<int> expected_b{ 20, 30 };
+        idx = 0;
+        for (auto it = b.begin(); it != b.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_b[idx]);
+        }
+    }
+
+
+	// last to last
+    {
+        FE::list<int> a{ 1, 2, 3 };
+        FE::list<int> b{ 10, 20, 30 };
+
+        a.splice(a.cbegin()+2, b, b.cbegin()+2);
+
+        EXPECT_EQ(a.size(), 4u);
+        EXPECT_EQ(b.size(), 2u);
+
+        std::vector<int> expected_a{ 1, 2, 3, 30 };
+        size_t idx = 0;
+        for (auto it = a.begin(); it != a.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_a[idx]);
+        }
+
+        std::vector<int> expected_b{ 10, 20 };
+        idx = 0;
+        for (auto it = b.begin(); it != b.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_b[idx]);
+        }
+    }
+
+
+	// mid to mid
+    {
+        FE::list<int> a{ 1, 2, 3 };
+        FE::list<int> b{ 10, 20, 30 };
+
+        a.splice(a.cbegin() + 1, b, b.cbegin() + 1);
+
+        EXPECT_EQ(a.size(), 4u);
+        EXPECT_EQ(b.size(), 2u);
+
+        std::vector<int> expected_a{ 1, 2, 20, 3};
+        size_t idx = 0;
+        for (auto it = a.begin(); it != a.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_a[idx]);
+        }
+
+        std::vector<int> expected_b{ 10, 30 };
+        idx = 0;
+        for (auto it = b.begin(); it != b.end(); ++it, ++idx)
+        {
+            EXPECT_EQ(*it, expected_b[idx]);
+        }
+    }
+}
+
 /*
   Fuzz-style benchmarks for FE::list constructors using Google Benchmark.
   - All benchmark functions use snake_case and Allman style braces.

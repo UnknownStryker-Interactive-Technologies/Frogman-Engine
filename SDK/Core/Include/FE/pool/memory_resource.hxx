@@ -17,7 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/pool/arena.hxx>
 #include <FE/pool/block_pool.hxx>
 #include <FE/pool/scalable_pool.hxx>
 
