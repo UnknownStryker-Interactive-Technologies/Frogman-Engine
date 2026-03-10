@@ -60,11 +60,10 @@ FE::internal::AllocatorType FE::internal::__select_allocator(std::size_t bytes_p
 		default:
 			if (bytes_p > FE::system_page_size)
 			{
-				return FE::internal::AllocatorType::_ArenaAllocator;
+				return FE::internal::AllocatorType::_AlignedMalloc;
 			}
 			return FE::internal::AllocatorType::_ScalableAllocator;
 		}
-		return FE::internal::AllocatorType::_ArenaAllocator;
 	}
 }
 
@@ -76,8 +75,7 @@ FE::memory_resource::memory_resource(FE::memory_resource&& other_p) noexcept
 		m_ymmword_block_pool( std::move(other_p.m_ymmword_block_pool) ),
 		m_zmmword_block_pool( std::move(other_p.m_zmmword_block_pool) ),
 		m_dzmmword_block_pool( std::move(other_p.m_dzmmword_block_pool) ),
-		m_scalable_pool( std::move(other_p.m_scalable_pool) ),
-		m_arena_pool( std::move(other_p.m_arena_pool) )
+		m_scalable_pool( std::move(other_p.m_scalable_pool) )
 {}
 
 FE::memory_resource& FE::memory_resource::operator=(FE::memory_resource&& other_p) noexcept
@@ -87,7 +85,6 @@ FE::memory_resource& FE::memory_resource::operator=(FE::memory_resource&& other_
 	m_zmmword_block_pool = std::move(other_p.m_zmmword_block_pool);
 	m_dzmmword_block_pool = std::move(other_p.m_dzmmword_block_pool);
 	m_scalable_pool = std::move(other_p.m_scalable_pool);
-	m_arena_pool = std::move(other_p.m_arena_pool);
 	return *this;
 }
 
@@ -110,11 +107,10 @@ void* FE::memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ st
 	case internal::AllocatorType::_ScalableAllocator:
 		return m_scalable_pool.allocate<std::byte>(bytes_p);
 
-	case internal::AllocatorType::_ArenaAllocator:
-		return m_arena_pool.allocate<std::byte>((FE::int32)bytes_p);
-
+	case internal::AllocatorType::_AlignedMalloc:
+		_FE_FALLTHROUGH_;
 	default:
-		return m_arena_pool.allocate<std::byte>(bytes_p);
+		return FE_ALIGNED_ALLOC((FE::int32)bytes_p, FE::SIMD_auto_alignment::size);
 	}
 	return nullptr;
 }
@@ -143,12 +139,10 @@ void FE::memory_resource::do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MA
 		m_scalable_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
 		return;
 
-	case internal::AllocatorType::_ArenaAllocator:
-		m_arena_pool.deallocate<std::byte>( static_cast<std::byte*>(ptr_p), bytes_p );
-		return;
-
+	case internal::AllocatorType::_AlignedMalloc:
+		_FE_FALLTHROUGH_;
 	default:
-		m_arena_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
+		FE_ALIGNED_FREE(ptr_p);
 		return;
 	}
 }
