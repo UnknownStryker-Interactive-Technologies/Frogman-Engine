@@ -1198,9 +1198,9 @@ public: // Member functions
 #endif
 
 		if ( ( pos_p == it_p ) ||
-			 ( pos_p == (it_p+1) ) )
+			 ( pos_p == (it_p+1) ) ) _FE_UNLIKELY_
 		{
-			if ( ((pos_p == nullptr) && (is_empty() == true)) == false )
+			if ( ((pos_p == nullptr) && (is_empty() == true)) == false ) _FE_UNLIKELY_
 			{
 				return; // has no effect; see: https://en.cppreference.com/w/cpp/container/list/splice.html
 			}

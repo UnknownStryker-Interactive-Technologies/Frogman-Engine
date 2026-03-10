@@ -53,13 +53,15 @@ namespace internal::pool
         var::byte* _page_iterator;
         var::byte* const _end;
         var::uint32 _usage_in_bytes;
+		PageGroup _availability;
 
     public:
         chunk() noexcept
             :   _begin(static_cast<var::byte*>(m_page)),
                 _page_iterator(_begin),
 			    _end(_page_iterator + page_capacity_in_bytes),
-			    _usage_in_bytes(0)
+			    _usage_in_bytes(0),
+			    _availability(PageGroup::_AvailablePages)
         {
 #ifdef _ENABLE_ASSERT_
             std::memset(m_double_free_tracker, 0, possible_address_count);
@@ -121,7 +123,8 @@ public:
 
 private:
     using pool_type = FE::list< chunk_type, FE::page_aligned_allocator<chunk_type> >;
-    pool_type m_pages;
+    pool_type m_available_pages;
+    pool_type m_unavailable_pages;
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     using page_validation_table = absl::flat_hash_set<chunk_type*,
@@ -132,7 +135,8 @@ private:
 
 public:
     pool() noexcept
-		:   m_pages()
+		:   m_available_pages(),
+            m_unavailable_pages()
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 		,   m_page_validation_table()
 #endif
@@ -140,13 +144,20 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_page_validation_table.reserve(512);
 #endif
+
+
+        m_available_pages.emplace_front();
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+        m_page_validation_table.insert(&m_available_pages.front());
+#endif
     }
 
     virtual ~pool() noexcept override
     {}
 
     pool(pool&& other_p) noexcept
-		:   m_pages( std::move(other_p.m_pages) )
+		:   m_available_pages( std::move(other_p.m_available_pages) ),
+            m_unavailable_pages( std::move(other_p.m_unavailable_pages) )
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         ,   m_page_validation_table(std::move(other_p.m_page_validation_table))
 #endif
@@ -154,14 +165,26 @@ public:
 
     pool& operator=(pool&& other_p) noexcept
     {
-		m_pages = std::move(other_p.m_pages);
+		m_available_pages = std::move(other_p.m_available_pages);
+        m_unavailable_pages = std::move(other_p.m_unavailable_pages);
+
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 		m_page_validation_table = std::move(other_p.m_page_validation_table);
 #endif
         return *this;
     }
+    
+    bool operator==(const pool& other_p) const noexcept
+    { 
+        if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
+        {
+            return false;
+        }
 
-    _FE_FORCE_INLINE_ bool operator==(const pool&) const noexcept { return false; }
+        auto l_this = dynamic_cast<const pool*>(this);
+		FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
+		return l_this == &other_p;
+    }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -179,14 +202,16 @@ protected:
         deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
     }
 
-    inline virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
+    virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
     {
         if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
         {
             return false;
         }
 
-        return operator==(dynamic_cast<const pool&>(other_p));
+        auto l_this = dynamic_cast<const pool*>(this);
+        FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
+        return l_this == &other_p;
     }
 
 public:
@@ -195,62 +220,40 @@ public:
     {
         static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         static_assert(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
+		FE_ASSERT(m_available_pages.is_empty() == false, "Critical Error in FE.Core.block_pool: No available pages to allocate from. This should never happen because the constructor always creates a page.");
 
-        for (typename pool_type::iterator page = m_pages.begin(); page != m_pages.end(); ++page)
+        if (m_available_pages.front().is_out_of_memory() == true)
         {
-            if (page->is_out_of_memory() == true) _FE_UNLIKELY_
-            {
-                continue;
-            }
+			m_available_pages.front()._availability = PageGroup::_UnavailablePages; // mark the page as unavailable before moving it to the unavailable list.
+			m_unavailable_pages.splice(m_unavailable_pages.cbegin(), m_available_pages, m_available_pages.cbegin()); // move the page to the Unavailable List (UL).
 
-            void* l_allocation_result;
-            if (page->_free_blocks.is_empty() == false)
-            {
-                l_allocation_result = page->_free_blocks.pop();
-            }
-            else
-            {
-                l_allocation_result = page->_page_iterator;
-                page->_page_iterator += fixed_block_size_in_bytes;
-            }
+            m_available_pages.emplace_front();
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-			page->check_double_allocation(reinterpret_cast<var::byte*>(l_allocation_result));
+            m_page_validation_table.insert(&m_available_pages.front());
 #endif
-            if constexpr (FE::is_trivial<U>::value == false)
-            {
-                new(static_cast<U*>(l_allocation_result)) U();
-            }
-
-            FE_ASSERT((reinterpret_cast<FE::uintptr>(l_allocation_result) % Alignment::size) == 0, "FE.Core.block_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_allocation_result, &Alignment::size);
-            page->_usage_in_bytes += fixed_block_size_in_bytes;
-            return static_cast<U*>(l_allocation_result);
         }
 
-        FE_LOG(FE::log::Severity::_Warning, "The initial attempts to allocating memory failed. Creating a new page.");
-		/* this sort the list in the new-to-old order; the newest page is always at the front of the list.
-		* This sorting strategy relies on the assumption that recently used pages are more likely to have free blocks available.
-   
-        * 0. // swap_extremes()
-        * 1. (page 1) // emplace_front()
-        * 
-        * 2. (page 1) // swap_extremes()
-		* 3. (page 2) (page 1) // emplace_front()
-        * 
-		* 4. (page 1) (page 2) // swap_extremes()
-        * 5. (page 3) (page 1) (page 2) // emplace_front()
-        * 
-        * 6. (page 2) (page 1) (page 3) // swap_extremes()
-        * 7. (page 4) (page 2) (page 1) (page 3) // emplace_front()
-        * 
-        * 8. (page 3) (page 2) (page 1) (page 4) // swap_extremes()
-		* 9. (page 5) (page 3) (page 2) (page 1) (page 4) // emplace_front()
-        */
-        m_pages.swap_extremes();
-        m_pages.emplace_front();
+        void* l_allocation_result;
+        if (m_available_pages.front()._free_blocks.is_empty() == false)
+        {
+            l_allocation_result = m_available_pages.front()._free_blocks.pop();
+        }
+        else
+        {
+            l_allocation_result = m_available_pages.front()._page_iterator;
+            m_available_pages.front()._page_iterator += fixed_block_size_in_bytes;
+        }
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        m_page_validation_table.insert(&m_pages.front());
+        m_available_pages.front().check_double_allocation(reinterpret_cast<var::byte*>(l_allocation_result));
 #endif
-        return allocate<U>();
+        if constexpr (FE::is_trivial<U>::value == false)
+        {
+            new(static_cast<U*>(l_allocation_result)) U();
+        }
+
+        FE_ASSERT((reinterpret_cast<FE::uintptr>(l_allocation_result) % Alignment::size) == 0, "FE.Core.block_pool has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_allocation_result, &Alignment::size);
+        m_available_pages.front()._usage_in_bytes += fixed_block_size_in_bytes;
+        return static_cast<U*>(l_allocation_result);
     }
 
     // Incorrect type will cause a critical runtime error.
@@ -274,17 +277,24 @@ public:
         }
         l_page_base->_free_blocks.push(l_to_be_freed);
         l_page_base->_usage_in_bytes -= fixed_block_size_in_bytes;
-        
         FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.block_pool: the internal usage counter has gone negative. Memory corruption might have occurred.");
+        
+        if (l_page_base->_availability == PageGroup::_UnavailablePages)
+        {
+			l_page_base->_availability = PageGroup::_AvailablePages; // mark the page as available before moving it to the available list.
+            
+            m_available_pages.splice(FE::iterator_cast<typename pool_type::const_iterator>(m_available_pages.rbegin()), m_unavailable_pages,
+                FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base)); // move the page to the Available List (AL).
+        }
     }
 
     bool try_trim_a_page() noexcept
     {
-        for (typename pool_type::iterator page = m_pages.begin(); page != m_pages.end(); ++page)
+        for (typename pool_type::iterator page = m_available_pages.begin(); page != m_available_pages.end(); ++page)
         {
             if (page->_usage_in_bytes == 0)
             {
-                m_pages->erase(page);
+                m_available_pages->erase(page);
                 return true;
             }
         }
@@ -293,11 +303,11 @@ public:
 
     void try_trim_all_pages() noexcept
     {
-        for (typename pool_type::iterator page = m_pages.begin(); page != m_pages.end();)
+        for (typename pool_type::iterator page = m_available_pages.begin(); page != m_available_pages.end();)
         {
             if (page->_usage_in_bytes == 0)
             {
-                page = m_pages->erase(page);
+                page = m_available_pages->erase(page);
                 continue;
             }
             ++page;

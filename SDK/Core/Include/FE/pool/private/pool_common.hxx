@@ -53,6 +53,12 @@ enum struct PoolType : uint8
 	_Arena = 2
 };
 
+enum struct PageGroup : uint8
+{
+    _AvailablePages = 0,
+    _UnavailablePages = 1
+};
+
 template<PoolType PoolType, class Alignment>
 class pool;
 

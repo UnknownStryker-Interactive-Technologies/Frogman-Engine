@@ -61,6 +61,7 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 	# /Oy-: Disable frame pointer omission  
 	# /Gv: Enable calling convention vectorcall
 	# /GR: Enable RTTI
+	# /dynamicdebug: as it reads
 
 	# Common Compile Options. The ABSL prevents compile when /Gv is enabled.
 	ADD_COMPILE_OPTIONS(/D_HAS_EXCEPTIONS=0 /DNOMINMAX /D_V143_=1 /std:c17 /Zc:__cplusplus /WX /W4 /MP /GF /Gy /Oi /Gr /GR /utf-8) # /utf-8 /Gv
