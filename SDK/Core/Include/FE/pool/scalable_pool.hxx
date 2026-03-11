@@ -462,75 +462,21 @@ private:
     }
 
 	// Time complexity: O(5n + n log n).
-    static void _FE_VECTOR_CALL_ __defragment(page_pointer page_p) noexcept
+    static void _FE_VECTOR_CALL_ __defragment(page_pointer page_p) noexcept // remove the parallelization; it is legacy code back in the days when a page size was almost a GiB. 
     {
         if (page_p->get_free_list_size() <= 1) _FE_UNLIKELY_
         {
             return;
         }
 
-        std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(std::execution::parallel_unsequenced_policy{},
-            page_p->get_free_list(),
-            page_p->get_free_list() + page_p->get_free_list_size(),
-            internal::pool::from_low_address{});
+        std::sort<free_list_iterator, internal::pool::from_low_address>(page_p->get_free_list(),
+                                                                        page_p->get_free_list() + page_p->get_free_list_size(),
+                                                                        internal::pool::from_low_address{});
 
 		// Merge the free list.
 		free_list_iterator l_iterator = page_p->get_free_list();
 		free_list_iterator l_next = l_iterator + 1;
 		free_list_iterator l_end = l_iterator + page_p->get_free_list_size();
-
-		FE::uint32 l_threads_count = std::thread::hardware_concurrency() >> 1;
-		FE::uint32 l_jobs_count_per_thread = page_p->get_free_list_size() / l_threads_count;
-  
-        static_assert(sizeof(internal::pool::block_info)*4 == FE::CPU_L1_cache_line::size, "Static Assertion failed: can't compile due to false sharing issues!");
-		if (l_jobs_count_per_thread > 8) // Parallelize the defragmentation if the job count per thread is large enough.
-        {
-			thread_local static tf::Executor tl_s_executor(l_threads_count);
-            thread_local static tf::Taskflow tl_s_taskflow;
-
-			std::atomic<free_list_iterator> l_atomic_partition = page_p->get_free_list();
-
-            FE_DO_ONCE(_DO_ONCE_PER_THREAD_,
-                for (var::uint32 i = 0; i < l_threads_count; ++i)
-                {
-                    tl_s_taskflow.emplace(
-                        [l_jobs_count_per_thread, &l_atomic_partition]()
-                        {
-                            free_list_iterator l_range_iterator = l_atomic_partition.fetch_add(l_jobs_count_per_thread);
-							free_list_iterator l_next = l_range_iterator + 1;
-                            free_list_iterator l_range_end = l_range_iterator + l_jobs_count_per_thread;
-
-                            // Time complexity: O(n)
-                            while (l_next != l_range_end)
-                            {
-                                // Merge the adjacent blocks.
-                                if ((l_range_iterator->_address + l_range_iterator->_size_in_bytes) == l_next->_address)
-                                {
-                                    l_range_iterator->_size_in_bytes += l_next->_size_in_bytes;
-
-                                    // Nullify the block.
-                                    l_next->_address = nullptr;
-                                    l_next->_size_in_bytes = l_next->_size_in_bytes xor l_next->_size_in_bytes;
-                                }
-                                // Move to the next block if they are not adjacent.
-                                ++l_next;
-                            }
-                        }
-                    );
-                }
-            );
-
-			tl_s_executor.run(tl_s_taskflow).wait();
-
-			// Migrate null blocks to right-side of the array to exclude them from being iterated.
-            l_end = std::stable_partition<std::execution::parallel_unsequenced_policy>(std::execution::parallel_unsequenced_policy{}, page_p->get_free_list(), l_end,
-                [](const internal::pool::block_info& block_p)
-                {
-					return block_p._address != nullptr;
-                }
-            );
-        }
-
 
         // Time complexity: O(n)
         while (l_next != l_end)
@@ -556,7 +502,7 @@ private:
         Best - O(n/2)
 		Worst - O(n)
         */                                                
-        l_end = std::partition<std::execution::parallel_unsequenced_policy>(std::execution::parallel_unsequenced_policy{}, page_p->get_free_list(), l_end, 
+        l_end = std::partition(page_p->get_free_list(), l_end, 
             [](const internal::pool::block_info& block_p)
             {
                 return block_p._address != nullptr;
@@ -566,7 +512,7 @@ private:
         page_p->set_free_list_size( static_cast<FE::uint32>( l_end - page_p->get_free_list() ) );
 
 		// Heapify the free list. Time complexity: O(3n)
-		std::make_heap(page_p->get_free_list(), l_end, internal::pool::less_than{}); // To do: consider parallelizing the heapification.
+		std::make_heap(page_p->get_free_list(), l_end, internal::pool::less_than{});
 
 		page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
     }

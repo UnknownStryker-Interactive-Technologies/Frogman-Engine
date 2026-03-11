@@ -21,7 +21,6 @@ limitations under the License.
 #include <FE/pool/scalable_pool.hxx>
 
 #include <memory_resource>
-#include <mutex>
 
 
 

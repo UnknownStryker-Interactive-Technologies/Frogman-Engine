@@ -111,7 +111,7 @@ void boost_object_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark
 		}
 	}
 }
-BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void boost_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -132,7 +132,7 @@ void boost_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State
 		}
 	}
 }
-BENCHMARK(boost_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(boost_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -153,7 +153,7 @@ void boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::
 		}
 	}
 }
-BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 
 void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
@@ -178,7 +178,7 @@ void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& s
 		}
 	}
 }
-BENCHMARK(FE_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(FE_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -202,7 +202,7 @@ void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::St
 		}
 	}
 }
-BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -223,7 +223,7 @@ void aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test(benchmark
 		}
 	}
 }
-BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -247,7 +247,7 @@ void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test(
 		}
 	}
 }
-BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 void FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -271,7 +271,7 @@ void FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test(benchmark::Sta
 		}
 	}
 }
-BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test)->Iterations(60000);
+BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test)->Iterations(20000);
 
 
 
