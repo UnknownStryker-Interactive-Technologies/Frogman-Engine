@@ -1,4 +1,4 @@
-#define WIN32_MEAN_AND_LEAN
+﻿#define WIN32_MEAN_AND_LEAN
 #define WIN32_LEAN_AND_MEAN
 //#include <windows.h>
 #include <conio.h>

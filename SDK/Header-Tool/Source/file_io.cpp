@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
 
 Licensed under the Frogman Engine Apache License (the "License");

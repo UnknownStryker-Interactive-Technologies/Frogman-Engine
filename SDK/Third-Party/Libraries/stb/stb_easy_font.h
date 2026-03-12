@@ -1,4 +1,4 @@
-// stb_easy_font.h - v1.1 - bitmap font for 3D rendering - public domain
+﻿// stb_easy_font.h - v1.1 - bitmap font for 3D rendering - public domain
 // Sean Barrett, Feb 2015
 //
 //    Easy-to-deploy,

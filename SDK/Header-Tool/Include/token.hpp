@@ -1,4 +1,4 @@
-#ifndef _FE_header_tool_TOKEN_HPP_
+﻿#ifndef _FE_header_tool_TOKEN_HPP_
 #define _FE_header_tool_TOKEN_HPP_
 /*
 Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.

@@ -1,4 +1,4 @@
-#define STB_IMAGE_WRITE_STATIC
+﻿#define STB_IMAGE_WRITE_STATIC
 #define STBIWDEF static inline
 
 #include "stb_image.h"

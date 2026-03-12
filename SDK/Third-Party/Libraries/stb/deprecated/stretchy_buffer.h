@@ -1,4 +1,4 @@
-// stretchy_buffer.h - v1.04 - public domain - nothings.org/stb
+﻿// stretchy_buffer.h - v1.04 - public domain - nothings.org/stb
 // a vector<>-like dynamic array for C
 //
 // version history:

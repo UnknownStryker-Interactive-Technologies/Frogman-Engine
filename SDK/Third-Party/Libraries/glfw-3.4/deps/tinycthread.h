@@ -1,4 +1,4 @@
-/* -*- mode: c; tab-width: 2; indent-tabs-mode: nil; -*-
+﻿/* -*- mode: c; tab-width: 2; indent-tabs-mode: nil; -*-
 Copyright (c) 2012 Marcus Geelnard
 
 This software is provided 'as-is', without any express or implied

@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_GARBAGE_COLLECTOR_
+﻿#ifndef _FROGMAN_ENGINE_GARBAGE_COLLECTOR_
 #define _FROGMAN_ENGINE_GARBAGE_COLLECTOR_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

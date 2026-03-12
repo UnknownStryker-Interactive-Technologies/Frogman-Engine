@@ -1,4 +1,4 @@
-// stb_wingraph.h  v0.01 - public domain windows graphics programming
+﻿// stb_wingraph.h  v0.01 - public domain windows graphics programming
 // wraps WinMain, ChoosePixelFormat, ChangeDisplayResolution, etc. for
 // doing OpenGL graphics
 //

@@ -1,4 +1,4 @@
-// stb_voxel_render.h - v0.89 - Sean Barrett, 2015 - public domain
+﻿// stb_voxel_render.h - v0.89 - Sean Barrett, 2015 - public domain
 //
 // This library helps render large-scale "voxel" worlds for games,
 // in this case, one with blocks that can have textures and that

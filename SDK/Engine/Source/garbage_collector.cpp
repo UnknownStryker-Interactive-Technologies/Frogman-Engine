@@ -1,4 +1,4 @@
-#include <FE/garbage_collector.hxx>
+﻿#include <FE/garbage_collector.hxx>
 #include <FE/memory.hpp>
 #include <FE/framework/ECS.hxx>
 

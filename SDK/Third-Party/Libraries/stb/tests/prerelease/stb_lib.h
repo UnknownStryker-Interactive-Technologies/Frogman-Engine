@@ -1,4 +1,4 @@
-/* stb_lib.h - v1.00 - http://nothings.org/stb
+﻿/* stb_lib.h - v1.00 - http://nothings.org/stb
    no warranty is offered or implied; use this code at your own risk
 
  ============================================================================

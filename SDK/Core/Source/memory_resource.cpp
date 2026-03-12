@@ -18,7 +18,7 @@ limitations under the License.
 
 
 
-FE::internal::AllocatorType FE::internal::__select_allocator(std::size_t bytes_p) noexcept
+FE::internal::AllocatorType _FE_VECTOR_CALL_ FE::internal::__select_allocator(std::size_t bytes_p) noexcept
 {
 	switch (bytes_p)
 	{

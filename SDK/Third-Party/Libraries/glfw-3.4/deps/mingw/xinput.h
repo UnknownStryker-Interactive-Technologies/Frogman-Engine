@@ -1,4 +1,4 @@
-/*
+﻿/*
  * The Wine project - Xinput Joystick Library
  * Copyright 2008 Andrew Fenn
  *

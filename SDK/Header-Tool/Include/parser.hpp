@@ -1,4 +1,4 @@
-#ifndef _FE_HEADER_TOOL_PARSER_HPP_
+﻿#ifndef _FE_HEADER_TOOL_PARSER_HPP_
 #define _FE_HEADER_TOOL_PARSER_HPP_
 /*
 Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.

@@ -1176,7 +1176,7 @@ public: // Member functions
 		m_back->m_next = nullptr;
 	}
 
-	constexpr void splice(const_iterator pos_p, list& other_p, const_iterator it_p) noexcept
+	constexpr void _FE_VECTOR_CALL_ splice(const_iterator pos_p, list& other_p, const_iterator it_p) noexcept
 	{
 		FE_ASSERT(other_p.is_empty() == false, "Assertion failed: the input source container must not be empty.");
 		FE_ASSERT(it_p != other_p.cend(), "Assertion failed: it_p must not be other_p.cend().");

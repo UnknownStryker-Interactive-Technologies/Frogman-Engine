@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 2016-present, Przemyslaw Skibinski
 All rights reserved.
 

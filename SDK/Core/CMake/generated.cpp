@@ -1,4 +1,4 @@
-// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
+﻿// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.hxx> 
 #include <FE/framework.hxx> 
 #include <C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/../Core/Include/FE/algorithm/math.hxx>

@@ -1,4 +1,4 @@
-/*
+﻿/*
    LZ4 file library
    Header File
    Copyright (C) 2022, Xiaomi Inc.

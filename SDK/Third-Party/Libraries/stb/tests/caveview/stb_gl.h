@@ -1,4 +1,4 @@
-// stbgl - v0.04 - Sean Barrett 2008 - public domain
+﻿// stbgl - v0.04 - Sean Barrett 2008 - public domain
 //
 // Note that the gl extensions support requires glext.h. In fact, it works
 // if you just concatenate glext.h onto the end of this file. In that case,

@@ -1,4 +1,4 @@
-#ifndef INCLUDE_CAVE_PARSE_H
+﻿#ifndef INCLUDE_CAVE_PARSE_H
 #define INCLUDE_CAVE_PARSE_H
 
 typedef struct

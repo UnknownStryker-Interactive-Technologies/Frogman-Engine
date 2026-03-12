@@ -1,4 +1,4 @@
-// stb_glprog v0.02 public domain         functions to reduce GLSL boilerplate
+﻿// stb_glprog v0.02 public domain         functions to reduce GLSL boilerplate
 // http://nothings.org/stb/stb_glprog.h   especially with GL1 + ARB extensions
 //
 // Following defines *before* including have following effects:

@@ -1,4 +1,4 @@
-// stb_connected_components - v0.96 - public domain connected components on grids
+﻿// stb_connected_components - v0.96 - public domain connected components on grids
 //                                                 http://github.com/nothings/stb
 //
 // Finds connected components on 2D grids for testing reachability between

@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_GAME_PROCESSOR_HXX_
+﻿#ifndef _FROGMAN_ENGINE_GAME_PROCESSOR_HXX_
 #define _FROGMAN_ENGINE_GAME_PROCESSOR_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

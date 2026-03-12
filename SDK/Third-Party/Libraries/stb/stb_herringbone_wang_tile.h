@@ -1,4 +1,4 @@
-/* stbhw - v0.7 -  http://nothings.org/gamedev/herringbone
+﻿/* stbhw - v0.7 -  http://nothings.org/gamedev/herringbone
    Herringbone Wang Tile Generator - Sean Barrett 2014 - public domain
 
 == LICENSE ==============================

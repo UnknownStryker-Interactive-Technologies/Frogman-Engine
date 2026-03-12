@@ -1,4 +1,4 @@
-#ifndef _FE_CORE_BITMASK_HXX_
+﻿#ifndef _FE_CORE_BITMASK_HXX_
 #define _FE_CORE_BITMASK_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

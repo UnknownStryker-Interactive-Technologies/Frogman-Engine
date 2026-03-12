@@ -1,4 +1,4 @@
-// stb_divide.h - v0.94 - public domain - Sean Barrett, Feb 2010
+﻿// stb_divide.h - v0.94 - public domain - Sean Barrett, Feb 2010
 // Three kinds of divide/modulus of signed integers.
 //
 // HISTORY

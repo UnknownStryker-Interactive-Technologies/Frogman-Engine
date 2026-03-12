@@ -96,7 +96,7 @@ void boost_object_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark
 
 	boost::object_pool<std::string> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
-	
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -111,13 +111,13 @@ void boost_object_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark
 		}
 	}
 }
-BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(boost_object_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void boost_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
 	std::list<std::string, boost::pool_allocator<std::string, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -132,13 +132,13 @@ void boost_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State
 		}
 	}
 }
-BENCHMARK(boost_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(boost_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
 	std::list<std::string, boost::fast_pool_allocator<std::string>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -153,7 +153,7 @@ void boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::
 		}
 	}
 }
-BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(boost_fast_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 
 void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
@@ -163,7 +163,7 @@ void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& s
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -178,7 +178,7 @@ void FE_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& s
 		}
 	}
 }
-BENCHMARK(FE_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(FE_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -187,7 +187,7 @@ void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::St
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -202,13 +202,13 @@ void FE_block_pool_allocator_extreme_fixed_sized_accumulation_test(benchmark::St
 		}
 	}
 }
-BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(FE_block_pool_allocator_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
 	std::list<std::string> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -223,7 +223,7 @@ void aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test(benchmark
 		}
 	}
 }
-BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(aligned_malloc_aligned_free_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -232,7 +232,7 @@ void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test(
 
 	std::pmr::list<std::string> l_strings(&l_resource);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -247,7 +247,7 @@ void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test(
 		}
 	}
 }
-BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 void FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test(benchmark::State& state_p) noexcept
 {
@@ -256,7 +256,7 @@ void FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test(benchmark::Sta
 
 	std::pmr::list<std::string> l_strings(&l_resource);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -271,7 +271,7 @@ void FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test(benchmark::Sta
 		}
 	}
 }
-BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test)->Iterations(20000);
+BENCHMARK(FE_pmr_memory_resource_extreme_fixed_sized_accumulation_test)->Iterations(1000);
 
 
 
@@ -283,7 +283,7 @@ void boost_object_pool_allocator_extreme_fixed_sized_test(benchmark::State& stat
 
 	boost::object_pool<std::string> l_allocator;
 	benchmark::DoNotOptimize(l_allocator);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -297,7 +297,7 @@ void boost_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) no
 {
 	std::list<std::string, boost::pool_allocator<std::string, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -311,7 +311,7 @@ void boost_fast_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_
 {
 	std::list<std::string, boost::fast_pool_allocator<std::string>> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -328,7 +328,7 @@ void FE_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p) noexc
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -346,7 +346,7 @@ void FE_block_pool_allocator_extreme_fixed_sized_test(benchmark::State& state_p)
 
 	std::pmr::list<std::string> l_strings(&l_allocator);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -360,7 +360,7 @@ void aligned_malloc_aligned_free_extreme_fixed_sized_test(benchmark::State& stat
 {
 	std::list<std::string> l_strings;
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -377,7 +377,7 @@ void std_pmr_unsynchronized_pool_resource_extreme_fixed_sized_test(benchmark::St
 
 	std::pmr::list<std::string> l_strings(&l_resource);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -394,7 +394,7 @@ void FE_pmr_memory_resource_extreme_fixed_sized_test(benchmark::State& state_p) 
 
 	std::pmr::list<std::string> l_strings(&l_resource);
 	benchmark::DoNotOptimize(l_strings);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -412,7 +412,7 @@ void aligned_malloc_aligned_free_random_size_test(benchmark::State& state_p) noe
 {
 	std::vector<std::byte> l_vector;
 	benchmark::DoNotOptimize(l_vector);
-	
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -431,7 +431,7 @@ void FE_scalable_pool_random_size_test(benchmark::State& state_p) noexcept
 
 	std::pmr::vector<std::byte> l_vector(&l_allocator);
 	benchmark::DoNotOptimize(l_vector);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -449,7 +449,7 @@ void FE_pmr_memory_resource_random_size_test(benchmark::State& state_p) noexcept
 
 	std::pmr::vector<std::byte> l_vector(&l_resource);
 	benchmark::DoNotOptimize(l_vector);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -467,7 +467,7 @@ void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 		boost::default_user_allocator_new_delete, 
 		boost::details::pool::null_mutex>> l_vector;
 	benchmark::DoNotOptimize(l_vector);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -482,7 +482,7 @@ void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexc
 {
 	std::vector<std::byte, boost::fast_pool_allocator<std::byte>> l_vector;
 	benchmark::DoNotOptimize(l_vector);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -501,7 +501,7 @@ void aligned_malloc_aligned_free_random_size_accumulation_test(benchmark::State&
 	std::vector< std::vector<std::byte> > l_vector;
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -532,7 +532,7 @@ void FE_scalable_pool_random_size_accumulation_test(benchmark::State& state_p) n
 	std::pmr::vector< std::pmr::vector<std::byte> > l_vector;
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -561,7 +561,7 @@ void FE_pmr_memory_resource_random_size_accumulation_test(benchmark::State& stat
 	std::pmr::vector< std::pmr::vector<std::byte> > l_vector;
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -591,7 +591,7 @@ void boost_pool_allocator_random_size_accumulation_test(benchmark::State& state_
 
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{
@@ -621,7 +621,7 @@ void boost_fast_pool_allocator_random_size_accumulation_test(benchmark::State& s
 	std::vector< std::vector<std::byte, boost::fast_pool_allocator<std::byte>> > l_vector; // the code does not compile with the boost pool's null_mutex
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
-
+	benchmark::ClobberMemory();
 
 	for (auto _ : state_p)
 	{

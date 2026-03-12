@@ -1,4 +1,4 @@
-#define STB_C_LEX_C_DECIMAL_INTS    Y  
+﻿#define STB_C_LEX_C_DECIMAL_INTS    Y  
 #define STB_C_LEX_C_HEX_INTS        Y
 #define STB_C_LEX_C_OCTAL_INTS      Y
 #define STB_C_LEX_C_DECIMAL_FLOATS  Y

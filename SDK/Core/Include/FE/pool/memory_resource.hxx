@@ -46,7 +46,7 @@ namespace internal
 		_AlignedMalloc
 	};
 
-	AllocatorType __select_allocator(std::size_t bytes_p) noexcept;
+	AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t bytes_p) noexcept;
 }
 
 
@@ -82,7 +82,7 @@ public:
 
 protected:
 	virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
-	virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
+	virtual void  do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept override;
 
 	virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override;
 };
