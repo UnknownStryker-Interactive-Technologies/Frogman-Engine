@@ -58,16 +58,16 @@ protected:
 	var::byte m_memory[sizeof(value_type) * Capacity];
 	pointer m_front_ptr;
 	pointer m_back_ptr;
-	pointer const m_absolute_begin_pointer;
-	size_type m_indirected_element_count;
+	pointer const m_begin_ptr;
+	size_type m_size;
 
 public:
 	fqueue() noexcept 
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr), 
-			m_absolute_begin_pointer(m_front_ptr),
-			m_indirected_element_count() 
+			m_begin_ptr(m_front_ptr),
+			m_size() 
 	{}
 	~fqueue() noexcept { pop_all(); }
 
@@ -75,8 +75,8 @@ public:
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr + initializer_list_p.size()), 
-			m_absolute_begin_pointer(m_front_ptr), 
-			m_indirected_element_count(initializer_list_p.size())
+			m_begin_ptr(m_front_ptr), 
+			m_size(initializer_list_p.size())
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
@@ -89,8 +89,8 @@ public:
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)),
 			m_back_ptr(m_front_ptr + (end_p - begin_p)), 
-			m_absolute_begin_pointer(m_front_ptr), 
-			m_indirected_element_count(end_p - begin_p)
+			m_begin_ptr(m_front_ptr), 
+			m_size(end_p - begin_p)
 	{
 		static_assert(std::is_class<InputIterator>::value, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		static_assert((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value), "Static Assertion Failure: InputIterator's value_type has to be the same as fqueue's value_type.");
@@ -98,15 +98,15 @@ public:
 		FE_NEGATIVE_ASSERT(begin_p >= end_p, "${%s@0}: The input iterator ${%s@1} must not be greater than ${%s@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator), TO_STRING(begin_p), TO_STRING(end_p));
 		FE_NEGATIVE_ASSERT(static_cast<uint64>(end_p - begin_p) > Capacity, "${%s@0}: The input size exceeds the fqueue capacity.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
 
-		Traits::copy_construct(InputIterator{ m_absolute_begin_pointer }, begin_p, end_p - begin_p);
+		Traits::copy_construct(InputIterator{ m_begin_ptr }, begin_p, end_p - begin_p);
 	}
 
 	fqueue(fqueue& other_p) noexcept 
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr),
-			m_absolute_begin_pointer(m_front_ptr), 
-			m_indirected_element_count(other_p.m_indirected_element_count)
+			m_begin_ptr(m_front_ptr), 
+			m_size(other_p.m_size)
 	{
 		if (other_p.is_empty())
 		{
@@ -115,7 +115,7 @@ public:
 
 		Traits::copy_construct(m_front_ptr, other_p.m_front_ptr, other_p.size());
 
-		__jump_front_pointer(other_p.m_front_ptr - other_p.m_absolute_begin_pointer);
+		__jump_front_pointer(other_p.m_front_ptr - other_p.m_begin_ptr);
 		__jump_back_pointer(other_p.m_back_ptr - other_p.m_front_ptr);
 	}
 
@@ -123,8 +123,8 @@ public:
 		:	m_memory(),
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr), 
-			m_absolute_begin_pointer(m_front_ptr), 
-			m_indirected_element_count(rvalue_p.m_indirected_element_count)
+			m_begin_ptr(m_front_ptr), 
+			m_size(rvalue_p.m_size)
 	{
 		if (rvalue_p.is_empty())
 		{
@@ -133,7 +133,7 @@ public:
 
 		Traits::move_construct(m_front_ptr, rvalue_p.m_front_ptr, rvalue_p.size());
 
-		__jump_front_pointer(rvalue_p.m_front_ptr - rvalue_p.m_absolute_begin_pointer);
+		__jump_front_pointer(rvalue_p.m_front_ptr - rvalue_p.m_begin_ptr);
 		__jump_back_pointer(rvalue_p.m_back_ptr - rvalue_p.m_front_ptr);
 		rvalue_p.__set_front_pointer_to_zero();
 		rvalue_p.__set_back_pointer_to_zero();
@@ -175,7 +175,7 @@ public:
 
 	constexpr void push(const value_type& value_p) noexcept
 	{
-		if (m_back_ptr >= m_absolute_begin_pointer + Capacity)
+		if (m_back_ptr >= m_begin_ptr + Capacity)
 		{
 			__set_back_pointer_to_zero();
 			FE_NEGATIVE_ASSERT(m_back_ptr >= m_front_ptr, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
@@ -191,14 +191,14 @@ public:
 		}
 		
 		++m_back_ptr;
-		++m_indirected_element_count;
+		++m_size;
 	}
 
 	constexpr value_type pop() noexcept
 	{
-		if ((m_absolute_begin_pointer + Capacity) == m_front_ptr)
+		if ((m_begin_ptr + Capacity) == m_front_ptr)
 		{
-			m_front_ptr = m_absolute_begin_pointer;
+			m_front_ptr = m_begin_ptr;
 			FE_NEGATIVE_ASSERT(is_empty() == true, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 		}
 
@@ -210,7 +210,7 @@ public:
 		}
 
 		++m_front_ptr;
-		--m_indirected_element_count;
+		--m_size;
 		return l_return_value_buffer;
 	}
 
@@ -226,14 +226,14 @@ public:
 				}
 				else
 				{
-					Traits::destruct(m_absolute_begin_pointer, m_back_ptr);
-					Traits::destruct(m_front_ptr, m_absolute_begin_pointer + Capacity);
+					Traits::destruct(m_begin_ptr, m_back_ptr);
+					Traits::destruct(m_front_ptr, m_begin_ptr + Capacity);
 				}
 			}
 
 			__set_front_pointer_to_zero();
 			__set_back_pointer_to_zero();
-			m_indirected_element_count = 0;
+			m_size = 0;
 		}
 	}
 
@@ -259,17 +259,17 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr boolean is_empty() const noexcept
 	{
-		return m_indirected_element_count == 0;
+		return m_size == 0;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type count() const noexcept
 	{
-		return m_indirected_element_count;
+		return m_size;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type size() const noexcept
 	{
-		return m_indirected_element_count;
+		return m_size;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type max_size() const noexcept
@@ -325,7 +325,7 @@ protected:
 
 	_FE_FORCE_INLINE_ constexpr void __set_front_pointer_to_zero() noexcept
 	{
-		m_front_ptr = m_absolute_begin_pointer;
+		m_front_ptr = m_begin_ptr;
 	}
 
 	_FE_FORCE_INLINE_ constexpr void __jump_back_pointer(difference_type ptrdiff_p) noexcept
@@ -335,7 +335,7 @@ protected:
 
 	_FE_FORCE_INLINE_ constexpr void __set_back_pointer_to_zero() noexcept
 	{
-		m_back_ptr = m_absolute_begin_pointer;
+		m_back_ptr = m_begin_ptr;
 	}
 };
 

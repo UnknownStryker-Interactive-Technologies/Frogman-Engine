@@ -1,4 +1,5 @@
 ﻿#ifndef _FE_CORE_DEQUE_HXX
+#define _FE_CORE_DEQUE_HXX
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 

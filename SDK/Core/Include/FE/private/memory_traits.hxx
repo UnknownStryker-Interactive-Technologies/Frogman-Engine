@@ -264,16 +264,13 @@ public:
 			}
 			return;
 		}
-		else
+
+		const T* const source_end = iterator_cast<const T* const>(source_p + source_count_p);
+		while (source_p != source_end)
 		{
-			const T* const source_end = iterator_cast<const T* const>(source_p + source_count_p);
-			while (source_p != source_end)
-			{
-				new(iterator_cast<T*>(out_dest_p)) T(*source_p);
-				++out_dest_p;
-				++source_p;
-			}
-			return;
+			new(iterator_cast<T*>(out_dest_p)) T(*source_p);
+			++out_dest_p;
+			++source_p;
 		}
 	}
 
@@ -314,15 +311,12 @@ public:
 			}
 			return;
 		}
-		else
+
+		for (var::uint64 i = 0; i < source_count_p; ++i)
 		{
-			for (var::uint64 i = 0; i < source_count_p; ++i)
-			{
-				new(iterator_cast<T*>(out_dest_p)) T(std::move(*source_p));
-				++out_dest_p;
-				++source_p;
-			}
-			return;
+			new(iterator_cast<T*>(out_dest_p)) T(std::move(*source_p));
+			++out_dest_p;
+			++source_p;
 		}
 	}
 
@@ -377,15 +371,12 @@ public:
 			}
 			return;
 		}
-		else
+
+		for (var::uint64 i = 0; i < source_count_p; ++i)
 		{
-			for (var::uint64 i = 0; i < source_count_p; ++i)
-			{
-				*out_dest_p = *source_p;
-				++out_dest_p;
-				++source_p;
-			}
-			return;
+			*out_dest_p = *source_p;
+			++out_dest_p;
+			++source_p;
 		}
 	}
 
@@ -425,15 +416,12 @@ public:
 			}
 			return;
 		}
-		else
+
+		for (var::uint64 i = 0; i < source_count_p; ++i)
 		{
-			for (var::uint64 i = 0; i < source_count_p; ++i)
-			{
-				*out_dest_p = std::move(*source_p);
-				++out_dest_p;
-				++source_p;
-			}
-			return;
+			*out_dest_p = std::move(*source_p);
+			++out_dest_p;
+			++source_p;
 		}
 	}
 

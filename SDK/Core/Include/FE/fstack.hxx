@@ -57,32 +57,32 @@ public:
 private:
 	var::byte m_memory[sizeof(value_type) * Capacity];
 	pointer m_top_ptr;
-	pointer const m_absolute_begin_pointer;
+	pointer const m_begin_ptr;
 
 public:
 	fstack() noexcept 
 		:	m_memory(), 
 			m_top_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_absolute_begin_pointer(m_top_ptr)
+			m_begin_ptr(m_top_ptr)
 	{}
 	~fstack() noexcept { pop_all(); }
 
 	fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept 
 		:	m_memory(), 
 			m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), 
-			m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
+			m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 
-		Traits::move_construct(m_absolute_begin_pointer, const_cast<value_type*>(initializer_list_p.begin()), initializer_list_p.size());
+		Traits::move_construct(m_begin_ptr, const_cast<value_type*>(initializer_list_p.begin()), initializer_list_p.size());
 	}
 
 	template<class InputIterator>
 	fstack(InputIterator begin_p, InputIterator end_p) noexcept 
 		:	m_memory(),
 			m_top_ptr(reinterpret_cast<pointer>(m_memory) + (end_p - begin_p)), 
-			m_absolute_begin_pointer(reinterpret_cast<pointer>(m_memory))
+			m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		static_assert(std::is_class<InputIterator>::value, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		static_assert((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value), "Static Assertion Failure: InputIterator's value_type has to be the same as fstack's value_type.");
@@ -90,37 +90,37 @@ public:
 		FE_NEGATIVE_ASSERT(begin_p >= end_p, "${%s@0}: The input iterator ${%s@1} must not be greater than the iterator ${%s@2}.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidIterator), TO_STRING(begin_p), TO_STRING(end_p));
 		FE_NEGATIVE_ASSERT(static_cast<uint64>(end_p - begin_p) > Capacity, "${%s@0}: The input size exceeds the fstack capacity.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_BufferOverflow));
 
-		Traits::copy_construct(InputIterator{ m_absolute_begin_pointer }, begin_p, end_p - begin_p);
+		Traits::copy_construct(InputIterator{ m_begin_ptr }, begin_p, end_p - begin_p);
 	}
 
 	fstack(fstack& other_p) noexcept 
 		:	m_memory(), 
 			m_top_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_absolute_begin_pointer(m_top_ptr)
+			m_begin_ptr(m_top_ptr)
 	{
 		if (other_p.is_empty())
 		{
 			return;
 		}
 
-		Traits::copy_construct(m_absolute_begin_pointer, capacity(), other_p.m_absolute_begin_pointer, other_p.size());
+		Traits::copy_construct(m_begin_ptr, capacity(), other_p.m_begin_ptr, other_p.size());
 
-		__jump_top_pointer(other_p.m_top_ptr - other_p.m_absolute_begin_pointer);
+		__jump_top_pointer(other_p.m_top_ptr - other_p.m_begin_ptr);
 	}
 
 	fstack(fstack&& rvalue_p) noexcept 
 		:	m_memory(),
 			m_top_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_absolute_begin_pointer(m_top_ptr)
+			m_begin_ptr(m_top_ptr)
 	{
 		if (rvalue_p.is_empty())
 		{
 			return;
 		}
 
-		Traits::move_construct(m_absolute_begin_pointer, capacity(), rvalue_p.m_absolute_begin_pointer, rvalue_p.size());
+		Traits::move_construct(m_begin_ptr, capacity(), rvalue_p.m_begin_ptr, rvalue_p.size());
 
-		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_absolute_begin_pointer);
+		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_begin_ptr);
 		rvalue_p.__set_top_pointer_to_zero();
 	}
 
@@ -137,7 +137,7 @@ public:
 		}
 
 		FE::size l_initializer_list_size = initializer_list_p.size();
-		__restructrue_fstack_with_move_semantics(const_cast<value_type*>(initializer_list_p.begin()), l_initializer_list_size);
+		__restructure_fstack_with_move_semantics(const_cast<value_type*>(initializer_list_p.begin()), l_initializer_list_size);
 		__set_top_pointer_to_zero();
 		__jump_top_pointer(l_initializer_list_size);
 		return *this;
@@ -158,10 +158,10 @@ public:
 			return *this;
 		}
 
-		__restructrue_fstack_with_copy_semantics(other_p.m_absolute_begin_pointer, l_other_size);
+		__restructure_fstack_with_copy_semantics(other_p.m_begin_ptr, l_other_size);
 
 		__set_top_pointer_to_zero();
-		__jump_top_pointer(other_p.m_top_ptr - other_p.m_absolute_begin_pointer);
+		__jump_top_pointer(other_p.m_top_ptr - other_p.m_begin_ptr);
 		return *this;
 	}
 
@@ -180,17 +180,17 @@ public:
 			return *this;
 		}
 
-		__restructrue_fstack_with_move_semantics(rvalue_p.m_absolute_begin_pointer, l_other_size);
+		__restructure_fstack_with_move_semantics(rvalue_p.m_begin_ptr, l_other_size);
 
 		__set_top_pointer_to_zero();
-		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_absolute_begin_pointer);
+		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_begin_ptr);
 		rvalue_p.__set_top_pointer_to_zero();
 		return *this;
 	}
 
 	void push(const value_type& value_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(m_top_ptr >= m_absolute_begin_pointer + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
+		FE_NEGATIVE_ASSERT(m_top_ptr >= m_begin_ptr + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
@@ -225,7 +225,7 @@ public:
 		{
 			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial) 
 			{
-				Traits::destruct(m_absolute_begin_pointer, m_top_ptr);
+				Traits::destruct(m_begin_ptr, m_top_ptr);
 			}
 			__set_top_pointer_to_zero();
 		}
@@ -243,17 +243,17 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr var::boolean is_empty() const noexcept
 	{
-		return (m_top_ptr == m_absolute_begin_pointer) ? true : false;
+		return (m_top_ptr == m_begin_ptr) ? true : false;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type count() const noexcept
 	{
-		return m_top_ptr - m_absolute_begin_pointer;
+		return m_top_ptr - m_begin_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type size() const noexcept
 	{
-		return m_top_ptr - m_absolute_begin_pointer;
+		return m_top_ptr - m_begin_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type max_size() const noexcept
@@ -268,7 +268,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cbegin() const noexcept
 	{
-		return m_absolute_begin_pointer;
+		return m_begin_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cend() const noexcept
@@ -283,7 +283,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crend() const noexcept
 	{
-		return m_absolute_begin_pointer - 1;
+		return m_begin_ptr - 1;
 	}
 
 	_FE_FORCE_INLINE_ constexpr void swap(fstack& in_out_other_p) noexcept
@@ -309,10 +309,10 @@ private:
 
 	_FE_FORCE_INLINE_ constexpr void __set_top_pointer_to_zero() noexcept
 	{
-		m_top_ptr = m_absolute_begin_pointer;
+		m_top_ptr = m_begin_ptr;
 	}
 
-	void __restructrue_fstack_with_move_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
+	void __restructure_fstack_with_move_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
 	{
 		FE::size l_this_size = size();
 
@@ -321,7 +321,7 @@ private:
 			FE::size l_count_to_construct = source_size_p - l_this_size;
 			Traits::move_construct(m_top_ptr, source_begin_p - l_count_to_construct, l_count_to_construct);
 
-			Traits::move_assign(m_absolute_begin_pointer, source_begin_p, l_this_size);
+			Traits::move_assign(m_begin_ptr, source_begin_p, l_this_size);
 		}
 		else if (source_size_p < l_this_size)
 		{
@@ -332,15 +332,15 @@ private:
 				Traits::destruct(m_top_ptr - l_count_to_destruct, m_top_ptr);
 			}
 
-			Traits::move_assign(m_absolute_begin_pointer, source_begin_p, source_size_p);
+			Traits::move_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 		else
 		{
-			Traits::move_assign(m_absolute_begin_pointer, source_begin_p, source_size_p);
+			Traits::move_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 	}
 
-	void __restructrue_fstack_with_copy_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
+	void __restructure_fstack_with_copy_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
 	{
 		FE::size l_this_size = size();
 
@@ -349,7 +349,7 @@ private:
 			FE::size l_count_to_construct = source_size_p - l_this_size;
 			Traits::copy_construct(m_top_ptr, source_begin_p - l_count_to_construct, l_count_to_construct);
 
-			Traits::copy_assign(m_absolute_begin_pointer, source_begin_p, l_this_size);
+			Traits::copy_assign(m_begin_ptr, source_begin_p, l_this_size);
 		}
 		else if (source_size_p < l_this_size)
 		{
@@ -360,11 +360,11 @@ private:
 				Traits::destruct(m_top_ptr - l_count_to_destruct, m_top_ptr);
 			}
 
-			Traits::copy_assign(m_absolute_begin_pointer, source_begin_p, source_size_p);
+			Traits::copy_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 		else
 		{
-			Traits::copy_assign(m_absolute_begin_pointer, source_begin_p, source_size_p);
+			Traits::copy_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 	}
 };
