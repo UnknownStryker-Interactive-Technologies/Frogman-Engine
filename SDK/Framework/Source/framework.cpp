@@ -23,6 +23,8 @@ limitations under the License.
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hxx>
 
+#include <FE/framework/processors.hxx>
+
 // boost
 #include <boost/stacktrace.hpp>
 
@@ -79,7 +81,7 @@ max_concurrency_option::max_concurrency_option(FE::int32 argc_p, FE::ASCII** arg
 	if (m_max_concurrency._second < 6)
 	{
 		m_max_concurrency._second = 6;
-		FE_LOG(FE::log::Severity::_Warning, "Performance Warning: the current system's CPU lacks logical hardware threads; Frogman Engine based games run slow on systems with CPU logical hardware threads less than six.");
+		FE_LOG(FE::log::Severity::_Warning, "Performance Warning: the current system's CPU lacks logical hardware threads; Frogman Engine based games might run slow on systems with CPU logical hardware threads less than six.");
 	}
 }
 

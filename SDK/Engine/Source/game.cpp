@@ -15,9 +15,3 @@ FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::create_world(const st
 	(path_to_world_file_p);
 	return FE::smart_ptr<FE::world, FE::RefType::_Observer>();
 }
-
-void FE::game::transition_world(const std::pmr::string& new_world_p) noexcept
-{
-	m_current_world = m_world_list[new_world_p];
-	FE::engine::get_engine().notify_world_transition(*this);
-}

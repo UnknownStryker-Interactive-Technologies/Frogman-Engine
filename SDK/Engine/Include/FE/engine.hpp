@@ -31,8 +31,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 class ecs;
-CLASS_FORWARD_DECLARATION(internal, game_processor);
-CLASS_FORWARD_DECLARATION(internal, garbage_collector);
+CLASS_FORWARD_DECLARATION(framework, game_processor);
 
 
 struct engine_info // fields are immutable after window creation; modifying these values will not affect any.
@@ -82,8 +81,7 @@ class engine final : public FE::framework::framework_base
 
     FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 
-    FE::smart_ptr<class FE::internal::game_processor, FE::RefType::_Owner> m_game_processor;
-	FE::smart_ptr<class FE::internal::garbage_collector, FE::RefType::_Owner> m_garbage_collector;
+    FE::smart_ptr<class FE::framework::game_processor, FE::RefType::_Owner> m_game_processor;
     FE::smart_ptr<FE::renderer, FE::RefType::_Owner> m_renderer;
 
 public:
@@ -95,8 +93,6 @@ public:
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
     _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_max_concurrency.get_max_concurrency() - 2; /* -(game + renderer) */ }
     
-    void notify_world_transition(FE::game& instance_p) noexcept;
-
 	template <typename T>
     _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>( get_memory_resource() ); }
 

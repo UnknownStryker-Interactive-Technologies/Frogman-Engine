@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/framework/ECS.hxx>
-#include <FE/world.hpp>
+#include <FE/framework/world.hxx>
 
 #include <absl/container/flat_hash_map.h>
 

@@ -34,8 +34,8 @@ ECS::ECS(FE::size component_type_count_hint_p) noexcept
 		m_component_table(),
 
 		m_archetype_default_entities(),
-		m_buffer(),
-		m_fiber_lock()
+		m_buffer()/*,
+		m_fiber_lock()*/
 {
 	m_component_table.reserve(component_type_count_hint_p * 2);
 }
@@ -87,7 +87,7 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::compo
 {
 	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
-	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 	const std::size_t l_hash_code = robin_hood::hash_bytes(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
 	entt_p->m_component_view_table[l_hash_code] = to_attatch_p;
@@ -102,7 +102,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 
 	initializer l_serialized_components(&m_memory_resource);
 
-	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 	for (auto& [hash, component] : entt_p->m_component_view_table)
 	{
@@ -151,7 +151,7 @@ void ECS::deserialize_entity(const initializer& serialized_components_p, FE::ent
 	constexpr FE::ASCII* l_class = "class";
 	constexpr FE::ASCII* l_struct = "struct";
 
-	std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 	for (auto& [hash, component] : out_entt_p->m_component_view_table)
 	{

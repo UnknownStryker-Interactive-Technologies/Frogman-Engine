@@ -47,7 +47,7 @@ namespace internal::renderer
 struct window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
     std::pmr::string _title = "Frogman Game";
-	std::pmr::string _icon_path = nullptr;
+	std::pmr::string _icon_path = "\0";
 	FE::int32 _icon_image_count = 0;
 	FE::int32 _monitor_index = 0;
     FE::boolean _should_enable_vsync = false;
@@ -86,14 +86,14 @@ private:
 	FE::clock m_render_delta_milliseconds;
 	var::float64 m_detla_milliseconds;
 
-	FE::framework::thread m_renderer_thread;
+	std::thread m_renderer_thread;
 
 public:
     renderer(const window_config& window_config_p) noexcept;
 	~renderer() noexcept;
 
-	void run(FE::size fiber_stack_size_p) noexcept;
-	void shutdown() noexcept;
+	void execute() noexcept;
+	void terminate() noexcept;
 
 	_FE_FORCE_INLINE_ void render_frame() noexcept 
 	{ 

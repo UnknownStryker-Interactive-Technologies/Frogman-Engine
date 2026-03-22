@@ -34,8 +34,10 @@ BEGIN_NAMESPACE(FE)
 
 
 /*
-The FE::fqueue class template is a fixed-capacity queue that utilizes custom memory traits for managing its elements
-providing various constructors and assignment operators for initialization and element manipulation.
+fqueue is a fixed-capacity, circular queue implementation that provides efficient FIFO operations.
+It uses a contiguous memory block to store elements and manages front and back pointers to simulate a queue.
+Supports both trivial and non-trivial types through the Traits template parameter.
+Capacity is fixed at compile-time, and operations are noexcept where possible.
 */
 template<class T, size Capacity, class Traits = internal::memory_traits<T>>
 class fqueue final
@@ -101,7 +103,7 @@ public:
 		Traits::copy_construct(InputIterator{ m_begin_ptr }, begin_p, end_p - begin_p);
 	}
 
-	fqueue(fqueue& other_p) noexcept 
+	fqueue(const fqueue& other_p) noexcept
 		:	m_memory(), 
 			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
 			m_back_ptr(m_front_ptr),
@@ -149,7 +151,7 @@ public:
 		return *this;
 	}
 
-	constexpr fqueue& operator=(fqueue& other_p) noexcept
+	constexpr fqueue& operator=(const fqueue& other_p) noexcept
 	{
 		if (other_p.is_empty())
 		{
@@ -173,7 +175,8 @@ public:
 		return *this;
 	}
 
-	constexpr void push(const value_type& value_p) noexcept
+	template <typename... Arguments>
+	constexpr void push(Arguments&&... value_p) noexcept
 	{
 		if (m_back_ptr >= m_begin_ptr + Capacity)
 		{
@@ -183,11 +186,11 @@ public:
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
-			new(m_back_ptr) T(value_p);
+			new(m_back_ptr) T( std::forward<Arguments&&>(value_p)... );
 		}
 		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
 		{
-			*m_back_ptr = value_p;
+			*m_back_ptr = T(std::forward<Arguments&&>(value_p)...);
 		}
 		
 		++m_back_ptr;

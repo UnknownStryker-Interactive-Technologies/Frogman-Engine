@@ -35,7 +35,7 @@ limitations under the License.
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
 
-#include <boost/fiber/recursive_mutex.hpp> // fiber lock
+//#include <boost/fiber/recursive_mutex.hpp> // fiber lock; replace it with the in-house fiber mutex when it is ready.
 
 
 
@@ -43,8 +43,7 @@ limitations under the License.
 CLASS_FORWARD_DECLARATION(FE, archetype_base);
 CLASS_FORWARD_DECLARATION(FE, component_base);
 CLASS_FORWARD_DECLARATION(FE::framework, ECS);
-CLASS_FORWARD_DECLARATION(FE::framework, game_thread);
-CLASS_FORWARD_DECLARATION(FE::framework, processors);
+CLASS_FORWARD_DECLARATION(FE::framework, game_processor);
 
 
 
@@ -52,7 +51,6 @@ CLASS_FORWARD_DECLARATION(FE::framework, processors);
 BEGIN_NAMESPACE(FE)
 
 
-CLASS_FORWARD_DECLARATION(internal, garbage_collector);
 CLASS_FORWARD_DECLARATION(internal::ECS, gc_metadata_base);
 STRUCT_FORWARD_DECLARATION(internal::ECS, component_metadata);
 
@@ -84,7 +82,7 @@ namespace framework
 class component_base
 {
 	friend class framework::ECS;
-	friend class ::FE::internal::garbage_collector;
+	friend class ::FE::framework::game_processor;
 	friend class internal::ECS::gc_metadata_base;
 
 	FE::smart_ptr<struct internal::ECS::component_metadata, FE::RefType::_Owner> m_metadata;
@@ -247,7 +245,7 @@ namespace internal::ECS
 class archetype_base
 {
 	friend class framework::ECS;
-	friend class ::FE::internal::garbage_collector;
+	friend class ::FE::framework::game_processor;
 
 	using component_view_table = absl::flat_hash_map<var::size, ::FE::component_view<component_base>,
 		FE::hash<var::size>,
@@ -326,8 +324,7 @@ BEGIN_NAMESPACE(FE::framework)
 class ECS
 {
 	friend class ::FE::archetype_base; // for archetype_base::get_ecs_memory_resource();
-	friend class ::FE::internal::ECS::component_table_getter;
-	friend class ::FE::internal::ECS::gc_root_getter;
+	friend class FE::framework::game_processor;
 
 public:
 	using archetype_table = FE::list< FE::internal::ECS::entities, FE::page_aligned_allocator<FE::internal::ECS::entities> >;
@@ -357,7 +354,7 @@ private:
 	
 	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
-	boost::fibers::recursive_mutex m_fiber_lock;
+	//boost::fibers::recursive_mutex m_fiber_lock;
 
 public:
 	ECS(FE::size component_type_count_hint_p) noexcept;
@@ -372,7 +369,7 @@ public:
 	FE::entity<Archetype> instanciate_entity(Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, *this, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
@@ -410,7 +407,7 @@ public:
 	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(const FE::framework::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		FE::entity<FE::archetype_base> l_entity = ECS::instanciate_entity<Archetype>();
 		if (l_entity.is_valid() == false)
@@ -458,7 +455,7 @@ public:
 	template <class Archetype>
 	FE::entity<FE::archetype_base> instanciate_archetype_default_entity() noexcept
 	{
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		framework::initializer* l_default_values = ECS::get_archetype_default_entity<Archetype>();
 		if (l_default_values == nullptr)
@@ -473,7 +470,7 @@ public:
 	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer&& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = std::move(default_values_p);
 	}
@@ -482,7 +479,7 @@ public:
 	_FE_FORCE_INLINE_ FE::framework::initializer* const get_archetype_default_entity() noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
 		if (l_probe_result != m_archetype_default_entities.end())
@@ -498,7 +495,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename component_table::iterator l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		if (l_probe_result == m_component_table.end())
@@ -597,7 +594,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 		typename FE::archetype_base::component_view_table::iterator l_probe_result = entt_p->m_component_view_table.find( FE::framework::reflection::type_id<Component>().hash_code() );
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");
@@ -620,36 +617,6 @@ END_NAMESPACE
 BEGIN_NAMESPACE(FE)
 
 
-namespace internal::ECS
-{
-	class component_table_getter
-	{
-		::FE::framework::ECS* m_target;
-	public:
-		component_table_getter(::FE::framework::ECS& ecs_p) noexcept
-			:   m_target(&ecs_p)
-		{}
-
-		~component_table_getter() = default;
-
-	public:
-		typename ::FE::framework::ECS::component_table& get_component_table() noexcept { return m_target->m_component_table; }
-	};
-
-	class gc_root_getter
-	{
-		::FE::framework::ECS* m_target;
-	public:
-		gc_root_getter(::FE::framework::ECS& ecs_p) noexcept
-			: m_target(&ecs_p)
-		{}
-
-		~gc_root_getter() = default;
-
-	public:
-		typename ::FE::framework::ECS::gc_root& get_gc_root() noexcept { return m_target->m_gc_root; }
-	};
-}
 
 
 template <class Component, typename ...Arguments>

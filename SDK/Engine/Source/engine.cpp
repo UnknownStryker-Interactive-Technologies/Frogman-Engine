@@ -19,11 +19,13 @@ limitations under the License.
 #include <FE/framework/processors.hxx>
 #include <FE/framework/reflection.hxx>
 
-#include <FE/game_processor.hxx>
-#include <FE/garbage_collector.hxx>
+#include <FE/framework/game_processor.hxx>
 #include <FE/pool/memory_resource.hxx>
 
 #include <FE/app.hpp>
+
+#include <FE/input_device.hpp>
+#include <FE/mode.hpp>
 
 
 
@@ -41,7 +43,6 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		m_game_instance(),
 
 		m_game_processor(),
-		m_garbage_collector(),
 		m_renderer()
 {
 	m_runtime_path.reserve(_MAX_PATH_LENGTH_);
@@ -72,11 +73,7 @@ FE::engine::~engine() noexcept
 {}
 
 
-void FE::engine::notify_world_transition(FE::game& instance_p) noexcept
-{
-	m_game_processor->notify_world_transition(instance_p.get_current_world());
-	m_garbage_collector->notify_world_transition(instance_p.get_current_world());
-}
+
 
 
 FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
@@ -99,8 +96,8 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 		*m_ecs
 		);
 
-	m_game_processor = FE::make_owner<FE::internal::game_processor>(framework_base::get_memory_resource(),
-		m_game_instance->get_current_world(),
+	m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_memory_resource(),
+		*m_game_instance->get_current_world(),
 		m_project_config->_fiber_stack_size);
 
 	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_memory_resource(), m_project_config->_window_config);
@@ -109,22 +106,18 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 
 FE::int32 FE::engine::run()
 {
-	m_processors->run();
-	m_game_processor->run();
-	m_garbage_collector = FE::make_owner<FE::internal::garbage_collector>(framework_base::get_memory_resource(),
-		m_game_instance->get_current_world(),
-		m_project_config->_gc_batch_count,
-		m_project_config->_fiber_stack_size);
-	m_renderer->run(m_project_config->_fiber_stack_size);
+	m_processors->execute();
+	m_game_processor->execute();
+
+	m_renderer->execute();
 	return 0;
 }
 
 FE::int32 FE::engine::shutdown()
 {
-	m_game_processor->shutdown();
-	m_garbage_collector.reset();
-	m_renderer->shutdown();
-	m_processors->shutdown();
+	m_game_processor->terminate();
+	m_renderer->execute();
+	m_processors->terminate();
 	return 0;
 }
 
@@ -235,7 +228,7 @@ void FE::engine::__read_froggy() noexcept
 			}
 
 			*const_cast<var::int32*>(&(m_project_config->_window_config._monitor_index)) = static_cast<FE::int32>(l_window_config["MonitorIndex"].get_int64());
-			FE_ASSERT(m_project_config->_window_config._monitor_index > 0);
+			FE_ASSERT(m_project_config->_window_config._monitor_index >= 0);
 
 			*const_cast<var::boolean*>(&(m_project_config->_window_config._should_enable_vsync)) = l_window_config["ShouldEnableVSync"].get_bool();
 			*const_cast<var::boolean*>(&(m_project_config->_window_config._is_on_the_top)) = l_window_config["IsAtopEverything"].get_bool();
@@ -264,7 +257,7 @@ void FE::engine::__read_froggy() noexcept
 
 void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept
 {
-	FE::input_device::keyboard& l_keyboard = get_game_instance().get_current_world()->get_game_mode().get_controller().get_keyboard();
+	FE::input_device::keyboard& l_keyboard = get_game_instance().get_current_world()->get_mode().get_controller().get_keyboard();
 	FE::input_device::KeyState l_current_key_state = static_cast<FE::input_device::KeyState>(action_p);
 	l_keyboard._keyboard_state._current_mode = static_cast<FE::input_device::KeyMode>(mods_p);
 
@@ -896,7 +889,7 @@ void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE:
 
 void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
 {
-	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_game_mode().get_controller().get_mouse();
+	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 
 	FE::input_device::ButtonState l_current_button_state = static_cast<FE::input_device::ButtonState>(action_p);
 	l_mouse._mouse_state._current_mode = static_cast<FE::input_device::KeyMode>(mods_p);
@@ -952,7 +945,7 @@ void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 b
 
 void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
 {
-	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_game_mode().get_controller().get_mouse();
+	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 	l_mouse._mouse_state._cursor_coordinate_x = x_p;
 	l_mouse._mouse_state._cursor_coordinate_y = y_p;
 
@@ -965,7 +958,7 @@ void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x
 
 void FE::engine::__scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept
 {
-	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_game_mode().get_controller().get_mouse();
+	FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 	l_mouse._mouse_state._cursor_coordinate_x = x_offset_p;
 	l_mouse._mouse_state._cursor_coordinate_y = y_offset_p;
 

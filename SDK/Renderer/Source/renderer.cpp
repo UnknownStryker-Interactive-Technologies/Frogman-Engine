@@ -119,12 +119,12 @@ renderer::~renderer() noexcept
 }
 
 
-void renderer::run(FE::size fiber_stack_size_p) noexcept
+void renderer::execute() noexcept
 {
-	m_renderer_thread.fork(__renderer_main, nullptr, fiber_stack_size_p);
+	m_renderer_thread = std::thread(__renderer_main, nullptr);
 }
 
-void renderer::shutdown() noexcept
+void renderer::terminate() noexcept
 {
 	m_renderer_thread.join();
 }
@@ -133,7 +133,7 @@ void renderer::shutdown() noexcept
 void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 {
 	FE::engine::get_engine().m_should_exit.store(true, std::memory_order_release);
-	FE::engine::get_engine().m_processors->shutdown();
+	FE::engine::get_engine().m_processors->terminate();
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
 }
 
