@@ -1,11 +1,16 @@
 # CMake generation dependency list for this directory.
 C:/Program Files/CMake/share/cmake-3.31/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeASMCompiler.cmake.in
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeASMInformation.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeASM_MASMInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCCompiler.cmake.in
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCCompilerABI.c
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCommonLanguageInclude.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeCompilerIdDetection.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineASMCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineASM_MASMCompiler.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCCompiler.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompiler.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeDetermineCompilerABI.cmake
@@ -26,6 +31,8 @@ C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeRCInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystem.cmake.in
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestASMCompiler.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestASM_MASMCompiler.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCCompiler.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestCompilerCommon.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeTestRCCompiler.cmake
@@ -82,9 +89,13 @@ C:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cm
 C:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/FindThreads.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeASMLinkerInformation.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeASM_MASMLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCommonLinkerInformation.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeDetermineLinkerId.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeInspectASMLinker.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeInspectASM_MASMLinker.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeInspectCLinker.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceCompiles.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/FeatureTesting.cmake
@@ -99,6 +110,7 @@ C:/Program Files/CMake/share/cmake-3.31/Modules/WriteBasicConfigVersionFile.cmak
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/CMake/predefined-settings.cmake
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/CMake/glfw3Config.cmake.in
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/CMakeLists.txt
+C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/3.31.10/CMakeASM_MASMCompiler.cmake
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/3.31.10/CMakeCCompiler.cmake
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/3.31.10/CMakeRCCompiler.cmake
 C:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX/CMakeFiles/3.31.10/CMakeSystem.cmake

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>tf::UnboundedWSQ class | Taskflow QuickStart</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <span id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">
+        <a href="https://taskflow.github.io"><img src="taskflow_logo.png" alt="" />Taskflow</a> <span class="m-breadcrumb">|</span> <a href="index.html" class="m-thin">QuickStart</a>
+      </span>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Handbook</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <div class="m-doc-template">template&lt;typename T&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacetf.html">tf</a>::<wbr/></span>UnboundedWSQ <span class="m-thin">class</span>
+        </h1>
+        <p>class to create a lock-free unbounded work-stealing queue</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">T</td>
+              <td>data type (must be a pointer type)</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-types">Public types</a></li>
+                <li><a href="#pub-static-methods">Public static functions</a></li>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+<p>This class implements the work-stealing queue described in the paper, <a href="https://www.di.ens.fr/~zappa/readings/ppopp13.pdf">Correct and Efficient Work-Stealing for Weak Memory Models</a>.</p><p>A work-stealing queue supports a single owner thread that performs push and pop operations, while multiple concurrent thief threads may steal tasks from the opposite end of the queue. The implementation is designed to operate correctly under weak memory models and uses atomic operations with carefully chosen memory orderings to ensure correctness and scalability.</p><div class="m-graph"><svg style="width: 37.800rem; height: 27.200rem;" viewBox="0.00 0.00 378.45 272.43">
+<g transform="scale(1 1) rotate(0) translate(4 268.43)">
+<title>UnboundedWSQ</title>
+<g class="m-node m-flat">
+<title>Owner</title>
+<polygon points="150.45,-264.43 62.45,-264.43 62.45,-228.43 150.45,-228.43 150.45,-264.43"/>
+<text text-anchor="middle" x="106.45" y="-249.43" font-family="Helvetica,sans-Serif" font-size="10.00"> Owner Thread</text>
+<text text-anchor="middle" x="106.45" y="-238.43" font-family="Helvetica,sans-Serif" font-size="10.00">(single) </text>
+</g>
+<g class="m-node m-flat">
+<title>Push</title>
+<ellipse cx="54.45" cy="-170.21" rx="54.39" ry="21.43"/>
+<text text-anchor="middle" x="54.45" y="-173.21" font-family="Helvetica,sans-Serif" font-size="10.00"> push()</text>
+<text text-anchor="middle" x="54.45" y="-162.21" font-family="Helvetica,sans-Serif" font-size="10.00">bulk_push() </text>
+</g>
+<g class="m-edge">
+<title>Owner&#45;&gt;Push</title>
+<path d="M94.39,-228.21C88.35,-219.6 80.9,-208.96 74.07,-199.22"/>
+<polygon points="76.88,-197.14 68.28,-190.95 71.15,-201.15 76.88,-197.14"/>
+</g>
+<g class="m-node m-flat">
+<title>Pop</title>
+<ellipse cx="156.45" cy="-170.21" rx="28.01" ry="18"/>
+<text text-anchor="middle" x="156.45" y="-167.71" font-family="Helvetica,sans-Serif" font-size="10.00"> pop() </text>
+</g>
+<g class="m-edge">
+<title>Owner&#45;&gt;Pop</title>
+<path d="M118.04,-228.21C124.53,-218.58 132.74,-206.41 139.89,-195.78"/>
+<polygon points="142.91,-197.57 145.6,-187.32 137.11,-193.65 142.91,-197.57"/>
+</g>
+<g class="m-node m-flat">
+<title>Thieves</title>
+<polygon points="334.45,-264.43 248.45,-264.43 248.45,-228.43 334.45,-228.43 334.45,-264.43"/>
+<text text-anchor="middle" x="291.45" y="-249.43" font-family="Helvetica,sans-Serif" font-size="10.00"> Thief Threads</text>
+<text text-anchor="middle" x="291.45" y="-238.43" font-family="Helvetica,sans-Serif" font-size="10.00">(multiple) </text>
+</g>
+<g class="m-node m-flat">
+<title>Steal</title>
+<ellipse cx="291.45" cy="-170.21" rx="31.58" ry="18"/>
+<text text-anchor="middle" x="291.45" y="-167.71" font-family="Helvetica,sans-Serif" font-size="10.00"> steal() </text>
+</g>
+<g class="m-edge">
+<title>Thieves&#45;&gt;Steal</title>
+<path d="M291.45,-228.21C291.45,-219.41 291.45,-208.48 291.45,-198.56"/>
+<polygon points="294.95,-198.33 291.45,-188.33 287.95,-198.33 294.95,-198.33"/>
+</g>
+<g class="m-node m-flat">
+<title>Queue</title>
+<polygon points="103.45,-0.5 103.45,-90.5 215.45,-90.5 215.45,-0.5 103.45,-0.5"/>
+<text text-anchor="middle" x="159.45" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">Head (Top)</text>
+<text text-anchor="middle" x="159.45" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">steal index</text>
+<polyline points="103.45,-60.5 215.45,-60.5 "/>
+<text text-anchor="middle" x="159.45" y="-48.5" font-family="Helvetica,sans-Serif" font-size="10.00">Dynamic Buffer</text>
+<text text-anchor="middle" x="159.45" y="-37.5" font-family="Helvetica,sans-Serif" font-size="10.00">(resizes as needed)</text>
+<polyline points="103.45,-30.5 215.45,-30.5 "/>
+<text text-anchor="middle" x="159.45" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">Tail (Bottom)</text>
+<text text-anchor="middle" x="159.45" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">push / pop index</text>
+</g>
+<g class="m-edge">
+<title>Push&#45;&gt;Queue:tail</title>
+<path d="M52.17,-148.8C48.87,-109.68 47.42,-27.09 92.46,-16.6"/>
+<polygon points="92.89,-20.08 102.45,-15.5 92.12,-13.12 92.89,-20.08"/>
+<text text-anchor="middle" x="93.45" y="-123" font-family="Helvetica,sans-Serif" font-size="10.00"> insert at bottom</text>
+<text text-anchor="middle" x="93.45" y="-112" font-family="Helvetica,sans-Serif" font-size="10.00">(grow if needed) </text>
+</g>
+<g class="m-edge">
+<title>Pop&#45;&gt;Queue:tail</title>
+<path d="M152.83,-152.11C151.08,-138.97 151.06,-121.08 160.45,-109 176.23,-88.69 200.21,-111.72 215.45,-91 232.99,-67.13 246.49,-26.56 226.33,-17.38"/>
+<polygon points="226.93,-13.94 216.45,-15.5 225.61,-20.81 226.93,-13.94"/>
+<text text-anchor="middle" x="214.95" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00"> remove from bottom </text>
+</g>
+<g class="m-edge">
+<title>Steal&#45;&gt;Queue:head</title>
+<path d="M288.34,-152.15C285.29,-139.21 279.58,-121.56 269.45,-109 254.28,-90.19 246.52,-78.81 226.55,-76.12"/>
+<polygon points="226.64,-72.62 216.45,-75.5 226.21,-79.61 226.64,-72.62"/>
+<text text-anchor="middle" x="325.95" y="-117.5" font-family="Helvetica,sans-Serif" font-size="10.00"> remove from top </text>
+</g>
+</g>
+</svg>
+</div><p>Unlike bounded queues, this queue automatically grows its internal storage as needed, allowing it to accommodate an arbitrary number of tasks without a fixed capacity limit.</p>
+        <section id="pub-types">
+          <h2><a href="#pub-types">Public types</a></h2>
+          <dl class="m-doc">
+            <dt>
+              using <a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_type</a> = std::conditional_t&lt;std::is_pointer_v&lt;T&gt;, T, std::optional&lt;T&gt;&gt;
+            </dt>
+            <dd>the return type of queue operations</dd>
+          </dl>
+        </section>
+        <section id="pub-static-methods">
+          <h2><a href="#pub-static-methods">Public static functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">static auto <a href="#abd33a82897356247c6cb4745003d4136" class="m-doc">empty_value</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>returns the empty sentinel value for the queue element type</dd>
+          </dl>
+        </section>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#a1b1c03ee3602cb76c94e7840c4272498" class="m-doc">UnboundedWSQ</a>(</span><span class="m-doc-wrap">int64_t LogSize = <a href="wsq_8hpp.html#a45e25b85f72dd5c43f2c9010205c3e37" class="m-doc">TF_<wbr />DEFAULT_<wbr />UNBOUNDED_<wbr />TASK_<wbr />QUEUE_<wbr />LOG_<wbr />SIZE</a>) <span class="m-label m-flat m-info">explicit</span> </span>
+            </dt>
+            <dd>constructs the queue with the given size in the base-2 logarithm</dd>
+            <dt id="ac1986b353f71887c197f65dc8eab10db">
+              <span class="m-doc-wrap-bumper"><a href="#ac1986b353f71887c197f65dc8eab10db" class="m-doc-self">~UnboundedWSQ</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>destructs the queue</dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a005abeb0ab8c65d4c98f7eafec46bd9e" class="m-doc">empty</a>(</span><span class="m-doc-wrap">) const -&gt; bool <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>queries if the queue is empty at the time of this call</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4b2e37db67ba4b0017d85f10bf43153d" class="m-doc">size</a>(</span><span class="m-doc-wrap">) const -&gt; size_t <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>queries the number of items at the time of this call</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa3d26c3c856d04f11ee242b90d71ea14" class="m-doc">capacity</a>(</span><span class="m-doc-wrap">) const -&gt; size_t <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>queries the capacity of the queue</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a2aaa261d52e680dcf00af7514868739f" class="m-doc">push</a>(</span><span class="m-doc-wrap">T item)</span>
+            </dt>
+            <dd>inserts an item to the queue</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename I&gt;</div>
+              <span class="m-doc-wrap-bumper">void <a href="#a85512e7baa65c368e757128e5c1a6e82" class="m-doc">bulk_push</a>(</span><span class="m-doc-wrap">I first,
+              size_t N)</span>
+            </dt>
+            <dd>tries to insert a batch of items into the queue</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a02e2447359cc9d84f59028b236e3a0e7" class="m-doc">pop</a>(</span><span class="m-doc-wrap">) -&gt; <a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a></span>
+            </dt>
+            <dd>pops out an item from the queue</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0b91802df36d932ee43b10aedc3abebc" class="m-doc">steal</a>(</span><span class="m-doc-wrap">) -&gt; <a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a></span>
+            </dt>
+            <dd>steals an item from the queue</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aa48bbb819409d53df6ead0183add73cf" class="m-doc">steal_with_feedback</a>(</span><span class="m-doc-wrap">size_t&amp; num_empty_steals) -&gt; <a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a></span>
+            </dt>
+            <dd>attempts to steal a task with feedback on the emptiness of the queue</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Typedef documentation</h2>
+          <section class="m-doc-details" id="a3c9faf5be2fe76fa9ce4d08091002a8a"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              using tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /><a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc-self">value_type</a> = std::conditional_t&lt;std::is_pointer_v&lt;T&gt;, T, std::optional&lt;T&gt;&gt;
+            </h3>
+            <p>the return type of queue operations</p>
+<p><code>value_type</code> represents the type returned by <code>pop</code> and <code>steal</code> operations. For pointer element types <code>T</code>, it is <code>T</code> itself and uses <code>nullptr</code> to indicate an empty result. For non-pointer types, it is <code>std::optional&lt;T&gt;</code>, where <code>std::nullopt</code> denotes the absence of a value.</p><pre class="m-code"><span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">);</span>
+<span class="k">static_assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">is_same_v</span><span class="o">&lt;</span><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">*&gt;::</span><span class="n">value_type</span><span class="p">,</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span></pre><p>This design avoids the overhead of <code>std::optional</code> for pointer types while providing a uniform empty-result semantics.</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="abd33a82897356247c6cb4745003d4136"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">static auto tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abd33a82897356247c6cb4745003d4136" class="m-doc-self">empty_value</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>returns the empty sentinel value for the queue element type</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>an empty <code>value_type</code> representing the absence of an element.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function provides a type-appropriate empty value used to indicate that a pop or steal operation failed. For pointer types, the empty value is <code>nullptr</code> of type <code>T</code>; for non-pointer types, it is <code>std::nullopt</code> of type <code>std::optional&lt;T&gt;</code>.</p><p>The function is implemented as a <code>constexpr</code> helper to avoid additional storage, runtime overhead, or code duplication across queue operations.</p>
+          </div></section>
+          <section class="m-doc-details" id="a1b1c03ee3602cb76c94e7840c4272498"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1b1c03ee3602cb76c94e7840c4272498" class="m-doc-self">UnboundedWSQ</a>(</span><span class="m-doc-wrap">int64_t LogSize = <a href="wsq_8hpp.html#a45e25b85f72dd5c43f2c9010205c3e37" class="m-doc">TF_<wbr />DEFAULT_<wbr />UNBOUNDED_<wbr />TASK_<wbr />QUEUE_<wbr />LOG_<wbr />SIZE</a>) <span class="m-label m-info">explicit</span> </span></span>
+            </h3>
+            <p>constructs the queue with the given size in the base-2 logarithm</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">LogSize</td>
+                  <td>the base-2 logarithm of the queue size</td>
+                </tr>
+              </tbody>
+            </table>
+<pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span></pre>
+          </div></section>
+          <section class="m-doc-details" id="a005abeb0ab8c65d4c98f7eafec46bd9e"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">bool tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a005abeb0ab8c65d4c98f7eafec46bd9e" class="m-doc-self">empty</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>queries if the queue is empty at the time of this call</p>
+<pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span></pre>
+          </div></section>
+          <section class="m-doc-details" id="a4b2e37db67ba4b0017d85f10bf43153d"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">size_t tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4b2e37db67ba4b0017d85f10bf43153d" class="m-doc-self">size</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>queries the number of items at the time of this call</p>
+<pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span></pre>
+          </div></section>
+          <section class="m-doc-details" id="aa3d26c3c856d04f11ee242b90d71ea14"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">size_t tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa3d26c3c856d04f11ee242b90d71ea14" class="m-doc-self">capacity</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>queries the capacity of the queue</p>
+<pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">1025</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w">  </span><span class="c1">// insert more than 1024 ints to trigger resizing</span>
+<span class="w">  </span><span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2048</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1025</span><span class="p">);</span></pre>
+          </div></section>
+          <section class="m-doc-details" id="a2aaa261d52e680dcf00af7514868739f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">void tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2aaa261d52e680dcf00af7514868739f" class="m-doc-self">push</a>(</span><span class="m-doc-wrap">T item)</span></span>
+            </h3>
+            <p>inserts an item to the queue</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">item</td>
+                  <td>the item to push to the queue</td>
+                </tr>
+              </tbody>
+            </table>
+<p>This method pushes one item into the queue. The operation can trigger the queue to resize its capacity if more space is required.</p><pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">1025</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">   </span><span class="c1">// insert more than 1024 items to trigger resizing</span>
+<span class="w">  </span><span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2048</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1025</span><span class="p">);</span></pre><p>Only the owner thread can insert an item to the queue.</p>
+          </div></section>
+          <section class="m-doc-details" id="a85512e7baa65c368e757128e5c1a6e82"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+                template&lt;typename I&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">void tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a85512e7baa65c368e757128e5c1a6e82" class="m-doc-self">bulk_push</a>(</span><span class="m-doc-wrap">I first,
+              size_t N)</span></span>
+            </h3>
+            <p>tries to insert a batch of items into the queue</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">I</td>
+                  <td>input iterator type</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>first</td>
+                  <td>iterator to the first item in the batch</td>
+                </tr>
+                <tr>
+                  <td>N</td>
+                  <td>number of items to insert beginning at <code>first</code></td>
+                </tr>
+              </tbody>
+            </table>
+<p>This method pushes up to <code>N</code> items from the range <code>[first, first + N)</code> into the queue. The operation can trigger the queue to resize its capacity if more space is required. Bulk insertion is often faster than inserting elements one by one because it requires fewer atomic operations.</p><pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">vec</span><span class="p">(</span><span class="mi">1025</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">bulk_push</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">());</span><span class="w"> </span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2048</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">());</span></pre><p>Only the owner thread can insert an item to the queue.</p>
+          </div></section>
+          <section class="m-doc-details" id="a02e2447359cc9d84f59028b236e3a0e7"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a> tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a02e2447359cc9d84f59028b236e3a0e7" class="m-doc-self">pop</a>(</span><span class="m-doc-wrap">)</span></span>
+            </h3>
+            <p>pops out an item from the queue</p>
+<p>This method pops an item from the queue. If the queue is empty, <a href="#abd33a82897356247c6cb4745003d4136" class="m-doc">empty_<wbr />value()</a> is returned. The elements popped out from the queue follow a last-in-first-out (LIFO) order.</p><pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">pop</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">pop</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">pop</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span></pre><p>Only the owner thread can pop out an item from the queue.</p>
+          </div></section>
+          <section class="m-doc-details" id="a0b91802df36d932ee43b10aedc3abebc"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a> tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0b91802df36d932ee43b10aedc3abebc" class="m-doc-self">steal</a>(</span><span class="m-doc-wrap">)</span></span>
+            </h3>
+            <p>steals an item from the queue</p>
+<p>Any threads can try to steal an item from the queue. The return can be an <a href="#abd33a82897356247c6cb4745003d4136" class="m-doc">empty_<wbr />value()</a> if this operation failed. The elements stolen from the queue follow a first-in-first-out (FIFO) order.</p><pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal</span><span class="p">().</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span></pre><p>Multiple threads can simultaneously steal items from the queue.</p>
+          </div></section>
+          <section class="m-doc-details" id="aa48bbb819409d53df6ead0183add73cf"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="#a3c9faf5be2fe76fa9ce4d08091002a8a" class="m-doc">value_<wbr />type</a> tf::<wbr />UnboundedWSQ&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa48bbb819409d53df6ead0183add73cf" class="m-doc-self">steal_with_feedback</a>(</span><span class="m-doc-wrap">size_t&amp; num_empty_steals)</span></span>
+            </h3>
+            <p>attempts to steal a task with feedback on the emptiness of the queue</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">num_empty_steals</td>
+                  <td>a reference to a counter tracking consecutive empty steal attempts</td>
+                </tr>
+              </tbody>
+            </table>
+<p>This function tries to steal a task from the queue. If the steal attempt is successful, the stolen task is returned. Additionally, if the queue is empty, the provided counter <code>num_empty_steals</code> is incremented; otherwise, <code>num_empty_steals</code> is reset to zero. The return can be an <a href="#abd33a82897356247c6cb4745003d4136" class="m-doc">empty_<wbr />value()</a> if this operation failed. The elements stolen from the queue follow a first-in-first-out (FIFO) order.</p><pre class="m-code"><span class="n">tf</span><span class="o">::</span><span class="n">UnboundedWSQ</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wsq</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w">  </span>
+<span class="kt">size_t</span><span class="w"> </span><span class="nf">num_empty_steals</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal_with_feedback</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal_with_feedback</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal_with_feedback</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">wsq</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">wsq</span><span class="p">.</span><span class="n">steal_with_feedback</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="p">).</span><span class="n">value</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">num_empty_steals</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// successful steal will reset the feedback to 0</span></pre><p>Multiple threads can simultaneously steal items from the queue.</p>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Taskflow handbook is part of the <a href="https://taskflow.github.io">Taskflow project</a>, copyright © <a href="https://tsung-wei-huang.github.io/">Dr. Tsung-Wei Huang</a>, 2018&ndash;2026.<br />Generated by <a href="https://doxygen.org/">Doxygen</a> 1.9.1 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

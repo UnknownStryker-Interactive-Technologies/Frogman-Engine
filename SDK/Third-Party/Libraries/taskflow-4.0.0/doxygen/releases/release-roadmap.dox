@@ -1,0 +1,38 @@
+namespace tf {
+
+/** @page release-roadmap Release Roadmap
+
+This page describes the upcoming milestones of the %Taskflow project.
+
+@tableofcontents
+
+@image html images/roadmap.png 
+
+@section MilestoneSummary Milestone Summary
+
+The table below summarizes the milestones (technical goals that significantly enhance the capability of %Taskflow) we plan to achieve in the long run:
+
+<div align="center">
+| Milestone | Release | 
+| :-:       | :-:     | 
+| Design a distributed task graph programming model | TBD | 
+| Migrate the codebase to C++20 | @ref release-4-0-0 | 
+| Design a TBB-inspired task group programming model | @ref release-4-0-0 |
+| Design a video suite ([Taskflow Academy](https://github.com/taskflow/academy)) for leaning %Taskflow | @ref release-4-0-0 | 
+| Design a custom thread-creation interface | @ref release-3-9-0 | 
+| Design a dynamic task graph programming model | @ref release-3-6-0 |
+| Design a task-parallel pipeline programming framework | @ref release-3-3-0 |
+| Integrate thread sanitizer into the CI | @ref release-3-3-0 |
+| Support GPU tasking through %cudaFlow atop CUDA %Graph | @ref release-3-0-0 |
+| Support profiling large data in tfprof  | @ref release-3-0-0 |
+| Support cancelling %Taskflow  | @ref release-3-0-0 | 
+| Support limiting maximum concurrency  | @ref release-3-0-0 | 
+| Migrate the codebase to C++17 | @ref release-3-0-0 |
+</div>
+
+Along with the project development, we expect to have multiple releases
+for feature requests, bug fixes, and technical improvement.
+
+*/
+
+}

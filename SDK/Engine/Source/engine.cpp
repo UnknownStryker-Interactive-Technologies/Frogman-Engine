@@ -83,22 +83,22 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 
 	__load_reflection_data();
 	__read_froggy();
-	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_memory_resource(), 
-											m_project_config->_max_engine_component_type_count_hint);
+	//m_ecs = FE::make_unique<framework::ECS>(framework_base::get_memory_resource(), 
+	//										m_project_config->_max_engine_component_type_count_hint);
 
-	m_processors = FE::make_unique<framework::processors>(	framework_base::get_memory_resource(), 
-															get_async_processor_count(),
-															m_project_config->_fibers_per_thread,
-															m_project_config->_fiber_stack_size);
+	//m_processors = FE::make_unique<framework::processors>(	framework_base::get_memory_resource(), 
+	//														get_async_processor_count(),
+	//														m_project_config->_fibers_per_thread,
+	//														m_project_config->_fiber_stack_size);
 
 
-	m_game_instance = FE::make_owner<FE::game>(framework_base::get_memory_resource(),
-		*m_ecs
-		);
+	//m_game_instance = FE::make_owner<FE::game>(framework_base::get_memory_resource(),
+	//	*m_ecs
+	//	);
 
-	m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_memory_resource(),
-		*m_game_instance->get_current_world(),
-		m_project_config->_fiber_stack_size);
+	//m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_memory_resource(),
+	//	*m_game_instance->get_current_world(),
+	//	m_project_config->_fiber_stack_size);
 
 	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_memory_resource(), m_project_config->_window_config);
 	return 0;
@@ -106,18 +106,17 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 
 FE::int32 FE::engine::run()
 {
-	m_processors->execute();
-	m_game_processor->execute();
-
+	//m_processors->execute();
+	//m_game_processor->execute();
 	m_renderer->execute();
 	return 0;
 }
 
 FE::int32 FE::engine::shutdown()
 {
-	m_game_processor->terminate();
-	m_renderer->execute();
-	m_processors->terminate();
+	m_renderer->terminate();
+	//m_game_processor->terminate();
+	//m_processors->terminate();
 	return 0;
 }
 

@@ -1,0 +1,231 @@
+namespace tf {
+
+/** @page StaticTasking Static Tasking
+
+Static tasking is the most basic programming model in %Taskflow.
+It follows the construct-and-run model, where you define a taskflow graph first and submit it to an executor for execution.
+
+@tableofcontents
+
+@section CreateATaskDependencyGraph Create a Task Dependency Graph
+
+A task in %Taskflow is a @em callable object for which the operation @std_invoke is applicable.
+It can be either 
+a functor, a lambda expression, a bind expression, or a class objects with @c operator() overloaded.
+All tasks are created from tf::Taskflow, the class that manages a task dependency graph.
+%Taskflow provides two methods, tf::Taskflow::placeholder and tf::Taskflow::emplace to create a task.
+
+For example, the code below creates a taskflow.
+It first defines a placeholder task without assigned work, then creates a task directly from a given callable and obtains its task handle. 
+Finally, it creates multiple tasks in one call using C++ structured binding.
+
+@code{.cpp}
+tf::Taskflow taskflow;
+tf::Task A = taskflow.placeholder();
+tf::Task B = taskflow.emplace([](){ std::cout << "task B\n"; });
+auto [D, E, F] = taskflow.emplace(
+  [](){ std::cout << "Task D\n"; },
+  [](){ std::cout << "Task E\n"; },
+  [](){ std::cout << "Task F\n"; }
+);
+@endcode
+
+
+Each time you create a task, 
+the taskflow creates a node and returns a task handle of type tf::Task.
+A task handle is a copy-cheap wrapper over the node pointer to a task in taskflow.
+The handle provides a set of methods for you to access and modify the attributes of a task,
+such as building dependencies, assigning a name, changing the work, querying task statistics, and so on.
+
+@code{.cpp}
+tf::Taskflow taskflow;
+tf::Task A = taskflow.emplace([] () { std::cout << "create a task A\n"; });
+tf::Task B = taskflow.emplace([] () { std::cout << "create a task B\n"; });
+
+A.name("Task A");
+A.work([] () { std::cout << "reassign A to a new callable\n"; });
+A.precede(B);
+
+std::cout << A.name() << '\n';              // Task A
+std::cout << A.num_successors() << '\n';    // 1
+std::cout << A.num_predecessors() << '\n';  // 0
+
+std::cout << B.name() << '\n';              // (empty name)
+std::cout << B.num_successors() << '\n';    // 0
+std::cout << B.num_predecessors() << '\n';  // 1
+@endcode
+
+The code above creates a taskflow of two tasks `A` and `B`. 
+It then assigns a name and a new callable to task `A`, and establishes a precedence link to task `B`. 
+Finally, it queries the task attributes, including names, successor counts, and predecessor counts of `A` and `B`.
+
+%Taskflow uses general-purpose polymorphic function wrapper, std::function,
+to store and invoke a callable in a task.
+You need to follow its contract to create a task.
+For example, the callable to construct a task must be copyable,
+and thus the code below won't compile:
+
+@code{.cpp}
+taskflow.emplace([ptr=std::make_unique<int>(1)](){
+  std::cout << "captured unique pointer is not copyable";
+});
+@endcode
+
+@section VisualizeATaskDependencyGraph Visualize a Task Dependency Graph
+
+You can dump a taskflow to a DOT format and visualize the graph using free online tools such as <a href="https://dreampuf.github.io/GraphvizOnline/">GraphvizOnline</a> and <a href="http://www.webgraphviz.com/">WebGraphviz</a>.
+For example, the code below dumps the taskflow through the standard output `std::cout`.
+
+@code{.cpp}
+#include <taskflow/taskflow.hpp>
+
+int main() {
+
+  tf::Taskflow taskflow;
+
+  // create a task dependency graph
+  tf::Task A = taskflow.emplace([] () { std::cout << "Task A\n"; });
+  tf::Task B = taskflow.emplace([] () { std::cout << "Task B\n"; });
+  tf::Task C = taskflow.emplace([] () { std::cout << "Task C\n"; });
+  tf::Task D = taskflow.emplace([] () { std::cout << "Task D\n"; });
+
+  // add dependency links
+  A.precede(B); 
+  A.precede(C);
+  B.precede(D);
+  C.precede(D);
+
+  taskflow.dump(std::cout);
+}
+@endcode
+
+<!-- @image html images/simple.svg width=40% -->
+@dotfile images/simple.dot
+
+Visualization helps you understand how tasks and dependencies are structured, making it easier to analyze and debug your taskflow programs.
+
+@section TraverseAdjacentTasks Traverse Adjacent Tasks
+
+You can iterate the successor list and the predecessor list of a task by using tf::Task::for_each_successor
+and tf::Task::for_each_predecessor, respectively.
+Both methods take a unary function that takes an argument of type tf::Task pointing to the task that is being visited.
+
+@code{.cpp}
+// traverse all successors of my_task
+my_task.for_each_successor([s=0] (tf::Task successor) mutable {
+  std::cout << "successor " << s++ << '\n';
+});
+// traverse all predecessors of my_task
+my_task.for_each_predecessor([d=0] (tf::Task predecessor) mutable {
+  std::cout << "predecessor " << d++ << '\n';
+});
+@endcode
+
+Together with tf::Taskflow::for_each_task, you can traverse a taskflow graph.
+For example, the code below traverse a taskflow and outputs the successor and the predecessor information of each task:
+
+@code{.cpp}
+// traverse every task in taskflow using the given unary function
+taskflow.for_each_task([](tf::Task task){
+  // print the name of the task
+  std::cout << “Task ” << task.name() << ‘\n’;
+  // traverse all successors of the task
+  task.for_each_successor([](tf::Task s) mutable {
+    std::cout << task.name() << “->” << s.name() << ‘ ’;
+  });
+  std::cout << “\n”;
+  // traverse all predecessors of the task
+  task.for_each_predecessor([] (tf::Task p) mutable {
+    std::cout << p.name() << “->” << task.name() << ‘ ’;
+ });
+});
+@endcode
+
+If the task contains a subflow (see @ref SubflowTasking), you can use tf::Task::for_each_subflow_task
+to iterate all tasks associated with that subflow.
+
+@code{.cpp}
+my_task.for_each_subflow_task([](tf::Task stask){
+  std::cout << "subflow task " << stask.name() << '\n';
+});
+@endcode
+
+@section AttachUserDataToATask Attach User Data to a Task
+
+You can attach custom data to a task using tf::Task::data(void*)
+and access it using tf::Task::data().
+Each node in a taskflow is associated with a C-styled data pointer
+(i.e., `void*`) you can use to point to user data and access it in the body
+of a task callable.
+The following example attaches an integer to a task and accesses that integer
+through capturing the data in the callable.
+
+@code{.cpp}
+int my_data = 5;
+tf::Task task = taskflow.placeholder();
+task.data(&my_data)
+    .work([task](){
+      int my_date = *static_cast<int*>(task.data());
+      std::cout << "my_data: " << my_data; 
+    });
+@endcode
+
+Notice that you need to create a placeholder task first before assigning it
+a work callable. Only this way can you capture that task in the lambda
+and access its attached data in the lambda body.
+Also, as %Taskflow does not manage any user data, it is your responsibility to ensure
+any attached data stays alive during the??
+
+
+@section UnderstandTheLifetimeOfATask Understand the Lifetime of a Task
+
+A task belongs to a single graph at a time and remains alive as long as that graph exists.
+The lifetime of a task is particularly important when referring to its callable,
+including any captured values.
+When the graph is destroyed or cleaned up, all associated tasks are also destroyed.
+Consequently, it is your responsibility to keep relevant taskflows alive during their execution.
+For example, the code below can crash because the taskflow may be destroyed before the executor finishes running it, 
+leaving the executor with dangling references to the task graph.
+
+@code{.cpp}
+tf::Executor executor;
+{
+  tf::Taskflow taskflow;
+  taskflow.emplace(
+    [](){ std::cout << "Task A\n"; },
+    [](){ std::cout << "Task B\n"; },
+    [](){ std::cout << "Task C\n"; },
+    [](){ std::cout << "Task D\n"; }
+  );
+  executor.run(taskflow);
+}  // taskflow is destroyed after the compound statement
+executor.wait_for_all();
+@endcode
+
+
+@section MoveATaskflow Move a Taskflow
+
+You can construct or assign a taskflow using C++ move semantics.
+Moving a taskflow to another will result in transferring the underlying graph data structures from one to the other.
+
+@code{.cpp}
+tf::Taskflow taskflow1, taskflow3;
+
+taskflow1.emplace([](){});
+
+// constructs taskflow2 from taskflow1 using C++ move semantics
+tf::Taskflow taskflow2(std::move(taskflow1));
+assert(taskflow2.num_tasks() == 1 && taskflow1.num_tasks() == 0);
+
+// assigns taskflow2 to taskflow3 using C++ move semantics
+taskflow3 = std::move(taskflow2);
+assert(taskflow3.num_tasks() == 1 && taskflow2.num_tasks() == 0);
+@endcode
+
+You can only move a taskflow to another taskflow when it is not being used, such as being executed by an executor. 
+Moving a taskflow that is being used may result in undefined behavior.
+
+*/
+
+}
+
