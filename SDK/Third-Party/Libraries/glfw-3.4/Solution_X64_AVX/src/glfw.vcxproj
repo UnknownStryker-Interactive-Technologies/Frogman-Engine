@@ -56,6 +56,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -116,6 +117,12 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_DEBUG_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <IncludePaths>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <WarningLevel>3</WarningLevel>
+    </MASM>
     <Midl>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
@@ -131,7 +138,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) /Zc:__cplusplus /utf-8 /dynamicdeopt</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <CallingConvention>FastCall</CallingConvention>
@@ -164,6 +171,12 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELWITHDEBINFO_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELWITHDEBINFO_;_ENABLE_ASSERT_;_ENABLE_NEGATIVE_ASSERT_;_ENABLE_EXIT_;_ENABLE_LOG_;_ENABLE_LOG_IF_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <IncludePaths>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <WarningLevel>3</WarningLevel>
+    </MASM>
     <Midl>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
@@ -212,6 +225,12 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_ENABLE_EXIT_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_RELEASE_;_ENABLE_EXIT_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <IncludePaths>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <WarningLevel>3</WarningLevel>
+    </MASM>
     <Midl>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
@@ -260,6 +279,12 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_MINSIZEREL_;_ENABLE_EXIT_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <MASM>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_FE_ON_WINDOWS_X86_64_;_ALLOWED_DIRECTORY_LENGTH_=256;_HAS_EXCEPTIONS=0;NOMINMAX;_V143_=1;_MINSIZEREL_;_ENABLE_EXIT_;_GLFW_WIN32;UNICODE;_UNICODE;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <IncludePaths>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(IncludePaths)</IncludePaths>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <WarningLevel>3</WarningLevel>
+    </MASM>
     <Midl>
       <AdditionalIncludeDirectories>C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\include;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\src;C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\Solution_X64_AVX\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
@@ -374,5 +399,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

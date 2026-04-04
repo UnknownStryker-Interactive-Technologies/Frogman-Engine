@@ -46,8 +46,8 @@ https://github.com/abseil/abseil-cpp/releases/tag/20250814.1
 - AES  
 https://github.com/mrdcvlsc/AES
 
-- Assimp 6.0.2  
-https://github.com/assimp/assimp/releases/tag/v6.0.2  
+- Assimp 6.0.4  
+https://github.com/assimp/assimp/releases
 
 - Boost Libraries 1.87.0  
 https://github.com/boostorg/boost/releases/tag/boost-1.87.0  
@@ -55,17 +55,20 @@ https://github.com/boostorg/boost/releases/tag/boost-1.87.0
 - City Hash  
 https://github.com/google/cityhash  
 
+- Dr Libs  
+https://github.com/mackron/dr_libs/tree/master?tab=readme-ov-file  
+
 - GLFW 3.4  
 https://www.glfw.org/download.html  
 
-- GLM 1.0.1  
-https://github.com/g-truc/glm/releases/tag/1.0.1  
+- GLM 1.0.3  
+https://github.com/g-truc/glm/releases
 
-- HAT Trie 0.6.0  
+- HAT Trie 0.7.1  
 https://github.com/Tessil/hat-trie  
 
 - Dear ImGUI 1.91.6  
-https://github.com/ocornut/imgui/releases/tag/v1.91.6  
+https://github.com/ocornut/imgui/releases
 
 - lz4 1.10.0  
 https://github.com/lz4/lz4/releases/tag/v1.10.0
@@ -85,8 +88,8 @@ https://github.com/nothings/stb
 - Unordered Dense 4.7.0  
 https://github.com/martinus/unordered_dense/releases  
 
-- Task Flow 3.8.0  
-https://github.com/taskflow/taskflow/releases/tag/v3.8.0  
+- Task Flow 4.0.0  
+https://github.com/taskflow/taskflow/releases
 
 - Google Test 1.16.0  
 https://github.com/google/googletest/releases/tag/v1.16.0  

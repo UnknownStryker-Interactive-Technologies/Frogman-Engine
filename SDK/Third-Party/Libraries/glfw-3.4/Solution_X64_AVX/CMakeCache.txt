@@ -18,10 +18,28 @@
 BUILD_SHARED_LIBS:BOOL=OFF
 
 //Path to a program.
-CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/Hostx64/x64/lib.exe
+CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/lib.exe
 
 //No help, variable specified on the command line.
 CMAKE_ARCHIVE_OUTPUT_DIRECTORY:UNINITIALIZED=C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Third-Party\Libraries\glfw-3.4\/Binaries/X86-64/Windows/AVX-SSE2
+
+//ASM_MASM compiler
+CMAKE_ASM_MASM_COMPILER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/ml64.exe
+
+//Flags used by the ASM_MASM compiler during all build types.
+CMAKE_ASM_MASM_FLAGS:STRING=
+
+//Flags used by the ASM_MASM compiler during DEBUG builds.
+CMAKE_ASM_MASM_FLAGS_DEBUG:STRING=
+
+//Flags used by the ASM_MASM compiler during MINSIZEREL builds.
+CMAKE_ASM_MASM_FLAGS_MINSIZEREL:STRING=
+
+//Flags used by the ASM_MASM compiler during RELEASE builds.
+CMAKE_ASM_MASM_FLAGS_RELEASE:STRING=
+
+//Flags used by the ASM_MASM compiler during RELWITHDEBINFO builds.
+CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO:STRING=
 
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
@@ -119,7 +137,7 @@ CMAKE_INSTALL_SHAREDSTATEDIR:PATH=com
 CMAKE_INSTALL_SYSCONFDIR:PATH=etc
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/Hostx64/x64/link.exe
+CMAKE_LINKER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/link.exe
 
 //Flags used by the linker during the creation of modules during
 // all build types.
@@ -289,6 +307,19 @@ USE_MSVC_RUNTIME_LIBRARY_DLL:BOOL=ON
 
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_COMPILER
+CMAKE_ASM_MASM_COMPILER-ADVANCED:INTERNAL=1
+CMAKE_ASM_MASM_COMPILER_WORKS:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS
+CMAKE_ASM_MASM_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_DEBUG
+CMAKE_ASM_MASM_FLAGS_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_MINSIZEREL
+CMAKE_ASM_MASM_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELEASE
+CMAKE_ASM_MASM_FLAGS_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO
+CMAKE_ASM_MASM_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=c:/Users/leeho/Documents/GitHub/Frogman-Engine/SDK/Third-Party/Libraries/glfw-3.4/Solution_X64_AVX
 //Major version of cmake used to create the current loaded cache

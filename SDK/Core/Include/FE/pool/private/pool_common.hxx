@@ -26,7 +26,6 @@ limitations under the License.
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 #include <absl/container/flat_hash_set.h> // absl::flat_hash_set for page base pointer validation
 #endif
-#include <taskflow.hpp> // for parallel defragmentation
 
 // std
 #include <algorithm> //  std::sort() for defragmentation
