@@ -270,7 +270,7 @@ void FE::archetype_base::deserialize_entity(const FE::framework::initializer& se
 	l_self.m_ptr.store(nullptr, std::memory_order_relaxed);
 }
 
-FE::memory_resource* archetype_base::get_ecs_memory_resource() noexcept { return &m_host->m_memory_resource; }
+FE::memory_resource* archetype_base::__get_ecs_memory_resource() noexcept { return &m_host->m_memory_resource; }
 
 
 

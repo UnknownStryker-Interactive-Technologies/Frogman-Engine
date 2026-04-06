@@ -163,6 +163,25 @@ namespace FE
 	};
 
 
+	class thread_context
+	{
+	public:
+		fiber_impl _thread_context;
+
+	private:
+		alignas(sizeof(SIMD)) var::byte m_page[FE::one_KiB * 8];
+
+	public:
+		thread_context() noexcept;
+		~thread_context() noexcept = default;
+
+		thread_context(thread_context&&) noexcept = delete;
+		thread_context& operator=(thread_context&&) noexcept = delete;
+
+		thread_context(const thread_context&) = delete;
+		thread_context& operator=(const thread_context&) = delete;
+	};
+
 	// fiber cannot be thread_local static!
 	class fiber final
 	{
@@ -192,11 +211,14 @@ namespace FE
 	{
 		FE::fqueue<fiber, 8> m_fiber_pool;
 		FE::fqueue<fiber, 8> m_active_fibers[7];
+		var::size m_fibers;
 
 		concurrency::concurrent_priority_queue<task, priority_comparator> m_task_queue;
 
+		std::unique_ptr<thread_context[]> m_thread_contexts;
+
 	public:
-		fiber_scheduler() noexcept = default;
+		fiber_scheduler() noexcept;
 		~fiber_scheduler() noexcept = default;
 
 		// not thread-safe.
@@ -211,7 +233,6 @@ namespace FE
 		void _FE_CDECL_ switch_fiber_context() noexcept;
 
 	private:
-		thread_local static fiber tl_s_thread;
 		thread_local static fiber_impl* tl_s_current_fiber;
 
 	public:

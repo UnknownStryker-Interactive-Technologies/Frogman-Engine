@@ -77,8 +77,6 @@ class engine final : public FE::framework::framework_base
     FE::smart_ptr<FE::engine_info, FE::RefType::_Owner> m_engine_info;
 	FE::smart_ptr<FE::project_config, FE::RefType::_Owner> m_project_config;
 
-	std::atomic_bool m_should_exit;
-
     FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 
     FE::smart_ptr<class FE::framework::game_processor, FE::RefType::_Owner> m_game_processor;
@@ -90,6 +88,8 @@ public:
 
 public:
     _FE_FORCE_INLINE_ static FE::engine& get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
+	_FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return *m_engine_info; }
+	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return *m_project_config; }
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
     _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_max_concurrency.get_max_concurrency() - 2; /* -(game + renderer) */ }
     

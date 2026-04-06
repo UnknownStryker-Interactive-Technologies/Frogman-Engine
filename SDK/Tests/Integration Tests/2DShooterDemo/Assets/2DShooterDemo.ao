@@ -1,0 +1,6 @@
+{
+    "Target GDK Version": "v0.0.0.2026.04.05prc",
+    "Tag": "2DShooterDemo",
+    "Gravity": [0.0, -9.81, 0.0],
+    "Nodes": []
+}

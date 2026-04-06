@@ -33,10 +33,12 @@ class game : public FE::archetype_base
 {
 	using base_type = FE::archetype_base;
 
-	absl::flat_hash_map<std::pmr::string, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
-	FE::hash<std::pmr::string>,
-	std::equal_to<std::pmr::string>,
-		std::pmr::polymorphic_allocator < std::pair<const std::pmr::string, FE::smart_ptr<FE::world, FE::RefType::_Owner>> >> m_world_list;
+	using world_list = absl::flat_hash_map<world_tag, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
+		FE::hash<world_tag>,
+		std::equal_to<world_tag>,
+		std::pmr::polymorphic_allocator < std::pair<const world_tag, FE::smart_ptr<FE::world, FE::RefType::_Owner>> >>;
+	
+	world_list m_world_list;
 
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> m_current_world;
 	// player list, current player
@@ -48,7 +50,6 @@ public:
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() const noexcept { return m_current_world; }
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() noexcept { return m_current_world; }
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const std::pmr::string& path_to_world_file_p) noexcept;
-	void transition_world(const std::pmr::string& new_world_p) noexcept;
 };
 
 

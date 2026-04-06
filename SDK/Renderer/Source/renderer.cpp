@@ -17,6 +17,8 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/engine.hpp>
 
+#include <FE/framework/game_processor.hxx>
+
 
 
 
@@ -33,7 +35,8 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		m_backend(),
 		m_render_delta_milliseconds(),
 		m_detla_milliseconds(0.0),
-		m_renderer_thread()
+		m_renderer_thread(),
+		m_should_exit(false)
 {
 	FE_EXIT_IF(glfwInit() == GLFW_FALSE, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window initialization failed.");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // We do not want to create an OpenGL context
@@ -132,14 +135,15 @@ void renderer::terminate() noexcept
 
 void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 {
-	FE::engine::get_engine().m_should_exit.store(true, std::memory_order_release);
-	FE::engine::get_engine().m_processors->terminate();
+	FE::engine::get_engine().m_renderer->m_should_exit.store(true, std::memory_order_release);
+	FE::engine::get_engine().m_game_processor->terminate();
+	// FE::engine::get_engine().m_processors->terminate();	
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
 }
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
-	while (FE::engine::get_engine().m_should_exit.load(std::memory_order_acquire) == false) // TO DO: retrieve render target data from the game thread stash.
+	while (FE::engine::get_engine().m_renderer->m_should_exit.load(std::memory_order_acquire) == false) // TO DO: retrieve render target data from the game thread stash.
 	{
 		FE::engine::get_engine().m_renderer->render_frame();
 	}

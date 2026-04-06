@@ -24,7 +24,7 @@ limitations under the License.
 
 
 extern "C" void _FE_CDECL_ __switch_to_the_fiber(struct fiber_impl* const from_p, struct fiber_impl* const to_p, size_t simd_vector_size_p);
-extern "C" void _FE_CDECL_ __switch_to_new_fiber(struct fiber_impl* const from_p, struct fiber_impl* const to_p, size_t simd_vector_size_p, void(FE::fiber_scheduler::* to_return_to_p)());
+extern "C" void _FE_CDECL_ __switch_to_new_fiber(struct fiber_impl* const from_p, struct fiber_impl* const to_p, size_t simd_vector_size_p, void(FE::fiber_scheduler::* to_return_to_p)(), struct fiber_impl* const thread_p);
 extern "C" void _FE_CDECL_ __fork_fiber(struct fiber_impl* const out_thread_p, struct fiber_impl* const fiber_p, size_t simd_vector_size_p, void(FE::fiber_scheduler::* to_return_to_p)());
 extern "C" void _FE_CDECL_ __join_fiber(struct fiber_impl* const thread_p, size_t simd_vector_size_p);
 
@@ -103,8 +103,18 @@ void _FE_CDECL_ __create_fiber(fiber_impl* const out_fiber_p, size_t stack_size_
 
 
 
+FE::fiber_scheduler::fiber_scheduler() noexcept
+	:	m_fiber_pool(),
+		m_active_fibers(),
+		m_fibers(0),
+		m_task_queue(),
+		m_thread_contexts(std::make_unique<thread_context[]>(FE::framework::framework_base::get_framework().get_program_options().get_max_concurrency()))
+{
+}
+
 void _FE_CDECL_ FE::fiber_scheduler::create_fiber(FE::size stack_size_p) noexcept
 {
+	++m_fibers;
 	m_fiber_pool.push(stack_size_p);
 }
 
@@ -130,8 +140,8 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 
 	tl_s_current_fiber = l_to_switch.m_impl;
 
-	__fork_fiber(tl_s_thread.m_impl, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context);
-	__join_fiber(tl_s_thread.m_impl, sizeof(SIMD));
+	auto l_this_thread = &(m_thread_contexts[FE::framework::get_current_thread_id()]._thread_context);
+	__fork_fiber(l_this_thread, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context); // debug it! Errr
 
 	// set a pointer to the fiber to reclaim
 	l_to_switch.m_impl = tl_s_current_fiber;
@@ -141,11 +151,13 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 		while (active_fiber_queue.is_empty() == false)
 		{
 			FE::fiber l_to_recycle = active_fiber_queue.pop();
-			l_to_switch.m_impl->_context_ptr->_rsp = (var::byte*)l_to_switch.m_impl->_context_ptr; // reset the rsp
+			l_to_recycle.m_impl->_context_ptr->_rsp = (var::byte*)l_to_recycle.m_impl->_context_ptr; // reset the rsp
 			l_to_recycle.m_impl->_task_type = TaskPriority::_None; // reset the task type to the default value.
 			m_fiber_pool.push( std::move(l_to_recycle) );
 		}
 	}
+	l_to_switch.m_impl->_context_ptr->_rsp = (var::byte*)l_to_switch.m_impl->_context_ptr; // reset the rsp
+	l_to_switch.m_impl->_task_type = TaskPriority::_None; // reset the task type to the default value.
 	m_fiber_pool.push( std::move(l_to_switch) ); // reclaim it.
 	return _FE_SUCCEEDED_;
 }
@@ -204,8 +216,9 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			FE::fiber l_from_fiber;
 			l_from_fiber.m_impl = l_from;
 
-			if (tl_s_current_fiber->_task_type == TaskPriority::_None)
+			if (tl_s_current_fiber->_task_type == TaskPriority::_None) // flag for fibers that are not currently running any tasks; they can be immediately recycled back to the pool without being pushed to the active queue.
 			{
+				l_from->_context_ptr->_rsp = (var::byte*)l_from->_context_ptr; // reset the rsp
 				m_fiber_pool.push(std::move(l_from_fiber));
 			}
 			else
@@ -218,11 +231,9 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system;
 			l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._component; // smuggle the component pointer into r12; the fiber entry point will pass this as an argument to the system function when calling it.
 			l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
-			l_to_switch.m_impl->_context_ptr->_rsp -= 8; // sub rsp, 8
-			::memcpy(l_to_switch.m_impl->_context_ptr->_rsp, tl_s_thread.m_impl->_context_ptr->_rsp, sizeof(var::uint64)); // push the return address (the original caller's rsp) onto the new fiber's stack; when the new fiber finishes executing the task, it will return to the original caller.
 
 			tl_s_current_fiber = l_to_switch.m_impl;
-			__switch_to_new_fiber( l_from, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context); // try passing the rsp to the func
+			__switch_to_new_fiber( l_from, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context, &(m_thread_contexts[FE::framework::get_current_thread_id()]._thread_context)); // try passing the rsp to the func
 			l_to_switch.m_impl = nullptr; // prevent double free
 			return; // exit yield
 		}
@@ -236,8 +247,9 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			FE::fiber l_from_fiber;
 			l_from_fiber.m_impl = l_from;
 
-			if (tl_s_current_fiber->_task_type == TaskPriority::_None)
+			if (tl_s_current_fiber->_task_type == TaskPriority::_None) // flag for fibers that are not running any task; they should be returned to the pool instead of being put back to the active fiber list.
 			{
+				l_from->_context_ptr->_rsp = (var::byte*)l_from->_context_ptr; // reset the rsp
 				m_fiber_pool.push(std::move(l_from_fiber));
 			}
 			else
@@ -297,5 +309,26 @@ FE::fiber& _FE_CDECL_ FE::fiber::operator=(FE::fiber&& other_p) noexcept
 
 
 thread_local FE::memory_resource FE::fiber::tl_s_fiber_pool;
-thread_local FE::fiber FE::fiber_scheduler::tl_s_thread = FE::system_large_page_size;
 thread_local fiber_impl* FE::fiber_scheduler::tl_s_current_fiber = nullptr;
+
+
+FE::thread_context::thread_context() noexcept
+	: _thread_context()
+{
+	_thread_context._absolute_begin_of_stack = &m_page;
+
+	_thread_context._stack_base = (var::byte*)_thread_context._absolute_begin_of_stack + sizeof(m_page);
+	_thread_context._stack_limit = (var::byte*)_thread_context._absolute_begin_of_stack;
+
+	// Multiple of 4096 is always multiple of 16, 32, and 64.
+	var::uintptr l_fiber_page_ptr = (var::uintptr)_thread_context._stack_base;
+	l_fiber_page_ptr -= sizeof(fiber_context); // allocate space for fiber context on the stack.
+	_thread_context._context_ptr = (fiber_context*)l_fiber_page_ptr;
+	memset(_thread_context._context_ptr, 0, sizeof(fiber_context));
+
+	static_assert(sizeof(SIMD) == alignof(fiber_context));
+	static_assert(sizeof(fiber_context) % 16 == 0);
+
+	_thread_context._context_ptr->_rsp = (var::byte*)l_fiber_page_ptr;
+	_thread_context._host_thread_id = FE::framework::get_current_thread_id();
+}

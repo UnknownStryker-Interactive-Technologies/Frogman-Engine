@@ -118,7 +118,7 @@ void FE::framework::game_processor::__game_main_loop(FE::component_base* const a
 
 		l_delta_clock.end_clock();
 		l_this->_this->m_game_delta_ms = l_delta_clock.get_delta_milliseconds();
-		l_this->_this->m_scheduler.switch_fiber_context(); // Yield to the GC fiber
+		// l_this->_this->m_scheduler.switch_fiber_context(); // Yield to the GC fiber
 	}
 
 
@@ -152,6 +152,8 @@ void FE::framework::game_processor::execute() noexcept
 {
 	__this_pointer l_this;
 	l_this._this = this;
+
+	// FE::framework::game_processor::__game_main_loop(&l_this); // We can call the main loop directly since it will yield to the GC loop periodically, thus we don't need to schedule it as a task on the scheduler. This also simplifies the synchronization between the main loop and the GC loop, as they can directly access the shared data without worrying about task scheduling and synchronization issues.
 
 	FE::task l_main_loop;
 	l_main_loop._component = &l_this;

@@ -51,15 +51,13 @@ processors::processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, F
 
 
 
-thread_local static std::condition_variable tl_s_anesthetic_cv;
-
 void processors::schedule_task(const task& task_p) noexcept
 {
 	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
 
 	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
 	m_scheduler[ l_current_thread_index ].schedule_task(task_p);
-	tl_s_anesthetic_cv.notify_one(); // resuscitate the thread from anesthesia
+	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
 }
 
 
@@ -69,21 +67,20 @@ void processors::yield() noexcept
 }
 
 
-void __anesthesia(_FE_MAYBE_UNUSED_ FE::component_base* const null_p) noexcept
-{
-	std::mutex l_anesthetic;
-	std::unique_lock<std::mutex> l_lock(l_anesthetic);
-	tl_s_anesthetic_cv.wait(l_lock);
-}
-
 // not thread-safe.
 void processors::execute() noexcept
 {
-	std::unique_ptr<std::thread[]> l_threads = std::make_unique<std::thread[]>(m_max_workers);
+	if (m_threads != nullptr)
+	{
+		return; // already executing
+	}
+
+	m_threads = std::make_unique<std::thread[]>(m_max_workers);
+	m_anesthetic_cv = std::make_unique<std::condition_variable[]>(m_max_workers);
 
 	for (var::int32 t = 0; t < m_max_workers; ++t)
 	{
-		l_threads[t] = std::thread
+		m_threads[t] = std::thread
 		(
 
 			[this, t]()
@@ -94,25 +91,14 @@ void processors::execute() noexcept
 
 					if (l_result == _FE_FAILED_) // no tasks to execute, put the thread to sleep for a while to avoid busy-waiting.
 					{
-						FE::task l_sleep_task;
-						l_sleep_task._component = nullptr;
-						l_sleep_task._system = &__anesthesia;
-						l_sleep_task._task_type = TaskPriority::_Background;
-
-						m_scheduler[t].schedule_task(l_sleep_task);
+						std::mutex l_anesthetic;
+						std::unique_lock<std::mutex> l_lock(l_anesthetic);
+						m_anesthetic_cv[t].wait(l_lock);
 					}
 				}
 			}
 
 		);
-	}
-
-	for (var::int32 t = 0; t < m_max_workers; ++t)
-	{
-		if (l_threads[t].joinable() == true)
-		{
-			l_threads[t].join();
-		}
 	}
 }
 
@@ -120,7 +106,19 @@ void processors::execute() noexcept
 void processors::terminate() noexcept
 {
 	m_should_terminate.store(true, std::memory_order_release);
-	tl_s_anesthetic_cv.notify_one(); // resuscitate the thread from anesthesia
+
+	for (var::int32 t = 0; t < m_max_workers; ++t)
+	{
+		m_anesthetic_cv[t].notify_all(); // resuscitate the thread from anesthesia
+	}
+
+	for (var::int32 t = 0; t < m_max_workers; ++t)
+	{
+		if (m_threads[t].joinable() == true)
+		{
+			m_threads[t].join();
+		}
+	}
 }
 
 

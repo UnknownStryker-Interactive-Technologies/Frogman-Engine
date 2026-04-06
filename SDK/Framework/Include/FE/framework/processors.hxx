@@ -35,6 +35,8 @@ class processors final
 	FE::int32 m_fibers_per_thread;
 	FE::size m_stack_size;
 	std::atomic_bool m_should_terminate;
+	std::unique_ptr<std::thread[]> m_threads;
+	std::unique_ptr<std::condition_variable[]> m_anesthetic_cv;
 
 public:
 	processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, FE::size stack_size_p) noexcept;

@@ -305,9 +305,9 @@ public:
 	void deserialize_entity(const FE::framework::initializer& serialized_components_p) noexcept;
 
 protected:
-	_FE_FORCE_INLINE_ void set_memory_layout_version(FE::ASCII* const version_p) noexcept { m_memory_layout_version = version_p; }
-	FE::memory_resource* get_ecs_memory_resource() noexcept;
-	_FE_FORCE_INLINE_ void switch_ecs_host(framework::ECS& new_host_p) noexcept { m_host = &new_host_p; }
+	_FE_FORCE_INLINE_ void __set_memory_layout_version(FE::ASCII* const version_p) noexcept { m_memory_layout_version = version_p; }
+	FE::memory_resource* __get_ecs_memory_resource() noexcept;
+	_FE_FORCE_INLINE_ void __switch_ecs_host(framework::ECS& new_host_p) noexcept { m_host = &new_host_p; }
 };
 
 CLASS_FORWARD_DECLARATION(internal::ECS, component_table_getter);
@@ -323,7 +323,7 @@ BEGIN_NAMESPACE(FE::framework)
 
 class ECS
 {
-	friend class ::FE::archetype_base; // for archetype_base::get_ecs_memory_resource();
+	friend class ::FE::archetype_base; // for archetype_base::__get_ecs_memory_resource();
 	friend class FE::framework::game_processor;
 
 public:

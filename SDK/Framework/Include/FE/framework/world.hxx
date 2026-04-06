@@ -28,32 +28,44 @@ CLASS_FORWARD_DECLARATION(FE::framework, game_processor);
 BEGIN_NAMESPACE(FE)
 
 
-using world_tag = ::FE::uint64;
+using world_tag = var::int64;
+
+struct area_of_operation
+{
+	std::pmr::string _target_gdk_version;
+	world_tag _tag;
+	var::float64 _gravity[3] = { 0.0, -9.81, 0.0 };
+	var::size _component_type_count_hint;
+
+	framework::initializer_list _initializer_list;
+	// scene graph below!
+	// ...
+};
 
 
 class world : public ::FE::archetype_base
 {
 	friend class ::FE::framework::game_processor;
 
-
 	using base_type = ::FE::archetype_base;
 
-
+	area_of_operation m_area_of_operation;
 	framework::ECS m_ecs;
-	world_tag m_world_tag;
 	FE::mode m_mode;
 
 public:
-	world(	world_tag world_tag_p,
-			framework::initializer_list&& initializer_list_p,
-			::FE::size component_type_count_hint_p) noexcept;
+	world(const area_of_operation& area_of_operation_p) noexcept;
 	~world() noexcept = default;
 
 public:
-	void spawn_entity() noexcept;
+	template <typename T, typename... Arguments>
+	FE::entity<T> spawn_entity(Arguments&&... args) noexcept
+	{
+		static_assert(std::is_base_of_v<FE::archetype_base, T>, "Static assertion failed: the template argument T must be derived from FE::archetype_base.");
+		return m_ecs.instanciate_entity<T>(std::forward<Arguments>(args)...);
+	}
 
-
-	_FE_FORCE_INLINE_ world_tag get_world_tag() const noexcept { return m_world_tag; }
+	_FE_FORCE_INLINE_ world_tag get_world_tag() const noexcept { return m_area_of_operation._tag; }
 	_FE_FORCE_INLINE_ const FE::mode& get_mode() const noexcept { return m_mode; }
 	_FE_FORCE_INLINE_ FE::mode& get_mode() noexcept { return m_mode; }
 };

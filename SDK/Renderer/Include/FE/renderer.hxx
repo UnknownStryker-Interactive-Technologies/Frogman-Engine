@@ -87,6 +87,7 @@ private:
 	var::float64 m_detla_milliseconds;
 
 	std::thread m_renderer_thread;
+	std::atomic_bool m_should_exit;
 
 public:
     renderer(const window_config& window_config_p) noexcept;

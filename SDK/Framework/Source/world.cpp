@@ -21,19 +21,13 @@ limitations under the License.
 
 
 
-FE::world::world(	world_tag world_tag_p,
-					framework::initializer_list&& initializer_list_p,
-					::FE::size component_type_count_hint_p) noexcept
+FE::world::world(const area_of_operation& area_of_operation_p) noexcept
 	:	base_type( FE::framework::framework_base::get_framework().get_ecs() ),
-		m_ecs(component_type_count_hint_p),
-		m_world_tag(world_tag_p),
-		m_mode(FE::framework::framework_base::get_framework().get_ecs())
+		m_area_of_operation( area_of_operation_p ),
+		m_ecs(m_area_of_operation._component_type_count_hint),
+		m_mode( FE::framework::framework_base::get_framework().get_ecs() )
 {
-	m_ecs.initialize(std::move(initializer_list_p));
+	m_ecs.initialize(std::move(m_area_of_operation._initializer_list));
 	// call the decryption method to decrypt the world if the functor is not null.
 	// asset pipelines have to be implemented somewhere here.
-}
-
-void FE::world::spawn_entity() noexcept
-{
 }
