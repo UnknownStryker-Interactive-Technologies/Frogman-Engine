@@ -27,12 +27,16 @@ limitations under the License.
 #include <FE/input_device.hpp>
 #include <FE/mode.hpp>
 
+// #define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h> // for loading icons
+
 
 
 
 FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	:	FE::framework::framework_base(argc_p, argv_p), 
 		m_runtime_path(framework_base::get_memory_resource()),
+		m_game_root_directory(framework_base::get_memory_resource()),
 		m_froggy_path(framework_base::get_memory_resource()),
 		m_froggy(framework_base::get_memory_resource()),
 
@@ -63,6 +67,7 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of project name in current executable path.");
 
 	m_froggy_path.erase(l_pos + l_project_name.length(), m_froggy_path.length() - (l_pos + l_project_name.length()));
+	m_game_root_directory = m_froggy_path;
 	m_froggy_path += "\\";
 	m_froggy_path += l_project_name;
 	m_froggy_path += ".froggy";
@@ -222,6 +227,13 @@ void FE::engine::__read_froggy() noexcept
 			{
 				FE_ASSERT(l_window_config["IconPath"].is_string() == true);
 				m_project_config->_window_config._icon_path = std::pmr::string(l_window_config["IconPath"].get_string().data(), framework_base::get_memory_resource());
+				
+				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource()); 
+				l_path += "\\";
+				l_path += m_project_config->_window_config._icon_path;
+
+				m_project_config->_window_config._icon_image.emplace();
+				m_project_config->_window_config._icon_image->pixels = stbi_load(l_path.c_str(), &(m_project_config->_window_config._icon_image->width), &(m_project_config->_window_config._icon_image->height), nullptr, 4/*RGBA*/);
 			}
 
 			*const_cast<var::int32*>(&(m_project_config->_window_config._monitor_index)) = static_cast<FE::int32>(l_window_config["MonitorIndex"].get_int64());

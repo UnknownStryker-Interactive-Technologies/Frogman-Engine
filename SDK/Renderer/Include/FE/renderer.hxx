@@ -48,7 +48,7 @@ struct window_config // fields are immutable after window creation; modifying th
 {
     std::pmr::string _title = "Frogman Game";
 	std::pmr::string _icon_path = "\0";
-	FE::int32 _icon_image_count = 0;
+	std::optional<GLFWimage> _icon_image;
 	FE::int32 _monitor_index = 0;
     FE::boolean _should_enable_vsync = false;
     FE::boolean _is_on_the_top = false;
@@ -84,7 +84,7 @@ private:
 	window_config m_window_config;
 	std::unique_ptr<FE::internal::renderer::backend> m_backend; // renderer backend
 	FE::clock m_render_delta_milliseconds;
-	var::float64 m_detla_milliseconds;
+	var::float64 m_delta_milliseconds;
 
 	std::thread m_renderer_thread;
 	std::atomic_bool m_should_exit;
@@ -101,7 +101,7 @@ public:
 		m_render_delta_milliseconds.start_clock();
 		m_backend->render_frame(); 
 		m_render_delta_milliseconds.end_clock();
-		m_detla_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
+		m_delta_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
 	}
 
 	_FE_FORCE_INLINE_ FE::boolean should_close() const noexcept

@@ -19,6 +19,9 @@ limitations under the License.
 
 #include <FE/framework/game_processor.hxx>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h> // for loading icons
+
 
 
 
@@ -34,7 +37,7 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		m_window_config(window_config_p),
 		m_backend(),
 		m_render_delta_milliseconds(),
-		m_detla_milliseconds(0.0),
+		m_delta_milliseconds(0.0),
 		m_renderer_thread(),
 		m_should_exit(false)
 {
@@ -86,6 +89,7 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	{
 		m_window = glfwCreateWindow(m_window_config._width, m_window_config._height, m_window_config._title.c_str(), m_primary_monitor, nullptr);
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	}
 	else
 	{
@@ -96,14 +100,11 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	FE_EXIT_IF(m_window == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_WindowCreationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window creation failed.");
 	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE); // Enable sticky keys input mode; the value remains until retrieved.
 	
-	//if (m_window_config._icon_images == nullptr)
-	//{
-	//	glfwSetWindowIcon(m_window, 0, nullptr);
-	//}
-	//else
-	//{
-	//	glfwSetWindowIcon(m_window, m_window_config._icon_image_count, m_window_config._icon_images);
-	//}
+	if (m_window_config._icon_image.has_value() == true)
+	{
+		glfwSetWindowIcon(m_window, 1, &(m_window_config._icon_image.value()));
+		stbi_image_free(m_window_config._icon_image.value().pixels);
+	}
 
 	glfwMakeContextCurrent(m_window);
 	m_backend = std::make_unique<FE::internal::renderer::backend>(this);

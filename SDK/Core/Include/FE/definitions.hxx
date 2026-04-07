@@ -167,4 +167,15 @@ limitations under the License.
     #define FE_STRUCT()
 #endif
 
+
+
+
+
+
+
+#define STBI_MALLOC(s) _aligned_malloc(s, FE::CPU_L1_cache_line::size)
+#define STBI_REALLOC(p, s) _aligned_realloc(p, s, FE::CPU_L1_cache_line::size)
+#define STBI_FREE(p) _aligned_free(p)
+
+
 #endif

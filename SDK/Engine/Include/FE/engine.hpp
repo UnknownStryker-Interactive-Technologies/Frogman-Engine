@@ -71,6 +71,7 @@ class engine final : public FE::framework::framework_base
     friend class FE::renderer;
 
     std::pmr::string m_runtime_path;
+	std::pmr::string m_game_root_directory;
     std::pmr::string m_froggy_path;
     std::pmr::string m_froggy;
 
@@ -88,9 +89,15 @@ public:
 
 public:
     _FE_FORCE_INLINE_ static FE::engine& get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
-	_FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return *m_engine_info; }
+	
+    _FE_FORCE_INLINE_ FE::ASCII* get_runtime_path() const noexcept { return m_runtime_path.c_str(); }
+	_FE_FORCE_INLINE_ FE::ASCII* get_game_root_directory() const noexcept { return m_game_root_directory.c_str(); }
+
+    _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return *m_engine_info; }
 	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return *m_project_config; }
+
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
+
     _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_max_concurrency.get_max_concurrency() - 2; /* -(game + renderer) */ }
     
 	template <typename T>
