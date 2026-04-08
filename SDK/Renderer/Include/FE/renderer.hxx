@@ -69,12 +69,6 @@ struct window_config // fields are immutable after window creation; modifying th
 class renderer
 {
 	friend FE::internal::renderer::backend;
-public:
-#ifdef _FE_ON_WINDOWS_X86_64_
-	using view_port = D3D11_VIEWPORT;
-#else
-	using view_port = VkViewport;
-#endif
 private:
     GLFWwindow* m_window;
     GLFWmonitor* m_primary_monitor;

@@ -42,7 +42,8 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 		m_debug(),
 #endif
 		m_present_params(),
-		m_clear_color{ 0.0f, 0.0f, 0.0f, 1.0f }
+		m_clear_color{ 0.0f, 0.0f, 0.0f, 1.0f },
+		m_viewport{}
 {
 	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -175,14 +176,24 @@ void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 n
 {
 	m_render_target_view.Reset();
 	m_back_buffer.Reset();
+	
 
-	FE_EXIT_IF(FAILED(m_swapchain->ResizeBuffers(m_frontend->m_window_config._swap_chain_buffer_count,
-								new_width_p,
-								new_height_p,
-								(m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM,
-								(m_should_allow_tearing == TRUE) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0) | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH),
+	FE_EXIT_IF
+	(
+		FAILED
+		(
+			m_swapchain->ResizeBuffers
+			(
+				m_frontend->m_window_config._swap_chain_buffer_count,
+				new_width_p,
+				new_height_p,
+				((m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM),
+				((m_should_allow_tearing == TRUE) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0) | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
+			) 
+		),
 		FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
-		"Failed to resize the swap chain buffers.");
+		"Failed to resize the swap chain buffers."
+	);
 
 	// Recreate back buffer
 	FE_EXIT_IF(FAILED(m_swapchain->GetBuffer(0, IID_PPV_ARGS(&m_back_buffer))), 

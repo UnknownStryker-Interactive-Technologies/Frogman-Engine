@@ -49,6 +49,7 @@ class d3d11_backend
 #endif
     DXGI_PRESENT_PARAMETERS m_present_params;
     FE::float32 m_clear_color[4];
+	D3D11_VIEWPORT m_viewport;
 
 public:
     d3d11_backend(class FE::renderer* const frontend_p) noexcept;
