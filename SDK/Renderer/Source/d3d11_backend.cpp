@@ -43,7 +43,11 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 #endif
 		m_present_params(),
 		m_clear_color{ 0.0f, 0.0f, 0.0f, 1.0f },
-		m_viewport{}
+		m_viewport{},
+
+		m_depth_stencil_buffer(),
+		m_depth_stencil_view(),
+		m_depth_stencil_state()
 {
 	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -115,33 +119,42 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	}
 #endif
 
+	
 	HWND l_window_handle = glfwGetWin32Window(m_frontend->m_window);
-	DXGI_SWAP_CHAIN_DESC1 l_swapchain_desc{};
-	l_swapchain_desc.Width = m_frontend->m_window_config._width;
-	l_swapchain_desc.Height = m_frontend->m_window_config._height;
-	l_swapchain_desc.Format = (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM;
-	l_swapchain_desc.Stereo = m_frontend->m_window_config._is_virtual_reality_mode;
+	DXGI_SWAP_CHAIN_DESC1 l_swapchain_desc = 
+	{
+		.Width = m_frontend->m_window_config._width,
+		.Height = m_frontend->m_window_config._height,
+		.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
+		.Stereo = m_frontend->m_window_config._is_virtual_reality_mode,
+		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
+		.BufferCount = m_frontend->m_window_config._swap_chain_buffer_count,
+		.Scaling = DXGI_SCALING_STRETCH,
+		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
+		.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED,
+		.Flags = (m_should_allow_tearing == TRUE) ? (UINT)DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u,
+	};
 	l_swapchain_desc.SampleDesc.Count = 1; // No multi-sampling
 	l_swapchain_desc.SampleDesc.Quality = 0; // multi-sampling quality level
-	l_swapchain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	l_swapchain_desc.BufferCount = m_frontend->m_window_config._swap_chain_buffer_count; 
-	l_swapchain_desc.Scaling = DXGI_SCALING_STRETCH;
-	l_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	l_swapchain_desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-	l_swapchain_desc.Flags = (m_should_allow_tearing == TRUE) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
 	l_swapchain_desc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	DXGI_SWAP_CHAIN_FULLSCREEN_DESC l_fullscreen_desc{};
+
+	DXGI_SWAP_CHAIN_FULLSCREEN_DESC l_fullscreen_desc = 
+	{
+		.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
+		.Scaling = DXGI_MODE_SCALING_UNSPECIFIED,
+		.Windowed = !(m_frontend->m_window_config._is_fullscreen)
+	};
 	l_fullscreen_desc.RefreshRate.Numerator = m_frontend->m_video_mode->refreshRate;
 	l_fullscreen_desc.RefreshRate.Denominator = 1;
-	l_fullscreen_desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	l_fullscreen_desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	l_fullscreen_desc.Windowed = !(m_frontend->m_window_config._is_fullscreen);
+
 
 	wrl::ComPtr<IDXGISwapChain1> l_swap_chain;
 
 	l_result = m_factory->CreateSwapChainForHwnd(m_device.Get(), l_window_handle, &l_swapchain_desc, &l_fullscreen_desc, nullptr, &l_swap_chain);
 	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create a swap chain; the error code is ${%d@0}.", &l_result);
+
+	m_factory->MakeWindowAssociation(l_window_handle, DXGI_MWA_NO_WINDOW_CHANGES);
 
 	l_result = l_swap_chain.As(&m_swapchain);
 	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "D3D11.4 unsupported; the error code is ${%d@0}.", &l_result);
@@ -151,11 +164,62 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	
 	_FE_MAYBE_UNUSED_ D3D11_TEXTURE2D_DESC l_desc{};
 	m_back_buffer->GetDesc(&l_desc);
-	FE_ASSERT(l_desc.Format == (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format; the error code is ${%d@0}.", &l_result);
+	FE_ASSERT(l_desc.Format == DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format; the error code is ${%d@0}.", &l_result);
 
 	l_result = m_device->CreateRenderTargetView(m_back_buffer.Get(), nullptr, &m_render_target_view);
 	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure, "Fail to create a render target view; the error code is ${%d@0}.", &l_result);
-	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), nullptr);
+
+
+	m_viewport =
+	{
+		.TopLeftX = 0.0f,
+		.TopLeftY = 0.0f,
+		.Width = static_cast<FLOAT>(m_frontend->m_window_config._width),
+		.Height = static_cast<FLOAT>(m_frontend->m_window_config._height),
+		.MinDepth = 0.0f,
+		.MaxDepth = 1.0f
+	};
+
+	m_context->RSSetViewports(1, &m_viewport);
+
+
+	D3D11_TEXTURE2D_DESC l_depth_desc =
+	{
+		.Width = static_cast<UINT>(m_frontend->m_window_config._width),
+		.Height = static_cast<UINT>(m_frontend->m_window_config._height),
+		.MipLevels = 1,
+		.ArraySize = 1,
+		.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+		.SampleDesc = {.Count = 1, .Quality = 0 }, // MSAA disabled
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_DEPTH_STENCIL,
+	};
+
+	l_result = m_device->CreateTexture2D(&l_depth_desc, nullptr, &m_depth_stencil_buffer);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
+		"Failed to create depth stencil buffer; the error code is ${%d@0}.", &l_result);
+
+	l_result = m_device->CreateDepthStencilView(m_depth_stencil_buffer.Get(), nullptr, &m_depth_stencil_view);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
+		"Failed to create depth stencil view; the error code is ${%d@0}.", &l_result);
+
+
+	D3D11_DEPTH_STENCIL_DESC l_ds_state_desc =
+	{
+		.DepthEnable = TRUE,
+		.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL,
+		.DepthFunc = D3D11_COMPARISON_LESS,
+		.StencilEnable = FALSE,
+	};
+
+	l_result = m_device->CreateDepthStencilState(&l_ds_state_desc, &m_depth_stencil_state);
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
+		"Failed to create depth stencil state; the error code is ${%d@0}.", &l_result);
+
+	m_context->OMSetDepthStencilState(m_depth_stencil_state.Get(), 0);
+
+
+	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), m_depth_stencil_view.Get());
 }
 
 d3d11_backend::~d3d11_backend() noexcept
@@ -169,14 +233,20 @@ void d3d11_backend::toggle_fullscreen_mode() noexcept
 	_FE_MAYBE_UNUSED_ HRESULT l_result = m_swapchain->GetContainingOutput(&l_output);
 	FE_ASSERT(SUCCEEDED(l_result));
 
-	m_swapchain->SetFullscreenState((BOOL)m_frontend->m_window_config._is_fullscreen, l_output.Get());
+	m_swapchain->SetFullscreenState((BOOL)m_frontend->m_window_config._is_fullscreen, (m_frontend->m_window_config._is_fullscreen == false) ? nullptr : l_output.Get());
+
+	DXGI_SWAP_CHAIN_DESC1 l_desc{};
+	m_swapchain->GetDesc1(&l_desc);
+	resize_swap_chain_buffers(l_desc.Width, l_desc.Height);
 }
 
 void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 new_height_p) noexcept
 {
+	m_context->OMSetRenderTargets(0, nullptr, nullptr);
+
 	m_render_target_view.Reset();
 	m_back_buffer.Reset();
-	
+
 
 	FE_EXIT_IF
 	(
@@ -187,7 +257,7 @@ void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 n
 				m_frontend->m_window_config._swap_chain_buffer_count,
 				new_width_p,
 				new_height_p,
-				((m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM),
+				DXGI_FORMAT_B8G8R8A8_UNORM,
 				((m_should_allow_tearing == TRUE) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0) | DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
 			) 
 		),
@@ -202,20 +272,62 @@ void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 n
 
 	_FE_MAYBE_UNUSED_ D3D11_TEXTURE2D_DESC l_desc{};
 	m_back_buffer->GetDesc(&l_desc);
-	FE_ASSERT(l_desc.Format == (m_frontend->m_window_config._should_enable_hdr == true) ? DXGI_FORMAT_R10G10B10A2_UNORM : DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format.");
+	FE_ASSERT(l_desc.Format == DXGI_FORMAT_B8G8R8A8_UNORM, "Unexpected back buffer format.");
 
 	// Recreate render target view
 	FE_EXIT_IF(FAILED(m_device->CreateRenderTargetView(m_back_buffer.Get(), nullptr, &m_render_target_view)),
 		FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
 		"Failed to recreate the render target view.");
 
+
+
+
+	m_depth_stencil_view.Reset();
+	m_depth_stencil_buffer.Reset();
+
+
+	D3D11_TEXTURE2D_DESC l_depth_desc =
+	{
+		.Width = static_cast<UINT>(new_width_p),
+		.Height = static_cast<UINT>(new_height_p),
+		.MipLevels = 1,
+		.ArraySize = 1,
+		.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+		.SampleDesc = {.Count = 1, .Quality = 0 },
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_DEPTH_STENCIL,
+	};
+
+	FE_EXIT_IF(FAILED(m_device->CreateTexture2D(&l_depth_desc, nullptr, &m_depth_stencil_buffer)),
+		FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
+		"Failed to recreate depth stencil buffer.");
+
+	FE_EXIT_IF(FAILED(m_device->CreateDepthStencilView(m_depth_stencil_buffer.Get(), nullptr, &m_depth_stencil_view)),
+		FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
+		"Failed to recreate depth stencil view.");
+
+
+	m_viewport =
+	{
+		.TopLeftX = 0.0f,
+		.TopLeftY = 0.0f,
+		.Width = static_cast<FLOAT>(new_width_p),
+		.Height = static_cast<FLOAT>(new_height_p),
+		.MinDepth = 0.0f,
+		.MaxDepth = 1.0f
+	};
+
+	m_context->RSSetViewports(1, &m_viewport);
+
+
 	// Bind new render target
-	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), nullptr);
+	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), m_depth_stencil_view.Get());
 }
 
 void d3d11_backend::render_frame() noexcept
 {
 	m_context->ClearRenderTargetView(m_render_target_view.Get(), m_clear_color);
+	m_context->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
 							((m_frontend->m_window_config._should_enable_vsync  == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,

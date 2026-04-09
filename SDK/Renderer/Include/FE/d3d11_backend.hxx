@@ -51,6 +51,10 @@ class d3d11_backend
     FE::float32 m_clear_color[4];
 	D3D11_VIEWPORT m_viewport;
 
+    wrl::ComPtr<ID3D11Texture2D> m_depth_stencil_buffer;
+    wrl::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
+    wrl::ComPtr<ID3D11DepthStencilState> m_depth_stencil_state;
+
 public:
     d3d11_backend(class FE::renderer* const frontend_p) noexcept;
 	~d3d11_backend() noexcept;

@@ -58,8 +58,8 @@ struct window_config // fields are immutable after window creation; modifying th
 	_FE_MAYBE_UNUSED_ FE::boolean _is_virtual_reality_mode = false;
 	FE::boolean _should_enable_hdr = false;
 
-    FE::int32 _width = 0;
-    FE::int32 _height = 0;
+    FE::uint32 _width = 0;
+    FE::uint32 _height = 0;
     FE::boolean _is_resizable = true;
     FE::boolean _is_maximized = true;
     var::boolean _is_fullscreen = false;

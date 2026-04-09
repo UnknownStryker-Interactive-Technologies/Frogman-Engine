@@ -61,11 +61,11 @@ renderer::renderer(const window_config& window_config_p) noexcept
 
 	if (m_window_config._width == 0)
 	{
-		*const_cast<var::int32*>( &(m_window_config._width) ) = m_video_mode->width;
+		*const_cast<var::uint32*>( &(m_window_config._width) ) = m_video_mode->width;
 	}
 	if (m_window_config._height == 0)
 	{
-		*const_cast<var::int32*>( &(m_window_config._height) ) = m_video_mode->height;
+		*const_cast<var::uint32*>( &(m_window_config._height) ) = m_video_mode->height;
 	}
 
 	if (m_window_config._is_fullscreen == true)

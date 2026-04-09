@@ -251,9 +251,9 @@ void FE::engine::__read_froggy() noexcept
 
 			*const_cast<var::boolean*>(&(m_project_config->_window_config._should_enable_hdr)) = l_window_config["ShouldEnableHDR"].get_bool();
 
-			*const_cast<var::int32*>(&(m_project_config->_window_config._width)) = static_cast<FE::int32>(l_window_config["Width"].get_int64());
+			*const_cast<var::uint32*>(&(m_project_config->_window_config._width)) = static_cast<FE::int32>(l_window_config["Width"].get_int64());
 			FE_ASSERT(m_project_config->_window_config._width >= 0);
-			*const_cast<var::int32*>(&(m_project_config->_window_config._height)) = static_cast<FE::int32>(l_window_config["Height"].get_int64());
+			*const_cast<var::uint32*>(&(m_project_config->_window_config._height)) = static_cast<FE::int32>(l_window_config["Height"].get_int64());
 			FE_ASSERT(m_project_config->_window_config._height >= 0);
 
 			*const_cast<var::boolean*>(&(m_project_config->_window_config._is_resizable)) = l_window_config["IsResizable"].get_bool();
