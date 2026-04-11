@@ -160,12 +160,6 @@ void FE::engine::__read_froggy() noexcept
 			m_project_config->_path_lookup_table._world_paths.push_back(std::pmr::string(element.get_string().c_str(), framework_base::get_memory_resource()));
 		}
 
-		for (auto element : l_resource_lut["ModulePaths"].get_array())
-		{
-			FE_ASSERT(element.is_string() == true);
-			m_project_config->_path_lookup_table._module_paths.push_back(std::pmr::string(element.get_string().data(), framework_base::get_memory_resource()));
-		}
-
 		if (l_project_config["CompressionMethod"].is_null() == false)
 		{
 			FE_ASSERT(l_froggy_json["CompressionMethod"].is_string() == true);
@@ -223,18 +217,37 @@ void FE::engine::__read_froggy() noexcept
 				m_project_config->_window_config._title = std::pmr::string(l_window_config["Title"].get_string().data(), framework_base::get_memory_resource());
 			}
 
-			if (l_window_config["IconPath"].is_null() == false)
-			{
-				FE_ASSERT(l_window_config["IconPath"].is_string() == true);
-				m_project_config->_window_config._icon_path = std::pmr::string(l_window_config["IconPath"].get_string().data(), framework_base::get_memory_resource());
-				
-				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource()); 
-				l_path += "\\";
-				l_path += m_project_config->_window_config._icon_path;
 
-				m_project_config->_window_config._icon_image.emplace();
-				m_project_config->_window_config._icon_image->pixels = stbi_load(l_path.c_str(), &(m_project_config->_window_config._icon_image->width), &(m_project_config->_window_config._icon_image->height), nullptr, 4/*RGBA*/);
+			m_project_config->_window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
+			for (auto element : l_window_config["IconPaths"].get_array())
+			{
+				FE_ASSERT(element.is_string() == true);
+				m_project_config->_window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
+
+				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
+				l_path += "\\";
+				l_path += m_project_config->_window_config._icon_paths.back();
+
+				m_project_config->_window_config._icon_image.emplace_back();
+				m_project_config->_window_config._icon_image.back().pixels = stbi_load(l_path.c_str(), &(m_project_config->_window_config._icon_image.back().width), &(m_project_config->_window_config._icon_image.back().height), nullptr, 4/*RGBA*/);
 			}
+
+
+			m_project_config->_window_config._random_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
+			for (auto element : l_window_config["RandomPlayVideoIntroPaths"].get_array())
+			{
+				FE_ASSERT(element.is_string() == true);
+				m_project_config->_window_config._random_play_video_intro_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
+			}
+
+
+			m_project_config->_window_config._sequential_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
+			for (auto element : l_window_config["SequentialPlayVideoIntroPaths"].get_array())
+			{
+				FE_ASSERT(element.is_string() == true);
+				m_project_config->_window_config._sequential_play_video_intro_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
+			}
+
 
 			*const_cast<var::int32*>(&(m_project_config->_window_config._monitor_index)) = static_cast<FE::int32>(l_window_config["MonitorIndex"].get_int64());
 			FE_ASSERT(m_project_config->_window_config._monitor_index >= 0);

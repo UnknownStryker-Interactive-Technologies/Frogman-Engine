@@ -16,6 +16,8 @@ limitations under the License.
 #include <FE/framework/ECS.hxx>
 #include <FE/framework.hxx>
 
+#include <FE/framework/mutex.hpp> // fiber lock
+
 #include <vector>
 
 
@@ -34,8 +36,8 @@ ECS::ECS(FE::size component_type_count_hint_p) noexcept
 		m_component_table(),
 
 		m_archetype_default_entities(),
-		m_buffer()/*,
-		m_fiber_lock()*/
+		m_buffer(),
+		m_fiber_lock()
 {
 	m_component_table.reserve(component_type_count_hint_p * 2);
 }
@@ -87,9 +89,12 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::compo
 {
 	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
-	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+
 
 	const std::size_t l_hash_code = robin_hood::hash_bytes(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
+
+	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+
 	entt_p->m_component_view_table[l_hash_code] = to_attatch_p;
 }
 
@@ -102,10 +107,11 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 
 	initializer l_serialized_components(&m_memory_resource);
 
-	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 	for (auto& [hash, component] : entt_p->m_component_view_table)
 	{
+		m_fiber_lock.lock();
+
 		m_buffer = component->get_typename();
 		std::pmr::string::size_type l_pos = m_buffer.find(l_class);
 		if (l_pos == std::pmr::string::npos)
@@ -135,9 +141,12 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 		l_arguments._first = l_serialized_components[component->get_typename()];
 		l_arguments._second = component.operator->();
 		l_arguments._third = entity_memory_layout_version;
-		(*l_component_serializer)(nullptr, &l_arguments); // Boom! Magcic!
+
+		m_fiber_lock.unlock();
+
+		(*l_component_serializer)(nullptr, &l_arguments); // Boom! Magic!
 		/*
-		* The first argument is a reference to the serialized component datavbuffer.
+		* The first argument is a reference to the serialized component data buffer.
 		* The second argument is a pointer to the component instance.
 		* The third argument is the memory layout version of the component.
 		*/
@@ -147,14 +156,17 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 // const robin_hood::unordered_map<std::pmr::string, std::pmr::string>& does not compile
 void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p, FE::ASCII* const entity_memory_layout_version) noexcept
 {
+	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+
 	constexpr FE::ASCII* l_function_prefix = "deserialize_component_";
 	constexpr FE::ASCII* l_class = "class";
 	constexpr FE::ASCII* l_struct = "struct";
 
-	//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
 
 	for (auto& [hash, component] : out_entt_p->m_component_view_table)
 	{
+		m_fiber_lock.lock();
+
 		m_buffer = component->get_typename();
 		std::pmr::string::size_type l_pos = m_buffer.find(l_class);
 		if (l_pos == std::pmr::string::npos)
@@ -185,6 +197,9 @@ void ECS::deserialize_entity(const initializer& serialized_components_p, FE::ent
 		l_arguments._first = l_probe_result->second;
 		l_arguments._second = component.operator->();
 		l_arguments._third = entity_memory_layout_version;
+
+		m_fiber_lock.unlock();
+
 		(*l_component_deserializer)(nullptr, &l_arguments);
 		/*
 		* The first argument is a reference to the serialized component datavbuffer.

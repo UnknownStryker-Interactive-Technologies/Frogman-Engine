@@ -31,6 +31,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 class ecs;
+class mutex;
+class shared_mutex;
 CLASS_FORWARD_DECLARATION(framework, game_processor);
 
 
@@ -69,6 +71,8 @@ class engine final : public FE::framework::framework_base
 {
     friend class ecs;
     friend class FE::renderer;
+    friend class FE::mutex;
+    friend class FE::shared_mutex;
 
     std::pmr::string m_runtime_path;
 	std::pmr::string m_game_root_directory;

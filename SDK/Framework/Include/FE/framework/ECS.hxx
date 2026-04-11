@@ -35,7 +35,7 @@ limitations under the License.
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
 
-//#include <boost/fiber/recursive_mutex.hpp> // fiber lock; replace it with the in-house fiber mutex when it is ready.
+#include <FE/framework/mutex.hpp> // fiber lock
 
 
 
@@ -354,7 +354,7 @@ private:
 	
 	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
-	//boost::fibers::recursive_mutex m_fiber_lock;
+	FE::mutex m_fiber_lock;
 
 public:
 	ECS(FE::size component_type_count_hint_p) noexcept;
@@ -369,7 +369,7 @@ public:
 	FE::entity<Archetype> instanciate_entity(Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, *this, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
@@ -407,47 +407,51 @@ public:
 	FE::entity<FE::archetype_base> instanciate_entity_from_initializer(const FE::framework::initializer& serialized_entity_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
-
 		FE::entity<FE::archetype_base> l_entity = ECS::instanciate_entity<Archetype>();
-		if (l_entity.is_valid() == false)
+
 		{
-			return entity<FE::archetype_base>();
+			std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+
+			if (l_entity.is_valid() == false)
+			{
+				return entity<FE::archetype_base>();
+			}
+
+			for (const auto& [component_identifier, serialized_component] : serialized_entity_p)
+			{
+				constexpr FE::ASCII* l_class = "class";
+				constexpr FE::ASCII* l_struct = "struct";
+
+				m_buffer = component_identifier;
+				std::pmr::string::size_type l_pos = m_buffer.find(l_class);
+				if (l_pos == std::pmr::string::npos)
+				{
+					l_pos = m_buffer.find(l_struct);
+					FE_ASSERT(l_pos != std::pmr::string::npos, "Assertion failed: the component type name must start with 'class' or 'struct'.");
+					l_pos += std::strlen(l_struct);
+				}
+				else
+				{
+					l_pos += std::strlen(l_class);
+				}
+				m_buffer.erase(0, l_pos);
+
+				for (l_pos = m_buffer.find(' '); l_pos != std::pmr::string::npos; l_pos = m_buffer.find(' '))
+				{
+					m_buffer.erase(m_buffer.begin() + l_pos);
+				}
+				m_buffer.insert(0, "::");
+
+				FE::task_base* l_component_adder = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(m_buffer);
+				FE_ASSERT(l_component_adder != nullptr, "Assertion failed: the component adder function is not found. The component type may not be registered.");
+
+				FE::component_view<FE::component_base> l_handle;
+				FE::arguments<FE::entity<FE::archetype_base>> l_arguments;
+				l_arguments._first = l_entity;
+				(*l_component_adder)(this, &l_handle, &l_arguments); // Perform reflection magic to add the component.
+			}
 		}
 
-		for (const auto& [component_identifier, serialized_component] : serialized_entity_p)
-		{
-			constexpr FE::ASCII* l_class = "class";
-			constexpr FE::ASCII* l_struct = "struct";
-
-			m_buffer = component_identifier;
-			std::pmr::string::size_type l_pos = m_buffer.find(l_class);
-			if (l_pos == std::pmr::string::npos)
-			{
-				l_pos = m_buffer.find(l_struct);
-				FE_ASSERT(l_pos != std::pmr::string::npos, "Assertion failed: the component type name must start with 'class' or 'struct'.");
-				l_pos += std::strlen(l_struct);
-			}
-			else
-			{
-				l_pos += std::strlen(l_class);
-			}
-			m_buffer.erase(0, l_pos);
-
-			for (l_pos = m_buffer.find(' '); l_pos != std::pmr::string::npos; l_pos = m_buffer.find(' '))
-			{
-				m_buffer.erase(m_buffer.begin() + l_pos);
-			}
-			m_buffer.insert(0, "::");
-
-			FE::task_base* l_component_adder = FE::framework::framework_base::get_framework().get_method_reflection().retrieve(m_buffer);
-			FE_ASSERT(l_component_adder != nullptr, "Assertion failed: the component adder function is not found. The component type may not be registered.");
-
-			FE::component_view<FE::component_base> l_handle;
-			FE::arguments<FE::entity<FE::archetype_base>> l_arguments;
-			l_arguments._first = l_entity;
-			(*l_component_adder)(this, &l_handle, &l_arguments); // Perform reflection magic to add the component.
-		}
 		deserialize_entity(serialized_entity_p, l_entity);
 		return l_entity;
 	}
@@ -455,8 +459,6 @@ public:
 	template <class Archetype>
 	FE::entity<FE::archetype_base> instanciate_archetype_default_entity() noexcept
 	{
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
-
 		framework::initializer* l_default_values = ECS::get_archetype_default_entity<Archetype>();
 		if (l_default_values == nullptr)
 		{
@@ -470,7 +472,7 @@ public:
 	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer&& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
 		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = std::move(default_values_p);
 	}
@@ -479,7 +481,7 @@ public:
 	_FE_FORCE_INLINE_ FE::framework::initializer* const get_archetype_default_entity() noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
 		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
 		if (l_probe_result != m_archetype_default_entities.end())
@@ -495,7 +497,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
 		typename component_table::iterator l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		if (l_probe_result == m_component_table.end())
@@ -594,7 +596,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		//std::lock_guard<boost::fibers::recursive_mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
 		typename FE::archetype_base::component_view_table::iterator l_probe_result = entt_p->m_component_view_table.find( FE::framework::reflection::type_id<Component>().hash_code() );
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");

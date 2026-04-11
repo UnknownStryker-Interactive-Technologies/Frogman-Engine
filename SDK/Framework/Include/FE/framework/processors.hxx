@@ -24,12 +24,20 @@ limitations under the License.
 
 
 
+
+CLASS_FORWARD_DECLARATION(FE, mutex)
+CLASS_FORWARD_DECLARATION(FE, shared_mutex)
+
+
 // TODO: implement fiber based future and promise!
 BEGIN_NAMESPACE(FE::framework)
 
 
 class processors final
 {
+	friend class FE::mutex;
+	friend class FE::shared_mutex;
+
 	std::unique_ptr<fiber_scheduler[]> m_scheduler;
 	FE::int32 m_max_workers;
 	FE::int32 m_fibers_per_thread;
@@ -44,9 +52,6 @@ public:
 
 	// Thread-safe.
 	void schedule_task(const task& task_p) noexcept;
-
-	// Thread-safe.
-	void yield() noexcept;
 
 	// Not thread-safe; must not be called concurrently.
 	void execute() noexcept;

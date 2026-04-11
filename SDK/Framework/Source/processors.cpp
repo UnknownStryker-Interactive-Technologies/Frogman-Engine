@@ -61,10 +61,6 @@ void processors::schedule_task(const task& task_p) noexcept
 }
 
 
-void processors::yield() noexcept
-{
-	m_scheduler[get_current_thread_id()].switch_fiber_context();
-}
 
 
 // not thread-safe.
@@ -82,9 +78,9 @@ void processors::execute() noexcept
 	{
 		m_threads[t] = std::thread
 		(
-
 			[this, t]()
 			{
+				FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = &m_scheduler[t];
 				while (m_should_terminate.load(std::memory_order_acquire) == false)
 				{
 					const int l_result = m_scheduler[t].execute();

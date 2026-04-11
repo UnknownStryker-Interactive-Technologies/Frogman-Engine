@@ -40,6 +40,7 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 |--------------|---------------|------------------|
 | Windows 11   | X86-64        | In Development   |
 | Ubuntu-Linux | X86-64        | Discontinued     |
+| Android      | ARM64         | Pending          |
 | Windows 11   | ARM64         | Pending          |
 
 # This project leverages:
@@ -58,6 +59,9 @@ https://github.com/boostorg/boost/releases/tag/boost-1.87.0
 - City Hash  
 https://github.com/google/cityhash  
 
+- Dear ImGUI 1.91.6  
+https://github.com/ocornut/imgui/releases  
+
 - Dr Libs  
 https://github.com/mackron/dr_libs/tree/master?tab=readme-ov-file  
 
@@ -70,14 +74,8 @@ https://github.com/g-truc/glm/releases
 - HAT Trie 0.7.1  
 https://github.com/Tessil/hat-trie  
 
-- Dear ImGUI 1.91.6  
-https://github.com/ocornut/imgui/releases
-
 - lz4 1.10.0  
-https://github.com/lz4/lz4/releases/tag/v1.10.0
-
-- Wwise SDK  
-https://www.audiokinetic.com/en/download  
+https://github.com/lz4/lz4/releases/tag/v1.10.0  
 
 - Robin Hood Hash 3.11.5  
 https://github.com/martinus/robin-hood-hashing  
@@ -86,19 +84,22 @@ https://github.com/martinus/robin-hood-hashing
 https://github.com/Tessil/robin-map/releases/tag/v1.4.0  
 
 - stb image  
-https://github.com/nothings/stb
+https://github.com/nothings/stb  
 
 - Unordered Dense 4.7.0  
 https://github.com/martinus/unordered_dense/releases  
 
 - Task Flow 4.0.0  
-https://github.com/taskflow/taskflow/releases
+https://github.com/taskflow/taskflow/releases  
 
 - Google Test 1.16.0  
 https://github.com/google/googletest/releases/tag/v1.16.0  
 
 - Google Benchmark 1.9.1  
 https://github.com/google/benchmark/releases/tag/v1.9.1  
+
+- Wwise SDK  
+https://www.audiokinetic.com/en/download  
 
 # Help:
 Issues with Frogman Engine Header Tool:  

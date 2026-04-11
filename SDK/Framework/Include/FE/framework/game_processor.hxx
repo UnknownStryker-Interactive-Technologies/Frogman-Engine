@@ -29,7 +29,10 @@ limitations under the License.
 
 
 
+CLASS_FORWARD_DECLARATION(FE, engine)
 CLASS_FORWARD_DECLARATION(FE, world)
+CLASS_FORWARD_DECLARATION(FE, mutex)
+CLASS_FORWARD_DECLARATION(FE, shared_mutex)
 
 
 BEGIN_NAMESPACE(FE::framework)
@@ -51,6 +54,10 @@ struct death_note
 
 class game_processor
 {
+	friend class FE::engine;
+	friend class FE::mutex;
+	friend class FE::shared_mutex;
+
 	FE::fiber_scheduler m_scheduler;
 	FE::world* m_world;
 	var::float64 m_game_delta_ms;
@@ -71,6 +78,7 @@ class game_processor
 	var::float64 m_gc_delta_ms;
 	std::mutex m_mutex;
 	std::condition_variable m_condition_variable;
+	
 
 public:
 	game_processor(FE::world& world_p, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;

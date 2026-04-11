@@ -47,8 +47,12 @@ namespace internal::renderer
 struct window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
     std::pmr::string _title = "Frogman Game";
-	std::pmr::string _icon_path = "\0";
-	std::optional<GLFWimage> _icon_image;
+	std::pmr::vector<std::pmr::string> _icon_paths;
+	std::pmr::vector<GLFWimage> _icon_image;
+
+	std::pmr::vector<std::pmr::string> _random_play_video_intro_paths;
+	std::pmr::vector<std::pmr::string> _sequential_play_video_intro_paths;
+
 	FE::int32 _monitor_index = 0;
     FE::boolean _should_enable_vsync = false;
     FE::boolean _is_on_the_top = false;

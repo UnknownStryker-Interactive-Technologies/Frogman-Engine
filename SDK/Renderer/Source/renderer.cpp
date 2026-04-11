@@ -100,10 +100,14 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	FE_EXIT_IF(m_window == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_WindowCreationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window creation failed.");
 	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE); // Enable sticky keys input mode; the value remains until retrieved.
 	
-	if (m_window_config._icon_image.has_value() == true)
+	if (m_window_config._icon_image.empty() == false)
 	{
-		glfwSetWindowIcon(m_window, 1, &(m_window_config._icon_image.value()));
-		stbi_image_free(m_window_config._icon_image.value().pixels);
+		glfwSetWindowIcon(m_window, (int)m_window_config._icon_image.size(), m_window_config._icon_image.data());
+
+		for (GLFWimage& image : m_window_config._icon_image)
+		{
+			stbi_image_free(image.pixels);
+		}
 	}
 
 	glfwMakeContextCurrent(m_window);

@@ -24,6 +24,8 @@ limitations under the License.
 
 #include <FE/framework/ECS.hxx>
 
+#include <atomic>
+
 #include <concurrent_priority_queue.h>
 
 
@@ -146,6 +148,9 @@ extern "C"
 
 namespace FE
 {
+	class framework::processors;
+	class framework::game_processor;
+
 	struct task
 	{
 		FE::system _system;
@@ -182,6 +187,7 @@ namespace FE
 		thread_context& operator=(const thread_context&) = delete;
 	};
 
+
 	// fiber cannot be thread_local static!
 	class fiber final
 	{
@@ -209,6 +215,9 @@ namespace FE
 
 	class fiber_scheduler final
 	{
+		friend class framework::processors;
+		friend class framework::game_processor;
+
 		FE::fqueue<fiber, 8> m_fiber_pool;
 		FE::fqueue<fiber, 8> m_active_fibers[7];
 		var::size m_fibers;
@@ -232,8 +241,11 @@ namespace FE
 		// calling it from other thread is an undefined behavior. The fiber context switch must be called from the same thread that is executing the fiber scheduler.
 		void _FE_CDECL_ switch_fiber_context() noexcept;
 
+		static void yield() noexcept;
+
 	private:
 		thread_local static fiber_impl* tl_s_current_fiber;
+		thread_local static FE::fiber_scheduler* tl_s_this_thread_fiber_scheduler;
 
 	public:
 		fiber_scheduler(const fiber_scheduler&) = delete;
