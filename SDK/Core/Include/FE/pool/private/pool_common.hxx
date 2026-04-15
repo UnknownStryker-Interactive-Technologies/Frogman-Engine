@@ -49,7 +49,8 @@ enum struct PoolType : uint8
 {
     _Block = 0,
     _Scalable = 1,
-	_Arena = 2
+    _BlockLargePage = 2,
+    _ScalableLargePage = 3
 };
 
 enum struct PageGroup : uint8
@@ -69,8 +70,25 @@ namespace internal::pool
 
     struct block_info
     {
-        var::byte* _address;
+        var::byte* _address; // Try reducing the pointer offset data to uint32 to save memory, since the page size is no larger than 2MiB.
         var::uint32 _size_in_bytes;
+    };
+
+    template <FE::size InBytes>
+    class uninitialized_bytes
+    {
+        var::byte m_page[InBytes];
+    };
+
+    enum struct PageListClass : FE::int8
+    {
+        _Unavailable = -1, // 0B
+        _6_25_PercentRemaining = 0, // 256B
+        _12_5_Percent = 1, // 512B
+        _25_Percent = 2,   // 1KiB
+        _50_Percent = 3,   // 2KiB
+        _75_Percent = 4,   // 3KiB
+        _100_Percent = 5   // 4KiB
     };
 
     class from_low_address
@@ -108,6 +126,27 @@ namespace internal::pool
     _FE_FORCE_INLINE_ bool operator!=(const block_info& lhs_p, const block_info& rhs_p) noexcept
     {
         return lhs_p._address != rhs_p._address;
+    }
+
+
+    _FE_FORCE_INLINE_ void __enable_large_pages() noexcept
+    {
+        HANDLE l_token;
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &l_token))
+        {
+            FE_EXIT_IF(true, FE::ErrorCode::_FatalWinAPI_Error_4XX_OpenProcessTokenFailure, "Frogman Engine Runtime Error: Failed to enable large pages.");
+            return;
+        }
+
+        TOKEN_PRIVILEGES l_tp;
+        LookupPrivilegeValue(NULL, SE_LOCK_MEMORY_NAME, &l_tp.Privileges[0].Luid);
+
+        l_tp.PrivilegeCount = 1;
+        l_tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+        AdjustTokenPrivileges(l_token, FALSE, &l_tp, 0, NULL, NULL);
+        FE_EXIT_IF(GetLastError() != 0, FE::ErrorCode::_FatalWinAPI_Error_4XX_AdjustTokenPrivilegesFailure, "Frogman Engine Runtime Error: Failed to enable large pages.");
+        CloseHandle(l_token);
     }
 }
 

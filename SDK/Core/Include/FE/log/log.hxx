@@ -272,6 +272,7 @@ namespace FE
 		_FatalWinAPI_Error_4XX_GetTokenInformationFailure = 407,
 		_FatalWinAPI_Error_4XX_LsaOpenPolicyFailure = 408,
 		_FatalWinAPI_Error_4XX_LsaAddAccountRights = 409,
+		_FatalMemoryError_4XX_LargePageEnablementFailure = 410,
 
 		_FatalRendererError_5XX_GLFW_InitializationFailure = 500,
 		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,

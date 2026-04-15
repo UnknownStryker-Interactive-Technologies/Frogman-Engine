@@ -239,14 +239,19 @@ struct align_128bytes final
 	_FE_MAYBE_UNUSED_ static constexpr size size = 128;
 };
 
-struct page_alignment final
-{
-	_FE_MAYBE_UNUSED_ static constexpr size size = 4096; // Might be incorrect non-windows systems but this is true for most gaming systems. Reference FE::system_page_size for accurate value.
-};
-
 struct CPU_L1_cache_line final
 {
 	_FE_MAYBE_UNUSED_ static constexpr size size = std::hardware_destructive_interference_size; // not available in llvm clang.
+};
+
+struct page_alignment final
+{
+	_FE_MAYBE_UNUSED_ static inline size size = 4096;
+};
+
+struct large_page_alignment final
+{
+	_FE_MAYBE_UNUSED_ static inline size size = 2097152;
 };
 
 /*
@@ -1422,7 +1427,7 @@ class page_aligned_allocator
 	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because page_aligned_allocator<const T> is ill-formed.");
 	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements.");
 	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements.");
-	static_assert(sizeof(T) >= (3 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
+	static_assert(sizeof(T) >= (4 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
 
 	template <typename>
 	friend class page_aligned_allocator;
@@ -1457,8 +1462,26 @@ public:
 
 	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
 	{
-		static_assert(FE::page_alignment::size == 4096);
-		FE::size l_bytes = FE::calculate_aligned_memory_size_in_bytes<T, FE::page_alignment>(count_p);
+		FE_ASSERT(count_p > 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(count_p));
+		FE::size l_actual_size = sizeof(T) * count_p;
+
+		var::size l_multiplier = l_actual_size / FE::system_page_size;
+		l_multiplier += ((l_actual_size % FE::system_page_size) != 0);
+
+		var::size l_bytes = FE::system_page_size * l_multiplier;
+
+		if (l_bytes >= FE::system_large_page_size)
+		{
+			l_multiplier = l_actual_size / FE::system_large_page_size;
+			l_multiplier += ((l_actual_size % FE::system_large_page_size) != 0);
+			l_bytes = FE::system_large_page_size * l_multiplier;
+
+			void* l_result = VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE | MEM_LARGE_PAGES, PAGE_READWRITE);
+			_FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
+			FE_ASSERT(l_result != nullptr, "Assertion Failed: VirtualAlloc large page allocation has failed due to the error code ${%d@0}.", &l_errcode);
+			return (T*)l_result;
+		}
+
 		return (T*)VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	}
 

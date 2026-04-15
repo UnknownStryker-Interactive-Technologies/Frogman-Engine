@@ -10,7 +10,6 @@ GET_FILENAME_COMPONENT(FROGMAN_ENGINE_PREDEFINED_SETTINGS_CMAKE_DIR ${CMAKE_CURR
 MESSAGE("
 Define a cmake macro if you want to make changes to the settings.
 Available -D macro options:
--DSHIPPING_BUILD=ON/OFF (Default: OFF)
 
 Frogman Engine SIMD Extension Requirements:
 an x86-64 cpu with AVX and SSE2 (AVX-512F is optional). Please Check if the x86-64 cpu has ymm and xmm vector registers.

@@ -32,9 +32,9 @@ limitations under the License.
 #include <FE/framework/reflection.hxx>
 #include <FE/framework/thread_id.hxx>
 
+
 CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE::framework, processors);
-CLASS_FORWARD_DECLARATION(FE, memory_resource);
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
 
 
@@ -49,16 +49,19 @@ enum struct RestartOrNot : uint8
 	_HasToRestart = 1,
 };
 
-class max_concurrency_option
+class program_option
 {
 	::FE::pair<::FE::ASCII*, var::uint32> m_max_concurrency;
+	::FE::pair<::FE::ASCII*, var::boolean> m_enable_large_pages;
 
 public:
-	max_concurrency_option(::FE::int32 argc_p, ::FE::ASCII** argv_p) noexcept;
-	~max_concurrency_option() noexcept = default;
+	program_option(::FE::int32 argc_p, ::FE::ASCII** argv_p) noexcept;
+	~program_option() noexcept = default;
 
 	::FE::uint32 get_max_concurrency() const noexcept;
 	::FE::ASCII* view_max_concurrency_option_title() const noexcept;
+	::FE::boolean is_large_pages_enabled() const noexcept;
+	::FE::ASCII* view_large_pages_option_title() const noexcept;
 };
 
 
@@ -67,10 +70,11 @@ class framework_base
 	friend int ::main(::FE::int32 argc_p, ::FE::ASCII** argv_p);
 
 protected:
-	max_concurrency_option m_max_concurrency;
+	program_option m_program_options;
 	std::locale m_current_system_locale;
 
-	std::unique_ptr<class ::FE::memory_resource[]> m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
+	std::pmr::memory_resource* m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
+	std::pmr::memory_resource* m_memory_large_pages; // LTLGPMP: Large Thread-Local General-Purpose Memory Pool
 
 	reflection::method_registry m_method_reflection;
 	reflection::property_registry m_property_reflection;
@@ -81,7 +85,7 @@ protected:
 
 public:
 	framework_base(::FE::int32 argc_p, ::FE::ASCII** argv_p) noexcept;
-	virtual ~framework_base() noexcept = default;
+	virtual ~framework_base() noexcept;
 
 public:
 	static framework_base& get_framework() noexcept;
@@ -90,11 +94,12 @@ public:
 	static void request_restart() noexcept;
 	static void cancel_restart() noexcept;
 
-	const max_concurrency_option& get_program_options() const noexcept;
+	const program_option& get_program_options() const noexcept;
 	const std::locale& get_current_system_locale() const noexcept;
 
 public:
 	std::pmr::memory_resource* get_memory_resource() noexcept;
+	std::pmr::memory_resource* get_large_memory_resource() noexcept;
 
 	reflection::method_registry& get_method_reflection() noexcept;
 	reflection::property_registry& get_property_reflection() noexcept;

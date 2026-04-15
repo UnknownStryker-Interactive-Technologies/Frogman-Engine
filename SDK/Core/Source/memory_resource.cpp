@@ -157,3 +157,96 @@ bool FE::memory_resource::do_is_equal(const std::pmr::memory_resource& other_p) 
 
 	return &(m_scalable_pool) == &(l_other->m_scalable_pool);
 }
+
+
+namespace FE::large
+{
+	memory_resource::memory_resource(memory_resource&& other_p) noexcept
+		: m_xmmword_block_pool(std::move(other_p.m_xmmword_block_pool)),
+		m_ymmword_block_pool(std::move(other_p.m_ymmword_block_pool)),
+		m_zmmword_block_pool(std::move(other_p.m_zmmword_block_pool)),
+		m_dzmmword_block_pool(std::move(other_p.m_dzmmword_block_pool)),
+		m_scalable_pool(std::move(other_p.m_scalable_pool))
+	{
+	}
+
+	memory_resource& memory_resource::operator=(memory_resource&& other_p) noexcept
+	{
+		m_xmmword_block_pool = std::move(other_p.m_xmmword_block_pool);
+		m_ymmword_block_pool = std::move(other_p.m_ymmword_block_pool);
+		m_zmmword_block_pool = std::move(other_p.m_zmmword_block_pool);
+		m_dzmmword_block_pool = std::move(other_p.m_dzmmword_block_pool);
+		m_scalable_pool = std::move(other_p.m_scalable_pool);
+		return *this;
+	}
+
+	void* memory_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept
+	{
+		switch (FE::internal::__select_allocator(bytes_p))
+		{
+		case internal::AllocatorType::_XMMWordAllocator:
+			return m_xmmword_block_pool.allocate< FE::align_as<xmmword_size, FE::align_16bytes> >();
+
+		case internal::AllocatorType::_YMMWordAllocator:
+			return  m_ymmword_block_pool.allocate< FE::align_as<ymmword_size, FE::align_32bytes> >();
+
+		case internal::AllocatorType::_ZMMWordAllocator:
+			return m_zmmword_block_pool.allocate< FE::align_as<zmmword_size, FE::align_64bytes> >();
+
+		case internal::AllocatorType::_DZMMWordAllocator:
+			return m_dzmmword_block_pool.allocate< FE::align_as<dzmmword_size, FE::align_128bytes> >();
+
+		case internal::AllocatorType::_ScalableAllocator:
+			return m_scalable_pool.allocate<std::byte>(bytes_p);
+
+		case internal::AllocatorType::_AlignedMalloc:
+			_FE_FALLTHROUGH_;
+		default:
+			return FE_ALIGNED_ALLOC((FE::int32)bytes_p, FE::SIMD_auto_alignment::size);
+		}
+		return nullptr;
+	}
+
+	void memory_resource::do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept
+	{
+		switch (FE::internal::__select_allocator(bytes_p))
+		{
+		case internal::AllocatorType::_XMMWordAllocator:
+			m_xmmword_block_pool.deallocate< FE::align_as<xmmword_size, FE::align_16bytes> >(static_cast<FE::align_as<xmmword_size, FE::align_16bytes>*>(ptr_p));
+			return;
+
+		case internal::AllocatorType::_YMMWordAllocator:
+			m_ymmword_block_pool.deallocate< FE::align_as<ymmword_size, FE::align_32bytes> >(static_cast<FE::align_as<ymmword_size, FE::align_32bytes>*>(ptr_p));
+			return;
+
+		case internal::AllocatorType::_ZMMWordAllocator:
+			m_zmmword_block_pool.deallocate< FE::align_as<zmmword_size, FE::align_64bytes> >(static_cast<FE::align_as<zmmword_size, FE::align_64bytes>*>(ptr_p));
+			return;
+
+		case internal::AllocatorType::_DZMMWordAllocator:
+			m_dzmmword_block_pool.deallocate< FE::align_as<dzmmword_size, FE::align_128bytes> >(static_cast<FE::align_as<dzmmword_size, FE::align_128bytes>*>(ptr_p));
+			return;
+
+		case internal::AllocatorType::_ScalableAllocator:
+			m_scalable_pool.deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
+			return;
+
+		case internal::AllocatorType::_AlignedMalloc:
+			_FE_FALLTHROUGH_;
+		default:
+			FE_ALIGNED_FREE(ptr_p);
+			return;
+		}
+	}
+
+	bool memory_resource::do_is_equal(const std::pmr::memory_resource& other_p) const noexcept
+	{
+		const memory_resource* l_other = dynamic_cast<const memory_resource*>(&other_p);
+		if (l_other == nullptr)
+		{
+			return false;
+		}
+
+		return &(m_scalable_pool) == &(l_other->m_scalable_pool);
+	}
+}

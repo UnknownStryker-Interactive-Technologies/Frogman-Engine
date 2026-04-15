@@ -102,7 +102,7 @@ public:
 
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 
-    _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_max_concurrency.get_max_concurrency() - 2; /* -(game + renderer) */ }
+    _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
     
 	template <typename T>
     _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>( get_memory_resource() ); }

@@ -318,7 +318,7 @@ FE::fiber& _FE_CDECL_ FE::fiber::operator=(FE::fiber&& other_p) noexcept
 }
 
 
-thread_local FE::memory_resource FE::fiber::tl_s_fiber_pool;
+thread_local std::pmr::monotonic_buffer_resource FE::fiber::tl_s_fiber_pool;
 thread_local fiber_impl* FE::fiber_scheduler::tl_s_current_fiber = nullptr;
 thread_local FE::fiber_scheduler* FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr;
 

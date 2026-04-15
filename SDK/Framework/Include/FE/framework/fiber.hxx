@@ -19,7 +19,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/pool/memory_resource.hxx>
 #include <FE/fqueue.hxx>
 
 #include <FE/framework/ECS.hxx>
@@ -27,6 +26,8 @@ limitations under the License.
 #include <atomic>
 
 #include <concurrent_priority_queue.h>
+
+#include <memory_resource>
 
 
 
@@ -209,7 +210,7 @@ namespace FE
 		fiber& operator=(const fiber&) noexcept = delete;
 
 	private:
-		thread_local static FE::memory_resource tl_s_fiber_pool;
+		thread_local static std::pmr::monotonic_buffer_resource tl_s_fiber_pool;
 	};
 
 
