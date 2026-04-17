@@ -154,7 +154,7 @@ void FE::engine::__read_froggy() noexcept
 			m_project_config->_path_lookup_table._entry_world_path = std::pmr::string(l_resource_lut["EntryWorldPath"].get_string().c_str(), framework_base::get_memory_resource());
 		}
 
-		for (auto element : l_resource_lut["WorldPaths"].get_array())
+		for (auto& element : l_resource_lut["WorldPaths"].get_array())
 		{
 			FE_ASSERT(element.is_string() == true);
 			m_project_config->_path_lookup_table._world_paths.push_back(std::pmr::string(element.get_string().c_str(), framework_base::get_memory_resource()));
@@ -219,7 +219,7 @@ void FE::engine::__read_froggy() noexcept
 
 
 			m_project_config->_window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto element : l_window_config["IconPaths"].get_array())
+			for (auto& element : l_window_config["IconPaths"].get_array())
 			{
 				FE_ASSERT(element.is_string() == true);
 				m_project_config->_window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
@@ -234,18 +234,26 @@ void FE::engine::__read_froggy() noexcept
 
 
 			m_project_config->_window_config._random_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto element : l_window_config["RandomPlayVideoIntroPaths"].get_array())
+			for (auto& element : l_window_config["RandomPlayIntroVideoPaths"].get_array())
 			{
 				FE_ASSERT(element.is_string() == true);
-				m_project_config->_window_config._random_play_video_intro_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
+
+				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
+				l_path += "\\";
+				l_path += element.get_string();
+				m_project_config->_window_config._random_play_video_intro_paths.push_back( std::move(l_path) );
 			}
 
 
 			m_project_config->_window_config._sequential_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto element : l_window_config["SequentialPlayVideoIntroPaths"].get_array())
+			for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"].get_array())
 			{
 				FE_ASSERT(element.is_string() == true);
-				m_project_config->_window_config._sequential_play_video_intro_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
+
+				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
+				l_path += "\\";
+				l_path += element.get_string();
+				m_project_config->_window_config._sequential_play_video_intro_paths.push_back( std::move(l_path) );
 			}
 
 

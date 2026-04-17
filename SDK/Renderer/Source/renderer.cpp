@@ -22,6 +22,12 @@ limitations under the License.
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h> // for loading icons
 
+#include <FE/video_player.hpp>
+
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
 
 
 
@@ -148,9 +154,38 @@ void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
-	while (FE::engine::get_engine().m_renderer->m_should_exit.load(std::memory_order_acquire) == false) // TO DO: retrieve render target data from the game thread stash.
+	auto& l_engine = FE::engine::get_engine();
+	auto& l_renderer = *l_engine.m_renderer;
+	std::unique_ptr<FE::internal::renderer::backend> l_backend = std::move(l_renderer.m_backend);
+
+	HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window);
+
+	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 	{
-		FE::engine::get_engine().m_renderer->render_frame();
+		FE::video_player l_intro(l_hwnd);
+
+		auto& l_random_list = l_engine.get_project_config()._window_config._random_play_video_intro_paths;
+		auto& l_sequential_list = l_engine.get_project_config()._window_config._sequential_play_video_intro_paths;
+
+		if (l_random_list.empty() == false)
+		{
+			FE::random_integer<var::uint64> l_rng;
+			FE::uint64 l_idx = l_rng.ranged_random_integer(0, l_random_list.size() - 1);
+			l_intro.play(l_random_list[l_idx].c_str());
+		}
+
+		for (auto& l_path : l_sequential_list)
+		{
+			l_intro.play(l_path.c_str());
+		}
+	} // l_intro destructs → MF::Shutdown → HWND free for the D3D backend
+	
+	// --- game render backend takes over the HWND --------------------------
+	l_renderer.m_backend = std::move(l_backend);
+
+	while (l_renderer.m_should_exit.load(std::memory_order_acquire) == false)
+	{
+		l_renderer.render_frame();
 	}
 }
 

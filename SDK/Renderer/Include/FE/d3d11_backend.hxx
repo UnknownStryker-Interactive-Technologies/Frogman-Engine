@@ -62,6 +62,8 @@ public:
 	void toggle_fullscreen_mode() noexcept;
 	void resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 new_height_p) noexcept;
 	void render_frame() noexcept;
+
+	ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
 };
 
 
