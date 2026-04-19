@@ -38,7 +38,7 @@ FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" OS_NATIVE_CMAKE_CURRENT_SOURCE
 
 
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
-	MESSAGE(STATUS "Configurating The Build Environment for Windows X86-64.")
+	MESSAGE(STATUS "Configurating The Build Environment for Windows AMD64.")
 	STRING(REPLACE "\\" "\\\\" OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR "${OS_NATIVE_CMAKE_CURRENT_SOURCE_DIR}")
 	ADD_COMPILE_OPTIONS("$<$<COMPILE_LANGUAGE:C,CXX>:/D_FE_ON_WINDOWS_X86_64_;/D_ALLOWED_DIRECTORY_LENGTH_=32768>")
 
@@ -108,65 +108,72 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 
 
 
-# Not maintained anymore. The linux development is canceled.
-ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
-	MESSAGE(STATUS "Configurating The Build Environment for Linux X86-64 Distributions.")
-	ADD_COMPILE_OPTIONS(-D_FE_ON_LINUX_X86_64_ -D_ALLOWED_DIRECTORY_LENGTH_=4096)
+ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Android" AND ((CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64") OR (CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")))
+	MESSAGE(STATUS "Configurating The Build Environment for Android ARM64.")
+	ADD_COMPILE_OPTIONS(-D_FE_ON_ANDROID_ARM64_ -D_ALLOWED_DIRECTORY_LENGTH_=4096)
 	MESSAGE(STATUS "CMake detected a C++ compiler at: ${CMAKE_CXX_COMPILER}.")
 	STRING(FIND "${CMAKE_CXX_COMPILER}" "clang" CLANG_COMPILER)
-
-    IF(CLANG_COMPILER GREATER -1)
+ 
+	IF(CLANG_COMPILER GREATER -1)
 		MESSAGE(STATUS "The detected C++ compiler is clang++.")
-    ELSE()
-        MESSAGE(FATAL_ERROR "Could Not Find Any of Executable Clang C++ compilers.")
-    ENDIF()
-
-	
+	ELSE()
+		MESSAGE(FATAL_ERROR "Could Not Find Any of Executable Clang C++ compilers.")
+	ENDIF()
+ 
+	ENABLE_LANGUAGE(ASM)
+ 
+	# ---------------------------------------------------------------------
 	# Common Compile Options.
-	ADD_COMPILE_OPTIONS(-D_CLANG_=1 -march=x86-64 -msse2 -mavx -frtti -ffunction-sections -finput-charset=UTF-8 -fexec-charset=UTF-8)
-
-	# Options for compile-time checks
-	ADD_COMPILE_OPTIONS(-Werror -Wpedantic -Wall -Wextra -Wdivision-by-zero -Wstack-exhausted -Wbuiltin-memcpy-chk-size -Wfree-nonheap-object -Wnull-dereference -Wnull-pointer-arithmetic)
-	ADD_COMPILE_OPTIONS(-Wnull-character -Wbuiltin-macro-redefined -Wswitch -Wimplicit-fallthrough -Wswitch-default -Wdangling -Wthread-safety -Wcoroutine -Wconversion -Wno-sign-conversion )	
-	ADD_COMPILE_OPTIONS(-Wbitwise-conditional-parentheses -Wbitwise-op-parentheses -Wbitfield-width -Wbitfield-constant-conversion -Wbitfield-enum-conversion)
-	ADD_COMPILE_OPTIONS(-Wno-format-pedantic -Wformat-security -Wno-unknown-pragmas -Wno-extra-semi )
-	
+	# The Android NDK Clang driver already sets --target=aarch64-linux-android<API>
+	# and defaults to -march=armv8-a with NEON enabled, so we don't have to pass
+	# those explicitly. We keep -frtti, function-section splitting, and charset
+	# normalization.
+	# ---------------------------------------------------------------------
+	ADD_COMPILE_OPTIONS(-D_CLANG_=1 -frtti -ffunction-sections -fdata-sections -finput-charset=UTF-8 -fexec-charset=UTF-8)
+ 
+	# Options for compile-time checks.
+	# NOTE: A handful of these warnings (-Wstack-exhausted, -Wdangling,
+	# -Wcoroutine, -Wbuiltin-memcpy-chk-size) only exist in Clang 15+.
+	# Current Android Studio NDKs (r27+) ship Clang 19/20, so these are fine,
+	# but older NDKs will reject unknown -W flags. Drop them if you need to
+	# support an older toolchain.
+	ADD_COMPILE_OPTIONS(-Werror -Wpedantic -Wall -Wextra
+						-Wnull-character -Wno-format-pedantic -Wformat-security -Wno-unknown-pragmas -Wno-extra-semi
+						-Wbuiltin-macro-redefined
+	                    -Wswitch -Wimplicit-fallthrough -Wswitch-default
+						-Wdivision-by-zero -Wthread-safety -Wconversion
+						-Wbitwise-conditional-parentheses -Wbitwise-op-parentheses -Wbitfield-width -Wbitfield-constant-conversion -Wbitfield-enum-conversion
+						-Wstack-exhausted -Wfree-nonheap-object -Wbuiltin-memcpy-chk-size -Wdangling 
+	                    -Wnull-dereference -Wnull-pointer-arithmetic)
+ 
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:-D_DEBUG_;-D_ENABLE_ASSERT_;-D_ENABLE_NEGATIVE_ASSERT_;-D_ENABLE_LOG_;-D_ENABLE_EXIT_;-D_ENABLE_LOG_IF_>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-D_RELWITHDEBINFO_;-D_DEBUG_;-D_ENABLE_ASSERT_;-D_ENABLE_NEGATIVE_ASSERT_;-D_ENABLE_LOG_;-D_ENABLE_EXIT_;-D_ENABLE_LOG_IF_>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-D_RELWITHDEBINFO_;-D_ENABLE_ASSERT_;-D_ENABLE_NEGATIVE_ASSERT_;-D_ENABLE_LOG_;-D_ENABLE_EXIT_;-D_ENABLE_LOG_IF_>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:-D_RELEASE_;-D_ENABLE_EXIT_>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-D_RELEASE_;-D_MINSIZEREL_;-D_ENABLE_EXIT_>")
-
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:-O1;-fno-inline-functions;-fno-unroll-loops;-fno-omit-frame-pointer;-g>")
-	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-O3;-funroll-loops;-g>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-D_MINSIZEREL_;-D_ENABLE_EXIT_>")
+ 
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:DEBUG>:-O1;-g;-fno-unroll-loops;-fno-inline-functions;-fno-omit-frame-pointer>")
+	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELWITHDEBINFO>:-O3;-g;-fno-unroll-loops;-fno-inline-functions;-fno-omit-frame-pointer>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:RELEASE>:-O3;-funroll-loops;-fomit-frame-pointer>")
 	ADD_COMPILE_OPTIONS("$<$<CONFIG:MINSIZEREL>:-Os;-funroll-loops;-fomit-frame-pointer>")
+ 
+	# -pthread is implicit on Android (Bionic), so it's harmless but redundant.
+	# libdl is linked via target_link_libraries in your actual targets; keeping
+	# it here for backwards compatibility with the existing project layout.
+	ADD_LINK_OPTIONS(-Wl,--gc-sections)
+ 
 	
-    
-	ADD_LINK_OPTIONS(-pthread -ldl)
-	
-
-	IF(SIMD STREQUAL AVX512F)
-		ADD_COMPILE_OPTIONS(-mavx512f )
-		MESSAGE(STATUS "AVX-512F has been added to the SIMD intrinsic extension list.")
-
-	ELSE()
-		ADD_COMPILE_OPTIONS(-mavx -mavx2)
-		MESSAGE(STATUS "AVX and AVX2 have been added to the SIMD intrinsic extension list.")
-	ENDIF()
-
-
 	IF(CMAKE_CXX_STANDARD EQUAL 20)
 		ADD_COMPILE_OPTIONS(-std=c++20)
 		MESSAGE(STATUS "C++20 has been selected.")
-
+ 
 	ELSEIF(CMAKE_CXX_STANDARD EQUAL 23)
 		ADD_COMPILE_OPTIONS(-std=c++23)
 		MESSAGE(STATUS "C++23 has been selected.")
 	ENDIF()
-
-
-
+ 
 
 ELSE()
-	MESSAGE(FATAL_ERROR "System not selected or incompatible.")
+	MESSAGE(FATAL_ERROR "System not selected or incompatible. "
+	                    "Supported: Windows x64, Android ARM64. "
+	                    "Got CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME} and CMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}.")
 ENDIF()

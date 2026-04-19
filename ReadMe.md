@@ -39,9 +39,7 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 | Platform     | Architecture  | Status           |
 |--------------|---------------|------------------|
 | Windows 11   | X86-64        | In Development   |
-| Ubuntu-Linux | X86-64        | Discontinued     |
 | Android      | ARM64         | Pending          |
-| Windows 11   | ARM64         | Pending          |
 
 # This project leverages:
 - abseil 20250814.1  

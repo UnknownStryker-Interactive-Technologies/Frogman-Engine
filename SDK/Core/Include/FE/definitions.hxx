@@ -32,7 +32,7 @@ limitations under the License.
 
 #if defined(_FE_ON_WINDOWS_X86_64_) || defined(_FE_ON_LINUX_X86_64_)
     #define _FE_ON_X86_64_
-#elif defined(__aarch64__)
+#elif defined(__aarch64__) || defined(_FE_ON_ANDROID_ARM64_)
     #define _FE_ON_ARM64_
 #else
 #error platform macro not defined.

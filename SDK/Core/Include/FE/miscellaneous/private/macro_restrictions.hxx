@@ -22,8 +22,8 @@ limitations under the License.
 //#error Frogman Engine requires LLVM Clang to compile.
 //#endif
 
-#if !defined(_FE_ON_WINDOWS_X86_64_) && !defined(_FE_ON_LINUX_X86_64_)
-#error An Incompatible System Environment Detected: Frogman Engine supports Windows x86-64 and Linux(Ubuntu) x86-64. Please use one of them.
+#if !defined(_FE_ON_WINDOWS_X86_64_) && !defined(_FE_ON_ANDROID_ARM64_)
+#error An Incompatible System Environment Detected: Frogman Engine supports Windows AMD64 and Android ARM64. Please use one of them.
 #endif
 
 
