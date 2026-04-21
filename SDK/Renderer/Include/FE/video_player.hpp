@@ -45,7 +45,7 @@ class video_player final
     var::boolean m_is_COM_initialized;
 
 public:
-    video_player(HWND target_window_p) noexcept;
+    video_player(const HWND target_window_p) noexcept;
     ~video_player() noexcept;
 
     // Blocks the calling thread until the clip finishes (ENDED) or fails.

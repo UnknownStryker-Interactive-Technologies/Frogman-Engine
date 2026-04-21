@@ -67,12 +67,30 @@ struct project_config // fields are immutable after window creation; modifying t
 };
 
 
+class engine_program_options 
+{
+	FE::pair<::FE::ASCII*, var::boolean> m_enable_fullscreen;
+	FE::pair<::FE::ASCII*, var::boolean> m_enable_vsync;
+public:
+    engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+    ~engine_program_options() noexcept = default;
+
+    FE::boolean is_fullscreen_enabled() const noexcept;
+    FE::ASCII* view_enable_fullscreen_title() const noexcept;
+
+	FE::boolean is_vsync_enabled() const noexcept;
+    FE::ASCII* view_enable_vsync_title() const noexcept;
+};
+
+
 class engine final : public FE::framework::framework_base
 {
     friend class ecs;
     friend class FE::renderer;
     friend class FE::mutex;
     friend class FE::shared_mutex;
+
+	engine_program_options m_engine_program_options;
 
     std::pmr::string m_runtime_path;
 	std::pmr::string m_game_root_directory;

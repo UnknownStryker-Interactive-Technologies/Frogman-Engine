@@ -45,7 +45,13 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		m_render_delta_milliseconds(),
 		m_delta_milliseconds(0.0),
 		m_renderer_thread(),
-		m_should_exit(false)
+		m_should_exit(false),
+		m_pending_resolution_change(),
+
+		m_saved_window_x(0),
+		m_saved_window_y(0),
+		m_saved_window_width(0),
+		m_saved_window_height(0)
 {
 	FE_EXIT_IF(glfwInit() == GLFW_FALSE, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window initialization failed.");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // We do not want to create an OpenGL context
@@ -54,8 +60,8 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	
 	m_monitors = glfwGetMonitors(&m_monitor_count);
 	FE_EXIT_IF(m_monitors == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: Could not detect monitors; the GLFW Monitors retrieval failed.");
-	FE_ASSERT(window_config_p._monitor_index < m_monitor_count);
-	m_primary_monitor = m_monitors[window_config_p._monitor_index];
+
+	m_primary_monitor = m_monitors[0];
 	FE_EXIT_IF(m_primary_monitor == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: Could not detect a monitor; the GLFW Primary Monitor retrieval failed.");
 
 	m_video_mode = glfwGetVideoMode(m_primary_monitor);
@@ -64,42 +70,27 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	glfwWindowHint(GLFW_GREEN_BITS, m_video_mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, m_video_mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, m_video_mode->refreshRate);
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE); // Disable automatic content scaling based on monitor DPI
 
-	if (m_window_config._width == 0)
-	{
-		*const_cast<var::uint32*>( &(m_window_config._width) ) = m_video_mode->width;
-	}
-	if (m_window_config._height == 0)
-	{
-		*const_cast<var::uint32*>( &(m_window_config._height) ) = m_video_mode->height;
-	}
 
 	if (m_window_config._is_fullscreen == true)
 	{
-		*const_cast<var::boolean*>(&(m_window_config._is_on_the_top)) = true;
-		*const_cast<var::boolean*>(&(m_window_config._should_scale_content_to_monitor_dpi)) = true;
-		*const_cast<var::boolean*>(&(m_window_config._has_border)) = false;
-		*const_cast<var::boolean*>(&(m_window_config._is_virtual_reality_mode)) = false;
-		*const_cast<var::boolean*>(&(m_window_config._is_resizable)) = false;
-		*const_cast<var::boolean*>(&(m_window_config._is_maximized)) = true;
-	}
+		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); // Make window always on top
+		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // Disable window decorations (title bar, borders, etc.)
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Do not allow window resizing
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE); // Start window maximized
 
-	glfwWindowHint(GLFW_FLOATING, m_window_config._is_on_the_top); // Make window always on top
-	glfwWindowHint(GLFW_SCALE_TO_MONITOR, m_window_config._should_scale_content_to_monitor_dpi); // Enable automatic content scaling based on monitor DPI
-	glfwWindowHint(GLFW_DECORATED, m_window_config._has_border); // Enable window decorations (title bar, borders, etc.)
-
-	glfwWindowHint(GLFW_RESIZABLE, m_window_config._is_resizable); // Allow window resizing
-	glfwWindowHint(GLFW_MAXIMIZED, m_window_config._is_maximized); // Start window maximized
-	
-	if (m_window_config._is_fullscreen == true)
-	{
-		m_window = glfwCreateWindow(m_window_config._width, m_window_config._height, m_window_config._title.c_str(), m_primary_monitor, nullptr);
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+		m_window = glfwCreateWindow(m_video_mode->width, m_video_mode->height, m_window_config._title.c_str(), m_primary_monitor, nullptr);
+		// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	else
 	{
-		m_window = glfwCreateWindow(m_window_config._width, m_window_config._height, m_window_config._title.c_str(), nullptr, nullptr);
+		glfwWindowHint(GLFW_FLOATING, GLFW_FALSE); // Make window always not on top
+		glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable window decorations (title bar, borders, etc.)
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow window resizing
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE); // Start window not maximized
+
+		m_window = glfwCreateWindow(m_video_mode->width, m_video_mode->height, m_window_config._title.c_str(), nullptr, nullptr);
 	}
 
 
@@ -116,10 +107,12 @@ renderer::renderer(const window_config& window_config_p) noexcept
 		}
 	}
 
-	glfwMakeContextCurrent(m_window);
+	// glfwMakeContextCurrent(m_window);
 	m_backend = std::make_unique<FE::internal::renderer::backend>(this);
 
 	glfwSetWindowCloseCallback(m_window, &__on_window_close);
+	glfwSetFramebufferSizeCallback(m_window, &__on_window_resize);
+	
 	glfwSetKeyCallback(m_window, &FE::engine::__key_callback);
 	glfwSetMouseButtonCallback(m_window, &FE::engine::__mouse_button_callback);
 	glfwSetCursorPosCallback(m_window, &FE::engine::__cursor_position_callback);
@@ -143,6 +136,22 @@ void renderer::terminate() noexcept
 	m_renderer_thread.join();
 }
 
+void renderer::render_frame() noexcept
+{
+	resolution l_pending_resolution = m_pending_resolution_change.exchange({}, std::memory_order_acq_rel);
+	if ((l_pending_resolution._width > 0) && (l_pending_resolution._height > 0))
+	{
+		m_backend->resize_swap_chain_buffers(l_pending_resolution._width, l_pending_resolution._height);
+	}
+
+	m_render_delta_milliseconds.start_clock();
+
+	m_backend->render_frame();
+
+	m_render_delta_milliseconds.end_clock();
+	m_delta_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
+}
+
 
 void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 {
@@ -150,6 +159,17 @@ void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 	FE::engine::get_engine().m_game_processor->terminate();
 	// FE::engine::get_engine().m_processors->terminate();	
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
+}
+
+void renderer::__on_window_resize(_FE_MAYBE_UNUSED_ GLFWwindow* const window_p, FE::int32 new_width_p, FE::int32 new_height_p) noexcept
+{
+	if ((new_width_p <= 0) || (new_height_p <= 0))
+	{
+		return; // Ignore minimize events
+	}
+
+	FE::engine::get_engine().m_renderer->m_pending_resolution_change.store( { ._width = (FE::uint32)new_width_p, ._height = (FE::uint32)new_height_p },
+																			std::memory_order_release);
 }
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
@@ -187,6 +207,55 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 	{
 		l_renderer.render_frame();
 	}
+}
+
+
+void renderer::toggle_borderless_fullscreen() noexcept
+{
+	if (m_window_config._is_fullscreen == false)
+	{
+		// Save windowed-mode state
+		glfwGetWindowPos(m_window, &m_saved_window_x, &m_saved_window_y);
+		glfwGetWindowSize(m_window, &m_saved_window_width, &m_saved_window_height);
+
+
+		// Position to cover the target monitor
+		int l_monitor_x = 0;
+		int l_monitor_y = 0;
+		glfwGetMonitorPos(m_primary_monitor, &l_monitor_x, &l_monitor_y);
+		
+
+		glfwSetWindowAttrib(m_window, GLFW_FLOATING, GLFW_TRUE);
+		glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_FALSE);
+		glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);
+		glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_TRUE);
+		
+		FE::engine::get_engine().m_renderer->m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_video_mode->width, ._height = (FE::uint32)m_video_mode->height },
+																				std::memory_order_release);
+		
+		glfwSetWindowMonitor(m_window, nullptr,
+			l_monitor_x, l_monitor_y,
+			m_video_mode->width, m_video_mode->height,
+			m_video_mode->refreshRate);
+
+		m_window_config._is_fullscreen = true;
+		return;
+	}
+
+	glfwSetWindowAttrib(m_window, GLFW_FLOATING, GLFW_FALSE);
+	glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_TRUE);
+	glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_TRUE);
+	glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_FALSE);
+
+	FE::engine::get_engine().m_renderer->m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_saved_window_width, ._height = (FE::uint32)m_saved_window_height },
+																			std::memory_order_release);
+
+	glfwSetWindowMonitor(m_window, nullptr,
+		m_saved_window_x, m_saved_window_y,
+		m_saved_window_width, m_saved_window_height,
+		m_video_mode->refreshRate);
+
+	m_window_config._is_fullscreen = false;
 }
 
 

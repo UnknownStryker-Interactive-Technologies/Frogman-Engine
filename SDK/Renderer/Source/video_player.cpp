@@ -106,7 +106,7 @@ public:
 
 
 
-FE::video_player::video_player(HWND target_window_p) noexcept
+FE::video_player::video_player(const HWND target_window_p) noexcept
     :   m_engine(), 
         m_notify(), 
         m_engine_ex(),
@@ -130,7 +130,7 @@ FE::video_player::video_player(HWND target_window_p) noexcept
     l_was_successful = (MFCreateAttributes(&l_attributes, 2) == S_OK); // create two slots.
     FE_ASSERT(l_was_successful == true);
 
-    l_was_successful = (l_attributes->SetUINT64(MF_MEDIA_ENGINE_PLAYBACK_HWND, reinterpret_cast<UINT64>(target_window_p)) == S_OK);
+    l_was_successful = (l_attributes->SetUINT64(MF_MEDIA_ENGINE_PLAYBACK_HWND, (UINT64)target_window_p) == S_OK);
     FE_ASSERT(l_was_successful == true);
 
     l_was_successful = (l_attributes->SetUnknown(MF_MEDIA_ENGINE_CALLBACK, m_notify.Get()) == S_OK); // Map MF_MEDIA_ENGINE_CALLBACK with m_notify.Get()
@@ -184,7 +184,7 @@ FE::boolean FE::video_player::__open(FE::ASCII* file_path_p) noexcept
     m_notify->ResetAll();
 
     var::wchar l_wide[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
-    _FE_MAYBE_UNUSED_ var::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p)+1, l_wide, _ALLOWED_DIRECTORY_LENGTH_);
+    _FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p)+1, l_wide, _ALLOWED_DIRECTORY_LENGTH_);
     FE_ASSERT(l_length > 0);
   
     BSTR l_url = SysAllocString(l_wide);
@@ -223,10 +223,6 @@ void FE::video_player::play(FE::ASCII* file_path_p) noexcept
     // Block until the clip finishes. MF handles all rendering internally on
     // its own HWND swap chain. We poll at a coarse granularity — this thread
     // has nothing else to do during the intro.
-    DWORD l_vid_w = 0;
-    DWORD l_vid_h = 0;
-    m_engine->GetNativeVideoSize(&l_vid_w, &l_vid_h);
-
     for (;;)
     {
         if (m_notify->HasError() == true)
@@ -242,38 +238,7 @@ void FE::video_player::play(FE::ASCII* file_path_p) noexcept
             break; 
         }
 
-        RECT l_client = {};
-        GetClientRect(m_hwnd, &l_client);
-
-        RECT l_dst = {};
-        if ((l_vid_w > 0) && (l_vid_h > 0) && (l_client.right > 0) && (l_client.bottom > 0))
-        {
-            FE::float32 l_win_w = static_cast<FE::float32>(l_client.right);
-            FE::float32 l_win_h = static_cast<FE::float32>(l_client.bottom);
-            FE::float32 l_win_ar = l_win_w / l_win_h;
-            FE::float32 l_vid_ar = static_cast<FE::float32>(l_vid_w) / static_cast<FE::float32>(l_vid_h);
-
-            if (l_vid_ar > l_win_ar)
-            {
-                FE::float32 l_scaled_w = l_win_h * l_vid_ar;
-                FE::float32 l_offset_x = (l_win_w - l_scaled_w) * 0.5f;
-                l_dst.left = static_cast<LONG>(l_offset_x);
-                l_dst.top = 0;
-                l_dst.right = static_cast<LONG>(l_offset_x + l_scaled_w);
-                l_dst.bottom = static_cast<LONG>(l_win_h);
-            }
-            else
-            {
-                FE::float32 l_scaled_h = l_win_w / l_vid_ar;
-                FE::float32 l_offset_y = (l_win_h - l_scaled_h) * 0.5f;
-                l_dst.left = 0;
-                l_dst.top = static_cast<LONG>(l_offset_y);
-                l_dst.right = static_cast<LONG>(l_win_w);
-                l_dst.bottom = static_cast<LONG>(l_offset_y + l_scaled_h);
-            }
-        }
-
-        m_engine_ex->UpdateVideoStream(nullptr, &l_dst, nullptr);
+        m_engine_ex->UpdateVideoStream(nullptr, nullptr, nullptr);
 
 		std::this_thread::yield();
     }

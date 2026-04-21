@@ -22,7 +22,7 @@ limitations under the License.
 #ifdef _FE_ON_WINDOWS_X86_64_
     #include <FE/d3d11_backend.hxx>
 #else
-	#include <FE/vulkan_backend.hxx>
+	#include <FE/opengl_es.hxx>
 #endif
 
 #include <FE/clock.hxx>
@@ -39,7 +39,7 @@ namespace internal::renderer
 #ifdef _FE_ON_WINDOWS_X86_64_
 	using backend = d3d11_backend;
 #else
-	using backend = vulkan_backend;
+	using backend = opengl_es_backend;
 #endif
 }
 
@@ -53,19 +53,9 @@ struct window_config // fields are immutable after window creation; modifying th
 	std::pmr::vector<std::pmr::string> _random_play_video_intro_paths;
 	std::pmr::vector<std::pmr::string> _sequential_play_video_intro_paths;
 
-	FE::int32 _monitor_index = 0;
-    FE::boolean _should_enable_vsync = false;
-    FE::boolean _is_on_the_top = false;
-	FE::boolean _should_scale_content_to_monitor_dpi = true;
-	FE::boolean _has_border = true;
 	FE::uint8 _swap_chain_buffer_count = 3;
-	_FE_MAYBE_UNUSED_ FE::boolean _is_virtual_reality_mode = false;
-	FE::boolean _should_enable_hdr = false;
 
-    FE::uint32 _width = 0;
-    FE::uint32 _height = 0;
-    FE::boolean _is_resizable = true;
-    FE::boolean _is_maximized = true;
+	var::boolean _should_enable_vsync = false;
     var::boolean _is_fullscreen = false;
 };
 
@@ -73,6 +63,13 @@ struct window_config // fields are immutable after window creation; modifying th
 class renderer
 {
 	friend FE::internal::renderer::backend;
+
+	struct resolution
+	{
+		var::uint32 _width;
+		var::uint32 _height;
+	};
+
 private:
     GLFWwindow* m_window;
     GLFWmonitor* m_primary_monitor;
@@ -86,6 +83,12 @@ private:
 
 	std::thread m_renderer_thread;
 	std::atomic_bool m_should_exit;
+	std::atomic<resolution> m_pending_resolution_change;
+
+	var::int32 m_saved_window_x;
+	var::int32 m_saved_window_y;
+	var::int32 m_saved_window_width;
+	var::int32 m_saved_window_height;
 
 public:
     renderer(const window_config& window_config_p) noexcept;
@@ -94,13 +97,7 @@ public:
 	void execute() noexcept;
 	void terminate() noexcept;
 
-	_FE_FORCE_INLINE_ void render_frame() noexcept 
-	{ 
-		m_render_delta_milliseconds.start_clock();
-		m_backend->render_frame(); 
-		m_render_delta_milliseconds.end_clock();
-		m_delta_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
-	}
+	void render_frame() noexcept;
 
 	_FE_FORCE_INLINE_ FE::boolean should_close() const noexcept
 	{
@@ -110,8 +107,11 @@ public:
 
 	_FE_FORCE_INLINE_ GLFWwindow* get_window() const noexcept { return m_window; }
 
+	void toggle_borderless_fullscreen() noexcept;
+
 private:
 	static void __on_window_close(GLFWwindow* window_p) noexcept;
+	static void __on_window_resize(GLFWwindow* const window_p, FE::int32 new_width_p, FE::int32 new_height_p) noexcept;
 	static void __renderer_main(class FE::component_base* const) noexcept;
 };
 

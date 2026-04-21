@@ -20,6 +20,7 @@ limitations under the License.
 #include <GLFW/glfw3native.h>
 
 #include <FE/type_traits.hxx>
+#include <FE/d3d11_backend.hxx>
 
 
 
@@ -123,10 +124,9 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	HWND l_window_handle = glfwGetWin32Window(m_frontend->m_window);
 	DXGI_SWAP_CHAIN_DESC1 l_swapchain_desc = 
 	{
-		.Width = m_frontend->m_window_config._width,
-		.Height = m_frontend->m_window_config._height,
+		.Width = (UINT)m_frontend->m_video_mode->width,
+		.Height = (UINT)m_frontend->m_video_mode->height,
 		.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
-		.Stereo = m_frontend->m_window_config._is_virtual_reality_mode,
 		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
 		.BufferCount = m_frontend->m_window_config._swap_chain_buffer_count,
 		.Scaling = DXGI_SCALING_STRETCH,
@@ -174,8 +174,8 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	{
 		.TopLeftX = 0.0f,
 		.TopLeftY = 0.0f,
-		.Width = static_cast<FLOAT>(m_frontend->m_window_config._width),
-		.Height = static_cast<FLOAT>(m_frontend->m_window_config._height),
+		.Width = static_cast<FLOAT>(m_frontend->m_video_mode->width),
+		.Height = static_cast<FLOAT>(m_frontend->m_video_mode->height),
 		.MinDepth = 0.0f,
 		.MaxDepth = 1.0f
 	};
@@ -185,8 +185,8 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 
 	D3D11_TEXTURE2D_DESC l_depth_desc =
 	{
-		.Width = static_cast<UINT>(m_frontend->m_window_config._width),
-		.Height = static_cast<UINT>(m_frontend->m_window_config._height),
+		.Width = static_cast<UINT>(m_frontend->m_video_mode->width),
+		.Height = static_cast<UINT>(m_frontend->m_video_mode->height),
 		.MipLevels = 1,
 		.ArraySize = 1,
 		.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
@@ -224,21 +224,14 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 
 d3d11_backend::~d3d11_backend() noexcept
 {
+	BOOL l_is_fullscreen = FALSE;
+	m_swapchain->GetFullscreenState(&l_is_fullscreen, nullptr);
+	if (l_is_fullscreen == TRUE)
+	{
+		m_swapchain->SetFullscreenState(FALSE, nullptr);
+	}
 }
 
-
-void d3d11_backend::toggle_fullscreen_mode() noexcept
-{
-	wrl::ComPtr<IDXGIOutput> l_output;
-	_FE_MAYBE_UNUSED_ HRESULT l_result = m_swapchain->GetContainingOutput(&l_output);
-	FE_ASSERT(SUCCEEDED(l_result));
-
-	m_swapchain->SetFullscreenState((BOOL)m_frontend->m_window_config._is_fullscreen, (m_frontend->m_window_config._is_fullscreen == false) ? nullptr : l_output.Get());
-
-	DXGI_SWAP_CHAIN_DESC1 l_desc{};
-	m_swapchain->GetDesc1(&l_desc);
-	resize_swap_chain_buffers(l_desc.Width, l_desc.Height);
-}
 
 void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 new_height_p) noexcept
 {
@@ -329,9 +322,14 @@ void d3d11_backend::render_frame() noexcept
 	m_context->ClearRenderTargetView(m_render_target_view.Get(), m_clear_color);
 	m_context->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
-							((m_frontend->m_window_config._should_enable_vsync  == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,
-							&m_present_params);
+	const HRESULT l_result = m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
+													((m_frontend->m_window_config._should_enable_vsync  == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,
+													&m_present_params);
+
+	if(l_result == DXGI_STATUS_OCCLUDED) _FE_UNLIKELY_
+	{
+		std::this_thread::yield();
+	}
 }
 
 
