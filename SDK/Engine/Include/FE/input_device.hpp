@@ -131,7 +131,7 @@ public:
 	action _key_menu;
 
 public:
-	keyboard_callbacks() noexcept = default;
+	keyboard_callbacks() noexcept;
 	virtual ~keyboard_callbacks() noexcept override = default;
 };
 
@@ -312,7 +312,7 @@ public:
 	action	_button_4th, _button_5th, _button_6th, _button_7th, _button_8th;
 
 public:
-	mouse_callbacks() noexcept = default;
+	mouse_callbacks() noexcept;
 	virtual ~mouse_callbacks() noexcept override = default;
 };
 
