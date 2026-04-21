@@ -1218,7 +1218,7 @@ namespace large
 
 
             typename pool_type::iterator l_page_list_iterator;
-            internal::pool::PageListClass l_required_page_class = internal::pool::__select_page_list_by_capacity(l_queried_allocation_in_bytes);
+            internal::pool::PageListClass l_required_page_class = internal::large::pool::__select_page_list_by_capacity(l_queried_allocation_in_bytes);
             do
             {
                 switch (l_required_page_class)
@@ -1339,7 +1339,7 @@ namespace large
 
 
             pool_type* l_previous_page_list = nullptr;
-            internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
             switch (l_previous_class) // class before allocation
             {
             case internal::pool::PageListClass::_6_25_PercentRemaining:
@@ -1372,7 +1372,7 @@ namespace large
 
             l_page_list_iterator->_remaining_capacity_in_bytes -= l_memblock_info._size_in_bytes;
 
-            internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
             {
                 switch (l_new_class) // new class after allocation
@@ -1443,7 +1443,7 @@ namespace large
 
 
             pool_type* l_previous_page_list = nullptr;
-            internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
             switch (l_previous_class) // class before deallocation
             {
             case internal::pool::PageListClass::_Unavailable:
@@ -1482,7 +1482,7 @@ namespace large
             typename pool_type::const_iterator l_page_list_iterator = FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base);
 
 
-            internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
             {
                 switch (l_new_class) // new class after deallocation
