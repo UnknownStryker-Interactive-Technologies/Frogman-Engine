@@ -28,6 +28,48 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::internal::renderer)
 
 
+wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, FE::ASCII* const target_p) noexcept
+{
+	FE_ASSERT(file_path_p != nullptr);
+	FE_ASSERT(entry_point_p != nullptr);
+	FE_ASSERT(target_p != nullptr);
+
+	var::wchar l_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
+	_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p) + 1, l_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
+	FE_ASSERT(l_length > 0);
+
+	var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
+#ifdef _DEBUG_
+	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+#elif defined(_RELWITHDEBINFO_)
+	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#else
+	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+
+	wrl::ComPtr<ID3DBlob> l_bytecode;
+	wrl::ComPtr<ID3DBlob> l_errors;
+	const HRESULT l_result = D3DCompileFromFile(l_wide_path,
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		entry_point_p,
+		target_p,
+		l_flags,
+		0, // Legacy flag, should be set to 0
+		&l_bytecode,
+		&l_errors);
+
+	if (l_errors != nullptr)
+	{
+		OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
+	}
+
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
+
+	return l_bytecode;
+}
+
+
 d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	:	m_frontend(frontend_p),
 		m_device(),

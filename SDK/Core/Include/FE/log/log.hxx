@@ -281,7 +281,8 @@ namespace FE
 		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,
 		_FatalRendererError_5XX_RendererBackendDeviceCreationFailure = 502,
 		_FatalRendererError_5XX_RendererSwapChainCreationFailure = 503,
-		_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure = 504
+		_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure = 504,
+		_FatalRendererError_5XX_ShaderCompilationFailure = 505
 	};
 }
 #endif
