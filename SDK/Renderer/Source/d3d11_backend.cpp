@@ -28,11 +28,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::internal::renderer)
 
 
-wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, FE::ASCII* const target_p) noexcept
+wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, const ShaderTarget target_p) noexcept
 {
 	FE_ASSERT(file_path_p != nullptr);
 	FE_ASSERT(entry_point_p != nullptr);
-	FE_ASSERT(target_p != nullptr);
 
 	var::wchar l_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
 	_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p) + 1, l_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
@@ -47,17 +46,48 @@ wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, F
 	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
 
+	FE::ASCII* l_target = nullptr;
+	switch (target_p)
+	{
+	case ShaderTarget::_VertexShader:
+		l_target = vertex_shader_target;
+		break;
+
+	case ShaderTarget::_PixelShader:
+		l_target = pixel_shader_target;
+		break;
+
+	case ShaderTarget::_GeometryShader:
+		l_target = geometry_shader_target;
+		break;
+
+	case ShaderTarget::_HullShader:
+		l_target = hull_shader_target;
+		break;
+
+	case ShaderTarget::_DomainShader:
+		l_target = domain_shader_target;
+		break;
+
+	case ShaderTarget::_ComputeShader:
+		l_target = compute_shader_target;
+		break;
+
+		_FE_NODEFAULT_;
+	}
+
 	wrl::ComPtr<ID3DBlob> l_bytecode;
 	wrl::ComPtr<ID3DBlob> l_errors;
 	const HRESULT l_result = D3DCompileFromFile(l_wide_path,
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		entry_point_p,
-		target_p,
-		l_flags,
-		0, // Legacy flag, should be set to 0
-		&l_bytecode,
-		&l_errors);
+												nullptr,
+												D3D_COMPILE_STANDARD_FILE_INCLUDE,
+												entry_point_p,
+												l_target,
+												l_flags,
+												0, // Legacy flag, should be set to 0
+												&l_bytecode,
+												&l_errors
+	);
 
 	if (l_errors != nullptr)
 	{

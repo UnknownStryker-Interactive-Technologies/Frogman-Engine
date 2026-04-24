@@ -40,7 +40,18 @@ constexpr FE::ASCII* const domain_shader_target = "ds_5_1";
 constexpr FE::ASCII* const compute_shader_target = "cs_5_1";
 
 
-wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, FE::ASCII* const target_p) noexcept;
+enum struct ShaderTarget
+{
+    _VertexShader,
+    _PixelShader,
+    _GeometryShader,
+    _HullShader,
+    _DomainShader,
+    _ComputeShader
+};
+
+
+wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, const ShaderTarget target_p) noexcept;
 
 
 class d3d11_backend
