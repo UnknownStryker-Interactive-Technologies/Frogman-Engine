@@ -210,17 +210,19 @@ program_option::program_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 				algorithm::utility::uint_info l_uint_info = algorithm::utility::string_to_uint<var::ASCII>(argv_p[i] + l_range->_end);
 				m_max_concurrency._second = static_cast<FE::uint32>(l_uint_info._value);
 
-				if (l_uint_info._value < 6)
+				if (l_uint_info._value <= 6)
 				{
-					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The -max-concurrency must be greater than 6.\nThe value given to the option will be overriden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
+					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The -max-concurrency must be greater than or equal to 6.\nThe value given to the option will be overridden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
 					m_max_concurrency._second = 6;
+					continue;
 				}
-				else if (l_uint_info._value > FE::int16_max)
+				
+				if (l_uint_info._value >= 64)
 				{
-					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than (2^16) / 2.\nThe value given to the option will be overriden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
+					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to 64.\nThe value given to the option will be overridden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
 					m_max_concurrency._second = 6;
+					continue;
 				}
-				break;
 			}
 			continue;
 		}
