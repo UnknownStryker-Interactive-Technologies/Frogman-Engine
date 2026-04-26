@@ -32,6 +32,8 @@ FILE(GLOB_RECURSE SOURCE_FILES "${FE_CMAKE_CURRENT_LIST_DIR}/../Source/*.cpp")
 # -fno-write: does not write any output files.
 RUN_FROGMAN_HEADER_TOOL(${HEADER_FILES} -fno-copyright-notice -max-concurrency=8 )
 
+SET_SHADERS()
+
 ADD_FROGMAN_EXECUTABLE(${CMAKE_PROJECT_NAME} ${HEADER_FILES}
     ${SOURCE_FILES}
 )

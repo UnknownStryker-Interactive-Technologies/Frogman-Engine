@@ -21,7 +21,7 @@ cd Solution_X64_AVX512F
 
 cmake -DCMAKE_SYSTEM_PROCESSOR=x64 -DSIMD=AVX512F -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_CXX_STANDARD=20 .. -G "Visual Studio 17 2022" -T "v143"
 cmake --build . --config Debug 
-cmake --build . --config RelWithDebInfo 
+cmake --build . --config RelWithDebInfo
 cmake --build . --config MinSizeRel 
 cmake --build . --config Release 
 

@@ -373,5 +373,72 @@ ENDFUNCTION()
 
 
 
+FUNCTION(SET_SHADERS)
+
+    FILE(GLOB_RECURSE SHADER_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.hlsli")
+
+    FILE(GLOB_RECURSE VERTEX_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.vertex.hlsl")
+    FILE(GLOB_RECURSE PIXEL_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.pixel.hlsl")
+    FILE(GLOB_RECURSE GEOMETRY_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.geometry.hlsl")
+    FILE(GLOB_RECURSE HULL_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.hull.hlsl")
+    FILE(GLOB_RECURSE DOMAIN_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.domain.hlsl")
+    FILE(GLOB_RECURSE COMPUTE_SHADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/*.compute.hlsl")
+
+    MESSAGE(STATUS "Found ${SHADER_HEADER_FILES} shader header files.")    
+    MESSAGE(STATUS "Found ${VERTEX_SHADER_FILES} vertex shader files.")
+    MESSAGE(STATUS "Found ${PIXEL_SHADER_FILES} pixel shader files.")
+    MESSAGE(STATUS "Found ${GEOMETRY_SHADER_FILES} geometry shader files.")
+    MESSAGE(STATUS "Found ${HULL_SHADER_FILES} hull shader files.")
+    MESSAGE(STATUS "Found ${DOMAIN_SHADER_FILES} domain shader files.")
+    MESSAGE(STATUS "Found ${COMPUTE_SHADER_FILES} compute shader files.")
+
+    FILE(GLOB FROGGY "${CMAKE_CURRENT_SOURCE_DIR}/../*.froggy")
+    LIST(LENGTH FROGGY N)
+    IF(NOT N EQUAL 1)
+        MESSAGE(FATAL_ERROR "There should be exactly one .froggy file in the root directory of the project.")
+    ENDIF()
+    FILE(READ "${FROGGY}" FROGGY_BUFFER)
+
+    # STRING(JSON <out-var> [ERROR_VARIABLE <error-var>] SET <json-string> <member|index> [<member|index> ...] <value>)
+    STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "Shaders" "[]")
+
+    SET(SHADER_INDEX 0)
+
+    MACRO(APPEND_SHADERS SHADER_FILES SHADER_TARGET MAIN_FUNCTION)
+        FOREACH(SF ${SHADER_FILES})
+            FILE(TO_NATIVE_PATH "${SF}" SF)
+            STRING(REPLACE "\\" "\\\\" SF_ESC "${SF}")
+            SET(OBJ "{}")
+            STRING(JSON OBJ SET "${OBJ}" "Source"       "\"${SF_ESC}\"")
+            STRING(JSON OBJ SET "${OBJ}" "MainFunction" "\"${MAIN_FUNCTION}\"")
+            STRING(JSON OBJ SET "${OBJ}" "ShaderTarget" "\"${SHADER_TARGET}\"")
+            STRING(JSON OBJ SET "${OBJ}" "Defines"      "[]")
+
+            STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "Shaders" ${SHADER_INDEX} "${OBJ}")
+            MATH(EXPR SHADER_INDEX "${SHADER_INDEX} + 1")
+        ENDFOREACH()
+    ENDMACRO()
+
+    APPEND_SHADERS("${VERTEX_SHADER_FILES}"   "vs_5_1" "vs_main")
+    APPEND_SHADERS("${PIXEL_SHADER_FILES}"    "ps_5_1" "ps_main")
+    APPEND_SHADERS("${GEOMETRY_SHADER_FILES}" "gs_5_1" "gs_main")
+    APPEND_SHADERS("${HULL_SHADER_FILES}"     "hs_5_1" "hs_main")
+    APPEND_SHADERS("${DOMAIN_SHADER_FILES}"   "ds_5_1" "ds_main")
+    APPEND_SHADERS("${COMPUTE_SHADER_FILES}"  "cs_5_1" "cs_main")
+
+    STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "ShaderHeaders" "[]")
+    SET(HEADER_INDEX 0)
+    FOREACH(H ${SHADER_HEADER_FILES})
+        FILE(TO_NATIVE_PATH "${H}" H)
+        STRING(REPLACE "\\" "\\\\" H_ESC "${H}")
+        STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "ShaderHeaders" ${HEADER_INDEX} "\"${H_ESC}\"")
+        MATH(EXPR HEADER_INDEX "${HEADER_INDEX} + 1")
+    ENDFOREACH()
+
+    FILE(WRITE "${FROGGY}" "${FROGGY_BUFFER}")
+
+ENDFUNCTION()
+
+
 SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${BOOST_CHRONO} ${BOOST_CONTAINER} ${BOOST_FILESYSTEM} ${BOOST_JSON} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK})
 SET(FROGMAN_ENGINE_SDK ${ASSIMP} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI})
