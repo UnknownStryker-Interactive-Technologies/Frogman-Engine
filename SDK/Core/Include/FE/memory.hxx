@@ -1477,8 +1477,15 @@ public:
 			l_bytes = FE::system_large_page_size * l_multiplier;
 
 			void* l_result = VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE | MEM_LARGE_PAGES, PAGE_READWRITE);
+
+			if (l_result == nullptr)
+			{
+				l_result = (T*)VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			}
+#ifdef _ENABLE_ASSERT_
 			_FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
 			FE_ASSERT(l_result != nullptr, "Assertion Failed: VirtualAlloc large page allocation has failed due to the error code ${%d@0}.", &l_errcode);
+#endif
 			return (T*)l_result;
 		}
 
