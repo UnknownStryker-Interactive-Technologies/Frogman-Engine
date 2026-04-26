@@ -71,6 +71,8 @@ class engine_program_options
 {
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_fullscreen;
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_vsync;
+    FE::pair<::FE::ASCII*, var::boolean> m_recompile_shaders;
+
 public:
     engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
     ~engine_program_options() noexcept = default;

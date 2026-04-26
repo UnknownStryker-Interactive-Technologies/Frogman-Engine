@@ -35,7 +35,8 @@ limitations under the License.
 
 FE::engine_program_options::engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	:	m_enable_fullscreen( "-enable-fullscreen", false ),
-		m_enable_vsync("-enable-vsync", false)
+		m_enable_vsync("-enable-vsync", false),
+		m_recompile_shaders("-recompile-shaders", false)
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
@@ -48,6 +49,12 @@ FE::engine_program_options::engine_program_options(FE::int32 argc_p, FE::ASCII**
 		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_enable_vsync._first) != std::nullopt)
 		{
 			m_enable_vsync._second = true;
+			continue;
+		}
+
+		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_recompile_shaders._first) != std::nullopt)
+		{
+			m_recompile_shaders._second = true;
 			continue;
 		}
 	}
@@ -125,7 +132,6 @@ FE::engine::~engine() noexcept
 
 
 
-
 FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
 	(argc_p);
@@ -155,7 +161,7 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 
 FE::int32 FE::engine::run()
 {
-	//m_processors->execute();
+	m_processors->execute();
 	m_renderer->execute();
 	m_game_processor->execute();
 	return 0;
@@ -165,7 +171,7 @@ FE::int32 FE::engine::shutdown()
 {
 	m_game_processor->terminate();
 	m_renderer->terminate();
-	// m_processors->terminate();
+	m_processors->terminate();
 	return 0;
 }
 
