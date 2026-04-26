@@ -15,12 +15,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#include <FE/d3d11_backend.hxx>
+
 #include <FE/renderer.hxx>
+#include <FE/type_traits.hxx>
+
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
-
-#include <FE/type_traits.hxx>
-#include <FE/d3d11_backend.hxx>
 
 
 
@@ -79,14 +80,14 @@ wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, F
 	wrl::ComPtr<ID3DBlob> l_bytecode;
 	wrl::ComPtr<ID3DBlob> l_errors;
 	const HRESULT l_result = D3DCompileFromFile(l_wide_path,
-												nullptr,
-												D3D_COMPILE_STANDARD_FILE_INCLUDE,
-												entry_point_p,
-												l_target,
-												l_flags,
-												0, // Legacy flag, should be set to 0
-												&l_bytecode,
-												&l_errors
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		entry_point_p,
+		l_target,
+		l_flags,
+		0, // Legacy flag, should be set to 0
+		&l_bytecode,
+		&l_errors
 	);
 
 	if (l_errors != nullptr)
@@ -98,6 +99,46 @@ wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, F
 
 	return l_bytecode;
 }
+
+wrl::ComPtr<ID3D11VertexShader> __create_vertex_shader(ID3D11Device5* const device_p, ID3DBlob* const bytecode_p) noexcept
+{
+	FE_ASSERT(device_p != nullptr);
+	FE_ASSERT(bytecode_p != nullptr);
+
+	wrl::ComPtr<ID3D11VertexShader> l_vertex_shader;
+	const HRESULT l_result = device_p->CreateVertexShader(bytecode_p->GetBufferPointer(), bytecode_p->GetBufferSize(), nullptr, &l_vertex_shader);
+
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCreationFailure, "Failed to create vertex shader; the error code is ${%d@0}.", &l_result);
+	return l_vertex_shader;
+}
+
+wrl::ComPtr<ID3D11PixelShader> __create_pixel_shader(ID3D11Device5* const device_p, ID3DBlob* const bytecode_p) noexcept
+{
+	FE_ASSERT(device_p != nullptr);
+	FE_ASSERT(bytecode_p != nullptr);
+
+	wrl::ComPtr<ID3D11PixelShader> l_pixel_shader;
+	const HRESULT l_result = device_p->CreatePixelShader(bytecode_p->GetBufferPointer(), bytecode_p->GetBufferSize(), nullptr, &l_pixel_shader);
+
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCreationFailure, "Failed to create pixel shader; the error code is ${%d@0}.", &l_result);
+	return l_pixel_shader;
+}
+
+wrl::ComPtr<ID3D11InputLayout> __create_input_layout(ID3D11Device5* const device_p, const D3D11_INPUT_ELEMENT_DESC* const descs_p, FE::uint32 descs_count_p, ID3DBlob* const vertex_shader_bytecode_p) noexcept
+{
+	FE_ASSERT(device_p != nullptr);
+	FE_ASSERT(descs_p != nullptr);
+	FE_ASSERT(descs_count_p > 0);
+	FE_ASSERT(vertex_shader_bytecode_p != nullptr);
+
+	wrl::ComPtr<ID3D11InputLayout> l_input_layout;
+	const HRESULT l_result = device_p->CreateInputLayout(descs_p, descs_count_p, vertex_shader_bytecode_p->GetBufferPointer(), vertex_shader_bytecode_p->GetBufferSize(), &l_input_layout);
+
+	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_InputLayoutCreationFailure, "Failed to create input layout; the error code is ${%d@0}.", &l_result);
+	return l_input_layout;
+}
+
+
 
 
 d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
@@ -111,7 +152,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 		m_adapter(),
 		m_adapter_desc(),
 		m_should_allow_tearing(FALSE),
-#ifdef _DEBUG_
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 		m_debug(),
 #endif
 		m_present_params(),
@@ -128,9 +169,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 #if defined(_RELEASE_) || defined(_MINSIZEREL_)
 	l_create_device_flags |= D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
-#elif defined(_RELWITHDEBINFO_)
-	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
-#elif defined(_DEBUG_)
+#elif defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -185,7 +224,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	
 	m_factory->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &m_should_allow_tearing, sizeof(m_should_allow_tearing));
 
-#ifdef _DEBUG_
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 	if ( SUCCEEDED( m_device.As(&m_debug) ) )
 	{
 		m_debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);

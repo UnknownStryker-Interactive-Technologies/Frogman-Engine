@@ -72,7 +72,7 @@ private:
 
 public:
 	memory_resource() noexcept = default;
-	virtual ~memory_resource() noexcept = default;
+	virtual ~memory_resource() noexcept override = default;
 
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
@@ -108,7 +108,7 @@ namespace large
 
 	public:
 		memory_resource() noexcept = default;
-		virtual ~memory_resource() noexcept = default;
+		virtual ~memory_resource() noexcept override = default;
 
 		memory_resource(memory_resource&& other_p) noexcept;
 		memory_resource& operator=(memory_resource&& other_p) noexcept;

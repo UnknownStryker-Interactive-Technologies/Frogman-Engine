@@ -103,7 +103,7 @@ namespace internal::pool
 
 
 template<class Alignment>
-class pool<PoolType::_Block, Alignment> : public std::pmr::memory_resource
+class pool<PoolType::_Block, Alignment>
 {
     static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -145,7 +145,7 @@ public:
 #endif
     }
 
-    virtual ~pool() noexcept override
+     ~pool() noexcept
     {}
 
     pool(pool&& other_p) noexcept
@@ -181,31 +181,6 @@ public:
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
-
-protected:
-    inline virtual void* do_allocate(_FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-    {
-        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size, ${%lu@0} is greater than the fixed block size, ${%lu@1}.", &bytes_p, &fixed_block_size_in_bytes);
-        return allocate<std::byte>();
-    }
-
-    inline virtual void do_deallocate(_FE_MAYBE_UNUSED_ void* ptr_p, _FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-    {
-        FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
-        deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
-    }
-
-    virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-    {
-        if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
-        {
-            return false;
-        }
-
-        auto l_this = dynamic_cast<const pool*>(this);
-        FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
-        return l_this == &other_p;
-    }
 
 public:
     template<typename U>
@@ -400,7 +375,7 @@ namespace internal::pool
 namespace large
 {
     template<class Alignment>
-    class pool<PoolType::_BlockLargePage, Alignment> : public std::pmr::memory_resource
+    class pool<PoolType::_BlockLargePage, Alignment>
     {
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -443,7 +418,7 @@ namespace large
 #endif
         }
 
-        virtual ~pool() noexcept override
+         ~pool() noexcept
         {
         }
 
@@ -481,31 +456,6 @@ namespace large
 
         pool(const pool&) noexcept = delete;
         pool& operator=(const pool&) noexcept = delete;
-
-    protected:
-        inline virtual void* do_allocate(_FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-        {
-            FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size, ${%lu@0} is greater than the fixed block size, ${%lu@1}.", &bytes_p, &fixed_block_size_in_bytes);
-            return allocate<std::byte>();
-        }
-
-        inline virtual void do_deallocate(_FE_MAYBE_UNUSED_ void* ptr_p, _FE_MAYBE_UNUSED_ std::size_t bytes_p = 0, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-        {
-            FE_ASSERT(bytes_p <= fixed_block_size_in_bytes, "Assertion failed: the allocation failed because the requested size is greater than the fixed block size. A nullptr has been returned.");
-            deallocate<std::byte>(static_cast<std::byte*>(ptr_p));
-        }
-
-        virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-        {
-            if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
-            {
-                return false;
-            }
-
-            auto l_this = dynamic_cast<const pool*>(this);
-            FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
-            return l_this == &other_p;
-        }
 
     public:
         template<typename U>

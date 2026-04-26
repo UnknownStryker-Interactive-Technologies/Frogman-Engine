@@ -16,17 +16,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+
+#include <glm/glm.hpp>
+
+#include <span>
+
 #ifdef _FE_ON_WINDOWS_X86_64_
 #include <d3d11_4.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
 #include <wrl/client.h>
 namespace wrl = ::Microsoft::WRL;
+#endif
 
 
 
 
 CLASS_FORWARD_DECLARATION(FE, renderer);
+
+
 
 
 BEGIN_NAMESPACE(FE::internal::renderer)
@@ -39,7 +47,6 @@ constexpr FE::ASCII* const hull_shader_target = "hs_5_1";
 constexpr FE::ASCII* const domain_shader_target = "ds_5_1";
 constexpr FE::ASCII* const compute_shader_target = "cs_5_1";
 
-
 enum struct ShaderTarget
 {
     _VertexShader,
@@ -49,9 +56,6 @@ enum struct ShaderTarget
     _DomainShader,
     _ComputeShader
 };
-
-
-wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, const ShaderTarget target_p) noexcept;
 
 
 class d3d11_backend
@@ -66,7 +70,7 @@ class d3d11_backend
 	wrl::ComPtr<IDXGIAdapter4> m_adapter;
 	DXGI_ADAPTER_DESC3 m_adapter_desc;
 	BOOL m_should_allow_tearing;
-#ifdef _DEBUG_
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     wrl::ComPtr<ID3D11Debug> m_debug;
 #endif
     DXGI_PRESENT_PARAMETERS m_present_params;
@@ -89,5 +93,4 @@ public:
 
 
 END_NAMESPACE
-#endif
 #endif

@@ -19,10 +19,12 @@ limitations under the License.
 
 #include <FE/framework/game_processor.hxx>
 
+#include <FE/video_player.hpp>
+
+#include <taskflow.hpp>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h> // for loading icons
-
-#include <FE/video_player.hpp>
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -157,7 +159,7 @@ void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 {
 	FE::engine::get_engine().m_renderer->m_should_exit.store(true, std::memory_order_release);
 	FE::engine::get_engine().m_game_processor->terminate();
-	// FE::engine::get_engine().m_processors->terminate();	
+	FE::engine::get_engine().m_processors->terminate();	
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
 }
 
@@ -174,6 +176,9 @@ void renderer::__on_window_resize(_FE_MAYBE_UNUSED_ GLFWwindow* const window_p, 
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
+	tf::Taskflow l_taskflow;
+	tf::Executor l_executor;
+
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = *l_engine.m_renderer;
 	std::unique_ptr<FE::internal::renderer::backend> l_backend = std::move(l_renderer.m_backend);

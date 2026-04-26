@@ -289,8 +289,11 @@ static std::pmr::memory_resource* s_LTLGPMP_deleter = nullptr;
 framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	:	m_program_options(argc_p, argv_p), 
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
-		m_memory( new FE::memory_resource[m_program_options.get_max_concurrency()] ), // the new operator is overloaded to return CPU cache line size aligned memory.
-		m_memory_large_pages( (m_program_options.is_large_pages_enabled() == true) ? (std::pmr::memory_resource*)new FE::large::memory_resource[m_program_options.get_max_concurrency()] : (std::pmr::memory_resource*)new FE::memory_resource[m_program_options.get_max_concurrency()] ),
+	m_memory( new FE::memory_resource[m_program_options.get_max_concurrency()]{} ), // the new operator is overloaded to return CPU cache line size aligned memory.
+	m_memory_large_pages(	(m_program_options.is_large_pages_enabled() == true) ? 
+								(std::pmr::memory_resource*)new FE::large::memory_resource[m_program_options.get_max_concurrency()]{} 
+							:	(std::pmr::memory_resource*)new FE::memory_resource[m_program_options.get_max_concurrency()]{} 
+						),
 		m_method_reflection(81920, get_large_memory_resource()), 
 		m_property_reflection(81920, get_large_memory_resource()),
 		m_enum_reflection(get_large_memory_resource(), 81920),
@@ -341,12 +344,15 @@ const std::locale& framework_base::get_current_system_locale() const noexcept
 
 std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 {
-	return m_memory + get_current_thread_id();
+	return ((FE::memory_resource*)m_memory) + get_current_thread_id();
 }
 
 std::pmr::memory_resource* framework_base::get_large_memory_resource() noexcept
 {
-	return m_memory_large_pages + get_current_thread_id();
+	// compute once
+	static FE::size l_size_of_page_element = (m_program_options.is_large_pages_enabled() == true) ? sizeof(FE::large::memory_resource) : sizeof(FE::memory_resource);
+
+	return (std::pmr::memory_resource*)( ((var::byte*)m_memory_large_pages) + (l_size_of_page_element * get_current_thread_id()) );
 }
 
 reflection::method_registry& framework_base::get_method_reflection() noexcept

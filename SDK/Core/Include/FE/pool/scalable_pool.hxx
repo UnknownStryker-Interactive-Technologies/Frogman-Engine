@@ -275,7 +275,7 @@ namespace internal::pool
 
 
 template<class Alignment>
-class pool<PoolType::_Scalable, Alignment> : public std::pmr::memory_resource
+class pool<PoolType::_Scalable, Alignment>
 {
     static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -327,7 +327,7 @@ public:
 #endif
     }
 
-    virtual ~pool() noexcept override = default;
+     ~pool() noexcept  = default;
 
     pool(pool&& other_p) noexcept
         :   m_unavailable_pages( std::move(other_p.m_unavailable_pages) ),
@@ -712,29 +712,6 @@ public:
 
 	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return m_pages_with_100_capacity.size(); }
 
-protected:
-    _FE_FORCE_INLINE_ virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-    {
-        FE_ASSERT(bytes_p <= FE::max_value<FE::uint32>);
-		return allocate<std::byte>(bytes_p);
-    }
-
-    _FE_FORCE_INLINE_ virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-	{
-        FE_ASSERT(bytes_p <= FE::max_value<FE::uint32>);
-		deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
-	}
-
-    _FE_FORCE_INLINE_ virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-    {
-		if (dynamic_cast<const pool*>(&other_p) == nullptr)
-		{
-			return false;
-		}
-
-		return operator==(dynamic_cast<const pool&>(other_p));
-    }
-
 private:
     /* Time complexity: 
 	Allocation from a stack: O(1)
@@ -1110,7 +1087,7 @@ namespace internal::large::pool
 namespace large
 {
     template<class Alignment>
-    class pool<PoolType::_ScalableLargePage, Alignment> : public std::pmr::memory_resource
+    class pool<PoolType::_ScalableLargePage, Alignment>
     {
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
@@ -1163,7 +1140,7 @@ namespace large
 #endif
         }
 
-        virtual ~pool() noexcept override = default;
+         ~pool() noexcept = default;
 
         pool(pool&& other_p) noexcept
             : m_unavailable_pages(std::move(other_p.m_unavailable_pages)),
@@ -1552,29 +1529,6 @@ namespace large
         }
 
         _FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return m_pages_with_100_capacity.size(); }
-
-    protected:
-        _FE_FORCE_INLINE_ virtual void* do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-        {
-            FE_ASSERT(bytes_p <= FE::max_value<FE::uint32>);
-            return allocate<std::byte>(bytes_p);
-        }
-
-        _FE_FORCE_INLINE_ virtual void do_deallocate(void* ptr_p, std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p = Alignment::size) noexcept override
-        {
-            FE_ASSERT(bytes_p <= FE::max_value<FE::uint32>);
-            deallocate<std::byte>(static_cast<std::byte*>(ptr_p), bytes_p);
-        }
-
-        _FE_FORCE_INLINE_ virtual bool do_is_equal(const std::pmr::memory_resource& other_p) const noexcept override
-        {
-            if (dynamic_cast<const pool*>(&other_p) == nullptr)
-            {
-                return false;
-            }
-
-            return operator==(dynamic_cast<const pool&>(other_p));
-        }
 
     private:
         /* Time complexity:
