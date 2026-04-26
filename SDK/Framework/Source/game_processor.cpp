@@ -46,6 +46,11 @@ FE::framework::game_processor::game_processor(FE::world& world_p, FE::size fiber
 	FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = &m_scheduler; // Set the thread-local pointer to this fiber scheduler instance.
 }
 
+FE::framework::game_processor::~game_processor() noexcept
+{
+	FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr;
+}
+
 
 class __this_pointer : public FE::component_base
 {

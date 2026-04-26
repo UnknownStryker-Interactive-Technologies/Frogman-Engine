@@ -242,7 +242,9 @@ namespace FE
 		// calling it from other thread is an undefined behavior. The fiber context switch must be called from the same thread that is executing the fiber scheduler.
 		void _FE_CDECL_ switch_fiber_context() noexcept;
 
-		static void yield() noexcept;
+		static void _FE_CDECL_ yield() noexcept;
+
+		static bool is_fiber() noexcept;
 
 	private:
 		thread_local static fiber_impl* tl_s_current_fiber;

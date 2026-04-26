@@ -82,7 +82,7 @@ class game_processor
 
 public:
 	game_processor(FE::world& world_p, FE::size fiber_stack_size_p = FE::one_MiB) noexcept;
-	~game_processor() noexcept = default;
+	~game_processor() noexcept;
 
 	void execute() noexcept;
 	void terminate() noexcept;

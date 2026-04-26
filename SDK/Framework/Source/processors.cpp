@@ -92,6 +92,7 @@ void processors::execute() noexcept
 						m_anesthetic_cv[t].wait(l_lock);
 					}
 				}
+				FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr; // reset the thread-local pointer to the fiber scheduler before exiting the thread.
 			}
 
 		);

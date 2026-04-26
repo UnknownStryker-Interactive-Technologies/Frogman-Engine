@@ -159,6 +159,7 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 	l_to_switch.m_impl->_context_ptr->_rsp = (var::byte*)l_to_switch.m_impl->_context_ptr; // reset the rsp
 	l_to_switch.m_impl->_task_type = TaskPriority::_None; // reset the task type to the default value.
 	m_fiber_pool.push( std::move(l_to_switch) ); // reclaim it.
+	tl_s_current_fiber = nullptr;
 	return _FE_SUCCEEDED_;
 }
 
@@ -267,7 +268,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 	}
 }
 
-void FE::fiber_scheduler::yield() noexcept
+void _FE_CDECL_ FE::fiber_scheduler::yield() noexcept
 {
 	if (tl_s_this_thread_fiber_scheduler == nullptr) _FE_UNLIKELY_
 	{
@@ -275,6 +276,11 @@ void FE::fiber_scheduler::yield() noexcept
 	}
 
 	tl_s_this_thread_fiber_scheduler->switch_fiber_context();
+}
+
+bool FE::fiber_scheduler::is_fiber() noexcept
+{
+	return tl_s_current_fiber != nullptr;
 }
 
 
