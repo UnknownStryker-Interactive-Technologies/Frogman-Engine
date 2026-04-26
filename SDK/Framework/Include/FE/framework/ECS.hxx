@@ -120,7 +120,7 @@ namespace internal::ECS
 	class entities
 	{
 	public:
-		_FE_MAYBE_UNUSED_ static constexpr FE::size max_entities = 524285; // Total size of entities node in a FE::list is 4 MiB.
+		_FE_MAYBE_UNUSED_ static constexpr FE::size max_entities = 262143;
 
 	private:
 		FE::archetype m_entities[max_entities];
@@ -153,12 +153,13 @@ namespace internal::ECS
 		_FE_FORCE_INLINE_ FE::archetype* begin() noexcept { return static_cast<FE::archetype*>(m_entities); }
 		_FE_FORCE_INLINE_ FE::archetype* end() noexcept { return static_cast<FE::archetype*>(m_entities) + m_current_size; }
 	};
+	static_assert(sizeof(entities) == 2 * FE::one_MiB);
 
 
 	class components
 	{
 	public:
-		_FE_MAYBE_UNUSED_ static constexpr FE::size max_components = 1021; // Total size of components node in a FE::list is 8 KiB.
+		_FE_MAYBE_UNUSED_ static constexpr FE::size max_components = 262143;
 
 	private:
 		FE::component m_components[max_components];
@@ -191,7 +192,7 @@ namespace internal::ECS
 		_FE_FORCE_INLINE_ FE::component* begin() noexcept { return static_cast<FE::component*>(m_components); }
 		_FE_FORCE_INLINE_ FE::component* end() noexcept { return static_cast<FE::component*>(m_components) + m_current_size; }
 	};
-
+	static_assert(sizeof(entities) == 2 * FE::one_MiB);
 #pragma warning(push)
 #pragma warning(disable: 4324) // structure was padded due to alignment specifier
 	// to avoid false sharing issues
@@ -215,7 +216,7 @@ namespace internal::ECS
 
 		FE::smart_ptr<class gc_metadata, FE::RefType::_Owner> _gc_metadata; // the GC metadata is read by a separate thread; I chose to store the GC metadata in a separate place to avoid false sharing issues.
 
-		FE::list<FE::internal::ECS::components>::iterator _group;
+		FE::list<FE::internal::ECS::components, FE::page_aligned_allocator<FE::internal::ECS::components>>::iterator _group;
 		var::size _index;
 		FE::ASCII* _typename;
 		var::size _type_hash;
@@ -263,7 +264,7 @@ private:
 	component_view_table m_component_view_table;
 	class framework::ECS* m_host;
 	FE::ASCII* m_memory_layout_version;
-	FE::list<FE::internal::ECS::entities>::iterator m_group;
+	FE::list<FE::internal::ECS::entities, FE::page_aligned_allocator<FE::internal::ECS::entities>>::iterator m_group;
 	var::size m_index;
 
 public:
@@ -331,7 +332,7 @@ public:
 
 	using component_table = absl::node_hash_map<std::size_t, // the robin hood hash map uses lighter hashing algorithm for integers, than objects.
 												FE::pair<	FE::memory_resource,
-															FE::list<FE::internal::ECS::components>
+															FE::list<FE::internal::ECS::components, FE::page_aligned_allocator<FE::internal::ECS::components>>
 														>
 												>;
 	struct gc_root
@@ -503,7 +504,6 @@ public:
 		if (l_probe_result == m_component_table.end())
 		{
 			typename component_table::mapped_type& l_list_and_allocator = m_component_table[FE::framework::reflection::type_id<Component>().hash_code()];
-			l_list_and_allocator._second = std::move(FE::list<FE::internal::ECS::components>(&l_list_and_allocator._first));
 			l_list_and_allocator._second.emplace_front(); // allocate a component pool.
 
 			m_gc_root._component_roots.push_back(l_list_and_allocator._second.begin()); // add to the GC tracking list.
