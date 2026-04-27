@@ -23,6 +23,8 @@ limitations under the License.
 #include <boost/json.hpp> // read game configurations from .froggy file
 
 
+
+
 #define FROGMAN_ENGINE() CUSTOM_ENGINE(FE::engine)
 
 
@@ -47,6 +49,20 @@ struct path_lut // fields are immutable after window creation; modifying these v
     std::pmr::string _entry_world_path;
     std::pmr::vector<std::pmr::string> _world_paths;
     std::pmr::vector<std::pmr::string> _module_paths;
+};
+
+struct shader_define
+{
+	std::pmr::string _identifier;
+	FE::pair<var::int64, var::int64> _value_range;
+};
+
+struct shader
+{
+	std::pmr::vector<shader_define> _defines;
+    std::pmr::string _main_function;
+    std::pmr::string _source_path;
+    internal::renderer::ShaderTarget _shader_target;
 };
 
 struct project_config // fields are immutable after window creation; modifying these values will not affect any.
@@ -85,7 +101,7 @@ public:
 };
 
 
-class engine final : public FE::framework::framework_base
+class alignas(FE::CPU_L1_cache_line::size) engine final : public FE::framework::framework_base
 {
     friend class ecs;
     friend class FE::renderer;
@@ -99,8 +115,9 @@ class engine final : public FE::framework::framework_base
     std::pmr::string m_froggy_path;
     std::pmr::string m_froggy;
 
-    FE::smart_ptr<FE::engine_info, FE::RefType::_Owner> m_engine_info;
-	FE::smart_ptr<FE::project_config, FE::RefType::_Owner> m_project_config;
+    FE::engine_info m_engine_info;
+    FE::project_config m_project_config;
+	std::pmr::vector<shader> m_shaders;
 
     FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 
@@ -117,18 +134,24 @@ public:
     _FE_FORCE_INLINE_ FE::ASCII* get_runtime_path() const noexcept { return m_runtime_path.c_str(); }
 	_FE_FORCE_INLINE_ FE::ASCII* get_game_root_directory() const noexcept { return m_game_root_directory.c_str(); }
 
-    _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return *m_engine_info; }
-	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return *m_project_config; }
+    _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return m_engine_info; }
+	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return m_project_config; }
 
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 
-    _FE_FORCE_INLINE_ FE::int32 get_async_processor_count() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
+    _FE_FORCE_INLINE_ FE::int32 count_async_processors() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
     
 	template <typename T>
     _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>( get_memory_resource() ); }
 
     template <typename T>
 	_FE_FORCE_INLINE_ std::pmr::polymorphic_allocator<T> get_std_pmr_thread_local_allocator() noexcept { return std::pmr::polymorphic_allocator<T>( get_memory_resource() ); }
+
+    template <typename T>
+    _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_large_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>(get_large_memory_resource()); }
+
+    template <typename T>
+    _FE_FORCE_INLINE_ std::pmr::polymorphic_allocator<T> get_std_pmr_large_thread_local_allocator() noexcept { return std::pmr::polymorphic_allocator<T>(get_large_memory_resource()); }
 
 private:
     virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;

@@ -1,5 +1,8 @@
 # cmake build artefact
 
+Solution_X64/
+Solution_X64_AVX512F/
+
 CMakeCache.txt
 CMakeFiles
 *.cmake
@@ -9,5 +12,4 @@ lz4c
 install_manifest.txt
 build
 
-Solution_X64/
-Solution_X64_AVX512F/
+

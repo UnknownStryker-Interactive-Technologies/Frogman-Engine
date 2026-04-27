@@ -1,3 +1,8 @@
+## Frogman Engine Folders
+Solution_X64/
+Solution_X64_AVX512F/
+
+
 ## OSX artifacts
 .DS_Store
 
@@ -32,9 +37,7 @@ JSON/
 ## Commonly used CMake directories
 build*/
 
-## Frogman Engine Folders
-Solution_X64/
-Solution_X64_AVX512F/
+
 
 ## Xcode artifacts
 project.xcworkspace

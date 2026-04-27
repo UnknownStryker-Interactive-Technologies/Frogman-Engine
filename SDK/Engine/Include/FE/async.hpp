@@ -42,7 +42,7 @@ public:
 
 	_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
 	{
-		return FE::engine::get_engine().get_async_processor_count();
+		return FE::engine::get_engine().count_async_processors();
 	}
 
 public:

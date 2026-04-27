@@ -84,13 +84,14 @@ FE::ASCII* FE::engine_program_options::view_enable_vsync_title() const noexcept
 FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
 	:	FE::framework::framework_base(argc_p, argv_p), 
 		m_engine_program_options(argc_p, argv_p),
-		m_runtime_path(framework_base::get_memory_resource()),
-		m_game_root_directory(framework_base::get_memory_resource()),
-		m_froggy_path(framework_base::get_memory_resource()),
-		m_froggy(framework_base::get_memory_resource()),
+		m_runtime_path(framework_base::get_large_memory_resource()),
+		m_game_root_directory(framework_base::get_large_memory_resource()),
+		m_froggy_path(framework_base::get_large_memory_resource()),
+		m_froggy(framework_base::get_large_memory_resource()),
 
 		m_engine_info(),
-		m_project_config(FE::make_owner<FE::project_config>(framework_base::get_memory_resource())),
+		m_project_config(),
+		m_shaders(framework_base::get_large_memory_resource()),
 
 		m_game_instance(),
 
@@ -122,8 +123,8 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	m_froggy_path += ".froggy";
 
 
-	m_project_config->_window_config._should_enable_vsync = m_engine_program_options.is_vsync_enabled();
-	m_project_config->_window_config._is_fullscreen = m_engine_program_options.is_fullscreen_enabled();
+	m_project_config._window_config._should_enable_vsync = m_engine_program_options.is_vsync_enabled();
+	m_project_config._window_config._is_fullscreen = m_engine_program_options.is_fullscreen_enabled();
 }
 
 FE::engine::~engine() noexcept
@@ -140,22 +141,22 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	__load_reflection_data();
 	__read_froggy();
 
-	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_memory_resource(), m_project_config->_max_engine_component_type_count_hint);
+	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_large_memory_resource(), m_project_config._max_engine_component_type_count_hint);
 
-	m_game_instance = FE::make_owner<FE::game>(framework_base::get_memory_resource(), *m_ecs);
+	m_game_instance = FE::make_owner<FE::game>(framework_base::get_large_memory_resource(), *m_ecs);
 
-	m_game_instance->create_world(m_project_config->_path_lookup_table._entry_world_path);
+	m_game_instance->create_world(m_project_config._path_lookup_table._entry_world_path);
 
-	m_processors = FE::make_unique<framework::processors>(framework_base::get_memory_resource(),
-		get_async_processor_count(),
-		m_project_config->_fibers_per_thread,
-		m_project_config->_fiber_stack_size);
+	m_processors = FE::make_unique<framework::processors>(framework_base::get_large_memory_resource(),
+		count_async_processors(),
+		m_project_config._fibers_per_thread,
+		m_project_config._fiber_stack_size);
 
-	m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_memory_resource(),
+	m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_large_memory_resource(),
 		*m_game_instance->get_current_world(),
-		m_project_config->_fiber_stack_size);
+		m_project_config._fiber_stack_size);
 
-	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_memory_resource(), m_project_config->_window_config);
+	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_large_memory_resource(), m_project_config._window_config);
 	return 0;
 }
 
@@ -182,33 +183,32 @@ void FE::engine::__read_froggy() noexcept
 	FE::ifstream_guard l_froggy_file_stream(l_froggy);
 	FE_ASSERT(l_froggy.is_open() == true, "Failed to open froggy file at path: %s", m_froggy_path.c_str());
 
-	boost::json::object l_froggy_json = boost::json::parse(l_froggy).as_object();
+	boost::json::object l_froggy_json = boost::json::parse(l_froggy).get_object();
 	{
-		m_engine_info = FE::make_owner<FE::engine_info>(framework_base::get_memory_resource());
 		FE_ASSERT(l_froggy_json["EngineInfo"].is_object() == true);
-		auto l_engine_info = l_froggy_json["EngineInfo"].as_object();
+		auto l_engine_info = l_froggy_json["EngineInfo"].get_object();
 
 		FE_ASSERT(l_engine_info["Version"].is_string() == true);
-		m_engine_info->_version = std::pmr::string(l_engine_info["Version"].get_string().c_str(), framework_base::get_memory_resource());
+		m_engine_info._version = std::pmr::string(l_engine_info["Version"].get_string().c_str(), framework_base::get_large_memory_resource());
 	}
 
 	{
 		FE_ASSERT(l_froggy_json["ProjectConfig"].is_object() == true);
-		auto l_project_config = l_froggy_json["ProjectConfig"].as_object();
+		auto l_project_config = l_froggy_json["ProjectConfig"].get_object();
 
 		FE_ASSERT(l_project_config["GlobalResourceLookUpTable"].is_object() == true);
-		auto l_resource_lut = l_project_config["GlobalResourceLookUpTable"].as_object();
+		auto l_resource_lut = l_project_config["GlobalResourceLookUpTable"].get_object();
 		
 		if (l_resource_lut["EntryWorldPath"].is_null() == false)
 		{
 			FE_ASSERT(l_resource_lut["EntryWorldPath"].is_string() == true);
-			m_project_config->_path_lookup_table._entry_world_path = std::pmr::string(l_resource_lut["EntryWorldPath"].get_string().c_str(), framework_base::get_memory_resource());
+			m_project_config._path_lookup_table._entry_world_path = std::pmr::string(l_resource_lut["EntryWorldPath"].get_string().c_str(), framework_base::get_large_memory_resource());
 		}
 
 		for (auto& element : l_resource_lut["WorldPaths"].get_array())
 		{
 			FE_ASSERT(element.is_string() == true);
-			m_project_config->_path_lookup_table._world_paths.push_back(std::pmr::string(element.get_string().c_str(), framework_base::get_memory_resource()));
+			m_project_config._path_lookup_table._world_paths.push_back(std::pmr::string(element.get_string().c_str(), framework_base::get_large_memory_resource()));
 		}
 
 		if (l_project_config["CompressionMethod"].is_null() == false)
@@ -216,7 +216,7 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(l_froggy_json["CompressionMethod"].is_string() == true);
 			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_froggy_json["CompressionMethod"].get_string().data());
 			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve compression method from reflection metadata.");
-			m_project_config->_compression_method = l_ptr->try_get_as_system();
+			m_project_config._compression_method = l_ptr->try_get_as_system();
 		}
 
 		if (l_project_config["DecompressionMethod"].is_null() == false)
@@ -224,7 +224,7 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(l_project_config["DecompressionMethod"].is_string() == true);
 			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecompressionMethod"].get_string().data());
 			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decompression method from reflection metadata.");
-			m_project_config->_decompression_method = l_ptr->try_get_as_system();
+			m_project_config._decompression_method = l_ptr->try_get_as_system();
 		}
 
 		if (l_project_config["EncryptionMethod"].is_null() == false)
@@ -232,7 +232,7 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(l_project_config["EncryptionMethod"].is_string() == true);
 			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["EncryptionMethod"].get_string().data());
 			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve encryption method from reflection metadata.");
-			m_project_config->_encryption_method = l_ptr->try_get_as_system();
+			m_project_config._encryption_method = l_ptr->try_get_as_system();
 		}
 
 		if (l_project_config["DecryptionMethod"].is_null() == false)
@@ -240,75 +240,107 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(l_project_config["DecryptionMethod"].is_string() == true);
 			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecryptionMethod"].get_string().data());
 			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decryption method from reflection metadata.");
-			m_project_config->_decryption_method = l_ptr->try_get_as_system();
+			m_project_config._decryption_method = l_ptr->try_get_as_system();
 		}
 
-		*const_cast<var::uint64*>(&(m_project_config->_max_engine_component_type_count_hint)) = l_project_config["MaxEngineComponentTypeCountHint"].get_int64();
-		FE_ASSERT(m_project_config->_max_engine_component_type_count_hint > 0);
+		*const_cast<var::uint64*>(&(m_project_config._max_engine_component_type_count_hint)) = l_project_config["MaxEngineComponentTypeCountHint"].get_int64();
+		FE_ASSERT(m_project_config._max_engine_component_type_count_hint > 0);
 
-		*const_cast<var::uint32*>(&(m_project_config->_gc_batch_count)) = static_cast<FE::uint32>(l_project_config["GCIterationsPerFrame"].get_int64());
-		FE_ASSERT(m_project_config->_gc_batch_count > 0);
+		*const_cast<var::uint32*>(&(m_project_config._gc_batch_count)) = static_cast<FE::uint32>(l_project_config["GCIterationsPerFrame"].get_int64());
+		FE_ASSERT(m_project_config._gc_batch_count > 0);
 
-		*const_cast<var::uint32*>(&(m_project_config->_frames_per_reachability_analysis)) = static_cast<FE::uint32>(l_project_config["FramesPerReachabilityAnalysis"].get_int64());
-		FE_ASSERT(m_project_config->_frames_per_reachability_analysis > 0);
+		*const_cast<var::uint32*>(&(m_project_config._frames_per_reachability_analysis)) = static_cast<FE::uint32>(l_project_config["FramesPerReachabilityAnalysis"].get_int64());
+		FE_ASSERT(m_project_config._frames_per_reachability_analysis > 0);
 
-		*const_cast<var::uint64*>(&(m_project_config->_fiber_stack_size)) = l_project_config["FiberStackSize"].get_int64();
-		FE_ASSERT(m_project_config->_fiber_stack_size > 1 * FE::one_KiB);
+		*const_cast<var::uint64*>(&(m_project_config._fiber_stack_size)) = l_project_config["FiberStackSize"].get_int64();
+		FE_ASSERT(m_project_config._fiber_stack_size > 1 * FE::one_KiB);
 
-		*const_cast<var::uint16*>(&(m_project_config->_fibers_per_thread)) = static_cast<FE::uint16>(l_project_config["FibersPerThread"].get_int64());
-		FE_ASSERT(m_project_config->_fibers_per_thread > 0);
+		*const_cast<var::uint16*>(&(m_project_config._fibers_per_thread)) = static_cast<FE::uint16>(l_project_config["FibersPerThread"].get_int64());
+		FE_ASSERT(m_project_config._fibers_per_thread > 0);
 
+		FE_ASSERT(l_project_config["WindowConfig"].is_object() == true);
+		auto l_window_config = l_project_config["WindowConfig"].get_object();
+
+		if (l_window_config["Title"].is_null() == false)
 		{
-			FE_ASSERT(l_project_config["WindowConfig"].is_object() == true);
-			auto l_window_config = l_project_config["WindowConfig"].as_object();
+			FE_ASSERT(l_window_config["Title"].is_string() == true);
+			m_project_config._window_config._title = std::pmr::string(l_window_config["Title"].get_string().data(), framework_base::get_large_memory_resource());
+		}
 
-			if (l_window_config["Title"].is_null() == false)
+
+		m_project_config._window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		for (auto& element : l_window_config["IconPaths"].get_array())
+		{
+			FE_ASSERT(element.is_string() == true);
+			m_project_config._window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_large_memory_resource() });
+
+			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
+			l_path += "\\";
+			l_path += m_project_config._window_config._icon_paths.back();
+
+			m_project_config._window_config._icon_image.emplace_back();
+			m_project_config._window_config._icon_image.back().pixels = stbi_load(l_path.c_str(), &(m_project_config._window_config._icon_image.back().width), &(m_project_config._window_config._icon_image.back().height), nullptr, 4/*RGBA*/);
+		}
+
+
+		m_project_config._window_config._random_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		for (auto& element : l_window_config["RandomPlayIntroVideoPaths"].get_array())
+		{
+			FE_ASSERT(element.is_string() == true);
+
+			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
+			l_path += "\\";
+			l_path += element.get_string();
+			m_project_config._window_config._random_play_video_intro_paths.push_back(std::move(l_path));
+		}
+
+
+		m_project_config._window_config._sequential_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"].get_array())
+		{
+			FE_ASSERT(element.is_string() == true);
+
+			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
+			l_path += "\\";
+			l_path += element.get_string();
+			m_project_config._window_config._sequential_play_video_intro_paths.push_back(std::move(l_path));
+		}
+
+		*const_cast<var::uint8*>(&(m_project_config._window_config._swap_chain_buffer_count)) = static_cast<FE::uint8>(l_window_config["SwapChainBufferCount"].get_int64());
+		FE_ASSERT(m_project_config._window_config._swap_chain_buffer_count > 0);
+	}
+
+	{
+		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
+		for (auto& shader : l_froggy_json["Shaders"].get_array())
+		{
+			m_shaders.emplace_back(	framework_base::get_large_memory_resource(), 
+									framework_base::get_large_memory_resource(), 
+									framework_base::get_large_memory_resource()
+			);
+
+			auto& l_shader = shader.get_object();
+			FE_ASSERT(l_shader["Defines"].is_array() == true);
+			for (auto& define : l_shader["Defines"].get_array())
 			{
-				FE_ASSERT(l_window_config["Title"].is_string() == true);
-				m_project_config->_window_config._title = std::pmr::string(l_window_config["Title"].get_string().data(), framework_base::get_memory_resource());
+				for (auto& [identifier, value_range] : define.get_object())
+				{
+					m_shaders.back()._defines.emplace_back(framework_base::get_large_memory_resource());
+					m_shaders.back()._defines.back()._identifier = identifier;
+					FE_ASSERT(value_range.is_array() == true);
+					FE_ASSERT(value_range.get_array().size() == 2);
+					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);
+					FE_ASSERT(value_range.get_array().at(1).is_int64() == true);
+					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
+					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
+				}
 			}
 
+			FE_ASSERT(l_shader["MainFunction"].is_string() == true);
+			m_shaders.back()._main_function = l_shader["MainFunction"].get_string();
 
-			m_project_config->_window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto& element : l_window_config["IconPaths"].get_array())
-			{
-				FE_ASSERT(element.is_string() == true);
-				m_project_config->_window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_memory_resource() });
-
-				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
-				l_path += "\\";
-				l_path += m_project_config->_window_config._icon_paths.back();
-
-				m_project_config->_window_config._icon_image.emplace_back();
-				m_project_config->_window_config._icon_image.back().pixels = stbi_load(l_path.c_str(), &(m_project_config->_window_config._icon_image.back().width), &(m_project_config->_window_config._icon_image.back().height), nullptr, 4/*RGBA*/);
-			}
-
-
-			m_project_config->_window_config._random_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto& element : l_window_config["RandomPlayIntroVideoPaths"].get_array())
-			{
-				FE_ASSERT(element.is_string() == true);
-
-				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
-				l_path += "\\";
-				l_path += element.get_string();
-				m_project_config->_window_config._random_play_video_intro_paths.push_back( std::move(l_path) );
-			}
-
-
-			m_project_config->_window_config._sequential_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_memory_resource());
-			for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"].get_array())
-			{
-				FE_ASSERT(element.is_string() == true);
-
-				std::pmr::string l_path(m_game_root_directory, framework_base::get_memory_resource());
-				l_path += "\\";
-				l_path += element.get_string();
-				m_project_config->_window_config._sequential_play_video_intro_paths.push_back( std::move(l_path) );
-			}
-
-			*const_cast<var::uint8*>(&(m_project_config->_window_config._swap_chain_buffer_count)) = static_cast<FE::uint8>(l_window_config["SwapChainBufferCount"].get_int64());
-			FE_ASSERT(m_project_config->_window_config._swap_chain_buffer_count > 0);
+			FE_ASSERT(l_shader["Source"].is_string() == true);
+			m_shaders.back()._source_path = l_shader["Source"].get_string();
 		}
 	}
 }
