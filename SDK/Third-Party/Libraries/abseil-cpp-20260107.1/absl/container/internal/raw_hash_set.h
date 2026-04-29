@@ -177,7 +177,9 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
 #define ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4127)  // conditional expression is constant
+#pragma warning(disable : 4702)  // unreachable code
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -3760,4 +3762,5 @@ ABSL_NAMESPACE_END
 #undef ABSL_SWISSTABLE_IGNORE_UNINITIALIZED_RETURN
 #undef ABSL_SWISSTABLE_ASSERT
 
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_RAW_HASH_SET_H_

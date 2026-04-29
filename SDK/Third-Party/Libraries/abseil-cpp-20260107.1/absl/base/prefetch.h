@@ -23,6 +23,7 @@
 //
 #ifndef ABSL_BASE_PREFETCH_H_
 #define ABSL_BASE_PREFETCH_H_
+#pragma warning (disable : 4100)  // unreferenced formal parameter
 
 #include "absl/base/attributes.h"
 #include "absl/base/config.h"

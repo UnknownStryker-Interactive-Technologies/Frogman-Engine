@@ -314,10 +314,11 @@ void FE::engine::__read_froggy() noexcept
 		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
 		for (auto& shader : l_froggy_json["Shaders"].get_array())
 		{
-			m_shaders.emplace_back(	framework_base::get_large_memory_resource(), 
-									framework_base::get_large_memory_resource(), 
-									framework_base::get_large_memory_resource()
-			);
+			m_shaders.emplace_back();
+			m_shaders.back()._defines = std::pmr::vector<FE::shader_define>(framework_base::get_large_memory_resource());
+			m_shaders.back()._main_function = std::pmr::string(framework_base::get_large_memory_resource());
+			m_shaders.back()._source_path = std::pmr::string(framework_base::get_large_memory_resource());
+
 
 			auto& l_shader = shader.get_object();
 			FE_ASSERT(l_shader["Defines"].is_array() == true);
@@ -325,8 +326,8 @@ void FE::engine::__read_froggy() noexcept
 			{
 				for (auto& [identifier, value_range] : define.get_object())
 				{
-					m_shaders.back()._defines.emplace_back(framework_base::get_large_memory_resource());
-					m_shaders.back()._defines.back()._identifier = identifier;
+					m_shaders.back()._defines.emplace_back();
+					m_shaders.back()._defines.back()._identifier = std::pmr::string( identifier, framework_base::get_large_memory_resource());
 					FE_ASSERT(value_range.is_array() == true);
 					FE_ASSERT(value_range.get_array().size() == 2);
 					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);

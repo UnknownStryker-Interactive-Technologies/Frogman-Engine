@@ -56,52 +56,52 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 
 IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
     SET(BOOST_CHRONO 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
     )
 
      SET(BOOST_CONTAINER 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(BOOST_FILESYSTEM
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(BOOST_LOCALE
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(BOOST_JSON 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(BOOST_STACKTRACE 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(BOOST_THREAD 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-sgd-x64-1_87.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_87.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_87.lib>
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-sgd-x64-1_91.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
     )
 
     SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib)

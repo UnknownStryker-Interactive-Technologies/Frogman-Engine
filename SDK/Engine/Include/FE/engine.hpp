@@ -19,8 +19,10 @@ limitations under the License.
 #include <FE/framework.hxx>
 #include <FE/game.hpp>
 #include <FE/renderer.hxx>
-
+#pragma warning(disable : 4324)
 #include <boost/json.hpp> // read game configurations from .froggy file
+
+#include <boost/hash2/fnv1a.hpp>
 
 
 

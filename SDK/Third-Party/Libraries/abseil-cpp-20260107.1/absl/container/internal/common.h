@@ -14,7 +14,8 @@
 
 #ifndef ABSL_CONTAINER_INTERNAL_COMMON_H_
 #define ABSL_CONTAINER_INTERNAL_COMMON_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4324) // structure was padded due to alignment specifier
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -298,4 +299,5 @@ struct ApplyWithoutDefaultSuffix<
 ABSL_NAMESPACE_END
 }  // namespace absl
 
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_COMMON_H_
