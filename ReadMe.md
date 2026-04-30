@@ -45,9 +45,6 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 - abseil 20250814.1  
 https://github.com/abseil/abseil-cpp/releases/tag/20250814.1  
 
-- AES  
-https://github.com/mrdcvlsc/AES
-
 - Assimp 6.0.4  
 https://github.com/assimp/assimp/releases
 
