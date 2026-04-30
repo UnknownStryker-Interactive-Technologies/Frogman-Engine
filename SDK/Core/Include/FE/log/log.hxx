@@ -241,6 +241,7 @@ namespace FE
 		_FatalLoggerError_IncorrectStringFormatterSyntex = 3,
 		_FatalSwitchCaseError_ReachedNoDefault = 4,
 		_FatalError_TableInsertionFailure = 5,
+		_FatalError_FileOpenFailure = 6,
 
 		_FatalMemoryError_1XX_IncorrectAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,

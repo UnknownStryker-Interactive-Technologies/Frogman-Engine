@@ -15,6 +15,8 @@ limitations under the License.
 */
 #include <FE/engine.hpp>
 
+#include <FE/algorithm/string.hxx>
+
 #include <FE/framework/ECS.hxx>
 #include <FE/framework/processors.hxx>
 #include <FE/framework/reflection.hxx>
@@ -311,14 +313,17 @@ void FE::engine::__read_froggy() noexcept
 	}
 
 	{
+		m_shaders.reserve(1024); // reserve some arbitrary amount of shaders to avoid too many reallocations; this value can be changed later if needed.
 		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
 		for (auto& shader : l_froggy_json["Shaders"].get_array())
 		{
 			m_shaders.emplace_back();
 			m_shaders.back()._defines = std::pmr::vector<FE::shader_define>(framework_base::get_large_memory_resource());
+			m_shaders.back()._permutation_blacklist = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+			m_shaders.back()._permutation = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
 			m_shaders.back()._main_function = std::pmr::string(framework_base::get_large_memory_resource());
 			m_shaders.back()._source_path = std::pmr::string(framework_base::get_large_memory_resource());
-
+			m_shaders.back()._source_code = std::pmr::string(framework_base::get_large_memory_resource());
 
 			auto& l_shader = shader.get_object();
 			FE_ASSERT(l_shader["Defines"].is_array() == true);
@@ -327,14 +332,21 @@ void FE::engine::__read_froggy() noexcept
 				for (auto& [identifier, value_range] : define.get_object())
 				{
 					m_shaders.back()._defines.emplace_back();
-					m_shaders.back()._defines.back()._identifier = std::pmr::string( identifier, framework_base::get_large_memory_resource());
+					m_shaders.back()._defines.back()._identifier = std::pmr::string(identifier, framework_base::get_large_memory_resource());
 					FE_ASSERT(value_range.is_array() == true);
 					FE_ASSERT(value_range.get_array().size() == 2);
 					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);
 					FE_ASSERT(value_range.get_array().at(1).is_int64() == true);
 					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
 					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
+					FE_ASSERT(m_shaders.back()._defines.back()._value_range._first <= m_shaders.back()._defines.back()._value_range._second);
 				}
+			}
+
+			for (auto& blacklist : l_shader["PermutationBlacklist"].get_array())
+			{
+				FE_ASSERT(blacklist.is_string() == true);
+				m_shaders.back()._permutation_blacklist.push_back(std::pmr::string(blacklist.get_string().c_str(), framework_base::get_large_memory_resource()));
 			}
 
 			FE_ASSERT(l_shader["MainFunction"].is_string() == true);
@@ -342,6 +354,40 @@ void FE::engine::__read_froggy() noexcept
 
 			FE_ASSERT(l_shader["Source"].is_string() == true);
 			m_shaders.back()._source_path = l_shader["Source"].get_string();
+
+			std::fstream l_ifstream(m_shaders.back()._source_path.c_str(), std::ios::binary | std::ios::in);
+			FE::fstream_guard l_shader_file_stream(l_ifstream);
+			FE_EXIT_IF(l_ifstream.is_open() == false, FE::ErrorCode::_FatalError_FileOpenFailure, "Failed to open shader source file at path: %s", m_shaders.back()._source_path.c_str());
+			l_shader_file_stream.get_stream() >> m_shaders.back()._source_code;
+
+			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
+			{
+			STRING_CASE(FE::internal::renderer::vertex_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_VertexShader;	
+				break;
+
+			STRING_CASE(FE::internal::renderer::pixel_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_PixelShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::geometry_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_GeometryShader;
+				break;
+
+				STRING_CASE(FE::internal::renderer::hull_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_HullShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::domain_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_DomainShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::compute_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_ComputeShader;
+				break;
+
+			_FE_NODEFAULT_;
+			}
 		}
 	}
 }

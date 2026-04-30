@@ -62,8 +62,11 @@ struct shader_define
 struct shader
 {
 	std::pmr::vector<shader_define> _defines;
+    std::pmr::vector<std::pmr::string> _permutation_blacklist;
+    std::pmr::vector<std::pmr::string> _permutation;
     std::pmr::string _main_function;
     std::pmr::string _source_path;
+	std::pmr::string _source_code;
     internal::renderer::ShaderTarget _shader_target;
 };
 

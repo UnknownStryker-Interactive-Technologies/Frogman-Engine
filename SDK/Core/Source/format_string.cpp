@@ -42,7 +42,6 @@ constexpr FE::uint32 __hash_string(const char* string_p, FE::uint32 length_p)
 {
 	boost::hash2::fnv1a_32 l_fnv1a;
 	boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + length_p);
-	//l_fnv1a.update(string_p, length_p);
 	return l_fnv1a.result();
 }
 

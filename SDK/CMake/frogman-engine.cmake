@@ -396,6 +396,9 @@ FUNCTION(SET_SHADERS)
     ENDIF()
     FILE(READ "${FROGGY}" FROGGY_BUFFER)
 
+    # Snapshot before clearing Shaders, so user-edited fields can be carried over.
+    SET(ORIGINAL_FROGGY_BUFFER "${FROGGY_BUFFER}")
+
     # STRING(JSON <out-var> [ERROR_VARIABLE <error-var>] SET <json-string> <member|index> [<member|index> ...] <value>)
     STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "Shaders" "[]")
 
@@ -405,12 +408,39 @@ FUNCTION(SET_SHADERS)
         FOREACH(SF ${SHADER_FILES})
             FILE(TO_NATIVE_PATH "${SF}" SF)
             STRING(REPLACE "\\" "\\\\" SF_ESC "${SF}")
+
+            # Start OBJ from the matching original entry (by Source path).
+            # This carries over Defines / PermutationBlacklist and any other
+            # user-added fields without per-key copy hazards.
             SET(OBJ "{}")
+            STRING(JSON ORIG_COUNT ERROR_VARIABLE ORIG_ERR LENGTH "${ORIGINAL_FROGGY_BUFFER}" "Shaders")
+            IF(NOT ORIG_ERR AND ORIG_COUNT GREATER 0)
+                MATH(EXPR LAST_IDX "${ORIG_COUNT} - 1")
+                FOREACH(I RANGE ${LAST_IDX})
+                    STRING(JSON ORIG_SOURCE ERROR_VARIABLE ORIG_ERR GET "${ORIGINAL_FROGGY_BUFFER}" "Shaders" ${I} "Source")
+                    IF(NOT ORIG_ERR AND ORIG_SOURCE STREQUAL "${SF}")
+                        STRING(JSON ORIG_OBJ ERROR_VARIABLE ORIG_ERR GET "${ORIGINAL_FROGGY_BUFFER}" "Shaders" ${I})
+                        IF(NOT ORIG_ERR)
+                            SET(OBJ "${ORIG_OBJ}")
+                        ENDIF()
+                        BREAK()
+                    ENDIF()
+                ENDFOREACH()
+            ENDIF()
+
             STRING(JSON OBJ SET "${OBJ}" "Source"       "\"${SF_ESC}\"")
             STRING(JSON OBJ SET "${OBJ}" "MainFunction" "\"${MAIN_FUNCTION}\"")
             STRING(JSON OBJ SET "${OBJ}" "ShaderTarget" "\"${SHADER_TARGET}\"")
-            STRING(JSON OBJ SET "${OBJ}" "Defines"      "[]")
-            STRING(JSON OBJ SET "${OBJ}" "Permutation Blacklist"      "[]")
+
+            STRING(JSON TYPE_INFO ERROR_VARIABLE ERROR TYPE "${OBJ}" "Defines")
+            IF(ERROR OR NOT TYPE_INFO STREQUAL "ARRAY")
+                STRING(JSON OBJ SET "${OBJ}" "Defines" "[]")
+            ENDIF()
+
+            STRING(JSON TYPE_INFO ERROR_VARIABLE ERROR TYPE "${OBJ}" "PermutationBlacklist")
+            IF(ERROR OR NOT TYPE_INFO STREQUAL "ARRAY")
+                STRING(JSON OBJ SET "${OBJ}" "PermutationBlacklist" "[]")
+            ENDIF()
 
             STRING(JSON FROGGY_BUFFER SET "${FROGGY_BUFFER}" "Shaders" ${SHADER_INDEX} "${OBJ}")
             MATH(EXPR SHADER_INDEX "${SHADER_INDEX} + 1")
@@ -436,7 +466,6 @@ FUNCTION(SET_SHADERS)
     FILE(WRITE "${FROGGY}" "${FROGGY_BUFFER}")
 
 ENDFUNCTION()
-
 
 SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${BOOST_CHRONO} ${BOOST_CONTAINER} ${BOOST_FILESYSTEM} ${BOOST_JSON} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK})
 SET(FROGMAN_ENGINE_SDK ${ASSIMP} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI})

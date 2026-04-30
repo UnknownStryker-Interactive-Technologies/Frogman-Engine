@@ -32,15 +32,6 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::algorithm::string)
 
 
-template <typename CharT>
-constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexcept
-{
-	boost::hash2::fnv1a_64 l_fnv1a;
-    boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + sizeof(CharT) * count_p);
-	return l_fnv1a.result();
-}
-
-
 template<typename CharT, FE::Address DestAddressAlignment = FE::Address::_NotAligned, FE::Address SourceAddressAlignment = FE::Address::_NotAligned>
 _FE_FORCE_INLINE_ void copy(CharT* const out_dest_p, const CharT* const source_p, FE::uint64 count_p) noexcept
 {
@@ -958,6 +949,19 @@ _FE_FORCE_INLINE_ _FE_CONSTEXPR17_ UTF* skip_BOM(UTF* string_p) noexcept
         return reinterpret_cast<UTF*>( reinterpret_cast<char*>(string_p) + l_bom_size );
     } 
 }
+
+
+template <typename CharT>
+constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexcept
+{
+    boost::hash2::fnv1a_64 l_fnv1a;
+    boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + sizeof(CharT) * count_p);
+    return l_fnv1a.result();
+}
+
+#define STRING_SWITCH(x) switch ( ::FE::algorithm::string::hash_bytes< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x, ::FE::algorithm::string::length< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x) ) )
+
+#define STRING_CASE(x) case ::FE::algorithm::string::hash_bytes< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x, ::FE::algorithm::string::length< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x) )
 
 
 END_NAMESPACE
