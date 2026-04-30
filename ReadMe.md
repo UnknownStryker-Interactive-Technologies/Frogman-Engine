@@ -42,8 +42,8 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 | Android      | ARM64         | Pending          |
 
 # This project leverages:
-- abseil 20250814.1  
-https://github.com/abseil/abseil-cpp/releases/tag/20250814.1  
+- abseil 20260107.1  
+https://github.com/abseil/abseil-cpp/releases/tag/20260107.1
 
 - Assimp 6.0.4  
 https://github.com/assimp/assimp/releases
