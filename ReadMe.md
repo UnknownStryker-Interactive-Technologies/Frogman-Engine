@@ -78,14 +78,8 @@ https://github.com/lz4/lz4/releases/tag/v1.10.0
 - Robin Hood Hash 3.11.5  
 https://github.com/martinus/robin-hood-hashing  
 
-- Robin Map 1.4.0  
-https://github.com/Tessil/robin-map/releases/tag/v1.4.0  
-
 - stb image  
 https://github.com/nothings/stb  
-
-- Unordered Dense 4.7.0  
-https://github.com/martinus/unordered_dense/releases  
 
 - Task Flow 4.0.0  
 https://github.com/taskflow/taskflow/releases  

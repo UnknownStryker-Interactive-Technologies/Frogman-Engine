@@ -23,10 +23,22 @@ limitations under the License.
 // std
 #include <optional>
 
+#include <boost/hash2/fnv1a.hpp>
+#include <boost/hash2/hash_append.hpp>
+
 
 
 
 BEGIN_NAMESPACE(FE::algorithm::string)
+
+
+template <typename CharT>
+constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexcept
+{
+	boost::hash2::fnv1a_64 l_fnv1a;
+    boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + sizeof(CharT) * count_p);
+	return l_fnv1a.result();
+}
 
 
 template<typename CharT, FE::Address DestAddressAlignment = FE::Address::_NotAligned, FE::Address SourceAddressAlignment = FE::Address::_NotAligned>

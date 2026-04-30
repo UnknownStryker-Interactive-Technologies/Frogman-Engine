@@ -17,8 +17,6 @@ limitations under the License.
 #include <FE/algorithm/utility.hxx>
 #include <FE/memory.hxx>
 
-//#include <boost/h>
-
 // std::snprintf
 #include <cstdio>
 
@@ -31,73 +29,22 @@ limitations under the License.
 // std::cerr
 #include <iostream>
 
-
-
-
-/*
-The copliot AI is used to generate this MurmurHash3 implementation
-because implemening a hash function is a periperal task when it comes to Frogman Engine development, and a moderately good constexpr hash function couldn't be found in the public GitHub repositories.
-Please forget this code if you have happened to discover it.
-
-robin_hood::hash_bytes does not compile constepr for the switch case, with MSVC.
-*/
-constexpr FE::uint32 __hash_string(const char* string_p, FE::uint32 length_p)
-{
-	FE::uint32 l_number_of_blocks = static_cast<FE::uint32>(length_p / 4);
-	var::uint32 l_h1 = 0; // seed
-	FE::uint32 l_c1 = 0xcc9e2d51;
-	FE::uint32 l_c2 = 0x1b873593;
-
-	// Body
-	const char* L_blocks = string_p + l_number_of_blocks * 4;
-#pragma warning (disable: 4146)
-	for (var::uint32 i = -l_number_of_blocks; i != 0; ++i) 
-	{
-		var::int32 l_k1 = L_blocks[i];
-
-		l_k1 *= l_c1;
-		l_k1 = (l_k1 << 15) | (l_k1 >> (32 - 15));
-		l_k1 *= l_c2;
-
-		l_h1 ^= l_k1;
-		l_h1 = (l_h1 << 13) | (l_h1 >> (32 - 13));
-		l_h1 = l_h1 * 5 + 0xe6546b64;
-	}
-
-	// Tail
-	const char* l_tail = string_p + l_number_of_blocks * 4;
-	var::int32 l_k1 = 0;
-
-	switch (length_p & 3) 
-	{
-	case 3: 
-		l_k1 ^= l_tail[2] << 16;
-	case 2:
-		l_k1 ^= l_tail[1] << 8;
-	case 1:
-		l_k1 ^= l_tail[0];
-		l_k1 *= l_c1;
-		l_k1 = (l_k1 << 15) | (l_k1 >> (32 - 15));
-		l_k1 *= l_c2;
-		l_h1 ^= l_k1;
-	}
-
-	// Finalization
-	l_h1 ^= length_p;
-	l_h1 ^= l_h1 >> 16;
-	l_h1 *= 0x85ebca6b;
-	l_h1 ^= l_h1 >> 13;
-	l_h1 *= 0xc2b2ae35;
-	l_h1 ^= l_h1 >> 16;
-
-	return l_h1;
-}
+#include <boost/hash2/fnv1a.hpp>
+#include <boost/hash2/hash_append.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE::log)
 
+
+constexpr FE::uint32 __hash_string(const char* string_p, FE::uint32 length_p)
+{
+	boost::hash2::fnv1a_32 l_fnv1a;
+	boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + length_p);
+	//l_fnv1a.update(string_p, length_p);
+	return l_fnv1a.result();
+}
 
 /*
 %i8 - int8
