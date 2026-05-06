@@ -41,6 +41,30 @@ namespace internal::renderer
 #else
 	using backend = opengl_es_backend;
 #endif
+
+	struct shader_define
+	{
+		std::pmr::string _identifier;
+		FE::pair<var::int64, var::int64> _value_range;
+		var::int64 _current_value;
+	};
+
+	class shader
+	{
+	public:
+		using macro = D3D_SHADER_MACRO;
+		using compiled_source = wrl::ComPtr<ID3DBlob>;
+
+		std::pmr::vector<shader_define> _defines;
+		std::pmr::vector<std::pmr::string> _permutation_blacklist;
+		std::pmr::vector<std::pmr::vector<macro>> _macro_combinations;
+		std::pmr::string _main_function;
+		std::pmr::string _source_path;
+		compiled_source _source_code;
+		internal::renderer::ShaderTarget _shader_target;
+
+		~shader() noexcept;
+	};
 }
 
 

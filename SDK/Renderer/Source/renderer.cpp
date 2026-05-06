@@ -20,6 +20,7 @@ limitations under the License.
 #include <FE/framework/game_processor.hxx>
 
 #include <FE/video_player.hpp>
+#include <FE/blacklist_evaluator.hxx>
 
 #include <taskflow.hpp>
 
@@ -34,6 +35,25 @@ limitations under the License.
 
 
 BEGIN_NAMESPACE(FE)
+
+
+internal::renderer::shader::~shader() noexcept
+{
+	for (std::pmr::vector<macro>& permutation_macros : _macro_combinations)
+	{
+		for (macro& macro : permutation_macros)
+		{
+			if (macro.Definition == nullptr)
+			{
+				continue;
+			}
+
+			std::pmr::polymorphic_allocator<char> l_deallocator = permutation_macros.get_allocator();
+			l_deallocator.deallocate((char*)macro.Definition, std::strlen(macro.Definition) + 1);
+			macro.Definition = nullptr;
+		}
+	}
+}
 
 
 renderer::renderer(const window_config& window_config_p) noexcept
@@ -176,16 +196,27 @@ void renderer::__on_window_resize(_FE_MAYBE_UNUSED_ GLFWwindow* const window_p, 
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
-	tf::Taskflow l_taskflow;
-	tf::Executor l_executor;
-
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = *l_engine.m_renderer;
 	std::unique_ptr<FE::internal::renderer::backend> l_backend = std::move(l_renderer.m_backend);
 
-	HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window);
 
-	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
+	tf::Executor l_executor;
+	tf::Taskflow l_taskflow; // Evaluate Permutation Blacklist
+	for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
+	{
+		l_taskflow.emplace
+		(
+			[&l_engine, n]()
+			{
+				FE::internal::__filter_shader_macro_combinations(l_engine.m_shaders[n]);
+			}
+		);
+	}
+	auto l_future = l_executor.run(l_taskflow);
+
+
+	HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 	{
 		FE::video_player l_intro(l_hwnd);
 
@@ -205,10 +236,94 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		}
 	} // l_intro destructs → MF::Shutdown → HWND free for the D3D backend
 	
-	// --- game render backend takes over the HWND --------------------------
-	l_renderer.m_backend = std::move(l_backend);
 
-	while (l_renderer.m_should_exit.load(std::memory_order_acquire) == false)
+	l_future.wait();
+	l_taskflow.clear();
+	for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
+	{
+		l_taskflow.emplace
+		(
+			[&l_engine, n]()
+			{
+				auto& l_file = l_engine.m_shaders[n];
+				var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
+#ifdef _DEBUG_
+				l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+#elif defined(_RELWITHDEBINFO_)
+				l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#else
+				l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+
+				for (auto& macro_combination : l_file._macro_combinations)
+				{
+					FE::ASCII* l_shader_target = nullptr;
+					switch (l_file._shader_target)
+					{
+					case internal::renderer::ShaderTarget::_VertexShader:
+						l_shader_target = FE::internal::renderer::vertex_shader_target; 
+						break;
+
+					case internal::renderer::ShaderTarget::_PixelShader:
+						l_shader_target = FE::internal::renderer::pixel_shader_target; 
+						break;
+
+					case internal::renderer::ShaderTarget::_GeometryShader:
+						l_shader_target = FE::internal::renderer::geometry_shader_target;
+						break;
+
+					case internal::renderer::ShaderTarget::_HullShader:
+						l_shader_target = FE::internal::renderer::hull_shader_target;
+						break;
+
+					case internal::renderer::ShaderTarget::_DomainShader:
+						l_shader_target = FE::internal::renderer::domain_shader_target;
+						break;
+
+					case internal::renderer::ShaderTarget::_ComputeShader:
+						l_shader_target = FE::internal::renderer::compute_shader_target;
+						break;
+					}
+
+
+					thread_local static var::wchar tl_s_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
+					_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, l_file._source_path.c_str(), (int)strlen(l_file._source_path.c_str()) + 1, tl_s_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
+					FE_ASSERT(l_length > 0);
+
+
+					wrl::ComPtr<ID3DBlob> l_errors;
+					const HRESULT l_result = D3DCompileFromFile(tl_s_wide_path,
+						macro_combination.data(),
+						D3D_COMPILE_STANDARD_FILE_INCLUDE,
+						l_file._main_function.c_str(),
+						l_shader_target,
+						l_flags,
+						FE::null, // Legacy flag, should be set to 0
+						&l_file._source_code,
+						&l_errors
+						);
+
+					if (l_errors != nullptr)
+					{
+						OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
+					}
+
+					FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
+				}
+
+			}
+		);
+	}
+
+	l_executor.run(l_taskflow);
+	// 
+	// spin wait while drawing shader compile splashscreen
+
+
+	l_renderer.m_backend = std::move(l_backend); 	// --- game render backend takes over the HWND --------------------------
+
+
+	while (l_renderer.m_should_exit.load(std::memory_order_acquire) == false) 	
 	{
 		l_renderer.render_frame();
 	}
@@ -265,3 +380,4 @@ void renderer::toggle_borderless_fullscreen() noexcept
 
 
 END_NAMESPACE
+

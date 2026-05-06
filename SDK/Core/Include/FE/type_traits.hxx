@@ -42,6 +42,15 @@ struct remove_const_reference
 template <typename T>
 using remove_const_reference_t = typename remove_const_reference<T>::type;
 
+template <typename T>
+struct remove_all
+{
+	using type = std::remove_pointer_t< std::remove_all_extents_t< std::remove_volatile_t<remove_const_reference_t<T>> > >;
+};
+
+template <typename T>
+using remove_all_t = typename remove_all<T>::type;
+
 
 
 

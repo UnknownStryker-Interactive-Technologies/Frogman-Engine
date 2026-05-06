@@ -53,22 +53,6 @@ struct path_lut // fields are immutable after window creation; modifying these v
     std::pmr::vector<std::pmr::string> _module_paths;
 };
 
-struct shader_define
-{
-	std::pmr::string _identifier;
-	FE::pair<var::int64, var::int64> _value_range;
-};
-
-struct shader
-{
-	std::pmr::vector<shader_define> _defines;
-    std::pmr::vector<std::pmr::string> _permutation_blacklist;
-    std::pmr::vector<std::pmr::string> _permutation;
-    std::pmr::string _main_function;
-    std::pmr::string _source_path;
-	std::pmr::string _source_code;
-    internal::renderer::ShaderTarget _shader_target;
-};
 
 struct project_config // fields are immutable after window creation; modifying these values will not affect any.
 {
@@ -122,7 +106,7 @@ class alignas(FE::CPU_L1_cache_line::size) engine final : public FE::framework::
 
     FE::engine_info m_engine_info;
     FE::project_config m_project_config;
-	std::pmr::vector<shader> m_shaders;
+	std::pmr::vector<::FE::internal::renderer::shader> m_shaders;
 
     FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 

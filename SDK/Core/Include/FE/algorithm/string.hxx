@@ -959,9 +959,9 @@ constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexc
     return l_fnv1a.result();
 }
 
-#define STRING_SWITCH(x) switch ( ::FE::algorithm::string::hash_bytes< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x, ::FE::algorithm::string::length< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x) ) )
+#define STRING_SWITCH(x) switch ( ::FE::algorithm::string::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::length< FE::remove_all_t<decltype(x)> >(x) ))
 
-#define STRING_CASE(x) case ::FE::algorithm::string::hash_bytes< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x, ::FE::algorithm::string::length< std::remove_pointer_t< std::remove_const_t<decltype(x)> > >(x) )
+#define STRING_CASE(x) case ::FE::algorithm::string::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::length< FE::remove_all_t<decltype(x)> >(x))
 
 
 END_NAMESPACE

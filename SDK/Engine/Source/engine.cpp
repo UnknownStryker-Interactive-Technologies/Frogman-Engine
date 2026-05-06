@@ -318,12 +318,11 @@ void FE::engine::__read_froggy() noexcept
 		for (auto& shader : l_froggy_json["Shaders"].get_array())
 		{
 			m_shaders.emplace_back();
-			m_shaders.back()._defines = std::pmr::vector<FE::shader_define>(framework_base::get_large_memory_resource());
+			m_shaders.back()._defines = std::pmr::vector<FE::internal::renderer::shader_define>(framework_base::get_large_memory_resource());
 			m_shaders.back()._permutation_blacklist = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
-			m_shaders.back()._permutation = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+			m_shaders.back()._macro_combinations = std::pmr::vector<std::pmr::vector<FE::internal::renderer::shader::macro>>(framework_base::get_large_memory_resource());
 			m_shaders.back()._main_function = std::pmr::string(framework_base::get_large_memory_resource());
 			m_shaders.back()._source_path = std::pmr::string(framework_base::get_large_memory_resource());
-			m_shaders.back()._source_code = std::pmr::string(framework_base::get_large_memory_resource());
 
 			auto& l_shader = shader.get_object();
 			FE_ASSERT(l_shader["Defines"].is_array() == true);
@@ -340,6 +339,7 @@ void FE::engine::__read_froggy() noexcept
 					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
 					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
 					FE_ASSERT(m_shaders.back()._defines.back()._value_range._first <= m_shaders.back()._defines.back()._value_range._second);
+					m_shaders.back()._defines.back()._current_value = m_shaders.back()._defines.back()._value_range._first; // set current value to the minimum value in the range by default
 				}
 			}
 
@@ -355,10 +355,6 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(l_shader["Source"].is_string() == true);
 			m_shaders.back()._source_path = l_shader["Source"].get_string();
 
-			std::fstream l_ifstream(m_shaders.back()._source_path.c_str(), std::ios::binary | std::ios::in);
-			FE::fstream_guard l_shader_file_stream(l_ifstream);
-			FE_EXIT_IF(l_ifstream.is_open() == false, FE::ErrorCode::_FatalError_FileOpenFailure, "Failed to open shader source file at path: %s", m_shaders.back()._source_path.c_str());
-			l_shader_file_stream.get_stream() >> m_shaders.back()._source_code;
 
 			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
 			{

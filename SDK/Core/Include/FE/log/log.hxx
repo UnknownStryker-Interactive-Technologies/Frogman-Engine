@@ -242,6 +242,12 @@ namespace FE
 		_FatalSwitchCaseError_ReachedNoDefault = 4,
 		_FatalError_TableInsertionFailure = 5,
 		_FatalError_FileOpenFailure = 6,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MacroUndefined = 7,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingParenthesis = 8,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingOperand = 9,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingLhsOperand = 10,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingRhsOperand = 11,
+		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingOperator = 12,
 
 		_FatalMemoryError_1XX_IncorrectAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,

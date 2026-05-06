@@ -1,5 +1,5 @@
-#ifndef _FROGMAN_ENGINE_PERMUTATION_BLACKLIST_HPP_
-#define _FROGMAN_ENGINE_PERMUTATION_BLACKLIST_HPP_
+#ifndef _FROGMAN_ENGINE_BLACKLIST_EVALUATOR_HXX_
+#define _FROGMAN_ENGINE_BLACKLIST_EVALUATOR_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/renderer.hxx>
 
 
 
@@ -23,8 +24,7 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::internal)
 
 
-
-
+void __filter_shader_macro_combinations(class renderer::shader& in_out_shader_p) noexcept;
 
 
 END_NAMESPACE

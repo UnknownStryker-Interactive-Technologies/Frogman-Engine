@@ -442,10 +442,10 @@ constexpr int_info string_to_int(const CharT* integral_string_p) noexcept
 }
 
 template<typename CharT>
-constexpr void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::int64 value_p) noexcept
+constexpr void int_to_string(CharT* const out_string_p, _FE_MAYBE_UNUSED_ uint64 str_buff_len_p, var::int64 value_p) noexcept
 {
     static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
-    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_ASSERT(out_string_p == nullptr, "NULLPTR DETECTED: out_string_p is nullptr.");
     FE_NEGATIVE_ASSERT(value_p == FE::min_value<var::int64>, "NaCN ERROR: value_p is not a calculatable number");
 
     var::uint8 l_integral_digits = algorithm::utility::count_int_digit_length(value_p);
@@ -453,42 +453,58 @@ constexpr void int_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64
     if (value_p < 0)
     {
         value_p *= -1;
-        *string_out_p = static_cast<CharT>('-');
+        *out_string_p = static_cast<CharT>('-');
         ++l_integral_digits;
     }
 
-    FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+    FE_NEGATIVE_ASSERT(str_buff_len_p < l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::uint8 l_idx = l_integral_digits - 1;
+
+    if (value_p == 0) _FE_UNLIKELY_
+    {
+        out_string_p[0] = (CharT)'0';
+        out_string_p[l_integral_digits] = null;
+        return;
+    }
+
     while (value_p > 0)
     {
-        string_out_p[l_idx] = ASCII_code_zero + (value_p % 10);
+        out_string_p[l_idx] = ASCII_code_zero + (value_p % 10);
         value_p /= 10;
         --l_idx;
     }
 
-    string_out_p[l_integral_digits] = null;
+    out_string_p[l_integral_digits] = null;
 }
 
 template<typename CharT>
-constexpr void uint_to_string(CharT* const string_out_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
+constexpr void uint_to_string(CharT* const out_string_p, _FE_MAYBE_UNUSED_ uint64 input_string_capacity_p, var::uint64 value_p) noexcept
 {
     static_assert(FE::is_char<CharT>::value, "an illegal type of value_p assigned to the template argument CharT");
-    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_ASSERT(out_string_p == nullptr, "NULLPTR DETECTED: out_string_p is nullptr.");
 
     var::uint8 l_integral_digits = algorithm::utility::count_uint_digit_length(value_p);
 
     FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::uint8 l_idx = l_integral_digits - 1;
+
+    if (value_p == 0) _FE_UNLIKELY_
+    {
+        out_string_p[0] = (CharT)'0';
+        out_string_p[l_integral_digits] = null;
+        return;
+    }
+
     while (value_p > 0)
     {
-        string_out_p[l_idx] = ASCII_code_zero + (value_p % 10);
+        out_string_p[l_idx] = ASCII_code_zero + (value_p % 10);
         value_p /= 10;
         --l_idx;
     }
 
-    string_out_p[l_integral_digits] = null;
+    out_string_p[l_integral_digits] = null;
 }
 
 
@@ -532,7 +548,7 @@ constexpr void float_to_string(CharT* const string_out_p, uint64 input_string_ca
 {
     static_assert(FE::is_char<CharT>::value, "an illegal type assigned to the template argument CharT");
 
-    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: string_out_p is nullptr.");
+    FE_NEGATIVE_ASSERT(string_out_p == nullptr, "NULLPTR DETECTED: out_string_p is nullptr.");
 
     algorithm::utility::int_to_string<CharT>(string_out_p, input_string_capacity_p, static_cast<var::int64>(value_p));
 
