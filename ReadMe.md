@@ -48,8 +48,8 @@ https://github.com/abseil/abseil-cpp/releases/tag/20260107.1
 - Assimp 6.0.4  
 https://github.com/assimp/assimp/releases
 
-- Boost Libraries 1.87.0  
-https://github.com/boostorg/boost/releases/tag/boost-1.87.0  
+- Boost Libraries 1.91.0  
+https://github.com/boostorg/boost/releases/tag/boost-1.91.0  
 
 - City Hash  
 https://github.com/google/cityhash  
