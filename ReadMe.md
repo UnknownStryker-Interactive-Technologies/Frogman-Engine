@@ -1,16 +1,13 @@
-[![License](https://img.shields.io/badge/License-Frogman_Engine_Apache-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Frogman_Engine-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-x86_64-white.svg)](PLATFORM)
 [![SIMD](https://img.shields.io/badge/SIMD-AVX-blue.svg)](PLATFORM)
 [![SIMD](https://img.shields.io/badge/SIMD-AVX512F-red.svg)](PLATFORM)
 
 # Frogman-Engine™
 
-https://github.com/user-attachments/assets/81ea57c7-0b17-45bd-bfd0-a50467f7bd56
+**LICENSE**: https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
-Copyright © from 2022-present, UNKNOWN STRYKER. All Rights Reserved.  
-**The Frogman Engine is licensed under a modified Apache License 2.0.**  
-⚠️ **NOTICE**: The contents of this repository **MAY NOT BE USED** for **training AI(Artificial Intelligence) models** without prior written permission. Please contact unknownstryker416@gmail.com to request for the permission.  
-The **Frogman Engine Game Development Kit** is **TOTALLY FREE** without any licensing fees if conforming to the **License** and if used for **game development**. Otherwise license fees apply.
+https://github.com/user-attachments/assets/81ea57c7-0b17-45bd-bfd0-a50467f7bd56
 
 ### Frogman Engine GDK has these two major GUI utility apps  
 - Frogman Engine Installer: https://github.com/UnknownStryker-Interactive-Technologies/Installer  
