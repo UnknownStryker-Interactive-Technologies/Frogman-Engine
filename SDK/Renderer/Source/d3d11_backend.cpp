@@ -29,118 +29,6 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::internal::renderer)
 
 
-wrl::ComPtr<ID3DBlob> __compile_shader_from_file(FE::ASCII* const file_path_p, FE::ASCII* const entry_point_p, const ShaderTarget target_p) noexcept
-{
-	FE_ASSERT(file_path_p != nullptr);
-	FE_ASSERT(entry_point_p != nullptr);
-
-	var::wchar l_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
-	_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p) + 1, l_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
-	FE_ASSERT(l_length > 0);
-
-	var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
-#ifdef _DEBUG_
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
-#elif defined(_RELWITHDEBINFO_)
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#else
-	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-
-	FE::ASCII* l_target = nullptr;
-	switch (target_p)
-	{
-	case ShaderTarget::_VertexShader:
-		l_target = vertex_shader_target;
-		break;
-
-	case ShaderTarget::_PixelShader:
-		l_target = pixel_shader_target;
-		break;
-
-	case ShaderTarget::_GeometryShader:
-		l_target = geometry_shader_target;
-		break;
-
-	case ShaderTarget::_HullShader:
-		l_target = hull_shader_target;
-		break;
-
-	case ShaderTarget::_DomainShader:
-		l_target = domain_shader_target;
-		break;
-
-	case ShaderTarget::_ComputeShader:
-		l_target = compute_shader_target;
-		break;
-
-		_FE_NODEFAULT_;
-	}
-
-	wrl::ComPtr<ID3DBlob> l_bytecode;
-	wrl::ComPtr<ID3DBlob> l_errors;
-	const HRESULT l_result = D3DCompileFromFile(l_wide_path,
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE,
-		entry_point_p,
-		l_target,
-		l_flags,
-		0, // Legacy flag, should be set to 0
-		&l_bytecode,
-		&l_errors
-	);
-
-	if (l_errors != nullptr)
-	{
-		OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
-	}
-
-	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
-
-	return l_bytecode;
-}
-
-wrl::ComPtr<ID3D11VertexShader> __create_vertex_shader(ID3D11Device5* const device_p, ID3DBlob* const bytecode_p) noexcept
-{
-	FE_ASSERT(device_p != nullptr);
-	FE_ASSERT(bytecode_p != nullptr);
-
-	wrl::ComPtr<ID3D11VertexShader> l_vertex_shader;
-	const HRESULT l_result = device_p->CreateVertexShader(bytecode_p->GetBufferPointer(), bytecode_p->GetBufferSize(), nullptr, &l_vertex_shader);
-
-	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCreationFailure, "Failed to create vertex shader; the error code is ${%d@0}.", &l_result);
-	return l_vertex_shader;
-}
-
-wrl::ComPtr<ID3D11PixelShader> __create_pixel_shader(ID3D11Device5* const device_p, ID3DBlob* const bytecode_p) noexcept
-{
-	FE_ASSERT(device_p != nullptr);
-	FE_ASSERT(bytecode_p != nullptr);
-
-	wrl::ComPtr<ID3D11PixelShader> l_pixel_shader;
-	const HRESULT l_result = device_p->CreatePixelShader(bytecode_p->GetBufferPointer(), bytecode_p->GetBufferSize(), nullptr, &l_pixel_shader);
-
-	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCreationFailure, "Failed to create pixel shader; the error code is ${%d@0}.", &l_result);
-	return l_pixel_shader;
-}
-
-wrl::ComPtr<ID3D11InputLayout> __create_input_layout(ID3D11Device5* const device_p, const D3D11_INPUT_ELEMENT_DESC* const descs_p, FE::uint32 descs_count_p, ID3DBlob* const vertex_shader_bytecode_p) noexcept
-{
-	FE_ASSERT(device_p != nullptr);
-	FE_ASSERT(descs_p != nullptr);
-	FE_ASSERT(descs_count_p > 0);
-	FE_ASSERT(vertex_shader_bytecode_p != nullptr);
-
-	wrl::ComPtr<ID3D11InputLayout> l_input_layout;
-	const HRESULT l_result = device_p->CreateInputLayout(descs_p, descs_count_p, vertex_shader_bytecode_p->GetBufferPointer(), vertex_shader_bytecode_p->GetBufferSize(), &l_input_layout);
-
-	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_InputLayoutCreationFailure, "Failed to create input layout; the error code is ${%d@0}.", &l_result);
-	return l_input_layout;
-}
-
-
-
-
 d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	:	m_frontend(frontend_p),
 		m_device(),
@@ -254,7 +142,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	{
 		.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
 		.Scaling = DXGI_MODE_SCALING_UNSPECIFIED,
-		.Windowed = !(m_frontend->m_window_config._is_fullscreen)
+		.Windowed = true
 	};
 	l_fullscreen_desc.RefreshRate.Numerator = m_frontend->m_video_mode->refreshRate;
 	l_fullscreen_desc.RefreshRate.Denominator = 1;
@@ -428,21 +316,25 @@ void d3d11_backend::resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 n
 	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), m_depth_stencil_view.Get());
 }
 
-void d3d11_backend::render_frame() noexcept
+void d3d11_backend::begin_frame() noexcept
 {
+	m_context->OMSetRenderTargets(1, m_render_target_view.GetAddressOf(), m_depth_stencil_view.Get());
 	m_context->ClearRenderTargetView(m_render_target_view.Get(), m_clear_color);
 	m_context->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	const HRESULT l_result = m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
-													((m_frontend->m_window_config._should_enable_vsync  == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,
-													&m_present_params);
-
-	if(l_result == DXGI_STATUS_OCCLUDED) _FE_UNLIKELY_
-	{
-		std::this_thread::yield();
-	}
 }
 
+void d3d11_backend::end_frame() noexcept
+{
+	const HRESULT l_result = m_swapchain->Present1(	m_frontend->m_window_config._should_enable_vsync,
+													((m_frontend->m_window_config._should_enable_vsync == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0,
+													&m_present_params
+	);
+
+	if (l_result == DXGI_STATUS_OCCLUDED) _FE_UNLIKELY_
+	{
+		_mm_pause();
+	}
+}
 
 END_NAMESPACE
 #endif

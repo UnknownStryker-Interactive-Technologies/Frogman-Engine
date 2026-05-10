@@ -125,6 +125,7 @@ public:
 
     _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return m_engine_info; }
 	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return m_project_config; }
+    _FE_FORCE_INLINE_ FE::project_config& get_project_config() noexcept { return m_project_config; }
 
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 

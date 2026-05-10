@@ -15,21 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+
+#include <FE/blacklist_evaluator.hxx>
+#include <FE/clock.hxx>
 #include <FE/engine.hpp>
+#include <FE/image.hpp>
+#include <FE/video_player.hpp>
 
 #include <FE/framework/game_processor.hxx>
 
-#include <FE/video_player.hpp>
-#include <FE/blacklist_evaluator.hxx>
+#include <atomic>
+
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_dx11.h>
 
 #include <taskflow.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h> // for loading icons
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h> // for loading icons & images
 
 
 
@@ -52,6 +60,78 @@ internal::renderer::shader::~shader() noexcept
 			l_deallocator.deallocate((char*)macro.Definition, std::strlen(macro.Definition) + 1);
 			macro.Definition = nullptr;
 		}
+	}
+}
+
+window_config::~window_config() noexcept
+{
+}
+
+void internal::renderer::shader::compile() noexcept
+{
+	var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
+#ifdef _DEBUG_
+	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+#elif defined(_RELWITHDEBINFO_)
+	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#else
+	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+	_permutations.reserve(_macro_combinations.size());
+	for (auto& macro_combination : _macro_combinations)
+	{
+		FE::ASCII* l_shader_target = nullptr;
+		switch (_shader_target)
+		{
+		case internal::renderer::ShaderTarget::_VertexShader:
+			l_shader_target = FE::internal::renderer::vertex_shader_target;
+			break;
+
+		case internal::renderer::ShaderTarget::_PixelShader:
+			l_shader_target = FE::internal::renderer::pixel_shader_target;
+			break;
+
+		case internal::renderer::ShaderTarget::_GeometryShader:
+			l_shader_target = FE::internal::renderer::geometry_shader_target;
+			break;
+
+		case internal::renderer::ShaderTarget::_HullShader:
+			l_shader_target = FE::internal::renderer::hull_shader_target;
+			break;
+
+		case internal::renderer::ShaderTarget::_DomainShader:
+			l_shader_target = FE::internal::renderer::domain_shader_target;
+			break;
+
+		case internal::renderer::ShaderTarget::_ComputeShader:
+			l_shader_target = FE::internal::renderer::compute_shader_target;
+			break;
+		}
+		_permutations.emplace_back();
+
+
+		thread_local static var::wchar tl_s_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
+		_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, _source_path.c_str(), (int)strlen(_source_path.c_str()) + 1, tl_s_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
+		FE_ASSERT(l_length > 0);
+
+
+		wrl::ComPtr<ID3DBlob> l_errors;
+		const HRESULT l_result = D3DCompileFromFile(tl_s_wide_path,
+			macro_combination.data(),
+			D3D_COMPILE_STANDARD_FILE_INCLUDE,
+			_main_function.c_str(),
+			l_shader_target,
+			l_flags,
+			FE::null, // Legacy flag, should be set to 0
+			&_permutations.back(),
+			&l_errors
+		);
+
+		if (l_errors != nullptr) _FE_UNLIKELY_
+		{
+			OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
+		}
+		FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
 	}
 }
 
@@ -119,13 +199,19 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	FE_EXIT_IF(m_window == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_WindowCreationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window creation failed.");
 	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE); // Enable sticky keys input mode; the value remains until retrieved.
 	
-	if (m_window_config._icon_image.empty() == false)
+	if (m_window_config._icon_images.empty() == false)
 	{
-		glfwSetWindowIcon(m_window, (int)m_window_config._icon_image.size(), m_window_config._icon_image.data());
+		glfwSetWindowIcon(m_window, (int)m_window_config._icon_images.size(), m_window_config._icon_images.data());
 
-		for (GLFWimage& image : m_window_config._icon_image)
+		for (GLFWimage& image : m_window_config._icon_images)
 		{
+			if (image.pixels == nullptr)
+			{
+				continue;
+			}
+
 			stbi_image_free(image.pixels);
+			image.pixels = nullptr;
 		}
 	}
 
@@ -168,7 +254,9 @@ void renderer::render_frame() noexcept
 
 	m_render_delta_milliseconds.start_clock();
 
-	m_backend->render_frame();
+	m_backend->begin_frame();
+
+	m_backend->end_frame();
 
 	m_render_delta_milliseconds.end_clock();
 	m_delta_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
@@ -198,7 +286,6 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = *l_engine.m_renderer;
-	std::unique_ptr<FE::internal::renderer::backend> l_backend = std::move(l_renderer.m_backend);
 
 
 	tf::Executor l_executor;
@@ -216,8 +303,14 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 	auto l_future = l_executor.run(l_taskflow);
 
 
-	HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
+	if (l_renderer.m_window_config._is_fullscreen == true)
 	{
+		l_renderer.toggle_borderless_fullscreen();
+	}
+
+
+	{
+		HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 		FE::video_player l_intro(l_hwnd);
 
 		auto& l_random_list = l_engine.get_project_config()._window_config._random_play_video_intro_paths;
@@ -237,90 +330,101 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 	} // l_intro destructs → MF::Shutdown → HWND free for the D3D backend
 	
 
-	l_future.wait();
-	l_taskflow.clear();
-	for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
 	{
-		l_taskflow.emplace
-		(
-			[&l_engine, n]()
-			{
-				auto& l_file = l_engine.m_shaders[n];
-				var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
-#ifdef _DEBUG_
-				l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
-#elif defined(_RELWITHDEBINFO_)
-				l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#else
-				l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
+		l_future.wait();
+		l_taskflow.clear();
+		var::uint64 l_total_permutations = 0;
+		std::atomic_uint64_t l_permutations_compiled = 0;
 
-				for (auto& macro_combination : l_file._macro_combinations)
+		for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
+		{
+			l_total_permutations += l_engine.m_shaders[n]._macro_combinations.size();
+
+			l_taskflow.emplace
+			(
+				[&l_engine, &l_permutations_compiled, n]()
 				{
-					FE::ASCII* l_shader_target = nullptr;
-					switch (l_file._shader_target)
-					{
-					case internal::renderer::ShaderTarget::_VertexShader:
-						l_shader_target = FE::internal::renderer::vertex_shader_target; 
-						break;
-
-					case internal::renderer::ShaderTarget::_PixelShader:
-						l_shader_target = FE::internal::renderer::pixel_shader_target; 
-						break;
-
-					case internal::renderer::ShaderTarget::_GeometryShader:
-						l_shader_target = FE::internal::renderer::geometry_shader_target;
-						break;
-
-					case internal::renderer::ShaderTarget::_HullShader:
-						l_shader_target = FE::internal::renderer::hull_shader_target;
-						break;
-
-					case internal::renderer::ShaderTarget::_DomainShader:
-						l_shader_target = FE::internal::renderer::domain_shader_target;
-						break;
-
-					case internal::renderer::ShaderTarget::_ComputeShader:
-						l_shader_target = FE::internal::renderer::compute_shader_target;
-						break;
-					}
-
-
-					thread_local static var::wchar tl_s_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
-					_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, l_file._source_path.c_str(), (int)strlen(l_file._source_path.c_str()) + 1, tl_s_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
-					FE_ASSERT(l_length > 0);
-
-
-					wrl::ComPtr<ID3DBlob> l_errors;
-					const HRESULT l_result = D3DCompileFromFile(tl_s_wide_path,
-						macro_combination.data(),
-						D3D_COMPILE_STANDARD_FILE_INCLUDE,
-						l_file._main_function.c_str(),
-						l_shader_target,
-						l_flags,
-						FE::null, // Legacy flag, should be set to 0
-						&l_file._source_code,
-						&l_errors
-						);
-
-					if (l_errors != nullptr)
-					{
-						OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
-					}
-
-					FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
+					l_engine.m_shaders[n].compile();
+					l_permutations_compiled.fetch_add(	l_engine.m_shaders[n]._permutations.size(), 
+														std::memory_order_acq_rel
+														);
 				}
+			);
+		}
 
+		l_executor.run(l_taskflow);
+		
+		for (FE::image& image : l_engine.get_project_config()._window_config._shader_compile_splash_images)
+		{
+			image.load_to_renderer(l_renderer.m_backend->get_device());
+		}
+		
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_InitForOther(l_renderer.m_window, false);
+		ImGui_ImplDX11_Init(l_renderer.m_backend->get_device(), l_renderer.m_backend->get_context());
+
+		FE::clock l_shader_compile_splash_duration;
+		auto l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.begin();
+
+		l_shader_compile_splash_duration.start_clock();
+		while (l_total_permutations > l_permutations_compiled.load(std::memory_order_acquire))
+		{
+			l_renderer.m_backend->begin_frame();
+
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplGlfw_NewFrame();  
+			ImGui::NewFrame();
+
+			l_shader_compile_splash_duration.end_clock();
+
+			FE::uint32 l_duration_seconds = (FE::uint32)(l_shader_compile_splash_duration.get_delta_milliseconds() / 1000.0);
+			if (l_duration_seconds >= l_engine.get_project_config()._window_config._splash_duration_in_seconds)
+			{
+				++l_splash_iterator;
+				if (l_splash_iterator == l_engine.get_project_config()._window_config._shader_compile_splash_images.end())
+				{
+					l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.begin();
+				}
+				l_shader_compile_splash_duration.start_clock();
 			}
-		);
+
+			FE::image& l_image = *l_splash_iterator;
+			ImGuiIO& l_io = ImGui::GetIO();
+
+			ImGui::SetNextWindowPos(ImVec2(0, 0));
+			ImGui::SetNextWindowSize(l_io.DisplaySize);
+			ImGui::Begin
+			(
+				"##shader_compile_splash", nullptr,
+				ImGuiWindowFlags_NoBackground |
+				ImGuiWindowFlags_NoDecoration
+			);
+
+			ImGui::Image(l_image.shader_resource_view(), l_io.DisplaySize);
+
+			FE::float32 l_progress = (FE::float32)l_permutations_compiled.load(std::memory_order_acquire) / (FE::float32)l_total_permutations;
+
+			ImVec2 l_window_size = ImGui::GetWindowSize();
+			constexpr FE::float32 l_corner_padding = 50.0f;
+			ImVec2 l_UI_pos{ l_corner_padding, l_window_size.y - l_corner_padding };
+			ImGui::SetCursorPos(l_UI_pos);
+
+			constexpr FE::float32 l_bar_thickness = 25.0f;
+			ImVec2 l_bar_size{ l_window_size.x - (l_corner_padding*2), l_bar_thickness };
+			ImGui::ProgressBar(l_progress, l_bar_size);
+
+			ImGui::End();
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+			l_renderer.m_backend->end_frame();
+		}
+
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
-
-	l_executor.run(l_taskflow);
-	// 
-	// spin wait while drawing shader compile splashscreen
-
-
-	l_renderer.m_backend = std::move(l_backend); 	// --- game render backend takes over the HWND --------------------------
 
 
 	while (l_renderer.m_should_exit.load(std::memory_order_acquire) == false) 	
@@ -380,4 +484,3 @@ void renderer::toggle_borderless_fullscreen() noexcept
 
 
 END_NAMESPACE
-

@@ -33,6 +33,7 @@ namespace wrl = ::Microsoft::WRL;
 
 
 CLASS_FORWARD_DECLARATION(FE, renderer);
+STRUCT_FORWARD_DECLARATION(FE::internal::renderer, shader_define);
 
 
 
@@ -86,11 +87,17 @@ public:
 	~d3d11_backend() noexcept;
 
 	void resize_swap_chain_buffers(FE::int32 new_width_p, FE::int32 new_height_p) noexcept;
-	void render_frame() noexcept;
+
+	void begin_frame() noexcept;
+    void end_frame() noexcept;
 
 	ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
+	ID3D11DeviceContext4* get_context() const noexcept { return m_context.Get(); }
 };
 
+#ifdef _FE_ON_WINDOWS_X86_64_
+using backend = d3d11_backend;
+#endif
 
 END_NAMESPACE
 #endif

@@ -631,6 +631,7 @@ void __filter_shader_macro_combinations(renderer::shader& in_out_shader_p) noexc
             FE::algorithm::utility::int_to_string< char >((char*)l_macro.Definition, l_capacity, define->_current_value);
             in_out_shader_p._macro_combinations.back().push_back(l_macro);
         }
+		in_out_shader_p._macro_combinations.back().emplace_back(nullptr, nullptr); // null-terminator
 
         __regenerate_macro_combination(l_valid_defines, it);
     }

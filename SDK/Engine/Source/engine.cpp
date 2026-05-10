@@ -280,8 +280,9 @@ void FE::engine::__read_froggy() noexcept
 			l_path += "\\";
 			l_path += m_project_config._window_config._icon_paths.back();
 
-			m_project_config._window_config._icon_image.emplace_back();
-			m_project_config._window_config._icon_image.back().pixels = stbi_load(l_path.c_str(), &(m_project_config._window_config._icon_image.back().width), &(m_project_config._window_config._icon_image.back().height), nullptr, 4/*RGBA*/);
+			m_project_config._window_config._icon_images = std::pmr::vector<GLFWimage>(framework_base::get_large_memory_resource());
+			m_project_config._window_config._icon_images.emplace_back();
+			m_project_config._window_config._icon_images.back().pixels = stbi_load(l_path.c_str(), &(m_project_config._window_config._icon_images.back().width), &(m_project_config._window_config._icon_images.back().height), nullptr, 4/*RGBA*/);
 		}
 
 
@@ -308,8 +309,26 @@ void FE::engine::__read_froggy() noexcept
 			m_project_config._window_config._sequential_play_video_intro_paths.push_back(std::move(l_path));
 		}
 
+
 		*const_cast<var::uint8*>(&(m_project_config._window_config._swap_chain_buffer_count)) = static_cast<FE::uint8>(l_window_config["SwapChainBufferCount"].get_int64());
 		FE_ASSERT(m_project_config._window_config._swap_chain_buffer_count > 0);
+
+
+		m_project_config._window_config._shader_compile_splash_images = std::pmr::vector<FE::image>(framework_base::get_large_memory_resource());
+		for (auto& element : l_window_config["ShaderCompileSplashImagePaths"].get_array())
+		{
+			FE_ASSERT(element.is_string() == true);
+
+			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
+			l_path += "\\";
+			l_path += element.get_string();
+
+			m_project_config._window_config._shader_compile_splash_images.emplace_back();
+			m_project_config._window_config._shader_compile_splash_images.back().read_image_from_disk(l_path.c_str());
+		}
+
+		FE_ASSERT(l_window_config["ShaderCompileSplashImageDurationInSeconds"].is_int64() == true);
+		m_project_config._window_config._splash_duration_in_seconds = (var::uint32)l_window_config["ShaderCompileSplashImageDurationInSeconds"].as_int64();
 	}
 
 	{

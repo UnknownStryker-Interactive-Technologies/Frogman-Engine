@@ -16,6 +16,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+
+#include <FE/clock.hxx>
+#include <FE/pair.hxx>
+
+#include <FE/framework/processors.hxx>
+
+#include <FE/image.hpp>
+
 #pragma warning(disable: 4005)
 #include <GLFW/glfw3.h> // Do not redefine the macro defines! It prevents code compilation if /Wx is enabled.
 
@@ -25,9 +33,6 @@ limitations under the License.
 	#include <FE/opengl_es.hxx>
 #endif
 
-#include <FE/clock.hxx>
-#include <FE/framework/processors.hxx>
-
 
 
 
@@ -36,12 +41,6 @@ BEGIN_NAMESPACE(FE)
 
 namespace internal::renderer
 {
-#ifdef _FE_ON_WINDOWS_X86_64_
-	using backend = d3d11_backend;
-#else
-	using backend = opengl_es_backend;
-#endif
-
 	struct shader_define
 	{
 		std::pmr::string _identifier;
@@ -60,27 +59,35 @@ namespace internal::renderer
 		std::pmr::vector<std::pmr::vector<macro>> _macro_combinations;
 		std::pmr::string _main_function;
 		std::pmr::string _source_path;
-		compiled_source _source_code;
+		std::pmr::vector<compiled_source> _permutations;
 		internal::renderer::ShaderTarget _shader_target;
 
 		~shader() noexcept;
+
+	public:
+		void compile() noexcept;
 	};
 }
 
 
-struct window_config // fields are immutable after window creation; modifying these values will not affect any.
+class window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
+public:
     std::pmr::string _title = "Frogman Game";
 	std::pmr::vector<std::pmr::string> _icon_paths;
-	std::pmr::vector<GLFWimage> _icon_image;
+	std::pmr::vector<GLFWimage> _icon_images;
 
 	std::pmr::vector<std::pmr::string> _random_play_video_intro_paths;
 	std::pmr::vector<std::pmr::string> _sequential_play_video_intro_paths;
+	std::pmr::vector<FE::image> _shader_compile_splash_images;
+	var::uint32 _splash_duration_in_seconds;
 
 	FE::uint8 _swap_chain_buffer_count = 3;
 
 	var::boolean _should_enable_vsync = false;
     var::boolean _is_fullscreen = false;
+
+	~window_config() noexcept;
 };
 
 

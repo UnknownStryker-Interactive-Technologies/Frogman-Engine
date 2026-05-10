@@ -209,10 +209,9 @@ void FE::video_player::play(FE::ASCII* file_path_p) noexcept
         FE::ErrorCode::_FatalWinAPI_MF_Error_4XX_VideoFileOpenFailure,
         "Frogman Engine Video Player Error: Failed to open video file.");
 
-    // Wait for CANPLAY. MF runs its own render thread, so we just sleep.
     while ((__is_ready() == false) && (__has_error() == false))
     {
-		std::this_thread::yield();
+        _mm_pause();
     }
     
     if (__has_error() == true) 
@@ -220,9 +219,6 @@ void FE::video_player::play(FE::ASCII* file_path_p) noexcept
         return; 
     }
 
-    // Block until the clip finishes. MF handles all rendering internally on
-    // its own HWND swap chain. We poll at a coarse granularity — this thread
-    // has nothing else to do during the intro.
     for (;;)
     {
         if (m_notify->HasError() == true)
@@ -239,7 +235,6 @@ void FE::video_player::play(FE::ASCII* file_path_p) noexcept
         }
 
         m_engine_ex->UpdateVideoStream(nullptr, nullptr, nullptr);
-
-		std::this_thread::yield();
+        _mm_pause();
     }
 }
