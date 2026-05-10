@@ -16,8 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <robin_hood.h>
-
 // std::is_same_v
 #include <type_traits>
 

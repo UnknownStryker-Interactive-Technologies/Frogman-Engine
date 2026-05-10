@@ -421,7 +421,7 @@ public:
 		{
 			return CityHash64((FE::ASCII*)m_bitmask, __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
 		}
-		return robin_hood::hash_int(m_64bit_buffer);
+		return CityHash64(reinterpret_cast<const char*>(&m_64bit_buffer), sizeof(m_64bit_buffer));
 	}
 
 	_FE_FORCE_INLINE_ FE::byte* data() const noexcept

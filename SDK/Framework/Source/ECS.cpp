@@ -91,7 +91,7 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::compo
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
 
 
-	const std::size_t l_hash_code = robin_hood::hash_bytes(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
+	const std::size_t l_hash_code = CityHash64(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
 
 	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
@@ -153,7 +153,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 	}
 	return std::move(l_serialized_components);
 }
-// const robin_hood::unordered_map<std::pmr::string, std::pmr::string>& does not compile
+
 void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p, FE::ASCII* const entity_memory_layout_version) noexcept
 {
 	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);

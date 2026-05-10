@@ -885,7 +885,7 @@
 
 .code
 	PUBLIC __join_fiber
-		__join_fiber PROC ; do not modify r11! r11 must be unmodified in this routine.
+		__join_fiber PROC ; do not modify r11! r11 has 'this' and must be unmodified in this routine.
 			; RCX = thread_p
 			; RDX = simd_vector_size_p
 
@@ -947,42 +947,42 @@
 
 
 		join_fiber_context_restoration_switch_case16::
-			movapd xmm6, XMMWORD PTR [r11]
-			movapd xmm7, XMMWORD PTR [r11 + 16]
-			movapd xmm8, XMMWORD PTR [r11 + 32]
-			movapd xmm9, XMMWORD PTR [r11 + 48]
-			movapd xmm10, XMMWORD PTR [r11 + 64]
-			movapd xmm11, XMMWORD PTR [r11 + 80]
-			movapd xmm12, XMMWORD PTR [r11 + 96]
-			movapd xmm13, XMMWORD PTR [r11 + 112]
-			movapd xmm14, XMMWORD PTR [r11 + 128]
-			movapd xmm15, XMMWORD PTR [r11 + 144]
+			movapd xmm6, XMMWORD PTR [r10]
+			movapd xmm7, XMMWORD PTR [r10 + 16]
+			movapd xmm8, XMMWORD PTR [r10 + 32]
+			movapd xmm9, XMMWORD PTR [r10 + 48]
+			movapd xmm10, XMMWORD PTR [r10 + 64]
+			movapd xmm11, XMMWORD PTR [r10 + 80]
+			movapd xmm12, XMMWORD PTR [r10 + 96]
+			movapd xmm13, XMMWORD PTR [r10 + 112]
+			movapd xmm14, XMMWORD PTR [r10 + 128]
+			movapd xmm15, XMMWORD PTR [r10 + 144]
 			jmp join_fiber_context_restoration_switch_case_end
 
 		join_fiber_context_restoration_switch_case32::
-			vmovapd ymm6, YMMWORD PTR [r11]
-			vmovapd ymm7, YMMWORD PTR [r11 + 32]
-			vmovapd ymm8, YMMWORD PTR [r11 + 64]
-			vmovapd ymm9, YMMWORD PTR [r11 + 96]
-			vmovapd ymm10, YMMWORD PTR [r11 + 128]
-			vmovapd ymm11, YMMWORD PTR [r11 + 160]
-			vmovapd ymm12, YMMWORD PTR [r11 + 192]
-			vmovapd ymm13, YMMWORD PTR [r11 + 224]
-			vmovapd ymm14, YMMWORD PTR [r11 + 256]
-			vmovapd ymm15, YMMWORD PTR [r11 + 288]
+			vmovapd ymm6, YMMWORD PTR [r10]
+			vmovapd ymm7, YMMWORD PTR [r10 + 32]
+			vmovapd ymm8, YMMWORD PTR [r10 + 64]
+			vmovapd ymm9, YMMWORD PTR [r10 + 96]
+			vmovapd ymm10, YMMWORD PTR [r10 + 128]
+			vmovapd ymm11, YMMWORD PTR [r10 + 160]
+			vmovapd ymm12, YMMWORD PTR [r10 + 192]
+			vmovapd ymm13, YMMWORD PTR [r10 + 224]
+			vmovapd ymm14, YMMWORD PTR [r10 + 256]
+			vmovapd ymm15, YMMWORD PTR [r10 + 288]
 			jmp join_fiber_context_restoration_switch_case_end
 
 		join_fiber_context_restoration_switch_case64::
-			vmovapd zmm6, ZMMWORD PTR [r11]
-			vmovapd zmm7, ZMMWORD PTR [r11 + 64]
-			vmovapd zmm8, ZMMWORD PTR [r11 + 128]
-			vmovapd zmm9, ZMMWORD PTR [r11 + 192]
-			vmovapd zmm10, ZMMWORD PTR [r11 + 256]
-			vmovapd zmm11, ZMMWORD PTR [r11 + 320]
-			vmovapd zmm12, ZMMWORD PTR [r11 + 384]
-			vmovapd zmm13, ZMMWORD PTR [r11 + 448]
-			vmovapd zmm14, ZMMWORD PTR [r11 + 512]
-			vmovapd zmm15, ZMMWORD PTR [r11 + 576]
+			vmovapd zmm6, ZMMWORD PTR [r10]
+			vmovapd zmm7, ZMMWORD PTR [r10 + 64]
+			vmovapd zmm8, ZMMWORD PTR [r10 + 128]
+			vmovapd zmm9, ZMMWORD PTR [r10 + 192]
+			vmovapd zmm10, ZMMWORD PTR [r10 + 256]
+			vmovapd zmm11, ZMMWORD PTR [r10 + 320]
+			vmovapd zmm12, ZMMWORD PTR [r10 + 384]
+			vmovapd zmm13, ZMMWORD PTR [r10 + 448]
+			vmovapd zmm14, ZMMWORD PTR [r10 + 512]
+			vmovapd zmm15, ZMMWORD PTR [r10 + 576]
 			jmp join_fiber_context_restoration_switch_case_end
 		__join_fiber ENDP
 

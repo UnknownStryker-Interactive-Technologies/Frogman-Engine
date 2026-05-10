@@ -46,9 +46,6 @@ limitations under the License.
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/shared_lock_guard.hpp>
 
-// ronbin hood hash map
-#include <robin_hood.h>
-
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
 #include <tsl/array-hash/array_map.h>
@@ -399,7 +396,7 @@ public:
 		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
 		{
 			auto l_result = m_property_registry.emplace(l_host_class_instance_typename, class_property_list(m_pool));
-			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to robin_hood::unordered_map::emplace() while executing property_registry::register_property().");
+			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to emplace() while executing property_registry::register_property().");
 			l_iterator = l_result.first;
 		}
 

@@ -51,6 +51,7 @@ void _FE_CDECL_ __create_fiber(fiber_impl* const out_fiber_p, size_t stack_size_
 		// Multiple of 4096 is always multiple of 16, 32, and 64.
 		var::uintptr l_fiber_page_ptr = (var::uintptr)out_fiber_p->_stack_base;
 		l_fiber_page_ptr -= sizeof(fiber_context); // allocate space for fiber context on the stack.
+		FE_ASSERT( ( ((FE::uintptr)l_fiber_page_ptr) % sizeof(SIMD) ) == 0, "Assertion Failed: address misaligned"); // ensure the fiber context is properly aligned.
 		out_fiber_p->_context_ptr = (fiber_context*)l_fiber_page_ptr;
 		memset(out_fiber_p->_context_ptr, 0, sizeof(fiber_context));
 

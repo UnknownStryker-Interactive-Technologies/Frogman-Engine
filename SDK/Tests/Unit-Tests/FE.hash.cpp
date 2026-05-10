@@ -3,8 +3,6 @@
 // Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
 #include <FE/hash.hxx>
 
-// robin hood
-#include <robin_hood.h>
 #include <absl/container/node_hash_map.h>
 
 
@@ -68,19 +66,6 @@ void city_hash_benchmark(benchmark::State& state_p)
 BENCHMARK(city_hash_benchmark);
 
 
-void robin_hood_hash_benchmark(benchmark::State& state_p)
-{
-	const char* l_content = "_FE_NODISCARD_ _FE_FORCE_INLINE_ _FE_CONSTEXPR20_ count<char> count_chars(const char* string_p, const char target_p) noexcept";
-	size_t l_length = strlen(l_content);
-
-	for (auto _ : state_p)
-	{
-		auto l_result = robin_hood::hash_bytes(l_content, l_length);
-		(void)l_result;
-	}
-}
-
-BENCHMARK(robin_hood_hash_benchmark);
 
 
 
@@ -89,17 +74,6 @@ BENCHMARK(robin_hood_hash_benchmark);
 
 
 
-
-
-static void robin_hood_insertion(benchmark::State& state)
-{
-	robin_hood::unordered_map<int, int> l_map;
-	for (auto _ : state)
-	{
-		l_map.insert({ 42, 3 });
-	}
-}
-BENCHMARK(robin_hood_insertion);
 
 static void std_unordered_map_insertion(benchmark::State& state)
 {
@@ -125,20 +99,6 @@ BENCHMARK(std_pmr_unordered_map_insertion);
 
 
 
-static void robin_hood_lookup(benchmark::State& state)
-{
-	robin_hood::unordered_map<int, int> l_map;
-	l_map.insert({ 42, 3 });
-	for (auto _ : state)
-	{
-		auto l_iterator = l_map.find(42);
-		if (l_iterator != l_map.end())
-		{
-			benchmark::DoNotOptimize(l_iterator->second);
-		}
-	}
-}
-BENCHMARK(robin_hood_lookup);
 
 static void std_unordered_map_lookup(benchmark::State& state)
 {

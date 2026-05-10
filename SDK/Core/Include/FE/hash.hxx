@@ -24,9 +24,6 @@ limitations under the License.
 // city hash
 #include <city.h>
 
-// robin hood hash
-#include <robin_hood.h>
-
 #include <FE/bitmask.hxx>
 
 
@@ -69,7 +66,6 @@ _FE_FORCE_INLINE_ constexpr HashInputDataType evaluate_hash_input_data_type()
 
 enum struct HasherType : uint8
 {
-	_MurmurHash = 0,
 	_CityHash = 1
 };
 
@@ -85,7 +81,7 @@ The FE::hash class template provides a hashing mechanism for objects of type T
 allowing the use of different hashing algorithms (such as Robin Hood Hashing or CityHash) based on the specified HasherType
 and is specialized for handling address-based hashing with the HashInputDataType::_Address type.
 */
-template<typename T, HasherType HasherType = HasherType::_MurmurHash, HashInputDataType HashInputDataType = FE::evaluate_hash_input_data_type<T>()>
+template<typename T, HasherType HasherType = HasherType::_CityHash, HashInputDataType HashInputDataType = FE::evaluate_hash_input_data_type<T>()>
 class hash;
 
 template<typename T, HasherType HasherType>
@@ -97,11 +93,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(T value_p) const noexcept
 	{
-		if constexpr (HasherType == HasherType::_MurmurHash)
-		{
-			return robin_hood::hash_int(reinterpret_cast<var::uintptr>(value_p));
-		}
-		else if constexpr (HasherType == HasherType::_CityHash)
+		if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p), sizeof(T));
 		}
@@ -117,11 +109,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uint64 operator()(T value_p) const noexcept
 	{
-		if constexpr (HasherType == HasherType::_MurmurHash)
-		{
-			return robin_hood::hash_bytes(value_p, sizeof(typename std::remove_pointer<T>::type) * internal::strlen(value_p));
-		}
-		else if constexpr (HasherType == HasherType::_CityHash)
+		if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p), sizeof(typename std::remove_pointer<T>::type) * internal::strlen(value_p));
 		}
@@ -137,11 +125,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
 	{
-		if constexpr (HasherType == HasherType::_MurmurHash)
-		{
-			return robin_hood::hash_bytes(value_p.data(), value_p.length());
-		}
-		else if constexpr (HasherType == HasherType::_CityHash)
+		if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p.data()), sizeof(typename std::remove_pointer<T>::type) * value_p.length());
 		}
@@ -157,11 +141,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ var::uintptr operator()(const T& value_p) const noexcept
 	{
-		if constexpr (HasherType == HasherType::_MurmurHash)
-		{
-			return robin_hood::hash_bytes(value_p.data(), value_p.capacity_in_bytes());
-		}
-		else if constexpr (HasherType == HasherType::_CityHash)
+		if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(value_p.data()), value_p.capacity_in_bytes());
 		}
@@ -179,11 +159,7 @@ public:
 	{
 		static_assert(std::is_trivially_copyable_v<T>, "Static assertion failed: only trivially copyable types can be hashed using binary hashing.");
 
-		if constexpr (HasherType == HasherType::_MurmurHash)
-		{
-			return robin_hood::hash_bytes(&value_p, sizeof(T));
-		}
-		else if constexpr (HasherType == HasherType::_CityHash)
+		if constexpr (HasherType == HasherType::_CityHash)
 		{
 			return CityHash64(reinterpret_cast<const char*>(&value_p), sizeof(T));
 		}

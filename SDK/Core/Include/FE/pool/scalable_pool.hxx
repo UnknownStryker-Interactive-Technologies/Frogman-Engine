@@ -300,7 +300,7 @@ private:
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     using page_validation_table = absl::flat_hash_set<chunk_type*,
-        FE::hash<chunk_type*>, std::equal_to<chunk_type*>,
+        typename absl::lts_20260107::container_internal::FlatHashSetPolicy<chunk_type*>::DefaultHash, std::equal_to<chunk_type*>,
         FE::cache_aligned_allocator<chunk_type*>>;
     page_validation_table m_page_validation_table;
 #endif

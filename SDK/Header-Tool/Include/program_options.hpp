@@ -17,9 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 
-// robin hood hash map
-#include <robin_hood.h>
-
 // trie
 #include <tsl/htrie_map.h>
 
@@ -29,13 +26,15 @@ limitations under the License.
 // std::string_view
 #include <string_view>
 
+#include <unordered_map>
+
 
 
 
 class program_options
 {
 	tsl::htrie_map<var::ASCII, std::basic_string<var::ASCII>> m_path_options;
-	robin_hood::unordered_map<std::basic_string_view<var::ASCII>, var::boolean> m_fno_options;
+	std::unordered_map<std::basic_string_view<var::ASCII>, var::boolean> m_fno_options;
 
 public:
 	program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;

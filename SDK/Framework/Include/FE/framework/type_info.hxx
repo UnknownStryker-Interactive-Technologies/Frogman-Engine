@@ -112,12 +112,12 @@ private:
     void set() noexcept
     {
         __demangle_type_name( m_info._typename, typeid(T).name() );
-		m_info._hashed_name = robin_hood::hash_bytes(m_info._typename.data(), m_info._typename.length());
+		m_info._hashed_name = CityHash64(m_info._typename.data(), m_info._typename.length());
 
         if constexpr (FE::has_base_type<T>::value == true)
         { 
             __demangle_type_name( m_info._base_typename, typeid(typename T::base_type).name() );
-			m_info._hashed_base_name = robin_hood::hash_bytes(m_info._base_typename.data(), m_info._base_typename.length());
+			m_info._hashed_base_name = CityHash64(m_info._base_typename.data(), m_info._base_typename.length());
         }
 
         if constexpr (std::is_base_of_v<FE::component_base, T> == true)
