@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,7 @@ limitations under the License.
 // boost
 #include <boost/thread/shared_lock_guard.hpp>
 
-// ronbin hood hash
-#include <absl/container/node_hash_map.h>
+#include <absl/container/flat_hash_map.h>
 
 // windows
 #ifdef _FE_ON_WINDOWS_X86_64_
@@ -60,9 +59,6 @@ namespace internal::type_info
     public:
         using string_type = std::pmr::string;
 
-        thread_local static std::shared_ptr<std::pmr::unsynchronized_pool_resource> tl_s_resource;
-		static std::atomic_uint64_t s_type_id_counter;
-
         string_type _typename;
         string_type _base_typename;
         std::size_t _hashed_name = 0;
@@ -74,27 +70,21 @@ namespace internal::type_info
 
 class type_info
 {
-    using table_type = absl::node_hash_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata,
-                                            FE::hash<typename internal::type_info::metadata::string_type>,
-                                            std::equal_to<typename internal::type_info::metadata::string_type>,
-		                                    FE::polymorphic_allocator< std::pair<const typename internal::type_info::metadata::string_type, internal::type_info::metadata> >
+    using table_type = std::pmr::unordered_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata
     >;
     using lock_type = std::shared_mutex;
-
-	std::shared_ptr<std::pmr::unsynchronized_pool_resource> m_resource;
-    internal::type_info::metadata m_info;
    
+
+    thread_local static std::shared_ptr<std::pmr::monotonic_buffer_resource> tl_s_resource;
     thread_local static table_type tl_s_type_information;
+    static std::atomic_uint64_t s_type_id_counter;
+
+    internal::type_info::metadata m_info;
 
 public:
     type_info() noexcept
         : m_info()
     {
-        if (internal::type_info::metadata::tl_s_resource == nullptr)
-        {
-			internal::type_info::metadata::tl_s_resource = std::make_shared<std::pmr::unsynchronized_pool_resource>();
-        }
-		m_resource = internal::type_info::metadata::tl_s_resource;
     }
 	~type_info() noexcept = default;
    
@@ -102,10 +92,10 @@ private:
     void __demangle_type_name(std::pmr::string& out_ret_p, const char* mangled_name_p) noexcept
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/dbghelp/nf-dbghelp-undecoratesymbolname
-        var::ASCII l_buffer[1024] = { 0 };
+        var::ASCII l_buffer[2048] = { 0 };
         _FE_MAYBE_UNUSED_ DWORD l_result = UnDecorateSymbolName(mangled_name_p, l_buffer, sizeof(l_buffer), UNDNAME_COMPLETE);
         FE_NEGATIVE_ASSERT((l_result == 0), "UnDecorateSymbolName() operation unsuccessful.");
-        out_ret_p = typename internal::type_info::metadata::string_type( static_cast<var::ASCII*>(l_buffer), m_resource.get() );
+        out_ret_p = typename internal::type_info::metadata::string_type( static_cast<var::ASCII*>(l_buffer), tl_s_resource.get() );
     }
 
     template <typename T>
@@ -122,11 +112,11 @@ private:
 
         if constexpr (std::is_base_of_v<FE::component_base, T> == true)
         {
-            ++internal::type_info::metadata::s_type_id_counter;
-            m_info._component_type_id = internal::type_info::metadata::s_type_id_counter;
+            ++s_type_id_counter;
+            m_info._component_type_id = s_type_id_counter;
         }
 
-        type_info::tl_s_type_information.emplace(m_info._typename, m_info);
+        type_info::tl_s_type_information[m_info._typename] = m_info;
     }
 
 public:

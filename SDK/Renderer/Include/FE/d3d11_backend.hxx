@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,7 +33,6 @@ namespace wrl = ::Microsoft::WRL;
 
 
 CLASS_FORWARD_DECLARATION(FE, renderer);
-STRUCT_FORWARD_DECLARATION(FE::internal::renderer, shader_define);
 
 
 
@@ -41,26 +40,44 @@ STRUCT_FORWARD_DECLARATION(FE::internal::renderer, shader_define);
 BEGIN_NAMESPACE(FE::internal::renderer)
 
 
-constexpr FE::ASCII* const vertex_shader_target = "vs_5_1";
-constexpr FE::ASCII* const pixel_shader_target = "ps_5_1";
-constexpr FE::ASCII* const geometry_shader_target = "gs_5_1";
-constexpr FE::ASCII* const hull_shader_target = "hs_5_1";
-constexpr FE::ASCII* const domain_shader_target = "ds_5_1";
-constexpr FE::ASCII* const compute_shader_target = "cs_5_1";
+constexpr FE::ASCII* const SM5_vertex_shader_target = "vs_5_0";
+constexpr FE::ASCII* const SM5_pixel_shader_target = "ps_5_0";
+constexpr FE::ASCII* const SM5_geometry_shader_target = "gs_5_0";
+constexpr FE::ASCII* const SM5_hull_shader_target = "hs_5_0";
+constexpr FE::ASCII* const SM5_domain_shader_target = "ds_5_0";
+constexpr FE::ASCII* const SM5_compute_shader_target = "cs_5_0";
+
+constexpr FE::ASCII* const SM6_vertex_shader_target = "vs_6_0";
+constexpr FE::ASCII* const SM6_pixel_shader_target = "ps_6_0";
+constexpr FE::ASCII* const SM6_geometry_shader_target = "gs_6_0";
+constexpr FE::ASCII* const SM6_hull_shader_target = "hs_6_0";
+constexpr FE::ASCII* const SM6_domain_shader_target = "ds_6_0";
+constexpr FE::ASCII* const SM6_compute_shader_target = "cs_6_0";
 
 enum struct ShaderTarget
 {
-    _VertexShader,
-    _PixelShader,
-    _GeometryShader,
-    _HullShader,
-    _DomainShader,
-    _ComputeShader
+    _SM5_VertexShader,
+    _SM5_PixelShader,
+    _SM5_GeometryShader,
+    _SM5_HullShader,
+    _SM5_DomainShader,
+    _SM5_ComputeShader,
+
+    _SM6_VertexShader,
+    _SM6_PixelShader,
+    _SM6_GeometryShader,
+    _SM6_HullShader,
+    _SM6_DomainShader,
+    _SM6_ComputeShader
 };
 
 
 class d3d11_backend
 {
+public:
+    using gpu_info = DXGI_ADAPTER_DESC3;
+
+private:
     class FE::renderer* const m_frontend;
     wrl::ComPtr<ID3D11Device5> m_device;
     wrl::ComPtr<ID3D11DeviceContext4> m_context;
@@ -69,7 +86,7 @@ class d3d11_backend
     wrl::ComPtr<ID3D11RenderTargetView> m_render_target_view;
     wrl::ComPtr<IDXGIFactory7> m_factory;
 	wrl::ComPtr<IDXGIAdapter4> m_adapter;
-	DXGI_ADAPTER_DESC3 m_adapter_desc;
+    gpu_info m_adapter_desc;
 	BOOL m_should_allow_tearing;
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     wrl::ComPtr<ID3D11Debug> m_debug;
@@ -91,8 +108,9 @@ public:
 	void begin_frame() noexcept;
     void end_frame() noexcept;
 
-	ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
-	ID3D11DeviceContext4* get_context() const noexcept { return m_context.Get(); }
+    _FE_FORCE_INLINE_ ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
+    _FE_FORCE_INLINE_ ID3D11DeviceContext4* get_context() const noexcept { return m_context.Get(); }
+    _FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_adapter_desc; }
 };
 
 #ifdef _FE_ON_WINDOWS_X86_64_

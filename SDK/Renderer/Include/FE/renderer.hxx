@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ limitations under the License.
 #include <FE/framework/processors.hxx>
 
 #include <FE/image.hpp>
+#include <FE/shader.hxx>
 
 #pragma warning(disable: 4005)
 #include <GLFW/glfw3.h> // Do not redefine the macro defines! It prevents code compilation if /Wx is enabled.
@@ -39,40 +40,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-namespace internal::renderer
+struct window_config // fields are immutable after window creation; modifying these values will not affect any.
 {
-	struct shader_define
-	{
-		std::pmr::string _identifier;
-		FE::pair<var::int64, var::int64> _value_range;
-		var::int64 _current_value;
-	};
-
-	class shader
-	{
-	public:
-		using macro = D3D_SHADER_MACRO;
-		using compiled_source = wrl::ComPtr<ID3DBlob>;
-
-		std::pmr::vector<shader_define> _defines;
-		std::pmr::vector<std::pmr::string> _permutation_blacklist;
-		std::pmr::vector<std::pmr::vector<macro>> _macro_combinations;
-		std::pmr::string _main_function;
-		std::pmr::string _source_path;
-		std::pmr::vector<compiled_source> _permutations;
-		internal::renderer::ShaderTarget _shader_target;
-
-		~shader() noexcept;
-
-	public:
-		void compile() noexcept;
-	};
-}
-
-
-class window_config // fields are immutable after window creation; modifying these values will not affect any.
-{
-public:
     std::pmr::string _title = "Frogman Game";
 	std::pmr::vector<std::pmr::string> _icon_paths;
 	std::pmr::vector<GLFWimage> _icon_images;
@@ -86,8 +55,6 @@ public:
 
 	var::boolean _should_enable_vsync = false;
     var::boolean _is_fullscreen = false;
-
-	~window_config() noexcept;
 };
 
 
@@ -100,6 +67,9 @@ class renderer
 		var::uint32 _width;
 		var::uint32 _height;
 	};
+
+public:
+	using gpu_info = internal::renderer::backend::gpu_info;
 
 private:
     GLFWwindow* m_window;
@@ -139,6 +109,8 @@ public:
 	_FE_FORCE_INLINE_ GLFWwindow* get_window() const noexcept { return m_window; }
 
 	void toggle_borderless_fullscreen() noexcept;
+
+	_FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_backend->get_gpu_info(); }
 
 private:
 	static void __on_window_close(GLFWwindow* window_p) noexcept;

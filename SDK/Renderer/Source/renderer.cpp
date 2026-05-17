@@ -6,7 +6,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+	https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,97 +43,6 @@ limitations under the License.
 
 
 BEGIN_NAMESPACE(FE)
-
-
-internal::renderer::shader::~shader() noexcept
-{
-	for (std::pmr::vector<macro>& permutation_macros : _macro_combinations)
-	{
-		for (macro& macro : permutation_macros)
-		{
-			if (macro.Definition == nullptr)
-			{
-				continue;
-			}
-
-			std::pmr::polymorphic_allocator<char> l_deallocator = permutation_macros.get_allocator();
-			l_deallocator.deallocate((char*)macro.Definition, std::strlen(macro.Definition) + 1);
-			macro.Definition = nullptr;
-		}
-	}
-}
-
-window_config::~window_config() noexcept
-{
-}
-
-void internal::renderer::shader::compile() noexcept
-{
-	var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
-#ifdef _DEBUG_
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
-#elif defined(_RELWITHDEBINFO_)
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#else
-	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-	_permutations.reserve(_macro_combinations.size());
-	for (auto& macro_combination : _macro_combinations)
-	{
-		FE::ASCII* l_shader_target = nullptr;
-		switch (_shader_target)
-		{
-		case internal::renderer::ShaderTarget::_VertexShader:
-			l_shader_target = FE::internal::renderer::vertex_shader_target;
-			break;
-
-		case internal::renderer::ShaderTarget::_PixelShader:
-			l_shader_target = FE::internal::renderer::pixel_shader_target;
-			break;
-
-		case internal::renderer::ShaderTarget::_GeometryShader:
-			l_shader_target = FE::internal::renderer::geometry_shader_target;
-			break;
-
-		case internal::renderer::ShaderTarget::_HullShader:
-			l_shader_target = FE::internal::renderer::hull_shader_target;
-			break;
-
-		case internal::renderer::ShaderTarget::_DomainShader:
-			l_shader_target = FE::internal::renderer::domain_shader_target;
-			break;
-
-		case internal::renderer::ShaderTarget::_ComputeShader:
-			l_shader_target = FE::internal::renderer::compute_shader_target;
-			break;
-		}
-		_permutations.emplace_back();
-
-
-		thread_local static var::wchar tl_s_wide_path[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
-		_FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, _source_path.c_str(), (int)strlen(_source_path.c_str()) + 1, tl_s_wide_path, _ALLOWED_DIRECTORY_LENGTH_);
-		FE_ASSERT(l_length > 0);
-
-
-		wrl::ComPtr<ID3DBlob> l_errors;
-		const HRESULT l_result = D3DCompileFromFile(tl_s_wide_path,
-			macro_combination.data(),
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			_main_function.c_str(),
-			l_shader_target,
-			l_flags,
-			FE::null, // Legacy flag, should be set to 0
-			&_permutations.back(),
-			&l_errors
-		);
-
-		if (l_errors != nullptr) _FE_UNLIKELY_
-		{
-			OutputDebugStringA((FE::ASCII*)l_errors->GetBufferPointer());
-		}
-		FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
-	}
-}
 
 
 renderer::renderer(const window_config& window_config_p) noexcept
@@ -287,6 +196,10 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = *l_engine.m_renderer;
 
+	if (l_renderer.m_window_config._is_fullscreen == true)
+	{
+		l_renderer.toggle_borderless_fullscreen();
+	}
 
 	tf::Executor l_executor;
 	tf::Taskflow l_taskflow; // Evaluate Permutation Blacklist
@@ -300,16 +213,8 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 			}
 		);
 	}
-	auto l_future = l_executor.run(l_taskflow);
-
-
-	if (l_renderer.m_window_config._is_fullscreen == true)
 	{
-		l_renderer.toggle_borderless_fullscreen();
-	}
-
-
-	{
+		auto l_future = l_executor.run(l_taskflow);
 		HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 		FE::video_player l_intro(l_hwnd);
 
@@ -327,12 +232,13 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		{
 			l_intro.play(l_path.c_str());
 		}
+
+		l_future.wait();
+		l_taskflow.clear();
 	} // l_intro destructs → MF::Shutdown → HWND free for the D3D backend
 	
 
 	{
-		l_future.wait();
-		l_taskflow.clear();
 		var::uint64 l_total_permutations = 0;
 		std::atomic_uint64_t l_permutations_compiled = 0;
 

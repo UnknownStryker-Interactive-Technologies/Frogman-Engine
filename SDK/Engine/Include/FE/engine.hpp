@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -130,18 +130,8 @@ public:
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 
     _FE_FORCE_INLINE_ FE::int32 count_async_processors() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
-    
-	template <typename T>
-    _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>( get_memory_resource() ); }
 
-    template <typename T>
-	_FE_FORCE_INLINE_ std::pmr::polymorphic_allocator<T> get_std_pmr_thread_local_allocator() noexcept { return std::pmr::polymorphic_allocator<T>( get_memory_resource() ); }
-
-    template <typename T>
-    _FE_FORCE_INLINE_ FE::polymorphic_allocator<T> get_large_thread_local_allocator() noexcept { return FE::polymorphic_allocator<T>(get_large_memory_resource()); }
-
-    template <typename T>
-    _FE_FORCE_INLINE_ std::pmr::polymorphic_allocator<T> get_std_pmr_large_thread_local_allocator() noexcept { return std::pmr::polymorphic_allocator<T>(get_large_memory_resource()); }
+	_FE_FORCE_INLINE_ const FE::renderer& get_renderer() const noexcept { return *m_renderer; }
 
 private:
     virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;

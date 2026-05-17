@@ -5,7 +5,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+	https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -341,7 +341,7 @@ void FE::engine::__read_froggy() noexcept
 			m_shaders.back()._permutation_blacklist = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
 			m_shaders.back()._macro_combinations = std::pmr::vector<std::pmr::vector<FE::internal::renderer::shader::macro>>(framework_base::get_large_memory_resource());
 			m_shaders.back()._main_function = std::pmr::string(framework_base::get_large_memory_resource());
-			m_shaders.back()._source_path = std::pmr::string(framework_base::get_large_memory_resource());
+			m_shaders.back()._source_path = std::pmr::wstring(framework_base::get_large_memory_resource());
 
 			auto& l_shader = shader.get_object();
 			FE_ASSERT(l_shader["Defines"].is_array() == true);
@@ -372,33 +372,59 @@ void FE::engine::__read_froggy() noexcept
 			m_shaders.back()._main_function = l_shader["MainFunction"].get_string();
 
 			FE_ASSERT(l_shader["Source"].is_string() == true);
-			m_shaders.back()._source_path = l_shader["Source"].get_string();
+			auto l_tmp = l_shader["Source"].get_string();
+			m_shaders.back()._source_path = std::pmr::wstring(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource());
 
 
 			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
 			{
-			STRING_CASE(FE::internal::renderer::vertex_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_VertexShader;	
+			STRING_CASE(FE::internal::renderer::SM5_vertex_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_VertexShader;	
 				break;
 
-			STRING_CASE(FE::internal::renderer::pixel_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_PixelShader;
+			STRING_CASE(FE::internal::renderer::SM5_pixel_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_PixelShader;
 				break;
 
-			STRING_CASE(FE::internal::renderer::geometry_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_GeometryShader;
+			STRING_CASE(FE::internal::renderer::SM5_geometry_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_GeometryShader;
 				break;
 
-				STRING_CASE(FE::internal::renderer::hull_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_HullShader;
+				STRING_CASE(FE::internal::renderer::SM5_hull_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_HullShader;
 				break;
 
-			STRING_CASE(FE::internal::renderer::domain_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_DomainShader;
+			STRING_CASE(FE::internal::renderer::SM5_domain_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_DomainShader;
 				break;
 
-			STRING_CASE(FE::internal::renderer::compute_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_ComputeShader;
+			STRING_CASE(FE::internal::renderer::SM5_compute_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_ComputeShader;
+				break;
+
+
+			STRING_CASE(FE::internal::renderer::SM6_vertex_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_VertexShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM6_pixel_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_PixelShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM6_geometry_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_GeometryShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM6_hull_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_HullShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM6_domain_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_DomainShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM6_compute_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_ComputeShader;
 				break;
 
 			_FE_NODEFAULT_;

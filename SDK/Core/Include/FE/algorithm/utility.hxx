@@ -7,7 +7,7 @@ Licensed under the Frogman Engine Apache License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/UnknownStryker-Interactive-Technology/Frogman-Engine-Apache-License/blob/release/LICENSE.md
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -486,7 +486,7 @@ constexpr void uint_to_string(CharT* const out_string_p, _FE_MAYBE_UNUSED_ uint6
 
     var::uint8 l_integral_digits = algorithm::utility::count_uint_digit_length(value_p);
 
-    FE_NEGATIVE_ASSERT(input_string_capacity_p <= l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
+    FE_NEGATIVE_ASSERT(input_string_capacity_p < l_integral_digits, "MEMORY BOUNDRY CHECK FAILURE: the digit length of an integer exceeds the output string buffer capacity");
 
     var::uint8 l_idx = l_integral_digits - 1;
 
