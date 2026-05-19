@@ -1,1 +1,0 @@
-The Frogman Engine Header Tools needs a surgery. I will definitely address this issue within few months, after workig on other major engine features.
