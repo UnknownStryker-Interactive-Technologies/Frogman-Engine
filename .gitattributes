@@ -6,14 +6,3 @@
 
 *.sh binary
 *.bat binary
-
-*.lib filter=lfs diff=lfs merge=lfs
-*.dll filter=lfs diff=lfs merge=lfs
-
-*.a filter=lfs diff=lfs merge=lfs
-*.so filter=lfs diff=lfs merge=lfs
-
-*.zip filter=lfs diff=lfs merge=lfs
-*.7z filter=lfs diff=lfs merge=lfs
-
-*.froggy filter=lfs diff=lfs merge=lfs
