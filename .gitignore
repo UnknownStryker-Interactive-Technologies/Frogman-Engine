@@ -1,6 +1,5 @@
 ﻿*.pdb
 *.obj
 
-*.exe
 *.lib
 *.dll
