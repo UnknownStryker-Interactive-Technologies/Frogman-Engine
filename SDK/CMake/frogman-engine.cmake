@@ -33,7 +33,7 @@ FILE(GLOB_RECURSE FE_AUDIO_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Source/
 
 
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1)
-INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/include)
+# INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/dr_libs)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/include)
@@ -201,12 +201,12 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
         )
 
-        SET(ASSIMP
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
-        )
+        #SET(ASSIMP
+        #    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
+        #    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
+        #    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
+        #    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
+        #)
 
         SET(GLFW
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/glfw3.lib>
@@ -230,12 +230,12 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
         )
 
 
-        SET(SIMD_JSON
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/simdjson.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/simdjson.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Release/simdjson.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/simdjson.lib>
-        )
+        #SET(SIMD_JSON
+        #    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/simdjson.lib>
+        #    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/simdjson.lib>
+        #    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Release/simdjson.lib>
+        #    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/simdjson.lib>
+        #)
 
 
         SET(FE_CORE
@@ -539,4 +539,4 @@ FUNCTION(SET_SHADERS)
 ENDFUNCTION()
 
 SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${BOOST_CHRONO} ${BOOST_CONTAINER} ${BOOST_FILESYSTEM} ${BOOST_JSON} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} )
-SET(FROGMAN_ENGINE_SDK ${ASSIMP} ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} )
+SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} )

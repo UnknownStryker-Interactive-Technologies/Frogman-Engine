@@ -42,9 +42,6 @@ All project settings can be adjusted by modifying CMakeLists.txt.
 - abseil 20260107.1  
 https://github.com/abseil/abseil-cpp/releases/tag/20260107.1
 
-- Assimp 6.0.4  
-https://github.com/assimp/assimp/releases
-
 - Boost Libraries 1.91.0  
 https://github.com/boostorg/boost/releases/tag/boost-1.91.0  
 
