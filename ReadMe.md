@@ -72,8 +72,8 @@ https://github.com/nothings/stb
 - Task Flow 4.0.0  
 https://github.com/taskflow/taskflow/releases  
 
-- ufbx 0.22.0
-https://github.com/ufbx/ufbx
+- ufbx 0.22.0  
+https://github.com/ufbx/ufbx  
 
 - Google Test 1.16.0  
 https://github.com/google/googletest/releases/tag/v1.16.0  
