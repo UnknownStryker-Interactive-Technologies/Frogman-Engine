@@ -19,3 +19,4 @@ copts/__pycache__/
 ## Frogman Engine Folders
 Solution_X64/
 Solution_X64_AVX512F/
+Binaries/
