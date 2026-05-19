@@ -69,14 +69,14 @@ https://github.com/Tessil/hat-trie
 - lz4 1.10.0  
 https://github.com/lz4/lz4/releases/tag/v1.10.0  
 
-- Robin Hood Hash 3.11.5  
-https://github.com/martinus/robin-hood-hashing  
-
 - stb image  
 https://github.com/nothings/stb  
 
 - Task Flow 4.0.0  
 https://github.com/taskflow/taskflow/releases  
+
+- ufbx 0.22.0
+https://github.com/ufbx/ufbx
 
 - Google Test 1.16.0  
 https://github.com/google/googletest/releases/tag/v1.16.0  
