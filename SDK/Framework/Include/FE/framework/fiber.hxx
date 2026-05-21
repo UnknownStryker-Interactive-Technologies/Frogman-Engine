@@ -5,7 +5,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Frogman Engine Apache License (the "License");
+Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 

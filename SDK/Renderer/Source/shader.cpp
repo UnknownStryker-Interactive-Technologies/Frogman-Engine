@@ -1,7 +1,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Frogman Engine Apache License (the "License");
+Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -80,43 +80,20 @@ void FE::internal::renderer::shader::compile() noexcept
 		l_shader_target = FE::internal::renderer::SM5_compute_shader_target;
 		break;
 
-
-	case internal::renderer::ShaderTarget::_SM6_VertexShader:
-		l_shader_target = FE::internal::renderer::SM6_vertex_shader_target;
-		break;
-
-	case internal::renderer::ShaderTarget::_SM6_PixelShader:
-		l_shader_target = FE::internal::renderer::SM6_pixel_shader_target;
-		break;
-
-	case internal::renderer::ShaderTarget::_SM6_GeometryShader:
-		l_shader_target = FE::internal::renderer::SM6_geometry_shader_target;
-		break;
-
-	case internal::renderer::ShaderTarget::_SM6_HullShader:
-		l_shader_target = FE::internal::renderer::SM6_hull_shader_target;
-		break;
-
-	case internal::renderer::ShaderTarget::_SM6_DomainShader:
-		l_shader_target = FE::internal::renderer::SM6_domain_shader_target;
-		break;
-
-	case internal::renderer::ShaderTarget::_SM6_ComputeShader:
-		l_shader_target = FE::internal::renderer::SM6_compute_shader_target;
-		break;
+	_FE_NODEFAULT_;
 	}
 
 	for (auto& macro_combination : _macro_combinations)
 	{
-		__build_shader_blob_cache_path(l_blob_path, macro_combination);
+		FE::uint64 l_blob_name = __build_shader_blob_cache_path(l_blob_path, macro_combination);
 
 		std::fstream l_blob_file(l_blob_path.c_str(), std::ios::binary | std::ios::in); // read as a binary sequence
 		FE::fstream_guard l_blob_file_guard(l_blob_file);
 		if (l_blob_file.is_open() == true) // does blob exist?
 		{
 			_permutations.emplace_back();
-			D3DReadFileToBlob(l_blob_path.c_str(), &_permutations.back());
-
+			D3DReadFileToBlob(l_blob_path.c_str(), &_permutations.back()._blob);
+			_permutations.back()._identifier = l_blob_name;
 			continue;
 		}
 
@@ -129,9 +106,10 @@ void FE::internal::renderer::shader::compile() noexcept
 			l_shader_target,
 			get_shader_compile_options(),
 			FE::null, // Legacy flag, should be set to 0
-			&_permutations.back(),
+			&_permutations.back()._blob,
 			&l_errors
 		);
+		_permutations.back()._identifier = l_blob_name;
 
 		if (l_errors != nullptr) _FE_UNLIKELY_
 		{
@@ -140,24 +118,11 @@ void FE::internal::renderer::shader::compile() noexcept
 		FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
 
 		// stash blobs to disk
-		D3DWriteBlobToFile(_permutations.back().Get(), l_blob_path.c_str(), TRUE);
+		D3DWriteBlobToFile(_permutations.back()._blob.Get(), l_blob_path.c_str(), TRUE);
 	}
 }
 
-FE::uint32 FE::internal::renderer::shader::get_shader_compile_options() const noexcept
-{
-	var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS; // /Wx /W4
-#ifdef _DEBUG_
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
-#elif defined(_RELWITHDEBINFO_)
-	l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#else
-	l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-	return l_flags;
-}
-
-void FE::internal::renderer::shader::__build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept
+FE::uint64 FE::internal::renderer::shader::__build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept
 {
 	boost::hash2::xxhash_64 l_hasher(0);
 	const FE::renderer::gpu_info& l_gpu_info = FE::engine::get_engine().get_renderer().get_gpu_info();
@@ -246,7 +211,7 @@ void FE::internal::renderer::shader::__build_shader_blob_cache_path(std::pmr::ws
 	boost::hash2::hash_append(l_hasher, {}, get_shader_compile_options());
 
 
-	var::uint64 l_blob_name = l_hasher.result();
+	FE::uint64 l_blob_name = l_hasher.result();
 	std::pmr::wstring l_blob_name_string(FE::engine::get_engine().get_large_memory_resource());
 	l_blob_name_string.resize(FE::algorithm::utility::count_uint_digit_length(l_blob_name));
 	FE::algorithm::utility::uint_to_string(l_blob_name_string.data(), l_blob_name_string.length(), l_blob_name);
@@ -259,4 +224,6 @@ void FE::internal::renderer::shader::__build_shader_blob_cache_path(std::pmr::ws
 	out_path_p.erase(l_pos, l_to_remove_length);
 	out_path_p += l_blob_name_string;
 	out_path_p += L".fesb"; // .Frogman Engine Shader Blob
+
+	return l_blob_name;
 }

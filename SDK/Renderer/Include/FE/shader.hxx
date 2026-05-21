@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Frogman Engine Apache License (the "License");
+Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -37,29 +37,45 @@ struct shader_define
 	var::int64 _current_value;
 };
 
+struct shader_blob
+{
+	wrl::ComPtr<ID3DBlob> _blob;
+	var::uint64 _identifier;
+};
+
 class shader final
 {
 public:
 	using macro = D3D_SHADER_MACRO;
-	using compiled_source = wrl::ComPtr<ID3DBlob>;
 
 	std::pmr::vector<shader_define> _defines;
 	std::pmr::vector<std::pmr::string> _permutation_blacklist;
 	std::pmr::vector<std::pmr::vector<macro>> _macro_combinations;
 	std::pmr::string _main_function;
 	std::pmr::wstring _source_path;
-	std::pmr::vector<compiled_source> _permutations;
+	std::pmr::vector<shader_blob> _permutations;
 	internal::renderer::ShaderTarget _shader_target;
 
 	~shader() noexcept;
 
 private:
-	void __build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept;
+	FE::uint64 __build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept;
 
 public:
 	void compile() noexcept;
-	FE::uint32 get_shader_compile_options() const noexcept;
 
+	constexpr FE::uint32 get_shader_compile_options() const noexcept
+	{
+		var::uint32 l_flags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS; // /Wx /W4
+#ifdef _DEBUG_
+		l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL0;
+#elif defined(_RELWITHDEBINFO_)
+		l_flags |= D3DCOMPILE_DEBUG | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#else
+		l_flags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+		return l_flags;
+	}
 };
 
 END_NAMESPACE

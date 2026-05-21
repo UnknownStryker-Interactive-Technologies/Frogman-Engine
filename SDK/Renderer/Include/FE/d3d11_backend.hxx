@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Frogman Engine Apache License (the "License");
+Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -21,7 +21,10 @@ limitations under the License.
 
 #include <span>
 
+#include <absl/container/flat_hash_map.h>
+
 #ifdef _FE_ON_WINDOWS_X86_64_
+#include <d3dcommon.h>
 #include <d3d11_4.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
@@ -39,6 +42,7 @@ CLASS_FORWARD_DECLARATION(FE, renderer);
 
 BEGIN_NAMESPACE(FE::internal::renderer)
 
+class shader;
 
 constexpr FE::ASCII* const SM5_vertex_shader_target = "vs_5_0";
 constexpr FE::ASCII* const SM5_pixel_shader_target = "ps_5_0";
@@ -61,14 +65,7 @@ enum struct ShaderTarget
     _SM5_GeometryShader,
     _SM5_HullShader,
     _SM5_DomainShader,
-    _SM5_ComputeShader,
-
-    _SM6_VertexShader,
-    _SM6_PixelShader,
-    _SM6_GeometryShader,
-    _SM6_HullShader,
-    _SM6_DomainShader,
-    _SM6_ComputeShader
+    _SM5_ComputeShader
 };
 
 
@@ -99,6 +96,13 @@ private:
     wrl::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
     wrl::ComPtr<ID3D11DepthStencilState> m_depth_stencil_state;
 
+	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11VertexShader>> m_vertex_shader_cache;
+	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11PixelShader>> m_pixel_shader_cache;
+    absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11GeometryShader>> m_geometry_shader_cache;
+	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11HullShader>> m_hull_shader_cache;
+	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11DomainShader>> m_domain_shader_cache;
+	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11ComputeShader>> m_compute_shader_cache;
+
 public:
     d3d11_backend(class FE::renderer* const frontend_p) noexcept;
 	~d3d11_backend() noexcept;
@@ -111,6 +115,8 @@ public:
     _FE_FORCE_INLINE_ ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
     _FE_FORCE_INLINE_ ID3D11DeviceContext4* get_context() const noexcept { return m_context.Get(); }
     _FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_adapter_desc; }
+
+    void register_shaders(std::pmr::vector<class ::FE::internal::renderer::shader>& shaders_p) noexcept;
 };
 
 #ifdef _FE_ON_WINDOWS_X86_64_

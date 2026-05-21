@@ -3,7 +3,7 @@
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
 
-Licensed under the Frogman Engine Apache License (the "License");
+Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
@@ -16,6 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/d3d11_backend.hxx>
+
+#include <FE/shader.hxx>
 
 #include <FE/renderer.hxx>
 #include <FE/type_traits.hxx>
@@ -333,6 +335,87 @@ void d3d11_backend::end_frame() noexcept
 	if (l_result == DXGI_STATUS_OCCLUDED) _FE_UNLIKELY_
 	{
 		_mm_pause();
+	}
+}
+
+void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::shader>& shaders_p) noexcept
+{
+	for (auto& shader : shaders_p)
+	{
+		switch (shader._shader_target)
+		{
+		case ShaderTarget::_SM5_VertexShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11VertexShader> l_vertex_shader;
+				const HRESULT l_result = m_device->CreateVertexShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_vertex_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a vertex shader; the error code is ${%d@0}.", &l_result);
+				
+				m_vertex_shader_cache[blob._identifier] = l_vertex_shader;
+			}
+			break;
+
+
+		case ShaderTarget::_SM5_PixelShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11PixelShader> l_pixel_shader;
+				const HRESULT l_result = m_device->CreatePixelShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_pixel_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a pixel shader; the error code is ${%d@0}.", &l_result);
+				
+				m_pixel_shader_cache[blob._identifier] = l_pixel_shader;
+			}
+			break;
+
+
+		case ShaderTarget::_SM5_GeometryShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11GeometryShader> l_geometry_shader;
+				const HRESULT l_result = m_device->CreateGeometryShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_geometry_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a geometry shader; the error code is ${%d@0}.", &l_result);
+				
+				m_geometry_shader_cache[blob._identifier] = l_geometry_shader;
+			}
+			break;
+
+
+		case ShaderTarget::_SM5_HullShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11HullShader> l_hull_shader;
+				const HRESULT l_result = m_device->CreateHullShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_hull_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a hull shader; the error code is ${%d@0}.", &l_result);
+				
+				m_hull_shader_cache[blob._identifier] = l_hull_shader;
+			}
+			break;
+
+
+		case ShaderTarget::_SM5_DomainShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11DomainShader> l_domain_shader;
+				const HRESULT l_result = m_device->CreateDomainShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_domain_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a domain shader; the error code is ${%d@0}.", &l_result);
+				
+				m_domain_shader_cache[blob._identifier] = l_domain_shader;
+			}
+			break;
+
+
+		case ShaderTarget::_SM5_ComputeShader:
+			for (auto& blob : shader._permutations)
+			{
+				wrl::ComPtr<ID3D11ComputeShader> l_compute_shader;
+				const HRESULT l_result = m_device->CreateComputeShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_compute_shader);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a compute shader; the error code is ${%d@0}.", &l_result);
+				
+				m_compute_shader_cache[blob._identifier] = l_compute_shader;
+			}
+			break;
+
+		}
 	}
 }
 
