@@ -1,3 +1,120 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0f7aa3d6f62e9da5364e52b5bba4a3d109266f7c5b5f0424f8dbade654c64a13
-size 4367
+{
+  "EngineInfo" : 
+  {
+    "InstallationPath" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine",
+    "Version" : "v0.0.0.2026.05.01prc"
+  },
+  "ProjectConfig" : 
+  {
+    "CompressionMethod" : null,
+    "DecompressionMethod" : null,
+    "DecryptionMethod" : null,
+    "EncryptionMethod" : null,
+    "FiberStackSize" : 1048576,
+    "FibersPerThread" : 3,
+    "FramesPerReachabilityAnalysis" : 60,
+    "GCIterationsPerFrame" : 30,
+    "GlobalResourceLookUpTable" : 
+    {
+      "EntryWorldPath" : "Assets\\Map.ao",
+      "WorldPaths" : []
+    },
+    "MaxEngineArchetypeCountHint" : 1024,
+    "MaxEngineComponentTypeCountHint" : 1024,
+    "WindowConfig" : 
+    {
+      "IconPaths" : [ "Assets\\Icon\\runtime icon.png" ],
+      "RandomPlayIntroVideoPaths" : 
+      [
+        "Assets\\Video\\runtime splash video 1.mp4",
+        "Assets\\Video\\runtime splash video 2.mp4"
+      ],
+      "SequentialPlayIntroVideoPaths" : [],
+      "ShaderCompileSplashImageDurationInSeconds" : 5,
+      "ShaderCompileSplashImagePaths" : 
+      [
+        "Assets\\Splash\\Shader Compile Splash.png",
+        "Assets\\Splash\\Shader Compile Splash 2.png",
+        "Assets\\Splash\\Shader Compile Splash 3.png"
+      ],
+      "SwapChainBufferCount" : 3,
+      "Title" : "Integration Test"
+    }
+  },
+  "ProjectInfo" : 
+  {
+    "ProjectName" : "IntegrationTest",
+    "ProjectPath" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest",
+    "ProjectType" : "game"
+  },
+  "ShaderHeaders" : 
+  [
+    "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hlsli"
+  ],
+  "Shaders" : 
+  [
+    {
+      "Defines" : 
+      [
+        {
+          "_DEBUG_" : [ 0, 1 ]
+        },
+        {
+          "_RELWITHDEBINFO_" : [ 0, 1 ]
+        },
+        {
+          "_MINSIZEREL_" : [ 0, 1 ]
+        },
+        {
+          "_RELEASE_" : [ 0, 1 ]
+        }
+      ],
+      "MainFunction" : "vs_main",
+      "PermutationBlacklist" : 
+      [
+        "(_DEBUG_ == 1) && ((_RELWITHDEBINFO_ == 1) || (_MINSIZEREL_ == 1) || (_RELEASE_ == 1))",
+        "(_RELWITHDEBINFO_ == 1) && ((_MINSIZEREL_ == 1) || (_RELEASE_ == 1) || (_DEBUG_ == 1))",
+        "(_MINSIZEREL_ == 1) && ((_RELEASE_ == 1) || (_DEBUG_ == 1) || (_RELWITHDEBINFO_ == 1))",
+        "(_RELEASE_ == 1) && ((_DEBUG_ == 1) || (_RELWITHDEBINFO_ == 1) || (_MINSIZEREL_ == 1))",
+        "(_DEBUG_ == 0) && (_RELWITHDEBINFO_ == 0) && (_MINSIZEREL_ == 0) && (_RELEASE_ == 0)"
+      ],
+      "ShaderTarget" : "vs_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.vertex.hlsl"
+    },
+    {
+      "Defines" : [],
+      "MainFunction" : "ps_main",
+      "PermutationBlacklist" : [],
+      "ShaderTarget" : "ps_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.pixel.hlsl"
+    },
+    {
+      "Defines" : [],
+      "MainFunction" : "gs_main",
+      "PermutationBlacklist" : [],
+      "ShaderTarget" : "gs_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.geometry.hlsl"
+    },
+    {
+      "Defines" : [],
+      "MainFunction" : "hs_main",
+      "PermutationBlacklist" : [],
+      "ShaderTarget" : "hs_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hull.hlsl"
+    },
+    {
+      "Defines" : [],
+      "MainFunction" : "ds_main",
+      "PermutationBlacklist" : [],
+      "ShaderTarget" : "ds_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.domain.hlsl"
+    },
+    {
+      "Defines" : [],
+      "MainFunction" : "cs_main",
+      "PermutationBlacklist" : [],
+      "ShaderTarget" : "cs_5_0",
+      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.compute.hlsl"
+    }
+  ]
+}

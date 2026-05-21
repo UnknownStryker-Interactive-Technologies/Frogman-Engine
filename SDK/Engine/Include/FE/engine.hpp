@@ -34,9 +34,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-class ecs;
-class mutex;
-class shared_mutex;
+
 CLASS_FORWARD_DECLARATION(framework, game_processor);
 
 
@@ -90,13 +88,21 @@ public:
 };
 
 
-class alignas(FE::CPU_L1_cache_line::size) engine final : public FE::framework::framework_base
+class alignas(FE::CPU_L1_cache_line::size) engine : public FE::framework::framework_base
 {
-    friend class ecs;
-    friend class FE::renderer;
-    friend class FE::mutex;
-    friend class FE::shared_mutex;
+public:
+    class auth
+    {
+        friend class FE::renderer;
 
+        constexpr auth() noexcept {};
+        constexpr ~auth() noexcept {};
+
+        constexpr auth(auth&&) noexcept {};
+        constexpr auth(const auth&) noexcept {};
+    };
+
+private:
 	engine_program_options m_engine_program_options;
 
     std::pmr::string m_runtime_path;
@@ -121,17 +127,23 @@ public:
     _FE_FORCE_INLINE_ static FE::engine& get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
 	
     _FE_FORCE_INLINE_ FE::ASCII* get_runtime_path() const noexcept { return m_runtime_path.c_str(); }
+
 	_FE_FORCE_INLINE_ FE::ASCII* get_game_root_directory() const noexcept { return m_game_root_directory.c_str(); }
 
     _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return m_engine_info; }
+
 	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return m_project_config; }
-    _FE_FORCE_INLINE_ FE::project_config& get_project_config() noexcept { return m_project_config; }
+    _FE_FORCE_INLINE_ FE::project_config& get_project_config(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_project_config; }
+
+    _FE_FORCE_INLINE_ std::pmr::vector<::FE::internal::renderer::shader>& get_shaders(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_shaders; }
 
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 
     _FE_FORCE_INLINE_ FE::int32 count_async_processors() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
+    void terminate_all_processors() noexcept;
 
 	_FE_FORCE_INLINE_ const FE::renderer& get_renderer() const noexcept { return *m_renderer; }
+    _FE_FORCE_INLINE_ FE::renderer& get_renderer(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return *m_renderer; }
 
 private:
     virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
@@ -141,11 +153,11 @@ private:
 private:
 	void __read_froggy() noexcept;
 
-private: // Callbacks
-	static void __key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
-	static void __mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
-	static void __cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept;
-	static void __scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept;
+public: // Callbacks
+	static void key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
+	static void mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept;
+	static void cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept;
+	static void scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept;
 };
 
 

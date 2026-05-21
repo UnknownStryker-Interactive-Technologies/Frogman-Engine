@@ -116,6 +116,7 @@ void FE::internal::renderer::shader::compile() noexcept
 		{
 			_permutations.emplace_back();
 			D3DReadFileToBlob(l_blob_path.c_str(), &_permutations.back());
+
 			continue;
 		}
 

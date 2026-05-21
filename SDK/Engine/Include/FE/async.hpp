@@ -22,33 +22,18 @@ limitations under the License.
 
 
 
-BEGIN_NAMESPACE(FE)
+BEGIN_NAMESPACE(FE::async)
 
 
-using task_handle = typename framework::task::handle;
-
-class async // async API
+_FE_FORCE_INLINE_ static void schedule_task(const FE::task& task_p) noexcept
 {
-public:
-	_FE_FORCE_INLINE_ static void schedule_task(const framework::task& task_p) noexcept
-	{
-		FE::engine::get_engine().get_processors().schedule_task(task_p);
-	}
+	FE::engine::get_engine().get_processors().schedule_task(task_p);
+}
 
-	_FE_FORCE_INLINE_ static task_handle schedule_waitable_task(const framework::task& task_p) noexcept
-	{
-		FE::engine::get_engine().get_processors().schedule_waitable_task(task_p);
-	}
-
-	_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
-	{
-		return FE::engine::get_engine().count_async_processors();
-	}
-
-public:
-	async() = delete;
-	~async() = delete;
-};
+_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
+{
+	return FE::engine::get_engine().count_async_processors();
+}
 
 
 END_NAMESPACE

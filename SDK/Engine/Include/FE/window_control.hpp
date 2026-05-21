@@ -18,7 +18,7 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #pragma warning(disable: 4005)
 #include <GLFW/glfw3.h>
-#include <FE/engine.hxx>
+#include <FE/engine.hpp>
 
 
 
@@ -34,18 +34,10 @@ enum struct CursorMode : FE::int32
 	_VisibleAndConfined = GLFW_CURSOR_CAPTURED
 };
 
-class window_control // window control API
+_FE_FORCE_INLINE_ static void set_window_cursor_mode(CursorMode mode_p) noexcept
 {
-public:
-	_FE_FORCE_INLINE_ static void set_window_cursor_mode(CursorMode mode_p) noexcept
-	{
-		glfwSetInputMode(FE::engine::get_engine().m_renderer->get_window(), GLFW_CURSOR, static_cast<FE::int32>(mode_p));
-	}
-
-public:
-	window_control() noexcept = delete;
-	~window_control() noexcept = delete;
-};
+	glfwSetInputMode(FE::engine::get_engine().get_renderer().get_window(), GLFW_CURSOR, static_cast<FE::int32>(mode_p));
+}
 
 
 END_NAMESPACE

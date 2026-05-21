@@ -211,9 +211,6 @@ namespace internal::ECS
 
 	struct component_metadata
 	{
-		friend class framework::ECS;
-		friend class gc_metadata_base;
-
 		FE::smart_ptr<class gc_metadata, FE::RefType::_Owner> _gc_metadata; // the GC metadata is read by a separate thread; I chose to store the GC metadata in a separate place to avoid false sharing issues.
 
 		FE::list<FE::internal::ECS::components, FE::page_aligned_allocator<FE::internal::ECS::components>>::iterator _group;

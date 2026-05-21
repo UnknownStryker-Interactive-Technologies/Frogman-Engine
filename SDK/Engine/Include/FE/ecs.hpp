@@ -23,47 +23,38 @@ limitations under the License.
 
 
 
-BEGIN_NAMESPACE(FE)
+BEGIN_NAMESPACE(FE::ECS)
 
 
-class ecs // ECS API
+template <class Archetype, typename ...Arguments>
+_FE_FORCE_INLINE_ static FE::entity<Archetype> create_entity(Arguments&& ...arguments_p) noexcept
 {
-public:
+	return FE::engine::get_engine().get_ecs().instanciate_entity(std::forward<Arguments&&>(arguments_p)...);
+}
 
-	template <class Archetype, typename ...Arguments>
-	_FE_FORCE_INLINE_ static FE::entity<Archetype> create_entity(Arguments&& ...arguments_p) noexcept
-	{
-		return FE::engine::get_engine().get_ecs().instanciate_entity(std::forward<Arguments&&>(arguments_p)...);
-	}
+template <class Archetype>
+_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_entity_from_initializer(const FE::framework::initializer& serialized_entity_p) noexcept
+{
+	return FE::engine::get_engine().get_ecs().instanciate_entity_from_initializer(serialized_entity_p);
+}
 
-	template <class Archetype>
-	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_entity_from_initializer(const FE::framework::initializer& serialized_entity_p) noexcept
-	{
-		return FE::engine::get_engine().get_ecs().instanciate_entity_from_initializer(serialized_entity_p);
-	}
+template <class Archetype> // ADE: Archetype Default Entity
+_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_ADE() noexcept
+{
+	return FE::engine::get_engine().get_ecs().instanciate_archetype_default_entity();
+}
 
-	template <class Archetype> // ADE: Archetype Default Entity
-	_FE_FORCE_INLINE_ static FE::entity<FE::archetype_base> create_ADE() noexcept
-	{
-		return FE::engine::get_engine().get_ecs().instanciate_archetype_default_entity();
-	}
+template <class Archetype>
+_FE_FORCE_INLINE_ static void set_ADE(FE::framework::initializer& default_values_p) noexcept
+{
+	FE::engine::get_engine().get_ecs().set_archetype_default_entity(default_values_p);
+}
 
-	template <class Archetype>
-	_FE_FORCE_INLINE_ static void set_ADE(FE::framework::initializer& default_values_p) noexcept
-	{
-		FE::engine::get_engine().get_ecs().set_archetype_default_entity(default_values_p);
-	}
-
-	template <class Archetype>
-	_FE_FORCE_INLINE_ static FE::framework::initializer* const get_ADE_initializer() noexcept
-	{
-		return FE::engine::get_engine().get_ecs().get_archetype_default_entity();
-	}
-
-public:
-	ecs() = delete;
-	~ecs() = delete;
-};
+template <class Archetype>
+_FE_FORCE_INLINE_ static FE::framework::initializer* const get_ADE_initializer() noexcept
+{
+	return FE::engine::get_engine().get_ecs().get_archetype_default_entity();
+}
 
 
 END_NAMESPACE

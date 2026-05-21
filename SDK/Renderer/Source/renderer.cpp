@@ -130,10 +130,10 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	glfwSetWindowCloseCallback(m_window, &__on_window_close);
 	glfwSetFramebufferSizeCallback(m_window, &__on_window_resize);
 	
-	glfwSetKeyCallback(m_window, &FE::engine::__key_callback);
-	glfwSetMouseButtonCallback(m_window, &FE::engine::__mouse_button_callback);
-	glfwSetCursorPosCallback(m_window, &FE::engine::__cursor_position_callback);
-	glfwSetScrollCallback(m_window, &FE::engine::__scroll_callback);
+	glfwSetKeyCallback(m_window, &FE::engine::key_callback);
+	glfwSetMouseButtonCallback(m_window, &FE::engine::mouse_button_callback);
+	glfwSetCursorPosCallback(m_window, &FE::engine::cursor_position_callback);
+	glfwSetScrollCallback(m_window, &FE::engine::scroll_callback);
 }
 
 renderer::~renderer() noexcept
@@ -174,9 +174,8 @@ void renderer::render_frame() noexcept
 
 void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
 {
-	FE::engine::get_engine().m_renderer->m_should_exit.store(true, std::memory_order_release);
-	FE::engine::get_engine().m_game_processor->terminate();
-	FE::engine::get_engine().m_processors->terminate();	
+	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_should_exit.store(true, std::memory_order_release);
+	FE::engine::get_engine().terminate_all_processors();
 	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
 }
 
@@ -187,14 +186,15 @@ void renderer::__on_window_resize(_FE_MAYBE_UNUSED_ GLFWwindow* const window_p, 
 		return; // Ignore minimize events
 	}
 
-	FE::engine::get_engine().m_renderer->m_pending_resolution_change.store( { ._width = (FE::uint32)new_width_p, ._height = (FE::uint32)new_height_p },
+	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store( { ._width = (FE::uint32)new_width_p, ._height = (FE::uint32)new_height_p },
 																			std::memory_order_release);
 }
 
 void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
 	auto& l_engine = FE::engine::get_engine();
-	auto& l_renderer = *l_engine.m_renderer;
+	auto& l_renderer = l_engine.get_renderer(FE::engine::auth{});
+	auto& l_shaders = l_engine.get_shaders(FE::engine::auth{});
 
 	if (l_renderer.m_window_config._is_fullscreen == true)
 	{
@@ -203,13 +203,13 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 
 	tf::Executor l_executor;
 	tf::Taskflow l_taskflow; // Evaluate Permutation Blacklist
-	for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
+	for (var::int32 n = 0; n < l_shaders.size(); ++n)
 	{
 		l_taskflow.emplace
 		(
-			[&l_engine, n]()
+			[&l_shaders, n]()
 			{
-				FE::internal::__filter_shader_macro_combinations(l_engine.m_shaders[n]);
+				FE::internal::__filter_shader_macro_combinations(l_shaders[n]);
 			}
 		);
 	}
@@ -218,8 +218,8 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 		FE::video_player l_intro(l_hwnd);
 
-		auto& l_random_list = l_engine.get_project_config()._window_config._random_play_video_intro_paths;
-		auto& l_sequential_list = l_engine.get_project_config()._window_config._sequential_play_video_intro_paths;
+		const auto& l_random_list = l_engine.get_project_config()._window_config._random_play_video_intro_paths;
+		const auto& l_sequential_list = l_engine.get_project_config()._window_config._sequential_play_video_intro_paths;
 
 		if (l_random_list.empty() == false)
 		{
@@ -228,7 +228,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 			l_intro.play(l_random_list[l_idx].c_str());
 		}
 
-		for (auto& l_path : l_sequential_list)
+		for (const auto& l_path : l_sequential_list)
 		{
 			l_intro.play(l_path.c_str());
 		}
@@ -242,16 +242,16 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		var::uint64 l_total_permutations = 0;
 		std::atomic_uint64_t l_permutations_compiled = 0;
 
-		for (var::int32 n = 0; n < l_engine.m_shaders.size(); ++n)
+		for (var::int32 n = 0; n < l_shaders.size(); ++n)
 		{
-			l_total_permutations += l_engine.m_shaders[n]._macro_combinations.size();
+			l_total_permutations += l_shaders[n]._macro_combinations.size();
 
 			l_taskflow.emplace
 			(
-				[&l_engine, &l_permutations_compiled, n]()
+				[&l_shaders, &l_permutations_compiled, n]()
 				{
-					l_engine.m_shaders[n].compile();
-					l_permutations_compiled.fetch_add(	l_engine.m_shaders[n]._permutations.size(), 
+					l_shaders[n].compile();
+					l_permutations_compiled.fetch_add(	l_shaders[n]._permutations.size(),
 														std::memory_order_acq_rel
 														);
 				}
@@ -260,7 +260,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 
 		l_executor.run(l_taskflow);
 		
-		for (FE::image& image : l_engine.get_project_config()._window_config._shader_compile_splash_images)
+		for (FE::image& image : l_engine.get_project_config(FE::engine::auth{})._window_config._shader_compile_splash_images)
 		{
 			image.load_to_renderer(l_renderer.m_backend->get_device());
 		}
@@ -271,7 +271,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		ImGui_ImplDX11_Init(l_renderer.m_backend->get_device(), l_renderer.m_backend->get_context());
 
 		FE::clock l_shader_compile_splash_duration;
-		auto l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.begin();
+		auto l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.cbegin();
 
 		l_shader_compile_splash_duration.start_clock();
 		while (l_total_permutations > l_permutations_compiled.load(std::memory_order_acquire))
@@ -288,14 +288,14 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 			if (l_duration_seconds >= l_engine.get_project_config()._window_config._splash_duration_in_seconds)
 			{
 				++l_splash_iterator;
-				if (l_splash_iterator == l_engine.get_project_config()._window_config._shader_compile_splash_images.end())
+				if (l_splash_iterator == l_engine.get_project_config()._window_config._shader_compile_splash_images.cend())
 				{
-					l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.begin();
+					l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.cbegin();
 				}
 				l_shader_compile_splash_duration.start_clock();
 			}
 
-			FE::image& l_image = *l_splash_iterator;
+			const FE::image& l_image = *l_splash_iterator;
 			ImGuiIO& l_io = ImGui::GetIO();
 
 			ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -360,7 +360,7 @@ void renderer::toggle_borderless_fullscreen() noexcept
 		glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);
 		glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_TRUE);
 		
-		FE::engine::get_engine().m_renderer->m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_video_mode->width, ._height = (FE::uint32)m_video_mode->height },
+		FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store({._width = (FE::uint32)m_video_mode->width, ._height = (FE::uint32)m_video_mode->height},
 																				std::memory_order_release);
 		
 		glfwSetWindowMonitor(m_window, nullptr,
@@ -377,7 +377,7 @@ void renderer::toggle_borderless_fullscreen() noexcept
 	glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_TRUE);
 	glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_FALSE);
 
-	FE::engine::get_engine().m_renderer->m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_saved_window_width, ._height = (FE::uint32)m_saved_window_height },
+	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_saved_window_width, ._height = (FE::uint32)m_saved_window_height },
 																			std::memory_order_release);
 
 	glfwSetWindowMonitor(m_window, nullptr,

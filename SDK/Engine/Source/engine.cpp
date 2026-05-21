@@ -133,6 +133,11 @@ FE::engine::~engine() noexcept
 {}
 
 
+void FE::engine::terminate_all_processors() noexcept
+{
+	m_game_processor->terminate();
+	m_processors->terminate();
+}
 
 
 FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
@@ -434,7 +439,7 @@ void FE::engine::__read_froggy() noexcept
 }
 
 
-void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept
+void FE::engine::key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept
 {
 	static FE::input_device::keyboard& l_keyboard = get_game_instance().get_current_world()->get_mode().get_controller().get_keyboard();
 	FE::input_device::KeyState l_current_key_state = static_cast<FE::input_device::KeyState>(action_p);
@@ -1076,7 +1081,7 @@ void FE::engine::__key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE:
 	(window_p);
 }
 
-void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
+void FE::engine::mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
 {
 	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 
@@ -1132,7 +1137,7 @@ void FE::engine::__mouse_button_callback(GLFWwindow* const window_p, FE::int32 b
 	(window_p);
 }
 
-void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
+void FE::engine::cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
 {
 	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 	l_mouse._mouse_state._cursor_coordinate_x = x_p;
@@ -1142,7 +1147,7 @@ void FE::engine::__cursor_position_callback(GLFWwindow* const window_p, double x
 	(window_p);
 }
 
-void FE::engine::__scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept
+void FE::engine::scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept
 {
 	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
 	l_mouse._mouse_state._cursor_coordinate_x = x_offset_p;

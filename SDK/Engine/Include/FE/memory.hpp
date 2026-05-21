@@ -25,18 +25,10 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-class memory // memory API
+_FE_FORCE_INLINE_ static std::pmr::memory_resource* get_thread_local_memory_resource() noexcept
 {
-public:
-    _FE_FORCE_INLINE_ static std::pmr::memory_resource* get_thread_local_memory_resource() noexcept
-	{
-		return FE::engine::get_engine().get_memory_resource();
-	}
-
-public:
-	memory() noexcept = delete;
-	~memory() noexcept = delete;
-};
+	return FE::engine::get_engine().get_memory_resource();
+}
 
 
 END_NAMESPACE
