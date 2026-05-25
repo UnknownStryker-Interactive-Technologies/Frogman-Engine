@@ -289,7 +289,16 @@ namespace FE
 		_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure = 504,
 		_FatalRendererError_5XX_ShaderCompilationFailure = 505,
 		_FatalRendererError_5XX_ShaderCreationFailure = 506,
-		_FatalRendererError_5XX_InputLayoutCreationFailure = 507
+		_FatalRendererError_5XX_InputLayoutCreationFailure = 507,
+		_FatalRendererError_5XX_VertexShaderCreationFailure = 508,
+		_FatalRendererError_5XX_PixelShaderCreationFailure = 509,
+		_FatalRendererError_5XX_GeometryShaderCreationFailure = 510,
+		_FatalRendererError_5XX_HullShaderCreationFailure = 511,
+		_FatalRendererError_5XX_DomainShaderCreationFailure = 512,
+		_FatalRendererError_5XX_ComputeShaderCreationFailure = 513,
+		_FatalRendererError_5XX_ShaderReflectionFailure = 514,
+		_FatalRendererError_5XX_BufferCreationFailure = 515,
+		_FatalRendererError_5XX_FBXImportFailure = 516,
 	};
 }
 #endif
