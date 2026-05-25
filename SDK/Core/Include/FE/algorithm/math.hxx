@@ -91,7 +91,7 @@ struct movement
 	var::float32 _speed; // value range: [0.0, 1.0]
 };
 
-_FE_FORCE_INLINE_ movement calculate_movement(glm::vec2 vector_p)
+_FE_FORCE_INLINE_ movement calculate_movement(const glm::vec2& vector_p)
 {
 	movement l_result = 
 	{
