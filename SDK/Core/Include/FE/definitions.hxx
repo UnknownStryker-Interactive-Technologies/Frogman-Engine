@@ -110,7 +110,7 @@ limitations under the License.
 	#define _FE_UNLIKELY_ [[unlikely]]
 	#define FE_LIKELY(c) (c)
 	#define FE_UNLIKELY(c) (c)
-	#define _FE_NO_UNIQUE_ADDRESS_ //[[no_unique_address]]
+	#define _FE_NO_UNIQUE_ADDRESS_ [[no_unique_address]]
 
 #else
 	#ifdef _FE_ON_LINUX_X86_64_
