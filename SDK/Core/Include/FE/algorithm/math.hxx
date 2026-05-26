@@ -19,8 +19,11 @@ limitations under the License.
 #include <FE/type_traits.hxx>
 
 // std
+#include <algorithm>
 #include <cmath>
+#include <memory_resource>
 #include <limits> 
+#include <vector>
 
 #include <glm/vec2.hpp>
 
@@ -133,45 +136,80 @@ uint64 to_upper_prime(uint64 number_p) noexcept;
 uint64 to_lower_prime(uint64 number_p) noexcept;
 
 
-template<typename T>
-constexpr T select_minimum(std::initializer_list<T>&& initializer_list_p) noexcept
+struct point2D
 {
-	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
-	const T* const l_initializer_list_end = initializer_list_p.end();
-	T l_buffer = std::move(*l_initializer_list_begin);
-	++l_initializer_list_begin;
+    var::float32 _x;
+    var::float32 _y;
+};
 
-	while (l_initializer_list_begin != l_initializer_list_end)
-	{
-		if (l_buffer > *l_initializer_list_begin)
-		{
-			l_buffer = std::move(*l_initializer_list_begin);
-		}
-		++l_initializer_list_begin;
-	}
-
-	return l_buffer;
-}
-
-template<typename T>
-constexpr T select_maximum(std::initializer_list<T>&& initializer_list_p) noexcept
+class graph2D
 {
-	T* l_initializer_list_begin = const_cast<T*>(initializer_list_p.begin());
-	const T* const l_initializer_list_end = initializer_list_p.end();
-	T l_buffer = std::move(*l_initializer_list_begin);
-	++l_initializer_list_begin;
+    std::pmr::vector<point2D> m_lut;
 
-	while (l_initializer_list_begin != l_initializer_list_end)
-	{
-		if (l_buffer < *l_initializer_list_begin)
-		{
-			l_buffer = std::move(*l_initializer_list_begin);
-		}
-		++l_initializer_list_begin;
-	}
+public:
+    constexpr graph2D(std::pmr::memory_resource* resource_p = std::pmr::get_default_resource()) noexcept
+        : m_lut(resource_p) {}
 
-	return l_buffer;
-}
+    ~graph2D() noexcept = default;
+
+    constexpr void add_points(const std::initializer_list<point2D>&& points_p) noexcept
+    {
+        const auto l_s_comparator = [](const point2D& lhs_p, const point2D& rhs_p) noexcept
+        {
+                return lhs_p._x < rhs_p._x;
+        };
+
+        m_lut.insert(m_lut.end(), points_p);
+        std::sort(m_lut.begin(), m_lut.end(), l_s_comparator);
+    }
+
+    constexpr FE::float32 f(FE::float32 x_p) noexcept
+    {
+        const point2D l_value =
+        {
+            ._x = x_p,
+            ._y = 0.0
+        };
+
+        const auto l_s_comparator = [](const point2D& lhs_p, const point2D& rhs_p) noexcept
+        {
+            return lhs_p._x < rhs_p._x;
+        };
+
+        const auto l_next = std::lower_bound(m_lut.begin(), m_lut.end(), l_value, l_s_comparator);
+        FE_ASSERT(l_next != m_lut.end());
+
+        if (l_next->_x == x_p)
+        {
+            return l_next->_y;
+        }
+
+        const auto l_prev = std::prev(l_next);
+        FE_ASSERT(l_prev != m_lut.end());
+
+        /*
+            y = mx;
+
+            y/x = m;
+
+            For two points:
+            (y2 - y1) / (x2 - x1) = m.
+        */
+        FE::float32 l_delta_y = l_next->_y - l_prev->_y;
+        FE::float32 l_delta_x = l_next->_x - l_prev->_x;
+
+        FE_ASSERT(l_delta_x != 0.0);
+
+        FE::float32 l_slope = l_delta_y / l_delta_x;
+        /*
+            y = mx;
+
+            y_p - y1 = m(x_p - x1);
+            y_p = m(x_p - x1) + y1;
+        */
+        return l_slope * (x_p - l_prev->_x) + l_prev->_y;
+    }
+};
 
 END_NAMESPACE
 #endif
