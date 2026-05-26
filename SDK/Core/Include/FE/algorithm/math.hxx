@@ -136,6 +136,15 @@ uint64 to_upper_prime(uint64 number_p) noexcept;
 uint64 to_lower_prime(uint64 number_p) noexcept;
 
 
+enum class Interpolation
+{
+    _Linear,
+    _Step,
+    _SmoothStep,
+    _CubicHermite,
+    _MonotoneCubic
+};
+
 struct point2D
 {
     var::float32 _x;
@@ -163,6 +172,7 @@ public:
         std::sort(m_lut.begin(), m_lut.end(), l_s_comparator);
     }
 
+	template <Interpolation Mode = Interpolation::_Linear>
     constexpr FE::float32 f(FE::float32 x_p) noexcept
     {
         const point2D l_value =
@@ -187,29 +197,47 @@ public:
         const auto l_prev = std::prev(l_next);
         FE_ASSERT(l_prev != m_lut.end());
 
-        /*
-            y = mx;
 
-            y/x = m;
+        if constexpr (Mode == Interpolation::_Linear)
+        {
+            /*
+                y = mx;
 
-            For two points:
-            (y2 - y1) / (x2 - x1) = m.
-        */
-        FE::float32 l_delta_y = l_next->_y - l_prev->_y;
-        FE::float32 l_delta_x = l_next->_x - l_prev->_x;
+                y/x = m;
 
-        FE_ASSERT(l_delta_x != 0.0);
+                For two points:
+                (y2 - y1) / (x2 - x1) = m.
+            */
+            FE::float32 l_delta_y = l_next->_y - l_prev->_y;
+            FE::float32 l_delta_x = l_next->_x - l_prev->_x;
 
-        FE::float32 l_slope = l_delta_y / l_delta_x;
-        /*
-            y = mx;
+            FE_ASSERT(l_delta_x != 0.0);
 
-            y_p - y1 = m(x_p - x1);
-            y_p = m(x_p - x1) + y1;
-        */
-        return l_slope * (x_p - l_prev->_x) + l_prev->_y;
+            FE::float32 l_slope = l_delta_y / l_delta_x;
+            /*
+                y = mx;
+
+                y_p - y1 = m(x_p - x1);
+                y_p = m(x_p - x1) + y1;
+            */
+            return l_slope * (x_p - l_prev->_x) + l_prev->_y;
+        }
+        else if constexpr (Mode == Interpolation::_Step)
+        {
+			return l_prev->_y;
+        }
+        else if constexpr (Mode == Interpolation::_SmoothStep)
+        {
+        }
+        else if constexpr (Mode == Interpolation::_CubicHermite)
+        {
+        }
+        else if constexpr (Mode == Interpolation::_MonotoneCubic)
+        {
+		}
     }
 };
+
 
 END_NAMESPACE
 #endif
