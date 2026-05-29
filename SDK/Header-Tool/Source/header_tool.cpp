@@ -29,35 +29,36 @@ limitations under the License.
 
 
 
-header_tool::header_tool(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	:	FE::framework::framework_base(argc_p, argv_p),
-		m_header_tool_options(argc_p, argv_p),
+header_tool::header_tool(std::unique_ptr<program_options> options_p) noexcept
+	:	FE::framework::framework_base(std::move(options_p)),
 		m_FHT_error_codes()
 {
-	m_current_system_locale = std::locale::global(std::locale("en_US.UTF-8"));
-	std::cout << "Frogman Engine Header Tool: the given program options are - ";
-	for (var::int32 i = 0; i < argc_p; ++i)
-	{
-		std::cout << argv_p[i] << ' ';
-	}
-	std::cout << '\n';
-
-	std::cout << "Frogman Engine Header Tool: the current locale is " << std::locale().name() << '\n';
 }
 
 
 FE::int32 header_tool::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 {
+	m_current_system_locale = std::locale::global(std::locale("en_US.UTF-8"));
+	std::cout << "Frogman Engine Header Tool: the given program options are - ";
+	for (var::int32 i = 0; i < get_program_options().get_argc(); ++i)
+	{
+		std::cout << get_program_options().get_argv()[i] << ' ';
+	}
+	std::cout << '\n';
+
+	std::cout << "Frogman Engine Header Tool: the current locale is " << std::locale().name() << '\n';
+
+
 	__load_reflection_data();
 	m_FHT_error_codes = FE::framework::framework_base::get_framework().get_enum_reflection().retrieve_enum_struct_metadata("::FrogmanEngineHeaderToolError");
 
-	if (m_header_tool_options.is_fno_op_defined() == true)
+	if (get_program_options().is_fno_op_defined() == true)
 	{
 		std::cerr << "\n\nFrogman Engine Header Tool: No operation will be done. Exiting the program.\n\n";
 		std::exit(0);
 	}
 
-	if (*(m_header_tool_options.get_path_to_copyright_notice()) != '\0')
+	if (*(get_program_options().get_path_to_copyright_notice()) != '\0')
 	{
 		m_copyright_notice = FHT::file_io::read_copyright_notice(argc_p, argv_p);
 	}
@@ -78,12 +79,12 @@ FE::int32 header_tool::run()
 	*/
 
 	tf::Taskflow l_taskflow;
-	tf::Executor l_executor(m_program_options.get_max_concurrency() - 1); // exclude the main thread.
+	tf::Executor l_executor(get_program_options().get_max_concurrency() - 1); // exclude the main thread.
 	var::int32 l_exit_code = 0;
 	FE::uint64 l_number_of_files = m_mapped_header_files.size();
 	std::mutex l_log_lock;
 
-	if (m_header_tool_options.is_fno_copyright_notice_defined() == false)
+	if (get_program_options().is_fno_copyright_notice_defined() == false)
 	{
 		for (var::uint64 i = 0; i < l_number_of_files; ++i)
 		{
@@ -120,7 +121,7 @@ FE::int32 header_tool::run()
 
 	l_taskflow.clear();
 
-	if (m_header_tool_options.is_fno_reflection_helper_defined() == false)
+	if (get_program_options().is_fno_reflection_helper_defined() == false)
 	{
 		for (var::uint64 i = 0; i < l_number_of_files; ++i)
 		{
@@ -192,7 +193,7 @@ FE::int32 header_tool::run()
 		}
 
 		// generate the reflection code in the generated.cpp file.
-		if (m_header_tool_options.is_fno_write_defined() == false)
+		if (get_program_options().is_fno_write_defined() == false)
 		{
 			FHT::reflexcode_generator::generate_reflexcode(m_metadata_set);
 		}

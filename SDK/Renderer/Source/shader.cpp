@@ -48,7 +48,7 @@ FE::internal::renderer::shader::~shader() noexcept
 }
 
 
-void FE::internal::renderer::shader::compile() noexcept
+void FE::internal::renderer::shader::compile(FE::boolean should_recompile_p) noexcept
 {
 	_permutations.reserve(_macro_combinations.size());
 	std::pmr::wstring l_blob_path(FE::engine::get_engine().get_large_memory_resource());
@@ -89,17 +89,18 @@ void FE::internal::renderer::shader::compile() noexcept
 
 		std::fstream l_blob_file(l_blob_path.c_str(), std::ios::binary | std::ios::in); // read as a binary sequence
 		FE::fstream_guard l_blob_file_guard(l_blob_file);
-		if (l_blob_file.is_open() == true) // does blob exist?
+		if (l_blob_file.is_open() == true && should_recompile_p == false && _is_hlsli_amended == false) // does blob exist AND should not recompile AND is hlsli not amended?
 		{
 			_permutations.emplace_back();
-			D3DReadFileToBlob(l_blob_path.c_str(), &_permutations.back()._blob);
+			HRESULT l_result = D3DReadFileToBlob(l_blob_path.c_str(), &_permutations.back()._blob);
+			FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderBlobCacheLoadFailure, "Shader blob cache load failed.");
 			_permutations.back()._identifier = l_blob_name;
 			continue;
 		}
 
 		_permutations.emplace_back();
-		wrl::ComPtr<ID3DBlob> l_errors;
-		const HRESULT l_result = D3DCompileFromFile(_source_path.c_str(),
+		wrl::com_ptr<ID3DBlob> l_errors;
+		HRESULT l_result = D3DCompileFromFile(_source_path.c_str(),
 			macro_combination.data(),
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			_main_function.c_str(),
@@ -118,7 +119,8 @@ void FE::internal::renderer::shader::compile() noexcept
 		FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderCompilationFailure, "Shader compilation failed.");
 
 		// stash blobs to disk
-		D3DWriteBlobToFile(_permutations.back()._blob.Get(), l_blob_path.c_str(), TRUE);
+		l_result = D3DWriteBlobToFile(_permutations.back()._blob.Get(), l_blob_path.c_str(), TRUE);
+		FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderBlobStashFailure, "Shader blob stash failed.");
 	}
 }
 
@@ -227,3 +229,247 @@ FE::uint64 FE::internal::renderer::shader::__build_shader_blob_cache_path(std::p
 
 	return l_blob_name;
 }
+
+
+
+
+std::pmr::list<FE::internal::renderer::hlsl_token> FE::internal::renderer::__tokenize_hlsl(const std::pmr::string& buffer_p)
+{
+	if (buffer_p.empty() == true)
+	{
+		throw HlslTokenizerError::_EmptyFileBuffer;
+	}
+		
+	std::pmr::list<FE::internal::renderer::hlsl_token>l_tokens(FE::engine::get_engine().get_memory_resource());
+	std::pmr::vector< FE::internal::renderer::HlslContext> l_context_stack(FE::engine::get_engine().get_memory_resource());
+
+	FE::ASCII* l_iter = buffer_p.data();
+	FE::ASCII* const l_end = buffer_p.data() + buffer_p.length();
+	while (l_iter < l_end)
+	{
+		if (*l_iter <= ' ')
+		{
+			++l_iter;
+			continue;
+		}
+		FE::ASCII* l_past = l_iter;
+		__tokenize_hlsl_comments(l_tokens, l_context_stack, l_iter);
+		__tokenize_hlsl_include_directives(l_tokens, l_iter);
+		__skip_hlsl_string_and_character_literals(l_iter, l_end);
+
+		if (l_past == l_iter) // hasn't advanced.
+		{
+			++l_iter; // skip irrelevant hlsl code for building include dependency graph.
+		}
+	}
+
+	l_tokens.emplace_back(HlslToken::_EOF, FE_TEXT("\0"));
+	return l_tokens;
+}
+
+void FE::internal::renderer::__tokenize_hlsl_comments(	std::pmr::list<FE::internal::renderer::hlsl_token>& out_tokens_p, std::pmr::vector<FE::internal::renderer::HlslContext>& in_out_context_stack_p, 
+														FE::ASCII*& code_iterator_p)
+{
+	FE::ASCII l_input_buffer[3] = { code_iterator_p[0], code_iterator_p[1], '\0' };
+	STRING_SWITCH(l_input_buffer)
+	{
+	STRING_CASE("//"):
+		in_out_context_stack_p.emplace_back(HlslContext::_LineComment);
+		out_tokens_p.emplace_back(HlslToken::_LineCommentBegin);
+		code_iterator_p += sizeof(l_input_buffer) - 1;
+		return;
+
+
+	STRING_CASE("/*"):
+		in_out_context_stack_p.emplace_back(HlslContext::_BlockComment);
+		out_tokens_p.emplace_back(HlslToken::_BlockCommentBegin);
+		code_iterator_p += sizeof(l_input_buffer) - 1;
+		return;
+
+	STRING_CASE("*/"):
+		if (in_out_context_stack_p.back() != HlslContext::_BlockComment)
+		{
+			throw HlslTokenizerError::_UnexpectedBlockCommentTermination;
+		}
+		in_out_context_stack_p.pop_back();
+		out_tokens_p.emplace_back(HlslToken::_BlockCommentEnd);
+		code_iterator_p += sizeof(l_input_buffer) - 1;
+		return;
+
+
+	default:
+		break;
+	}
+
+
+	if (*code_iterator_p == '\n' && in_out_context_stack_p.back() == HlslContext::_LineComment)
+	{
+		in_out_context_stack_p.pop_back();
+		out_tokens_p.emplace_back(HlslToken::_LineCommentEnd);
+		++code_iterator_p;
+		return;
+	}
+
+
+	switch (in_out_context_stack_p.back())
+	{
+	case HlslContext::_LineComment:
+		out_tokens_p.emplace_back(HlslToken::_LineCommentBody);
+		{
+			auto l_newline = FE::algorithm::string::find_the_first(code_iterator_p, '\n');
+			if (l_newline == std::nullopt) _FE_UNLIKELY_
+			{
+				throw HlslTokenizerError::_MissingNullTerminator;
+			}
+			code_iterator_p += l_newline->_end;
+		}
+		return;
+
+	case HlslContext::_BlockComment:
+		out_tokens_p.emplace_back(HlslToken::_BlockCommentBody);
+		{
+			auto l_block_comment_opener = FE::algorithm::string::find_the_first(code_iterator_p, "/*");
+			auto l_block_comment_termination = FE::algorithm::string::find_the_first(code_iterator_p, "*/");
+
+			if (l_block_comment_termination == std::nullopt ||
+				l_block_comment_opener->_begin < l_block_comment_termination->_begin) _FE_UNLIKELY_
+			{
+				throw HlslTokenizerError::_MissingBlockCommentTerminator;
+			}
+			code_iterator_p += l_block_comment_termination->_begin;
+		}
+		return;
+
+	default:
+		return;
+	}
+}
+
+void FE::internal::renderer::__skip_hlsl_string_and_character_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p)
+{
+	if (*code_iterator_p != '\"') // if *code_iterator_p is not ", then return.
+	{
+		return;
+	}
+	++code_iterator_p; // skip the opening "
+
+	var::ASCII l_input_buffer[3] = {};
+	constexpr FE::ASCII* const l_extender = "\\\"";
+	const FE::algorithm::string::range l_cmp_rng = { 0, FE::algorithm::string::length(l_input_buffer) };
+	
+	while (code_iterator_p < end_p)
+	{
+		l_input_buffer[0] = code_iterator_p[0];
+		l_input_buffer[1] = code_iterator_p[1];
+		l_input_buffer[2] = '\0';
+
+		if (FE::algorithm::string::compare_ranged(l_extender, l_cmp_rng, l_input_buffer, l_cmp_rng) == true) // found \"
+		{
+			code_iterator_p += l_cmp_rng._end;
+			continue;
+		}
+
+		if (*code_iterator_p == '\"')
+		{
+			++code_iterator_p;
+			return;
+		}
+
+		++code_iterator_p;
+	}
+
+	throw HlslTokenizerError::_MissingQuote;
+}
+
+void FE::internal::renderer::__tokenize_hlsl_include_directives(std::pmr::list<::FE::internal::renderer::hlsl_token>& out_tokens_p, FE::ASCII*& code_iterator_p)
+{
+	if (*code_iterator_p != '#') // if *code_iterator_p is not #, then return.
+	{
+		return;
+	}
+	++code_iterator_p; // skip the #
+
+
+	while (*code_iterator_p <= ' ')
+	{
+		++code_iterator_p;
+	}
+
+
+	FE::ASCII l_input_buffer[8] = 
+	{
+		code_iterator_p[0], // i
+		code_iterator_p[1], // n
+		code_iterator_p[2], // c
+		code_iterator_p[3], // l
+		code_iterator_p[4], // u
+		code_iterator_p[5], // d
+		code_iterator_p[6], // e
+		'\0'
+	};
+	const FE::algorithm::string::range l_cmp_rng = { 0, FE::algorithm::string::length(l_input_buffer) };
+	constexpr FE::ASCII l_include_directive[] = "include";
+
+	if (FE::algorithm::string::compare_ranged(l_input_buffer, l_cmp_rng, l_include_directive, l_cmp_rng) == true)
+	{
+		code_iterator_p += l_cmp_rng._end;
+		while (*code_iterator_p <= ' ')
+		{
+			++code_iterator_p;
+		}
+
+		std::optional<FE::algorithm::string::range>	l_include_path_rng = {};
+		switch (*code_iterator_p)
+		{
+		case '<':
+			++code_iterator_p; // skip the opening <
+			l_include_path_rng = FE::algorithm::string::find_the_first(code_iterator_p, '>');
+			if (l_include_path_rng == std::nullopt) _FE_UNLIKELY_
+			{
+				throw HlslTokenizerError::_MalformedIncludeDirectiveFormat;
+			}
+			out_tokens_p.emplace_back(HlslToken::_IncludeDirective, FE::directory_string(code_iterator_p, code_iterator_p + l_include_path_rng->_begin, FE::framework::framework_base::get_framework().get_memory_resource()));
+			break;
+
+		case '\"':
+			++code_iterator_p; // skip the opening "
+			l_include_path_rng = FE::algorithm::string::find_the_first(code_iterator_p, '\"');
+			if (l_include_path_rng == std::nullopt) _FE_UNLIKELY_
+			{
+				throw HlslTokenizerError::_MalformedIncludeDirectiveFormat;
+			}
+			out_tokens_p.emplace_back(HlslToken::_IncludeDirective, FE::directory_string(code_iterator_p, code_iterator_p + l_include_path_rng->_begin,FE::framework::framework_base::get_framework().get_memory_resource()));
+			break;
+
+		default:
+			throw HlslTokenizerError::_MalformedIncludeDirectiveFormat;
+		}
+	}
+}
+
+void FE::internal::renderer::__build_include_dependency_graph(	const concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
+										absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
+										std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p) noexcept
+{
+	FE::directory_string l_shader_path(FE::engine::get_engine().get_large_memory_resource());
+	for (const auto& [key, token_list] : token_lists_p)
+	{
+		for (const FE::internal::renderer::hlsl_token& token : token_list)
+		{
+			if (token._type == FE::internal::renderer::HlslToken::_IncludeDirective)
+			{
+				l_shader_path = FE::engine::get_engine().get_shader_root_directory();
+				l_shader_path += FE_TEXT("\\");
+				l_shader_path += token._value;
+
+				auto l_header_it = in_out_shader_headers_p.find(l_shader_path);
+				FE_EXIT_IF(l_header_it == in_out_shader_headers_p.end(), ErrorCode::_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted, "Shader subdirectory creation restricted; target HLSL file path: ${%s@0}.", l_shader_path.c_str());
+			
+				//in_out_shader_headers_p[l_shader_path]._included_hlslis;
+				// DFS
+			}
+		}
+	}
+	(in_out_shaders_p);
+}
+

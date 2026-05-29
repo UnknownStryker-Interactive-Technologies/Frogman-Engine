@@ -51,7 +51,16 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 
 		m_depth_stencil_buffer(),
 		m_depth_stencil_view(),
-		m_depth_stencil_state()
+		m_depth_stencil_state(),
+		
+		m_vertex_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+		m_pixel_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+		m_geometry_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+		m_hull_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+		m_domain_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+		m_compute_shader_cache(FE::framework::framework_base::get_framework().get_large_memory_resource()),
+
+		m_input_layout_cache(FE::framework::framework_base::get_framework().get_large_memory_resource())
 {
 	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -87,8 +96,8 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 				"Failed to retrieve the GPU description; the error code is ${%d@0}.", &l_result);
 
 
-	wrl::ComPtr<ID3D11Device> l_device;
-	wrl::ComPtr<ID3D11DeviceContext> l_context;
+	wrl::com_ptr<ID3D11Device> l_device;
+	wrl::com_ptr<ID3D11DeviceContext> l_context;
 	constexpr D3D_FEATURE_LEVEL l_feature_level[] = { D3D_FEATURE_LEVEL_11_1 };
 	_FE_MAYBE_UNUSED_ D3D_FEATURE_LEVEL l_actual_feature_level;
 	l_result = D3D11CreateDevice(m_adapter.Get(),
@@ -150,7 +159,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 	l_fullscreen_desc.RefreshRate.Denominator = 1;
 
 
-	wrl::ComPtr<IDXGISwapChain1> l_swap_chain;
+	wrl::com_ptr<IDXGISwapChain1> l_swap_chain;
 
 	l_result = m_factory->CreateSwapChainForHwnd(m_device.Get(), l_window_handle, &l_swapchain_desc, &l_fullscreen_desc, nullptr, &l_swap_chain);
 	FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererSwapChainCreationFailure, "Fail to create a swap chain; the error code is ${%d@0}.", &l_result);
@@ -347,9 +356,9 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_VertexShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11VertexShader> l_vertex_shader;
+				wrl::com_ptr<ID3D11VertexShader> l_vertex_shader;
 				const HRESULT l_result = m_device->CreateVertexShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_vertex_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a vertex shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_VertexShaderCreationFailure, "Failed to create a vertex shader; the error code is ${%d@0}.", &l_result);
 				
 				m_vertex_shader_cache[blob._identifier] = l_vertex_shader;
 			}
@@ -359,9 +368,9 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_PixelShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11PixelShader> l_pixel_shader;
+				wrl::com_ptr<ID3D11PixelShader> l_pixel_shader;
 				const HRESULT l_result = m_device->CreatePixelShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_pixel_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a pixel shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_PixelShaderCreationFailure, "Failed to create a pixel shader; the error code is ${%d@0}.", &l_result);
 				
 				m_pixel_shader_cache[blob._identifier] = l_pixel_shader;
 			}
@@ -371,9 +380,9 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_GeometryShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11GeometryShader> l_geometry_shader;
+				wrl::com_ptr<ID3D11GeometryShader> l_geometry_shader;
 				const HRESULT l_result = m_device->CreateGeometryShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_geometry_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a geometry shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_GeometryShaderCreationFailure, "Failed to create a geometry shader; the error code is ${%d@0}.", &l_result);
 				
 				m_geometry_shader_cache[blob._identifier] = l_geometry_shader;
 			}
@@ -383,9 +392,9 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_HullShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11HullShader> l_hull_shader;
+				wrl::com_ptr<ID3D11HullShader> l_hull_shader;
 				const HRESULT l_result = m_device->CreateHullShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_hull_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a hull shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_HullShaderCreationFailure, "Failed to create a hull shader; the error code is ${%d@0}.", &l_result);
 				
 				m_hull_shader_cache[blob._identifier] = l_hull_shader;
 			}
@@ -395,9 +404,9 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_DomainShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11DomainShader> l_domain_shader;
+				wrl::com_ptr<ID3D11DomainShader> l_domain_shader;
 				const HRESULT l_result = m_device->CreateDomainShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_domain_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a domain shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_DomainShaderCreationFailure, "Failed to create a domain shader; the error code is ${%d@0}.", &l_result);
 				
 				m_domain_shader_cache[blob._identifier] = l_domain_shader;
 			}
@@ -407,14 +416,52 @@ void d3d11_backend::register_shaders(std::pmr::vector<::FE::internal::renderer::
 		case ShaderTarget::_SM5_ComputeShader:
 			for (auto& blob : shader._permutations)
 			{
-				wrl::ComPtr<ID3D11ComputeShader> l_compute_shader;
+				wrl::com_ptr<ID3D11ComputeShader> l_compute_shader;
 				const HRESULT l_result = m_device->CreateComputeShader(blob._blob->GetBufferPointer(), blob._blob->GetBufferSize(), nullptr, &l_compute_shader);
-				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, "Failed to create a compute shader; the error code is ${%d@0}.", &l_result);
+				FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ComputeShaderCreationFailure, "Failed to create a compute shader; the error code is ${%d@0}.", &l_result);
 				
 				m_compute_shader_cache[blob._identifier] = l_compute_shader;
 			}
 			break;
+		}
+	}
+}
 
+void d3d11_backend::create_hlsl_struct_memory_layout(std::pmr::vector<class::FE::internal::renderer::shader>& shaders_p) noexcept
+{
+	std::pmr::vector<D3D11_INPUT_ELEMENT_DESC> l_descs(FE::framework::framework_base::get_framework().get_large_memory_resource());
+
+	for (auto& shader : shaders_p)
+	{
+		for (auto& blob : shader._permutations)
+		{
+			wrl::com_ptr<ID3D11ShaderReflection> l_reflection = nullptr;
+			HRESULT l_result = D3DReflect(blob._blob->GetBufferPointer(),
+									blob._blob->GetBufferSize(),
+									IID_ID3D11ShaderReflection,
+									&l_reflection
+			);
+
+			FE_EXIT_IF(FAILED(l_result), FE::ErrorCode::_FatalRendererError_5XX_ShaderReflectionFailure, "Failed to reflect shader bytecode; the error code is ${%d@0}.", &l_result);
+		
+			D3D11_SHADER_DESC l_shader_desc = {};
+			l_reflection->GetDesc(&l_shader_desc);
+
+			l_descs.reserve(l_shader_desc.InputParameters);
+
+			// 
+
+			wrl::com_ptr<ID3D11InputLayout> l_input_layout;
+			l_result = m_device->CreateInputLayout(	l_descs.data(),
+													(UINT)l_descs.size(),
+													blob._blob->GetBufferPointer(),
+													blob._blob->GetBufferSize(),
+													&l_input_layout
+			);
+
+			m_input_layout_cache[blob._identifier] = l_input_layout;
+
+			l_descs.clear();
 		}
 	}
 }

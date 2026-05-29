@@ -18,6 +18,8 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/pair.hxx>
 
+#include <memory>
+
 // std
 #include <functional>
 
@@ -25,7 +27,7 @@ limitations under the License.
 #ifdef CUSTOM_ENGINE
     #error Frogman Engine Prohibits macroizing the keyword "CUSTOM_ENGINE()".
 #else                                                                                                                        // The name below does not follow the naming convention since it is considered hidden from users.
-    #define CUSTOM_ENGINE(framework_class_name) static ::std::function<::FE::framework::framework_base* (FE::int32, FE::ASCII**)> CustomEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::ASCII** argv_p) { return new framework_class_name(argc_p, argv_p); } );
+    #define CUSTOM_ENGINE(framework_class_name, program_option_class_name) static ::std::function<::FE::framework::framework_base* (FE::int32, FE::ASCII**)> CustomEngine = ::FE::framework::framework_base::allocate_framework( [](FE::int32 argc_p, FE::ASCII** argv_p) { return new framework_class_name( ::std::make_unique<program_option_class_name>(argc_p, argv_p) ); } );
 #endif
 
 
@@ -56,7 +58,7 @@ class program_option
 
 public:
 	program_option(::FE::int32 argc_p, ::FE::ASCII** argv_p) noexcept;
-	~program_option() noexcept = default;
+	virtual ~program_option() noexcept = default;
 
 	::FE::uint32 get_max_concurrency() const noexcept;
 	::FE::ASCII* view_max_concurrency_option_title() const noexcept;
@@ -70,7 +72,7 @@ class framework_base
 	friend int ::main(::FE::int32 argc_p, ::FE::ASCII** argv_p);
 
 protected:
-	program_option m_program_options;
+	std::unique_ptr<program_option> m_program_options;
 	std::locale m_current_system_locale;
 
 	std::pmr::memory_resource* m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
@@ -84,7 +86,7 @@ protected:
 	::FE::unique_ptr<class processors> m_processors;
 
 public:
-	framework_base(::FE::int32 argc_p, ::FE::ASCII** argv_p) noexcept;
+	framework_base(std::unique_ptr<program_option> options_p) noexcept;
 	virtual ~framework_base() noexcept;
 
 public:

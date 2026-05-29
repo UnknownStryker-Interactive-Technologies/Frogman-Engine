@@ -172,7 +172,7 @@ FE::boolean FE::video_player::__is_ready() const noexcept
 }
 
 
-FE::boolean FE::video_player::__open(FE::ASCII* file_path_p) noexcept
+FE::boolean FE::video_player::__open(FE::directory_char_t* file_path_p) noexcept
 {
     if (file_path_p == nullptr) 
     {
@@ -182,12 +182,8 @@ FE::boolean FE::video_player::__open(FE::ASCII* file_path_p) noexcept
     std::lock_guard<std::mutex> l_guard(m_mtx);
 
     m_notify->ResetAll();
-
-    var::wchar l_wide[_ALLOWED_DIRECTORY_LENGTH_] = L"\0";
-    _FE_MAYBE_UNUSED_ FE::int32 l_length = MultiByteToWideChar(CP_UTF8, NULL, file_path_p, (int)strlen(file_path_p)+1, l_wide, _ALLOWED_DIRECTORY_LENGTH_);
-    FE_ASSERT(l_length > 0);
   
-    BSTR l_url = SysAllocString(l_wide);
+    BSTR l_url = SysAllocString(file_path_p);
     if (l_url == nullptr) 
     {
         return false; 
@@ -203,7 +199,7 @@ FE::boolean FE::video_player::__open(FE::ASCII* file_path_p) noexcept
 }
 
 
-void FE::video_player::play(FE::ASCII* file_path_p) noexcept
+void FE::video_player::play(FE::directory_char_t* file_path_p) noexcept
 {
     FE_EXIT_IF(__open(file_path_p) == false,
         FE::ErrorCode::_FatalWinAPI_MF_Error_4XX_VideoFileOpenFailure,

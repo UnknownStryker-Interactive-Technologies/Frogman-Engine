@@ -46,8 +46,8 @@ struct window_config // fields are immutable after window creation; modifying th
 	std::pmr::vector<std::pmr::string> _icon_paths;
 	std::pmr::vector<GLFWimage> _icon_images;
 
-	std::pmr::vector<std::pmr::string> _random_play_video_intro_paths;
-	std::pmr::vector<std::pmr::string> _sequential_play_video_intro_paths;
+	std::pmr::vector<FE::directory_string> _random_play_video_intro_paths;
+	std::pmr::vector<FE::directory_string> _sequential_play_video_intro_paths;
 	std::pmr::vector<FE::image> _shader_compile_splash_images;
 	var::uint32 _splash_duration_in_seconds;
 

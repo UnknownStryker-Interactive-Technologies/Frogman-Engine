@@ -82,6 +82,7 @@ typedef const wchar_t directory_char_t;
 #elif defined(_FE_ON_LINUX_X86_64_)
 typedef const char directory_char_t;
 #endif
+using directory_string = std::pmr::basic_string<std::remove_const_t<directory_char_t>>;
 
 
 template <typename T>
@@ -122,6 +123,22 @@ _FE_MAYBE_UNUSED_	constexpr inline FE::size uint64_min = min_value<FE::uint64>;
 
 #define _FE_SUCCEEDED_ 1
 #define _FE_FAILED_ 0
+
+
+_FE_MAYBE_UNUSED_ constexpr FE::float64 one_klick_f64 = 1000.0;
+_FE_MAYBE_UNUSED_ constexpr FE::float32 one_klick_f32 = 1000.0f;
+
+_FE_MAYBE_UNUSED_ constexpr FE::float64 one_meter_f64 = 1.0;
+_FE_MAYBE_UNUSED_ constexpr FE::float32 one_meter_f32 = 1.0f;
+
+_FE_MAYBE_UNUSED_ constexpr FE::float64 one_centimeter_f64 = 0.01;
+_FE_MAYBE_UNUSED_ constexpr FE::float32 one_centimeter_f32 = 0.01f;
+
+_FE_MAYBE_UNUSED_ constexpr FE::float64 one_millimeter_f64 = 0.001;
+_FE_MAYBE_UNUSED_ constexpr FE::float32 one_millimeter_f32 = 0.001f;
+
+_FE_MAYBE_UNUSED_ constexpr FE::float64 one_micrometer_f64 = 0.000001;
+_FE_MAYBE_UNUSED_ constexpr FE::float32 one_micrometer_f32 = 0.000001f;
 
 
 using null_t = uint8;

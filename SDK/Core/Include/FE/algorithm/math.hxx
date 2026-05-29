@@ -90,8 +90,8 @@ constexpr static inline FE::float64 pi = 3.1415926535897932;
 
 struct movement
 {
-	var::float32 _direction; // value range: (-180.0, 180.0]; in degrees.
-	var::float32 _speed; // value range: [0.0, 1.0]
+	var::float64 _direction; // value range: (-180.0, 180.0]; in degrees.
+	var::float64 _speed; // value range: [0.0, 1.0]
 };
 
 _FE_FORCE_INLINE_ movement calculate_movement(const glm::vec2& vector_p)
@@ -147,8 +147,8 @@ enum class Interpolation
 
 struct point2D
 {
-    var::float32 _x;
-    var::float32 _y;
+    var::float64 _x;
+    var::float64 _y;
 };
 
 class graph2D
@@ -173,7 +173,7 @@ public:
     }
 
 	template <Interpolation Mode = Interpolation::_Linear>
-    constexpr FE::float32 f(FE::float32 x_p) noexcept
+    constexpr FE::float64 f(FE::float64 x_p) noexcept
     {
         const point2D l_value =
         {
@@ -208,12 +208,12 @@ public:
                 For two points:
                 (y2 - y1) / (x2 - x1) = m.
             */
-            FE::float32 l_delta_y = l_next->_y - l_prev->_y;
-            FE::float32 l_delta_x = l_next->_x - l_prev->_x;
+            FE::float64 l_delta_y = l_next->_y - l_prev->_y;
+            FE::float64 l_delta_x = l_next->_x - l_prev->_x;
 
             FE_ASSERT(l_delta_x != 0.0);
 
-            FE::float32 l_slope = l_delta_y / l_delta_x;
+            FE::float64 l_slope = l_delta_y / l_delta_x;
             /*
                 y = mx;
 

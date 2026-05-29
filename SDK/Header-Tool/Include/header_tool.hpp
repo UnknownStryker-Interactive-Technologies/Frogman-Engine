@@ -56,7 +56,8 @@ while utilizing parallel task execution for efficiency.
 
 class header_tool : public FE::framework::framework_base
 {
-	program_options m_header_tool_options;
+	using base = FE::framework::framework_base;
+
 	file_buffer_t m_copyright_notice;
 	
 	std::pmr::vector<directory_t> m_header_file_list;
@@ -65,7 +66,7 @@ class header_tool : public FE::framework::framework_base
 	FHT::reflexcode_generator::metadata_set_t m_metadata_set;
 
 public:
-	header_tool(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+	header_tool(std::unique_ptr<program_options> options_p) noexcept;
 	~header_tool() noexcept override = default;
 
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
@@ -73,7 +74,7 @@ public:
 	virtual FE::int32 shutdown() override;
 		
 public:
-	_FE_FORCE_INLINE_ static program_options& get_program_options() noexcept { return static_cast<header_tool&>( get_framework() ).m_header_tool_options; }
+	_FE_FORCE_INLINE_ static const ::program_options& get_program_options() noexcept { return static_cast<const ::program_options&>( get_framework().get_program_options() ); }
 };
 
 

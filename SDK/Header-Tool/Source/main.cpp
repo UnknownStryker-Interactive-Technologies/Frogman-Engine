@@ -14,4 +14,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include "header_tool.hpp"
-CUSTOM_ENGINE(header_tool);
+CUSTOM_ENGINE(::header_tool, ::program_options);

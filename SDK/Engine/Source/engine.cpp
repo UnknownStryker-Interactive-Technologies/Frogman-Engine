@@ -36,7 +36,8 @@ limitations under the License.
 
 
 FE::engine_program_options::engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	:	m_enable_fullscreen( "-enable-fullscreen", false ),
+	:	base(argc_p, argv_p),
+		m_enable_fullscreen( "-enable-fullscreen", false ),
 		m_enable_vsync("-enable-vsync", false),
 		m_recompile_shaders("-recompile-shaders", false)
 {
@@ -82,12 +83,22 @@ FE::ASCII* FE::engine_program_options::view_enable_vsync_title() const noexcept
 	return m_enable_vsync._first;
 }
 
+FE::boolean FE::engine_program_options::is_recompile_shaders_enabled() const noexcept
+{
+	return m_recompile_shaders._second;
+}
 
-FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
-	:	FE::framework::framework_base(argc_p, argv_p), 
-		m_engine_program_options(argc_p, argv_p),
+FE::ASCII* FE::engine_program_options::view_recompile_shaders_title() const noexcept
+{
+	return m_recompile_shaders._first;
+}
+
+
+FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
+	:	FE::framework::framework_base(std::move(options_p)),
 		m_runtime_path(framework_base::get_large_memory_resource()),
 		m_game_root_directory(framework_base::get_large_memory_resource()),
+		m_shader_root_directory(framework_base::get_large_memory_resource()),
 		m_froggy_path(framework_base::get_large_memory_resource()),
 		m_froggy(framework_base::get_large_memory_resource()),
 
@@ -109,9 +120,9 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in current executable path.");
 	m_froggy_path = m_runtime_path;
 	++l_pos;
-	std::pmr::string l_project_name = m_runtime_path.substr(l_pos, m_runtime_path.size() - l_pos);
+	FE::directory_string l_project_name = m_runtime_path.substr(l_pos, m_runtime_path.size() - l_pos);
 	m_froggy_path.erase(l_pos, l_project_name.length());
-	l_pos = l_project_name.rfind(".exe");
+	l_pos = l_project_name.rfind(FE_TEXT(".exe"));
 	FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '.exe' in current executable path.");
 	l_project_name.erase(l_pos, std::strlen(".exe")); // 4 is length of ".exe"
 
@@ -120,13 +131,15 @@ FE::engine::engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 
 	m_froggy_path.erase(l_pos + l_project_name.length(), m_froggy_path.length() - (l_pos + l_project_name.length()));
 	m_game_root_directory = m_froggy_path;
-	m_froggy_path += "\\";
+	m_froggy_path += FE_TEXT("\\");
 	m_froggy_path += l_project_name;
-	m_froggy_path += ".froggy";
+	m_froggy_path += FE_TEXT(".froggy");
 
+	m_shader_root_directory = m_game_root_directory;
+	m_shader_root_directory += FE_TEXT("\\Assets\\Shaders");
 
-	m_project_config._window_config._should_enable_vsync = m_engine_program_options.is_vsync_enabled();
-	m_project_config._window_config._is_fullscreen = m_engine_program_options.is_fullscreen_enabled();
+	m_project_config._window_config._should_enable_vsync = get_program_options().is_vsync_enabled();
+	m_project_config._window_config._is_fullscreen = get_program_options().is_fullscreen_enabled();
 }
 
 FE::engine::~engine() noexcept
@@ -209,13 +222,15 @@ void FE::engine::__read_froggy() noexcept
 		if (l_resource_lut["EntryWorldPath"].is_null() == false)
 		{
 			FE_ASSERT(l_resource_lut["EntryWorldPath"].is_string() == true);
-			m_project_config._path_lookup_table._entry_world_path = std::pmr::string(l_resource_lut["EntryWorldPath"].get_string().c_str(), framework_base::get_large_memory_resource());
+			auto l_tmp = l_resource_lut["EntryWorldPath"].get_string();
+			m_project_config._path_lookup_table._entry_world_path = FE::directory_string(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource());
 		}
 
 		for (auto& element : l_resource_lut["WorldPaths"].get_array())
 		{
 			FE_ASSERT(element.is_string() == true);
-			m_project_config._path_lookup_table._world_paths.push_back(std::pmr::string(element.get_string().c_str(), framework_base::get_large_memory_resource()));
+			auto l_tmp = element.get_string();
+			m_project_config._path_lookup_table._world_paths.push_back(FE::directory_string(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource()));
 		}
 
 		if (l_project_config["CompressionMethod"].is_null() == false)
@@ -280,8 +295,15 @@ void FE::engine::__read_froggy() noexcept
 		{
 			FE_ASSERT(element.is_string() == true);
 			m_project_config._window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_large_memory_resource() });
-
-			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
+			
+			std::pmr::string l_path;
+			l_path.resize(m_game_root_directory.length());
+#ifdef _FE_ON_WINDOWS_X86_64_
+			WideCharToMultiByte(CP_UTF8, 0, 
+								m_game_root_directory.c_str(), (int)m_game_root_directory.length(), 
+								l_path.data(), (int)l_path.length(),
+								nullptr, nullptr);
+#endif
 			l_path += "\\";
 			l_path += m_project_config._window_config._icon_paths.back();
 
@@ -291,26 +313,28 @@ void FE::engine::__read_froggy() noexcept
 		}
 
 
-		m_project_config._window_config._random_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		m_project_config._window_config._random_play_video_intro_paths = std::pmr::vector<FE::directory_string>(framework_base::get_large_memory_resource());
+		FE::directory_string l_path(framework_base::get_large_memory_resource());
 		for (auto& element : l_window_config["RandomPlayIntroVideoPaths"].get_array())
 		{
 			FE_ASSERT(element.is_string() == true);
-
-			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
-			l_path += "\\";
-			l_path += element.get_string();
+			l_path = m_game_root_directory;
+			l_path += FE_TEXT("\\");
+			auto l_tmp = element.get_string();
+			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._random_play_video_intro_paths.push_back(std::move(l_path));
 		}
 
 
-		m_project_config._window_config._sequential_play_video_intro_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		m_project_config._window_config._sequential_play_video_intro_paths = std::pmr::vector<FE::directory_string>(framework_base::get_large_memory_resource());
 		for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"].get_array())
 		{
 			FE_ASSERT(element.is_string() == true);
 
-			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
-			l_path += "\\";
-			l_path += element.get_string();
+			l_path = m_game_root_directory;
+			l_path += FE_TEXT("\\");
+			auto l_tmp = element.get_string();
+			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._sequential_play_video_intro_paths.push_back(std::move(l_path));
 		}
 
@@ -324,9 +348,10 @@ void FE::engine::__read_froggy() noexcept
 		{
 			FE_ASSERT(element.is_string() == true);
 
-			std::pmr::string l_path(m_game_root_directory, framework_base::get_large_memory_resource());
-			l_path += "\\";
-			l_path += element.get_string();
+			l_path = m_game_root_directory;
+			l_path += FE_TEXT("\\");
+			auto l_tmp = element.get_string();
+			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
 			m_project_config._window_config._shader_compile_splash_images.emplace_back();
 			m_project_config._window_config._shader_compile_splash_images.back().read_image_from_disk(l_path.c_str());
@@ -334,6 +359,39 @@ void FE::engine::__read_froggy() noexcept
 
 		FE_ASSERT(l_window_config["ShaderCompileSplashImageDurationInSeconds"].is_int64() == true);
 		m_project_config._window_config._splash_duration_in_seconds = (var::uint32)l_window_config["ShaderCompileSplashImageDurationInSeconds"].as_int64();
+	}
+
+	{
+		m_shader_headers.reserve(1024); // reserve some arbitrary amount of headers to avoid too many reallocations; this value can be changed later if needed.
+		FE_ASSERT(l_froggy_json["ShaderHeaders"].is_array() == true);
+
+		FE::directory_string l_path(framework_base::get_large_memory_resource());
+		for (auto& element : l_froggy_json["ShaderHeaders"].get_array())
+		{
+			FE_ASSERT(element.is_string() == true);
+			auto l_tmp = element.get_string();
+			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
+
+			auto l_pos = l_path.rfind(FE_TEXT("\\"));
+			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
+
+			l_path.replace(l_path.begin(), l_path.begin() + l_pos, m_shader_root_directory);
+
+			std::fstream l_file(l_path.c_str(), std::ios::binary | std::ios::in);
+			FE::fstream_guard l_file_stream(l_file);
+
+			l_file.seekg(0, std::ios::end);
+			std::streamsize l_size = l_file.tellg();
+			l_file.seekg(0, std::ios::beg);
+
+			auto& l_shader_header = m_shader_headers[l_path];
+			l_shader_header._header_buffer = std::pmr::string(framework_base::get_large_memory_resource());
+			l_shader_header._header_buffer.resize(l_size);
+
+			l_file.read(l_shader_header._header_buffer.data(), l_size);
+
+			l_shader_header._included_hlslis = std::pmr::vector<FE::internal::renderer::hlsli*>(framework_base::get_large_memory_resource());
+		}
 	}
 
 	{
@@ -380,6 +438,15 @@ void FE::engine::__read_froggy() noexcept
 			auto l_tmp = l_shader["Source"].get_string();
 			m_shaders.back()._source_path = std::pmr::wstring(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource());
 
+			auto l_pos = m_shaders.back()._source_path.rfind(L"\\");
+			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
+
+			m_shaders.back()._source_path.replace(	m_shaders.back()._source_path.begin(), 
+													m_shaders.back()._source_path.begin() + l_pos, 
+
+													std::pmr::wstring(	m_shader_root_directory.begin(), m_shader_root_directory.end() )
+			);
+
 
 			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
 			{
@@ -405,31 +472,6 @@ void FE::engine::__read_froggy() noexcept
 
 			STRING_CASE(FE::internal::renderer::SM5_compute_shader_target) :
 				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_ComputeShader;
-				break;
-
-
-			STRING_CASE(FE::internal::renderer::SM6_vertex_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_VertexShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM6_pixel_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_PixelShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM6_geometry_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_GeometryShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM6_hull_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_HullShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM6_domain_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_DomainShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM6_compute_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM6_ComputeShader;
 				break;
 
 			_FE_NODEFAULT_;

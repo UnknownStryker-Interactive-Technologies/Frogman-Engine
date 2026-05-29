@@ -29,7 +29,12 @@ limitations under the License.
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
 #include <wrl/client.h>
-namespace wrl = ::Microsoft::WRL;
+
+namespace wrl
+{
+    template <typename T>
+    using com_ptr = Microsoft::WRL::ComPtr<T>;
+}
 #endif
 
 
@@ -76,32 +81,41 @@ public:
 
 private:
     class FE::renderer* const m_frontend;
-    wrl::ComPtr<ID3D11Device5> m_device;
-    wrl::ComPtr<ID3D11DeviceContext4> m_context;
-    wrl::ComPtr<IDXGISwapChain4> m_swapchain;
-    wrl::ComPtr<ID3D11Texture2D1> m_back_buffer;
-    wrl::ComPtr<ID3D11RenderTargetView> m_render_target_view;
-    wrl::ComPtr<IDXGIFactory7> m_factory;
-	wrl::ComPtr<IDXGIAdapter4> m_adapter;
+    wrl::com_ptr<ID3D11Device5> m_device;
+    wrl::com_ptr<ID3D11DeviceContext4> m_context;
+    wrl::com_ptr<IDXGISwapChain4> m_swapchain;
+    wrl::com_ptr<ID3D11Texture2D1> m_back_buffer;
+    wrl::com_ptr<ID3D11RenderTargetView> m_render_target_view;
+    wrl::com_ptr<IDXGIFactory7> m_factory;
+	wrl::com_ptr<IDXGIAdapter4> m_adapter;
     gpu_info m_adapter_desc;
 	BOOL m_should_allow_tearing;
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-    wrl::ComPtr<ID3D11Debug> m_debug;
+    wrl::com_ptr<ID3D11Debug> m_debug;
 #endif
     DXGI_PRESENT_PARAMETERS m_present_params;
     FE::float32 m_clear_color[4];
 	D3D11_VIEWPORT m_viewport;
 
-    wrl::ComPtr<ID3D11Texture2D> m_depth_stencil_buffer;
-    wrl::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
-    wrl::ComPtr<ID3D11DepthStencilState> m_depth_stencil_state;
+    wrl::com_ptr<ID3D11Texture2D> m_depth_stencil_buffer;
+    wrl::com_ptr<ID3D11DepthStencilView> m_depth_stencil_view;
+    wrl::com_ptr<ID3D11DepthStencilState> m_depth_stencil_state;
 
-	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11VertexShader>> m_vertex_shader_cache;
-	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11PixelShader>> m_pixel_shader_cache;
-    absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11GeometryShader>> m_geometry_shader_cache;
-	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11HullShader>> m_hull_shader_cache;
-	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11DomainShader>> m_domain_shader_cache;
-	absl::flat_hash_map<var::uint64, wrl::ComPtr<ID3D11ComputeShader>> m_compute_shader_cache;
+	template <typename T>
+    using cache_map = absl::flat_hash_map<  var::uint64, wrl::com_ptr<T>,
+        absl::lts_20260107::DefaultHashContainerHash<var::uint64>,
+        absl::lts_20260107::DefaultHashContainerEq<var::uint64>,
+		std::pmr::polymorphic_allocator<std::pair<FE::uint64, wrl::com_ptr<T>>>
+    >;
+	
+    cache_map<ID3D11VertexShader> m_vertex_shader_cache;
+    cache_map<ID3D11PixelShader> m_pixel_shader_cache;
+    cache_map<ID3D11GeometryShader> m_geometry_shader_cache;
+    cache_map<ID3D11HullShader> m_hull_shader_cache;
+    cache_map<ID3D11DomainShader> m_domain_shader_cache;
+    cache_map<ID3D11ComputeShader> m_compute_shader_cache;
+
+    cache_map<ID3D11InputLayout> m_input_layout_cache;
 
 public:
     d3d11_backend(class FE::renderer* const frontend_p) noexcept;
@@ -117,6 +131,7 @@ public:
     _FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_adapter_desc; }
 
     void register_shaders(std::pmr::vector<class ::FE::internal::renderer::shader>& shaders_p) noexcept;
+	void create_hlsl_struct_memory_layout(std::pmr::vector<class ::FE::internal::renderer::shader>& shaders_p) noexcept;
 };
 
 #ifdef _FE_ON_WINDOWS_X86_64_

@@ -22,7 +22,8 @@ limitations under the License.
 
 
 program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	: m_path_options({
+	:	base(argc_p, argv_p),
+		m_path_options({
 		{ "-path-to-copyright-notice=", "\0" },
 		{ "-path-to-code-style-guide=", "\0" },
 		{ "-path-to-project=", "\0" }
@@ -34,7 +35,9 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 		{ "-fno-reflection-helper", false },
 		{ "-fno-op", false },
 		{ "-fno-write", false }
-		})
+		}),
+		m_argc(argc_p),
+		m_argv(argv_p)
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{

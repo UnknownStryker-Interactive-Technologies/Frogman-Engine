@@ -49,10 +49,10 @@ public:
     ~video_player() noexcept;
 
     // Blocks the calling thread until the clip finishes (ENDED) or fails.
-    void play(FE::ASCII* file_path_p) noexcept;
+    void play(FE::directory_char_t* file_path_p) noexcept;
 
 private:
-    FE::boolean __open(FE::ASCII* file_path_p) noexcept;
+    FE::boolean __open(FE::directory_char_t* file_path_p) noexcept;
     FE::boolean __has_error() const noexcept;
     FE::boolean __is_ready() const noexcept;
 

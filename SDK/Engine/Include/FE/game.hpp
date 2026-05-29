@@ -49,7 +49,7 @@ public:
 
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() const noexcept { return m_current_world; }
 	FE::smart_ptr<FE::world, FE::RefType::_Observer> get_current_world() noexcept { return m_current_world; }
-	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const std::pmr::string& path_to_world_file_p) noexcept;
+	FE::smart_ptr<FE::world, FE::RefType::_Observer> create_world(const FE::directory_string& path_to_world_file_p) noexcept;
 };
 
 

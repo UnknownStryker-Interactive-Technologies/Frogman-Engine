@@ -15,6 +15,8 @@ limitations under the License.
 */
 #include <FE/image.hpp>
 
+#include <FE/algorithm/string.hxx>
+
 #include <stb_image.h>
 
 
@@ -87,7 +89,7 @@ FE::image& FE::image::operator=(image&& other_p) noexcept
 	return *this;
 }
 
-bool FE::image::read_image_from_disk(FE::ASCII* const path_p) noexcept
+bool FE::image::read_image_from_disk(FE::directory_char_t* const path_p) noexcept
 {
     if (path_p == nullptr) _FE_UNLIKELY_
     {
@@ -101,7 +103,16 @@ bool FE::image::read_image_from_disk(FE::ASCII* const path_p) noexcept
         m_pixels = nullptr;
 	}
 
-    m_pixels = stbi_load(path_p, &m_width, &m_height, nullptr, 4/*RGBA*/);
+	std::pmr::string l_path_str;
+    l_path_str.resize(FE::algorithm::string::length(path_p));
+#ifdef _FE_ON_WINDOWS_X86_64_
+	WideCharToMultiByte(CP_UTF8, 0, 
+                        path_p, -1,
+                        l_path_str.data(), (int)l_path_str.length(), 
+                        nullptr, nullptr);
+#endif
+
+    m_pixels = stbi_load(l_path_str.c_str(), &m_width, &m_height, nullptr, 4/*RGBA*/);
     if( m_pixels == nullptr) _FE_UNLIKELY_
     {
         FE_ASSERT(m_pixels != nullptr, "Failed to load image from disk.");

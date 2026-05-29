@@ -286,13 +286,13 @@ static RestartOrNot s_restart_or_not = RestartOrNot::_NoOperation;
 
 static std::pmr::memory_resource* s_TLGPMP_deleter = nullptr;
 static std::pmr::memory_resource* s_LTLGPMP_deleter = nullptr;
-framework_base::framework_base(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
-	:	m_program_options(argc_p, argv_p), 
+framework_base::framework_base(std::unique_ptr<program_option> options_p) noexcept
+	:	m_program_options(std::move(options_p)),
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
-	m_memory( new FE::memory_resource[m_program_options.get_max_concurrency()]{} ), // the new operator is overloaded to return CPU cache line size aligned memory.
-	m_memory_large_pages(	(m_program_options.is_large_pages_enabled() == true) ? 
-								(std::pmr::memory_resource*)new FE::large::memory_resource[m_program_options.get_max_concurrency()]{} 
-							:	(std::pmr::memory_resource*)new FE::memory_resource[m_program_options.get_max_concurrency()]{} 
+	m_memory( new FE::memory_resource[m_program_options->get_max_concurrency()]{} ), // the new operator is overloaded to return CPU cache line size aligned memory.
+	m_memory_large_pages(	(m_program_options->is_large_pages_enabled() == true) ? 
+								(std::pmr::memory_resource*)new FE::large::memory_resource[m_program_options->get_max_concurrency()]{} 
+							:	(std::pmr::memory_resource*)new FE::memory_resource[m_program_options->get_max_concurrency()]{} 
 						),
 		m_method_reflection(81920, get_large_memory_resource()), 
 		m_property_reflection(81920, get_large_memory_resource()),
@@ -334,7 +334,7 @@ framework_base& framework_base::get_framework() noexcept
 
 const program_option& framework_base::get_program_options() const noexcept
 {
-	return m_program_options;
+	return *m_program_options;
 }
 
 const std::locale& framework_base::get_current_system_locale() const noexcept
@@ -350,7 +350,7 @@ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 std::pmr::memory_resource* framework_base::get_large_memory_resource() noexcept
 {
 	// compute once
-	static FE::size l_size_of_page_element = (m_program_options.is_large_pages_enabled() == true) ? sizeof(FE::large::memory_resource) : sizeof(FE::memory_resource);
+	static FE::size l_size_of_page_element = (m_program_options->is_large_pages_enabled() == true) ? sizeof(FE::large::memory_resource) : sizeof(FE::memory_resource);
 
 	return (std::pmr::memory_resource*)( ((var::byte*)m_memory_large_pages) + (l_size_of_page_element * get_current_thread_id()) );
 }

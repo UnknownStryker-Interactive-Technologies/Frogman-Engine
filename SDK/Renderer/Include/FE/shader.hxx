@@ -21,13 +21,74 @@ limitations under the License.
 #include <FE/d3d11_backend.hxx>
 
 #include <memory_resource>
+#include <optional>
 #include <string>
 #include <vector>
+
+#include <concurrent_unordered_map.h>
 
 
 
 
 BEGIN_NAMESPACE(FE::internal::renderer)
+
+
+enum struct HlslTokenizerError
+{
+	_EmptyFileBuffer,
+	_UnexpectedBlockCommentTermination,
+	_MissingNullTerminator,
+	_MissingBlockCommentTerminator,
+	_MissingQuote,
+	_MalformedIncludeDirectiveFormat
+};
+
+enum struct HlslToken : FE::uint8
+{
+	_LineCommentBegin, _LineCommentBody, _LineCommentEnd,
+
+	_BlockCommentBegin, _BlockCommentBody, _BlockCommentEnd,
+
+	_IncludeDirective,
+
+	_EOF
+};
+
+enum struct HlslContext : FE::uint8
+{
+	_LineComment,
+	_BlockComment
+};
+
+struct hlsl_token
+{
+	HlslToken _type;
+	FE::directory_string _value;
+};
+
+struct hlsli
+{
+	std::pmr::string _header_buffer;
+	std::pmr::vector<hlsli*> _included_hlslis;
+	var::boolean _is_amended; // 'true' can be transmitted from _included_hlslis.
+};
+
+std::pmr::list<FE::internal::renderer::hlsl_token> __tokenize_hlsl(const std::pmr::string& buffer_p);
+
+void __tokenize_hlsl_comments(	std::pmr::list<hlsl_token>& out_tokens_p, std::pmr::vector<FE::internal::renderer::HlslContext>& in_out_context_stack_p,
+								FE::ASCII*& code_iterator_p
+);
+
+void __skip_hlsl_string_and_character_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p);
+
+void __tokenize_hlsl_include_directives(std::pmr::list<hlsl_token>& out_tokens_p,
+										FE::ASCII*& code_iterator_p
+);
+
+void __build_include_dependency_graph(	const concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
+										absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
+										std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p
+) noexcept;
 
 
 struct shader_define
@@ -39,7 +100,7 @@ struct shader_define
 
 struct shader_blob
 {
-	wrl::ComPtr<ID3DBlob> _blob;
+	wrl::com_ptr<ID3DBlob> _blob;
 	var::uint64 _identifier;
 };
 
@@ -52,17 +113,18 @@ public:
 	std::pmr::vector<std::pmr::string> _permutation_blacklist;
 	std::pmr::vector<std::pmr::vector<macro>> _macro_combinations;
 	std::pmr::string _main_function;
-	std::pmr::wstring _source_path;
+	FE::directory_string _source_path;
 	std::pmr::vector<shader_blob> _permutations;
 	internal::renderer::ShaderTarget _shader_target;
+	var::boolean _is_hlsli_amended = false;
 
 	~shader() noexcept;
 
 private:
-	FE::uint64 __build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept;
+	FE::uint64 __build_shader_blob_cache_path(FE::directory_string& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept;
 
 public:
-	void compile() noexcept;
+	void compile(FE::boolean should_recompile_p) noexcept;
 
 	constexpr FE::uint32 get_shader_compile_options() const noexcept
 	{
@@ -77,6 +139,7 @@ public:
 		return l_flags;
 	}
 };
+
 
 END_NAMESPACE
 #endif

@@ -47,7 +47,7 @@ public:
     image(image&& other_p) noexcept;
     image& operator=(image&& other_p) noexcept;
 
-    bool read_image_from_disk(FE::ASCII* const path_p) noexcept;
+    bool read_image_from_disk(FE::directory_char_t* const path_p) noexcept;
     bool load_to_renderer(ID3D11Device5* const device_p) noexcept;
     
 	_FE_FORCE_INLINE_ ImTextureID shader_resource_view() const noexcept { return (ImTextureID)m_shader_resource_view.Get(); }

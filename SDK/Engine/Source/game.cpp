@@ -10,7 +10,7 @@ FE::game::game(FE::framework::ECS& engine_ecs_p) noexcept
 		m_current_world()
 {}
 
-FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::create_world(const std::pmr::string& path_to_world_file_p) noexcept
+FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::create_world(const FE::directory_string& path_to_world_file_p) noexcept
 {
 	(path_to_world_file_p);
 	area_of_operation l_area_of_operation; // build from world file.

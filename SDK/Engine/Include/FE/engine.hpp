@@ -41,14 +41,14 @@ CLASS_FORWARD_DECLARATION(framework, game_processor);
 struct engine_info // fields are immutable after window creation; modifying these values will not affect any.
 {
     std::pmr::string _version;
-	std::pmr::string _installation_path;
+    FE::directory_string _installation_path;
 };
 
 struct path_lut // fields are immutable after window creation; modifying these values will not affect any.
 {
-    std::pmr::string _entry_world_path;
-    std::pmr::vector<std::pmr::string> _world_paths;
-    std::pmr::vector<std::pmr::string> _module_paths;
+    FE::directory_string _entry_world_path;
+    std::pmr::vector<FE::directory_string> _world_paths;
+    std::pmr::vector<FE::directory_string> _module_paths;
 };
 
 
@@ -70,26 +70,33 @@ struct project_config // fields are immutable after window creation; modifying t
 };
 
 
-class engine_program_options 
+class engine_program_options : public FE::framework::program_option
 {
+	using base = FE::framework::program_option;
+
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_fullscreen;
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_vsync;
     FE::pair<::FE::ASCII*, var::boolean> m_recompile_shaders;
 
 public:
     engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
-    ~engine_program_options() noexcept = default;
+    virtual ~engine_program_options() noexcept override = default;
 
     FE::boolean is_fullscreen_enabled() const noexcept;
     FE::ASCII* view_enable_fullscreen_title() const noexcept;
 
 	FE::boolean is_vsync_enabled() const noexcept;
     FE::ASCII* view_enable_vsync_title() const noexcept;
+
+	FE::boolean is_recompile_shaders_enabled() const noexcept;
+	FE::ASCII* view_recompile_shaders_title() const noexcept;
 };
 
 
 class alignas(FE::CPU_L1_cache_line::size) engine : public FE::framework::framework_base
 {
+	using base = FE::framework::framework_base;
+
 public:
     class auth
     {
@@ -103,17 +110,20 @@ public:
         constexpr auth(const auth&) noexcept {};
     };
 
-private:
-	engine_program_options m_engine_program_options;
+    using shader_header_list = absl::flat_hash_map<FE::directory_string, ::FE::internal::renderer::hlsli>;
+	using shader_list = std::pmr::vector<::FE::internal::renderer::shader>;
 
-    std::pmr::string m_runtime_path;
-	std::pmr::string m_game_root_directory;
-    std::pmr::string m_froggy_path;
+private:
+    FE::directory_string m_runtime_path;
+    FE::directory_string m_game_root_directory;
+    FE::directory_string m_shader_root_directory;
+    FE::directory_string m_froggy_path;
     std::pmr::string m_froggy;
 
     FE::engine_info m_engine_info;
     FE::project_config m_project_config;
-	std::pmr::vector<::FE::internal::renderer::shader> m_shaders;
+    shader_header_list m_shader_headers;
+    shader_list m_shaders;
 
     FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game_instance;
 
@@ -121,26 +131,30 @@ private:
     FE::smart_ptr<FE::renderer, FE::RefType::_Owner> m_renderer;
 
 public:
-    engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
+    engine(std::unique_ptr<engine_program_options> options_p) noexcept;
     virtual ~engine() noexcept override;
 
 public:
     _FE_FORCE_INLINE_ static FE::engine& get_engine() noexcept { return static_cast<FE::engine&>(FE::framework::framework_base::get_framework()); }
-	
-    _FE_FORCE_INLINE_ FE::ASCII* get_runtime_path() const noexcept { return m_runtime_path.c_str(); }
 
-	_FE_FORCE_INLINE_ FE::ASCII* get_game_root_directory() const noexcept { return m_game_root_directory.c_str(); }
+    _FE_FORCE_INLINE_ const engine_program_options& get_program_options() const noexcept { return static_cast<const engine_program_options&>(*m_program_options); }
+	
+    _FE_FORCE_INLINE_ FE::directory_char_t* get_runtime_path() const noexcept { return m_runtime_path.c_str(); }
+
+	_FE_FORCE_INLINE_ FE::directory_char_t* get_game_root_directory() const noexcept { return m_game_root_directory.c_str(); }
+	_FE_FORCE_INLINE_ FE::directory_char_t* get_shader_root_directory() const noexcept { return m_shader_root_directory.c_str(); }
 
     _FE_FORCE_INLINE_ const FE::engine_info& get_engine_info() const noexcept { return m_engine_info; }
 
 	_FE_FORCE_INLINE_ const FE::project_config& get_project_config() const noexcept { return m_project_config; }
     _FE_FORCE_INLINE_ FE::project_config& get_project_config(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_project_config; }
 
-    _FE_FORCE_INLINE_ std::pmr::vector<::FE::internal::renderer::shader>& get_shaders(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_shaders; }
+    _FE_FORCE_INLINE_ shader_header_list& get_shader_headers(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_shader_headers; }
+    _FE_FORCE_INLINE_ shader_list& get_shaders(_FE_MAYBE_UNUSED_ const auth& access_p) noexcept { return m_shaders; }
 
     _FE_FORCE_INLINE_ static FE::game& get_game_instance() noexcept { return *(get_engine().m_game_instance); }
 
-    _FE_FORCE_INLINE_ FE::int32 count_async_processors() const noexcept { return m_program_options.get_max_concurrency() - 2; /* -(game + renderer) */ }
+    _FE_FORCE_INLINE_ FE::int32 count_async_processors() const noexcept { return base::get_program_options().get_max_concurrency() - 2; /* -(game + renderer) */ }
     void terminate_all_processors() noexcept;
 
 	_FE_FORCE_INLINE_ const FE::renderer& get_renderer() const noexcept { return *m_renderer; }

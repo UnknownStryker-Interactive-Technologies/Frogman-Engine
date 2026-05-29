@@ -194,7 +194,9 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 {
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = l_engine.get_renderer(FE::engine::auth{});
+	auto& l_shader_headers = l_engine.get_shader_headers(FE::engine::auth{});
 	auto& l_shaders = l_engine.get_shaders(FE::engine::auth{});
+
 
 	if (l_renderer.m_window_config._is_fullscreen == true)
 	{
@@ -213,8 +215,61 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 			}
 		);
 	}
+
+	concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>> l_token_lists;
+	for (auto it = l_shader_headers.begin(); it != l_shader_headers.end(); ++it)
 	{
-		auto l_future = l_executor.run(l_taskflow);
+		l_taskflow.emplace
+		(
+			[it, &l_token_lists]()
+			{
+				try
+				{
+					auto l_list = FE::internal::renderer::__tokenize_hlsl(it->second._header_buffer);
+					l_token_lists[it->first] = std::move(l_list);
+				}
+				catch (const FE::internal::renderer::HlslTokenizerError& err)
+				{
+					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", it->first.c_str(), &err);
+					return;
+				}
+			}
+		);
+	}
+
+	for (var::int32 n = 0; n < l_shaders.size(); ++n)
+	{
+		l_taskflow.emplace
+		(
+			[&l_engine, &l_shaders, &l_token_lists, n]()
+			{
+				std::fstream l_file_stream(l_shaders[n]._source_path.c_str(), std::ios::in | std::ios::binary);
+				FE::fstream_guard l_file_guard(l_file_stream);
+
+				std::pmr::string l_buffer(l_engine.get_large_memory_resource());
+				l_file_stream.seekg(0, std::ios::end);
+				l_buffer.resize(l_file_stream.tellg());
+				l_file_stream.seekg(0, std::ios::beg);
+
+				l_file_stream.read(l_buffer.data(), l_buffer.size());
+
+				try
+				{
+					auto l_list = FE::internal::renderer::__tokenize_hlsl(l_buffer);
+					l_token_lists[l_shaders[n]._source_path] = std::move(l_list);
+				}
+				catch (const FE::internal::renderer::HlslTokenizerError& err)
+				{
+					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", l_shaders[n]._source_path.c_str(), &err);
+					return;
+				}
+			}
+		);
+	}
+
+	{
+		auto l_future = l_executor.run(l_taskflow); // run all queued tasks
+
 		HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
 		FE::video_player l_intro(l_hwnd);
 
@@ -235,8 +290,9 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 
 		l_future.wait();
 		l_taskflow.clear();
-	} // l_intro destructs → MF::Shutdown → HWND free for the D3D backend
-	
+	}	// l_intro destructs → MF::Shutdown → HWND free for the D3D backend
+
+	FE::internal::renderer::__build_include_dependency_graph(l_token_lists, l_shader_headers, l_shaders);
 
 	{
 		var::uint64 l_total_permutations = 0;
@@ -248,9 +304,9 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 
 			l_taskflow.emplace
 			(
-				[&l_shaders, &l_permutations_compiled, n]()
+				[&l_engine, &l_shaders, &l_permutations_compiled, n]()
 				{
-					l_shaders[n].compile();
+					l_shaders[n].compile(l_engine.get_program_options().is_recompile_shaders_enabled());
 					l_permutations_compiled.fetch_add(	l_shaders[n]._permutations.size(),
 														std::memory_order_acq_rel
 														);

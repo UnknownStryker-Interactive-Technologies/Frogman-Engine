@@ -299,6 +299,10 @@ namespace FE
 		_FatalRendererError_5XX_ShaderReflectionFailure = 514,
 		_FatalRendererError_5XX_BufferCreationFailure = 515,
 		_FatalRendererError_5XX_FBXImportFailure = 516,
+
+		_FatalRendererError_5XX_ShaderBlobStashFailure = 517,
+		_FatalRendererError_5XX_ShaderBlobCacheLoadFailure = 518,
+		_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted = 519
 	};
 }
 #endif
