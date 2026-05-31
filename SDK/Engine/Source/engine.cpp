@@ -122,7 +122,7 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 	++l_pos;
 	FE::directory_string l_project_name = m_runtime_path.substr(l_pos, m_runtime_path.size() - l_pos);
 	m_froggy_path.erase(l_pos, l_project_name.length());
-	l_pos = l_project_name.rfind(FE_TEXT(".exe"));
+	l_pos = l_project_name.rfind(FE_TEXT(.exe));
 	FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '.exe' in current executable path.");
 	l_project_name.erase(l_pos, std::strlen(".exe")); // 4 is length of ".exe"
 
@@ -131,12 +131,12 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 
 	m_froggy_path.erase(l_pos + l_project_name.length(), m_froggy_path.length() - (l_pos + l_project_name.length()));
 	m_game_root_directory = m_froggy_path;
-	m_froggy_path += FE_TEXT("\\");
+	m_froggy_path += FE_TEXT(\\);
 	m_froggy_path += l_project_name;
-	m_froggy_path += FE_TEXT(".froggy");
+	m_froggy_path += FE_TEXT(.froggy);
 
 	m_shader_root_directory = m_game_root_directory;
-	m_shader_root_directory += FE_TEXT("\\Assets\\Shaders");
+	m_shader_root_directory += FE_TEXT(\\Assets\\Shaders);
 
 	m_project_config._window_config._should_enable_vsync = get_program_options().is_vsync_enabled();
 	m_project_config._window_config._is_fullscreen = get_program_options().is_fullscreen_enabled();
@@ -319,7 +319,7 @@ void FE::engine::__read_froggy() noexcept
 		{
 			FE_ASSERT(element.is_string() == true);
 			l_path = m_game_root_directory;
-			l_path += FE_TEXT("\\");
+			l_path += FE_TEXT(\\);
 			auto l_tmp = element.get_string();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._random_play_video_intro_paths.push_back(std::move(l_path));
@@ -332,7 +332,7 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(element.is_string() == true);
 
 			l_path = m_game_root_directory;
-			l_path += FE_TEXT("\\");
+			l_path += FE_TEXT(\\);
 			auto l_tmp = element.get_string();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._sequential_play_video_intro_paths.push_back(std::move(l_path));
@@ -349,7 +349,7 @@ void FE::engine::__read_froggy() noexcept
 			FE_ASSERT(element.is_string() == true);
 
 			l_path = m_game_root_directory;
-			l_path += FE_TEXT("\\");
+			l_path += FE_TEXT(\\);
 			auto l_tmp = element.get_string();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
@@ -372,7 +372,7 @@ void FE::engine::__read_froggy() noexcept
 			auto l_tmp = element.get_string();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
-			auto l_pos = l_path.rfind(FE_TEXT("\\"));
+			auto l_pos = l_path.rfind(FE_TEXT(\\));
 			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
 
 			l_path.replace(l_path.begin(), l_path.begin() + l_pos, m_shader_root_directory);

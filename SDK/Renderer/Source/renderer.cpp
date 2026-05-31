@@ -228,7 +228,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 					auto l_list = FE::internal::renderer::__tokenize_hlsl(it->second._header_buffer);
 					l_token_lists[it->first] = std::move(l_list);
 				}
-				catch (const FE::internal::renderer::HlslTokenizerError& err)
+				catch (_FE_MAYBE_UNUSED_ const FE::internal::renderer::HlslTokenizerError& err)
 				{
 					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", it->first.c_str(), &err);
 					return;
@@ -258,7 +258,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 					auto l_list = FE::internal::renderer::__tokenize_hlsl(l_buffer);
 					l_token_lists[l_shaders[n]._source_path] = std::move(l_list);
 				}
-				catch (const FE::internal::renderer::HlslTokenizerError& err)
+				catch (_FE_MAYBE_UNUSED_ const FE::internal::renderer::HlslTokenizerError& err)
 				{
 					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", l_shaders[n]._source_path.c_str(), &err);
 					return;

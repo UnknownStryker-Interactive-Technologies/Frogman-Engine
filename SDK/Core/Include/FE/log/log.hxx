@@ -302,7 +302,8 @@ namespace FE
 
 		_FatalRendererError_5XX_ShaderBlobStashFailure = 517,
 		_FatalRendererError_5XX_ShaderBlobCacheLoadFailure = 518,
-		_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted = 519
+		_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted = 519,
+		_HlslDirectoryMalformed = 520
 	};
 }
 #endif

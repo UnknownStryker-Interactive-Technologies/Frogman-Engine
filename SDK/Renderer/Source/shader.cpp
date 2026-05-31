@@ -255,15 +255,13 @@ std::pmr::list<FE::internal::renderer::hlsl_token> FE::internal::renderer::__tok
 		FE::ASCII* l_past = l_iter;
 		__tokenize_hlsl_comments(l_tokens, l_context_stack, l_iter);
 		__tokenize_hlsl_include_directives(l_tokens, l_iter);
-		__skip_hlsl_string_and_character_literals(l_iter, l_end);
+		__skip_hlsl_string_literals(l_iter, l_end);
 
 		if (l_past == l_iter) // hasn't advanced.
 		{
 			++l_iter; // skip irrelevant hlsl code for building include dependency graph.
 		}
 	}
-
-	l_tokens.emplace_back(HlslToken::_EOF, FE_TEXT("\0"));
 	return l_tokens;
 }
 
@@ -298,6 +296,11 @@ void FE::internal::renderer::__tokenize_hlsl_comments(	std::pmr::list<FE::intern
 
 
 	default:
+		if (in_out_context_stack_p.empty() == true ||
+			in_out_context_stack_p.back() != HlslContext::_BlockComment && in_out_context_stack_p.back() != HlslContext::_LineComment)
+		{
+			return;
+		}
 		break;
 	}
 
@@ -322,17 +325,16 @@ void FE::internal::renderer::__tokenize_hlsl_comments(	std::pmr::list<FE::intern
 				throw HlslTokenizerError::_MissingNullTerminator;
 			}
 			code_iterator_p += l_newline->_end;
+			in_out_context_stack_p.pop_back();
 		}
 		return;
 
 	case HlslContext::_BlockComment:
 		out_tokens_p.emplace_back(HlslToken::_BlockCommentBody);
 		{
-			auto l_block_comment_opener = FE::algorithm::string::find_the_first(code_iterator_p, "/*");
 			auto l_block_comment_termination = FE::algorithm::string::find_the_first(code_iterator_p, "*/");
 
-			if (l_block_comment_termination == std::nullopt ||
-				l_block_comment_opener->_begin < l_block_comment_termination->_begin) _FE_UNLIKELY_
+			if (l_block_comment_termination == std::nullopt) _FE_UNLIKELY_
 			{
 				throw HlslTokenizerError::_MissingBlockCommentTerminator;
 			}
@@ -345,7 +347,7 @@ void FE::internal::renderer::__tokenize_hlsl_comments(	std::pmr::list<FE::intern
 	}
 }
 
-void FE::internal::renderer::__skip_hlsl_string_and_character_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p)
+void FE::internal::renderer::__skip_hlsl_string_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p)
 {
 	if (*code_iterator_p != '\"') // if *code_iterator_p is not ", then return.
 	{
@@ -439,6 +441,7 @@ void FE::internal::renderer::__tokenize_hlsl_include_directives(std::pmr::list<:
 				throw HlslTokenizerError::_MalformedIncludeDirectiveFormat;
 			}
 			out_tokens_p.emplace_back(HlslToken::_IncludeDirective, FE::directory_string(code_iterator_p, code_iterator_p + l_include_path_rng->_begin,FE::framework::framework_base::get_framework().get_memory_resource()));
+			code_iterator_p += l_include_path_rng->_end;
 			break;
 
 		default:
@@ -447,29 +450,132 @@ void FE::internal::renderer::__tokenize_hlsl_include_directives(std::pmr::list<:
 	}
 }
 
-void FE::internal::renderer::__build_include_dependency_graph(	const concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
-										absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
-										std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p) noexcept
+void FE::internal::renderer::__build_include_dependency_graph(	concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
+																absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
+																std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p) noexcept
 {
 	FE::directory_string l_shader_path(FE::engine::get_engine().get_large_memory_resource());
-	for (const auto& [key, token_list] : token_lists_p)
-	{
-		for (const FE::internal::renderer::hlsl_token& token : token_list)
-		{
-			if (token._type == FE::internal::renderer::HlslToken::_IncludeDirective)
-			{
-				l_shader_path = FE::engine::get_engine().get_shader_root_directory();
-				l_shader_path += FE_TEXT("\\");
-				l_shader_path += token._value;
 
-				auto l_header_it = in_out_shader_headers_p.find(l_shader_path);
-				FE_EXIT_IF(l_header_it == in_out_shader_headers_p.end(), ErrorCode::_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted, "Shader subdirectory creation restricted; target HLSL file path: ${%s@0}.", l_shader_path.c_str());
-			
-				//in_out_shader_headers_p[l_shader_path]._included_hlslis;
-				// DFS
+	for (auto& [key, token_list] : token_lists_p)
+	{
+		for (auto it = token_list.begin(); it != token_list.end();)
+		{
+			if (it->_type != HlslToken::_IncludeDirective)
+			{
+				auto l_to_delete = it;
+				++it;
+				token_list.erase(l_to_delete);
+				continue;
 			}
+			++it;
+		}
+
+		if ( key.ends_with(FE_TEXT(.hlsli)) == false)
+		{
+			continue;
+		}
+
+		for (const auto& token : token_list)
+		{
+			l_shader_path = FE::engine::get_engine().get_shader_root_directory();
+			l_shader_path += FE_TEXT(\\);
+			l_shader_path += token._value;
+
+			auto l_current_file = in_out_shader_headers_p.find(key);
+			FE_EXIT_IF(l_current_file == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+			
+			auto l_to_include = in_out_shader_headers_p.find(l_shader_path);
+			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+
+			l_current_file->second._included_hlslis.emplace_back(&(l_to_include->second));
 		}
 	}
-	(in_out_shaders_p);
-}
 
+	using iterator = std::pmr::vector<hlsli*>::iterator;
+	std::pmr::vector<FE::pair<iterator, iterator>> l_dfs_iter_stack(FE::engine::get_engine().get_large_memory_resource());
+
+	boost::hash2::xxhash_64 l_hasher(0);
+
+	for (auto& shader : in_out_shaders_p) // iterate over the list of .hlsl shaders
+	{
+		auto l_shader = token_lists_p.find(shader._source_path); // get the token list of the current .hlsl file.
+		FE_EXIT_IF(l_shader == token_lists_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+		
+		for (const auto& token : l_shader->second) // iterate over the refined token list; it is the list of includes directly included by the current .hlsl file.
+		{
+			// build the path
+			l_shader_path = FE::engine::get_engine().get_shader_root_directory();
+			l_shader_path += FE_TEXT(\\);
+			l_shader_path += token._value; 
+
+			// find the hlsli from the dictionary using the path
+			auto l_to_include = in_out_shader_headers_p.find(l_shader_path);
+			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+
+			for (auto hlsli = l_to_include->second._included_hlslis.begin(); hlsli != l_to_include->second._included_hlslis.end();) 
+			{
+				if ((*hlsli)->_included_hlslis.size() > 0)
+				{
+					// this is the list of includes included by a .hlsli file directly included by the current .hlsl file.
+					l_dfs_iter_stack.emplace_back((*hlsli)->_included_hlslis.begin(), (*hlsli)->_included_hlslis.end());
+					while (l_dfs_iter_stack.back()._first != l_dfs_iter_stack.back()._second) // DFS to reach to the deepest level of include hierarchy.
+					{
+						if ((*(l_dfs_iter_stack.back()._first))->_included_hlslis.empty() == true)
+						{
+							break;
+						}
+						l_dfs_iter_stack.emplace_back((*(l_dfs_iter_stack.back()._first))->_included_hlslis.begin(), (*(l_dfs_iter_stack.back()._first))->_included_hlslis.end());
+					} // Reached the end, exit; we are at the deepest level of the include hierarchy, and the current hlsli does not include any other hlsli.
+				}
+
+				l_hasher.update((*hlsli)->_header_buffer.c_str(), (*hlsli)->_header_buffer.length()); // Turn the hlsli content into uint64 hash for identification.
+
+				FE::uint64 l_hlsli_id = l_hasher.result();
+				l_shader_path = FE::engine::get_engine().get_shader_root_directory();
+				l_shader_path += FE_TEXT(\\); // build the base directory path. E.g. "C:\Game\Assets\Shaders\"
+
+				auto l_hlsli_id_insertion_pos = l_shader_path.length(); // get insertion point.
+
+				l_shader_path.resize(l_shader_path.length() + FE::algorithm::utility::count_uint_digit_length(l_hlsli_id)); // prep space
+
+				// convert uint64 to string and insert it after l_shader_path.data() + l_hlsli_id_insertion_pos. E.g. "C:\Game\Assets\Shaders\12345678901234567890"
+				FE::algorithm::utility::uint_to_string(l_shader_path.data() + l_hlsli_id_insertion_pos, l_shader_path.length() - l_hlsli_id_insertion_pos, l_hlsli_id);
+				l_shader_path += FE_TEXT(.feshid); // The final path would look like "C:\Game\Assets\Shaders\12345678901234567890.feshid".
+
+				std::fstream l_hlsli_id_file; // read as a binary sequence
+				l_hlsli_id_file.open(l_shader_path.c_str(), std::ios::binary | std::ios::in);
+				FE::fstream_guard l_hlsli_id_file_guard(l_hlsli_id_file); // RAII guard! Just like the std::lock_guard.
+
+				/*
+					If the file does not exist 
+					it means the hlsli has been amended since the last compilation
+					and all shaders including this hlsli directly or indirectly should be recompiled.
+				*/
+				if (l_hlsli_id_file.is_open() == false) 
+				{
+					shader._is_hlsli_amended = true; // set true to trigger recompilation of hlsl files.
+					l_dfs_iter_stack.clear(); // clear the DFS stack to break the loop.
+					l_hlsli_id_file.open(l_shader_path.c_str(), std::ios::binary | std::ios::out);
+					goto Escape;
+				}
+
+				if ((*hlsli)->_included_hlslis.size() > 0)
+				{
+					if (hlsli == l_dfs_iter_stack.back()._first) // has returned to the first level of include hierarchy?
+					{
+						++hlsli; // move to the next directly included hlsli of the current .hlsl file.
+						l_dfs_iter_stack.pop_back(); // pop the DFS layer stack
+						continue;
+					}
+
+					l_dfs_iter_stack.pop_back(); // pop the DFS layer stack
+					++(l_dfs_iter_stack.back()._first); // move to the next within the same level of include hierarchy.
+				}
+			}
+		}
+		// goto is not inheritantly evil; it can be a very clean solution to break out of multiple nested loops without flag variables or complex conditions.
+		Escape:
+		{
+		}
+	}
+}

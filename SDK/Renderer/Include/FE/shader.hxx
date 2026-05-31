@@ -49,9 +49,7 @@ enum struct HlslToken : FE::uint8
 
 	_BlockCommentBegin, _BlockCommentBody, _BlockCommentEnd,
 
-	_IncludeDirective,
-
-	_EOF
+	_IncludeDirective
 };
 
 enum struct HlslContext : FE::uint8
@@ -70,7 +68,6 @@ struct hlsli
 {
 	std::pmr::string _header_buffer;
 	std::pmr::vector<hlsli*> _included_hlslis;
-	var::boolean _is_amended; // 'true' can be transmitted from _included_hlslis.
 };
 
 std::pmr::list<FE::internal::renderer::hlsl_token> __tokenize_hlsl(const std::pmr::string& buffer_p);
@@ -79,13 +76,13 @@ void __tokenize_hlsl_comments(	std::pmr::list<hlsl_token>& out_tokens_p, std::pm
 								FE::ASCII*& code_iterator_p
 );
 
-void __skip_hlsl_string_and_character_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p);
+void __skip_hlsl_string_literals(FE::ASCII*& code_iterator_p, FE::ASCII* const end_p);
 
 void __tokenize_hlsl_include_directives(std::pmr::list<hlsl_token>& out_tokens_p,
 										FE::ASCII*& code_iterator_p
 );
 
-void __build_include_dependency_graph(	const concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
+void __build_include_dependency_graph(  concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
 										absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
 										std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p
 ) noexcept;

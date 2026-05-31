@@ -16,7 +16,7 @@ ls filename: checks the presence of files with the specified name.
 class test_engine : public FE::framework::framework_base
 {
 public:
-	test_engine(FE::int32 argc_p, FE::ASCII** argv_p) noexcept : FE::framework::framework_base(argc_p, argv_p)
+	test_engine(std::unique_ptr<FE::framework::program_option> options_p) noexcept : FE::framework::framework_base(std::move(options_p))
 	{
 	};
 	~test_engine() noexcept = default;
@@ -57,4 +57,4 @@ public:
 		return 0;
 	}
 };
-CUSTOM_ENGINE(test_engine);
+CUSTOM_ENGINE(test_engine, FE::framework::program_option);

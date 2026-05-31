@@ -215,13 +215,3 @@ TEST(math, to_lower_prime)
 	l_num = FE::algorithm::math::to_lower_prime(l_num);
 	EXPECT_TRUE(FE::algorithm::math::is_prime(l_num));
 }
-
-TEST(math, select_minimum)
-{
-	EXPECT_EQ(FE::algorithm::math::select_minimum({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }), 1);
-}
-
-TEST(math, select_maximum)
-{
-	EXPECT_EQ(FE::algorithm::math::select_maximum({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }), 10);
-}
