@@ -27,7 +27,7 @@ limitations under the License.
 
 
 
-#define FROGMAN_ENGINE() CUSTOM_ENGINE(FE::engine)
+#define FROGMAN_ENGINE() CUSTOM_ENGINE(::FE::engine, ::FE::engine_program_options)
 
 
 
