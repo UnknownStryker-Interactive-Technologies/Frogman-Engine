@@ -104,7 +104,7 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
         $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
     )
 
-    SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib version.lib)
+    SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib dxguid.lib uuid.lib version.lib )
 
     IF(SIMD STREQUAL AVX512F)
         FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/Debug/*.lib")
