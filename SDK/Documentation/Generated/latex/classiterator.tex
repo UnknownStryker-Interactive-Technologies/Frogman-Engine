@@ -1,0 +1,567 @@
+\doxysection{iterator\texorpdfstring{$<$}{<} Implementation \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classiterator}{}\label{classiterator}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+
+
+{\ttfamily \+\#include $<$iterator.\+hxx$>$}
+
+
+
+Inheritance diagram for iterator\texorpdfstring{$<$}{<} Implementation \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classiterator__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for iterator\texorpdfstring{$<$}{<} Implementation \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classiterator__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} = \doxymbox{\hyperlink{class_implementation}{Implementation}}
+\item 
+using \doxymbox{\hyperlink{classiterator_ababd00c45af3c588e218db63760c2270}{iterator\+\_\+category}} = typename Implementation::\+iterator\+\_\+category
+\item 
+using \doxymbox{\hyperlink{classiterator_abece68b1952c7de9e1f51d19a6ff352e}{value\+\_\+type}} = typename Implementation::\+value\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} = typename Implementation::\+difference\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}} = typename Implementation::\+pointer
+\item 
+using \doxymbox{\hyperlink{classiterator_a290cf434d5ab8518ee64905b5bea924a}{reference}} = typename Implementation::\+reference
+\item 
+using \doxymbox{\hyperlink{classiterator_ade90a389b18de0ef37103066ad918cbd}{const\+\_\+pointer}} = typename Implementation::\+const\+\_\+pointer
+\item 
+using \doxymbox{\hyperlink{classiterator_a9fb8498b5961769e72e465acefbd3277}{const\+\_\+reference}} = typename Implementation::\+const\+\_\+reference
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a21ee54cbd704b3833f80027021d32b2c}{iterator}} (const \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}} value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_aa0749f596f2846aeb0145bd968fdbd47}{iterator}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_abc1089f40b24cdc5cb775a61618f17fb}{iterator}} (\doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&\&rvalue\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a1220815c6e3296ba7a7ddc9024dfea0f}{\texorpdfstring{$\sim$}{\string~}iterator}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a290cf434d5ab8518ee64905b5bea924a}{reference}} \doxymbox{\hyperlink{classiterator_a0237df41c016b97e88d0ad59408a5954}{operator\texorpdfstring{$\ast$}{*}}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}} \doxymbox{\hyperlink{classiterator_ac3042dd6cf818c09b92d25a87e182609}{operator-\/$>$}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a9fb8498b5961769e72e465acefbd3277}{const\+\_\+reference}} \doxymbox{\hyperlink{classiterator_a2e563c461ae3aa153d18ecba9cf485a7}{operator\texorpdfstring{$\ast$}{*}}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_ade90a389b18de0ef37103066ad918cbd}{const\+\_\+pointer}} \doxymbox{\hyperlink{classiterator_aa1d5b81b393b6bdcbb0a9c58cd9f224f}{operator-\/$>$}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_a50427809da522723468f4a0c968a9056}{operator++}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator_a7afc105eb3ad6e92d64d545b4d4fa9de}{operator++}} (int) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_ae3aaf6a03a1833597bc512d31a3736de}{operator-\/-\/}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_a8fad456b9326e5fd3340676958caff03}{operator-\/-\/}} (int) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator_a289a58093a8d3f8589f8cb85fb81f0e8}{operator+}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_a53ecdce7be0123a1b4488a1b21c4413a}{operator+=}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator_ac79f802151213348e06d01ffd28839a4}{operator-\/}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_ad634e62dad1e19cda753dc48d9378db4}{operator-\/=}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} \doxymbox{\hyperlink{classiterator_abed0be2e385178810aaff5bd7f7f4561}{operator-\/}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a9fb8498b5961769e72e465acefbd3277}{const\+\_\+reference}} \doxymbox{\hyperlink{classiterator_ac7076b7e86b02701cfdc1f6b7dd81e7a}{operator\+[$\,$]\+}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} index\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a290cf434d5ab8518ee64905b5bea924a}{reference}} \doxymbox{\hyperlink{classiterator_a36e4ac187d9c3ed493fbcd009b3f7c23}{operator\+[$\,$]\+}} (const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} index\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_a7f373a07a04e8e71566b18065c1471c3}{operator=}} (const \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}} value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_acad7dbaf667ac769245e3a12010a41ae}{operator=}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator_a2e94bfaff7e4e93581dd0f55226d5274}{operator=}} (\doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&\&rvalue\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_ab62e83b8e7b64d31c79b20a9355bf545}{operator$<$}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_ad6d5c7eae43a17b7baba48f5493f03fb}{operator$<$=}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_a3ee46cb799b2b5e271b85c8c3d7a9a07}{operator$>$}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_a3cd4910c29c6caae36a4003097cbbe0e}{operator$>$=}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_a3335866105bcfa6543e97907358c53fd}{operator==}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator_a4b56fb4ac167b5e3ec46f15de94a30c0}{operator!=}} (const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&other\+\_\+p) const noexcept
+\end{DoxyCompactItemize}
+
+
+\label{classiterator_doc-typedef-members}
+\Hypertarget{classiterator_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classiterator_afc49bc923e0b5691105abbf314758984}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!base\_type@{base\_type}}
+\index{base\_type@{base\_type}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{base\_type}{base\_type}}
+{\footnotesize\ttfamily \label{classiterator_afc49bc923e0b5691105abbf314758984} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+base\+\_\+type = \doxymbox{\hyperlink{class_implementation}{Implementation}}}
+
+\Hypertarget{classiterator_ade90a389b18de0ef37103066ad918cbd}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classiterator_ade90a389b18de0ef37103066ad918cbd} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+const\+\_\+pointer = typename Implementation::\+const\+\_\+pointer}
+
+\Hypertarget{classiterator_a9fb8498b5961769e72e465acefbd3277}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classiterator_a9fb8498b5961769e72e465acefbd3277} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+const\+\_\+reference = typename Implementation::\+const\+\_\+reference}
+
+\Hypertarget{classiterator_a2a46392d275ba46a55ebc5b199848ec6}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classiterator_a2a46392d275ba46a55ebc5b199848ec6} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+difference\+\_\+type = typename Implementation::\+difference\+\_\+type}
+
+\Hypertarget{classiterator_ababd00c45af3c588e218db63760c2270}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!iterator\_category@{iterator\_category}}
+\index{iterator\_category@{iterator\_category}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{iterator\_category}{iterator\_category}}
+{\footnotesize\ttfamily \label{classiterator_ababd00c45af3c588e218db63760c2270} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+iterator\+\_\+category = typename Implementation::\+iterator\+\_\+category}
+
+\Hypertarget{classiterator_a017013d54371a2972ea8dedcdfce8ee6}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!pointer@{pointer}}
+\index{pointer@{pointer}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classiterator_a017013d54371a2972ea8dedcdfce8ee6} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+pointer = typename Implementation::\+pointer}
+
+\Hypertarget{classiterator_a290cf434d5ab8518ee64905b5bea924a}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!reference@{reference}}
+\index{reference@{reference}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classiterator_a290cf434d5ab8518ee64905b5bea924a} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+reference = typename Implementation::\+reference}
+
+\Hypertarget{classiterator_abece68b1952c7de9e1f51d19a6ff352e}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classiterator_abece68b1952c7de9e1f51d19a6ff352e} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+using \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+value\+\_\+type = typename Implementation::\+value\+\_\+type}
+
+
+
+\label{classiterator_doc-constructors}
+\Hypertarget{classiterator_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classiterator_ac1fe4068846aa7509d565bb3e64229d7}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!iterator@{iterator}}
+\index{iterator@{iterator}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{iterator()}{iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{classiterator_ac1fe4068846aa7509d565bb3e64229d7} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+iterator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classiterator_a289a58093a8d3f8589f8cb85fb81f0e8}{operator+()}}, \doxymbox{\hyperlink{classiterator_a50427809da522723468f4a0c968a9056}{operator++()}}, \doxymbox{\hyperlink{classiterator_a7afc105eb3ad6e92d64d545b4d4fa9de}{operator++()}}, \doxymbox{\hyperlink{classiterator_a53ecdce7be0123a1b4488a1b21c4413a}{operator+=()}}, \doxymbox{\hyperlink{classiterator_ac79f802151213348e06d01ffd28839a4}{operator-\/()}}, \doxymbox{\hyperlink{classiterator_ae3aaf6a03a1833597bc512d31a3736de}{operator-\/-\/()}}, \doxymbox{\hyperlink{classiterator_a8fad456b9326e5fd3340676958caff03}{operator-\/-\/()}}, \doxymbox{\hyperlink{classiterator_ad634e62dad1e19cda753dc48d9378db4}{operator-\/=()}}, \doxymbox{\hyperlink{classiterator_a2e94bfaff7e4e93581dd0f55226d5274}{operator=()}}, \doxymbox{\hyperlink{classiterator_acad7dbaf667ac769245e3a12010a41ae}{operator=()}}, and \doxymbox{\hyperlink{classiterator_a7f373a07a04e8e71566b18065c1471c3}{operator=()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classiterator_ac1fe4068846aa7509d565bb3e64229d7_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a21ee54cbd704b3833f80027021d32b2c}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!iterator@{iterator}}
+\index{iterator@{iterator}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{iterator()}{iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{classiterator_a21ee54cbd704b3833f80027021d32b2c} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+iterator (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}}}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classiterator_aa0749f596f2846aeb0145bd968fdbd47}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!iterator@{iterator}}
+\index{iterator@{iterator}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{iterator()}{iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{classiterator_aa0749f596f2846aeb0145bd968fdbd47} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+iterator (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classiterator_abc1089f40b24cdc5cb775a61618f17fb}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!iterator@{iterator}}
+\index{iterator@{iterator}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{iterator()}{iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{classiterator_abc1089f40b24cdc5cb775a61618f17fb} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+iterator (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&\&}]{rvalue\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classiterator_a1220815c6e3296ba7a7ddc9024dfea0f}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!````~iterator@{\texorpdfstring{$\sim$}{\string~}iterator}}
+\index{````~iterator@{\texorpdfstring{$\sim$}{\string~}iterator}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}iterator()}{\string~iterator()}}
+{\footnotesize\ttfamily \label{classiterator_a1220815c6e3296ba7a7ddc9024dfea0f} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classiterator}{iterator}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classiterator_doc-func-members}
+\Hypertarget{classiterator_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classiterator_a4b56fb4ac167b5e3ec46f15de94a30c0}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{classiterator_a4b56fb4ac167b5e3ec46f15de94a30c0} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator!= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a2e563c461ae3aa153d18ecba9cf485a7}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_a2e563c461ae3aa153d18ecba9cf485a7} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a9fb8498b5961769e72e465acefbd3277}{const\+\_\+reference}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a0237df41c016b97e88d0ad59408a5954}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_a0237df41c016b97e88d0ad59408a5954} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a290cf434d5ab8518ee64905b5bea924a}{reference}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}.
+
+\Hypertarget{classiterator_a289a58093a8d3f8589f8cb85fb81f0e8}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator+@{operator+}}
+\index{operator+@{operator+}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \label{classiterator_a289a58093a8d3f8589f8cb85fb81f0e8} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_a289a58093a8d3f8589f8cb85fb81f0e8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a50427809da522723468f4a0c968a9056}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator++@{operator++}}
+\index{operator++@{operator++}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator++()}{operator++()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_a50427809da522723468f4a0c968a9056} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator++ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classiterator_a50427809da522723468f4a0c968a9056_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a7afc105eb3ad6e92d64d545b4d4fa9de}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator++@{operator++}}
+\index{operator++@{operator++}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator++()}{operator++()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_a7afc105eb3ad6e92d64d545b4d4fa9de} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator++ (\begin{DoxyParamCaption}\item[{int}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classiterator_a7afc105eb3ad6e92d64d545b4d4fa9de_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a53ecdce7be0123a1b4488a1b21c4413a}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator+=()}{operator+=()}}
+{\footnotesize\ttfamily \label{classiterator_a53ecdce7be0123a1b4488a1b21c4413a} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator+= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classiterator_a53ecdce7be0123a1b4488a1b21c4413a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_abed0be2e385178810aaff5bd7f7f4561}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_abed0be2e385178810aaff5bd7f7f4561} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_ac79f802151213348e06d01ffd28839a4}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_ac79f802151213348e06d01ffd28839a4} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=288pt]{classiterator_ac79f802151213348e06d01ffd28839a4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_ae3aaf6a03a1833597bc512d31a3736de}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/-\/@{operator-\/-\/}}
+\index{operator-\/-\/@{operator-\/-\/}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/-\/()}{operator--()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_ae3aaf6a03a1833597bc512d31a3736de} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/-\/ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_ae3aaf6a03a1833597bc512d31a3736de_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a8fad456b9326e5fd3340676958caff03}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/-\/@{operator-\/-\/}}
+\index{operator-\/-\/@{operator-\/-\/}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/-\/()}{operator--()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_a8fad456b9326e5fd3340676958caff03} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/-\/ (\begin{DoxyParamCaption}\item[{int}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_a8fad456b9326e5fd3340676958caff03_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_ad634e62dad1e19cda753dc48d9378db4}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/=()}{operator-=()}}
+{\footnotesize\ttfamily \label{classiterator_ad634e62dad1e19cda753dc48d9378db4} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=294pt]{classiterator_ad634e62dad1e19cda753dc48d9378db4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_aa1d5b81b393b6bdcbb0a9c58cd9f224f}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_aa1d5b81b393b6bdcbb0a9c58cd9f224f} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_ade90a389b18de0ef37103066ad918cbd}{const\+\_\+pointer}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_ac3042dd6cf818c09b92d25a87e182609}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_ac3042dd6cf818c09b92d25a87e182609} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_ab62e83b8e7b64d31c79b20a9355bf545}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator$<$()}{operator<()}}
+{\footnotesize\ttfamily \label{classiterator_ab62e83b8e7b64d31c79b20a9355bf545} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator$<$ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_ad6d5c7eae43a17b7baba48f5493f03fb}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator$<$=@{operator$<$=}}
+\index{operator$<$=@{operator$<$=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator$<$=()}{operator<=()}}
+{\footnotesize\ttfamily \label{classiterator_ad6d5c7eae43a17b7baba48f5493f03fb} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator$<$= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a2e94bfaff7e4e93581dd0f55226d5274}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classiterator_a2e94bfaff7e4e93581dd0f55226d5274} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&\&}]{rvalue\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_a2e94bfaff7e4e93581dd0f55226d5274_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_acad7dbaf667ac769245e3a12010a41ae}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classiterator_acad7dbaf667ac769245e3a12010a41ae} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_acad7dbaf667ac769245e3a12010a41ae_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a7f373a07a04e8e71566b18065c1471c3}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classiterator_a7f373a07a04e8e71566b18065c1471c3} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator}{iterator}} \& \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a017013d54371a2972ea8dedcdfce8ee6}{pointer}}}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classiterator_ac1fe4068846aa7509d565bb3e64229d7}{iterator()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=291pt]{classiterator_a7f373a07a04e8e71566b18065c1471c3_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classiterator_a3335866105bcfa6543e97907358c53fd}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator==@{operator==}}
+\index{operator==@{operator==}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{classiterator_a3335866105bcfa6543e97907358c53fd} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator== (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a3ee46cb799b2b5e271b85c8c3d7a9a07}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator$>$()}{operator>()}}
+{\footnotesize\ttfamily \label{classiterator_a3ee46cb799b2b5e271b85c8c3d7a9a07} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator$>$ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a3cd4910c29c6caae36a4003097cbbe0e}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator$>$=@{operator$>$=}}
+\index{operator$>$=@{operator$>$=}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator$>$=()}{operator>=()}}
+{\footnotesize\ttfamily \label{classiterator_a3cd4910c29c6caae36a4003097cbbe0e} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator$>$= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_afc49bc923e0b5691105abbf314758984}{base\+\_\+type}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_ac7076b7e86b02701cfdc1f6b7dd81e7a}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator\+[]\+@{operator[]}}
+\index{operator\+[]\+@{operator[]}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classiterator_ac7076b7e86b02701cfdc1f6b7dd81e7a} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a9fb8498b5961769e72e465acefbd3277}{const\+\_\+reference}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator\+[$\,$]\+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{index\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classiterator_a36e4ac187d9c3ed493fbcd009b3f7c23}\index{iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}!operator\+[]\+@{operator[]}}
+\index{operator\+[]\+@{operator[]}!iterator$<$ Implementation $>$@{iterator$<$ Implementation $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classiterator_a36e4ac187d9c3ed493fbcd009b3f7c23} 
+template$<$class \doxymbox{\hyperlink{class_implementation}{Implementation}}$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classiterator_a290cf434d5ab8518ee64905b5bea924a}{reference}} \doxymbox{\hyperlink{classiterator}{iterator}}$<$ \doxymbox{\hyperlink{class_implementation}{Implementation}} $>$::\+operator\+[$\,$]\+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classiterator_a2a46392d275ba46a55ebc5b199848ec6}{difference\+\_\+type}}}]{index\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{iterator_8hxx}{iterator.\+hxx}}\end{DoxyCompactItemize}

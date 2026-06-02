@@ -1,0 +1,177 @@
+\doxysection{hash.\+hxx}
+\hypertarget{hash_8hxx_source}{}\label{hash_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/hash.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/hash.hxx}}
+\doxymbox{\hyperlink{hash_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_HASH\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_HASH\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ warning(push)}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4702)}}
+\DoxyCodeLine{00005\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00009\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00013\ \textcolor{comment}{}}
+\DoxyCodeLine{00014\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00018\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{strlen_8hxx}{FE/private/strlen.hxx}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{random_8hxx}{FE/random.hxx}}>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{type__traits_8hxx}{FE/type\_traits.hxx}}>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ city\ hash}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <city.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{bitmask_8hxx}{FE/bitmask.hxx}}>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ enum\ struct\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ :\ \doxymbox{\hyperlink{types_8hxx_a4975f0ed4e8143fee4bddc72f539761a}{uint8}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{\_Address}}\ =\ 0,}
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{\_CString}}\ =\ 1,}
+\DoxyCodeLine{00039\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{\_StringClass}}\ =\ 2,\ \ \ }
+\DoxyCodeLine{00040\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{\_Binary}}\ =\ 3,}
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{\_Bitmask}}\ =\ 4}
+\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00045\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{hash_8hxx_a01d02dc2727b996e4984ca52c4e52c15}{evaluate\_hash\_input\_data\_type}}()}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (FE::is\_constant\_string\_v<T>)}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{HashInputDataType::\_CString}};}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_pointer\_v<T>)}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{HashInputDataType::\_Address}};}
+\DoxyCodeLine{00054\ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (FE::is\_string\_class\_v<T>)}
+\DoxyCodeLine{00056\ \ \ \ \ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{HashInputDataType::\_StringClass}};}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::same\_as<T,\ FE::bitmask>)}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{HashInputDataType::\_Bitmask}};}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{HashInputDataType::\_Binary}};}
+\DoxyCodeLine{00065\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ :\ \doxymbox{\hyperlink{types_8hxx_a4975f0ed4e8143fee4bddc72f539761a}{uint8}}}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{\_CityHash}}\ =\ 1}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{static}\ FE::random\_integer<var::uint64>\ \doxymbox{\hyperlink{classhash__base_ad05a1dd20622b3f8813401535a9ca652}{s\_random\_integer}};}
+\DoxyCodeLine{00075\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}\ \doxymbox{\hyperlink{classhash__base_a94ea8d781aedd372cd4494da9dc9c1c0}{s\_seed}};}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00080\ \textcolor{comment}{The\ FE::hash\ class\ template\ provides\ a\ hashing\ mechanism\ for\ objects\ of\ type\ T}}
+\DoxyCodeLine{00081\ \textcolor{comment}{allowing\ the\ use\ of\ different\ hashing\ algorithms\ (such\ as\ Robin\ Hood\ Hashing\ or\ CityHash)\ based\ on\ the\ specified\ HasherType}}
+\DoxyCodeLine{00082\ \textcolor{comment}{and\ is\ specialized\ for\ handling\ address-\/based\ hashing\ with\ the\ HashInputDataType::\_Address\ type.}}
+\DoxyCodeLine{00083\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00084\ template<typename\ T,\ HasherType\ HasherType\ =\ HasherType::\_CityHash,\ HashInputDataType\ HashInputDataType\ =\ FE::evaluate\_hash\_input\_data\_type<T>()>}
+\DoxyCodeLine{00085\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ HasherType\ HasherType>}
+\DoxyCodeLine{00088\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}}<T,\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}},\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}::\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{\_Address}}>\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___address_01_4_ab84b6cba8dc4733203fa76f95b8bc986}{base}}\ =\ \doxymbox{\hyperlink{classhash__base}{hash\_base}};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___address_01_4_a2d0b54aa9aa282e405ce290ce407df89}{hash\_input\_data\_type}}\ =\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{HashInputDataType::\_Address}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{namespacevar_aa80c89a3142cfc82088a61e778cde037}{var::uintptr}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___address_01_4_afa242f1239494f478d5c82cf558868fb}{operator()}}(T\ value\_p)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ ==\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{HasherType::\_CityHash}})}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CityHash64(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(value\_p),\ \textcolor{keyword}{sizeof}(T));}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ HasherType\ HasherType>}
+\DoxyCodeLine{00104\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}}<T,\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}},\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}::\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{\_CString}}>\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00105\ \{}
+\DoxyCodeLine{00106\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___c_string_01_4_ac902fd8e6e8f7b38a280feee37a1b3e5}{base}}\ =\ \doxymbox{\hyperlink{classhash__base}{hash\_base}};}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___c_string_01_4_aad2d5495565dbcedf309bc99f4eeaef4}{hash\_input\_data\_type}}\ =\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{HashInputDataType::\_CString}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::uint64}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___c_string_01_4_a03536a25c5c50a1dc3effb002f3646cd}{operator()}}(T\ value\_p)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00111\ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ ==\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{HasherType::\_CityHash}})}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CityHash64(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(value\_p),\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{typename}\ std::remove\_pointer<T>::type)\ *\ internal::strlen(value\_p));}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ HasherType\ HasherType>}
+\DoxyCodeLine{00120\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}}<T,\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}},\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}::\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{\_StringClass}}>\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00121\ \{}
+\DoxyCodeLine{00122\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___string_class_01_4_af213b4d0f76d9ca652bd381113bd6336}{base}}\ =\ \doxymbox{\hyperlink{classhash__base}{hash\_base}};}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___string_class_01_4_afb1837b95541bec68e13d01d7d3fe997}{hash\_input\_data\_type}}\ =\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{HashInputDataType::\_StringClass}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{namespacevar_aa80c89a3142cfc82088a61e778cde037}{var::uintptr}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___string_class_01_4_a3506163b0c252f4922ba02929f54482a}{operator()}}(\textcolor{keyword}{const}\ T\&\ value\_p)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ ==\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{HasherType::\_CityHash}})}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CityHash64(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(value\_p.data()),\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{typename}\ std::remove\_pointer<T>::type)\ *\ value\_p.length());}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ HasherType\ HasherType>}
+\DoxyCodeLine{00136\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}}<T,\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}},\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}::\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{\_Bitmask}}>\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00137\ \{}
+\DoxyCodeLine{00138\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___bitmask_01_4_a37248cf8a87cc9810ef033fec98f43e4}{base}}\ =\ \doxymbox{\hyperlink{classhash__base}{hash\_base}};}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___bitmask_01_4_ae8e4f81bc9d6b3fee200de7c69775685}{hash\_input\_data\_type}}\ =\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{HashInputDataType::\_Bitmask}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{namespacevar_aa80c89a3142cfc82088a61e778cde037}{var::uintptr}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___bitmask_01_4_acc09652eb545255dc5234d047087c200}{operator()}}(\textcolor{keyword}{const}\ T\&\ value\_p)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00143\ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ ==\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{HasherType::\_CityHash}})}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CityHash64(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(value\_p.data()),\ value\_p.capacity\_in\_bytes());}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ HasherType\ HasherType>}
+\DoxyCodeLine{00152\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classhash}{hash}}<T,\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}},\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}::\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{\_Binary}}>\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classhash__base}{hash\_base}}}
+\DoxyCodeLine{00153\ \{}
+\DoxyCodeLine{00154\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___binary_01_4_ab6f0133de7107a00820ac0d8d14c635f}{base}}\ =\ \doxymbox{\hyperlink{classhash__base}{hash\_base}};}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{HashInputDataType}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___binary_01_4_a7f4c49d6048466d97d7aae2b55e8b5fb}{hash\_input\_data\_type}}\ =\ \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{HashInputDataType::\_Binary}};}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::uint64}}\ \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___binary_01_4_adb24eeb232c95345b4706355d99b225f}{operator()}}(\textcolor{keyword}{const}\ T\&\ value\_p)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_trivially\_copyable\_v<T>,\ \textcolor{stringliteral}{"{}Static\ assertion\ failed:\ only\ trivially\ copyable\ types\ can\ be\ hashed\ using\ binary\ hashing."{}});}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{HasherType}}\ ==\ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{HasherType::\_CityHash}})}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CityHash64(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(\&value\_p),\ \textcolor{keyword}{sizeof}(T));}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#pragma\ warning(pop)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

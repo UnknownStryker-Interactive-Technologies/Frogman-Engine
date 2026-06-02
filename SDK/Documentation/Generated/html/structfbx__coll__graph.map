@@ -1,0 +1,9 @@
+<map id="fbx" name="fbx">
+<area shape="rect" id="Node000001" title=" " alt="" coords="367,74,406,101"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,7,170,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,26,264,35,304,43,344,56,372,74,367,73,342,60,303,48,263,40,185,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,74,164,101"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,85,368,85,365,89,179,90"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="17,125,158,167"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,144,256,136,300,127,342,114,367,102,372,100,344,119,301,132,257,141,174,149"/>
+</map>

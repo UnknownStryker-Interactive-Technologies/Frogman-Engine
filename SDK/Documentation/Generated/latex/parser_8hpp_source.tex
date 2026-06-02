@@ -1,0 +1,50 @@
+\doxysection{parser.\+hpp}
+\hypertarget{parser_8hpp_source}{}\label{parser_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/parser.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/parser.hpp}}
+\doxymbox{\hyperlink{parser_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_HEADER\_TOOL\_PARSER\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_HEADER\_TOOL\_PARSER\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2024\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{context_8hpp}{context.hpp}}"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_f_h_t_1_1parser}{FHT::parser}}}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structheader__file__root}{header\_file\_root}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_aa5bfe976da7a5e43d5d7af86078d7bb2}{build\_reflextree}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\_t}}\&\ file\_path\_p,\ \textcolor{keyword}{const}\ std::pmr::list<token>\&\ token\_list\_p);}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structnamespace__node}{namespace\_node}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_a8d1820317ee41c9514bf740f272f337a}{build\_namespace\_node\_recursive}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\&\ parent\_namespace\_p,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\&\ out\_token\_iterator\_p,\ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\ end\_p,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structclass__node}{class\_node}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_a22972a7bc2fc2deb58ae281452bd57fc}{build\_class\_node}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\&\ parent\_namespace\_p,\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\&\ out\_token\_iterator\_p,\ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\ end\_p);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structstruct__node}{struct\_node}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_a2184d0a338ddd30e602dcb59a52a4546}{build\_struct\_node}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\&\ parent\_namespace\_p,\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\&\ out\_token\_iterator\_p,\ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\ end\_p);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structenum__struct__node}{enum\_struct\_node}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_a70826d37fe06979398f9c14df5f38bfb}{build\_enum\_struct\_node}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\&\ parent\_namespace\_p,\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\&\ out\_token\_iterator\_p,\ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\ end\_p);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structsystem__node}{system\_node}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1parser_a4902670ccbcb4f5d4c826fd03323db68}{build\_ecs\_system\_node}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\&\ parent\_namespace\_p,\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\&\ out\_token\_iterator\_p,\ \textcolor{keyword}{typename}\ std::pmr::list<token>::const\_iterator\ end\_p);}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,83 @@
+\doxysection{program\+\_\+options.\+hpp}
+\hypertarget{program__options_8hpp_source}{}\label{program__options_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/program\_options.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/program\_options.hpp}}
+\doxymbox{\hyperlink{program__options_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_HEADER\_TOOL\_PROGRAM\_OPTIONS\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_HEADER\_TOOL\_PROGRAM\_OPTIONS\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2024\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{framework_2framework_8hxx}{FE/framework/framework.hxx}}>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ trie}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <tsl/htrie\_map.h>}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ std::stirng}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ std::string\_view}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classprogram__options_a1c8014b0302bdc2c08541045018b1168}{program\_options}}\ :\ \textcolor{keyword}{public}\ FE::framework::program\_option}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classprogram__options_a61f56ddbc15381177d2d3f45589d3c86}{base}}\ =\ FE::framework::program\_option;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ tsl::htrie\_map<var::ASCII,\ std::basic\_string<var::ASCII>>\ \doxymbox{\hyperlink{classprogram__options_ad38aa59dddabf448461d68fc40659718}{m\_path\_options}};}
+\DoxyCodeLine{00041\ \ \ \ \ std::unordered\_map<std::basic\_string\_view<var::ASCII>,\ \doxymbox{\hyperlink{namespacevar_a3d0ff8440d6ca765617d941d680efd5e}{var::boolean}}>\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ FE::int32\ \doxymbox{\hyperlink{classprogram__options_a7c0e0ea114f594fe72a08ae3685a13d7}{m\_argc}};}
+\DoxyCodeLine{00044\ \ \ \ \ FE::ASCII**\ \doxymbox{\hyperlink{classprogram__options_af0da1edf4f5f5815f420836d1bccf7e6}{m\_argv}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{classprogram__options_a1c8014b0302bdc2c08541045018b1168}{program\_options}}(FE::int32\ argc\_p,\ FE::ASCII**\ argv\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classprogram__options_a886f2e50122aab15daaf18cf996d9ef3}{\string~program\_options}}()\ noexcept\ override\ =\ default;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ private:}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classprogram__options_ab1ff1fb62ad30e4f67e50abfbd088af7}{\_\_parse\_path\_options}}(\doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*\ non\_fno\_option\_p)\ noexcept;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ public:}
+\DoxyCodeLine{00054\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*\ \doxymbox{\hyperlink{classprogram__options_a4087e0207fbe2bd3d37fbb9bac2d3aa6}{get\_path\_to\_copyright\_notice}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ad38aa59dddabf448461d68fc40659718}{m\_path\_options}}.find(\textcolor{stringliteral}{"{}-\/path-\/to-\/copyright-\/notice="{}}).value().c\_str();\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_a05bacbc238a1c89e34ea0b240a262d81}{get\_path\_to\_project}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ad38aa59dddabf448461d68fc40659718}{m\_path\_options}}.find(\textcolor{stringliteral}{"{}-\/path-\/to-\/project="{}}).value().c\_str();\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_a8a5b1157cfcba5024f9711dc3b3e8c07}{view\_fno\_copyright\_notice\_option\_title}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/copyright-\/notice"{}})-\/>first.data();\ \}}
+\DoxyCodeLine{00058\ \ \ \ \ FE::boolean\ \doxymbox{\hyperlink{classprogram__options_a945195e8754f9c1341be56f4f36c2d7a}{is\_fno\_copyright\_notice\_defined}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/copyright-\/notice"{}})-\/>second;\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_a702d4bd4e085b251465d419dde99e00e}{view\_fno\_code\_style\_guide\_option\_title}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/code-\/style-\/guide"{}})-\/>first.data();\ \}}
+\DoxyCodeLine{00061\ \ \ \ \ FE::boolean\ \doxymbox{\hyperlink{classprogram__options_a488d199281ae936856ea679d539715cb}{is\_fno\_code\_style\_guide\_defined}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/code-\/style-\/guide"{}})-\/>second;\ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_a22ed05551deee58852205618f61a8818}{view\_fno\_reflection\_helper\_option\_title}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/reflection-\/helper"{}})-\/>first.data();\ \}}
+\DoxyCodeLine{00064\ \ \ \ \ FE::boolean\ \doxymbox{\hyperlink{classprogram__options_a7a62ba9991c7c0ba55141598b0e0207d}{is\_fno\_reflection\_helper\_defined}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/reflection-\/helper"{}})-\/>second;\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_a91dec3e0ef91cc8dc2d34047257e915e}{view\_fno\_op\_option\_title}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/op"{}})-\/>first.data();\ \}}
+\DoxyCodeLine{00067\ \ \ \ \ FE::boolean\ \doxymbox{\hyperlink{classprogram__options_a9370540954e43ac9efdf16939edf9a96}{is\_fno\_op\_defined}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/op"{}})-\/>second;\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ FE::ASCII*\ \doxymbox{\hyperlink{classprogram__options_ae868574ce22e5880a999ece120ef56ab}{view\_fno\_write\_option\_title}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/write"{}})-\/>first.data();\ \}}
+\DoxyCodeLine{00070\ \ \ \ \ FE::boolean\ \doxymbox{\hyperlink{classprogram__options_a45f742590d68499429cd47abc9436d0a}{is\_fno\_write\_defined}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_ae0446cbbe52b4a785892987bd92fa6b5}{m\_fno\_options}}.find(\textcolor{stringliteral}{"{}-\/fno-\/write"{}})-\/>second;\ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ FE::int32\ \doxymbox{\hyperlink{classprogram__options_a4afc6faaf750c0923091bf603df00985}{get\_argc}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_a7c0e0ea114f594fe72a08ae3685a13d7}{m\_argc}};\ \}}
+\DoxyCodeLine{00073\ \ \ \ \ FE::ASCII**\ \doxymbox{\hyperlink{classprogram__options_a9ff117cc3e27fdcd51aadaf5e9031b94}{get\_argv}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classprogram__options_af0da1edf4f5f5815f420836d1bccf7e6}{m\_argv}};\ \}}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

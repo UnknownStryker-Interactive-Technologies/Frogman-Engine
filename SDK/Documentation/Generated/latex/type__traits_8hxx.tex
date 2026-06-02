@@ -1,0 +1,574 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+type\+\_\+traits.hxx File Reference}
+\hypertarget{type__traits_8hxx}{}\label{type__traits_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/type\_traits.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/type\_traits.hxx}}
+{\ttfamily \+\#include $<$FE/\+definitions.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+log/\+log.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+types.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+private/\+strlen.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$array$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \+\#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+Include dependency graph for type\+\_\+traits.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{type__traits_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structremove__const__reference}{remove\+\_\+const\+\_\+reference$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structremove__all}{remove\+\_\+all$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string}{is\+\_\+constant\+\_\+string$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_a_s_c_i_i_01_5_01_4}{is\+\_\+constant\+\_\+string$<$ ASCII \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01wchar_01_5_01_4}{is\+\_\+constant\+\_\+string$<$ wchar \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f16_01_5_01_4}{is\+\_\+constant\+\_\+string$<$ UTF16 \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f32_01_5_01_4}{is\+\_\+constant\+\_\+string$<$ UTF32 \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_a_s_c_i_i_0f_0e_4}{is\+\_\+constant\+\_\+string$<$ ASCII\+[$\,$]\+$>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01wchar_0f_0e_4}{is\+\_\+constant\+\_\+string$<$ wchar\+[$\,$]\+$>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f16_0f_0e_4}{is\+\_\+constant\+\_\+string$<$ UTF16\+[$\,$]\+$>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f32_0f_0e_4}{is\+\_\+constant\+\_\+string$<$ UTF32\+[$\,$]\+$>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char}{is\+\_\+char$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01_a_s_c_i_i_01_4}{is\+\_\+char$<$ ASCII $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01var_1_1_a_s_c_i_i_01_4}{is\+\_\+char$<$ var::\+\+ASCII $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01wchar_01_4}{is\+\_\+char$<$ wchar $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01var_1_1wchar_01_4}{is\+\_\+char$<$ var::\+wchar $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01_u_t_f16_01_4}{is\+\_\+char$<$ UTF16 $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01var_1_1_u_t_f16_01_4}{is\+\_\+char$<$ var::\+\+UTF16 $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01_u_t_f32_01_4}{is\+\_\+char$<$ UTF32 $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__char_3_01var_1_1_u_t_f32_01_4}{is\+\_\+char$<$ var::\+\+UTF32 $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__boolean}{is\+\_\+boolean$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__boolean_3_01var_1_1boolean_01_4}{is\+\_\+boolean$<$ var::\+boolean $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__boolean_3_01boolean_01_4}{is\+\_\+boolean$<$ boolean $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__primitive}{is\+\_\+primitive$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__numeric}{is\+\_\+numeric$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__function}{is\+\_\+function$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__trivial}{is\+\_\+trivial$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__const__reference}{is\+\_\+const\+\_\+reference$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__vector}{is\+\_\+std\+\_\+vector$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__vector_3_01std_1_1vector_3_01_t_00_01_allocator_01_4_01_4}{is\+\_\+std\+\_\+vector$<$ std::\+vector$<$ T, Allocator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__pmr__vector}{is\+\_\+pmr\+\_\+vector$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__pmr__vector_3_01std_1_1pmr_1_1vector_3_01_t_01_4_01_4}{is\+\_\+pmr\+\_\+vector$<$ std::\+pmr::\+vector$<$ T $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__scalable__array}{is\+\_\+scalable\+\_\+array$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__array}{is\+\_\+std\+\_\+array$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__array_3_01std_1_1array_3_01_t_00_01_n_01_4_01_4}{is\+\_\+std\+\_\+array$<$ std::\+array$<$ T, N $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__array}{is\+\_\+array$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__string}{is\+\_\+std\+\_\+string$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__string_3_01std_1_1basic__string_3_01_t_00_01_traits_00_01_allocator_01_4_01_4}{is\+\_\+std\+\_\+string$<$ std::\+basic\+\_\+string$<$ T, Traits, Allocator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__pmr__string}{is\+\_\+pmr\+\_\+string$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__pmr__string_3_01std_1_1pmr_1_1basic__string_3_01_t_00_01_traits_01_4_01_4}{is\+\_\+pmr\+\_\+string$<$ std::\+pmr::\+basic\+\_\+string$<$ T, Traits $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__string__view}{is\+\_\+std\+\_\+string\+\_\+view$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__std__string__view_3_01std_1_1basic__string__view_3_01_t_00_01_traits_01_4_01_4}{is\+\_\+std\+\_\+string\+\_\+view$<$ std::\+basic\+\_\+string\+\_\+view$<$ T, Traits $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__string__class}{is\+\_\+string\+\_\+class$<$ T $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__string__class_3_01std_1_1basic__string_3_01_t_00_01_traits_00_01_allocator_01_4_01_4}{is\+\_\+string\+\_\+class$<$ std::\+basic\+\_\+string$<$ T, Traits, Allocator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__string__class_3_01std_1_1pmr_1_1basic__string_3_01_t_00_01_traits_01_4_01_4}{is\+\_\+string\+\_\+class$<$ std::\+pmr::\+basic\+\_\+string$<$ T, Traits $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__string__class_3_01std_1_1basic__string__view_3_01_t_00_01_traits_01_4_01_4}{is\+\_\+string\+\_\+class$<$ std::\+basic\+\_\+string\+\_\+view$<$ T, Traits $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__base__type}{has\+\_\+base\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__base__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1base__type_01_4_01_4}{has\+\_\+base\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+base\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__value__type}{has\+\_\+value\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__value__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1value__type_01_4_01_4}{has\+\_\+value\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+value\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__element__type}{has\+\_\+element\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__element__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1element__type_01_4_01_4}{has\+\_\+element\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+element\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__iterator}{has\+\_\+iterator$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__iterator_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1iterator_01_4_01_4}{has\+\_\+iterator$<$ T, std::\+void\+\_\+t$<$ typename T::\+iterator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__traits__type}{has\+\_\+traits\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__traits__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1traits__type_01_4_01_4}{has\+\_\+traits\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+traits\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__allocator__type}{has\+\_\+allocator\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__allocator__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1allocator__type_01_4_01_4}{has\+\_\+allocator\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+allocator\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__size__type}{has\+\_\+size\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__size__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1size__type_01_4_01_4}{has\+\_\+size\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+size\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__difference__type}{has\+\_\+difference\+\_\+type$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__difference__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1difference__type_01_4_01_4}{has\+\_\+difference\+\_\+type$<$ T, std::\+void\+\_\+t$<$ typename T::\+difference\+\_\+type $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__reference}{has\+\_\+reference$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__reference_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1reference_01_4_01_4}{has\+\_\+reference$<$ T, std::\+void\+\_\+t$<$ typename T::\+reference $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__reference}{has\+\_\+const\+\_\+reference$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__reference_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1const__reference_01_4_01_4}{has\+\_\+const\+\_\+reference$<$ T, std::\+void\+\_\+t$<$ typename T::\+const\+\_\+reference $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__pointer}{has\+\_\+pointer$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__pointer_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1pointer_01_4_01_4}{has\+\_\+pointer$<$ T, std::\+void\+\_\+t$<$ typename T::\+pointer $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__pointer}{has\+\_\+const\+\_\+pointer$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__pointer_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1const__pointer_01_4_01_4}{has\+\_\+const\+\_\+pointer$<$ T, std::\+void\+\_\+t$<$ typename T::\+const\+\_\+pointer $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__iterator}{has\+\_\+const\+\_\+iterator$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__iterator_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1const__iterator_01_4_01_4}{has\+\_\+const\+\_\+iterator$<$ T, std::\+void\+\_\+t$<$ typename T::\+const\+\_\+iterator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__reverse__iterator}{has\+\_\+reverse\+\_\+iterator$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__reverse__iterator_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1reverse__iterator_01_4_01_4}{has\+\_\+reverse\+\_\+iterator$<$ T, std::\+void\+\_\+t$<$ typename T::\+reverse\+\_\+iterator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\+\_\+const\+\_\+reverse\+\_\+iterator$<$ T, typename $>$}}
+\item 
+struct \doxymbox{\hyperlink{structhas__const__reverse__iterator_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1const__reverse__iterator_01_4_01_4}{has\+\_\+const\+\_\+reverse\+\_\+iterator$<$ T, std::\+void\+\_\+t$<$ typename T::\+const\+\_\+reverse\+\_\+iterator $>$ $>$}}
+\item 
+struct \doxymbox{\hyperlink{structis__serializable}{is\+\_\+serializable$<$ T $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\using \doxymbox{\hyperlink{type__traits_8hxx_ab6f21e89e6310096cdccc92d6b953eb0}{remove\+\_\+const\+\_\+reference\+\_\+t}} = typename \doxymbox{\hyperlink{structremove__const__reference}{remove\+\_\+const\+\_\+reference}}$<$T$>$::\+type
+\item 
+{\footnotesize template$<$typename T$>$ }\\using \doxymbox{\hyperlink{type__traits_8hxx_ad11e96cd250df03678cb81c91ccd02cf}{remove\+\_\+all\+\_\+t}} = typename \doxymbox{\hyperlink{structremove__all}{remove\+\_\+all}}$<$T$>$::\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}{Type\+Triviality}} :\+ boolean \{ \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{\+\_\+\+Trivial}} = true
+, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}} = false
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class To, class From$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} To \doxymbox{\hyperlink{type__traits_8hxx_ae419ed09a07b39aebafdd5ec7a3712cd}{polymorphic\+\_\+cast}} (From from\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class To, class From$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} To \doxymbox{\hyperlink{type__traits_8hxx_abcbbc956c59dcf9b48a9ee60459266bd}{forward\+\_\+to}} (std::\+conditional\+\_\+t$<$ std::\+is\+\_\+reference$<$ From $>$::\+value, From, std::\+conditional\+\_\+t$<$ std::\+is\+\_\+rvalue\+\_\+reference$<$ From $>$::\+value, From, From \& $>$ $>$ from\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a703f5c47a8e99b7c3e3f1dcc8d44bc3e}{is\+\_\+constant\+\_\+string\+\_\+v}} = \doxymbox{\hyperlink{structis__constant__string}{is\+\_\+constant\+\_\+string}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a3716b51b7b45f4e971c7f792417ffb72}{is\+\_\+char\+\_\+v}} = \doxymbox{\hyperlink{structis__char}{is\+\_\+char}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a343a2b20d4fa6f049c7064d95f2a0a10}{is\+\_\+boolean\+\_\+v}} = \doxymbox{\hyperlink{structis__boolean}{is\+\_\+boolean}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a06f950eb64173cecd0acf73ae0cbdac2}{is\+\_\+primitive\+\_\+v}} = \doxymbox{\hyperlink{structis__primitive}{is\+\_\+primitive}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_ad163d51ce9df3b5bed1f522cfaabedae}{is\+\_\+numeric\+\_\+v}} = \doxymbox{\hyperlink{structis__numeric}{is\+\_\+numeric}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a85f284b7a79d4d1a9a97dd3e32182a9a}{is\+\_\+function\+\_\+v}} = \doxymbox{\hyperlink{structis__function}{is\+\_\+function}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a6da0bd64afea76a51d572589c5bcb6e7}{is\+\_\+trivial\+\_\+v}} = \doxymbox{\hyperlink{structis__trivial}{is\+\_\+trivial}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a54ee27e27c1c97a13f1c046b09783a27}{is\+\_\+const\+\_\+reference\+\_\+v}} = \doxymbox{\hyperlink{structis__const__reference}{is\+\_\+const\+\_\+reference}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a95f0e4c8909de6d10fc1a2b3fb7bd58f}{is\+\_\+std\+\_\+vector\+\_\+v}} = \doxymbox{\hyperlink{structis__std__vector}{is\+\_\+std\+\_\+vector}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a95acc9eea6dd266b933bdb9cd324fd03}{is\+\_\+pmr\+\_\+vector\+\_\+v}} = \doxymbox{\hyperlink{structis__pmr__vector}{is\+\_\+pmr\+\_\+vector}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_ad8770547e378112eaa2f83a299402ba6}{is\+\_\+scalable\+\_\+array\+\_\+v}} = \doxymbox{\hyperlink{structis__scalable__array}{is\+\_\+scalable\+\_\+array}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a7a51d83060442fbbffa2c2fd304ca3a4}{is\+\_\+std\+\_\+array\+\_\+v}} = \doxymbox{\hyperlink{structis__std__array}{is\+\_\+std\+\_\+array}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a7bd0b59e7bcebeee8db0707ca710c080}{is\+\_\+array\+\_\+v}} = \doxymbox{\hyperlink{structis__array}{is\+\_\+array}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a8c698ea6fe4f0db61494eacd09123f2a}{is\+\_\+std\+\_\+string\+\_\+v}} = \doxymbox{\hyperlink{structis__std__string}{is\+\_\+std\+\_\+string}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_ae11e0caa7a8eded6c63b56fa9d6ca624}{is\+\_\+pmr\+\_\+string\+\_\+v}} = \doxymbox{\hyperlink{structis__pmr__string}{is\+\_\+pmr\+\_\+string}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a269d3fcf2dd72f8c36c30b4389e288f5}{is\+\_\+std\+\_\+string\+\_\+view\+\_\+v}} = \doxymbox{\hyperlink{structis__std__string__view}{is\+\_\+std\+\_\+string\+\_\+view}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a9e858273c13bf0bbc5358761cf095bdd}{is\+\_\+string\+\_\+class\+\_\+v}} = \doxymbox{\hyperlink{structis__string__class}{is\+\_\+string\+\_\+class}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a7e0346b85f02eed521f560aeeebace91}{has\+\_\+base\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__base__type}{has\+\_\+base\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a98b37e70bc905247482ff8aacaf87057}{has\+\_\+value\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__value__type}{has\+\_\+value\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a1522c8830ec014ea54bef9f9d2612e52}{has\+\_\+element\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__element__type}{has\+\_\+element\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_ac0252fe47419b72db2fc0df6fb6131c0}{has\+\_\+iterator\+\_\+v}} = \doxymbox{\hyperlink{structhas__iterator}{has\+\_\+iterator}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a9a9b1dd9d0deb576a02142270611c2d1}{has\+\_\+traits\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__traits__type}{has\+\_\+traits\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a421646c76504c844c9d6dfecd427ebf6}{has\+\_\+allocator\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__allocator__type}{has\+\_\+allocator\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_acfe411a844caa5a6527b9e6635bd193e}{has\+\_\+size\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__size__type}{has\+\_\+size\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a14eff3c9c34b2065f866d8b0493c70ed}{has\+\_\+difference\+\_\+type\+\_\+v}} = \doxymbox{\hyperlink{structhas__difference__type}{has\+\_\+difference\+\_\+type}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_ac7de6459dbb2b8250fec1659cb12093b}{has\+\_\+reference\+\_\+v}} = \doxymbox{\hyperlink{structhas__reference}{has\+\_\+reference}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a29e7085ebff1707aa23ac69879d855f3}{has\+\_\+const\+\_\+reference\+\_\+v}} = \doxymbox{\hyperlink{structhas__const__reference}{has\+\_\+const\+\_\+reference}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a062ac4ddbc711888f879a319fecc6e69}{has\+\_\+pointer\+\_\+v}} = \doxymbox{\hyperlink{structhas__pointer}{has\+\_\+pointer}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a46296f915fc4311aedefcb0c653983ac}{has\+\_\+const\+\_\+pointer\+\_\+v}} = \doxymbox{\hyperlink{structhas__const__pointer}{has\+\_\+const\+\_\+pointer}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a9e5df6162d54702140ee702048ffcece}{has\+\_\+const\+\_\+iterator\+\_\+v}} = \doxymbox{\hyperlink{structhas__const__iterator}{has\+\_\+const\+\_\+iterator}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a2b977616d783965c629e467263f24988}{has\+\_\+reverse\+\_\+iterator\+\_\+v}} = \doxymbox{\hyperlink{structhas__reverse__iterator}{has\+\_\+reverse\+\_\+iterator}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a4dec3d336af238ea419988fe6833c691}{has\+\_\+const\+\_\+reverse\+\_\+iterator\+\_\+v}} = \doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\+\_\+const\+\_\+reverse\+\_\+iterator}}$<$T$>$::\+value
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{type__traits_8hxx_a800b9b4afee8556c3b43e3b539f8f23b}{is\+\_\+serializable\+\_\+v}} = \doxymbox{\hyperlink{structis__serializable}{is\+\_\+serializable}}$<$T$>$::\+value
+\end{DoxyCompactItemize}
+
+
+\label{type__traits_8hxx_doc-typedef-members}
+\Hypertarget{type__traits_8hxx_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{type__traits_8hxx_ad11e96cd250df03678cb81c91ccd02cf}\index{type\_traits.hxx@{type\_traits.hxx}!remove\_all\_t@{remove\_all\_t}}
+\index{remove\_all\_t@{remove\_all\_t}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{remove\_all\_t}{remove\_all\_t}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ad11e96cd250df03678cb81c91ccd02cf} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{type__traits_8hxx_ad11e96cd250df03678cb81c91ccd02cf}{remove\+\_\+all\+\_\+t}} = typename \doxymbox{\hyperlink{structremove__all}{remove\+\_\+all}}$<$T$>$::\+type}
+
+\Hypertarget{type__traits_8hxx_ab6f21e89e6310096cdccc92d6b953eb0}\index{type\_traits.hxx@{type\_traits.hxx}!remove\_const\_reference\_t@{remove\_const\_reference\_t}}
+\index{remove\_const\_reference\_t@{remove\_const\_reference\_t}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{remove\_const\_reference\_t}{remove\_const\_reference\_t}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ab6f21e89e6310096cdccc92d6b953eb0} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{type__traits_8hxx_ab6f21e89e6310096cdccc92d6b953eb0}{remove\+\_\+const\+\_\+reference\+\_\+t}} = typename \doxymbox{\hyperlink{structremove__const__reference}{remove\+\_\+const\+\_\+reference}}$<$T$>$::\+type}
+
+
+
+\label{type__traits_8hxx_doc-enum-members}
+\Hypertarget{type__traits_8hxx_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}\index{type\_traits.hxx@{type\_traits.hxx}!TypeTriviality@{TypeTriviality}}
+\index{TypeTriviality@{TypeTriviality}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{TypeTriviality}{TypeTriviality}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3} 
+enum struct \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}{Type\+Triviality}} :\+ \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Trivial@{\_Trivial}!type\_traits.hxx@{type\_traits.hxx}}
+\index{type\_traits.hxx@{type\_traits.hxx}!\_Trivial@{\_Trivial}}
+}\Hypertarget{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}\label{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748} 
+\+\_\+\+Trivial&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_NotTrivial@{\_NotTrivial}!type\_traits.hxx@{type\_traits.hxx}}
+\index{type\_traits.hxx@{type\_traits.hxx}!\_NotTrivial@{\_NotTrivial}}
+}\Hypertarget{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}\label{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96} 
+\+\_\+\+Not\+Trivial&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{type__traits_8hxx_doc-func-members}
+\Hypertarget{type__traits_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{type__traits_8hxx_abcbbc956c59dcf9b48a9ee60459266bd}\index{type\_traits.hxx@{type\_traits.hxx}!forward\_to@{forward\_to}}
+\index{forward\_to@{forward\_to}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{forward\_to()}{forward\_to()}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_abcbbc956c59dcf9b48a9ee60459266bd} 
+template$<$class To, class From$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} To forward\+\_\+to (\begin{DoxyParamCaption}\item[{std::\+conditional\+\_\+t$<$ std::\+is\+\_\+reference$<$ From $>$::\+value, From, std::\+conditional\+\_\+t$<$ std::\+is\+\_\+rvalue\+\_\+reference$<$ From $>$::\+value, From, From \& $>$ $>$}]{from\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{type__traits_8hxx_ae419ed09a07b39aebafdd5ec7a3712cd}\index{type\_traits.hxx@{type\_traits.hxx}!polymorphic\_cast@{polymorphic\_cast}}
+\index{polymorphic\_cast@{polymorphic\_cast}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{polymorphic\_cast()}{polymorphic\_cast()}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ae419ed09a07b39aebafdd5ec7a3712cd} 
+template$<$class To, class From$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} To polymorphic\+\_\+cast (\begin{DoxyParamCaption}\item[{From}]{from\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+\label{type__traits_8hxx_doc-var-members}
+\Hypertarget{type__traits_8hxx_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{type__traits_8hxx_a421646c76504c844c9d6dfecd427ebf6}\index{type\_traits.hxx@{type\_traits.hxx}!has\_allocator\_type\_v@{has\_allocator\_type\_v}}
+\index{has\_allocator\_type\_v@{has\_allocator\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_allocator\_type\_v}{has\_allocator\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a421646c76504c844c9d6dfecd427ebf6} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+allocator\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__allocator__type}{has\+\_\+allocator\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a7e0346b85f02eed521f560aeeebace91}\index{type\_traits.hxx@{type\_traits.hxx}!has\_base\_type\_v@{has\_base\_type\_v}}
+\index{has\_base\_type\_v@{has\_base\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_base\_type\_v}{has\_base\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a7e0346b85f02eed521f560aeeebace91} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+base\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__base__type}{has\+\_\+base\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a9e5df6162d54702140ee702048ffcece}\index{type\_traits.hxx@{type\_traits.hxx}!has\_const\_iterator\_v@{has\_const\_iterator\_v}}
+\index{has\_const\_iterator\_v@{has\_const\_iterator\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_const\_iterator\_v}{has\_const\_iterator\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a9e5df6162d54702140ee702048ffcece} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+const\+\_\+iterator\+\_\+v = \doxymbox{\hyperlink{structhas__const__iterator}{has\+\_\+const\+\_\+iterator}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a46296f915fc4311aedefcb0c653983ac}\index{type\_traits.hxx@{type\_traits.hxx}!has\_const\_pointer\_v@{has\_const\_pointer\_v}}
+\index{has\_const\_pointer\_v@{has\_const\_pointer\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_const\_pointer\_v}{has\_const\_pointer\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a46296f915fc4311aedefcb0c653983ac} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+const\+\_\+pointer\+\_\+v = \doxymbox{\hyperlink{structhas__const__pointer}{has\+\_\+const\+\_\+pointer}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a29e7085ebff1707aa23ac69879d855f3}\index{type\_traits.hxx@{type\_traits.hxx}!has\_const\_reference\_v@{has\_const\_reference\_v}}
+\index{has\_const\_reference\_v@{has\_const\_reference\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_const\_reference\_v}{has\_const\_reference\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a29e7085ebff1707aa23ac69879d855f3} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+const\+\_\+reference\+\_\+v = \doxymbox{\hyperlink{structhas__const__reference}{has\+\_\+const\+\_\+reference}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a4dec3d336af238ea419988fe6833c691}\index{type\_traits.hxx@{type\_traits.hxx}!has\_const\_reverse\_iterator\_v@{has\_const\_reverse\_iterator\_v}}
+\index{has\_const\_reverse\_iterator\_v@{has\_const\_reverse\_iterator\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_const\_reverse\_iterator\_v}{has\_const\_reverse\_iterator\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a4dec3d336af238ea419988fe6833c691} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+const\+\_\+reverse\+\_\+iterator\+\_\+v = \doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\+\_\+const\+\_\+reverse\+\_\+iterator}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a14eff3c9c34b2065f866d8b0493c70ed}\index{type\_traits.hxx@{type\_traits.hxx}!has\_difference\_type\_v@{has\_difference\_type\_v}}
+\index{has\_difference\_type\_v@{has\_difference\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_difference\_type\_v}{has\_difference\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a14eff3c9c34b2065f866d8b0493c70ed} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+difference\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__difference__type}{has\+\_\+difference\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a1522c8830ec014ea54bef9f9d2612e52}\index{type\_traits.hxx@{type\_traits.hxx}!has\_element\_type\_v@{has\_element\_type\_v}}
+\index{has\_element\_type\_v@{has\_element\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_element\_type\_v}{has\_element\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a1522c8830ec014ea54bef9f9d2612e52} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+element\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__element__type}{has\+\_\+element\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_ac0252fe47419b72db2fc0df6fb6131c0}\index{type\_traits.hxx@{type\_traits.hxx}!has\_iterator\_v@{has\_iterator\_v}}
+\index{has\_iterator\_v@{has\_iterator\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_iterator\_v}{has\_iterator\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ac0252fe47419b72db2fc0df6fb6131c0} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+iterator\+\_\+v = \doxymbox{\hyperlink{structhas__iterator}{has\+\_\+iterator}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a062ac4ddbc711888f879a319fecc6e69}\index{type\_traits.hxx@{type\_traits.hxx}!has\_pointer\_v@{has\_pointer\_v}}
+\index{has\_pointer\_v@{has\_pointer\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_pointer\_v}{has\_pointer\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a062ac4ddbc711888f879a319fecc6e69} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+pointer\+\_\+v = \doxymbox{\hyperlink{structhas__pointer}{has\+\_\+pointer}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_ac7de6459dbb2b8250fec1659cb12093b}\index{type\_traits.hxx@{type\_traits.hxx}!has\_reference\_v@{has\_reference\_v}}
+\index{has\_reference\_v@{has\_reference\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_reference\_v}{has\_reference\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ac7de6459dbb2b8250fec1659cb12093b} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+reference\+\_\+v = \doxymbox{\hyperlink{structhas__reference}{has\+\_\+reference}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a2b977616d783965c629e467263f24988}\index{type\_traits.hxx@{type\_traits.hxx}!has\_reverse\_iterator\_v@{has\_reverse\_iterator\_v}}
+\index{has\_reverse\_iterator\_v@{has\_reverse\_iterator\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_reverse\_iterator\_v}{has\_reverse\_iterator\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a2b977616d783965c629e467263f24988} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+reverse\+\_\+iterator\+\_\+v = \doxymbox{\hyperlink{structhas__reverse__iterator}{has\+\_\+reverse\+\_\+iterator}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_acfe411a844caa5a6527b9e6635bd193e}\index{type\_traits.hxx@{type\_traits.hxx}!has\_size\_type\_v@{has\_size\_type\_v}}
+\index{has\_size\_type\_v@{has\_size\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_size\_type\_v}{has\_size\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_acfe411a844caa5a6527b9e6635bd193e} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+size\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__size__type}{has\+\_\+size\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a9a9b1dd9d0deb576a02142270611c2d1}\index{type\_traits.hxx@{type\_traits.hxx}!has\_traits\_type\_v@{has\_traits\_type\_v}}
+\index{has\_traits\_type\_v@{has\_traits\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_traits\_type\_v}{has\_traits\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a9a9b1dd9d0deb576a02142270611c2d1} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+traits\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__traits__type}{has\+\_\+traits\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a98b37e70bc905247482ff8aacaf87057}\index{type\_traits.hxx@{type\_traits.hxx}!has\_value\_type\_v@{has\_value\_type\_v}}
+\index{has\_value\_type\_v@{has\_value\_type\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{has\_value\_type\_v}{has\_value\_type\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a98b37e70bc905247482ff8aacaf87057} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool has\+\_\+value\+\_\+type\+\_\+v = \doxymbox{\hyperlink{structhas__value__type}{has\+\_\+value\+\_\+type}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a7bd0b59e7bcebeee8db0707ca710c080}\index{type\_traits.hxx@{type\_traits.hxx}!is\_array\_v@{is\_array\_v}}
+\index{is\_array\_v@{is\_array\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_array\_v}{is\_array\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a7bd0b59e7bcebeee8db0707ca710c080} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+array\+\_\+v = \doxymbox{\hyperlink{structis__array}{is\+\_\+array}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a343a2b20d4fa6f049c7064d95f2a0a10}\index{type\_traits.hxx@{type\_traits.hxx}!is\_boolean\_v@{is\_boolean\_v}}
+\index{is\_boolean\_v@{is\_boolean\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_boolean\_v}{is\_boolean\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a343a2b20d4fa6f049c7064d95f2a0a10} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+boolean\+\_\+v = \doxymbox{\hyperlink{structis__boolean}{is\+\_\+boolean}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a3716b51b7b45f4e971c7f792417ffb72}\index{type\_traits.hxx@{type\_traits.hxx}!is\_char\_v@{is\_char\_v}}
+\index{is\_char\_v@{is\_char\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_char\_v}{is\_char\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a3716b51b7b45f4e971c7f792417ffb72} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+char\+\_\+v = \doxymbox{\hyperlink{structis__char}{is\+\_\+char}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a54ee27e27c1c97a13f1c046b09783a27}\index{type\_traits.hxx@{type\_traits.hxx}!is\_const\_reference\_v@{is\_const\_reference\_v}}
+\index{is\_const\_reference\_v@{is\_const\_reference\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_const\_reference\_v}{is\_const\_reference\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a54ee27e27c1c97a13f1c046b09783a27} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+const\+\_\+reference\+\_\+v = \doxymbox{\hyperlink{structis__const__reference}{is\+\_\+const\+\_\+reference}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a703f5c47a8e99b7c3e3f1dcc8d44bc3e}\index{type\_traits.hxx@{type\_traits.hxx}!is\_constant\_string\_v@{is\_constant\_string\_v}}
+\index{is\_constant\_string\_v@{is\_constant\_string\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_constant\_string\_v}{is\_constant\_string\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a703f5c47a8e99b7c3e3f1dcc8d44bc3e} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+constant\+\_\+string\+\_\+v = \doxymbox{\hyperlink{structis__constant__string}{is\+\_\+constant\+\_\+string}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a85f284b7a79d4d1a9a97dd3e32182a9a}\index{type\_traits.hxx@{type\_traits.hxx}!is\_function\_v@{is\_function\_v}}
+\index{is\_function\_v@{is\_function\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_function\_v}{is\_function\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a85f284b7a79d4d1a9a97dd3e32182a9a} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+function\+\_\+v = \doxymbox{\hyperlink{structis__function}{is\+\_\+function}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_ad163d51ce9df3b5bed1f522cfaabedae}\index{type\_traits.hxx@{type\_traits.hxx}!is\_numeric\_v@{is\_numeric\_v}}
+\index{is\_numeric\_v@{is\_numeric\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_numeric\_v}{is\_numeric\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ad163d51ce9df3b5bed1f522cfaabedae} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+numeric\+\_\+v = \doxymbox{\hyperlink{structis__numeric}{is\+\_\+numeric}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_ae11e0caa7a8eded6c63b56fa9d6ca624}\index{type\_traits.hxx@{type\_traits.hxx}!is\_pmr\_string\_v@{is\_pmr\_string\_v}}
+\index{is\_pmr\_string\_v@{is\_pmr\_string\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_pmr\_string\_v}{is\_pmr\_string\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ae11e0caa7a8eded6c63b56fa9d6ca624} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+pmr\+\_\+string\+\_\+v = \doxymbox{\hyperlink{structis__pmr__string}{is\+\_\+pmr\+\_\+string}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a95acc9eea6dd266b933bdb9cd324fd03}\index{type\_traits.hxx@{type\_traits.hxx}!is\_pmr\_vector\_v@{is\_pmr\_vector\_v}}
+\index{is\_pmr\_vector\_v@{is\_pmr\_vector\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_pmr\_vector\_v}{is\_pmr\_vector\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a95acc9eea6dd266b933bdb9cd324fd03} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+pmr\+\_\+vector\+\_\+v = \doxymbox{\hyperlink{structis__pmr__vector}{is\+\_\+pmr\+\_\+vector}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a06f950eb64173cecd0acf73ae0cbdac2}\index{type\_traits.hxx@{type\_traits.hxx}!is\_primitive\_v@{is\_primitive\_v}}
+\index{is\_primitive\_v@{is\_primitive\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_primitive\_v}{is\_primitive\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a06f950eb64173cecd0acf73ae0cbdac2} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+primitive\+\_\+v = \doxymbox{\hyperlink{structis__primitive}{is\+\_\+primitive}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_ad8770547e378112eaa2f83a299402ba6}\index{type\_traits.hxx@{type\_traits.hxx}!is\_scalable\_array\_v@{is\_scalable\_array\_v}}
+\index{is\_scalable\_array\_v@{is\_scalable\_array\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_scalable\_array\_v}{is\_scalable\_array\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_ad8770547e378112eaa2f83a299402ba6} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+scalable\+\_\+array\+\_\+v = \doxymbox{\hyperlink{structis__scalable__array}{is\+\_\+scalable\+\_\+array}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a800b9b4afee8556c3b43e3b539f8f23b}\index{type\_traits.hxx@{type\_traits.hxx}!is\_serializable\_v@{is\_serializable\_v}}
+\index{is\_serializable\_v@{is\_serializable\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_serializable\_v}{is\_serializable\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a800b9b4afee8556c3b43e3b539f8f23b} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+serializable\+\_\+v = \doxymbox{\hyperlink{structis__serializable}{is\+\_\+serializable}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a7a51d83060442fbbffa2c2fd304ca3a4}\index{type\_traits.hxx@{type\_traits.hxx}!is\_std\_array\_v@{is\_std\_array\_v}}
+\index{is\_std\_array\_v@{is\_std\_array\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_std\_array\_v}{is\_std\_array\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a7a51d83060442fbbffa2c2fd304ca3a4} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+std\+\_\+array\+\_\+v = \doxymbox{\hyperlink{structis__std__array}{is\+\_\+std\+\_\+array}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a8c698ea6fe4f0db61494eacd09123f2a}\index{type\_traits.hxx@{type\_traits.hxx}!is\_std\_string\_v@{is\_std\_string\_v}}
+\index{is\_std\_string\_v@{is\_std\_string\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_std\_string\_v}{is\_std\_string\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a8c698ea6fe4f0db61494eacd09123f2a} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+std\+\_\+string\+\_\+v = \doxymbox{\hyperlink{structis__std__string}{is\+\_\+std\+\_\+string}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a269d3fcf2dd72f8c36c30b4389e288f5}\index{type\_traits.hxx@{type\_traits.hxx}!is\_std\_string\_view\_v@{is\_std\_string\_view\_v}}
+\index{is\_std\_string\_view\_v@{is\_std\_string\_view\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_std\_string\_view\_v}{is\_std\_string\_view\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a269d3fcf2dd72f8c36c30b4389e288f5} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+std\+\_\+string\+\_\+view\+\_\+v = \doxymbox{\hyperlink{structis__std__string__view}{is\+\_\+std\+\_\+string\+\_\+view}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a95f0e4c8909de6d10fc1a2b3fb7bd58f}\index{type\_traits.hxx@{type\_traits.hxx}!is\_std\_vector\_v@{is\_std\_vector\_v}}
+\index{is\_std\_vector\_v@{is\_std\_vector\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_std\_vector\_v}{is\_std\_vector\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a95f0e4c8909de6d10fc1a2b3fb7bd58f} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+std\+\_\+vector\+\_\+v = \doxymbox{\hyperlink{structis__std__vector}{is\+\_\+std\+\_\+vector}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a9e858273c13bf0bbc5358761cf095bdd}\index{type\_traits.hxx@{type\_traits.hxx}!is\_string\_class\_v@{is\_string\_class\_v}}
+\index{is\_string\_class\_v@{is\_string\_class\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_string\_class\_v}{is\_string\_class\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a9e858273c13bf0bbc5358761cf095bdd} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+string\+\_\+class\+\_\+v = \doxymbox{\hyperlink{structis__string__class}{is\+\_\+string\+\_\+class}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{type__traits_8hxx_a6da0bd64afea76a51d572589c5bcb6e7}\index{type\_traits.hxx@{type\_traits.hxx}!is\_trivial\_v@{is\_trivial\_v}}
+\index{is\_trivial\_v@{is\_trivial\_v}!type\_traits.hxx@{type\_traits.hxx}}
+\doxysubsubsection{\texorpdfstring{is\_trivial\_v}{is\_trivial\_v}}
+{\footnotesize\ttfamily \label{type__traits_8hxx_a6da0bd64afea76a51d572589c5bcb6e7} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool is\+\_\+trivial\+\_\+v = \doxymbox{\hyperlink{structis__trivial}{is\+\_\+trivial}}$<$T$>$::\+value\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+

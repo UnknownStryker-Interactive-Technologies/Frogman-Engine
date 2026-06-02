@@ -1,0 +1,9 @@
+<map id="fqueue::fqueue" name="fqueue::fqueue">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,113,107"/>
+<area shape="rect" id="Node000002" href="$classfqueue.html#acc753042b2b22035e64908e4fa0bacf0" title=" " alt="" coords="161,5,306,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,77,164,52,160,56,98,82"/>
+<area shape="rect" id="Node000003" href="$classfqueue.html#ab7c810e62ebe3fc82c5d7c5a4d3d1830" title=" " alt="" coords="162,72,305,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,91,149,92,144,94,114,96"/>
+<area shape="rect" id="Node000004" href="$classfqueue.html#acf155b9d68580c5d930124f864ef1cfc" title=" " alt="" coords="180,139,287,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="101,105,180,132,175,135,101,110"/>
+</map>

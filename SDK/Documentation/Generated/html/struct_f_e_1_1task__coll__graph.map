@@ -1,0 +1,9 @@
+<map id="FE::task" name="FE::task">
+<area shape="rect" id="Node000001" title=" " alt="" coords="192,104,264,131"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,139,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,38,166,78,208,104,203,104,163,82,102,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="163,5,293,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,46,230,105,226,102,226,50"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="316,5,406,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="347,44,332,65,314,82,290,97,265,107,263,102,287,92,310,78,328,61,343,46"/>
+</map>

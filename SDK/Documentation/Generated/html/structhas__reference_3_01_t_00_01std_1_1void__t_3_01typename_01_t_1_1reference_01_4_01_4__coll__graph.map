@@ -1,0 +1,10 @@
+<map id="has_reference&lt; T, std::void_t&lt; typename T::reference &gt; &gt;" name="has_reference&lt; T, std::void_t&lt; typename T::reference &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="100,201,247,260"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,45,63,77,71,107,85,134,103,158,143,201,137,202,99,162,81,136,66,109,57,78,57,50"/>
+<area shape="rect" id="Node000004" href="$structhas__reference.html" title=" " alt="" coords="80,81,278,108"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="92,38,161,80,156,82,92,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="307,81,408,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="360,121,356,152,341,179,321,196,298,209,249,225,247,220,296,204,318,192,337,176,351,150,356,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,121,178,132,176,202,171,200,172,132,174,126"/>
+</map>

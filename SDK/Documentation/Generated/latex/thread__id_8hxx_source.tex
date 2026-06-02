@@ -1,0 +1,56 @@
+\doxysection{thread\+\_\+id.\+hxx}
+\hypertarget{thread__id_8hxx_source}{}\label{thread__id_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/thread\_id.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/thread\_id.hxx}}
+\doxymbox{\hyperlink{thread__id_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_FRAMEWORK\_THREAD\_ID\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_FRAMEWORK\_THREAD\_ID\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{clock_8hxx}{FE/clock.hxx}}>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ std::shared\_ptr}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ std::pmr::synchronized\_pool\_resource}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <memory\_resource>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ std::mutex,\ std::lock\_guard}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ std::thread}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <taskflow.hpp>}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ boost::function}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <boost/function.hpp>}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{synchronized__access_8hxx}{FE/synchronized\_access.hxx}}>}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::framework)}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ \doxymbox{\hyperlink{thread__id_8hxx_aab082825ed29673e547fc64f8d2f2fdd}{get\_current\_thread\_id}}()\ noexcept;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

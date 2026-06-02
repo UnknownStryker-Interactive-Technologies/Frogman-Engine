@@ -1,0 +1,810 @@
+\doxysection{fqueue\texorpdfstring{$<$}{<} T, Capacity, Traits \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classfqueue}{}\label{classfqueue}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+
+
+{\ttfamily \+\#include $<$fqueue.\+hxx$>$}
+
+
+
+Collaboration diagram for fqueue\texorpdfstring{$<$}{<} T, Capacity, Traits \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classfqueue__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} = T
+\item 
+using \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}}
+\item 
+using \doxymbox{\hyperlink{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}{reference}} = T\&
+\item 
+using \doxymbox{\hyperlink{classfqueue_a777ca1242f393de906273a39ce865aa0}{const\+\_\+reference}} = const T\&
+\item 
+using \doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} = T\texorpdfstring{$\ast$}{*}
+\item 
+using \doxymbox{\hyperlink{classfqueue_a2a356b89b56ec2124060bdb087a657b4}{const\+\_\+pointer}} = const T\texorpdfstring{$\ast$}{*}
+\item 
+using \doxymbox{\hyperlink{classfqueue_a9883c4a85bd2218dceb01f073811d191}{const\+\_\+iterator}} = FE::\+const\+\_\+iterator$<$FE::\+contiguous\+\_\+iterator$<$T$>$$>$
+\item 
+using \doxymbox{\hyperlink{classfqueue_ab65feaed6e11d522389f457c06b72064}{const\+\_\+reverse\+\_\+iterator}} = FE::\+const\+\_\+reverse\+\_\+iterator$<$FE::\+contiguous\+\_\+iterator$<$T$>$$>$
+\item 
+using \doxymbox{\hyperlink{classfqueue_a77d5a663177827a70fc7e49112421428}{difference\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue}} () noexcept
+\item 
+\doxymbox{\hyperlink{classfqueue_ac9313539cd188be47647031895fe231a}{\texorpdfstring{$\sim$}{\string~}fqueue}} () noexcept
+\item 
+\doxymbox{\hyperlink{classfqueue_ac2859c597e616e0d57126a277cc3fcf9}{fqueue}} (std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} $>$ \&\&initializer\+\_\+list\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Input\+Iterator$>$ }\\\doxymbox{\hyperlink{classfqueue_a38ee88b0019467cd338e21efba051be0}{fqueue}} (Input\+Iterator begin\+\_\+p, Input\+Iterator end\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue}} (const \doxymbox{\hyperlink{classfqueue}{fqueue}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue}} (\doxymbox{\hyperlink{classfqueue}{fqueue}} \&\&rvalue\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue_a556411f9d6fde74002414f6ae9e7d137}{operator=}} (std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} $>$ \&\&initializer\+\_\+list\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue_a8642b05e67f47d9b4c3a02b68338d972}{operator=}} (const \doxymbox{\hyperlink{classfqueue}{fqueue}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue_ada08755cd0bb4a230053dbc3e82c483c}{operator=}} (\doxymbox{\hyperlink{classfqueue}{fqueue}} \&\&rvalue\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Arguments$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push}} (Arguments \&\&... value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} \doxymbox{\hyperlink{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}{pop}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a777ca1242f393de906273a39ce865aa0}{const\+\_\+reference}} \doxymbox{\hyperlink{classfqueue_acfc2043994aaf529d04a2fd4d3cb3430}{front}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a777ca1242f393de906273a39ce865aa0}{const\+\_\+reference}} \doxymbox{\hyperlink{classfqueue_aeab156da64e4cdc3c33da86ee43f7d34}{back}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}{reference}} \doxymbox{\hyperlink{classfqueue_a86b3cbee865f7b95a71fbb0d1e6f58b3}{front}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}{reference}} \doxymbox{\hyperlink{classfqueue_ad4862f199e1da1a5b10672d600133c7b}{back}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77}{is\+\_\+empty}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue_a79496412cb847f2b3cd1e001159086a9}{count}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue_a310dd49cc26d41009edbe69566f9104f}{max\+\_\+size}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue_a7eba15261f7708022839fb8ab845fd35}{capacity}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a9883c4a85bd2218dceb01f073811d191}{const\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue_a5051e8f8931254235e268856292186dd}{cbegin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a9883c4a85bd2218dceb01f073811d191}{const\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue_aa30fcbe3808f5fe5779576527597d14d}{cend}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_ab65feaed6e11d522389f457c06b72064}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue_ab44e20378317417b5b1cabfac08a40b0}{crbegin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_ab65feaed6e11d522389f457c06b72064}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue_aa313a7117867de4d25a6909e7b959932}{crend}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_acd219e7f44f0d48063c9fafe17ea76c8}{swap}} (\doxymbox{\hyperlink{classfqueue}{fqueue}} \&in\+\_\+out\+\_\+other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue_a774449412b9d3d14df2acf321a7f6a89}{operator==}} (\doxymbox{\hyperlink{classfqueue}{fqueue}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue_abd9f2b939de9c202503ff75113ced7e1}{operator!=}} (\doxymbox{\hyperlink{classfqueue}{fqueue}} \&other\+\_\+p) const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830}{\+\_\+\+\_\+jump\+\_\+front\+\_\+pointer}} (\doxymbox{\hyperlink{classfqueue_a77d5a663177827a70fc7e49112421428}{difference\+\_\+type}} ptrdiff\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_a7d8863586d06ee200d2fd9a752174a14}{\+\_\+\+\_\+set\+\_\+front\+\_\+pointer\+\_\+to\+\_\+zero}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_acc753042b2b22035e64908e4fa0bacf0}{\+\_\+\+\_\+jump\+\_\+back\+\_\+pointer}} (\doxymbox{\hyperlink{classfqueue_a77d5a663177827a70fc7e49112421428}{difference\+\_\+type}} ptrdiff\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue_a7c60068edb6616502032d96a7895793b}{\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}} \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}} \+[sizeof(\doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}}) \texorpdfstring{$\ast$}{*}Capacity]\+
+\item 
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}
+\item 
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}
+\item 
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} const \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}
+\item 
+\doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}
+\end{DoxyCompactItemize}
+
+
+\label{classfqueue_doc-typedef-members}
+\Hypertarget{classfqueue_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classfqueue_a9883c4a85bd2218dceb01f073811d191}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!const\_iterator@{const\_iterator}}
+\index{const\_iterator@{const\_iterator}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{const\_iterator}{const\_iterator}}
+{\footnotesize\ttfamily \label{classfqueue_a9883c4a85bd2218dceb01f073811d191} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+const\+\_\+iterator = FE::\+const\+\_\+iterator$<$FE::\+contiguous\+\_\+iterator$<$T$>$$>$}
+
+\Hypertarget{classfqueue_a2a356b89b56ec2124060bdb087a657b4}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classfqueue_a2a356b89b56ec2124060bdb087a657b4} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+const\+\_\+pointer = const T\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classfqueue_a777ca1242f393de906273a39ce865aa0}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classfqueue_a777ca1242f393de906273a39ce865aa0} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+const\+\_\+reference = const T\&}
+
+\Hypertarget{classfqueue_ab65feaed6e11d522389f457c06b72064}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!const\_reverse\_iterator@{const\_reverse\_iterator}}
+\index{const\_reverse\_iterator@{const\_reverse\_iterator}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reverse\_iterator}{const\_reverse\_iterator}}
+{\footnotesize\ttfamily \label{classfqueue_ab65feaed6e11d522389f457c06b72064} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+const\+\_\+reverse\+\_\+iterator = FE::\+const\+\_\+reverse\+\_\+iterator$<$FE::\+contiguous\+\_\+iterator$<$T$>$$>$}
+
+\Hypertarget{classfqueue_a77d5a663177827a70fc7e49112421428}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classfqueue_a77d5a663177827a70fc7e49112421428} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+difference\+\_\+type = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}}
+
+\Hypertarget{classfqueue_aa46bb7999910f641388357ad5a2e8024}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!pointer@{pointer}}
+\index{pointer@{pointer}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classfqueue_aa46bb7999910f641388357ad5a2e8024} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+pointer = T\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!reference@{reference}}
+\index{reference@{reference}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+reference = T\&}
+
+\Hypertarget{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!size\_type@{size\_type}}
+\index{size\_type@{size\_type}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{size\_type}{size\_type}}
+{\footnotesize\ttfamily \label{classfqueue_a1204e17e2ed31261d904305d9cadc3fc} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+size\+\_\+type = \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}}}
+
+\Hypertarget{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+value\+\_\+type = T}
+
+
+
+\label{classfqueue_doc-constructors}
+\Hypertarget{classfqueue_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classfqueue_acf155b9d68580c5d930124f864ef1cfc}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!fqueue@{fqueue}}
+\index{fqueue@{fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{fqueue()}{fqueue()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily \label{classfqueue_acf155b9d68580c5d930124f864ef1cfc} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+fqueue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}}, and \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_abd9f2b939de9c202503ff75113ced7e1}{operator!=()}}, \doxymbox{\hyperlink{classfqueue_a8642b05e67f47d9b4c3a02b68338d972}{operator=()}}, \doxymbox{\hyperlink{classfqueue_ada08755cd0bb4a230053dbc3e82c483c}{operator=()}}, \doxymbox{\hyperlink{classfqueue_a556411f9d6fde74002414f6ae9e7d137}{operator=()}}, \doxymbox{\hyperlink{classfqueue_a774449412b9d3d14df2acf321a7f6a89}{operator==()}}, and \doxymbox{\hyperlink{classfqueue_acd219e7f44f0d48063c9fafe17ea76c8}{swap()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{classfqueue_acf155b9d68580c5d930124f864ef1cfc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_ac9313539cd188be47647031895fe231a}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!````~fqueue@{\texorpdfstring{$\sim$}{\string~}fqueue}}
+\index{````~fqueue@{\texorpdfstring{$\sim$}{\string~}fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}fqueue()}{\string~fqueue()}}
+{\footnotesize\ttfamily \label{classfqueue_ac9313539cd188be47647031895fe231a} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classfqueue}{fqueue}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a8642b05e67f47d9b4c3a02b68338d972}{operator=()}}, \doxymbox{\hyperlink{classfqueue_ada08755cd0bb4a230053dbc3e82c483c}{operator=()}}, and \doxymbox{\hyperlink{classfqueue_a556411f9d6fde74002414f6ae9e7d137}{operator=()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_ac9313539cd188be47647031895fe231a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{classfqueue_ac9313539cd188be47647031895fe231a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_ac2859c597e616e0d57126a277cc3fcf9}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!fqueue@{fqueue}}
+\index{fqueue@{fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{fqueue()}{fqueue()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily \label{classfqueue_ac2859c597e616e0d57126a277cc3fcf9} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+fqueue (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} $>$ \&\&}]{initializer\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5bde699953c26849a7bbcd897944b106}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Size}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classfqueue_a38ee88b0019467cd338e21efba051be0}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!fqueue@{fqueue}}
+\index{fqueue@{fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{fqueue()}{fqueue()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily \label{classfqueue_a38ee88b0019467cd338e21efba051be0} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+template$<$class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+fqueue (\begin{DoxyParamCaption}\item[{Input\+Iterator}]{begin\+\_\+p}{, }\item[{Input\+Iterator}]{end\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fab31b16853b91205040026097886c5e1e}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Buffer\+Overflow}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fac9d147f7f4f6fb7cfc61edd6a16554bc}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Iterator}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+\Hypertarget{classfqueue_a5ee87cf71588b4cb017778f661c2a921}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!fqueue@{fqueue}}
+\index{fqueue@{fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{fqueue()}{fqueue()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily \label{classfqueue_a5ee87cf71588b4cb017778f661c2a921} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+fqueue (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_acc753042b2b22035e64908e4fa0bacf0}{\+\_\+\+\_\+jump\+\_\+back\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830}{\+\_\+\+\_\+jump\+\_\+front\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, and \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classfqueue_a5ee87cf71588b4cb017778f661c2a921_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!fqueue@{fqueue}}
+\index{fqueue@{fqueue}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{fqueue()}{fqueue()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily \label{classfqueue_a96f220c7564ff953d01ddcb210e0e64d} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+fqueue (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&\&}]{rvalue\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_acc753042b2b22035e64908e4fa0bacf0}{\+\_\+\+\_\+jump\+\_\+back\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830}{\+\_\+\+\_\+jump\+\_\+front\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, and \doxymbox{\hyperlink{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}{m\+\_\+memory}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classfqueue_a96f220c7564ff953d01ddcb210e0e64d_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classfqueue_doc-func-members}
+\Hypertarget{classfqueue_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classfqueue_acc753042b2b22035e64908e4fa0bacf0}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!\_\_jump\_back\_pointer@{\_\_jump\_back\_pointer}}
+\index{\_\_jump\_back\_pointer@{\_\_jump\_back\_pointer}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_jump\_back\_pointer()}{\_\_jump\_back\_pointer()}}
+{\footnotesize\ttfamily \label{classfqueue_acc753042b2b22035e64908e4fa0bacf0} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+\+\_\+\+\_\+jump\+\_\+back\+\_\+pointer (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue_a77d5a663177827a70fc7e49112421428}{difference\+\_\+type}}}]{ptrdiff\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [protected]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue()}}, and \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classfqueue_acc753042b2b22035e64908e4fa0bacf0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!\_\_jump\_front\_pointer@{\_\_jump\_front\_pointer}}
+\index{\_\_jump\_front\_pointer@{\_\_jump\_front\_pointer}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_jump\_front\_pointer()}{\_\_jump\_front\_pointer()}}
+{\footnotesize\ttfamily \label{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+\+\_\+\+\_\+jump\+\_\+front\+\_\+pointer (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue_a77d5a663177827a70fc7e49112421428}{difference\+\_\+type}}}]{ptrdiff\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [protected]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue()}}, and \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=304pt]{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a7c60068edb6616502032d96a7895793b}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!\_\_set\_back\_pointer\_to\_zero@{\_\_set\_back\_pointer\_to\_zero}}
+\index{\_\_set\_back\_pointer\_to\_zero@{\_\_set\_back\_pointer\_to\_zero}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_set\_back\_pointer\_to\_zero()}{\_\_set\_back\_pointer\_to\_zero()}}
+{\footnotesize\ttfamily \label{classfqueue_a7c60068edb6616502032d96a7895793b} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [protected]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}, and \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}, and \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_a7c60068edb6616502032d96a7895793b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a7d8863586d06ee200d2fd9a752174a14}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!\_\_set\_front\_pointer\_to\_zero@{\_\_set\_front\_pointer\_to\_zero}}
+\index{\_\_set\_front\_pointer\_to\_zero@{\_\_set\_front\_pointer\_to\_zero}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_set\_front\_pointer\_to\_zero()}{\_\_set\_front\_pointer\_to\_zero()}}
+{\footnotesize\ttfamily \label{classfqueue_a7d8863586d06ee200d2fd9a752174a14} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+\+\_\+\+\_\+set\+\_\+front\+\_\+pointer\+\_\+to\+\_\+zero (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [protected]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_a7d8863586d06ee200d2fd9a752174a14_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_aeab156da64e4cdc3c33da86ee43f7d34}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!back@{back}}
+\index{back@{back}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classfqueue_aeab156da64e4cdc3c33da86ee43f7d34} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a777ca1242f393de906273a39ce865aa0}{const\+\_\+reference}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+back (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_ad4862f199e1da1a5b10672d600133c7b}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!back@{back}}
+\index{back@{back}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classfqueue_ad4862f199e1da1a5b10672d600133c7b} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}{reference}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+back (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_a7eba15261f7708022839fb8ab845fd35}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!capacity@{capacity}}
+\index{capacity@{capacity}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{capacity()}{capacity()}}
+{\footnotesize\ttfamily \label{classfqueue_a7eba15261f7708022839fb8ab845fd35} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+capacity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{classfqueue_a5051e8f8931254235e268856292186dd}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!cbegin@{cbegin}}
+\index{cbegin@{cbegin}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{cbegin()}{cbegin()}}
+{\footnotesize\ttfamily \label{classfqueue_a5051e8f8931254235e268856292186dd} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a9883c4a85bd2218dceb01f073811d191}{const\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+cbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_abd9f2b939de9c202503ff75113ced7e1}{operator!=()}}, and \doxymbox{\hyperlink{classfqueue_a774449412b9d3d14df2acf321a7f6a89}{operator==()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=294pt]{classfqueue_a5051e8f8931254235e268856292186dd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_aa30fcbe3808f5fe5779576527597d14d}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!cend@{cend}}
+\index{cend@{cend}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{cend()}{cend()}}
+{\footnotesize\ttfamily \label{classfqueue_aa30fcbe3808f5fe5779576527597d14d} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a9883c4a85bd2218dceb01f073811d191}{const\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+cend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_abd9f2b939de9c202503ff75113ced7e1}{operator!=()}}, and \doxymbox{\hyperlink{classfqueue_a774449412b9d3d14df2acf321a7f6a89}{operator==()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=287pt]{classfqueue_aa30fcbe3808f5fe5779576527597d14d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a79496412cb847f2b3cd1e001159086a9}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!count@{count}}
+\index{count@{count}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{count()}{count()}}
+{\footnotesize\ttfamily \label{classfqueue_a79496412cb847f2b3cd1e001159086a9} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}.
+
+\Hypertarget{classfqueue_ab44e20378317417b5b1cabfac08a40b0}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!crbegin@{crbegin}}
+\index{crbegin@{crbegin}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{crbegin()}{crbegin()}}
+{\footnotesize\ttfamily \label{classfqueue_ab44e20378317417b5b1cabfac08a40b0} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_ab65feaed6e11d522389f457c06b72064}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+crbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_aa313a7117867de4d25a6909e7b959932}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!crend@{crend}}
+\index{crend@{crend}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{crend()}{crend()}}
+{\footnotesize\ttfamily \label{classfqueue_aa313a7117867de4d25a6909e7b959932} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_ab65feaed6e11d522389f457c06b72064}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+crend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_acfc2043994aaf529d04a2fd4d3cb3430}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!front@{front}}
+\index{front@{front}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classfqueue_acfc2043994aaf529d04a2fd4d3cb3430} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a777ca1242f393de906273a39ce865aa0}{const\+\_\+reference}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+front (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_a86b3cbee865f7b95a71fbb0d1e6f58b3}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!front@{front}}
+\index{front@{front}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classfqueue_a86b3cbee865f7b95a71fbb0d1e6f58b3} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a4d84d3df14b31b6b7d71dbec696b1feb}{reference}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+front (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}.
+
+\Hypertarget{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!is\_empty@{is\_empty}}
+\index{is\_empty@{is\_empty}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{is\_empty()}{is\_empty()}}
+{\footnotesize\ttfamily \label{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}{pop()}}, and \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a310dd49cc26d41009edbe69566f9104f}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!max\_size@{max\_size}}
+\index{max\_size@{max\_size}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{max\_size()}{max\_size()}}
+{\footnotesize\ttfamily \label{classfqueue_a310dd49cc26d41009edbe69566f9104f} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+max\+\_\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{classfqueue_abd9f2b939de9c202503ff75113ced7e1}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{classfqueue_abd9f2b939de9c202503ff75113ced7e1} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+operator!= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{classfqueue_a5051e8f8931254235e268856292186dd}{cbegin()}}, \doxymbox{\hyperlink{classfqueue_aa30fcbe3808f5fe5779576527597d14d}{cend()}}, and \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=292pt]{classfqueue_abd9f2b939de9c202503ff75113ced7e1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a8642b05e67f47d9b4c3a02b68338d972}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classfqueue_a8642b05e67f47d9b4c3a02b68338d972} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, and \doxymbox{\hyperlink{classfqueue_ac9313539cd188be47647031895fe231a}{\texorpdfstring{$\sim$}{\string~}fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_a8642b05e67f47d9b4c3a02b68338d972_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_ada08755cd0bb4a230053dbc3e82c483c}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classfqueue_ada08755cd0bb4a230053dbc3e82c483c} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&\&}]{rvalue\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, and \doxymbox{\hyperlink{classfqueue_ac9313539cd188be47647031895fe231a}{\texorpdfstring{$\sim$}{\string~}fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_ada08755cd0bb4a230053dbc3e82c483c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a556411f9d6fde74002414f6ae9e7d137}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classfqueue_a556411f9d6fde74002414f6ae9e7d137} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue}{fqueue}} \& \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+operator= (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} $>$ \&\&}]{initializer\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5bde699953c26849a7bbcd897944b106}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Size}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{classfqueue_ac9313539cd188be47647031895fe231a}{\texorpdfstring{$\sim$}{\string~}fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_a556411f9d6fde74002414f6ae9e7d137_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a774449412b9d3d14df2acf321a7f6a89}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!operator==@{operator==}}
+\index{operator==@{operator==}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{classfqueue_a774449412b9d3d14df2acf321a7f6a89} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+operator== (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{classfqueue_a5051e8f8931254235e268856292186dd}{cbegin()}}, \doxymbox{\hyperlink{classfqueue_aa30fcbe3808f5fe5779576527597d14d}{cend()}}, and \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{classfqueue_a774449412b9d3d14df2acf321a7f6a89_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!pop@{pop}}
+\index{pop@{pop}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily \label{classfqueue_a42255fac5ccbe9ea2283be8258b1419c} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+pop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=274pt]{classfqueue_a42255fac5ccbe9ea2283be8258b1419c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!pop\_all@{pop\_all}}
+\index{pop\_all@{pop\_all}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{pop\_all()}{pop\_all()}}
+{\footnotesize\ttfamily \label{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+pop\+\_\+all (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_a7c60068edb6616502032d96a7895793b}{\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{classfqueue_a7d8863586d06ee200d2fd9a752174a14}{\+\_\+\+\_\+set\+\_\+front\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}}, \doxymbox{\hyperlink{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, and \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_ac9313539cd188be47647031895fe231a}{\texorpdfstring{$\sim$}{\string~}fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=300pt]{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_ad2b953c23ebde46fda09205a09c6279e}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!push@{push}}
+\index{push@{push}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily \label{classfqueue_ad2b953c23ebde46fda09205a09c6279e} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+template$<$typename... Arguments$>$ \\
+void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+push (\begin{DoxyParamCaption}\item[{Arguments \&\&...}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classfqueue_a7c60068edb6616502032d96a7895793b}{\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{\+\_\+\+Trivial}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classfqueue_a49ef9be80f99b322d1980d786b4230b8}{m\+\_\+back\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a82c5aae953877a4cec3552e004fb2913}{m\+\_\+begin\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_a2598cf6a9794a383fc02adea177a9f99}{m\+\_\+front\+\_\+ptr}}, \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=290pt]{classfqueue_ad2b953c23ebde46fda09205a09c6279e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfqueue_a6c87117b8721a221609d12c41e3d7b87}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!size@{size}}
+\index{size@{size}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{classfqueue_a6c87117b8721a221609d12c41e3d7b87} 
+template$<$class T, size Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_aa86edfcaf419bcf741374d2ab7622707}{m\+\_\+size}}.
+
+\Hypertarget{classfqueue_acd219e7f44f0d48063c9fafe17ea76c8}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!swap@{swap}}
+\index{swap@{swap}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily \label{classfqueue_acd219e7f44f0d48063c9fafe17ea76c8} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+swap (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$ \&}]{in\+\_\+out\+\_\+other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=271pt]{classfqueue_acd219e7f44f0d48063c9fafe17ea76c8_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classfqueue_doc-variable-members}
+\Hypertarget{classfqueue_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classfqueue_a49ef9be80f99b322d1980d786b4230b8}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!m\_back\_ptr@{m\_back\_ptr}}
+\index{m\_back\_ptr@{m\_back\_ptr}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{m\_back\_ptr}{m\_back\_ptr}}
+{\footnotesize\ttfamily \label{classfqueue_a49ef9be80f99b322d1980d786b4230b8} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+m\+\_\+back\+\_\+ptr\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_acc753042b2b22035e64908e4fa0bacf0}{\+\_\+\+\_\+jump\+\_\+back\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_a7c60068edb6616502032d96a7895793b}{\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{classfqueue_aeab156da64e4cdc3c33da86ee43f7d34}{back()}}, \doxymbox{\hyperlink{classfqueue_ad4862f199e1da1a5b10672d600133c7b}{back()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}, and \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push()}}.
+
+\Hypertarget{classfqueue_a82c5aae953877a4cec3552e004fb2913}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!m\_begin\_ptr@{m\_begin\_ptr}}
+\index{m\_begin\_ptr@{m\_begin\_ptr}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{m\_begin\_ptr}{m\_begin\_ptr}}
+{\footnotesize\ttfamily \label{classfqueue_a82c5aae953877a4cec3552e004fb2913} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} const \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+m\+\_\+begin\+\_\+ptr\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a7c60068edb6616502032d96a7895793b}{\+\_\+\+\_\+set\+\_\+back\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{classfqueue_a7d8863586d06ee200d2fd9a752174a14}{\+\_\+\+\_\+set\+\_\+front\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a38ee88b0019467cd338e21efba051be0}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}{pop()}}, \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}, and \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push()}}.
+
+\Hypertarget{classfqueue_a2598cf6a9794a383fc02adea177a9f99}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!m\_front\_ptr@{m\_front\_ptr}}
+\index{m\_front\_ptr@{m\_front\_ptr}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{m\_front\_ptr}{m\_front\_ptr}}
+{\footnotesize\ttfamily \label{classfqueue_a2598cf6a9794a383fc02adea177a9f99} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue_aa46bb7999910f641388357ad5a2e8024}{pointer}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+m\+\_\+front\+\_\+ptr\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_ab7c810e62ebe3fc82c5d7c5a4d3d1830}{\+\_\+\+\_\+jump\+\_\+front\+\_\+pointer()}}, \doxymbox{\hyperlink{classfqueue_a7d8863586d06ee200d2fd9a752174a14}{\+\_\+\+\_\+set\+\_\+front\+\_\+pointer\+\_\+to\+\_\+zero()}}, \doxymbox{\hyperlink{classfqueue_a5051e8f8931254235e268856292186dd}{cbegin()}}, \doxymbox{\hyperlink{classfqueue_aa30fcbe3808f5fe5779576527597d14d}{cend()}}, \doxymbox{\hyperlink{classfqueue_ab44e20378317417b5b1cabfac08a40b0}{crbegin()}}, \doxymbox{\hyperlink{classfqueue_aa313a7117867de4d25a6909e7b959932}{crend()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a38ee88b0019467cd338e21efba051be0}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_ac2859c597e616e0d57126a277cc3fcf9}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_acfc2043994aaf529d04a2fd4d3cb3430}{front()}}, \doxymbox{\hyperlink{classfqueue_a86b3cbee865f7b95a71fbb0d1e6f58b3}{front()}}, \doxymbox{\hyperlink{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}{pop()}}, \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}, and \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push()}}.
+
+\Hypertarget{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!m\_memory@{m\_memory}}
+\index{m\_memory@{m\_memory}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{m\_memory}{m\_memory}}
+{\footnotesize\ttfamily \label{classfqueue_a0a92ceb4b4a61bb8ed67edc980233194} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+m\+\_\+memory\+[sizeof(\doxymbox{\hyperlink{classfqueue_a84cd2a43719946bd7d1947ccf6ff115e}{value\+\_\+type}}) \texorpdfstring{$\ast$}{*}Capacity]\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a5ee87cf71588b4cb017778f661c2a921}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a96f220c7564ff953d01ddcb210e0e64d}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a38ee88b0019467cd338e21efba051be0}{fqueue()}}, and \doxymbox{\hyperlink{classfqueue_ac2859c597e616e0d57126a277cc3fcf9}{fqueue()}}.
+
+\Hypertarget{classfqueue_aa86edfcaf419bcf741374d2ab7622707}\index{fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}!m\_size@{m\_size}}
+\index{m\_size@{m\_size}!fqueue$<$ T, Capacity, Traits $>$@{fqueue$<$ T, Capacity, Traits $>$}}
+\doxysubsubsection{\texorpdfstring{m\_size}{m\_size}}
+{\footnotesize\ttfamily \label{classfqueue_aa86edfcaf419bcf741374d2ab7622707} 
+template$<$class T, \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size}} Capacity, class Traits = internal::\+memory\+\_\+traits$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classfqueue_a1204e17e2ed31261d904305d9cadc3fc}{size\+\_\+type}} \doxymbox{\hyperlink{classfqueue}{fqueue}}$<$ T, Capacity, Traits $>$::\+m\+\_\+size\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classfqueue_a79496412cb847f2b3cd1e001159086a9}{count()}}, \doxymbox{\hyperlink{classfqueue_acf155b9d68580c5d930124f864ef1cfc}{fqueue()}}, \doxymbox{\hyperlink{classfqueue_a4cf096d86348ae16f4ba3e431d5d0b77}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classfqueue_a42255fac5ccbe9ea2283be8258b1419c}{pop()}}, \doxymbox{\hyperlink{classfqueue_aa1dd86ec73e64cfca34472a18b1d26d0}{pop\+\_\+all()}}, \doxymbox{\hyperlink{classfqueue_ad2b953c23ebde46fda09205a09c6279e}{push()}}, and \doxymbox{\hyperlink{classfqueue_a6c87117b8721a221609d12c41e3d7b87}{size()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{fqueue_8hxx}{fqueue.\+hxx}}\end{DoxyCompactItemize}

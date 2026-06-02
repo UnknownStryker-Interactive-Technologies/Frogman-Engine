@@ -1,0 +1,58 @@
+\doxysection{app.\+hpp}
+\hypertarget{app_8hpp_source}{}\label{app_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/app.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/app.hpp}}
+\doxymbox{\hyperlink{app_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_APP\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_APP\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{framework_2framework_8hxx}{FE/framework/framework.hxx}}>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a7f8dd3e3c36b59a01241d6c99766688c}{uint32}}\ \doxymbox{\hyperlink{app_8hpp_a3d34c56a8c5c02821965103ee4ec996a}{get\_directory\_of\_current\_executable}}(\doxymbox{\hyperlink{namespacevar}{var}}::directory\_char\_t*\ out\_buffer\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a7f8dd3e3c36b59a01241d6c99766688c}{uint32}}\ buffer\_size\_p)\ noexcept;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{app_8hpp_ae4b882f9bf8c6b0b3d631ef9f7484584}{schedule\_app\_restart}}()\ noexcept}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ FE::framework::framework\_base::get\_framework().request\_restart();}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{app_8hpp_a11c2ae89185ae9b03aab13dbd9765c29}{cancel\_app\_restart}}()\ noexcept}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ FE::framework::framework\_base::get\_framework().cancel\_restart();}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::uint32\ \doxymbox{\hyperlink{app_8hpp_a1f6dffededb43f43eeabb5325d54ef15}{get\_max\_concurrency}}()\ noexcept}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::framework::framework\_base::get\_framework().get\_program\_options().get\_max\_concurrency();}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{const}\ std::locale\&\ \doxymbox{\hyperlink{app_8hpp_a5030ef3e68d7e17a0037ed002b9a84b6}{get\_current\_system\_locale}}()\ noexcept}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::framework::framework\_base::get\_framework().get\_current\_system\_locale();}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

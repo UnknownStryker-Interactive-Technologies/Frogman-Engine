@@ -1,0 +1,289 @@
+\doxysection{shared\+\_\+access\texorpdfstring{$<$}{<} Shared\+Lock, T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classshared__access}{}\label{classshared__access}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+
+
+{\ttfamily \+\#include $<$synchronized\+\_\+access.\+hxx$>$}
+
+
+
+Collaboration diagram for shared\+\_\+access\texorpdfstring{$<$}{<} Shared\+Lock, T \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=243pt]{classshared__access__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classshared__access_aa6b6374e81402e2865389e57916581b0}{lock\+\_\+type}} = Shared\+Lock
+\item 
+using \doxymbox{\hyperlink{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}{reference}} = T\&
+\item 
+using \doxymbox{\hyperlink{classshared__access_a4ec1918486435765e32d7410255caa85}{const\+\_\+reference}} = const T\&
+\item 
+using \doxymbox{\hyperlink{classshared__access_a24c1a0c067e605735bb69bb834d7ef1c}{pointer}} = T\texorpdfstring{$\ast$}{*}
+\item 
+using \doxymbox{\hyperlink{classshared__access_a6e0ffbd16b824f7d511b3825ac309ee5}{const\+\_\+pointer}} = const T\texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access}} (\doxymbox{\hyperlink{classshared__access_aa6b6374e81402e2865389e57916581b0}{lock\+\_\+type}} \&lock\+\_\+p, T \&data\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a3785d8f40777d80d90c1535d8991b4b3}{\texorpdfstring{$\sim$}{\string~}shared\+\_\+access}} () noexcept
+\item 
+\doxymbox{\hyperlink{classshared__access_af6469a92eb57aa11531d2818395bf860}{shared\+\_\+access}} (const \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classshared__access_a1c06f62d7b445ed64a3a58f405727321}{shared\+\_\+access}} (\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \& \doxymbox{\hyperlink{classshared__access_ac5774f6c9a02fd123eafa99e07195060}{operator=}} (const \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \& \doxymbox{\hyperlink{classshared__access_a0991a04955d1e45eb3ae62db61048c31}{operator=}} (\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}{reference}} \doxymbox{\hyperlink{classshared__access_afe10aae8ae5aff3ea6fda703d6616615}{operator\texorpdfstring{$\ast$}{*}}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a4ec1918486435765e32d7410255caa85}{const\+\_\+reference}} \doxymbox{\hyperlink{classshared__access_a5c6f399e83b483a3dee8c4c20e70eb6d}{operator\texorpdfstring{$\ast$}{*}}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a24c1a0c067e605735bb69bb834d7ef1c}{pointer}} \doxymbox{\hyperlink{classshared__access_a99b5fd793340e34aa11d0dfaef9d85a3}{operator-\/$>$}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a6e0ffbd16b824f7d511b3825ac309ee5}{const\+\_\+pointer}} \doxymbox{\hyperlink{classshared__access_add93d5b3aa603081d60302c0b0aabadb}{operator-\/$>$}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classshared__access_aa6b6374e81402e2865389e57916581b0}{lock\+\_\+type}} \& \doxymbox{\hyperlink{classshared__access_ae007d7453dda4a5acb6209d711fc5dac}{m\+\_\+lock}}
+\item 
+\doxymbox{\hyperlink{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}{reference}} \doxymbox{\hyperlink{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}{m\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\label{classshared__access_doc-typedef-members}
+\Hypertarget{classshared__access_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classshared__access_a6e0ffbd16b824f7d511b3825ac309ee5}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classshared__access_a6e0ffbd16b824f7d511b3825ac309ee5} 
+template$<$class Shared\+Lock, typename T$>$ \\
+using \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+const\+\_\+pointer = const T\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classshared__access_a4ec1918486435765e32d7410255caa85}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classshared__access_a4ec1918486435765e32d7410255caa85} 
+template$<$class Shared\+Lock, typename T$>$ \\
+using \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+const\+\_\+reference = const T\&}
+
+\Hypertarget{classshared__access_aa6b6374e81402e2865389e57916581b0}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!lock\_type@{lock\_type}}
+\index{lock\_type@{lock\_type}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{lock\_type}{lock\_type}}
+{\footnotesize\ttfamily \label{classshared__access_aa6b6374e81402e2865389e57916581b0} 
+template$<$class Shared\+Lock, typename T$>$ \\
+using \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+lock\+\_\+type = Shared\+Lock}
+
+\Hypertarget{classshared__access_a24c1a0c067e605735bb69bb834d7ef1c}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!pointer@{pointer}}
+\index{pointer@{pointer}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classshared__access_a24c1a0c067e605735bb69bb834d7ef1c} 
+template$<$class Shared\+Lock, typename T$>$ \\
+using \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+pointer = T\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!reference@{reference}}
+\index{reference@{reference}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69} 
+template$<$class Shared\+Lock, typename T$>$ \\
+using \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+reference = T\&}
+
+
+
+\label{classshared__access_doc-constructors}
+\Hypertarget{classshared__access_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classshared__access_a19841d3e343083cf5cd4a3072aabc342}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!shared\_access@{shared\_access}}
+\index{shared\_access@{shared\_access}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{shared\_access()}{shared\_access()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classshared__access_a19841d3e343083cf5cd4a3072aabc342} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+shared\+\_\+access (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classshared__access_aa6b6374e81402e2865389e57916581b0}{lock\+\_\+type}} \&}]{lock\+\_\+p}{, }\item[{T \&}]{data\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_ae007d7453dda4a5acb6209d711fc5dac}{m\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classshared__access_ac5774f6c9a02fd123eafa99e07195060}{operator=()}}, \doxymbox{\hyperlink{classshared__access_a0991a04955d1e45eb3ae62db61048c31}{operator=()}}, \doxymbox{\hyperlink{classshared__access_af6469a92eb57aa11531d2818395bf860}{shared\+\_\+access()}}, and \doxymbox{\hyperlink{classshared__access_a1c06f62d7b445ed64a3a58f405727321}{shared\+\_\+access()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classshared__access_a19841d3e343083cf5cd4a3072aabc342_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classshared__access_a3785d8f40777d80d90c1535d8991b4b3}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!````~shared\_access@{\texorpdfstring{$\sim$}{\string~}shared\_access}}
+\index{````~shared\_access@{\texorpdfstring{$\sim$}{\string~}shared\_access}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}shared\_access()}{\string~shared\_access()}}
+{\footnotesize\ttfamily \label{classshared__access_a3785d8f40777d80d90c1535d8991b4b3} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_ae007d7453dda4a5acb6209d711fc5dac}{m\+\_\+lock}}.
+
+\Hypertarget{classshared__access_af6469a92eb57aa11531d2818395bf860}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!shared\_access@{shared\_access}}
+\index{shared\_access@{shared\_access}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{shared\_access()}{shared\_access()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classshared__access_af6469a92eb57aa11531d2818395bf860} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+shared\+\_\+access (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classshared__access_af6469a92eb57aa11531d2818395bf860_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classshared__access_a1c06f62d7b445ed64a3a58f405727321}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!shared\_access@{shared\_access}}
+\index{shared\_access@{shared\_access}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{shared\_access()}{shared\_access()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classshared__access_a1c06f62d7b445ed64a3a58f405727321} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+shared\+\_\+access (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classshared__access_a1c06f62d7b445ed64a3a58f405727321_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classshared__access_doc-func-members}
+\Hypertarget{classshared__access_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classshared__access_a5c6f399e83b483a3dee8c4c20e70eb6d}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classshared__access_a5c6f399e83b483a3dee8c4c20e70eb6d} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a4ec1918486435765e32d7410255caa85}{const\+\_\+reference}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}{m\+\_\+data}}.
+
+\Hypertarget{classshared__access_afe10aae8ae5aff3ea6fda703d6616615}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classshared__access_afe10aae8ae5aff3ea6fda703d6616615} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}{reference}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}{m\+\_\+data}}.
+
+\Hypertarget{classshared__access_add93d5b3aa603081d60302c0b0aabadb}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classshared__access_add93d5b3aa603081d60302c0b0aabadb} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a6e0ffbd16b824f7d511b3825ac309ee5}{const\+\_\+pointer}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}{m\+\_\+data}}.
+
+\Hypertarget{classshared__access_a99b5fd793340e34aa11d0dfaef9d85a3}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classshared__access_a99b5fd793340e34aa11d0dfaef9d85a3} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classshared__access_a24c1a0c067e605735bb69bb834d7ef1c}{pointer}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}{m\+\_\+data}}.
+
+\Hypertarget{classshared__access_ac5774f6c9a02fd123eafa99e07195060}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classshared__access_ac5774f6c9a02fd123eafa99e07195060} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \& \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classshared__access_ac5774f6c9a02fd123eafa99e07195060_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classshared__access_a0991a04955d1e45eb3ae62db61048c31}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classshared__access_a0991a04955d1e45eb3ae62db61048c31} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}} \& \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classshared__access_a0991a04955d1e45eb3ae62db61048c31_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classshared__access_doc-variable-members}
+\Hypertarget{classshared__access_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!m\_data@{m\_data}}
+\index{m\_data@{m\_data}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{m\_data}{m\_data}}
+{\footnotesize\ttfamily \label{classshared__access_a2474c165ea1f9bd7c7efd29c33f6108f} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access_aaf95e2fca5086bf7be6da2507c2dcc69}{reference}} \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+m\+\_\+data\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classshared__access_a5c6f399e83b483a3dee8c4c20e70eb6d}{operator\texorpdfstring{$\ast$}{*}()}}, \doxymbox{\hyperlink{classshared__access_afe10aae8ae5aff3ea6fda703d6616615}{operator\texorpdfstring{$\ast$}{*}()}}, \doxymbox{\hyperlink{classshared__access_add93d5b3aa603081d60302c0b0aabadb}{operator-\/$>$()}}, and \doxymbox{\hyperlink{classshared__access_a99b5fd793340e34aa11d0dfaef9d85a3}{operator-\/$>$()}}.
+
+\Hypertarget{classshared__access_ae007d7453dda4a5acb6209d711fc5dac}\index{shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}!m\_lock@{m\_lock}}
+\index{m\_lock@{m\_lock}!shared\_access$<$ SharedLock, T $>$@{shared\_access$<$ SharedLock, T $>$}}
+\doxysubsubsection{\texorpdfstring{m\_lock}{m\_lock}}
+{\footnotesize\ttfamily \label{classshared__access_ae007d7453dda4a5acb6209d711fc5dac} 
+template$<$class Shared\+Lock, typename T$>$ \\
+\doxymbox{\hyperlink{classshared__access_aa6b6374e81402e2865389e57916581b0}{lock\+\_\+type}}\& \doxymbox{\hyperlink{classshared__access}{shared\+\_\+access}}$<$ Shared\+Lock, T $>$::\+m\+\_\+lock\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classshared__access_a19841d3e343083cf5cd4a3072aabc342}{shared\+\_\+access()}}, and \doxymbox{\hyperlink{classshared__access_a3785d8f40777d80d90c1535d8991b4b3}{\texorpdfstring{$\sim$}{\string~}shared\+\_\+access()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{synchronized__access_8hxx}{synchronized\+\_\+access.\+hxx}}\end{DoxyCompactItemize}

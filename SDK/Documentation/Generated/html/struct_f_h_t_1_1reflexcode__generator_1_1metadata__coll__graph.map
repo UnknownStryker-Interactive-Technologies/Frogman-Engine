@@ -1,0 +1,11 @@
+<map id="FHT::reflexcode_generator::metadata" name="FHT::reflexcode_generator::metadata">
+<area shape="rect" id="Node000001" title=" " alt="" coords="399,136,574,179"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="30,10,160,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,25,273,33,326,43,376,61,404,76,429,95,469,136,464,136,426,99,401,80,374,66,324,49,272,38,176,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,112,185,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,132,400,149,396,152,200,137"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="14,163,176,206"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="191,186,280,185,374,179,401,178,396,179,375,184,280,191,191,191"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="14,230,176,288"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="191,251,281,238,374,215,415,198,450,181,455,179,417,203,376,220,282,244,192,256"/>
+</map>

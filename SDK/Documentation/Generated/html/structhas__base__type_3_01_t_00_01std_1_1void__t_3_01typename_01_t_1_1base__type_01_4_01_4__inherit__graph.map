@@ -1,0 +1,10 @@
+<map id="has_base_type&lt; T, std::void_t&lt; typename T::base_type &gt; &gt;" name="has_base_type&lt; T, std::void_t&lt; typename T::base_type &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,201,256,260"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,45,62,77,71,107,86,134,104,158,146,200,141,202,100,162,81,137,66,109,57,78,57,50"/>
+<area shape="rect" id="Node000004" href="$structhas__base__type.html" title=" " alt="" coords="81,81,285,108"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="93,37,164,80,160,82,93,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="312,81,414,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="365,121,361,152,346,179,327,196,305,209,257,224,256,219,302,204,324,191,342,176,356,150,362,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,121,183,132,181,202,176,200,178,132,179,126"/>
+</map>

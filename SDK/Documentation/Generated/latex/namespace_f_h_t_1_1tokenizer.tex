@@ -1,0 +1,190 @@
+\doxysection{FHT::\+tokenizer Namespace Reference}
+\hypertarget{namespace_f_h_t_1_1tokenizer}{}\label{namespace_f_h_t_1_1tokenizer}\index{FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a3b2bdfaeaf3eff41b2d8f55330a02f10}{tokenize\+\_\+header}} (const \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \&file\+\_\+p, const \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} \&path\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af94b977c0a6a262b7fa6d21799acdf12}{purge\+\_\+comments}} (std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&out\+\_\+list\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_adc8166b1071b6dd5c0609f8732e55671}{purge\+\_\+preprocessor}} (std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&out\+\_\+list\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a4d2ad3ff3de2ebf60e46a2fcff24425e}{purge\+\_\+string\+\_\+literals\+\_\+and\+\_\+backslashes}} (std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&out\+\_\+list\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ac8eaaabf1586236d4ba57465769dab15}{purge\+\_\+template}} (std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&out\+\_\+list\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a69f69e4d6045da4d6600e8d09f60147e}{purge\+\_\+forward\+\_\+declaration}} (std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&out\+\_\+list\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{structtoken}{token}} \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ab544bd555957587c1da35077f51bc732}{tokenize\+\_\+identifiable}} (typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{structtoken}{token}} \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ab502a3a3258e5d9f2c977f1c22ef3fbd}{tokenize\+\_\+unidentifiable}} (typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a9b3eca555c3a150987e38d32034c98c9}{tokenize\+\_\+comment}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a00c12a910e3f9931590cff5a19277fb7}{tokenize\+\_\+preprocessor}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a694f654690864ec6367fad6059777427}{tokenize\+\_\+string\+\_\+literal}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a6aae8dcbcffa74f6541178c40d89dd1f}{extract\+\_\+raw\+\_\+text\+\_\+delimiter\+\_\+from\+\_\+the\+\_\+left\+\_\+quote}} (\doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \&out\+\_\+return\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a64bad395ea2a3aa59d7bd82b18e43ca2}{tokenize\+\_\+template}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ad64215dec4b8b791926e59dd8cb892f9}{tokenize\+\_\+other}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af1b115d8e1c8d8c06e1f7d4991b13a16}{tokenize\+\_\+reflection\+\_\+macros}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_aec02824fe4042d30a479b9cbad9d89ad}{tokenize\+\_\+class}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a9e3464d86aee0b0475235b9a158f1f6f}{tokenize\+\_\+struct}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a5ec47e4b57c79810da6eed72d0982606}{tokenize\+\_\+enum\+\_\+struct}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af77eff5f4196fe54a8cbdea1a017773c}{tokenize\+\_\+namespace}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a482e164ef065f8bfa42e999543f4147a}{tokenize\+\_\+class\+\_\+struct\+\_\+enum\+\_\+forward\+\_\+decl\+\_\+and\+\_\+using\+\_\+namespace}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p)
+\item 
+void \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a023e27d8ed04b598c3571aa24a7bef9d}{tokenize\+\_\+template\+\_\+body}} (\doxymbox{\hyperlink{structtoken}{token}} \&out\+\_\+token\+\_\+p, typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer code\+\_\+iterator\+\_\+p, \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&context\+\_\+stack\+\_\+p)
+\end{DoxyCompactItemize}
+
+
+\label{namespace_f_h_t_1_1tokenizer_doc-func-members}
+\Hypertarget{namespace_f_h_t_1_1tokenizer_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a6aae8dcbcffa74f6541178c40d89dd1f}\index{FHT::tokenizer@{FHT::tokenizer}!extract\_raw\_text\_delimiter\_from\_the\_left\_quote@{extract\_raw\_text\_delimiter\_from\_the\_left\_quote}}
+\index{extract\_raw\_text\_delimiter\_from\_the\_left\_quote@{extract\_raw\_text\_delimiter\_from\_the\_left\_quote}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{extract\_raw\_text\_delimiter\_from\_the\_left\_quote()}{extract\_raw\_text\_delimiter\_from\_the\_left\_quote()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a6aae8dcbcffa74f6541178c40d89dd1f} 
+void FHT::\+tokenizer::\+extract\+\_\+raw\+\_\+text\+\_\+delimiter\+\_\+from\+\_\+the\+\_\+left\+\_\+quote (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \&}]{out\+\_\+return\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_af94b977c0a6a262b7fa6d21799acdf12}\index{FHT::tokenizer@{FHT::tokenizer}!purge\_comments@{purge\_comments}}
+\index{purge\_comments@{purge\_comments}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{purge\_comments()}{purge\_comments()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_af94b977c0a6a262b7fa6d21799acdf12} 
+void FHT::\+tokenizer::\+purge\+\_\+comments (\begin{DoxyParamCaption}\item[{std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&}]{out\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a69f69e4d6045da4d6600e8d09f60147e}\index{FHT::tokenizer@{FHT::tokenizer}!purge\_forward\_declaration@{purge\_forward\_declaration}}
+\index{purge\_forward\_declaration@{purge\_forward\_declaration}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{purge\_forward\_declaration()}{purge\_forward\_declaration()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a69f69e4d6045da4d6600e8d09f60147e} 
+void FHT::\+tokenizer::\+purge\+\_\+forward\+\_\+declaration (\begin{DoxyParamCaption}\item[{std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&}]{out\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_adc8166b1071b6dd5c0609f8732e55671}\index{FHT::tokenizer@{FHT::tokenizer}!purge\_preprocessor@{purge\_preprocessor}}
+\index{purge\_preprocessor@{purge\_preprocessor}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{purge\_preprocessor()}{purge\_preprocessor()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_adc8166b1071b6dd5c0609f8732e55671} 
+void FHT::\+tokenizer::\+purge\+\_\+preprocessor (\begin{DoxyParamCaption}\item[{std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&}]{out\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a4d2ad3ff3de2ebf60e46a2fcff24425e}\index{FHT::tokenizer@{FHT::tokenizer}!purge\_string\_literals\_and\_backslashes@{purge\_string\_literals\_and\_backslashes}}
+\index{purge\_string\_literals\_and\_backslashes@{purge\_string\_literals\_and\_backslashes}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{purge\_string\_literals\_and\_backslashes()}{purge\_string\_literals\_and\_backslashes()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a4d2ad3ff3de2ebf60e46a2fcff24425e} 
+void FHT::\+tokenizer::\+purge\+\_\+string\+\_\+literals\+\_\+and\+\_\+backslashes (\begin{DoxyParamCaption}\item[{std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&}]{out\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_ac8eaaabf1586236d4ba57465769dab15}\index{FHT::tokenizer@{FHT::tokenizer}!purge\_template@{purge\_template}}
+\index{purge\_template@{purge\_template}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{purge\_template()}{purge\_template()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_ac8eaaabf1586236d4ba57465769dab15} 
+void FHT::\+tokenizer::\+purge\+\_\+template (\begin{DoxyParamCaption}\item[{std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ \&}]{out\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_aec02824fe4042d30a479b9cbad9d89ad}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_class@{tokenize\_class}}
+\index{tokenize\_class@{tokenize\_class}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_class()}{tokenize\_class()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_aec02824fe4042d30a479b9cbad9d89ad} 
+void FHT::\+tokenizer::\+tokenize\+\_\+class (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a482e164ef065f8bfa42e999543f4147a}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace@{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace}}
+\index{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace@{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace()}{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a482e164ef065f8bfa42e999543f4147a} 
+void FHT::\+tokenizer::\+tokenize\+\_\+class\+\_\+struct\+\_\+enum\+\_\+forward\+\_\+decl\+\_\+and\+\_\+using\+\_\+namespace (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a9b3eca555c3a150987e38d32034c98c9}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_comment@{tokenize\_comment}}
+\index{tokenize\_comment@{tokenize\_comment}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_comment()}{tokenize\_comment()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a9b3eca555c3a150987e38d32034c98c9} 
+void FHT::\+tokenizer::\+tokenize\+\_\+comment (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a5ec47e4b57c79810da6eed72d0982606}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_enum\_struct@{tokenize\_enum\_struct}}
+\index{tokenize\_enum\_struct@{tokenize\_enum\_struct}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_enum\_struct()}{tokenize\_enum\_struct()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a5ec47e4b57c79810da6eed72d0982606} 
+void FHT::\+tokenizer::\+tokenize\+\_\+enum\+\_\+struct (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a3b2bdfaeaf3eff41b2d8f55330a02f10}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_header@{tokenize\_header}}
+\index{tokenize\_header@{tokenize\_header}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_header()}{tokenize\_header()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a3b2bdfaeaf3eff41b2d8f55330a02f10} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+list$<$ \doxymbox{\hyperlink{structtoken}{token}} $>$ FHT::\+tokenizer::\+tokenize\+\_\+header (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \&}]{file\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} \&}]{path\+\_\+p}{}\end{DoxyParamCaption})}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_ab544bd555957587c1da35077f51bc732}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_identifiable@{tokenize\_identifiable}}
+\index{tokenize\_identifiable@{tokenize\_identifiable}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_identifiable()}{tokenize\_identifiable()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_ab544bd555957587c1da35077f51bc732} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{structtoken}{token}} FHT::\+tokenizer::\+tokenize\+\_\+identifiable (\begin{DoxyParamCaption}\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_af77eff5f4196fe54a8cbdea1a017773c}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_namespace@{tokenize\_namespace}}
+\index{tokenize\_namespace@{tokenize\_namespace}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_namespace()}{tokenize\_namespace()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_af77eff5f4196fe54a8cbdea1a017773c} 
+void FHT::\+tokenizer::\+tokenize\+\_\+namespace (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_ad64215dec4b8b791926e59dd8cb892f9}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_other@{tokenize\_other}}
+\index{tokenize\_other@{tokenize\_other}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_other()}{tokenize\_other()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_ad64215dec4b8b791926e59dd8cb892f9} 
+void FHT::\+tokenizer::\+tokenize\+\_\+other (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a00c12a910e3f9931590cff5a19277fb7}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_preprocessor@{tokenize\_preprocessor}}
+\index{tokenize\_preprocessor@{tokenize\_preprocessor}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_preprocessor()}{tokenize\_preprocessor()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a00c12a910e3f9931590cff5a19277fb7} 
+void FHT::\+tokenizer::\+tokenize\+\_\+preprocessor (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_af1b115d8e1c8d8c06e1f7d4991b13a16}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_reflection\_macros@{tokenize\_reflection\_macros}}
+\index{tokenize\_reflection\_macros@{tokenize\_reflection\_macros}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_reflection\_macros()}{tokenize\_reflection\_macros()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_af1b115d8e1c8d8c06e1f7d4991b13a16} 
+void FHT::\+tokenizer::\+tokenize\+\_\+reflection\+\_\+macros (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a694f654690864ec6367fad6059777427}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_string\_literal@{tokenize\_string\_literal}}
+\index{tokenize\_string\_literal@{tokenize\_string\_literal}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_string\_literal()}{tokenize\_string\_literal()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a694f654690864ec6367fad6059777427} 
+void FHT::\+tokenizer::\+tokenize\+\_\+string\+\_\+literal (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a9e3464d86aee0b0475235b9a158f1f6f}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_struct@{tokenize\_struct}}
+\index{tokenize\_struct@{tokenize\_struct}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_struct()}{tokenize\_struct()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a9e3464d86aee0b0475235b9a158f1f6f} 
+void FHT::\+tokenizer::\+tokenize\+\_\+struct (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a64bad395ea2a3aa59d7bd82b18e43ca2}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_template@{tokenize\_template}}
+\index{tokenize\_template@{tokenize\_template}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_template()}{tokenize\_template()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a64bad395ea2a3aa59d7bd82b18e43ca2} 
+void FHT::\+tokenizer::\+tokenize\+\_\+template (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_a023e27d8ed04b598c3571aa24a7bef9d}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_template\_body@{tokenize\_template\_body}}
+\index{tokenize\_template\_body@{tokenize\_template\_body}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_template\_body()}{tokenize\_template\_body()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_a023e27d8ed04b598c3571aa24a7bef9d} 
+void FHT::\+tokenizer::\+tokenize\+\_\+template\+\_\+body (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structtoken}{token}} \&}]{out\+\_\+token\+\_\+p}{, }\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_f_h_t_1_1tokenizer_ab502a3a3258e5d9f2c977f1c22ef3fbd}\index{FHT::tokenizer@{FHT::tokenizer}!tokenize\_unidentifiable@{tokenize\_unidentifiable}}
+\index{tokenize\_unidentifiable@{tokenize\_unidentifiable}!FHT::tokenizer@{FHT::tokenizer}}
+\doxysubsubsection{\texorpdfstring{tokenize\_unidentifiable()}{tokenize\_unidentifiable()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1tokenizer_ab502a3a3258e5d9f2c977f1c22ef3fbd} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{structtoken}{token}} FHT::\+tokenizer::\+tokenize\+\_\+unidentifiable (\begin{DoxyParamCaption}\item[{typename file\+\_\+buffer\+\_\+t::\+const\+\_\+pointer}]{code\+\_\+iterator\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::\+context\+\_\+stack\+\_\+t}} \&}]{context\+\_\+stack\+\_\+p}{}\end{DoxyParamCaption})}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+

@@ -1,0 +1,220 @@
+\doxysection{asset\+\_\+vault Class Reference}
+\hypertarget{classasset__vault}{}\label{classasset__vault}\index{asset\_vault@{asset\_vault}}
+
+
+{\ttfamily \+\#include $<$asset\+\_\+vault.\+hxx$>$}
+
+
+
+Collaboration diagram for asset\+\_\+vault:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classasset__vault__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault}} (\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}memory\+\_\+resource=std::\+pmr::\+get\+\_\+default\+\_\+resource()) noexcept
+\item 
+\doxymbox{\hyperlink{classasset__vault_ac85fa1f5f67e74394bc69e4b597a0b48}{\texorpdfstring{$\sim$}{\string~}asset\+\_\+vault}} () noexcept
+\item 
+\doxymbox{\hyperlink{structfbx}{fbx}} \& \doxymbox{\hyperlink{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6}{import\+\_\+fbx}} (FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}const path\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classasset__vault_ac3f9f2264d609bd42793ae821da27583}{asset\+\_\+vault}} (const \doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \& \doxymbox{\hyperlink{classasset__vault_a0aa43f7c9485a849b031e9f0578a08a0}{operator=}} (const \doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classasset__vault_a523954746518753d8f887c18716f296a}{asset\+\_\+vault}} (\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \& \doxymbox{\hyperlink{classasset__vault_a629eb126c3854476cacfa139df4f9af5}{operator=}} (\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0}{cached\+\_\+fbx}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0}{cached\+\_\+fbx}} \doxymbox{\hyperlink{classasset__vault_aa0eec73120de32efdb9555addec23c40}{m\+\_\+fbx}}
+\end{DoxyCompactItemize}
+
+
+\label{classasset__vault_doc-typedef-members}
+\Hypertarget{classasset__vault_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0}\index{asset\_vault@{asset\_vault}!cached\_fbx@{cached\_fbx}}
+\index{cached\_fbx@{cached\_fbx}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{cached\_fbx}{cached\_fbx}}
+{\footnotesize\ttfamily \label{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0} 
+using \doxymbox{\hyperlink{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0}{asset\+\_\+vault::\+cached\+\_\+fbx}}\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{absl::flat\_hash\_map<\doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::uint64}},\ \doxymbox{\hyperlink{structfbx}{fbx}},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ absl::lts\_20260107::DefaultHashContainerHash<var::uint64>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ absl::lts\_20260107::DefaultHashContainerEq<var::uint64>,}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ std::pmr::polymorphic\_allocator<\ std::pair<FE::uint64,\ fbx>\ >}
+\DoxyCodeLine{\ \ \ >}
+
+\end{DoxyCode}
+
+
+\label{classasset__vault_doc-constructors}
+\Hypertarget{classasset__vault_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{asset\_vault()}{asset\_vault()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classasset__vault_a6ed869e16cc3139d5998f67604176cdb} 
+asset\+\_\+vault::\+asset\+\_\+vault (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}}]{memory\+\_\+resource}{ = {\ttfamily std:\+:\+pmr:\+:\+get\+\_\+default\+\_\+resource()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classasset__vault_a523954746518753d8f887c18716f296a}{asset\+\_\+vault()}}, \doxymbox{\hyperlink{classasset__vault_ac3f9f2264d609bd42793ae821da27583}{asset\+\_\+vault()}}, \doxymbox{\hyperlink{classasset__vault_a629eb126c3854476cacfa139df4f9af5}{operator=()}}, \doxymbox{\hyperlink{classasset__vault_a0aa43f7c9485a849b031e9f0578a08a0}{operator=()}}, and \doxymbox{\hyperlink{classasset__vault_ac85fa1f5f67e74394bc69e4b597a0b48}{\texorpdfstring{$\sim$}{\string~}asset\+\_\+vault()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{classasset__vault_a6ed869e16cc3139d5998f67604176cdb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classasset__vault_ac85fa1f5f67e74394bc69e4b597a0b48}\index{asset\_vault@{asset\_vault}!````~asset\_vault@{\texorpdfstring{$\sim$}{\string~}asset\_vault}}
+\index{````~asset\_vault@{\texorpdfstring{$\sim$}{\string~}asset\_vault}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}asset\_vault()}{\string~asset\_vault()}}
+{\footnotesize\ttfamily \label{classasset__vault_ac85fa1f5f67e74394bc69e4b597a0b48} 
+asset\+\_\+vault::\+\texorpdfstring{$\sim$}{\string~}asset\+\_\+vault (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=315pt]{classasset__vault_ac85fa1f5f67e74394bc69e4b597a0b48_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classasset__vault_ac3f9f2264d609bd42793ae821da27583}\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{asset\_vault()}{asset\_vault()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classasset__vault_ac3f9f2264d609bd42793ae821da27583} 
+asset\+\_\+vault::\+asset\+\_\+vault (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{classasset__vault_ac3f9f2264d609bd42793ae821da27583_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classasset__vault_a523954746518753d8f887c18716f296a}\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\index{asset\_vault@{asset\_vault}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{asset\_vault()}{asset\_vault()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classasset__vault_a523954746518753d8f887c18716f296a} 
+asset\+\_\+vault::\+asset\+\_\+vault (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{classasset__vault_a523954746518753d8f887c18716f296a_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classasset__vault_doc-func-members}
+\Hypertarget{classasset__vault_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6}\index{asset\_vault@{asset\_vault}!import\_fbx@{import\_fbx}}
+\index{import\_fbx@{import\_fbx}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{import\_fbx()}{import\_fbx()}}
+{\footnotesize\ttfamily \label{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6} 
+\doxymbox{\hyperlink{structfbx}{fbx}} \& asset\+\_\+vault::\+import\+\_\+fbx (\begin{DoxyParamCaption}\item[{FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}const}]{path\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6}{import\+\_\+fbx()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6}{import\+\_\+fbx()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classasset__vault_a8aea74b09e47bcccb1a298f7ee2b0cf6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classasset__vault_a629eb126c3854476cacfa139df4f9af5}\index{asset\_vault@{asset\_vault}!operator=@{operator=}}
+\index{operator=@{operator=}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classasset__vault_a629eb126c3854476cacfa139df4f9af5} 
+\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \& asset\+\_\+vault::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault()}}, and \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\+\_\+\+NAMESPACE}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{classasset__vault_a629eb126c3854476cacfa139df4f9af5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classasset__vault_a0aa43f7c9485a849b031e9f0578a08a0}\index{asset\_vault@{asset\_vault}!operator=@{operator=}}
+\index{operator=@{operator=}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classasset__vault_a0aa43f7c9485a849b031e9f0578a08a0} 
+\doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \& asset\+\_\+vault::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classasset__vault}{asset\+\_\+vault}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classasset__vault_a6ed869e16cc3139d5998f67604176cdb}{asset\+\_\+vault()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=326pt]{classasset__vault_a0aa43f7c9485a849b031e9f0578a08a0_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classasset__vault_doc-variable-members}
+\Hypertarget{classasset__vault_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classasset__vault_aa0eec73120de32efdb9555addec23c40}\index{asset\_vault@{asset\_vault}!m\_fbx@{m\_fbx}}
+\index{m\_fbx@{m\_fbx}!asset\_vault@{asset\_vault}}
+\doxysubsubsection{\texorpdfstring{m\_fbx}{m\_fbx}}
+{\footnotesize\ttfamily \label{classasset__vault_aa0eec73120de32efdb9555addec23c40} 
+\doxymbox{\hyperlink{classasset__vault_a4f0d4bd0bd952c438914bcb071d52df0}{cached\+\_\+fbx}} asset\+\_\+vault::\+m\+\_\+fbx\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Renderer/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{asset__vault_8hxx}{asset\+\_\+vault.\+hxx}}\end{DoxyCompactItemize}

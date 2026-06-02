@@ -1,0 +1,634 @@
+\doxysection{type\+\_\+traits.\+hxx}
+\hypertarget{type__traits_8hxx_source}{}\label{type__traits_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/type\_traits.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/type\_traits.hxx}}
+\doxymbox{\hyperlink{type__traits_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_TYPE\_TRAITS\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_TYPE\_TRAITS\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{definitions_8hxx}{FE/definitions.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{log_8hxx}{FE/log/log.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{types_8hxx}{FE/types.hxx}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{strlen_8hxx}{FE/private/strlen.hxx}}>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ std}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00037\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structremove__const__reference}{remove\_const\_reference}}\ }
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{structremove__const__reference_a7c3deb1e29a9faeab2271b1843d725dd}{type}}\ =\ \textcolor{keyword}{typename}\ std::remove\_const\_t<\ std::remove\_reference\_t<T>\ >;\ }
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00043\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{type__traits_8hxx_ab6f21e89e6310096cdccc92d6b953eb0}{remove\_const\_reference\_t}}\ =\ \textcolor{keyword}{typename}\ \doxymbox{\hyperlink{structremove__const__reference_a7c3deb1e29a9faeab2271b1843d725dd}{remove\_const\_reference<T>::type}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structremove__all}{remove\_all}}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{structremove__all_a6768ff7a505df9d6eddedb5012a6d820}{type}}\ =\ std::remove\_pointer\_t<\ std::remove\_all\_extents\_t<\ std::remove\_volatile\_t<remove\_const\_reference\_t<T>>\ >\ >;}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00052\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{type__traits_8hxx_ad11e96cd250df03678cb81c91ccd02cf}{remove\_all\_t}}\ =\ \textcolor{keyword}{typename}\ \doxymbox{\hyperlink{structremove__all_a6768ff7a505df9d6eddedb5012a6d820}{remove\_all<T>::type}};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00058\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_a70df09d636ce4de6347cc9516409e7f7}{value}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00064\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a703f5c47a8e99b7c3e3f1dcc8d44bc3e}{is\_constant\_string\_v}}\ =\ \doxymbox{\hyperlink{structis__constant__string_a70df09d636ce4de6347cc9516409e7f7}{is\_constant\_string<T>::value}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00067\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*>}
+\DoxyCodeLine{00068\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_a_s_c_i_i_01_5_01_4_aee3b62e121349e2e8a37e746ed966d92}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00073\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_ad0c63db65a26dec4ffea68460b2cd1ea}{wchar}}*>}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01wchar_01_5_01_4_a625abd0e64e180ff22d5ebc5f9258dcd}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00076\ \};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00080\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<UTF8*>}
+\DoxyCodeLine{00081\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_a70df09d636ce4de6347cc9516409e7f7}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00087\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_ac70902debfdb4efaceb325ef141890ab}{UTF16}}*>}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f16_01_5_01_4_a2cd4f9a7617c0861aecc0d239366c7eb}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00090\ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00093\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_a0b4c3eb19289fa08944a090a3acf456b}{UTF32}}*>}
+\DoxyCodeLine{00094\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f32_01_5_01_4_ac394276858d30973e7d9dec66835e5c4}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00096\ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00099\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}[]>}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_a_s_c_i_i_0f_0e_4_a0d8a64126bb8d512122b5b64321aa737}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00102\ \};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00105\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_ad0c63db65a26dec4ffea68460b2cd1ea}{wchar}}[]>}
+\DoxyCodeLine{00106\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01wchar_0f_0e_4_a8d432a5c94aff66070289092af5e81d7}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00108\ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00111\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00112\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<UTF8[]>}
+\DoxyCodeLine{00113\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_a70df09d636ce4de6347cc9516409e7f7}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00115\ \};}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00119\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_ac70902debfdb4efaceb325ef141890ab}{UTF16}}[]>}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f16_0f_0e_4_ade533bddbbe387cd2a6a2769587ad791}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00122\ \};}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00125\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__constant__string}{is\_constant\_string}}<\doxymbox{\hyperlink{types_8hxx_a0b4c3eb19289fa08944a090a3acf456b}{UTF32}}[]>}
+\DoxyCodeLine{00126\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__constant__string_3_01_u_t_f32_0f_0e_4_a54b1fd53296e970fec76af1abb27b54f}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00128\ \};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00134\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}}
+\DoxyCodeLine{00135\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_ac17e164a49ed86ae5928895926ba15b2}{value}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00137\ \};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00140\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a3716b51b7b45f4e971c7f792417ffb72}{is\_char\_v}}\ =\ \doxymbox{\hyperlink{structis__char_ac17e164a49ed86ae5928895926ba15b2}{is\_char<T>::value}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00143\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}>}
+\DoxyCodeLine{00144\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01_a_s_c_i_i_01_4_aae8b6809e0f89981697bc2552513371b}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00146\ \};}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00149\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{namespacevar}{var}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}>}
+\DoxyCodeLine{00150\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01var_1_1_a_s_c_i_i_01_4_a203fead8f3b6e248fba7d54aa825d089}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00152\ \};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00155\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{types_8hxx_ad0c63db65a26dec4ffea68460b2cd1ea}{wchar}}>}
+\DoxyCodeLine{00156\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01wchar_01_4_a19cc9c2414167ea72c3d9e9c46c6aab2}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00158\ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00161\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{namespacevar}{var}}::\doxymbox{\hyperlink{types_8hxx_ad0c63db65a26dec4ffea68460b2cd1ea}{wchar}}>}
+\DoxyCodeLine{00162\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01var_1_1wchar_01_4_a90f2c2096dbb6196d8755e3858e56425}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00164\ \};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00167\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00168\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<UTF8>}
+\DoxyCodeLine{00169\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_ac17e164a49ed86ae5928895926ba15b2}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00171\ \};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00174\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{namespacevar}{var}}::UTF8>}
+\DoxyCodeLine{00175\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_ac17e164a49ed86ae5928895926ba15b2}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00177\ \};}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00181\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{types_8hxx_ac70902debfdb4efaceb325ef141890ab}{UTF16}}>}
+\DoxyCodeLine{00182\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01_u_t_f16_01_4_ab594f8f4b935af5ff4e0403170320bff}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00184\ \};}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00187\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{namespacevar}{var}}::\doxymbox{\hyperlink{types_8hxx_ac70902debfdb4efaceb325ef141890ab}{UTF16}}>}
+\DoxyCodeLine{00188\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01var_1_1_u_t_f16_01_4_a66b27848f4ff46c870911c1014aea44d}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00190\ \};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00193\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{types_8hxx_a0b4c3eb19289fa08944a090a3acf456b}{UTF32}}>}
+\DoxyCodeLine{00194\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01_u_t_f32_01_4_af9afeeb7dcda5bf6e65e954c28a184b9}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00196\ \};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00199\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__char}{is\_char}}<\doxymbox{\hyperlink{namespacevar}{var}}::\doxymbox{\hyperlink{types_8hxx_a0b4c3eb19289fa08944a090a3acf456b}{UTF32}}>}
+\DoxyCodeLine{00200\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__char_3_01var_1_1_u_t_f32_01_4_a3c816fa550858ab8fa98f5f829ac535a}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00202\ \};}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00208\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__boolean}{is\_boolean}}}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__boolean_ae033cb906c77dc71c4a9f3db3c4dac34}{value}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00211\ \};}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00214\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a343a2b20d4fa6f049c7064d95f2a0a10}{is\_boolean\_v}}\ =\ \doxymbox{\hyperlink{structis__boolean_ae033cb906c77dc71c4a9f3db3c4dac34}{is\_boolean<T>::value}};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00217\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__boolean}{is\_boolean}}<\doxymbox{\hyperlink{namespacevar}{var}}::\doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}}>}
+\DoxyCodeLine{00218\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__boolean_3_01var_1_1boolean_01_4_a66268fa40cbe3f5f2536f4f24c33cbf7}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00220\ \};}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00223\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__boolean}{is\_boolean}}<\doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}}>}
+\DoxyCodeLine{00224\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__boolean_3_01boolean_01_4_a0475ae852884ffff0aad30908e03091e}{value}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00226\ \};}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00232\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__primitive}{is\_primitive}}}
+\DoxyCodeLine{00233\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__primitive_a8731668586c8c440116da3c12afc2b12}{value}}\ =\ (}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ (FE::is\_boolean<T>::value\ ==\ \textcolor{keyword}{true})\ ||\ (FE::is\_char<T>::value\ ==\ \textcolor{keyword}{true})\ ||}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ (std::is\_integral\_v<T>\ ==\ \textcolor{keyword}{true})\ ||\ (std::is\_floating\_point\_v<T>\ ==\ \textcolor{keyword}{true})\ ||}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ (FE::is\_constant\_string<T>::value\ ==\ \textcolor{keyword}{true})\ ||\ (std::is\_pointer\_v<T>\ ==\ \textcolor{keyword}{true})\ ||\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ (std::is\_null\_pointer\_v<T>\ ==\ \textcolor{keyword}{true})}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00240\ \};}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00243\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a06f950eb64173cecd0acf73ae0cbdac2}{is\_primitive\_v}}\ =\ \doxymbox{\hyperlink{structis__primitive_a8731668586c8c440116da3c12afc2b12}{is\_primitive<T>::value}};}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00249\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__numeric}{is\_numeric}}}
+\DoxyCodeLine{00250\ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__numeric_a2051be5be56796b5a2f54df4f4737229}{value}}\ =\ (}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ ((std::is\_integral<T>::value\ ==\ \textcolor{keyword}{true})\ \&\&\ (FE::is\_boolean<T>::value\ ==\ \textcolor{keyword}{false}))\ ||\ }
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ (std::is\_floating\_point<T>::value\ ==\ \textcolor{keyword}{true})}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00255\ \};}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00258\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_ad163d51ce9df3b5bed1f522cfaabedae}{is\_numeric\_v}}\ =\ \doxymbox{\hyperlink{structis__numeric_a2051be5be56796b5a2f54df4f4737229}{is\_numeric<T>::value}};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00264\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__function}{is\_function}}}
+\DoxyCodeLine{00265\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__function_a3ed2be9aae4da6159f86436f5f785226}{value}}\ =\ std::is\_function\_v<T>\ ||\ std::is\_member\_function\_pointer\_v<T>;}
+\DoxyCodeLine{00267\ \};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00270\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a85f284b7a79d4d1a9a97dd3e32182a9a}{is\_function\_v}}\ =\ \doxymbox{\hyperlink{structis__function_a3ed2be9aae4da6159f86436f5f785226}{is\_function<T>::value}};}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}{TypeTriviality}}\ :\ \textcolor{keywordtype}{boolean}}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{\_Trivial}}\ =\ \textcolor{keyword}{true},}
+\DoxyCodeLine{00278\ \ \ \ \ \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\_NotTrivial}}\ =\ \textcolor{keyword}{false}}
+\DoxyCodeLine{00279\ \};}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00282\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__trivial}{is\_trivial}}}
+\DoxyCodeLine{00283\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__trivial_a6db5744b5ccae0de6b25ded27c03a959}{value}}\ =\ std::is\_trivially\_constructible\_v<T>\ \&\&\ std::is\_trivially\_destructible\_v<T>\ \&\&\ std::is\_trivially\_copyable\_v<T>;}
+\DoxyCodeLine{00285\ \};}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00288\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a6da0bd64afea76a51d572589c5bcb6e7}{is\_trivial\_v}}\ =\ \doxymbox{\hyperlink{structis__trivial_a6db5744b5ccae0de6b25ded27c03a959}{is\_trivial<T>::value}};}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00294\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__const__reference}{is\_const\_reference}}}
+\DoxyCodeLine{00295\ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__const__reference_ad4b4978f84f67202d278b77fe2492f00}{value}}\ =\ std::is\_const\_v<\ std::remove\_reference\_t<T>\ >\ \&\&\ std::is\_reference\_v<\ std::remove\_const\_t<T>\ >;}
+\DoxyCodeLine{00297\ \};}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00300\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a54ee27e27c1c97a13f1c046b09783a27}{is\_const\_reference\_v}}\ =\ \doxymbox{\hyperlink{structis__const__reference_ad4b4978f84f67202d278b77fe2492f00}{is\_const\_reference<T>::value}};}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00306\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__vector}{is\_std\_vector}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Allocator>}
+\DoxyCodeLine{00309\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__vector}{is\_std\_vector}}<std::vector<T,\ Allocator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00312\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a95f0e4c8909de6d10fc1a2b3fb7bd58f}{is\_std\_vector\_v}}\ =\ \doxymbox{\hyperlink{structis__std__vector}{is\_std\_vector<T>::value}};}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00316\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__pmr__vector}{is\_pmr\_vector}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00319\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__pmr__vector}{is\_pmr\_vector}}<std::pmr::vector<T>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00322\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a95acc9eea6dd266b933bdb9cd324fd03}{is\_pmr\_vector\_v}}\ =\ \doxymbox{\hyperlink{structis__pmr__vector}{is\_pmr\_vector<T>::value}};}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00326\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__scalable__array}{is\_scalable\_array}}}
+\DoxyCodeLine{00327\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__scalable__array_ad673f12d3fdb17bce0b87f1f1bb68c6b}{value}}\ =\ (FE::is\_std\_vector<T>::value\ ==\ \textcolor{keyword}{true})\ ||\ (FE::is\_pmr\_vector<T>::value\ ==\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00329\ \};}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00332\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_ad8770547e378112eaa2f83a299402ba6}{is\_scalable\_array\_v}}\ =\ \doxymbox{\hyperlink{structis__scalable__array_ad673f12d3fdb17bce0b87f1f1bb68c6b}{is\_scalable\_array<T>::value}};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00336\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__array}{is\_std\_array}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ std::\textcolor{keywordtype}{size\_t}\ N>}
+\DoxyCodeLine{00339\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__array}{is\_std\_array}}<std::array<T,\ N>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00342\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a7a51d83060442fbbffa2c2fd304ca3a4}{is\_std\_array\_v}}\ =\ \doxymbox{\hyperlink{structis__std__array}{is\_std\_array<T>::value}};}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00345\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__array}{is\_array}}}
+\DoxyCodeLine{00346\ \{}
+\DoxyCodeLine{00347\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__array_ae0ed7b376a9e3d781ff68b4376c35ee8}{value}}\ =\ (std::is\_array<T>::value\ ==\ \textcolor{keyword}{true})\ ||\ (FE::is\_std\_array<T>::value\ ==\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00348\ \};}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00351\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a7bd0b59e7bcebeee8db0707ca710c080}{is\_array\_v}}\ =\ \doxymbox{\hyperlink{structis__array_ae0ed7b376a9e3d781ff68b4376c35ee8}{is\_array<T>::value}};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00357\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__string}{is\_std\_string}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits,\ \textcolor{keyword}{typename}\ Allocator>}
+\DoxyCodeLine{00360\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__string}{is\_std\_string}}<std::basic\_string<T,\ Traits,\ Allocator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00363\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a8c698ea6fe4f0db61494eacd09123f2a}{is\_std\_string\_v}}\ =\ \doxymbox{\hyperlink{structis__std__string}{is\_std\_string<T>::value}};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00367\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__pmr__string}{is\_pmr\_string}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00370\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__pmr__string}{is\_pmr\_string}}<std::pmr::basic\_string<T,\ Traits>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00373\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_ae11e0caa7a8eded6c63b56fa9d6ca624}{is\_pmr\_string\_v}}\ =\ \doxymbox{\hyperlink{structis__pmr__string}{is\_pmr\_string<T>::value}};}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00377\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__string__view}{is\_std\_string\_view}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00380\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__std__string__view}{is\_std\_string\_view}}<std::basic\_string\_view<T,\ Traits>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00383\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a269d3fcf2dd72f8c36c30b4389e288f5}{is\_std\_string\_view\_v}}\ =\ \doxymbox{\hyperlink{structis__std__string__view}{is\_std\_string\_view<T>::value}};}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00387\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__string__class}{is\_string\_class}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits,\ \textcolor{keyword}{typename}\ Allocator>}
+\DoxyCodeLine{00390\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__string__class}{is\_string\_class}}<std::basic\_string<T,\ Traits,\ Allocator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00393\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__string__class}{is\_string\_class}}<std::pmr::basic\_string<T,\ Traits>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00396\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__string__class}{is\_string\_class}}<std::basic\_string\_view<T,\ Traits>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00399\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a9e858273c13bf0bbc5358761cf095bdd}{is\_string\_class\_v}}\ =\ \doxymbox{\hyperlink{structis__string__class}{is\_string\_class<T>::value}};}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00405\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__base__type}{has\_base\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00408\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__base__type}{has\_base\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::base\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00411\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a7e0346b85f02eed521f560aeeebace91}{has\_base\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__base__type}{has\_base\_type<T>::value}};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00417\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__value__type}{has\_value\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00420\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__value__type}{has\_value\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::value\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00423\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a98b37e70bc905247482ff8aacaf87057}{has\_value\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__value__type}{has\_value\_type<T>::value}};}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00429\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__element__type}{has\_element\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00432\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__element__type}{has\_element\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::element\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00435\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a1522c8830ec014ea54bef9f9d2612e52}{has\_element\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__element__type}{has\_element\_type<T>::value}};}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00441\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__iterator}{has\_iterator}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00444\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__iterator}{has\_iterator}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::iterator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00447\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_ac0252fe47419b72db2fc0df6fb6131c0}{has\_iterator\_v}}\ =\ \doxymbox{\hyperlink{structhas__iterator}{has\_iterator<T>::value}};}
+\DoxyCodeLine{00448\ }
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00453\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__traits__type}{has\_traits\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00456\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__traits__type}{has\_traits\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::traits\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00459\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a9a9b1dd9d0deb576a02142270611c2d1}{has\_traits\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__traits__type}{has\_traits\_type<T>::value}};}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00465\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__allocator__type}{has\_allocator\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00468\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__allocator__type}{has\_allocator\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::allocator\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00471\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a421646c76504c844c9d6dfecd427ebf6}{has\_allocator\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__allocator__type}{has\_allocator\_type<T>::value}};}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00477\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__size__type}{has\_size\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00480\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__size__type}{has\_size\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::size\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00483\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_acfe411a844caa5a6527b9e6635bd193e}{has\_size\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__size__type}{has\_size\_type<T>::value}};}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00489\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__difference__type}{has\_difference\_type}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00492\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__difference__type}{has\_difference\_type}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::difference\_type>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00495\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a14eff3c9c34b2065f866d8b0493c70ed}{has\_difference\_type\_v}}\ =\ \doxymbox{\hyperlink{structhas__difference__type}{has\_difference\_type<T>::value}};}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00501\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__reference}{has\_reference}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00504\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__reference}{has\_reference}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::reference>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00507\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_ac7de6459dbb2b8250fec1659cb12093b}{has\_reference\_v}}\ =\ \doxymbox{\hyperlink{structhas__reference}{has\_reference<T>::value}};}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00513\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__reference}{has\_const\_reference}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00516\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__reference}{has\_const\_reference}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::const\_reference>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00519\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a29e7085ebff1707aa23ac69879d855f3}{has\_const\_reference\_v}}\ =\ \doxymbox{\hyperlink{structhas__const__reference}{has\_const\_reference<T>::value}};}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00525\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__pointer}{has\_pointer}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00528\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__pointer}{has\_pointer}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::pointer>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00531\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a062ac4ddbc711888f879a319fecc6e69}{has\_pointer\_v}}\ =\ \doxymbox{\hyperlink{structhas__pointer}{has\_pointer<T>::value}};}
+\DoxyCodeLine{00532\ }
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00537\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__pointer}{has\_const\_pointer}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00540\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__pointer}{has\_const\_pointer}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::const\_pointer>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00543\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a46296f915fc4311aedefcb0c653983ac}{has\_const\_pointer\_v}}\ =\ \doxymbox{\hyperlink{structhas__const__pointer}{has\_const\_pointer<T>::value}};}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00549\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__iterator}{has\_const\_iterator}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00552\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__iterator}{has\_const\_iterator}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::const\_iterator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00555\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a9e5df6162d54702140ee702048ffcece}{has\_const\_iterator\_v}}\ =\ \doxymbox{\hyperlink{structhas__const__iterator}{has\_const\_iterator<T>::value}};}
+\DoxyCodeLine{00556\ }
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00561\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__reverse__iterator}{has\_reverse\_iterator}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00564\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__reverse__iterator}{has\_reverse\_iterator}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::reverse\_iterator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00567\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a2b977616d783965c629e467263f24988}{has\_reverse\_iterator\_v}}\ =\ \doxymbox{\hyperlink{structhas__reverse__iterator}{has\_reverse\_iterator<T>::value}};}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00573\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\_const\_reverse\_iterator}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00576\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\_const\_reverse\_iterator}}<T,\ std::\doxymbox{\hyperlink{classvoid__t}{void\_t}}<typename\ T::const\_reverse\_iterator>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00579\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a4dec3d336af238ea419988fe6833c691}{has\_const\_reverse\_iterator\_v}}\ =\ \doxymbox{\hyperlink{structhas__const__reverse__iterator}{has\_const\_reverse\_iterator<T>::value}};}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00585\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structis__serializable}{is\_serializable}}}
+\DoxyCodeLine{00586\ \{}
+\DoxyCodeLine{00587\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{structis__serializable_a11653a02c8cca07886473b716a92ad56}{value}}\ =\ (}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ (FE::is\_trivial<T>::value\ ==\ \textcolor{keyword}{true})\ ||}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ (FE::is\_scalable\_array<T>::value\ ==\ \textcolor{keyword}{true})\ ||}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ (FE::is\_array<T>::value\ ==\ \textcolor{keyword}{true})\ ||}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ (FE::is\_string\_class<T>::value\ ==\ \textcolor{keyword}{true})}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00593\ \};}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00596\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{type__traits_8hxx_a800b9b4afee8556c3b43e3b539f8f23b}{is\_serializable\_v}}\ =\ \doxymbox{\hyperlink{structis__serializable_a11653a02c8cca07886473b716a92ad56}{is\_serializable<T>::value}};}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ To,\ \textcolor{keyword}{class}\ From>}
+\DoxyCodeLine{00602\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ To\ \doxymbox{\hyperlink{type__traits_8hxx_ae419ed09a07b39aebafdd5ec7a3712cd}{polymorphic\_cast}}(From\ from\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00603\ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \textcolor{keyword}{static\_assert}((std::is\_base\_of<To,\ From>::value\ ==\ \textcolor{keyword}{false})\ ||\ (std::is\_base\_of<From,\ To>::value\ ==\ \textcolor{keyword}{false}),\ \textcolor{stringliteral}{"{}polymorphic\_cast<T>()\ failed:\ Both\ types\ are\ incompatible\ to\ cast."{}});}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG\_}}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{dynamic\_cast<}To\textcolor{keyword}{>}(from\_p);}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{reinterpret\_cast<}To\textcolor{keyword}{>}(from\_p);}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00610\ \}}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ To,\ \textcolor{keyword}{class}\ From>}
+\DoxyCodeLine{00614\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ To\ \doxymbox{\hyperlink{type__traits_8hxx_abcbbc956c59dcf9b48a9ee60459266bd}{forward\_to}}(std::conditional\_t<\ std::is\_reference<From>::value,\ From,\ std::conditional\_t<\ std::is\_rvalue\_reference<From>::value,\ From,\ From\&\ >\ >\ from\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00615\ \{}
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_lvalue\_reference<To>::value\ ==\ \textcolor{keyword}{true})}
+\DoxyCodeLine{00617\ \ \ \ \ \{}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ from\_p;}
+\DoxyCodeLine{00619\ \ \ \ \ \}}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::is\_lvalue\_reference<To>::value\ ==\ \textcolor{keyword}{false})}
+\DoxyCodeLine{00621\ \ \ \ \ \{}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::move(from\_p);}
+\DoxyCodeLine{00623\ \ \ \ \ \}}
+\DoxyCodeLine{00624\ \}}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00627\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,301 @@
+\doxysection{video\+\_\+player Class Reference}
+\hypertarget{classvideo__player}{}\label{classvideo__player}\index{video\_player@{video\_player}}
+
+
+{\ttfamily \+\#include $<$video\+\_\+player.\+hpp$>$}
+
+
+
+Collaboration diagram for video\+\_\+player:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classvideo__player__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classvideo__player_a30081c57a089b033b19587a9d5e6a80b}{video\+\_\+player}} (const HWND target\+\_\+window\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classvideo__player_ac37003115a2e8668f51f263b0c5fb2d1}{\texorpdfstring{$\sim$}{\string~}video\+\_\+player}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classvideo__player_a252f97bc4c39328dda857b16d3c9edce}{play}} (FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}file\+\_\+path\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classvideo__player_ab85855fc4397fa9016f11befdac000a9}{video\+\_\+player}} (const \doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \& \doxymbox{\hyperlink{classvideo__player_a64e326f8abf913a4060ff452b69084a2}{operator=}} (const \doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \&)=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+FE::\+boolean \doxymbox{\hyperlink{classvideo__player_a018d7d291b3fd86a183023f975556f84}{\+\_\+\+\_\+open}} (FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}file\+\_\+path\+\_\+p) noexcept
+\item 
+FE::\+boolean \doxymbox{\hyperlink{classvideo__player_a31af8fbb82172c99dd3830068048d6f9}{\+\_\+\+\_\+has\+\_\+error}} () const noexcept
+\item 
+FE::\+boolean \doxymbox{\hyperlink{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc}{\+\_\+\+\_\+is\+\_\+ready}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$ IMFMedia\+Engine $>$ \doxymbox{\hyperlink{classvideo__player_aeabe6c1e5fae2287d061bb0bc62aaf28}{m\+\_\+engine}}
+\item 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$ \doxymbox{\hyperlink{classvideo__player_a2e47102e52874b761ef46f2943176262}{engine\+\_\+notify}} $>$ \doxymbox{\hyperlink{classvideo__player_aaf3fe82566094e2922aa6cc687fa487b}{m\+\_\+notify}}
+\item 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$ IMFMedia\+Engine\+Ex $>$ \doxymbox{\hyperlink{classvideo__player_acb6a5515fb7f985bc8f33e63d78aee8f}{m\+\_\+engine\+\_\+ex}}
+\item 
+HWND \doxymbox{\hyperlink{classvideo__player_a099d05a463e605f5f6e600baf70ff671}{m\+\_\+hwnd}}
+\item 
+std::\+mutex \doxymbox{\hyperlink{classvideo__player_a55b665ee3e82d3e137f83bf84bbacc36}{m\+\_\+mtx}}
+\item 
+\doxymbox{\hyperlink{namespacevar_a3d0ff8440d6ca765617d941d680efd5e}{var::\+boolean}} \doxymbox{\hyperlink{classvideo__player_a8a49c8737be4b243747a1a9858fcac3c}{m\+\_\+is\+\_\+\+COM\+\_\+initialized}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classvideo__player_a2e47102e52874b761ef46f2943176262}{engine\+\_\+notify}}
+\end{DoxyCompactItemize}
+
+
+\label{classvideo__player_doc-constructors}
+\Hypertarget{classvideo__player_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classvideo__player_a30081c57a089b033b19587a9d5e6a80b}\index{video\_player@{video\_player}!video\_player@{video\_player}}
+\index{video\_player@{video\_player}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{video\_player()}{video\_player()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classvideo__player_a30081c57a089b033b19587a9d5e6a80b} 
+video\+\_\+player::\+video\+\_\+player (\begin{DoxyParamCaption}\item[{const HWND}]{target\+\_\+window\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a64e326f8abf913a4060ff452b69084a2}{operator=()}}, and \doxymbox{\hyperlink{classvideo__player_ab85855fc4397fa9016f11befdac000a9}{video\+\_\+player()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{classvideo__player_a30081c57a089b033b19587a9d5e6a80b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classvideo__player_ac37003115a2e8668f51f263b0c5fb2d1}\index{video\_player@{video\_player}!````~video\_player@{\texorpdfstring{$\sim$}{\string~}video\_player}}
+\index{````~video\_player@{\texorpdfstring{$\sim$}{\string~}video\_player}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}video\_player()}{\string~video\_player()}}
+{\footnotesize\ttfamily \label{classvideo__player_ac37003115a2e8668f51f263b0c5fb2d1} 
+video\+\_\+player::\+\texorpdfstring{$\sim$}{\string~}video\+\_\+player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{classvideo__player_ab85855fc4397fa9016f11befdac000a9}\index{video\_player@{video\_player}!video\_player@{video\_player}}
+\index{video\_player@{video\_player}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{video\_player()}{video\_player()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classvideo__player_ab85855fc4397fa9016f11befdac000a9} 
+video\+\_\+player::\+video\+\_\+player (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a30081c57a089b033b19587a9d5e6a80b}{video\+\_\+player()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classvideo__player_ab85855fc4397fa9016f11befdac000a9_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classvideo__player_doc-func-members}
+\Hypertarget{classvideo__player_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classvideo__player_a31af8fbb82172c99dd3830068048d6f9}\index{video\_player@{video\_player}!\_\_has\_error@{\_\_has\_error}}
+\index{\_\_has\_error@{\_\_has\_error}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{\_\_has\_error()}{\_\_has\_error()}}
+{\footnotesize\ttfamily \label{classvideo__player_a31af8fbb82172c99dd3830068048d6f9} 
+FE::\+boolean video\+\_\+player::\+\+\_\+\+\_\+has\+\_\+error (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a31af8fbb82172c99dd3830068048d6f9}{\+\_\+\+\_\+has\+\_\+error()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a31af8fbb82172c99dd3830068048d6f9}{\+\_\+\+\_\+has\+\_\+error()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{classvideo__player_a31af8fbb82172c99dd3830068048d6f9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{classvideo__player_a31af8fbb82172c99dd3830068048d6f9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc}\index{video\_player@{video\_player}!\_\_is\_ready@{\_\_is\_ready}}
+\index{\_\_is\_ready@{\_\_is\_ready}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{\_\_is\_ready()}{\_\_is\_ready()}}
+{\footnotesize\ttfamily \label{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc} 
+FE::\+boolean video\+\_\+player::\+\+\_\+\+\_\+is\+\_\+ready (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc}{\+\_\+\+\_\+is\+\_\+ready()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc}{\+\_\+\+\_\+is\+\_\+ready()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classvideo__player_a716c8b70ce31bba9536d136e7ede3fdc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classvideo__player_a018d7d291b3fd86a183023f975556f84}\index{video\_player@{video\_player}!\_\_open@{\_\_open}}
+\index{\_\_open@{\_\_open}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{\_\_open()}{\_\_open()}}
+{\footnotesize\ttfamily \label{classvideo__player_a018d7d291b3fd86a183023f975556f84} 
+FE::\+boolean video\+\_\+player::\+\+\_\+\+\_\+open (\begin{DoxyParamCaption}\item[{FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}}]{file\+\_\+path\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a018d7d291b3fd86a183023f975556f84}{\+\_\+\+\_\+open()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a018d7d291b3fd86a183023f975556f84}{\+\_\+\+\_\+open()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{classvideo__player_a018d7d291b3fd86a183023f975556f84_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{classvideo__player_a018d7d291b3fd86a183023f975556f84_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classvideo__player_a64e326f8abf913a4060ff452b69084a2}\index{video\_player@{video\_player}!operator=@{operator=}}
+\index{operator=@{operator=}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{classvideo__player_a64e326f8abf913a4060ff452b69084a2} 
+\doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \& video\+\_\+player::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classvideo__player}{video\+\_\+player}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\+\_\+\+NAMESPACE}}, and \doxymbox{\hyperlink{classvideo__player_a30081c57a089b033b19587a9d5e6a80b}{video\+\_\+player()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{classvideo__player_a64e326f8abf913a4060ff452b69084a2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classvideo__player_a252f97bc4c39328dda857b16d3c9edce}\index{video\_player@{video\_player}!play@{play}}
+\index{play@{play}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{play()}{play()}}
+{\footnotesize\ttfamily \label{classvideo__player_a252f97bc4c39328dda857b16d3c9edce} 
+void video\+\_\+player::\+play (\begin{DoxyParamCaption}\item[{FE::\+directory\+\_\+char\+\_\+t \texorpdfstring{$\ast$}{*}}]{file\+\_\+path\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a252f97bc4c39328dda857b16d3c9edce}{play()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a252f97bc4c39328dda857b16d3c9edce}{play()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classvideo__player_a252f97bc4c39328dda857b16d3c9edce_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classvideo__player_a252f97bc4c39328dda857b16d3c9edce_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{classvideo__player_doc-related-members}
+\Hypertarget{classvideo__player_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classvideo__player_a2e47102e52874b761ef46f2943176262}\index{video\_player@{video\_player}!engine\_notify@{engine\_notify}}
+\index{engine\_notify@{engine\_notify}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{engine\_notify}{engine\_notify}}
+{\footnotesize\ttfamily \label{classvideo__player_a2e47102e52874b761ef46f2943176262} 
+friend class engine\+\_\+notify\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classvideo__player_a2e47102e52874b761ef46f2943176262}{engine\+\_\+notify}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classvideo__player_a2e47102e52874b761ef46f2943176262}{engine\+\_\+notify}}.
+
+
+
+\label{classvideo__player_doc-variable-members}
+\Hypertarget{classvideo__player_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classvideo__player_aeabe6c1e5fae2287d061bb0bc62aaf28}\index{video\_player@{video\_player}!m\_engine@{m\_engine}}
+\index{m\_engine@{m\_engine}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_engine}{m\_engine}}
+{\footnotesize\ttfamily \label{classvideo__player_aeabe6c1e5fae2287d061bb0bc62aaf28} 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$IMFMedia\+Engine$>$ video\+\_\+player::\+m\+\_\+engine\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classvideo__player_acb6a5515fb7f985bc8f33e63d78aee8f}\index{video\_player@{video\_player}!m\_engine\_ex@{m\_engine\_ex}}
+\index{m\_engine\_ex@{m\_engine\_ex}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_engine\_ex}{m\_engine\_ex}}
+{\footnotesize\ttfamily \label{classvideo__player_acb6a5515fb7f985bc8f33e63d78aee8f} 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$IMFMedia\+Engine\+Ex$>$ video\+\_\+player::\+m\+\_\+engine\+\_\+ex\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classvideo__player_a099d05a463e605f5f6e600baf70ff671}\index{video\_player@{video\_player}!m\_hwnd@{m\_hwnd}}
+\index{m\_hwnd@{m\_hwnd}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_hwnd}{m\_hwnd}}
+{\footnotesize\ttfamily \label{classvideo__player_a099d05a463e605f5f6e600baf70ff671} 
+HWND video\+\_\+player::\+m\+\_\+hwnd\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classvideo__player_a8a49c8737be4b243747a1a9858fcac3c}\index{video\_player@{video\_player}!m\_is\_COM\_initialized@{m\_is\_COM\_initialized}}
+\index{m\_is\_COM\_initialized@{m\_is\_COM\_initialized}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_is\_COM\_initialized}{m\_is\_COM\_initialized}}
+{\footnotesize\ttfamily \label{classvideo__player_a8a49c8737be4b243747a1a9858fcac3c} 
+\doxymbox{\hyperlink{namespacevar_a3d0ff8440d6ca765617d941d680efd5e}{var::\+boolean}} video\+\_\+player::\+m\+\_\+is\+\_\+\+COM\+\_\+initialized\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classvideo__player_a55b665ee3e82d3e137f83bf84bbacc36}\index{video\_player@{video\_player}!m\_mtx@{m\_mtx}}
+\index{m\_mtx@{m\_mtx}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_mtx}{m\_mtx}}
+{\footnotesize\ttfamily \label{classvideo__player_a55b665ee3e82d3e137f83bf84bbacc36} 
+std::\+mutex video\+\_\+player::\+m\+\_\+mtx\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classvideo__player_aaf3fe82566094e2922aa6cc687fa487b}\index{video\_player@{video\_player}!m\_notify@{m\_notify}}
+\index{m\_notify@{m\_notify}!video\_player@{video\_player}}
+\doxysubsubsection{\texorpdfstring{m\_notify}{m\_notify}}
+{\footnotesize\ttfamily \label{classvideo__player_aaf3fe82566094e2922aa6cc687fa487b} 
+Microsoft::\+\+WRL::\+\+Com\+Ptr$<$\doxymbox{\hyperlink{classvideo__player_a2e47102e52874b761ef46f2943176262}{engine\+\_\+notify}}$>$ video\+\_\+player::\+m\+\_\+notify\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Renderer/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{video__player_8hpp}{video\+\_\+player.\+hpp}}\end{DoxyCompactItemize}

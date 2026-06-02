@@ -1,0 +1,124 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+hash.hxx File Reference}
+\hypertarget{hash_8hxx}{}\label{hash_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/hash.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/hash.hxx}}
+{\ttfamily \+\#include $<$FE/\+private/\+strlen.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+random.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+type\+\_\+traits.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$city.\+h$>$}\newline
+{\ttfamily \+\#include $<$FE/\+bitmask.\+hxx$>$}\newline
+Include dependency graph for hash.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{hash_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classhash__base}{hash\+\_\+base}}
+\item 
+class \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___address_01_4}{hash$<$ T, Hasher\+Type, Hash\+Input\+Data\+Type::\+\+\_\+\+Address $>$}}
+\item 
+class \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___c_string_01_4}{hash$<$ T, Hasher\+Type, Hash\+Input\+Data\+Type::\+\+\_\+\+CString $>$}}
+\item 
+class \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___string_class_01_4}{hash$<$ T, Hasher\+Type, Hash\+Input\+Data\+Type::\+\+\_\+\+String\+Class $>$}}
+\item 
+class \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___bitmask_01_4}{hash$<$ T, Hasher\+Type, Hash\+Input\+Data\+Type::\+\+\_\+\+Bitmask $>$}}
+\item 
+class \doxymbox{\hyperlink{classhash_3_01_t_00_01_hasher_type_00_01_hash_input_data_type_1_1___binary_01_4}{hash$<$ T, Hasher\+Type, Hash\+Input\+Data\+Type::\+\+\_\+\+Binary $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{Hash\+Input\+Data\+Type}} :\+ uint8 \{ \newline
+\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{\+\_\+\+Address}} = 0
+, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{\+\_\+\+CString}} = 1
+, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{\+\_\+\+String\+Class}} = 2
+, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{\+\_\+\+Binary}} = 3
+, \newline
+\doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{\+\_\+\+Bitmask}} = 4
+ \}
+\item 
+enum struct \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{Hasher\+Type}} :\+ uint8 \{ \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}{\+\_\+\+City\+Hash}} = 1
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{Hash\+Input\+Data\+Type}} \doxymbox{\hyperlink{hash_8hxx_a01d02dc2727b996e4984ca52c4e52c15}{evaluate\+\_\+hash\+\_\+input\+\_\+data\+\_\+type}} ()
+\end{DoxyCompactItemize}
+
+
+\label{hash_8hxx_doc-enum-members}
+\Hypertarget{hash_8hxx_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{hash_8hxx_a7a602830fac0da5e549e1d123c092826}\index{hash.hxx@{hash.hxx}!HasherType@{HasherType}}
+\index{HasherType@{HasherType}!hash.hxx@{hash.hxx}}
+\doxysubsubsection{\texorpdfstring{HasherType}{HasherType}}
+{\footnotesize\ttfamily \label{hash_8hxx_a7a602830fac0da5e549e1d123c092826} 
+enum struct \doxymbox{\hyperlink{hash_8hxx_a7a602830fac0da5e549e1d123c092826}{Hasher\+Type}} :\+ \doxymbox{\hyperlink{types_8hxx_a4975f0ed4e8143fee4bddc72f539761a}{uint8}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CityHash@{\_CityHash}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_CityHash@{\_CityHash}}
+}\Hypertarget{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3}\label{hash_8hxx_a7a602830fac0da5e549e1d123c092826aa217c44634b1010280de21bbf4fe5fd3} 
+\+\_\+\+City\+Hash&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}\index{hash.hxx@{hash.hxx}!HashInputDataType@{HashInputDataType}}
+\index{HashInputDataType@{HashInputDataType}!hash.hxx@{hash.hxx}}
+\doxysubsubsection{\texorpdfstring{HashInputDataType}{HashInputDataType}}
+{\footnotesize\ttfamily \label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1} 
+enum struct \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{Hash\+Input\+Data\+Type}} :\+ \doxymbox{\hyperlink{types_8hxx_a4975f0ed4e8143fee4bddc72f539761a}{uint8}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Address@{\_Address}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_Address@{\_Address}}
+}\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}\label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee} 
+\+\_\+\+Address&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CString@{\_CString}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_CString@{\_CString}}
+}\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}\label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2} 
+\+\_\+\+CString&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_StringClass@{\_StringClass}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_StringClass@{\_StringClass}}
+}\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}\label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c} 
+\+\_\+\+String\+Class&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Binary@{\_Binary}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_Binary@{\_Binary}}
+}\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}\label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f} 
+\+\_\+\+Binary&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Bitmask@{\_Bitmask}!hash.hxx@{hash.hxx}}
+\index{hash.hxx@{hash.hxx}!\_Bitmask@{\_Bitmask}}
+}\Hypertarget{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}\label{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170} 
+\+\_\+\+Bitmask&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{hash_8hxx_doc-func-members}
+\Hypertarget{hash_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{hash_8hxx_a01d02dc2727b996e4984ca52c4e52c15}\index{hash.hxx@{hash.hxx}!evaluate\_hash\_input\_data\_type@{evaluate\_hash\_input\_data\_type}}
+\index{evaluate\_hash\_input\_data\_type@{evaluate\_hash\_input\_data\_type}!hash.hxx@{hash.hxx}}
+\doxysubsubsection{\texorpdfstring{evaluate\_hash\_input\_data\_type()}{evaluate\_hash\_input\_data\_type()}}
+{\footnotesize\ttfamily \label{hash_8hxx_a01d02dc2727b996e4984ca52c4e52c15} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1}{Hash\+Input\+Data\+Type}} evaluate\+\_\+hash\+\_\+input\+\_\+data\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+References \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1acfd02d9395e16e1ee59dae907b175bee}{\+\_\+\+Address}}, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a53affc1293608b29aeca531071e86c9f}{\+\_\+\+Binary}}, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a9c547e718d88a65114235c4bb8f93170}{\+\_\+\+Bitmask}}, \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a800c8a2e75f37377d28dca2fa9529ff2}{\+\_\+\+CString}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{hash_8hxx_abe18bc1018cb4c304b7b8730a1a0ade1a892193d2ee4b38041d849fc4afe6a95c}{\+\_\+\+String\+Class}}.
+

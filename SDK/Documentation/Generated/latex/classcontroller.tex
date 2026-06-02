@@ -1,0 +1,220 @@
+\doxysection{controller Class Reference}
+\hypertarget{classcontroller}{}\label{classcontroller}\index{controller@{controller}}
+
+
+{\ttfamily \+\#include $<$controller.\+hpp$>$}
+
+
+
+Inheritance diagram for controller:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=184pt]{classcontroller__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for controller:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcontroller__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classcontroller_a1b5bc0db300058326b4b2870cffa56cd}{controller}} (framework::\+\+ECS \&host\+\_\+p, \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}} device\+\_\+type\+\_\+p) noexcept
+\item 
+virtual \doxymbox{\hyperlink{classcontroller_a9a4f1f3b10097f4e05bef17a7e3da905}{\texorpdfstring{$\sim$}{\string~}controller}} () noexcept override
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}} \doxymbox{\hyperlink{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}{get\+\_\+device\+\_\+type}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{classcontroller_a24f13c93365cbe674bfda62ac676362b}{get\+\_\+player}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{classcontroller_a6d9a04b5b51a8719016bf50cfa0b4d6d}{get\+\_\+player}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classcontroller_af3f91125801924170b43d074d521e2ab}{set\+\_\+player}} (const FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \&player\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+input\+\_\+device::\+keyboard \& \doxymbox{\hyperlink{classcontroller_ae60a602b0129a9ebc26b331c69a29f60}{get\+\_\+keyboard}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+input\+\_\+device::\+mouse \& \doxymbox{\hyperlink{classcontroller_a9a34df42269851ba341e8a73eda73dd9}{get\+\_\+mouse}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classcontroller_adade9cf636e4f2bf2ddc1186b7fd3bd1}{base\+\_\+type}} = FE::\+archetype\+\_\+base
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}} \doxymbox{\hyperlink{classcontroller_aff80014066793550acc999fd97108750}{m\+\_\+device\+\_\+type}}
+\item 
+FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\+\_\+player}}
+\item 
+FE::\+component\+\_\+view$<$ FE::\+input\+\_\+device::\+keyboard $>$ \doxymbox{\hyperlink{classcontroller_ae897845e28482166f68d89316caa242a}{m\+\_\+keyboard\+\_\+view}}
+\item 
+FE::\+component\+\_\+view$<$ FE::\+input\+\_\+device::\+mouse $>$ \doxymbox{\hyperlink{classcontroller_ac553e42e77cf15787024b249dbd02b97}{m\+\_\+mouse\+\_\+view}}
+\end{DoxyCompactItemize}
+
+
+\label{classcontroller_doc-typedef-members}
+\Hypertarget{classcontroller_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classcontroller_adade9cf636e4f2bf2ddc1186b7fd3bd1}\index{controller@{controller}!base\_type@{base\_type}}
+\index{base\_type@{base\_type}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{base\_type}{base\_type}}
+{\footnotesize\ttfamily \label{classcontroller_adade9cf636e4f2bf2ddc1186b7fd3bd1} 
+using \doxymbox{\hyperlink{classcontroller_adade9cf636e4f2bf2ddc1186b7fd3bd1}{controller::\+base\+\_\+type}} = FE::\+archetype\+\_\+base\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\label{classcontroller_doc-constructors}
+\Hypertarget{classcontroller_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcontroller_a1b5bc0db300058326b4b2870cffa56cd}\index{controller@{controller}!controller@{controller}}
+\index{controller@{controller}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{controller()}{controller()}}
+{\footnotesize\ttfamily \label{classcontroller_a1b5bc0db300058326b4b2870cffa56cd} 
+controller::\+controller (\begin{DoxyParamCaption}\item[{framework::\+\+ECS \&}]{host\+\_\+p}{, }\item[{\doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}}}]{device\+\_\+type\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{classcontroller_a9a4f1f3b10097f4e05bef17a7e3da905}\index{controller@{controller}!````~controller@{\texorpdfstring{$\sim$}{\string~}controller}}
+\index{````~controller@{\texorpdfstring{$\sim$}{\string~}controller}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}controller()}{\string~controller()}}
+{\footnotesize\ttfamily \label{classcontroller_a9a4f1f3b10097f4e05bef17a7e3da905} 
+virtual controller::\+\texorpdfstring{$\sim$}{\string~}controller (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classcontroller_doc-func-members}
+\Hypertarget{classcontroller_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}\index{controller@{controller}!get\_device\_type@{get\_device\_type}}
+\index{get\_device\_type@{get\_device\_type}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{get\_device\_type()}{get\_device\_type()}}
+{\footnotesize\ttfamily \label{classcontroller_a796ae74a5c922e0135fd4745b577ad7c} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}} controller::\+get\+\_\+device\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}{get\+\_\+device\+\_\+type()}}, and \doxymbox{\hyperlink{classcontroller_aff80014066793550acc999fd97108750}{m\+\_\+device\+\_\+type}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}{get\+\_\+device\+\_\+type()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=213pt]{classcontroller_a796ae74a5c922e0135fd4745b577ad7c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=213pt]{classcontroller_a796ae74a5c922e0135fd4745b577ad7c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcontroller_ae60a602b0129a9ebc26b331c69a29f60}\index{controller@{controller}!get\_keyboard@{get\_keyboard}}
+\index{get\_keyboard@{get\_keyboard}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{get\_keyboard()}{get\_keyboard()}}
+{\footnotesize\ttfamily \label{classcontroller_ae60a602b0129a9ebc26b331c69a29f60} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+input\+\_\+device::\+keyboard \& controller::\+get\+\_\+keyboard (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcontroller_ae897845e28482166f68d89316caa242a}{m\+\_\+keyboard\+\_\+view}}.
+
+\Hypertarget{classcontroller_a9a34df42269851ba341e8a73eda73dd9}\index{controller@{controller}!get\_mouse@{get\_mouse}}
+\index{get\_mouse@{get\_mouse}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{get\_mouse()}{get\_mouse()}}
+{\footnotesize\ttfamily \label{classcontroller_a9a34df42269851ba341e8a73eda73dd9} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+input\+\_\+device::\+mouse \& controller::\+get\+\_\+mouse (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcontroller_ac553e42e77cf15787024b249dbd02b97}{m\+\_\+mouse\+\_\+view}}.
+
+\Hypertarget{classcontroller_a24f13c93365cbe674bfda62ac676362b}\index{controller@{controller}!get\_player@{get\_player}}
+\index{get\_player@{get\_player}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{get\_player()}{get\_player()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classcontroller_a24f13c93365cbe674bfda62ac676362b} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ controller::\+get\+\_\+player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\+\_\+player}}.
+
+\Hypertarget{classcontroller_a6d9a04b5b51a8719016bf50cfa0b4d6d}\index{controller@{controller}!get\_player@{get\_player}}
+\index{get\_player@{get\_player}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{get\_player()}{get\_player()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classcontroller_a6d9a04b5b51a8719016bf50cfa0b4d6d} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ controller::\+get\+\_\+player (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\+\_\+player}}.
+
+\Hypertarget{classcontroller_af3f91125801924170b43d074d521e2ab}\index{controller@{controller}!set\_player@{set\_player}}
+\index{set\_player@{set\_player}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{set\_player()}{set\_player()}}
+{\footnotesize\ttfamily \label{classcontroller_af3f91125801924170b43d074d521e2ab} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void controller::\+set\+\_\+player (\begin{DoxyParamCaption}\item[{const FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \&}]{player\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\+\_\+player}}.
+
+
+
+\label{classcontroller_doc-variable-members}
+\Hypertarget{classcontroller_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classcontroller_aff80014066793550acc999fd97108750}\index{controller@{controller}!m\_device\_type@{m\_device\_type}}
+\index{m\_device\_type@{m\_device\_type}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{m\_device\_type}{m\_device\_type}}
+{\footnotesize\ttfamily \label{classcontroller_aff80014066793550acc999fd97108750} 
+\doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{Controller\+Type}} controller::\+m\+\_\+device\+\_\+type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}{get\+\_\+device\+\_\+type()}}.
+
+\Hypertarget{classcontroller_ae897845e28482166f68d89316caa242a}\index{controller@{controller}!m\_keyboard\_view@{m\_keyboard\_view}}
+\index{m\_keyboard\_view@{m\_keyboard\_view}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{m\_keyboard\_view}{m\_keyboard\_view}}
+{\footnotesize\ttfamily \label{classcontroller_ae897845e28482166f68d89316caa242a} 
+FE::\+component\+\_\+view$<$FE::\+input\+\_\+device::\+keyboard$>$ controller::\+m\+\_\+keyboard\+\_\+view\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classcontroller_ae60a602b0129a9ebc26b331c69a29f60}{get\+\_\+keyboard()}}.
+
+\Hypertarget{classcontroller_ac553e42e77cf15787024b249dbd02b97}\index{controller@{controller}!m\_mouse\_view@{m\_mouse\_view}}
+\index{m\_mouse\_view@{m\_mouse\_view}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{m\_mouse\_view}{m\_mouse\_view}}
+{\footnotesize\ttfamily \label{classcontroller_ac553e42e77cf15787024b249dbd02b97} 
+FE::\+component\+\_\+view$<$FE::\+input\+\_\+device::\+mouse$>$ controller::\+m\+\_\+mouse\+\_\+view\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classcontroller_a9a34df42269851ba341e8a73eda73dd9}{get\+\_\+mouse()}}.
+
+\Hypertarget{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}\index{controller@{controller}!m\_player@{m\_player}}
+\index{m\_player@{m\_player}!controller@{controller}}
+\doxysubsubsection{\texorpdfstring{m\_player}{m\_player}}
+{\footnotesize\ttfamily \label{classcontroller_a342ba3aeba77dd6902b9848fc27afea8} 
+FE::\+entity$<$FE::\+archetype\+\_\+base$>$ controller::\+m\+\_\+player\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classcontroller_a24f13c93365cbe674bfda62ac676362b}{get\+\_\+player()}}, \doxymbox{\hyperlink{classcontroller_a6d9a04b5b51a8719016bf50cfa0b4d6d}{get\+\_\+player()}}, and \doxymbox{\hyperlink{classcontroller_af3f91125801924170b43d074d521e2ab}{set\+\_\+player()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Engine/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{controller_8hpp}{controller.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,843 @@
+\doxysection{property\+\_\+registry Class Reference}
+\hypertarget{classproperty__registry}{}\label{classproperty__registry}\index{property\_registry@{property\_registry}}
+
+
+{\ttfamily \+\#include $<$reflection.\+hxx$>$}
+
+
+
+Collaboration diagram for property\+\_\+registry:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967}{internal\+\_\+map\+\_\+type}}
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a43581f35260840f1248d48dc13ae330c}{class\+\_\+name\+\_\+type}} = internal\+\_\+map\+\_\+type::\+key\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{class\+\_\+property\+\_\+list}} = internal\+\_\+map\+\_\+type::\+mapped\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a82b6afea0e7251c4ac61a3f7f5d343df}{class\+\_\+property\+\_\+offset\+\_\+type}} = typename class\+\_\+property\+\_\+list::\+key\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_afa81a45f370049c0ed2dd15fa40b6f9d}{class\+\_\+property\+\_\+metadata\+\_\+type}} = typename class\+\_\+property\+\_\+list::\+mapped\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087}{class\+\_\+layer\+\_\+stack}} = std::\+pmr::\+vector$<$ FE::\+pair$<$\doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{class\+\_\+property\+\_\+list}}\texorpdfstring{$\ast$}{*}, typename class\+\_\+property\+\_\+list::\+iterator$>$ $>$
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a9bc8bb040b1208514500213396f72d0b}{data\+\_\+on\+\_\+heap\+\_\+size\+\_\+record}} = std::\+pmr::\+deque$<$\doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}$>$
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_aa349698fc26638442266a89690b549a9}{lock\+\_\+type}} = std::\+mutex
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a93298e92455fe1dc65062010b19d99b7}{file\+\_\+handler}} = std::\+fstream
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6}{input\+\_\+buffer\+\_\+type}} = std::\+pmr::\+string
+\item 
+using \doxymbox{\hyperlink{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3}{input\+\_\+buffer\+\_\+iterator\+\_\+type}} = typename input\+\_\+buffer\+\_\+type::\+iterator
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry}} (FE::\+size reflection\+\_\+map\+\_\+capacity\+\_\+p, \doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}pool\+\_\+p=std::\+pmr::\+get\+\_\+default\+\_\+resource()) noexcept
+\item 
+\doxymbox{\hyperlink{classproperty__registry_afa37c68f322d0534f9a96021ad1e5487}{\texorpdfstring{$\sim$}{\string~}property\+\_\+registry}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a82ec27090aa49cbf8809f5ac4bedc49a}{property\+\_\+registry}} (const \doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classproperty__registry_ad02668997ba22c0e966cea00fdd3cad6}{property\+\_\+registry}} (\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \& \doxymbox{\hyperlink{classproperty__registry_a11be9198146212eb937cc351ac52b306}{operator=}} (const \doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&)=delete
+\item 
+\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \& \doxymbox{\hyperlink{classproperty__registry_a5c86a44a7ccd3faa691282aef1b7441c}{operator=}} (\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}{reserve}} (\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}} size\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class C, typename T$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property}} (const C \&host\+\_\+class\+\_\+instance\+\_\+p, const T \&property\+\_\+p, const std::\+string\+\_\+view \&property\+\_\+name\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize}} (std::\+pmr::\+string \&out\+\_\+ret\+\_\+buffer\+\_\+p, const T \&object\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const version\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize}} (const std::\+pmr::\+string \&data\+\_\+p, T \&out\+\_\+object\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const version\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{classinstance__metadata}{instance\+\_\+metadata}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classproperty__registry_a3f95aa7c077af8f08430b6c8e2c0ae24}{get\+\_\+instance\+\_\+metadata}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Inner\+Container$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive}} () noexcept
+\item 
+{\footnotesize template$<$class Inner\+Container$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} class\+\_\+property\+\_\+list::\+iterator \& \doxymbox{\hyperlink{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30}{\+\_\+\+\_\+get\+\_\+the\+\_\+top\+\_\+class\+\_\+property\+\_\+list\+\_\+iterator}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+ptrdiff \doxymbox{\hyperlink{classproperty__registry_a54bf9458ceed915b9df48b4b10731895}{\+\_\+\+\_\+get\+\_\+memory\+\_\+offset\+\_\+of\+\_\+the\+\_\+property}} (typename class\+\_\+property\+\_\+list::\+iterator \&to\+\_\+the\+\_\+property\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{structproperty__metadata}{property\+\_\+metadata}} \& \doxymbox{\hyperlink{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8}{\+\_\+\+\_\+get\+\_\+metadata\+\_\+of\+\_\+the\+\_\+property}} (typename class\+\_\+property\+\_\+list::\+iterator \&to\+\_\+the\+\_\+property\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{class\+\_\+property\+\_\+list}} \& \doxymbox{\hyperlink{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991}{\+\_\+\+\_\+get\+\_\+top\+\_\+class\+\_\+property\+\_\+list}} () noexcept
+\item 
+{\footnotesize template$<$class U$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+by\+\_\+typename\+\_\+string\+\_\+recursive}} (const std::\+string\+\_\+view \&typename\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive}} (std::\+pmr::\+string \&out\+\_\+ret\+\_\+buffer\+\_\+p, const T \&object\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive}} (T \&out\+\_\+object\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Container$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive}} (std::\+pmr::\+string \&out\+\_\+ret\+\_\+buffer\+\_\+p, const void \texorpdfstring{$\ast$}{*}const data\+\_\+p) noexcept
+\item 
+std::\+string\+\_\+view \doxymbox{\hyperlink{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0}{\+\_\+\+\_\+get\+\_\+serialization\+\_\+task\+\_\+name}} (const std::\+string\+\_\+view \&property\+\_\+typename\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Container$>$ }\\void \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive}} (void \texorpdfstring{$\ast$}{*}const data\+\_\+p) noexcept
+\item 
+std::\+string\+\_\+view \doxymbox{\hyperlink{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba}{\+\_\+\+\_\+get\+\_\+deserialization\+\_\+task\+\_\+name}} (const std::\+string\+\_\+view \&property\+\_\+typename\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61}{m\+\_\+pool}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967}{internal\+\_\+map\+\_\+type}} \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087}{class\+\_\+layer\+\_\+stack}} \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a9bc8bb040b1208514500213396f72d0b}{data\+\_\+on\+\_\+heap\+\_\+size\+\_\+record}} \doxymbox{\hyperlink{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}{m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_aa349698fc26638442266a89690b549a9}{lock\+\_\+type}} \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6}{input\+\_\+buffer\+\_\+type}} \doxymbox{\hyperlink{classproperty__registry_a59efe3ffe273db183cf0b9d109fb6133}{m\+\_\+input\+\_\+buffer}}
+\item 
+\doxymbox{\hyperlink{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3}{input\+\_\+buffer\+\_\+iterator\+\_\+type}} \doxymbox{\hyperlink{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480}{m\+\_\+position}}
+\item 
+absl::\+node\+\_\+hash\+\_\+map$<$ std::\+pmr::\+string, \doxymbox{\hyperlink{classinstance__metadata}{instance\+\_\+metadata}} $>$ \doxymbox{\hyperlink{classproperty__registry_ab7c7c213b3a386c2cd4fa266f10e74e3}{m\+\_\+instance\+\_\+metadata\+\_\+lut}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classproperty__registry_a3a697244cc3cfe6c703be551ea23a3f8}{::\+\+FE::\+framework::\+framework\+\_\+base}}
+\end{DoxyCompactItemize}
+
+
+\label{classproperty__registry_doc-typedef-members}
+\Hypertarget{classproperty__registry_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087}\index{property\_registry@{property\_registry}!class\_layer\_stack@{class\_layer\_stack}}
+\index{class\_layer\_stack@{class\_layer\_stack}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{class\_layer\_stack}{class\_layer\_stack}}
+{\footnotesize\ttfamily \label{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087} 
+using \doxymbox{\hyperlink{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087}{property\+\_\+registry::\+class\+\_\+layer\+\_\+stack}} = std::\+pmr::\+vector$<$ FE::\+pair$<$\doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{class\+\_\+property\+\_\+list}}\texorpdfstring{$\ast$}{*}, typename class\+\_\+property\+\_\+list::\+iterator$>$ $>$}
+
+\Hypertarget{classproperty__registry_a43581f35260840f1248d48dc13ae330c}\index{property\_registry@{property\_registry}!class\_name\_type@{class\_name\_type}}
+\index{class\_name\_type@{class\_name\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{class\_name\_type}{class\_name\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_a43581f35260840f1248d48dc13ae330c} 
+using \doxymbox{\hyperlink{classproperty__registry_a43581f35260840f1248d48dc13ae330c}{property\+\_\+registry::\+class\+\_\+name\+\_\+type}} = internal\+\_\+map\+\_\+type::\+key\+\_\+type}
+
+\Hypertarget{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}\index{property\_registry@{property\_registry}!class\_property\_list@{class\_property\_list}}
+\index{class\_property\_list@{class\_property\_list}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{class\_property\_list}{class\_property\_list}}
+{\footnotesize\ttfamily \label{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d} 
+using \doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{property\+\_\+registry::\+class\+\_\+property\+\_\+list}} = internal\+\_\+map\+\_\+type::\+mapped\+\_\+type}
+
+\Hypertarget{classproperty__registry_afa81a45f370049c0ed2dd15fa40b6f9d}\index{property\_registry@{property\_registry}!class\_property\_metadata\_type@{class\_property\_metadata\_type}}
+\index{class\_property\_metadata\_type@{class\_property\_metadata\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{class\_property\_metadata\_type}{class\_property\_metadata\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_afa81a45f370049c0ed2dd15fa40b6f9d} 
+using \doxymbox{\hyperlink{classproperty__registry_afa81a45f370049c0ed2dd15fa40b6f9d}{property\+\_\+registry::\+class\+\_\+property\+\_\+metadata\+\_\+type}} = typename class\+\_\+property\+\_\+list::\+mapped\+\_\+type}
+
+\Hypertarget{classproperty__registry_a82b6afea0e7251c4ac61a3f7f5d343df}\index{property\_registry@{property\_registry}!class\_property\_offset\_type@{class\_property\_offset\_type}}
+\index{class\_property\_offset\_type@{class\_property\_offset\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{class\_property\_offset\_type}{class\_property\_offset\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_a82b6afea0e7251c4ac61a3f7f5d343df} 
+using \doxymbox{\hyperlink{classproperty__registry_a82b6afea0e7251c4ac61a3f7f5d343df}{property\+\_\+registry::\+class\+\_\+property\+\_\+offset\+\_\+type}} = typename class\+\_\+property\+\_\+list::\+key\+\_\+type}
+
+\Hypertarget{classproperty__registry_a9bc8bb040b1208514500213396f72d0b}\index{property\_registry@{property\_registry}!data\_on\_heap\_size\_record@{data\_on\_heap\_size\_record}}
+\index{data\_on\_heap\_size\_record@{data\_on\_heap\_size\_record}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{data\_on\_heap\_size\_record}{data\_on\_heap\_size\_record}}
+{\footnotesize\ttfamily \label{classproperty__registry_a9bc8bb040b1208514500213396f72d0b} 
+using \doxymbox{\hyperlink{classproperty__registry_a9bc8bb040b1208514500213396f72d0b}{property\+\_\+registry::\+data\+\_\+on\+\_\+heap\+\_\+size\+\_\+record}} = std::\+pmr::\+deque$<$\doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}$>$}
+
+\Hypertarget{classproperty__registry_a93298e92455fe1dc65062010b19d99b7}\index{property\_registry@{property\_registry}!file\_handler@{file\_handler}}
+\index{file\_handler@{file\_handler}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{file\_handler}{file\_handler}}
+{\footnotesize\ttfamily \label{classproperty__registry_a93298e92455fe1dc65062010b19d99b7} 
+using \doxymbox{\hyperlink{classproperty__registry_a93298e92455fe1dc65062010b19d99b7}{property\+\_\+registry::\+file\+\_\+handler}} = std::\+fstream}
+
+\Hypertarget{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3}\index{property\_registry@{property\_registry}!input\_buffer\_iterator\_type@{input\_buffer\_iterator\_type}}
+\index{input\_buffer\_iterator\_type@{input\_buffer\_iterator\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{input\_buffer\_iterator\_type}{input\_buffer\_iterator\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3} 
+using \doxymbox{\hyperlink{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3}{property\+\_\+registry::\+input\+\_\+buffer\+\_\+iterator\+\_\+type}} = typename input\+\_\+buffer\+\_\+type::\+iterator}
+
+\Hypertarget{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6}\index{property\_registry@{property\_registry}!input\_buffer\_type@{input\_buffer\_type}}
+\index{input\_buffer\_type@{input\_buffer\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{input\_buffer\_type}{input\_buffer\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6} 
+using \doxymbox{\hyperlink{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6}{property\+\_\+registry::\+input\+\_\+buffer\+\_\+type}} = std::\+pmr::\+string}
+
+\Hypertarget{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967}\index{property\_registry@{property\_registry}!internal\_map\_type@{internal\_map\_type}}
+\index{internal\_map\_type@{internal\_map\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{internal\_map\_type}{internal\_map\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967} 
+using \doxymbox{\hyperlink{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967}{property\+\_\+registry::\+internal\+\_\+map\+\_\+type}}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{absl::node\_hash\_map<std::pmr::string,\ std::pmr::map<var::ptrdiff,\ property\_metadata>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ FE::hash<std::pmr::string>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ std::equal\_to<std::pmr::string>,}
+\DoxyCodeLine{\ \ \ \ \ \ \ FE::cache\_aligned\_allocator<std::pmr::string>>}
+
+\end{DoxyCode}
+\Hypertarget{classproperty__registry_aa349698fc26638442266a89690b549a9}\index{property\_registry@{property\_registry}!lock\_type@{lock\_type}}
+\index{lock\_type@{lock\_type}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{lock\_type}{lock\_type}}
+{\footnotesize\ttfamily \label{classproperty__registry_aa349698fc26638442266a89690b549a9} 
+using \doxymbox{\hyperlink{classproperty__registry_aa349698fc26638442266a89690b549a9}{property\+\_\+registry::\+lock\+\_\+type}} = std::\+mutex}
+
+
+
+\label{classproperty__registry_doc-constructors}
+\Hypertarget{classproperty__registry_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{property\_registry()}{property\_registry()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8} 
+property\+\_\+registry::\+property\+\_\+registry (\begin{DoxyParamCaption}\item[{FE::\+size}]{reflection\+\_\+map\+\_\+capacity\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}}]{pool\+\_\+p}{ = {\ttfamily std:\+:\+pmr:\+:\+get\+\_\+default\+\_\+resource()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a11be9198146212eb937cc351ac52b306}{operator=()}}, \doxymbox{\hyperlink{classproperty__registry_a5c86a44a7ccd3faa691282aef1b7441c}{operator=()}}, \doxymbox{\hyperlink{classproperty__registry_a82ec27090aa49cbf8809f5ac4bedc49a}{property\+\_\+registry()}}, \doxymbox{\hyperlink{classproperty__registry_ad02668997ba22c0e966cea00fdd3cad6}{property\+\_\+registry()}}, \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}, and \doxymbox{\hyperlink{classproperty__registry_afa37c68f322d0534f9a96021ad1e5487}{\texorpdfstring{$\sim$}{\string~}property\+\_\+registry()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_afa37c68f322d0534f9a96021ad1e5487}\index{property\_registry@{property\_registry}!````~property\_registry@{\texorpdfstring{$\sim$}{\string~}property\_registry}}
+\index{````~property\_registry@{\texorpdfstring{$\sim$}{\string~}property\_registry}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}property\_registry()}{\string~property\_registry()}}
+{\footnotesize\ttfamily \label{classproperty__registry_afa37c68f322d0534f9a96021ad1e5487} 
+property\+\_\+registry::\+\texorpdfstring{$\sim$}{\string~}property\+\_\+registry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classproperty__registry_afa37c68f322d0534f9a96021ad1e5487_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a82ec27090aa49cbf8809f5ac4bedc49a}\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{property\_registry()}{property\_registry()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classproperty__registry_a82ec27090aa49cbf8809f5ac4bedc49a} 
+property\+\_\+registry::\+property\+\_\+registry (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classproperty__registry_a82ec27090aa49cbf8809f5ac4bedc49a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_ad02668997ba22c0e966cea00fdd3cad6}\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\index{property\_registry@{property\_registry}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{property\_registry()}{property\_registry()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classproperty__registry_ad02668997ba22c0e966cea00fdd3cad6} 
+property\+\_\+registry::\+property\+\_\+registry (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classproperty__registry_ad02668997ba22c0e966cea00fdd3cad6_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classproperty__registry_doc-func-members}
+\Hypertarget{classproperty__registry_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}\index{property\_registry@{property\_registry}!\_\_deserialize\_by\_foreach\_mutually\_recursive@{\_\_deserialize\_by\_foreach\_mutually\_recursive}}
+\index{\_\_deserialize\_by\_foreach\_mutually\_recursive@{\_\_deserialize\_by\_foreach\_mutually\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_deserialize\_by\_foreach\_mutually\_recursive()}{\_\_deserialize\_by\_foreach\_mutually\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98} 
+template$<$class Container$>$ \\
+void property\+\_\+registry::\+\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}const}]{data\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480}{m\+\_\+position}}, and \doxymbox{\hyperlink{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}{m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}\index{property\_registry@{property\_registry}!\_\_deserialize\_mutually\_recursive@{\_\_deserialize\_mutually\_recursive}}
+\index{\_\_deserialize\_mutually\_recursive@{\_\_deserialize\_mutually\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_deserialize\_mutually\_recursive()}{\_\_deserialize\_mutually\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1} 
+template$<$typename T$>$ \\
+void property\+\_\+registry::\+\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive (\begin{DoxyParamCaption}\item[{T \&}]{out\+\_\+object\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba}{\+\_\+\+\_\+get\+\_\+deserialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_a54bf9458ceed915b9df48b4b10731895}{\+\_\+\+\_\+get\+\_\+memory\+\_\+offset\+\_\+of\+\_\+the\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8}{\+\_\+\+\_\+get\+\_\+metadata\+\_\+of\+\_\+the\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30}{\+\_\+\+\_\+get\+\_\+the\+\_\+top\+\_\+class\+\_\+property\+\_\+list\+\_\+iterator()}}, \doxymbox{\hyperlink{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991}{\+\_\+\+\_\+get\+\_\+top\+\_\+class\+\_\+property\+\_\+list()}}, \doxymbox{\hyperlink{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+by\+\_\+typename\+\_\+string\+\_\+recursive()}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}}, \doxymbox{\hyperlink{structproperty__metadata_a9966940e097d94fc7e9319b4272d1a6e}{property\+\_\+metadata::\+\+\_\+size\+\_\+in\+\_\+byte}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{\+\_\+\+Trivial}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classframework__base_a3c205065d5c1c413fb216671906a7e3e}{framework\+\_\+base::\+get\+\_\+framework()}}, \doxymbox{\hyperlink{classframework__base_a6ade7ddeca01a5fcfe98853e10d37798}{framework\+\_\+base::\+get\+\_\+method\+\_\+reflection()}}, \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}, \doxymbox{\hyperlink{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480}{m\+\_\+position}}, and \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba}\index{property\_registry@{property\_registry}!\_\_get\_deserialization\_task\_name@{\_\_get\_deserialization\_task\_name}}
+\index{\_\_get\_deserialization\_task\_name@{\_\_get\_deserialization\_task\_name}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_deserialization\_task\_name()}{\_\_get\_deserialization\_task\_name()}}
+{\footnotesize\ttfamily \label{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba} 
+std::\+string\+\_\+view property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+deserialization\+\_\+task\+\_\+name (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{property\+\_\+typename\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a54bf9458ceed915b9df48b4b10731895}\index{property\_registry@{property\_registry}!\_\_get\_memory\_offset\_of\_the\_property@{\_\_get\_memory\_offset\_of\_the\_property}}
+\index{\_\_get\_memory\_offset\_of\_the\_property@{\_\_get\_memory\_offset\_of\_the\_property}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_memory\_offset\_of\_the\_property()}{\_\_get\_memory\_offset\_of\_the\_property()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a54bf9458ceed915b9df48b4b10731895} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+ptrdiff property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+memory\+\_\+offset\+\_\+of\+\_\+the\+\_\+property (\begin{DoxyParamCaption}\item[{typename class\+\_\+property\+\_\+list::\+iterator \&}]{to\+\_\+the\+\_\+property\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a54bf9458ceed915b9df48b4b10731895_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8}\index{property\_registry@{property\_registry}!\_\_get\_metadata\_of\_the\_property@{\_\_get\_metadata\_of\_the\_property}}
+\index{\_\_get\_metadata\_of\_the\_property@{\_\_get\_metadata\_of\_the\_property}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_metadata\_of\_the\_property()}{\_\_get\_metadata\_of\_the\_property()}}
+{\footnotesize\ttfamily \label{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{structproperty__metadata}{property\+\_\+metadata}} \& property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+metadata\+\_\+of\+\_\+the\+\_\+property (\begin{DoxyParamCaption}\item[{typename class\+\_\+property\+\_\+list::\+iterator \&}]{to\+\_\+the\+\_\+property\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0}\index{property\_registry@{property\_registry}!\_\_get\_serialization\_task\_name@{\_\_get\_serialization\_task\_name}}
+\index{\_\_get\_serialization\_task\_name@{\_\_get\_serialization\_task\_name}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_serialization\_task\_name()}{\_\_get\_serialization\_task\_name()}}
+{\footnotesize\ttfamily \label{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0} 
+std::\+string\+\_\+view property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+serialization\+\_\+task\+\_\+name (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{property\+\_\+typename\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30}\index{property\_registry@{property\_registry}!\_\_get\_the\_top\_class\_property\_list\_iterator@{\_\_get\_the\_top\_class\_property\_list\_iterator}}
+\index{\_\_get\_the\_top\_class\_property\_list\_iterator@{\_\_get\_the\_top\_class\_property\_list\_iterator}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_the\_top\_class\_property\_list\_iterator()}{\_\_get\_the\_top\_class\_property\_list\_iterator()}}
+{\footnotesize\ttfamily \label{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} class\+\_\+property\+\_\+list::\+iterator \& property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+the\+\_\+top\+\_\+class\+\_\+property\+\_\+list\+\_\+iterator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991}\index{property\_registry@{property\_registry}!\_\_get\_top\_class\_property\_list@{\_\_get\_top\_class\_property\_list}}
+\index{\_\_get\_top\_class\_property\_list@{\_\_get\_top\_class\_property\_list}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_get\_top\_class\_property\_list()}{\_\_get\_top\_class\_property\_list()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classproperty__registry_a54d188d41a49c8239d542a9cc8dd161d}{class\+\_\+property\+\_\+list}} \& property\+\_\+registry::\+\+\_\+\+\_\+get\+\_\+top\+\_\+class\+\_\+property\+\_\+list (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}\index{property\_registry@{property\_registry}!\_\_push\_multidimensional\_container\_deserialization\_task\_recursive@{\_\_push\_multidimensional\_container\_deserialization\_task\_recursive}}
+\index{\_\_push\_multidimensional\_container\_deserialization\_task\_recursive@{\_\_push\_multidimensional\_container\_deserialization\_task\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_push\_multidimensional\_container\_deserialization\_task\_recursive()}{\_\_push\_multidimensional\_container\_deserialization\_task\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125} 
+template$<$class Inner\+Container$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void property\+\_\+registry::\+\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba}{\+\_\+\+\_\+get\+\_\+deserialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classframework__base_a3c205065d5c1c413fb216671906a7e3e}{framework\+\_\+base::\+get\+\_\+framework()}}, \doxymbox{\hyperlink{classframework__base_a6ade7ddeca01a5fcfe98853e10d37798}{framework\+\_\+base::\+get\+\_\+method\+\_\+reflection()}}, and \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_aab26a47838339e36e7403bf251d01d66}\index{property\_registry@{property\_registry}!\_\_push\_multidimensional\_container\_serialization\_task\_recursive@{\_\_push\_multidimensional\_container\_serialization\_task\_recursive}}
+\index{\_\_push\_multidimensional\_container\_serialization\_task\_recursive@{\_\_push\_multidimensional\_container\_serialization\_task\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_push\_multidimensional\_container\_serialization\_task\_recursive()}{\_\_push\_multidimensional\_container\_serialization\_task\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_aab26a47838339e36e7403bf251d01d66} 
+template$<$class Inner\+Container$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void property\+\_\+registry::\+\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0}{\+\_\+\+\_\+get\+\_\+serialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classframework__base_a3c205065d5c1c413fb216671906a7e3e}{framework\+\_\+base::\+get\+\_\+framework()}}, \doxymbox{\hyperlink{classframework__base_a6ade7ddeca01a5fcfe98853e10d37798}{framework\+\_\+base::\+get\+\_\+method\+\_\+reflection()}}, and \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_aab26a47838339e36e7403bf251d01d66_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classproperty__registry_aab26a47838339e36e7403bf251d01d66_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802}\index{property\_registry@{property\_registry}!\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive@{\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive}}
+\index{\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive@{\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive()}{\_\_push\_parent\_class\_layers\_by\_typename\_string\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802} 
+void property\+\_\+registry::\+\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+by\+\_\+typename\+\_\+string\+\_\+recursive (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{typename\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}\index{property\_registry@{property\_registry}!\_\_push\_parent\_class\_layers\_recursive@{\_\_push\_parent\_class\_layers\_recursive}}
+\index{\_\_push\_parent\_class\_layers\_recursive@{\_\_push\_parent\_class\_layers\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_push\_parent\_class\_layers\_recursive()}{\_\_push\_parent\_class\_layers\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6} 
+template$<$class U$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void property\+\_\+registry::\+\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}, and \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=319pt]{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}\index{property\_registry@{property\_registry}!\_\_serialize\_by\_foreach\_mutually\_recursive@{\_\_serialize\_by\_foreach\_mutually\_recursive}}
+\index{\_\_serialize\_by\_foreach\_mutually\_recursive@{\_\_serialize\_by\_foreach\_mutually\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_serialize\_by\_foreach\_mutually\_recursive()}{\_\_serialize\_by\_foreach\_mutually\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b} 
+template$<$class Container$>$ \\
+void property\+\_\+registry::\+\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive (\begin{DoxyParamCaption}\item[{std::\+pmr::\+string \&}]{out\+\_\+ret\+\_\+buffer\+\_\+p}{, }\item[{const void \texorpdfstring{$\ast$}{*}const}]{data\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}{m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}\index{property\_registry@{property\_registry}!\_\_serialize\_mutually\_recursive@{\_\_serialize\_mutually\_recursive}}
+\index{\_\_serialize\_mutually\_recursive@{\_\_serialize\_mutually\_recursive}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{\_\_serialize\_mutually\_recursive()}{\_\_serialize\_mutually\_recursive()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a605a19191bf71d8c1e1761f801de082e} 
+template$<$typename T$>$ \\
+void property\+\_\+registry::\+\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive (\begin{DoxyParamCaption}\item[{std::\+pmr::\+string \&}]{out\+\_\+ret\+\_\+buffer\+\_\+p}{, }\item[{const T \&}]{object\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_a54bf9458ceed915b9df48b4b10731895}{\+\_\+\+\_\+get\+\_\+memory\+\_\+offset\+\_\+of\+\_\+the\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_af070ce279d80c3b34b7fea2780660fd8}{\+\_\+\+\_\+get\+\_\+metadata\+\_\+of\+\_\+the\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0}{\+\_\+\+\_\+get\+\_\+serialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30}{\+\_\+\+\_\+get\+\_\+the\+\_\+top\+\_\+class\+\_\+property\+\_\+list\+\_\+iterator()}}, \doxymbox{\hyperlink{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991}{\+\_\+\+\_\+get\+\_\+top\+\_\+class\+\_\+property\+\_\+list()}}, \doxymbox{\hyperlink{classproperty__registry_a2e2c38d1c2b2115e7fc913fc24a5d802}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+by\+\_\+typename\+\_\+string\+\_\+recursive()}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3abc174e434767900bb718e9adbf673f96}{\+\_\+\+Not\+Trivial}}, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{\+\_\+\+Trivial}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classframework__base_a3c205065d5c1c413fb216671906a7e3e}{framework\+\_\+base::\+get\+\_\+framework()}}, \doxymbox{\hyperlink{classframework__base_a6ade7ddeca01a5fcfe98853e10d37798}{framework\+\_\+base::\+get\+\_\+method\+\_\+reflection()}}, \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}, and \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a605a19191bf71d8c1e1761f801de082e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a605a19191bf71d8c1e1761f801de082e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}\index{property\_registry@{property\_registry}!deserialize@{deserialize}}
+\index{deserialize@{deserialize}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{deserialize()}{deserialize()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2} 
+template$<$typename T$>$ \\
+void property\+\_\+registry::\+deserialize (\begin{DoxyParamCaption}\item[{const std::\+pmr::\+string \&}]{data\+\_\+p}{, }\item[{T \&}]{out\+\_\+object\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const}]{version\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa05e12750f5a9dc8fdf8c7b06afcb85d5}{FE::\+\+\_\+\+Fatal\+Serialization\+Error\+\_\+3\+XX\+\_\+\+File\+Version\+Mismatch}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa32e131cb6f5f5a81582ad0ecdb336ded}{FE::\+\+\_\+\+Fatal\+Serialization\+Error\+\_\+3\+XX\+\_\+\+Type\+Mismatch}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{log_8hxx_ae9c129c4f0cda55d43b05a65a1d7a796}{FE\+\_\+\+LOG}}, \doxymbox{\hyperlink{log_8hxx_aed7826b8d7ff3a8fb9af0fc4bf486470}{FE\+\_\+\+LOG\+\_\+\+IF}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}, \doxymbox{\hyperlink{classproperty__registry_a59efe3ffe273db183cf0b9d109fb6133}{m\+\_\+input\+\_\+buffer}}, \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}, \doxymbox{\hyperlink{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61}{m\+\_\+pool}}, \doxymbox{\hyperlink{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480}{m\+\_\+position}}, \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}, \doxymbox{\hyperlink{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}{m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a3f95aa7c077af8f08430b6c8e2c0ae24}\index{property\_registry@{property\_registry}!get\_instance\_metadata@{get\_instance\_metadata}}
+\index{get\_instance\_metadata@{get\_instance\_metadata}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{get\_instance\_metadata()}{get\_instance\_metadata()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a3f95aa7c077af8f08430b6c8e2c0ae24} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classinstance__metadata}{instance\+\_\+metadata}} \texorpdfstring{$\ast$}{*} property\+\_\+registry::\+get\+\_\+instance\+\_\+metadata (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ab7c7c213b3a386c2cd4fa266f10e74e3}{m\+\_\+instance\+\_\+metadata\+\_\+lut}}, and \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}.
+
+\Hypertarget{classproperty__registry_a11be9198146212eb937cc351ac52b306}\index{property\_registry@{property\_registry}!operator=@{operator=}}
+\index{operator=@{operator=}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classproperty__registry_a11be9198146212eb937cc351ac52b306} 
+\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \& property\+\_\+registry::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classproperty__registry_a11be9198146212eb937cc351ac52b306_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a5c86a44a7ccd3faa691282aef1b7441c}\index{property\_registry@{property\_registry}!operator=@{operator=}}
+\index{operator=@{operator=}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classproperty__registry_a5c86a44a7ccd3faa691282aef1b7441c} 
+\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \& property\+\_\+registry::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classproperty__registry_a5c86a44a7ccd3faa691282aef1b7441c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}\index{property\_registry@{property\_registry}!register\_property@{register\_property}}
+\index{register\_property@{register\_property}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{register\_property()}{register\_property()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050} 
+template$<$class C, typename T$>$ \\
+void property\+\_\+registry::\+register\+\_\+property (\begin{DoxyParamCaption}\item[{const C \&}]{host\+\_\+class\+\_\+instance\+\_\+p}{, }\item[{const T \&}]{property\+\_\+p}{, }\item[{const std::\+string\+\_\+view \&}]{property\+\_\+name\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aed7fdba834c71ccdd101b85fd9dfc7ba}{\+\_\+\+\_\+get\+\_\+deserialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_af01eadfb7a39ff23eb9df5fe4a9b92d0}{\+\_\+\+\_\+get\+\_\+serialization\+\_\+task\+\_\+name()}}, \doxymbox{\hyperlink{classproperty__registry_a8cc550326c794c2a3bfe9af8212da125}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+deserialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aab26a47838339e36e7403bf251d01d66}{\+\_\+\+\_\+push\+\_\+multidimensional\+\_\+container\+\_\+serialization\+\_\+task\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faceb56aef233cf1dacc483514be39bfe3}{FE::\+\+\_\+\+Fatal\+Error\+\_\+\+Table\+Insertion\+Failure}}, \doxymbox{\hyperlink{definitions_8hxx_a4c99351d8d3c5b65d07d7eae7bf7a01f}{\+\_\+\+FE\+\_\+\+UNLIKELY\+\_\+}}, \doxymbox{\hyperlink{structproperty__metadata_a93c3e940087a5a38ca5c8df66f59f011}{property\+\_\+metadata::\+\+\_\+is\+\_\+serializable}}, \doxymbox{\hyperlink{structproperty__metadata_ac98d56b55904fdbfb0b904254dc509f1}{property\+\_\+metadata::\+\+\_\+is\+\_\+trivial}}, \doxymbox{\hyperlink{structproperty__metadata_aaeb577f11c444ed2d16f409f7137ce34}{property\+\_\+metadata::\+\+\_\+name}}, \doxymbox{\hyperlink{structproperty__metadata_aed6dd6f2823afa8e103dbc5bd2c62933}{property\+\_\+metadata::\+\+\_\+offset\+\_\+from\+\_\+this}}, \doxymbox{\hyperlink{structproperty__metadata_a9966940e097d94fc7e9319b4272d1a6e}{property\+\_\+metadata::\+\+\_\+size\+\_\+in\+\_\+byte}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{definitions_8hxx_ae3e3f0c7577e1759aec3ea9516b11826}{FE\+\_\+\+UNLIKELY}}, \doxymbox{\hyperlink{classframework__base_a3c205065d5c1c413fb216671906a7e3e}{framework\+\_\+base::\+get\+\_\+framework()}}, \doxymbox{\hyperlink{classframework__base_a6ade7ddeca01a5fcfe98853e10d37798}{framework\+\_\+base::\+get\+\_\+method\+\_\+reflection()}}, \doxymbox{\hyperlink{classproperty__registry_ab7c7c213b3a386c2cd4fa266f10e74e3}{m\+\_\+instance\+\_\+metadata\+\_\+lut}}, \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}, \doxymbox{\hyperlink{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61}{m\+\_\+pool}}, \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}, \doxymbox{\hyperlink{structproperty__metadata_a774fb3d48f1e53bfe03f07811342acaa}{property\+\_\+metadata::\+m\+\_\+typename}}, and \doxymbox{\hyperlink{classproperty__registry_ad3cbfc91a2694222c95f4fcf209061a8}{property\+\_\+registry()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}\index{property\_registry@{property\_registry}!reserve@{reserve}}
+\index{reserve@{reserve}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{reserve()}{reserve()}}
+{\footnotesize\ttfamily \label{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void property\+\_\+registry::\+reserve (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}}]{size\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}, \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}, \doxymbox{\hyperlink{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}{reserve()}}, and \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}{reserve()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classproperty__registry_abff07bc7cb718514d79cd4d557957064}\index{property\_registry@{property\_registry}!serialize@{serialize}}
+\index{serialize@{serialize}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily \label{classproperty__registry_abff07bc7cb718514d79cd4d557957064} 
+template$<$typename T$>$ \\
+void property\+\_\+registry::\+serialize (\begin{DoxyParamCaption}\item[{std::\+pmr::\+string \&}]{out\+\_\+ret\+\_\+buffer\+\_\+p}{, }\item[{const T \&}]{object\+\_\+p}{, }\item[{FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const}]{version\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{log_8hxx_ae9c129c4f0cda55d43b05a65a1d7a796}{FE\+\_\+\+LOG}}, \doxymbox{\hyperlink{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}{m\+\_\+class\+\_\+layer}}, \doxymbox{\hyperlink{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}{m\+\_\+lock}}, \doxymbox{\hyperlink{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61}{m\+\_\+pool}}, \doxymbox{\hyperlink{classproperty__registry_a02879de8529c58db99d0277ebf399509}{m\+\_\+property\+\_\+registry}}, \doxymbox{\hyperlink{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}{m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record}}, \doxymbox{\hyperlink{memory_8hxx_a93aa8fd96d145e5bf46c8fbbd78da0e8}{one\+\_\+\+KiB}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classproperty__registry_abff07bc7cb718514d79cd4d557957064_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classproperty__registry_doc-related-members}
+\Hypertarget{classproperty__registry_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classproperty__registry_a3a697244cc3cfe6c703be551ea23a3f8}\index{property\_registry@{property\_registry}!::FE::framework::framework\_base@{::FE::framework::framework\_base}}
+\index{::FE::framework::framework\_base@{::FE::framework::framework\_base}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{::FE::framework::framework\_base}{::FE::framework::framework\_base}}
+{\footnotesize\ttfamily \label{classproperty__registry_a3a697244cc3cfe6c703be551ea23a3f8} 
+friend class \doxymbox{\hyperlink{class_f_e_1_1framework_1_1framework__base}{::\+\+FE::\+framework::\+framework\+\_\+base}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\label{classproperty__registry_doc-variable-members}
+\Hypertarget{classproperty__registry_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36}\index{property\_registry@{property\_registry}!m\_class\_layer@{m\_class\_layer}}
+\index{m\_class\_layer@{m\_class\_layer}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_class\_layer}{m\_class\_layer}}
+{\footnotesize\ttfamily \label{classproperty__registry_a0371d66e76a2c4668329f0fd8abfde36} 
+\doxymbox{\hyperlink{classproperty__registry_a8a600ee907e4e7fbe3f395ee23469087}{class\+\_\+layer\+\_\+stack}} property\+\_\+registry::\+m\+\_\+class\+\_\+layer\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_af10ed06e22190a6fb8ed0aa2f3031f30}{\+\_\+\+\_\+get\+\_\+the\+\_\+top\+\_\+class\+\_\+property\+\_\+list\+\_\+iterator()}}, \doxymbox{\hyperlink{classproperty__registry_a48fc400482cfef1e17f37bcccc50d991}{\+\_\+\+\_\+get\+\_\+top\+\_\+class\+\_\+property\+\_\+list()}}, \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+\Hypertarget{classproperty__registry_a59efe3ffe273db183cf0b9d109fb6133}\index{property\_registry@{property\_registry}!m\_input\_buffer@{m\_input\_buffer}}
+\index{m\_input\_buffer@{m\_input\_buffer}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_input\_buffer}{m\_input\_buffer}}
+{\footnotesize\ttfamily \label{classproperty__registry_a59efe3ffe273db183cf0b9d109fb6133} 
+\doxymbox{\hyperlink{classproperty__registry_a935da07e31754fa3a909d79b63a1b5a6}{input\+\_\+buffer\+\_\+type}} property\+\_\+registry::\+m\+\_\+input\+\_\+buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}.
+
+\Hypertarget{classproperty__registry_ab7c7c213b3a386c2cd4fa266f10e74e3}\index{property\_registry@{property\_registry}!m\_instance\_metadata\_lut@{m\_instance\_metadata\_lut}}
+\index{m\_instance\_metadata\_lut@{m\_instance\_metadata\_lut}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_instance\_metadata\_lut}{m\_instance\_metadata\_lut}}
+{\footnotesize\ttfamily \label{classproperty__registry_ab7c7c213b3a386c2cd4fa266f10e74e3} 
+absl::\+node\+\_\+hash\+\_\+map$<$std::\+pmr::\+string, \doxymbox{\hyperlink{classinstance__metadata}{instance\+\_\+metadata}}$>$ property\+\_\+registry::\+m\+\_\+instance\+\_\+metadata\+\_\+lut\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a3f95aa7c077af8f08430b6c8e2c0ae24}{get\+\_\+instance\+\_\+metadata()}}, and \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}.
+
+\Hypertarget{classproperty__registry_a66e944984940bc92d8192e7f7a94259f}\index{property\_registry@{property\_registry}!m\_lock@{m\_lock}}
+\index{m\_lock@{m\_lock}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_lock}{m\_lock}}
+{\footnotesize\ttfamily \label{classproperty__registry_a66e944984940bc92d8192e7f7a94259f} 
+\doxymbox{\hyperlink{classproperty__registry_aa349698fc26638442266a89690b549a9}{lock\+\_\+type}} property\+\_\+registry::\+m\+\_\+lock\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, \doxymbox{\hyperlink{classproperty__registry_a3f95aa7c077af8f08430b6c8e2c0ae24}{get\+\_\+instance\+\_\+metadata()}}, \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}{reserve()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+\Hypertarget{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61}\index{property\_registry@{property\_registry}!m\_pool@{m\_pool}}
+\index{m\_pool@{m\_pool}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_pool}{m\_pool}}
+{\footnotesize\ttfamily \label{classproperty__registry_a415b7f7063b45c9266e11a677a8eda61} 
+\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}}\texorpdfstring{$\ast$}{*} property\+\_\+registry::\+m\+\_\+pool\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+\Hypertarget{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480}\index{property\_registry@{property\_registry}!m\_position@{m\_position}}
+\index{m\_position@{m\_position}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_position}{m\_position}}
+{\footnotesize\ttfamily \label{classproperty__registry_a97e0fa67a3e6bb8cb8052b9d7b644480} 
+\doxymbox{\hyperlink{classproperty__registry_a64a9196f699592a723d65d0f5791e3e3}{input\+\_\+buffer\+\_\+iterator\+\_\+type}} property\+\_\+registry::\+m\+\_\+position\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, and \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}.
+
+\Hypertarget{classproperty__registry_a02879de8529c58db99d0277ebf399509}\index{property\_registry@{property\_registry}!m\_property\_registry@{m\_property\_registry}}
+\index{m\_property\_registry@{m\_property\_registry}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_property\_registry}{m\_property\_registry}}
+{\footnotesize\ttfamily \label{classproperty__registry_a02879de8529c58db99d0277ebf399509} 
+\doxymbox{\hyperlink{classproperty__registry_a15a5a939bf7dd64994ac419fc14fb967}{internal\+\_\+map\+\_\+type}} property\+\_\+registry::\+m\+\_\+property\+\_\+registry\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_a406b010a2fdeb1f041cf1aff8ecb33d1}{\+\_\+\+\_\+deserialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a877fa3b5da7ff952c852e719788f8ad6}{\+\_\+\+\_\+push\+\_\+parent\+\_\+class\+\_\+layers\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a605a19191bf71d8c1e1761f801de082e}{\+\_\+\+\_\+serialize\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, \doxymbox{\hyperlink{classproperty__registry_a58e2d098829d628d9dcfbc407fbf1050}{register\+\_\+property()}}, \doxymbox{\hyperlink{classproperty__registry_a7c0b7d16c3ce9c3d73c694eade0c5b7c}{reserve()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+\Hypertarget{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85}\index{property\_registry@{property\_registry}!m\_scalable\_container\_size\_record@{m\_scalable\_container\_size\_record}}
+\index{m\_scalable\_container\_size\_record@{m\_scalable\_container\_size\_record}!property\_registry@{property\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_scalable\_container\_size\_record}{m\_scalable\_container\_size\_record}}
+{\footnotesize\ttfamily \label{classproperty__registry_a524ab7c136e88b2feed27a1069e96a85} 
+\doxymbox{\hyperlink{classproperty__registry_a9bc8bb040b1208514500213396f72d0b}{data\+\_\+on\+\_\+heap\+\_\+size\+\_\+record}} property\+\_\+registry::\+m\+\_\+scalable\+\_\+container\+\_\+size\+\_\+record\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classproperty__registry_ac5534f5b1027ad74d1d7671de6803a98}{\+\_\+\+\_\+deserialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_aeb32212b6669cd2e701efbb04faa0b2b}{\+\_\+\+\_\+serialize\+\_\+by\+\_\+foreach\+\_\+mutually\+\_\+recursive()}}, \doxymbox{\hyperlink{classproperty__registry_a8f40651a5da8283bbc57c875927cdfe2}{deserialize()}}, and \doxymbox{\hyperlink{classproperty__registry_abff07bc7cb718514d79cd4d557957064}{serialize()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{reflection_8hxx}{reflection.\+hxx}}\end{DoxyCompactItemize}

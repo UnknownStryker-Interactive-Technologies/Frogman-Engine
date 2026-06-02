@@ -1,0 +1,638 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Header-\/\+Tool/\+\+Include/\+vocabulary.hpp File Reference}
+\hypertarget{vocabulary_8hpp}{}\label{vocabulary_8hpp}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/vocabulary.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/vocabulary.hpp}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$tsl/\+htrie\+\_\+map.\+h$>$}\newline
+Include dependency graph for vocabulary.\+hpp:\+
+% FIG 0
+This graph shows which files directly or indirectly include this file:\+
+% FIG 1
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}{Vocabulary}} :\+ FE::\+uint32 \{ \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a99b8e8f98ec8efcf4b56a1fa0ec5997b}{\+\_\+\+Undefined}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab3615f2c54c82f5a099d9d6346223ea5}{\+\_\+\+End\+Of\+Code}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5a06eed9653185f36622d7ca16c1d170}{\+\_\+\+Any\+Decl}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1}{\+\_\+\+Line\+Comment}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8b3ea1bd49643376a6b61024d119c0f3}{\+\_\+\+Line\+End}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9}{\+\_\+\+Comment\+Begin}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2}{\+\_\+\+Comment\+End}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a79dec327a9e8ee84b7858235478cd088}{\+\_\+\+Comment\+Body}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8}{\+\_\+\+Begin\+Namespace}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507}{\+\_\+\+End\+Namespace}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a1db22cb15042a2b61385331e797576a4}{\+\_\+\+Namespace}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718}{\+\_\+\+Namespace\+Concatenator}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afd2b6dcafaf9ec20484194e9fd07b095}{\+\_\+\+Template}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4c6dec3535bb22abfae47d18d99461b}{\+\_\+\+Begin\+Template\+Args}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac00e33848d422c0736d097a7438facab}{\+\_\+\+Typename}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a893c51429255a7da27f8f389ca4b353e}{\+\_\+\+Template\+Arg}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a2039f0aca0ceed17c357242883f30ebe}{\+\_\+\+End\+Template\+Args}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9e1fdefd21c40a4c8b7abf110b1b0de8}{\+\_\+\+Template\+Body}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afec3c3a1002be26952cb8116eba7533d}{\+\_\+\+Class}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9264400ad12d1a8458abed8b080839d8}{\+\_\+\+Struct}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a237da50c7c4b3716f9e73e2c3b4258eb}{\+\_\+\+Enum\+Struct}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afe637dbdfe071bb3544957f3b5f417fe}{\+\_\+\+Class\+Struct\+Enum\+Forward\+Declaration}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a311b09a3b446ee3ba12a2b8c3cff221b}{\+\_\+\+Field\+Type}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8f1ca47f544372dbc605a3867aa7d163}{\+\_\+\+Field\+Identifier}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac46254636214e0a1752e2ef7a01e69c0}{\+\_\+\+Enum\+Struct\+Field}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ae360c2baf727af8f3e3a7f2a9ee7ce2d}{\+\_\+\+Enum\+Struct\+Field\+Initial\+Value}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9d5db9a2f9dbbda8908205196fa5d5f2}{\+\_\+\+Colon}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee6b32fc86b0ebe723034e82f158fe05}{\+\_\+\+Semicolon}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa092ce4be0fdc357ff9d1bae9b17246f}{\+\_\+\+Comma}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a368d6f342c7137ffae57c8a4e12b29dc}{\+\_\+\+Back\+Slash}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad6066dc4012876fc8eb3e1c773dd52d1}{\+\_\+\+Text\+Literal\+Prefix}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aab1991c3eae67799a94ede3fc8e5068f}{\+\_\+\+String\+Literal}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3b49a70500fb1ae3f8d307d5ee5ddcbe}{\+\_\+\+Char\+Literal}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeb1a2177279992441b16eb5963a5a77b}{\+\_\+\+Number\+Value}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8707dcc0102953abb94ddf23b2075802}{\+\_\+\+Operator}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08c471abdc60cd1538f2893ac87bce78}{\+\_\+\+Assignment\+Operator}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e}{\+\_\+\+Virtual}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652}{\+\_\+\+Override}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5}{\+\_\+\+Final}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78}{\+\_\+\+Private}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd}{\+\_\+\+Protected}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6}{\+\_\+\+Public}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7}{\+\_\+\+Static}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d}{\+\_\+\+Thread\+Local}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579}{\+\_\+\+Const}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958}{\+\_\+\+Volatile}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065adb5c3a47e2b7e3f8c2aa80a7c69ffd8c}{\+\_\+\+Reference}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a6d109a29ab54ba4b620552b396a279a5}{\+\_\+\+Pointer}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac}{\+\_\+\+Noexcept}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50}{\+\_\+\+Constexpr}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f}{\+\_\+\+Consteval}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935}{\+\_\+\+Constinit}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aaefe03700a63e594bc70aa2f48967ace}{\+\_\+\+Left\+Paren}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7d8770d6216fb91f7659af13114909bd}{\+\_\+\+Right\+Paren}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065abcb4e9b971723ae32c86b903e7c1a0f6}{\+\_\+\+Left\+Bracket}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28a74918e1c780911597c1f8f42512d}{\+\_\+\+Right\+Bracket}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa01c4999c9402eb81dfd497d72466b13}{\+\_\+\+Left\+Curly\+Bracket}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3db6868480de515408089e58c30d0824}{\+\_\+\+Right\+Curly\+Bracket}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28f0ac81fad7d93e4da285e98fab1a6}{\+\_\+\+Calling\+Convention}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8fa9d30e85e82cfbfa81db753ce8d9c2}{\+\_\+\+Fn\+Return\+Type}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aade38001c19d46238a92fb8655ad1996}{\+\_\+\+Fn\+Identifier}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4d1538f2a5dd42aeade5f8c911b769a}{\+\_\+\+Fn\+Parameter\+List}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a415a61486fa7f108ae131bfb8853db74}{\+\_\+\+Fn\+Body}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb}{\+\_\+\+Static\+Assert}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a012157b56671d3cd56827dd8fec4ec3e}{\+\_\+\+Frogman\+Engine\+Base\+Class\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114}{\+\_\+\+Frogman\+Engine\+Class\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1}{\+\_\+\+Frogman\+Engine\+Struct\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7eb60689ec28f8f3d4c82e3aaadcff35}{\+\_\+\+Frogman\+Engine\+Property\+Reflection\+Macro}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3c50258ab0f4ce7bf3a2749392e90d71}{\+\_\+\+Frogman\+Engine\+Static\+Method\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a578e01c16b161145a900cf9c37cca6d6}{\+\_\+\+Frogman\+Engine\+Method\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06}{\+\_\+\+Frogman\+Engine\+Enum\+Struct\+Reflection\+Macro}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f}{\+\_\+\+Frogman\+Engine\+System\+Macro}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08dffbc204c9db4ae5cd8ea617a5a334}{\+\_\+\+Frogman\+Engine\+System\+Arg\+Sys\+Call\+Phase}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad7c64aed723208d09cc570f7f50b3779}{\+\_\+\+Frogman\+Engine\+System\+Arg\+Target\+Component\+Type}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad0cc36f8dd185ec0981d89a2f704995f}{\+\_\+\+Frogman\+Engine\+System\+Arg\+World\+Tag\+Enum\+Type}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad04c89bd21e7cfca8391ba6713635eaa}{\+\_\+\+Preprocessor\+Directive}}
+, \newline
+\doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aef7e45679ec14f91903a1f36ebce452d}{\+\_\+\+Preprocessor\+Next\+Line}}
+, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065acd14ba1cb2b51fb72f606e48167dda41}{\+\_\+\+Preprocessor}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const tsl::\+htrie\+\_\+map$<$ \doxymbox{\hyperlink{namespacevar_a7307772b6a8ac63bf68c2d45994f7081}{var::\+\+ASCII}}, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}{Vocabulary}} $>$ \doxymbox{\hyperlink{vocabulary_8hpp_a519523e96179a8ae2497a3085c050eb8}{g\+\_\+vocabulary}}
+\end{DoxyCompactItemize}
+
+
+\label{vocabulary_8hpp_doc-enum-members}
+\Hypertarget{vocabulary_8hpp_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}\index{vocabulary.hpp@{vocabulary.hpp}!Vocabulary@{Vocabulary}}
+\index{Vocabulary@{Vocabulary}!vocabulary.hpp@{vocabulary.hpp}}
+\doxysubsubsection{\texorpdfstring{Vocabulary}{Vocabulary}}
+{\footnotesize\ttfamily \label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065} 
+enum struct \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}{Vocabulary}} :\+ \doxymbox{\hyperlink{types_8hxx_a7f8dd3e3c36b59a01241d6c99766688c}{FE::\+uint32}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Undefined@{\_Undefined}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Undefined@{\_Undefined}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a99b8e8f98ec8efcf4b56a1fa0ec5997b}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a99b8e8f98ec8efcf4b56a1fa0ec5997b} 
+\+\_\+\+Undefined&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EndOfCode@{\_EndOfCode}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EndOfCode@{\_EndOfCode}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab3615f2c54c82f5a099d9d6346223ea5}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab3615f2c54c82f5a099d9d6346223ea5} 
+\+\_\+\+End\+Of\+Code&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_AnyDecl@{\_AnyDecl}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_AnyDecl@{\_AnyDecl}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5a06eed9653185f36622d7ca16c1d170}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5a06eed9653185f36622d7ca16c1d170} 
+\+\_\+\+Any\+Decl&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_LineComment@{\_LineComment}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_LineComment@{\_LineComment}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1} 
+\+\_\+\+Line\+Comment&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_LineEnd@{\_LineEnd}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_LineEnd@{\_LineEnd}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8b3ea1bd49643376a6b61024d119c0f3}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8b3ea1bd49643376a6b61024d119c0f3} 
+\+\_\+\+Line\+End&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CommentBegin@{\_CommentBegin}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_CommentBegin@{\_CommentBegin}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9} 
+\+\_\+\+Comment\+Begin&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CommentEnd@{\_CommentEnd}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_CommentEnd@{\_CommentEnd}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2} 
+\+\_\+\+Comment\+End&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CommentBody@{\_CommentBody}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_CommentBody@{\_CommentBody}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a79dec327a9e8ee84b7858235478cd088}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a79dec327a9e8ee84b7858235478cd088} 
+\+\_\+\+Comment\+Body&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_BeginNamespace@{\_BeginNamespace}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_BeginNamespace@{\_BeginNamespace}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8} 
+\+\_\+\+Begin\+Namespace&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EndNamespace@{\_EndNamespace}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EndNamespace@{\_EndNamespace}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507} 
+\+\_\+\+End\+Namespace&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Namespace@{\_Namespace}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Namespace@{\_Namespace}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a1db22cb15042a2b61385331e797576a4}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a1db22cb15042a2b61385331e797576a4} 
+\+\_\+\+Namespace&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_NamespaceConcatenator@{\_NamespaceConcatenator}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_NamespaceConcatenator@{\_NamespaceConcatenator}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718} 
+\+\_\+\+Namespace\+Concatenator&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Template@{\_Template}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Template@{\_Template}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afd2b6dcafaf9ec20484194e9fd07b095}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afd2b6dcafaf9ec20484194e9fd07b095} 
+\+\_\+\+Template&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_BeginTemplateArgs@{\_BeginTemplateArgs}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_BeginTemplateArgs@{\_BeginTemplateArgs}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4c6dec3535bb22abfae47d18d99461b}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4c6dec3535bb22abfae47d18d99461b} 
+\+\_\+\+Begin\+Template\+Args&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Typename@{\_Typename}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Typename@{\_Typename}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac00e33848d422c0736d097a7438facab}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac00e33848d422c0736d097a7438facab} 
+\+\_\+\+Typename&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_TemplateArg@{\_TemplateArg}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_TemplateArg@{\_TemplateArg}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a893c51429255a7da27f8f389ca4b353e}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a893c51429255a7da27f8f389ca4b353e} 
+\+\_\+\+Template\+Arg&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EndTemplateArgs@{\_EndTemplateArgs}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EndTemplateArgs@{\_EndTemplateArgs}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a2039f0aca0ceed17c357242883f30ebe}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a2039f0aca0ceed17c357242883f30ebe} 
+\+\_\+\+End\+Template\+Args&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_TemplateBody@{\_TemplateBody}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_TemplateBody@{\_TemplateBody}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9e1fdefd21c40a4c8b7abf110b1b0de8}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9e1fdefd21c40a4c8b7abf110b1b0de8} 
+\+\_\+\+Template\+Body&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Class@{\_Class}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Class@{\_Class}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afec3c3a1002be26952cb8116eba7533d}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afec3c3a1002be26952cb8116eba7533d} 
+\+\_\+\+Class&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Struct@{\_Struct}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Struct@{\_Struct}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9264400ad12d1a8458abed8b080839d8}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9264400ad12d1a8458abed8b080839d8} 
+\+\_\+\+Struct&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EnumStruct@{\_EnumStruct}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EnumStruct@{\_EnumStruct}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a237da50c7c4b3716f9e73e2c3b4258eb}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a237da50c7c4b3716f9e73e2c3b4258eb} 
+\+\_\+\+Enum\+Struct&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_ClassStructEnumForwardDeclaration@{\_ClassStructEnumForwardDeclaration}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_ClassStructEnumForwardDeclaration@{\_ClassStructEnumForwardDeclaration}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afe637dbdfe071bb3544957f3b5f417fe}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afe637dbdfe071bb3544957f3b5f417fe} 
+\+\_\+\+Class\+Struct\+Enum\+Forward\+Declaration&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FieldType@{\_FieldType}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FieldType@{\_FieldType}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a311b09a3b446ee3ba12a2b8c3cff221b}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a311b09a3b446ee3ba12a2b8c3cff221b} 
+\+\_\+\+Field\+Type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FieldIdentifier@{\_FieldIdentifier}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FieldIdentifier@{\_FieldIdentifier}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8f1ca47f544372dbc605a3867aa7d163}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8f1ca47f544372dbc605a3867aa7d163} 
+\+\_\+\+Field\+Identifier&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EnumStructField@{\_EnumStructField}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EnumStructField@{\_EnumStructField}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac46254636214e0a1752e2ef7a01e69c0}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac46254636214e0a1752e2ef7a01e69c0} 
+\+\_\+\+Enum\+Struct\+Field&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_EnumStructFieldInitialValue@{\_EnumStructFieldInitialValue}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_EnumStructFieldInitialValue@{\_EnumStructFieldInitialValue}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ae360c2baf727af8f3e3a7f2a9ee7ce2d}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ae360c2baf727af8f3e3a7f2a9ee7ce2d} 
+\+\_\+\+Enum\+Struct\+Field\+Initial\+Value&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Colon@{\_Colon}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Colon@{\_Colon}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9d5db9a2f9dbbda8908205196fa5d5f2}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9d5db9a2f9dbbda8908205196fa5d5f2} 
+\+\_\+\+Colon&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Semicolon@{\_Semicolon}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Semicolon@{\_Semicolon}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee6b32fc86b0ebe723034e82f158fe05}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee6b32fc86b0ebe723034e82f158fe05} 
+\+\_\+\+Semicolon&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Comma@{\_Comma}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Comma@{\_Comma}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa092ce4be0fdc357ff9d1bae9b17246f}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa092ce4be0fdc357ff9d1bae9b17246f} 
+\+\_\+\+Comma&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_BackSlash@{\_BackSlash}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_BackSlash@{\_BackSlash}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a368d6f342c7137ffae57c8a4e12b29dc}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a368d6f342c7137ffae57c8a4e12b29dc} 
+\+\_\+\+Back\+Slash&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_TextLiteralPrefix@{\_TextLiteralPrefix}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_TextLiteralPrefix@{\_TextLiteralPrefix}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad6066dc4012876fc8eb3e1c773dd52d1}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad6066dc4012876fc8eb3e1c773dd52d1} 
+\+\_\+\+Text\+Literal\+Prefix&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_StringLiteral@{\_StringLiteral}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_StringLiteral@{\_StringLiteral}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aab1991c3eae67799a94ede3fc8e5068f}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aab1991c3eae67799a94ede3fc8e5068f} 
+\+\_\+\+String\+Literal&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CharLiteral@{\_CharLiteral}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_CharLiteral@{\_CharLiteral}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3b49a70500fb1ae3f8d307d5ee5ddcbe}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3b49a70500fb1ae3f8d307d5ee5ddcbe} 
+\+\_\+\+Char\+Literal&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_NumberValue@{\_NumberValue}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_NumberValue@{\_NumberValue}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeb1a2177279992441b16eb5963a5a77b}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeb1a2177279992441b16eb5963a5a77b} 
+\+\_\+\+Number\+Value&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Operator@{\_Operator}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Operator@{\_Operator}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8707dcc0102953abb94ddf23b2075802}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8707dcc0102953abb94ddf23b2075802} 
+\+\_\+\+Operator&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_AssignmentOperator@{\_AssignmentOperator}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_AssignmentOperator@{\_AssignmentOperator}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08c471abdc60cd1538f2893ac87bce78}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08c471abdc60cd1538f2893ac87bce78} 
+\+\_\+\+Assignment\+Operator&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Virtual@{\_Virtual}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Virtual@{\_Virtual}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e} 
+\+\_\+\+Virtual&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Override@{\_Override}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Override@{\_Override}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652} 
+\+\_\+\+Override&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Final@{\_Final}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Final@{\_Final}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5} 
+\+\_\+\+Final&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Private@{\_Private}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Private@{\_Private}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78} 
+\+\_\+\+Private&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Protected@{\_Protected}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Protected@{\_Protected}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd} 
+\+\_\+\+Protected&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Public@{\_Public}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Public@{\_Public}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6} 
+\+\_\+\+Public&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Static@{\_Static}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Static@{\_Static}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7} 
+\+\_\+\+Static&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_ThreadLocal@{\_ThreadLocal}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_ThreadLocal@{\_ThreadLocal}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d} 
+\+\_\+\+Thread\+Local&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Const@{\_Const}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Const@{\_Const}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579} 
+\+\_\+\+Const&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Volatile@{\_Volatile}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Volatile@{\_Volatile}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958} 
+\+\_\+\+Volatile&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Reference@{\_Reference}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Reference@{\_Reference}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065adb5c3a47e2b7e3f8c2aa80a7c69ffd8c}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065adb5c3a47e2b7e3f8c2aa80a7c69ffd8c} 
+\+\_\+\+Reference&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Pointer@{\_Pointer}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Pointer@{\_Pointer}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a6d109a29ab54ba4b620552b396a279a5}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a6d109a29ab54ba4b620552b396a279a5} 
+\+\_\+\+Pointer&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Noexcept@{\_Noexcept}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Noexcept@{\_Noexcept}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac} 
+\+\_\+\+Noexcept&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Constexpr@{\_Constexpr}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Constexpr@{\_Constexpr}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50} 
+\+\_\+\+Constexpr&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Consteval@{\_Consteval}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Consteval@{\_Consteval}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f} 
+\+\_\+\+Consteval&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Constinit@{\_Constinit}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Constinit@{\_Constinit}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935} 
+\+\_\+\+Constinit&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_LeftParen@{\_LeftParen}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_LeftParen@{\_LeftParen}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aaefe03700a63e594bc70aa2f48967ace}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aaefe03700a63e594bc70aa2f48967ace} 
+\+\_\+\+Left\+Paren&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_RightParen@{\_RightParen}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_RightParen@{\_RightParen}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7d8770d6216fb91f7659af13114909bd}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7d8770d6216fb91f7659af13114909bd} 
+\+\_\+\+Right\+Paren&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_LeftBracket@{\_LeftBracket}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_LeftBracket@{\_LeftBracket}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065abcb4e9b971723ae32c86b903e7c1a0f6}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065abcb4e9b971723ae32c86b903e7c1a0f6} 
+\+\_\+\+Left\+Bracket&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_RightBracket@{\_RightBracket}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_RightBracket@{\_RightBracket}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28a74918e1c780911597c1f8f42512d}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28a74918e1c780911597c1f8f42512d} 
+\+\_\+\+Right\+Bracket&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_LeftCurlyBracket@{\_LeftCurlyBracket}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_LeftCurlyBracket@{\_LeftCurlyBracket}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa01c4999c9402eb81dfd497d72466b13}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa01c4999c9402eb81dfd497d72466b13} 
+\+\_\+\+Left\+Curly\+Bracket&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_RightCurlyBracket@{\_RightCurlyBracket}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_RightCurlyBracket@{\_RightCurlyBracket}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3db6868480de515408089e58c30d0824}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3db6868480de515408089e58c30d0824} 
+\+\_\+\+Right\+Curly\+Bracket&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_CallingConvention@{\_CallingConvention}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_CallingConvention@{\_CallingConvention}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28f0ac81fad7d93e4da285e98fab1a6}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28f0ac81fad7d93e4da285e98fab1a6} 
+\+\_\+\+Calling\+Convention&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FnReturnType@{\_FnReturnType}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FnReturnType@{\_FnReturnType}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8fa9d30e85e82cfbfa81db753ce8d9c2}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8fa9d30e85e82cfbfa81db753ce8d9c2} 
+\+\_\+\+Fn\+Return\+Type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FnIdentifier@{\_FnIdentifier}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FnIdentifier@{\_FnIdentifier}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aade38001c19d46238a92fb8655ad1996}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aade38001c19d46238a92fb8655ad1996} 
+\+\_\+\+Fn\+Identifier&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FnParameterList@{\_FnParameterList}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FnParameterList@{\_FnParameterList}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4d1538f2a5dd42aeade5f8c911b769a}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4d1538f2a5dd42aeade5f8c911b769a} 
+\+\_\+\+Fn\+Parameter\+List&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FnBody@{\_FnBody}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FnBody@{\_FnBody}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a415a61486fa7f108ae131bfb8853db74}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a415a61486fa7f108ae131bfb8853db74} 
+\+\_\+\+Fn\+Body&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_StaticAssert@{\_StaticAssert}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_StaticAssert@{\_StaticAssert}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb} 
+\+\_\+\+Static\+Assert&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineBaseClassReflectionMacro@{\_FrogmanEngineBaseClassReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineBaseClassReflectionMacro@{\_FrogmanEngineBaseClassReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a012157b56671d3cd56827dd8fec4ec3e}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a012157b56671d3cd56827dd8fec4ec3e} 
+\+\_\+\+Frogman\+Engine\+Base\+Class\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineClassReflectionMacro@{\_FrogmanEngineClassReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineClassReflectionMacro@{\_FrogmanEngineClassReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114} 
+\+\_\+\+Frogman\+Engine\+Class\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineStructReflectionMacro@{\_FrogmanEngineStructReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineStructReflectionMacro@{\_FrogmanEngineStructReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1} 
+\+\_\+\+Frogman\+Engine\+Struct\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEnginePropertyReflectionMacro@{\_FrogmanEnginePropertyReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEnginePropertyReflectionMacro@{\_FrogmanEnginePropertyReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7eb60689ec28f8f3d4c82e3aaadcff35}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7eb60689ec28f8f3d4c82e3aaadcff35} 
+\+\_\+\+Frogman\+Engine\+Property\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineStaticMethodReflectionMacro@{\_FrogmanEngineStaticMethodReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineStaticMethodReflectionMacro@{\_FrogmanEngineStaticMethodReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3c50258ab0f4ce7bf3a2749392e90d71}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3c50258ab0f4ce7bf3a2749392e90d71} 
+\+\_\+\+Frogman\+Engine\+Static\+Method\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineMethodReflectionMacro@{\_FrogmanEngineMethodReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineMethodReflectionMacro@{\_FrogmanEngineMethodReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a578e01c16b161145a900cf9c37cca6d6}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a578e01c16b161145a900cf9c37cca6d6} 
+\+\_\+\+Frogman\+Engine\+Method\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineEnumStructReflectionMacro@{\_FrogmanEngineEnumStructReflectionMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineEnumStructReflectionMacro@{\_FrogmanEngineEnumStructReflectionMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06} 
+\+\_\+\+Frogman\+Engine\+Enum\+Struct\+Reflection\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineSystemMacro@{\_FrogmanEngineSystemMacro}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineSystemMacro@{\_FrogmanEngineSystemMacro}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f} 
+\+\_\+\+Frogman\+Engine\+System\+Macro&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineSystemArgSysCallPhase@{\_FrogmanEngineSystemArgSysCallPhase}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineSystemArgSysCallPhase@{\_FrogmanEngineSystemArgSysCallPhase}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08dffbc204c9db4ae5cd8ea617a5a334}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08dffbc204c9db4ae5cd8ea617a5a334} 
+\+\_\+\+Frogman\+Engine\+System\+Arg\+Sys\+Call\+Phase&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineSystemArgTargetComponentType@{\_FrogmanEngineSystemArgTargetComponentType}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineSystemArgTargetComponentType@{\_FrogmanEngineSystemArgTargetComponentType}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad7c64aed723208d09cc570f7f50b3779}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad7c64aed723208d09cc570f7f50b3779} 
+\+\_\+\+Frogman\+Engine\+System\+Arg\+Target\+Component\+Type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_FrogmanEngineSystemArgWorldTagEnumType@{\_FrogmanEngineSystemArgWorldTagEnumType}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_FrogmanEngineSystemArgWorldTagEnumType@{\_FrogmanEngineSystemArgWorldTagEnumType}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad0cc36f8dd185ec0981d89a2f704995f}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad0cc36f8dd185ec0981d89a2f704995f} 
+\+\_\+\+Frogman\+Engine\+System\+Arg\+World\+Tag\+Enum\+Type&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_PreprocessorDirective@{\_PreprocessorDirective}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_PreprocessorDirective@{\_PreprocessorDirective}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad04c89bd21e7cfca8391ba6713635eaa}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad04c89bd21e7cfca8391ba6713635eaa} 
+\+\_\+\+Preprocessor\+Directive&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_PreprocessorNextLine@{\_PreprocessorNextLine}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_PreprocessorNextLine@{\_PreprocessorNextLine}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aef7e45679ec14f91903a1f36ebce452d}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aef7e45679ec14f91903a1f36ebce452d} 
+\+\_\+\+Preprocessor\+Next\+Line&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Preprocessor@{\_Preprocessor}!vocabulary.hpp@{vocabulary.hpp}}
+\index{vocabulary.hpp@{vocabulary.hpp}!\_Preprocessor@{\_Preprocessor}}
+}\Hypertarget{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065acd14ba1cb2b51fb72f606e48167dda41}\label{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065acd14ba1cb2b51fb72f606e48167dda41} 
+\+\_\+\+Preprocessor&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{vocabulary_8hpp_doc-var-members}
+\Hypertarget{vocabulary_8hpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{vocabulary_8hpp_a519523e96179a8ae2497a3085c050eb8}\index{vocabulary.hpp@{vocabulary.hpp}!g\_vocabulary@{g\_vocabulary}}
+\index{g\_vocabulary@{g\_vocabulary}!vocabulary.hpp@{vocabulary.hpp}}
+\doxysubsubsection{\texorpdfstring{g\_vocabulary}{g\_vocabulary}}
+{\footnotesize\ttfamily \label{vocabulary_8hpp_a519523e96179a8ae2497a3085c050eb8} 
+const tsl::\+htrie\+\_\+map$<$\doxymbox{\hyperlink{namespacevar_a7307772b6a8ac63bf68c2d45994f7081}{var::\+\+ASCII}}, \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}{Vocabulary}}$>$ g\+\_\+vocabulary}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}//"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1}{Vocabulary::\_LineComment}}\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}/*"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9}{Vocabulary::\_CommentBegin}}\},\ \{\textcolor{stringliteral}{"{}*/"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2}{Vocabulary::\_CommentEnd}}\},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}BEGIN\_NAMESPACE"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8}{Vocabulary::\_BeginNamespace}}\ \},\ \{\ \textcolor{stringliteral}{"{}END\_NAMESPACE"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507}{Vocabulary::\_EndNamespace}}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}::"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718}{Vocabulary::\_NamespaceConcatenator}}\ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}virtual"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e}{Vocabulary::\_Virtual}}\},\ \{\ \textcolor{stringliteral}{"{}override"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652}{Vocabulary::\_Override}}\},\ \{\ \textcolor{stringliteral}{"{}final"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5}{Vocabulary::\_Final}}\},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}private"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78}{Vocabulary::\_Private}}\ \},\ \{\ \textcolor{stringliteral}{"{}protected"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd}{Vocabulary::\_Protected}}\ \},\ \{\ \textcolor{stringliteral}{"{}public"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6}{Vocabulary::\_Public}}\ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}static"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7}{Vocabulary::\_Static}}\ \},\ \{\ \textcolor{stringliteral}{"{}thread\_local"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d}{Vocabulary::\_ThreadLocal}}\ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}const"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579}{Vocabulary::\_Const}}\ \},\ \{\ \textcolor{stringliteral}{"{}volatile"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958}{Vocabulary::\_Volatile}}\},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}noexcept"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac}{Vocabulary::\_Noexcept}}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}constexpr"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50}{Vocabulary::\_Constexpr}}\ \},\ \{\ \textcolor{stringliteral}{"{}consteval"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f}{Vocabulary::\_Consteval}}\ \},\ \{\ \textcolor{stringliteral}{"{}constinit"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935}{Vocabulary::\_Constinit}}\ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}static\_assert"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb}{Vocabulary::\_StaticAssert}}\ \},}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_CLASS"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114}{Vocabulary::\_FrogmanEngineClassReflectionMacro}}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_STRUCT"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1}{Vocabulary::\_FrogmanEngineStructReflectionMacro}}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_ENUM\_STRUCT"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06}{Vocabulary::\_FrogmanEngineEnumStructReflectionMacro}}\ \},}
+\DoxyCodeLine{\ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_SYSTEM"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f}{Vocabulary::\_FrogmanEngineSystemMacro}}\ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

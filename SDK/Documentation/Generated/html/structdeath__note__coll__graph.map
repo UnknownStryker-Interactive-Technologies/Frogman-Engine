@@ -1,0 +1,7 @@
+<map id="death_note" name="death_note">
+<area shape="rect" id="Node000001" title=" " alt="" coords="449,52,534,79"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,192,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,32,425,53,451,59,446,59,424,59,208,38"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,81,196,124"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,113,316,114,371,109,424,99,448,89,469,80,474,78,451,94,425,104,371,114,316,119,212,118"/>
+</map>

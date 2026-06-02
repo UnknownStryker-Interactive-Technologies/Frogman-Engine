@@ -1,0 +1,9 @@
+<map id="game" name="game">
+<area shape="rect" id="Node000001" title=" " alt="" coords="385,120,438,147"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="50,5,188,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,33,234,41,299,68,362,102,390,119,385,119,359,106,297,73,232,47,204,38"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,56,233,211"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,131,387,132,382,135,249,136"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="29,235,209,277"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="213,227,232,220,297,193,359,160,385,148,390,146,362,165,299,198,234,225,214,232"/>
+</map>

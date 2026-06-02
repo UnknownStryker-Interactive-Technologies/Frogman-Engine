@@ -1,0 +1,73 @@
+\doxysection{format\+\_\+string.\+hxx}
+\hypertarget{format__string_8hxx_source}{}\label{format__string_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/log/format\_string.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/log/format\_string.hxx}}
+\doxymbox{\hyperlink{format__string_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_LOG\_FORMAT\_STRING\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_LOG\_FORMAT\_STRING\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{types_8hxx}{FE/types.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//std}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <initializer\_list>}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{inline}\ FE::uint32\ \doxymbox{\hyperlink{format__string_8hxx_a19743f54bed3d6806ee182cef6d09685}{string\_formatter\_buffer\_size}}\ =\ 8192;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::log)}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\%i8\ -\/\ int8}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\%u8\ -\/\ uint8}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\%i16\ -\/\ int16}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\%u16\ -\/\ uint16}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\%d,\ \%i32\ -\/\ int32}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\%u,\ \%u32\ -\/\ uint32}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\%ld,\ \%i64\ -\/\ int64}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\%lu,\ \%u64\ -\/\ uint64}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\%f,\ \%f32\ -\/\ float32}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\%lf,\ \%f64\ -\/\ float64}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\%b\ -\/\ bool}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\%c\ -\/\ char}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\%s\ -\/\ string}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\%p\ -\/\ hexadecimal\ 64-\/bit\ pointer}}
+\DoxyCodeLine{00045\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00046\ void\ \doxymbox{\hyperlink{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803}{format\_string}}(\textcolor{keywordtype}{char}*\ out\_buffer\_pointer\_p,\ const\ \textcolor{keywordtype}{char}*\ string\_format\_p,\ \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}\ buffer\_size\_p,\ const\ \textcolor{keywordtype}{void}**\ arguments\_pointer\_p,\ \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}\ arguments\_count\_p)\ noexcept;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\%i8\ -\/\ int8}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\%u8\ -\/\ uint8}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\%i16\ -\/\ int16}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\%u16\ -\/\ uint16}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\%d,\ \%i32\ -\/\ int32}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\%u,\ \%u32\ -\/\ uint32}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\%ld,\ \%i64\ -\/\ int64}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\%lu,\ \%u64\ -\/\ uint64}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\%f,\ \%f32\ -\/\ float32}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\%lf,\ \%f64\ -\/\ float64}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\%b\ -\/\ bool}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\%c\ -\/\ char}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\%s\ -\/\ string}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\%p\ -\/\ hexadecimal\ 64-\/bit\ pointer}}
+\DoxyCodeLine{00063\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00064\ const\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418}{buffered\_string\_formatter}}(std::initializer\_list<const\ \textcolor{keywordtype}{void}*>\ arguments\_p)\ noexcept;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}};}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

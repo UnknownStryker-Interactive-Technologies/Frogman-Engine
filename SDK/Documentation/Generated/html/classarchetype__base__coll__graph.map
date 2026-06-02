@@ -1,0 +1,15 @@
+<map id="archetype_base" name="archetype_base">
+<area shape="rect" id="Node000001" title=" " alt="" coords="655,223,769,249"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="165,5,443,144"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="458,95,547,120,591,137,633,158,673,189,703,223,698,222,670,193,630,162,589,142,546,125,458,101"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="275,168,333,195"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="348,180,476,187,554,195,632,208,675,222,670,222,631,213,554,201,476,192,349,185"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="271,223,337,249"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="353,233,657,234,653,238,353,239"/>
+<area shape="rect" id="Node000005" href="$classiterator.html" title=" " alt="" coords="217,277,391,304"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="407,287,515,280,631,263,677,250,682,249,632,268,516,286,407,293"/>
+<area shape="rect" id="Node000006" href="$class_implementation.html" title=" " alt="" coords="5,277,116,304"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="131,288,219,289,214,292,131,293"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="276,332,332,359"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="348,348,406,351,479,349,556,338,594,328,630,314,652,300,672,282,699,251,704,248,675,286,655,304,633,318,596,333,557,343,479,355,406,356,348,353"/>
+</map>

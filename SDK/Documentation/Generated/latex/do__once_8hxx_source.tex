@@ -1,0 +1,66 @@
+\doxysection{do\+\_\+once.\+hxx}
+\hypertarget{do__once_8hxx_source}{}\label{do__once_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/do\_once.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/do\_once.hxx}}
+\doxymbox{\hyperlink{do__once_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_DO\_ONCE\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_DO\_ONCE\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_f_e_1_1internal}{FE::internal}}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_f_e_1_1internal_1_1do__once_a575077f6f565a3bdc201cadec2769527}{do\_once}}}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Lambda>}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{class_f_e_1_1internal_1_1do__once_a575077f6f565a3bdc201cadec2769527}{do\_once}}(Lambda\&\&\ code\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ code\_p();}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \};}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifdef\ \_DO\_ONCE\_PER\_APP\_EXECUTION\_}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ \#error\ \_DO\_ONCE\_PER\_APP\_EXECUTION\_\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ A\ directive\ for\ executing\ a\ given\ code\ once\ per\ an\ application\ launch.}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ \_DO\_ONCE\_PER\_APP\_EXECUTION\_\ static}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifdef\ \_DO\_ONCE\_PER\_THREAD\_}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \#error\ \_DO\_ONCE\_PER\_THREAD\_\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ A\ directive\ for\ executing\ a\ given\ code\ once\ per\ thread.}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ \_DO\_ONCE\_PER\_THREAD\_\ thread\_local\ static\ }}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifdef\ FE\_DO\_ONCE}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \#error\ FE\_DO\_ONCE\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00051\ \textcolor{comment}{The\ FE\_DO\_ONCE\ macro\ is\ used\ to\ execute\ a\ block\ of\ code\ exactly\ once\ within\ a\ specified\ frequency\ context}}
+\DoxyCodeLine{00052\ \textcolor{comment}{leveraging\ a\ lambda\ function\ to\ encapsulate\ the\ code\ to\ be\ executed.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ FE\_DO\_ONCE(frequency,\ ...)\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \_FE\_MAYBE\_UNUSED\_\ frequency\ ::FE::internal::do\_once\ \_\_FE\_DO\_ONCE\_INSTANCE\_\_(\ [\&]()\ \{\ \_\_VA\_ARGS\_\_;\ \}\ );\ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,313 @@
+\doxysection{cache\+\_\+aligned\+\_\+allocator\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classcache__aligned__allocator}{}\label{classcache__aligned__allocator}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+
+
+{\ttfamily \+\#include $<$memory.\+hxx$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classcache__aligned__allocator_a721149a25539f26a2ac34d093fd228cd}{value\+\_\+type}} = T
+\item 
+using \doxymbox{\hyperlink{classcache__aligned__allocator_ad1d65ad9cddebe82a28a413699fb40f6}{size\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}
+\item 
+using \doxymbox{\hyperlink{classcache__aligned__allocator_a3858a7c1668e586df8561718bce2de9b}{difference\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}
+\item 
+using \doxymbox{\hyperlink{classcache__aligned__allocator_ab1fead9b7316864b1c2afa6d3902e573}{propagate\+\_\+on\+\_\+container\+\_\+move\+\_\+assignment}} = std::\+true\+\_\+type
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_a52fbe1fab23e62626d720823df34301c}{cache\+\_\+aligned\+\_\+allocator}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_a428ba516ec983e3b0dbaf0629a622c49}{\texorpdfstring{$\sim$}{\string~}cache\+\_\+aligned\+\_\+allocator}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_a9a593849b1266fcc8ca84a6f73fdb9ea}{cache\+\_\+aligned\+\_\+allocator}} (const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \&) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_adf586f1dd820a2d4bf7ed51f419d26f8}{cache\+\_\+aligned\+\_\+allocator}} (\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \&\&) noexcept
+\item 
+{\footnotesize template$<$typename U$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_aa6d0b69e6b5d9fee0c84ae841c65d6ca}{cache\+\_\+aligned\+\_\+allocator}} (const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&) noexcept
+\item 
+{\footnotesize template$<$typename U$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator_a6d3d22642b66e385691143a59bb6b2d0}{cache\+\_\+aligned\+\_\+allocator}} (\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&\&) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator_ac97ef95e55db47be36de68c0066f4152}{operator=}} (const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \&) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator_a955669edd062ac54c230eba4ce3d8293}{operator=}} (\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \&\&) noexcept
+\item 
+{\footnotesize template$<$typename U$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator_aa8a8bd1d12f58e8f0d4e7ac783c85c0d}{operator=}} (const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&) noexcept
+\item 
+{\footnotesize template$<$typename U$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator_a6d2932ca6b9264c3e83ba6ee4c1bd796}{operator=}} (\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&\&) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} T \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classcache__aligned__allocator_a48e43d0a8a8d83a175f6be02ea429cf3}{allocate}} (FE::\+size count\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classcache__aligned__allocator_aed0c2ec2e5f52db1c81c88e808ddaa85}{deallocate}} (T \texorpdfstring{$\ast$}{*}const ptr\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} const size\+\_\+t count\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename$>$ }\\class \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}
+\end{DoxyCompactItemize}
+
+
+\label{classcache__aligned__allocator_doc-typedef-members}
+\Hypertarget{classcache__aligned__allocator_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classcache__aligned__allocator_a3858a7c1668e586df8561718bce2de9b}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a3858a7c1668e586df8561718bce2de9b} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+difference\+\_\+type = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}}
+
+\Hypertarget{classcache__aligned__allocator_ab1fead9b7316864b1c2afa6d3902e573}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!propagate\_on\_container\_move\_assignment@{propagate\_on\_container\_move\_assignment}}
+\index{propagate\_on\_container\_move\_assignment@{propagate\_on\_container\_move\_assignment}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{propagate\_on\_container\_move\_assignment}{propagate\_on\_container\_move\_assignment}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_ab1fead9b7316864b1c2afa6d3902e573} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+propagate\+\_\+on\+\_\+container\+\_\+move\+\_\+assignment = std::\+true\+\_\+type}
+
+\Hypertarget{classcache__aligned__allocator_ad1d65ad9cddebe82a28a413699fb40f6}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!size\_type@{size\_type}}
+\index{size\_type@{size\_type}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{size\_type}{size\_type}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_ad1d65ad9cddebe82a28a413699fb40f6} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+size\+\_\+type = \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}}
+
+\Hypertarget{classcache__aligned__allocator_a721149a25539f26a2ac34d093fd228cd}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a721149a25539f26a2ac34d093fd228cd} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+value\+\_\+type = T}
+
+
+
+\label{classcache__aligned__allocator_doc-constructors}
+\Hypertarget{classcache__aligned__allocator_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classcache__aligned__allocator_a52fbe1fab23e62626d720823df34301c}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator()}{cache\_aligned\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a52fbe1fab23e62626d720823df34301c} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+cache\+\_\+aligned\+\_\+allocator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classcache__aligned__allocator_a428ba516ec983e3b0dbaf0629a622c49}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!````~cache\_aligned\_allocator@{\texorpdfstring{$\sim$}{\string~}cache\_aligned\_allocator}}
+\index{````~cache\_aligned\_allocator@{\texorpdfstring{$\sim$}{\string~}cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}cache\_aligned\_allocator()}{\string~cache\_aligned\_allocator()}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a428ba516ec983e3b0dbaf0629a622c49} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}, and \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_a428ba516ec983e3b0dbaf0629a622c49_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_a9a593849b1266fcc8ca84a6f73fdb9ea}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator()}{cache\_aligned\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a9a593849b1266fcc8ca84a6f73fdb9ea} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+cache\+\_\+aligned\+\_\+allocator (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}, and \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_a9a593849b1266fcc8ca84a6f73fdb9ea_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_adf586f1dd820a2d4bf7ed51f419d26f8}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator()}{cache\_aligned\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_adf586f1dd820a2d4bf7ed51f419d26f8} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+cache\+\_\+aligned\+\_\+allocator (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_adf586f1dd820a2d4bf7ed51f419d26f8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_aa6d0b69e6b5d9fee0c84ae841c65d6ca}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator()}{cache\_aligned\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_aa6d0b69e6b5d9fee0c84ae841c65d6ca} 
+template$<$typename T$>$ \\
+template$<$typename U$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+cache\+\_\+aligned\+\_\+allocator (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_aa6d0b69e6b5d9fee0c84ae841c65d6ca_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_a6d3d22642b66e385691143a59bb6b2d0}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator()}{cache\_aligned\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a6d3d22642b66e385691143a59bb6b2d0} 
+template$<$typename T$>$ \\
+template$<$typename U$>$ \\
+\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+cache\+\_\+aligned\+\_\+allocator (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_a6d3d22642b66e385691143a59bb6b2d0_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classcache__aligned__allocator_doc-func-members}
+\Hypertarget{classcache__aligned__allocator_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classcache__aligned__allocator_a48e43d0a8a8d83a175f6be02ea429cf3}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!allocate@{allocate}}
+\index{allocate@{allocate}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{allocate()}{allocate()}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a48e43d0a8a8d83a175f6be02ea429cf3} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} T \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+allocate (\begin{DoxyParamCaption}\item[{FE::\+size}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{classcache__aligned__allocator_aed0c2ec2e5f52db1c81c88e808ddaa85}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!deallocate@{deallocate}}
+\index{deallocate@{deallocate}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{deallocate()}{deallocate()}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_aed0c2ec2e5f52db1c81c88e808ddaa85} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+deallocate (\begin{DoxyParamCaption}\item[{T \texorpdfstring{$\ast$}{*}const}]{ptr\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} const size\+\_\+t}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+\Hypertarget{classcache__aligned__allocator_a955669edd062ac54c230eba4ce3d8293}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a955669edd062ac54c230eba4ce3d8293} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_a955669edd062ac54c230eba4ce3d8293_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_a6d2932ca6b9264c3e83ba6ee4c1bd796}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a6d2932ca6b9264c3e83ba6ee4c1bd796} 
+template$<$typename T$>$ \\
+template$<$typename U$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_a6d2932ca6b9264c3e83ba6ee4c1bd796_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_ac97ef95e55db47be36de68c0066f4152}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_ac97ef95e55db47be36de68c0066f4152} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_ac97ef95e55db47be36de68c0066f4152_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classcache__aligned__allocator_aa8a8bd1d12f58e8f0d4e7ac783c85c0d}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_aa8a8bd1d12f58e8f0d4e7ac783c85c0d} 
+template$<$typename T$>$ \\
+template$<$typename U$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}} \& \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}$<$ U $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcache__aligned__allocator_aa8a8bd1d12f58e8f0d4e7ac783c85c0d_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classcache__aligned__allocator_doc-related-members}
+\Hypertarget{classcache__aligned__allocator_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}\index{cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}!cache\_aligned\_allocator@{cache\_aligned\_allocator}}
+\index{cache\_aligned\_allocator@{cache\_aligned\_allocator}!cache\_aligned\_allocator$<$ T $>$@{cache\_aligned\_allocator$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{cache\_aligned\_allocator}{cache\_aligned\_allocator}}
+{\footnotesize\ttfamily \label{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5} 
+template$<$typename T$>$ \\
+template$<$typename$>$ \\
+friend class \doxymbox{\hyperlink{classcache__aligned__allocator}{cache\+\_\+aligned\+\_\+allocator}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classcache__aligned__allocator_adf586f1dd820a2d4bf7ed51f419d26f8}{cache\+\_\+aligned\+\_\+allocator()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_a6d3d22642b66e385691143a59bb6b2d0}{cache\+\_\+aligned\+\_\+allocator()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_a9a593849b1266fcc8ca84a6f73fdb9ea}{cache\+\_\+aligned\+\_\+allocator()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_aa6d0b69e6b5d9fee0c84ae841c65d6ca}{cache\+\_\+aligned\+\_\+allocator()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_a6949494aa9f8e9b716529169d48dd7b5}{cache\+\_\+aligned\+\_\+allocator}}, \doxymbox{\hyperlink{classcache__aligned__allocator_a955669edd062ac54c230eba4ce3d8293}{operator=()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_a6d2932ca6b9264c3e83ba6ee4c1bd796}{operator=()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_ac97ef95e55db47be36de68c0066f4152}{operator=()}}, \doxymbox{\hyperlink{classcache__aligned__allocator_aa8a8bd1d12f58e8f0d4e7ac783c85c0d}{operator=()}}, and \doxymbox{\hyperlink{classcache__aligned__allocator_a428ba516ec983e3b0dbaf0629a622c49}{\texorpdfstring{$\sim$}{\string~}cache\+\_\+aligned\+\_\+allocator()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{memory_8hxx}{memory.\+hxx}}\end{DoxyCompactItemize}

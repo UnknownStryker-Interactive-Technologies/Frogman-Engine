@@ -1,0 +1,67 @@
+\doxysection{ecs.\+hpp}
+\hypertarget{ecs_8hpp_source}{}\label{ecs_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/ecs.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/ecs.hpp}}
+\doxymbox{\hyperlink{ecs_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_ECS\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_ECS\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_e_c_s_8hxx}{FE/framework/ECS.hxx}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{engine_8hpp}{FE/engine.hpp}}>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::ECS)}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Archetype,\ \textcolor{keyword}{typename}\ ...Arguments>}
+\DoxyCodeLine{00030\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ FE::entity<Archetype>\ \doxymbox{\hyperlink{ecs_8hpp_a5ee623c121f6468d431779622a737330}{create\_entity}}(Arguments\&\&\ ...arguments\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::engine::get\_engine().get\_ecs().instanciate\_entity(std::forward<Arguments\&\&>(arguments\_p)...);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archetype>}
+\DoxyCodeLine{00036\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ FE::entity<FE::archetype\_base>\ \doxymbox{\hyperlink{ecs_8hpp_a72cb7e8d110a40af888e0cdf6f2f0cf1}{create\_entity\_from\_initializer}}(\textcolor{keyword}{const}\ FE::framework::initializer\&\ serialized\_entity\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::engine::get\_engine().get\_ecs().instanciate\_entity\_from\_initializer(serialized\_entity\_p);}
+\DoxyCodeLine{00039\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archetype>\ \textcolor{comment}{//\ ADE:\ Archetype\ Default\ Entity}}
+\DoxyCodeLine{00042\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ FE::entity<FE::archetype\_base>\ \doxymbox{\hyperlink{ecs_8hpp_a1ea4c4a8d3f67ead62cc1ee11762e5ff}{create\_ADE}}()\ noexcept}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::engine::get\_engine().get\_ecs().instanciate\_archetype\_default\_entity();}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archetype>}
+\DoxyCodeLine{00048\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{ecs_8hpp_ae2ff789f4ff4b65d4bc5644a31c6b565}{set\_ADE}}(FE::framework::initializer\&\ default\_values\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ FE::engine::get\_engine().get\_ecs().set\_archetype\_default\_entity(default\_values\_p);}
+\DoxyCodeLine{00051\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Archetype>}
+\DoxyCodeLine{00054\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ FE::framework::initializer*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{ecs_8hpp_a80ab2fd2d4ef0856b5d8047f22a9a66c}{get\_ADE\_initializer}}()\ noexcept}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::engine::get\_engine().get\_ecs().get\_archetype\_default\_entity();}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

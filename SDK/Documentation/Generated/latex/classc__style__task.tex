@@ -1,0 +1,262 @@
+\doxysection{c\+\_\+style\+\_\+task\texorpdfstring{$<$}{<} Task\+Impl, Arguments\+Buffer\+Type \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classc__style__task}{}\label{classc__style__task}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+
+
+{\ttfamily \+\#include $<$function.\+hxx$>$}
+
+
+
+Inheritance diagram for c\+\_\+style\+\_\+task\texorpdfstring{$<$}{<} Task\+Impl, Arguments\+Buffer\+Type \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=203pt]{classc__style__task__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for c\+\_\+style\+\_\+task\texorpdfstring{$<$}{<} Task\+Impl, Arguments\+Buffer\+Type \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classc__style__task__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classc__style__task_a756c706ee75cfac48990b4248b23e710}{task\+\_\+impl\+\_\+type}} = Task\+Impl
+\item 
+using \doxymbox{\hyperlink{classc__style__task_a2dcd8c248fe57fc1579e80014c32a930}{return\+\_\+type}} = typename FE::\+function$<$\doxymbox{\hyperlink{classc__style__task_a756c706ee75cfac48990b4248b23e710}{task\+\_\+impl\+\_\+type}}$>$::\+return\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} = typename FE::\+function$<$\doxymbox{\hyperlink{classc__style__task_a756c706ee75cfac48990b4248b23e710}{task\+\_\+impl\+\_\+type}}$>$::\+function\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classc__style__task_a0959732037adb8791a18dc248074d5e9}{arguments\+\_\+buffer\+\_\+type}} = Arguments\+Buffer\+Type
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \doxymbox{\hyperlink{classtask__base}{task\+\_\+base}}}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classtask__base_a8c54d285b1f24a9e8f97842ef299a1c6}{system}} = void(\texorpdfstring{$\ast$}{*})(class FE::\+component\+\_\+base\texorpdfstring{$\ast$}{*} const)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e}{c\+\_\+style\+\_\+task}} () noexcept
+\item 
+virtual \doxymbox{\hyperlink{classc__style__task_a360c75854d82b53f1bb0ec0533fc365e}{\texorpdfstring{$\sim$}{\string~}c\+\_\+style\+\_\+task}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281}{c\+\_\+style\+\_\+task}} (\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} task\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classc__style__task_af6110fe12e8b74c7bdfb86038752b423}{set\+\_\+task}} (\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} task\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} \doxymbox{\hyperlink{classc__style__task_a71b0c022b1fd9e8178e3b7f9dff94f60}{get\+\_\+task}} () const noexcept
+\item 
+virtual void \doxymbox{\hyperlink{classc__style__task_a8ad75e45dc99837c08e3b194d8521162}{operator()}} (\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr out\+\_\+ret\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const arguments\+\_\+p) noexcept override
+\item 
+virtual \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classc__style__task_ab750c1d8a6ef1d6dacbf586db42e44c2}{is\+\_\+null}} () const noexcept override
+\item 
+virtual void \doxymbox{\hyperlink{classc__style__task_a3857b3f1590be068e2027f8a440de79f}{operator()}} (\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr instance\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr out\+\_\+ret\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const arguments\+\_\+p) noexcept override
+\item 
+virtual \doxymbox{\hyperlink{classtask__base_a8c54d285b1f24a9e8f97842ef299a1c6}{system}} \doxymbox{\hyperlink{classc__style__task_aee189747e10b45f4ed68ca84637ebb01}{try\+\_\+get\+\_\+as\+\_\+system}} () noexcept override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{classtask__base}{task\+\_\+base}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classtask__base_a1c9f21fffcc26ff4abfca9edaf9deb81}{task\+\_\+base}} () noexcept=default
+\item 
+virtual \doxymbox{\hyperlink{classtask__base_aa80e5bf1b34ecea6424d0f2ee337bc2f}{\texorpdfstring{$\sim$}{\string~}task\+\_\+base}} () noexcept=default
+\item 
+virtual void \doxymbox{\hyperlink{classtask__base_aba1e7c8920c916e3b24dbd5440995f70}{operator()}} (FE::\+void\+\_\+ptr out\+\_\+ret\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const arguments\+\_\+p) noexcept=0
+\item 
+virtual void \doxymbox{\hyperlink{classtask__base_a76efa2699158fa6a064f343f40507ca3}{operator()}} (FE::\+void\+\_\+ptr instance\+\_\+p, FE::\+void\+\_\+ptr out\+\_\+ret\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const arguments\+\_\+p) noexcept=0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}
+\end{DoxyCompactItemize}
+
+
+\label{classc__style__task_doc-typedef-members}
+\Hypertarget{classc__style__task_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classc__style__task_a0959732037adb8791a18dc248074d5e9}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!arguments\_buffer\_type@{arguments\_buffer\_type}}
+\index{arguments\_buffer\_type@{arguments\_buffer\_type}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{arguments\_buffer\_type}{arguments\_buffer\_type}}
+{\footnotesize\ttfamily \label{classc__style__task_a0959732037adb8791a18dc248074d5e9} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+using \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+arguments\+\_\+buffer\+\_\+type = Arguments\+Buffer\+Type}
+
+\Hypertarget{classc__style__task_a2dcd8c248fe57fc1579e80014c32a930}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!return\_type@{return\_type}}
+\index{return\_type@{return\_type}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{return\_type}{return\_type}}
+{\footnotesize\ttfamily \label{classc__style__task_a2dcd8c248fe57fc1579e80014c32a930} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+using \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+return\+\_\+type = typename FE::\+function$<$\doxymbox{\hyperlink{classc__style__task_a756c706ee75cfac48990b4248b23e710}{task\+\_\+impl\+\_\+type}}$>$::\+return\+\_\+type}
+
+\Hypertarget{classc__style__task_a756c706ee75cfac48990b4248b23e710}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!task\_impl\_type@{task\_impl\_type}}
+\index{task\_impl\_type@{task\_impl\_type}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{task\_impl\_type}{task\_impl\_type}}
+{\footnotesize\ttfamily \label{classc__style__task_a756c706ee75cfac48990b4248b23e710} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+using \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+task\+\_\+impl\+\_\+type = Task\+Impl}
+
+\Hypertarget{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!task\_type@{task\_type}}
+\index{task\_type@{task\_type}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{task\_type}{task\_type}}
+{\footnotesize\ttfamily \label{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+using \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+task\+\_\+type = typename FE::\+function$<$\doxymbox{\hyperlink{classc__style__task_a756c706ee75cfac48990b4248b23e710}{task\+\_\+impl\+\_\+type}}$>$::\+function\+\_\+type}
+
+
+
+\label{classc__style__task_doc-constructors}
+\Hypertarget{classc__style__task_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!c\_style\_task@{c\_style\_task}}
+\index{c\_style\_task@{c\_style\_task}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{c\_style\_task()}{c\_style\_task()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+\doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+c\+\_\+style\+\_\+task (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281}{c\+\_\+style\+\_\+task()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classc__style__task_a360c75854d82b53f1bb0ec0533fc365e}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!````~c\_style\_task@{\texorpdfstring{$\sim$}{\string~}c\_style\_task}}
+\index{````~c\_style\_task@{\texorpdfstring{$\sim$}{\string~}c\_style\_task}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}c\_style\_task()}{\string~c\_style\_task()}}
+{\footnotesize\ttfamily \label{classc__style__task_a360c75854d82b53f1bb0ec0533fc365e} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+virtual \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!c\_style\_task@{c\_style\_task}}
+\index{c\_style\_task@{c\_style\_task}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{c\_style\_task()}{c\_style\_task()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+\doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+c\+\_\+style\+\_\+task (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}}}]{task\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e}{c\+\_\+style\+\_\+task()}}, \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}, and \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classc__style__task_doc-func-members}
+\Hypertarget{classc__style__task_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classc__style__task_a71b0c022b1fd9e8178e3b7f9dff94f60}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!get\_task@{get\_task}}
+\index{get\_task@{get\_task}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{get\_task()}{get\_task()}}
+{\footnotesize\ttfamily \label{classc__style__task_a71b0c022b1fd9e8178e3b7f9dff94f60} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+get\+\_\+task (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+\Hypertarget{classc__style__task_ab750c1d8a6ef1d6dacbf586db42e44c2}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!is\_null@{is\_null}}
+\index{is\_null@{is\_null}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{is\_null()}{is\_null()}}
+{\footnotesize\ttfamily \label{classc__style__task_ab750c1d8a6ef1d6dacbf586db42e44c2} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+virtual \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+is\+\_\+null (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+Implements \doxymbox{\hyperlink{classtask__base_a6133f94f31a82023be05246680d34459}{task\+\_\+base}}.
+
+
+
+References \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+\Hypertarget{classc__style__task_a3857b3f1590be068e2027f8a440de79f}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classc__style__task_a3857b3f1590be068e2027f8a440de79f} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+virtual void \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+operator() (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr}]{instance\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr}]{out\+\_\+ret\+\_\+buffer\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa32e131cb6f5f5a81582ad0ecdb336ded}{FE::\+\+\_\+\+Fatal\+Serialization\+Error\+\_\+3\+XX\+\_\+\+Type\+Mismatch}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}.
+
+\Hypertarget{classc__style__task_a8ad75e45dc99837c08e3b194d8521162}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classc__style__task_a8ad75e45dc99837c08e3b194d8521162} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+virtual void \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+operator() (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} FE::\+void\+\_\+ptr}]{out\+\_\+ret\+\_\+buffer\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{classargument__base}{argument\+\_\+base}} \texorpdfstring{$\ast$}{*}const}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5aa764b4bf13a360c7ac2a35ec4ca96c95}{\+\_\+0}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5a5d98ec0427152056397e9e35f357be87}{\+\_\+1}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5af3e698f88ff5b6ae938c2f132de7cbaa}{\+\_\+10}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5a26e3d8bac39f9313d584a6025bd7544d}{\+\_\+2}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5af806252045a28179caaf0ec8f0b5f298}{\+\_\+3}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5ab49511be6fca00a500dc7cd69ecc6c58}{\+\_\+4}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5afc85e0e9e785e1ac37df34f744769c5f}{\+\_\+5}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5adfbfc4a9ddfbf50d6b3349e7a97f0101}{\+\_\+6}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5a56bb8449aba0e83c4cd30e57fab20c9d}{\+\_\+7}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5add494b805517113d9d15b8adf0a09b5c}{\+\_\+8}}, \doxymbox{\hyperlink{function_8hxx_a194f4927d90ad75029c21998d220c0d5a9748632a03a999f14fd0c94056c4aa24}{\+\_\+9}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+\Hypertarget{classc__style__task_af6110fe12e8b74c7bdfb86038752b423}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!set\_task@{set\_task}}
+\index{set\_task@{set\_task}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{set\_task()}{set\_task()}}
+{\footnotesize\ttfamily \label{classc__style__task_af6110fe12e8b74c7bdfb86038752b423} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+set\+\_\+task (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}}}]{task\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+\Hypertarget{classc__style__task_aee189747e10b45f4ed68ca84637ebb01}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!try\_get\_as\_system@{try\_get\_as\_system}}
+\index{try\_get\_as\_system@{try\_get\_as\_system}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{try\_get\_as\_system()}{try\_get\_as\_system()}}
+{\footnotesize\ttfamily \label{classc__style__task_aee189747e10b45f4ed68ca84637ebb01} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+virtual \doxymbox{\hyperlink{classtask__base_a8c54d285b1f24a9e8f97842ef299a1c6}{system}} \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+try\+\_\+get\+\_\+as\+\_\+system (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+Implements \doxymbox{\hyperlink{classtask__base_a7f6902aa392f84cd2d7e8ab350e05505}{task\+\_\+base}}.
+
+
+
+References \doxymbox{\hyperlink{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}{m\+\_\+function}}.
+
+
+
+\label{classc__style__task_doc-variable-members}
+\Hypertarget{classc__style__task_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900}\index{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}!m\_function@{m\_function}}
+\index{m\_function@{m\_function}!c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$@{c\_style\_task$<$ TaskImpl, ArgumentsBufferType $>$}}
+\doxysubsubsection{\texorpdfstring{m\_function}{m\_function}}
+{\footnotesize\ttfamily \label{classc__style__task_a55b01c38dbc7711e58db4f7fe8bb9900} 
+template$<$typename Task\+Impl, class Arguments\+Buffer\+Type = typename FE::\+function$<$\+Task\+Impl$>$::\+arguments\+\_\+type$>$ \\
+\doxymbox{\hyperlink{classc__style__task_a9a947a1fde4ce888fcd3a3d757b4023f}{task\+\_\+type}} \doxymbox{\hyperlink{classc__style__task}{c\+\_\+style\+\_\+task}}$<$ Task\+Impl, Arguments\+Buffer\+Type $>$::\+m\+\_\+function\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classc__style__task_a1a41b968722fd0db6a73b295eaf0cb1e}{c\+\_\+style\+\_\+task()}}, \doxymbox{\hyperlink{classc__style__task_a99d6a90a0a3ae53a1b96fa88357a6281}{c\+\_\+style\+\_\+task()}}, \doxymbox{\hyperlink{classc__style__task_a71b0c022b1fd9e8178e3b7f9dff94f60}{get\+\_\+task()}}, \doxymbox{\hyperlink{classc__style__task_ab750c1d8a6ef1d6dacbf586db42e44c2}{is\+\_\+null()}}, \doxymbox{\hyperlink{classc__style__task_a8ad75e45dc99837c08e3b194d8521162}{operator()()}}, \doxymbox{\hyperlink{classc__style__task_af6110fe12e8b74c7bdfb86038752b423}{set\+\_\+task()}}, and \doxymbox{\hyperlink{classc__style__task_aee189747e10b45f4ed68ca84637ebb01}{try\+\_\+get\+\_\+as\+\_\+system()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{function_8hxx}{function.\+hxx}}\end{DoxyCompactItemize}

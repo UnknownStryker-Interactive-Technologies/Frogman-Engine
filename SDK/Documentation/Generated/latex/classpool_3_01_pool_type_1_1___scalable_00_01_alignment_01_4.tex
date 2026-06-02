@@ -1,0 +1,485 @@
+\doxysection{pool\texorpdfstring{$<$}{<} Pool\+Type::\+\+\_\+\+Scalable, Alignment \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4}{}\label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+
+
+{\ttfamily \+\#include $<$scalable\+\_\+pool.\+hxx$>$}
+
+
+
+Inheritance diagram for pool\texorpdfstring{$<$}{<} Pool\+Type::\+\+\_\+\+Scalable, Alignment \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for pool\texorpdfstring{$<$}{<} Pool\+Type::\+\+\_\+\+Scalable, Alignment \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a29ace1ca9a96c64a1bd3ba079a4cb658}{alignment\+\_\+type}} = Alignment
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool}} () noexcept
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aad7bcde2865f4f5a831cdae14baefe1c}{\texorpdfstring{$\sim$}{\string~}pool}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool}} (\doxymbox{\hyperlink{classpool}{pool}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classpool}{pool}} \& \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=}} (\doxymbox{\hyperlink{classpool}{pool}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af2caa9e08fd9d5ba2e4fabee413266f1}{operator==}} (const \doxymbox{\hyperlink{classpool}{pool}} \&) const noexcept
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a66a4132c58bbfdf8cbe69d8fc327a70f}{pool}} (const \doxymbox{\hyperlink{classpool}{pool}} \&) noexcept=delete
+\item 
+\doxymbox{\hyperlink{classpool}{pool}} \& \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8a0ed90b4479395449e8103f573c10ad}{operator=}} (const \doxymbox{\hyperlink{classpool}{pool}} \&) noexcept=delete
+\item 
+{\footnotesize template$<$typename U$>$ }\\U \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate}} (FE::\+size size\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate}} (T \texorpdfstring{$\ast$}{*}pointer\+\_\+p, FE::\+size count\+\_\+p) noexcept
+\item 
+bool \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a678767731761b4d50f8ccd39dae8fd70}{try\+\_\+trim\+\_\+a\+\_\+page}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a26057899b4f5cefa73d643577ff42502}{try\+\_\+trim\+\_\+all\+\_\+pages}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+size \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aea8954697f809032c5c5e975a823291c}{get\+\_\+page\+\_\+count}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+uint32 \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4}{page\+\_\+capacity}} = \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a70a7c4e11f9297ab81ee4e7d1d0bc251}{chunk\+\_\+type::\+page\+\_\+size\+\_\+in\+\_\+bytes}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}{chunk\+\_\+type}} = \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk}{internal::\+pool::\+chunk}}$<$\doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment$>$
+\item 
+using \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a197b4ade2e1056422374df8058b8e2ba}{free\+\_\+list\+\_\+iterator}} = typename \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab860e120bd2f95f5775a5ec74322673e}{chunk\+\_\+type::\+free\+\_\+list\+\_\+iterator}}
+\item 
+using \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} = FE::\+list$<$\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}{chunk\+\_\+type}}, FE::\+page\+\_\+aligned\+\_\+allocator$<$\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}{chunk\+\_\+type}}$>$$>$
+\item 
+using \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}{page\+\_\+iterator}} = typename pool\+\_\+type::\+iterator
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static FE::\+boolean \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb}{\+\_\+\+\_\+try\+\_\+allocation\+\_\+from\+\_\+page}} (\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}{page\+\_\+iterator}} page\+\_\+p, \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{internal::\+pool::\+block\+\_\+info}} \&out\+\_\+result\+\_\+p, FE::\+uint32 bytes\+\_\+p) noexcept
+\item 
+static void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a64d3ba9bd647f3ac117d4b98e1729ea0}{\+\_\+\+\_\+defragment}} (\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}{page\+\_\+iterator}} page\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}
+\item 
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}
+\end{DoxyCompactItemize}
+
+
+\label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-typedef-members}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a29ace1ca9a96c64a1bd3ba079a4cb658}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!alignment\_type@{alignment\_type}}
+\index{alignment\_type@{alignment\_type}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{alignment\_type}{alignment\_type}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a29ace1ca9a96c64a1bd3ba079a4cb658} 
+template$<$class Alignment$>$ \\
+using \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+alignment\+\_\+type = Alignment}
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!chunk\_type@{chunk\_type}}
+\index{chunk\_type@{chunk\_type}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{chunk\_type}{chunk\_type}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2} 
+template$<$class Alignment$>$ \\
+using \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+chunk\+\_\+type = \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk}{internal::\+pool::\+chunk}}$<$\doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a197b4ade2e1056422374df8058b8e2ba}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!free\_list\_iterator@{free\_list\_iterator}}
+\index{free\_list\_iterator@{free\_list\_iterator}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{free\_list\_iterator}{free\_list\_iterator}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a197b4ade2e1056422374df8058b8e2ba} 
+template$<$class Alignment$>$ \\
+using \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+free\+\_\+list\+\_\+iterator = typename \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab860e120bd2f95f5775a5ec74322673e}{chunk\+\_\+type::\+free\+\_\+list\+\_\+iterator}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!page\_iterator@{page\_iterator}}
+\index{page\_iterator@{page\_iterator}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{page\_iterator}{page\_iterator}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630} 
+template$<$class Alignment$>$ \\
+using \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+page\+\_\+iterator = typename pool\+\_\+type::\+iterator\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!pool\_type@{pool\_type}}
+\index{pool\_type@{pool\_type}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{pool\_type}{pool\_type}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f} 
+template$<$class Alignment$>$ \\
+using \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+pool\+\_\+type = FE::\+list$<$\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}{chunk\+\_\+type}}, FE::\+page\+\_\+aligned\+\_\+allocator$<$\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af1b838930b42651495bbdac4d6bae7f2}{chunk\+\_\+type}}$>$$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-constructors}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!pool@{pool}}
+\index{pool@{pool}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{pool()}{pool()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8a0ed90b4479395449e8103f573c10ad}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af2caa9e08fd9d5ba2e4fabee413266f1}{operator==()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a66a4132c58bbfdf8cbe69d8fc327a70f}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aad7bcde2865f4f5a831cdae14baefe1c}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!````~pool@{\texorpdfstring{$\sim$}{\string~}pool}}
+\index{````~pool@{\texorpdfstring{$\sim$}{\string~}pool}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}pool()}{\string~pool()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aad7bcde2865f4f5a831cdae14baefe1c} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classpool}{pool}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!pool@{pool}}
+\index{pool@{pool}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{pool()}{pool()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+pool (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$ \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a66a4132c58bbfdf8cbe69d8fc327a70f}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!pool@{pool}}
+\index{pool@{pool}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{pool()}{pool()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a66a4132c58bbfdf8cbe69d8fc327a70f} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+pool (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a66a4132c58bbfdf8cbe69d8fc327a70f_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-func-members}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a64d3ba9bd647f3ac117d4b98e1729ea0}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!\_\_defragment@{\_\_defragment}}
+\index{\_\_defragment@{\_\_defragment}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_defragment()}{\_\_defragment()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a64d3ba9bd647f3ac117d4b98e1729ea0} 
+template$<$class Alignment$>$ \\
+void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+\+\_\+\+\_\+defragment (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}{page\+\_\+iterator}}}]{page\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a4c99351d8d3c5b65d07d7eae7bf7a01f}{\+\_\+\+FE\+\_\+\+UNLIKELY\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb}{\+\_\+\+\_\+try\+\_\+allocation\+\_\+from\+\_\+page()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a64d3ba9bd647f3ac117d4b98e1729ea0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!\_\_try\_allocation\_from\_page@{\_\_try\_allocation\_from\_page}}
+\index{\_\_try\_allocation\_from\_page@{\_\_try\_allocation\_from\_page}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_try\_allocation\_from\_page()}{\_\_try\_allocation\_from\_page()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb} 
+template$<$class Alignment$>$ \\
+FE::\+boolean \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+\+\_\+\+\_\+try\+\_\+allocation\+\_\+from\+\_\+page (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a942a01d3c4819005c501412d64a3e630}{page\+\_\+iterator}}}]{page\+\_\+p}{, }\item[{\doxymbox{\hyperlink{namespaceinternal_1_1pool}{internal::\+pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+block\+\_\+info \&}]{out\+\_\+result\+\_\+p}{, }\item[{FE::\+uint32}]{bytes\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a64d3ba9bd647f3ac117d4b98e1729ea0}{\+\_\+\+\_\+defragment()}}, \doxymbox{\hyperlink{types_8hxx_a8b6ec68159ea76ca724c3f0babb2ef79}{\+\_\+\+FE\+\_\+\+FAILED\+\_\+}}, \doxymbox{\hyperlink{types_8hxx_a0032e5927d343f172711ccfe66134474}{\+\_\+\+FE\+\_\+\+SUCCEEDED\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4}{page\+\_\+capacity}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!allocate@{allocate}}
+\index{allocate@{allocate}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{allocate()}{allocate()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a} 
+template$<$class Alignment$>$ \\
+template$<$typename U$>$ \\
+U \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+allocate (\begin{DoxyParamCaption}\item[{FE::\+size}]{size\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc}{internal::\+pool::\+\+\_\+100\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534}{internal::\+pool::\+\+\_\+12\+\_\+5\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5}{internal::\+pool::\+\+\_\+25\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b}{internal::\+pool::\+\+\_\+50\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d}{internal::\+pool::\+\+\_\+6\+\_\+25\+\_\+\+Percent\+Remaining}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7}{internal::\+pool::\+\+\_\+75\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284}{internal::\+pool::\+\+\_\+\+\_\+select\+\_\+page\+\_\+list\+\_\+by\+\_\+capacity()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb}{\+\_\+\+\_\+try\+\_\+allocation\+\_\+from\+\_\+page()}}, \doxymbox{\hyperlink{log_8hxx_a8f80a737b1ab1289e2045f878424c332}{\+\_\+\+FE\+\_\+\+NODEFAULT\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1}{internal::\+pool::\+\+\_\+\+Unavailable}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4}{page\+\_\+capacity}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!deallocate@{deallocate}}
+\index{deallocate@{deallocate}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{deallocate()}{deallocate()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896} 
+template$<$class Alignment$>$ \\
+template$<$typename T$>$ \\
+void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+deallocate (\begin{DoxyParamCaption}\item[{T \texorpdfstring{$\ast$}{*}}]{pointer\+\_\+p}{, }\item[{FE::\+size}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc}{internal::\+pool::\+\+\_\+100\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534}{internal::\+pool::\+\+\_\+12\+\_\+5\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5}{internal::\+pool::\+\+\_\+25\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b}{internal::\+pool::\+\+\_\+50\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d}{internal::\+pool::\+\+\_\+6\+\_\+25\+\_\+\+Percent\+Remaining}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7}{internal::\+pool::\+\+\_\+75\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284}{internal::\+pool::\+\+\_\+\+\_\+select\+\_\+page\+\_\+list\+\_\+by\+\_\+capacity()}}, \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info_a1b4c7028c0d7edb84d73d6275ad7a9e4}{internal::\+pool::\+block\+\_\+info::\+\+\_\+address}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5bde699953c26849a7bbcd897944b106}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Size}}, \doxymbox{\hyperlink{log_8hxx_a8f80a737b1ab1289e2045f878424c332}{\+\_\+\+FE\+\_\+\+NODEFAULT\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}}, \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a808acb7ade44d4c6204cdf5b02b130bb}{internal::\+pool::\+chunk$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$::\+\+\_\+remaining\+\_\+capacity\+\_\+in\+\_\+bytes}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1}{internal::\+pool::\+\+\_\+\+Unavailable}}, \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aeaa50142db0864614694d34708fe214a}{internal::\+pool::\+chunk$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$::\+\+\_\+usage\+\_\+in\+\_\+bytes}}, \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a19976026221cf3c41cdb0027d91a492c}{internal::\+pool::\+chunk$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$::\+add\+\_\+to\+\_\+the\+\_\+free\+\_\+list()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4}{page\+\_\+capacity}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aea8954697f809032c5c5e975a823291c}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!get\_page\_count@{get\_page\_count}}
+\index{get\_page\_count@{get\_page\_count}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{get\_page\_count()}{get\_page\_count()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aea8954697f809032c5c5e975a823291c} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+size \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+get\+\_\+page\+\_\+count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8a0ed90b4479395449e8103f573c10ad}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8a0ed90b4479395449e8103f573c10ad} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}} \& \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8a0ed90b4479395449e8103f573c10ad_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool}{pool}} \& \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$ \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}{m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}{m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}{m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}{m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}{m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}{m\+\_\+unavailable\+\_\+pages}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af2caa9e08fd9d5ba2e4fabee413266f1}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!operator==@{operator==}}
+\index{operator==@{operator==}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af2caa9e08fd9d5ba2e4fabee413266f1} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+operator== (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$ \&}]{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_af2caa9e08fd9d5ba2e4fabee413266f1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a678767731761b4d50f8ccd39dae8fd70}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!try\_trim\_a\_page@{try\_trim\_a\_page}}
+\index{try\_trim\_a\_page@{try\_trim\_a\_page}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{try\_trim\_a\_page()}{try\_trim\_a\_page()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a678767731761b4d50f8ccd39dae8fd70} 
+template$<$class Alignment$>$ \\
+bool \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+try\+\_\+trim\+\_\+a\+\_\+page (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a26057899b4f5cefa73d643577ff42502}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!try\_trim\_all\_pages@{try\_trim\_all\_pages}}
+\index{try\_trim\_all\_pages@{try\_trim\_all\_pages}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{try\_trim\_all\_pages()}{try\_trim\_all\_pages()}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a26057899b4f5cefa73d643577ff42502} 
+template$<$class Alignment$>$ \\
+void \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+try\+\_\+trim\+\_\+all\+\_\+pages (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}{m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity}}.
+
+
+
+\label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-variable-members}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_100\_capacity@{m\_pages\_with\_100\_capacity}}
+\index{m\_pages\_with\_100\_capacity@{m\_pages\_with\_100\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_100\_capacity}{m\_pages\_with\_100\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a00b79d011c318cc363d04d0cfcb6435e} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+100\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aea8954697f809032c5c5e975a823291c}{get\+\_\+page\+\_\+count()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a678767731761b4d50f8ccd39dae8fd70}{try\+\_\+trim\+\_\+a\+\_\+page()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a26057899b4f5cefa73d643577ff42502}{try\+\_\+trim\+\_\+all\+\_\+pages()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_12\_5\_capacity@{m\_pages\_with\_12\_5\_capacity}}
+\index{m\_pages\_with\_12\_5\_capacity@{m\_pages\_with\_12\_5\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_12\_5\_capacity}{m\_pages\_with\_12\_5\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a035275d138a6cbe843e7113dbda708d0} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+12\+\_\+5\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_25\_capacity@{m\_pages\_with\_25\_capacity}}
+\index{m\_pages\_with\_25\_capacity@{m\_pages\_with\_25\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_25\_capacity}{m\_pages\_with\_25\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ae2055bc25f6d02bd0024cc09f7e0dac9} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+25\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_50\_capacity@{m\_pages\_with\_50\_capacity}}
+\index{m\_pages\_with\_50\_capacity@{m\_pages\_with\_50\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_50\_capacity}{m\_pages\_with\_50\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a8d1d14d3f7b4a575201e21c0b8d327b4} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+50\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_6\_25\_capacity@{m\_pages\_with\_6\_25\_capacity}}
+\index{m\_pages\_with\_6\_25\_capacity@{m\_pages\_with\_6\_25\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_6\_25\_capacity}{m\_pages\_with\_6\_25\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_aebe0328c6dd6d6386a58b765bf874d88} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+6\+\_\+25\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_pages\_with\_75\_capacity@{m\_pages\_with\_75\_capacity}}
+\index{m\_pages\_with\_75\_capacity@{m\_pages\_with\_75\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_pages\_with\_75\_capacity}{m\_pages\_with\_75\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a567e5df927dc2859156a6f26fe224883} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+pages\+\_\+with\+\_\+75\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!m\_unavailable\_pages@{m\_unavailable\_pages}}
+\index{m\_unavailable\_pages@{m\_unavailable\_pages}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{m\_unavailable\_pages}{m\_unavailable\_pages}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afc845ceaf021940465576b0cd594da1f} 
+template$<$class Alignment$>$ \\
+\doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_ab84b0985c551bca9b2c55a4d92d1da9f}{pool\+\_\+type}} \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+m\+\_\+unavailable\+\_\+pages\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_affa3b5e74692afd00bb0ee7a9b173fd8}{operator=()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a04788b2b899a3ea5a7197a2f1ae31aff}{pool()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a6282ab4b24593adf99ac80f41d8b15bd}{pool()}}.
+
+\Hypertarget{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4}\index{pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}!page\_capacity@{page\_capacity}}
+\index{page\_capacity@{page\_capacity}!pool$<$ PoolType::\_Scalable, Alignment $>$@{pool$<$ PoolType::\_Scalable, Alignment $>$}}
+\doxysubsubsection{\texorpdfstring{page\_capacity}{page\_capacity}}
+{\footnotesize\ttfamily \label{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_afd34f1e0eda11edadd53f8a8ae348da4} 
+template$<$class Alignment$>$ \\
+FE::\+uint32 \doxymbox{\hyperlink{classpool}{pool}}$<$ \doxymbox{\hyperlink{pool__common_8hxx_aec3190700363e0f14ec2373ada5360eea723241a5f515e9a004d373ed201db086}{Pool\+Type::\+\+\_\+\+Scalable}}, Alignment $>$::\+page\+\_\+capacity = \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a70a7c4e11f9297ab81ee4e7d1d0bc251}{chunk\+\_\+type::\+page\+\_\+size\+\_\+in\+\_\+bytes}}\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a13b549b09e08a9a816d4e440ecdb35bb}{\+\_\+\+\_\+try\+\_\+allocation\+\_\+from\+\_\+page()}}, \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{allocate()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{deallocate()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+pool/\+\doxymbox{\hyperlink{scalable__pool_8hxx}{scalable\+\_\+pool.\+hxx}}\end{DoxyCompactItemize}

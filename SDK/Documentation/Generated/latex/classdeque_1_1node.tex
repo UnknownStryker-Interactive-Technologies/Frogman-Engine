@@ -1,0 +1,72 @@
+\doxysection{deque\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>}::\+node Class Reference}
+\hypertarget{classdeque_1_1node}{}\label{classdeque_1_1node}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+
+
+Collaboration diagram for deque\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>}::\+node:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=308pt]{classdeque_1_1node__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+size \doxymbox{\hyperlink{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}{array\+\_\+size}} = FE::\+internal::\+deque::\+calculate\+\_\+node\+\_\+size$<$T$>$()
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+size \doxymbox{\hyperlink{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}{array\+\_\+size\+\_\+in\+\_\+bytes}} = \doxymbox{\hyperlink{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}{array\+\_\+size}} \texorpdfstring{$\ast$}{*} sizeof(T)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}} \doxymbox{\hyperlink{classdeque_1_1node_ad917a46abfe90b0ce3e1cc2068af2660}{m\+\_\+data}} \+[\doxymbox{\hyperlink{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}{array\+\_\+size\+\_\+in\+\_\+bytes}}]\+
+\item 
+T \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdeque_1_1node_a531ec1fa987d0d9d85f70af8983dbf13}{m\+\_\+front}}
+\item 
+T \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdeque_1_1node_a0afec65767e5d7a1e44b3975795011f6}{m\+\_\+back}}
+\end{DoxyCompactItemize}
+
+
+\label{classdeque_1_1node_doc-variable-members}
+\Hypertarget{classdeque_1_1node_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}!array\_size@{array\_size}}
+\index{array\_size@{array\_size}!deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+\doxysubsubsection{\texorpdfstring{array\_size}{array\_size}}
+{\footnotesize\ttfamily \label{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+FE::\+size \doxymbox{\hyperlink{classdeque}{deque}}$<$ T, Allocator $>$::\+node::\+array\+\_\+size = FE::\+internal::\+deque::\+calculate\+\_\+node\+\_\+size$<$T$>$()\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}!array\_size\_in\_bytes@{array\_size\_in\_bytes}}
+\index{array\_size\_in\_bytes@{array\_size\_in\_bytes}!deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+\doxysubsubsection{\texorpdfstring{array\_size\_in\_bytes}{array\_size\_in\_bytes}}
+{\footnotesize\ttfamily \label{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+FE::\+size \doxymbox{\hyperlink{classdeque}{deque}}$<$ T, Allocator $>$::\+node::\+array\+\_\+size\+\_\+in\+\_\+bytes = \doxymbox{\hyperlink{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}{array\+\_\+size}} \texorpdfstring{$\ast$}{*} sizeof(T)\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{classdeque_1_1node_a0afec65767e5d7a1e44b3975795011f6}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}!m\_back@{m\_back}}
+\index{m\_back@{m\_back}!deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+\doxysubsubsection{\texorpdfstring{m\_back}{m\_back}}
+{\footnotesize\ttfamily \label{classdeque_1_1node_a0afec65767e5d7a1e44b3975795011f6} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+T\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdeque}{deque}}$<$ T, Allocator $>$::\+node::\+m\+\_\+back\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classdeque_1_1node_ad917a46abfe90b0ce3e1cc2068af2660}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}!m\_data@{m\_data}}
+\index{m\_data@{m\_data}!deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+\doxysubsubsection{\texorpdfstring{m\_data}{m\_data}}
+{\footnotesize\ttfamily \label{classdeque_1_1node_ad917a46abfe90b0ce3e1cc2068af2660} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}} \doxymbox{\hyperlink{classdeque}{deque}}$<$ T, Allocator $>$::\+node::\+m\+\_\+data\+[\doxymbox{\hyperlink{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}{array\+\_\+size\+\_\+in\+\_\+bytes}}]\+\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classdeque_1_1node_a531ec1fa987d0d9d85f70af8983dbf13}\index{deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}!m\_front@{m\_front}}
+\index{m\_front@{m\_front}!deque$<$ T, Allocator $>$::node@{deque$<$ T, Allocator $>$::node}}
+\doxysubsubsection{\texorpdfstring{m\_front}{m\_front}}
+{\footnotesize\ttfamily \label{classdeque_1_1node_a531ec1fa987d0d9d85f70af8983dbf13} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+T\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classdeque}{deque}}$<$ T, Allocator $>$::\+node::\+m\+\_\+front\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{deque_8hxx}{deque.\+hxx}}\end{DoxyCompactItemize}

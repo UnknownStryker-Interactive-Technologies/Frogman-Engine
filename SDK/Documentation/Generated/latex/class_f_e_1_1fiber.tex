@@ -1,0 +1,255 @@
+\doxysection{FE::\+fiber Class Reference}
+\hypertarget{class_f_e_1_1fiber}{}\label{class_f_e_1_1fiber}\index{FE::fiber@{FE::fiber}}
+
+
+{\ttfamily \+\#include $<$fiber.\+hxx$>$}
+
+
+
+Collaboration diagram for FE::\+fiber:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_f_e_1_1fiber__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_a2579e64fda4c4936a218b151ba142b20}{fiber}} (size\+\_\+t stack\+\_\+size\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_a9a808d84434d96b14d90b9c7cd33053d}{\texorpdfstring{$\sim$}{\string~}fiber}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_ada3f7a69de330def1ed0f71ac4f268f8}{fiber}} (fiber \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_ab51f38fdb1a73c4a914cb0014ebbeb5e}{operator=}} (\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{namespacevar_ac16e4ca851eede084b6479f971c2dbe2}{var::\+int32}} \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} \doxymbox{\hyperlink{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249}{get\+\_\+host\+\_\+thread\+\_\+id}} () const noexcept
+\item 
+\doxymbox{\hyperlink{class_f_e_1_1fiber_a6f96ad43f4652628da7b19383b5d0080}{fiber}} (const fiber \&) noexcept=delete
+\item 
+\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \& \doxymbox{\hyperlink{class_f_e_1_1fiber_a30be94df6d421c790522c99584c2a7b5}{operator=}} (const \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&) noexcept=delete
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{structfiber__impl}{fiber\+\_\+impl}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_f_e_1_1fiber_a12bfb778ed64107c50280cf039b8890b}{m\+\_\+impl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+pmr::\+monotonic\+\_\+buffer\+\_\+resource \doxymbox{\hyperlink{class_f_e_1_1fiber_a1201d2ad47e99d36b948f0698dfd0aad}{tl\+\_\+s\+\_\+fiber\+\_\+pool}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_f_e_1_1fiber_a3bf7ab1db8fd35adb62b899e6f6231f0}{fiber\+\_\+scheduler}}
+\end{DoxyCompactItemize}
+
+
+\label{class_f_e_1_1fiber_doc-constructors}
+\Hypertarget{class_f_e_1_1fiber_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}\index{FE::fiber@{FE::fiber}!fiber@{fiber}}
+\index{fiber@{fiber}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{fiber()}{fiber()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5} 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+fiber (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_f_e_1_1fiber_a6f96ad43f4652628da7b19383b5d0080}{fiber()}}, \doxymbox{\hyperlink{class_f_e_1_1fiber_ada3f7a69de330def1ed0f71ac4f268f8}{fiber()}}, \doxymbox{\hyperlink{class_f_e_1_1fiber_a2579e64fda4c4936a218b151ba142b20}{fiber()}}, \doxymbox{\hyperlink{class_f_e_1_1fiber_a30be94df6d421c790522c99584c2a7b5}{operator=()}}, \doxymbox{\hyperlink{class_f_e_1_1fiber_ab51f38fdb1a73c4a914cb0014ebbeb5e}{operator=()}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_a9a808d84434d96b14d90b9c7cd33053d}{\texorpdfstring{$\sim$}{\string~}fiber()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_a2579e64fda4c4936a218b151ba142b20}\index{FE::fiber@{FE::fiber}!fiber@{fiber}}
+\index{fiber@{fiber}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{fiber()}{fiber()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a2579e64fda4c4936a218b151ba142b20} 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+fiber (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{stack\+\_\+size\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{class_f_e_1_1fiber_a2579e64fda4c4936a218b151ba142b20_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_a9a808d84434d96b14d90b9c7cd33053d}\index{FE::fiber@{FE::fiber}!````~fiber@{\texorpdfstring{$\sim$}{\string~}fiber}}
+\index{````~fiber@{\texorpdfstring{$\sim$}{\string~}fiber}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}fiber()}{\string~fiber()}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a9a808d84434d96b14d90b9c7cd33053d} 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+\texorpdfstring{$\sim$}{\string~}fiber (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=279pt]{class_f_e_1_1fiber_a9a808d84434d96b14d90b9c7cd33053d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_ada3f7a69de330def1ed0f71ac4f268f8}\index{FE::fiber@{FE::fiber}!fiber@{fiber}}
+\index{fiber@{fiber}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{fiber()}{fiber()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_ada3f7a69de330def1ed0f71ac4f268f8} 
+\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+fiber (\begin{DoxyParamCaption}\item[{fiber \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{class_f_e_1_1fiber_ada3f7a69de330def1ed0f71ac4f268f8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_a6f96ad43f4652628da7b19383b5d0080}\index{FE::fiber@{FE::fiber}!fiber@{fiber}}
+\index{fiber@{fiber}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{fiber()}{fiber()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a6f96ad43f4652628da7b19383b5d0080} 
+FE::\+fiber::\+fiber (\begin{DoxyParamCaption}\item[{const fiber \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{class_f_e_1_1fiber_a6f96ad43f4652628da7b19383b5d0080_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{class_f_e_1_1fiber_doc-func-members}
+\Hypertarget{class_f_e_1_1fiber_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249}\index{FE::fiber@{FE::fiber}!get\_host\_thread\_id@{get\_host\_thread\_id}}
+\index{get\_host\_thread\_id@{get\_host\_thread\_id}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{get\_host\_thread\_id()}{get\_host\_thread\_id()}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249} 
+\doxymbox{\hyperlink{namespacevar_ac16e4ca851eede084b6479f971c2dbe2}{var::\+int32}} \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+get\+\_\+host\+\_\+thread\+\_\+id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}, \doxymbox{\hyperlink{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249}{get\+\_\+host\+\_\+thread\+\_\+id()}}, \doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_a12bfb778ed64107c50280cf039b8890b}{m\+\_\+impl}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249}{get\+\_\+host\+\_\+thread\+\_\+id()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=177pt]{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=177pt]{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_a30be94df6d421c790522c99584c2a7b5}\index{FE::fiber@{FE::fiber}!operator=@{operator=}}
+\index{operator=@{operator=}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a30be94df6d421c790522c99584c2a7b5} 
+\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \& FE::\+fiber::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{class_f_e_1_1fiber_a30be94df6d421c790522c99584c2a7b5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_f_e_1_1fiber_ab51f38fdb1a73c4a914cb0014ebbeb5e}\index{FE::fiber@{FE::fiber}!operator=@{operator=}}
+\index{operator=@{operator=}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_ab51f38fdb1a73c4a914cb0014ebbeb5e} 
+\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&\doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}} FE::\+fiber::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber}} \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a5af261992b136e4462a253950a8d3a9a}{\+\_\+\+FE\+\_\+\+CDECL\+\_\+}}, and \doxymbox{\hyperlink{class_f_e_1_1fiber_ace4815345442d82b6910aa755187a9f5}{fiber()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=295pt]{class_f_e_1_1fiber_ab51f38fdb1a73c4a914cb0014ebbeb5e_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{class_f_e_1_1fiber_doc-related-members}
+\Hypertarget{class_f_e_1_1fiber_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{class_f_e_1_1fiber_a3bf7ab1db8fd35adb62b899e6f6231f0}\index{FE::fiber@{FE::fiber}!fiber\_scheduler@{fiber\_scheduler}}
+\index{fiber\_scheduler@{fiber\_scheduler}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{fiber\_scheduler}{fiber\_scheduler}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a3bf7ab1db8fd35adb62b899e6f6231f0} 
+friend class fiber\+\_\+scheduler\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{class_f_e_1_1fiber_a3bf7ab1db8fd35adb62b899e6f6231f0}{fiber\+\_\+scheduler}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_f_e_1_1fiber_a3bf7ab1db8fd35adb62b899e6f6231f0}{fiber\+\_\+scheduler}}.
+
+
+
+\label{class_f_e_1_1fiber_doc-variable-members}
+\Hypertarget{class_f_e_1_1fiber_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_f_e_1_1fiber_a12bfb778ed64107c50280cf039b8890b}\index{FE::fiber@{FE::fiber}!m\_impl@{m\_impl}}
+\index{m\_impl@{m\_impl}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{m\_impl}{m\_impl}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a12bfb778ed64107c50280cf039b8890b} 
+\doxymbox{\hyperlink{structfiber__impl}{fiber\+\_\+impl}}\texorpdfstring{$\ast$}{*} FE::\+fiber::\+m\+\_\+impl\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_f_e_1_1fiber_ad6897aa1de5809638459f41013e6b249}{get\+\_\+host\+\_\+thread\+\_\+id()}}.
+
+\Hypertarget{class_f_e_1_1fiber_a1201d2ad47e99d36b948f0698dfd0aad}\index{FE::fiber@{FE::fiber}!tl\_s\_fiber\_pool@{tl\_s\_fiber\_pool}}
+\index{tl\_s\_fiber\_pool@{tl\_s\_fiber\_pool}!FE::fiber@{FE::fiber}}
+\doxysubsubsection{\texorpdfstring{tl\_s\_fiber\_pool}{tl\_s\_fiber\_pool}}
+{\footnotesize\ttfamily \label{class_f_e_1_1fiber_a1201d2ad47e99d36b948f0698dfd0aad} 
+std::\+pmr::\+monotonic\+\_\+buffer\+\_\+resource FE::\+fiber::\+tl\+\_\+s\+\_\+fiber\+\_\+pool\hspace{0.3cm}{\ttfamily [thread_local]}, {\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{fiber_8hxx}{fiber.\+hxx}}\end{DoxyCompactItemize}

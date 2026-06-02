@@ -1,0 +1,7 @@
+<map id="task_base" name="task_base">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,51,87,77"/>
+<area shape="rect" id="Node000002" href="$classc__style__task.html" title=" " alt="" coords="144,5,307,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,50,146,42,141,45,103,55"/>
+<area shape="rect" id="Node000003" href="$classcpp__style__task.html" title=" " alt="" coords="135,72,316,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,73,137,82,132,83,102,78"/>
+</map>

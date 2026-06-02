@@ -1,0 +1,124 @@
+\doxysection{pair.\+hxx}
+\hypertarget{pair_8hxx_source}{}\label{pair_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/pair.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/pair.hxx}}
+\doxymbox{\hyperlink{pair_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_PAIR\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_PAIR\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{definitions_8hxx}{FE/definitions.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ First,\ \textcolor{keyword}{typename}\ Second>}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classpair_a8c8a054ba724f9acedc635c4a0281e7b}{first\_type}}\ =\ First;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classpair_a330d9ac09ae73b121502b0ffd8e1bbbb}{second\_type}}\ =\ Second;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ First\ \doxymbox{\hyperlink{classpair_ad939e49f0a3478b9b4fafb24f6751041}{\_first}};}
+\DoxyCodeLine{00036\ \ \ \ \ Second\ \doxymbox{\hyperlink{classpair_ad8020d7ee9f7e02a0a5dbec37b37b85b}{\_second}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00039\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}(const\ First\&\ first\_p,\ const\ Second\&\ second\_p)\ noexcept\ :\ \doxymbox{\hyperlink{classpair_ad939e49f0a3478b9b4fafb24f6751041}{\_first}}(first\_p),\ \doxymbox{\hyperlink{classpair_ad8020d7ee9f7e02a0a5dbec37b37b85b}{\_second}}(second\_p)\ \{\};}
+\DoxyCodeLine{00040\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_a788abc58d513111e7cbb64af6a95a9dc}{pair}}(First\&\&\ first\_p,\ Second\&\&\ second\_p)\ noexcept\ :\ \doxymbox{\hyperlink{classpair_ad939e49f0a3478b9b4fafb24f6751041}{\_first}}(std::forward<First\&\&>(first\_p)),\ \doxymbox{\hyperlink{classpair_ad8020d7ee9f7e02a0a5dbec37b37b85b}{\_second}}(std::forward<Second\&\&>(second\_p))\ \{\};}
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_a8a3413378a9e1c803e07ff399623d990}{\string~pair}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}(const\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00044\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}(\doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&\ operator=(const\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&\ other\_p)\ noexcept}
+\DoxyCodeLine{00047\ \ \ \ \ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classpair_ad939e49f0a3478b9b4fafb24f6751041}{\_first}}\ =\ other\_p.\_first;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classpair_ad8020d7ee9f7e02a0a5dbec37b37b85b}{\_second}}\ =\ other\_p.\_second;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\_FE\_CONSTEXPR17\_}}\ \doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&\ \doxymbox{\hyperlink{classpair_a7972ecc1474ed40179f6662d75ffa916}{operator=}}(\doxymbox{\hyperlink{classpair_abb838ad5e31e4f68998733a7993d5b44}{pair}}\&\&\ rvalue\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classpair_ad939e49f0a3478b9b4fafb24f6751041}{\_first}}\ =\ std::move(rvalue\_p.\_first);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classpair_ad8020d7ee9f7e02a0a5dbec37b37b85b}{\_second}}\ =\ std::move(rvalue\_p.\_second);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ First,\ \textcolor{keyword}{typename}\ Second>}
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classcompressed__pair}{compressed\_pair}}\ final}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{using\ }first\_type\ =\ First;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{using\ }second\_type\ =\ Second;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00073\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\_FE\_NO\_UNIQUE\_ADDRESS\_}}\ First\ m\_first;}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\_FE\_NO\_UNIQUE\_ADDRESS\_}}\ Second\ m\_second;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ First\&\ get\_first()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_first;\ \}}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ Second\&\ get\_second()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ m\_second;\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00082\ template<typename\ First,\ typename\ Second,\ boolean\ IsFirstEmpty\ =\ std::is\_empty<First>::value,\ \textcolor{keywordtype}{boolean}\ IsSecondEmpty\ =\ std::is\_empty<Second>::value>}
+\DoxyCodeLine{00083\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classcompressed__pair}{compressed\_pair}}\ \{\};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ First,\ \textcolor{keyword}{typename}\ Second>}
+\DoxyCodeLine{00086\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classcompressed__pair}{compressed\_pair}}<First,\ Second,\ true,\ false>\ :\ \textcolor{keyword}{private}\ First}
+\DoxyCodeLine{00087\ \{}
+\DoxyCodeLine{00088\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_ac96157524e5a60cd43569bee0d8ff8f0}{first\_type}}\ =\ First;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_a506f92d7eb70a8e167658b24207d403f}{second\_type}}\ =\ Second;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00093\ \ \ \ \ Second\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_a9f513bd1333da6bc0354656950610f2d}{m\_second}};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00096\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ First\&\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_ad91b4084c31e878e83da4314e0623340}{get\_first}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ Second\&\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_a5719dc6efb31d7a28871b3d64c066046}{get\_second}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01true_00_01false_01_4_a9f513bd1333da6bc0354656950610f2d}{m\_second}};\ \}}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ First,\ \textcolor{keyword}{typename}\ Second>}
+\DoxyCodeLine{00101\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classcompressed__pair}{compressed\_pair}}<First,\ Second,\ false,\ true>\ :\ \textcolor{keyword}{private}\ Second}
+\DoxyCodeLine{00102\ \{}
+\DoxyCodeLine{00103\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_a46af02e72a380ba2de7e1e8ab264a724}{first\_type}}\ =\ First;}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_aaca11501e55b2ecf79eb250a09ef15b3}{second\_type}}\ =\ Second;}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00108\ \ \ \ \ First\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_a064b84a1bdeebf80203e95272cfdad1f}{m\_first}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00111\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ First\&\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_ae37cb035ed487c7aaf51afb57ac95fc8}{get\_first}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_a064b84a1bdeebf80203e95272cfdad1f}{m\_first}};\ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ Second\&\ \doxymbox{\hyperlink{classcompressed__pair_3_01_first_00_01_second_00_01false_00_01true_01_4_a125a93266630caa5ad1af848f086b680}{get\_second}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00113\ \};}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

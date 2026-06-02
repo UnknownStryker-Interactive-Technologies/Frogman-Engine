@@ -1,0 +1,207 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Renderer/\+\+Include/\+\+FE/\+d3d11\+\_\+backend.hxx File Reference}
+\hypertarget{d3d11__backend_8hxx}{}\label{d3d11__backend_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/d3d11\_backend.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/d3d11\_backend.hxx}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$glm/\+glm.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$span$>$}\newline
+{\ttfamily \+\#include $<$absl/\+container/\+flat\+\_\+hash\+\_\+map.\+h$>$}\newline
+Include dependency graph for d3d11\+\_\+backend.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3d11__backend_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3d11__backend_8hxx__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classd3d11__backend}{d3d11\+\_\+backend}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820e}{Shader\+Target}} \{ \newline
+\doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ead20b96c36ccbc19fea22d6401bc09163}{\+\_\+\+SM5\+\_\+\+Vertex\+Shader}}
+, \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab58e584ee4a5b145c6b988db1e3b401c}{\+\_\+\+SM5\+\_\+\+Pixel\+Shader}}
+, \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea1edbc513fe83963a1fbf95d73c0783b7}{\+\_\+\+SM5\+\_\+\+Geometry\+Shader}}
+, \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eac28f7b91101bfddb4e7f7672db78df7a}{\+\_\+\+SM5\+\_\+\+Hull\+Shader}}
+, \newline
+\doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab8d9d19607d953a2a16c6109ba1e97de}{\+\_\+\+SM5\+\_\+\+Domain\+Shader}}
+, \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea9dc3978bb166b9c0a8ebb1d7fabe8893}{\+\_\+\+SM5\+\_\+\+Compute\+Shader}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{d3d11__backend_8hxx_a1aef6239b4dd70a4296946527fcaa458}{CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION}} (\doxymbox{\hyperlink{namespace_f_e}{FE}}, \doxymbox{\hyperlink{classrenderer}{renderer}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_aae8383f44cd0054c07486bd447a61da8}{SM5\+\_\+vertex\+\_\+shader\+\_\+target}} = "{}vs\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_a59211c9d33c48e2cac6d191ad734c058}{SM5\+\_\+pixel\+\_\+shader\+\_\+target}} = "{}ps\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_a4fb0c803b3efb0d4414821408dd46fe6}{SM5\+\_\+geometry\+\_\+shader\+\_\+target}} = "{}gs\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_af021526f4d8e99ae916b0f608e5bb7d9}{SM5\+\_\+hull\+\_\+shader\+\_\+target}} = "{}hs\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_a49cff843f929a1392da56cb1a1a2ed83}{SM5\+\_\+domain\+\_\+shader\+\_\+target}} = "{}ds\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_abaa2842f619a3cd8de23cbd455bf9403}{SM5\+\_\+compute\+\_\+shader\+\_\+target}} = "{}cs\+\_\+5\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_ab15d8e68f7bb5fd72ca6be3b180f52bf}{SM6\+\_\+vertex\+\_\+shader\+\_\+target}} = "{}vs\+\_\+6\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_aba3e7a45da67d9e118df1d31f20e1d9c}{SM6\+\_\+pixel\+\_\+shader\+\_\+target}} = "{}ps\+\_\+6\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_aaedee11d5ce5e70aaffc2aaf85de8ff8}{SM6\+\_\+geometry\+\_\+shader\+\_\+target}} = "{}gs\+\_\+6\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_ac9969e2fb20e1e71ea13e93fd66000ab}{SM6\+\_\+hull\+\_\+shader\+\_\+target}} = "{}hs\+\_\+6\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_afe84d6e919fc9a06438c0818ae1fdf45}{SM6\+\_\+domain\+\_\+shader\+\_\+target}} = "{}ds\+\_\+6\+\_\+0"{}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{d3d11__backend_8hxx_a1f7f9dbc4f8437264f36bfd8c29c687c}{SM6\+\_\+compute\+\_\+shader\+\_\+target}} = "{}cs\+\_\+6\+\_\+0"{}
+\end{DoxyCompactItemize}
+
+
+\label{d3d11__backend_8hxx_doc-enum-members}
+\Hypertarget{d3d11__backend_8hxx_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820e}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!ShaderTarget@{ShaderTarget}}
+\index{ShaderTarget@{ShaderTarget}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{ShaderTarget}{ShaderTarget}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820e} 
+enum struct \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820e}{Shader\+Target}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_VertexShader@{\_SM5\_VertexShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_VertexShader@{\_SM5\_VertexShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ead20b96c36ccbc19fea22d6401bc09163}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ead20b96c36ccbc19fea22d6401bc09163} 
+\+\_\+\+SM5\+\_\+\+Vertex\+Shader&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_PixelShader@{\_SM5\_PixelShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_PixelShader@{\_SM5\_PixelShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab58e584ee4a5b145c6b988db1e3b401c}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab58e584ee4a5b145c6b988db1e3b401c} 
+\+\_\+\+SM5\+\_\+\+Pixel\+Shader&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_GeometryShader@{\_SM5\_GeometryShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_GeometryShader@{\_SM5\_GeometryShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea1edbc513fe83963a1fbf95d73c0783b7}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea1edbc513fe83963a1fbf95d73c0783b7} 
+\+\_\+\+SM5\+\_\+\+Geometry\+Shader&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_HullShader@{\_SM5\_HullShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_HullShader@{\_SM5\_HullShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eac28f7b91101bfddb4e7f7672db78df7a}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eac28f7b91101bfddb4e7f7672db78df7a} 
+\+\_\+\+SM5\+\_\+\+Hull\+Shader&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_DomainShader@{\_SM5\_DomainShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_DomainShader@{\_SM5\_DomainShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab8d9d19607d953a2a16c6109ba1e97de}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab8d9d19607d953a2a16c6109ba1e97de} 
+\+\_\+\+SM5\+\_\+\+Domain\+Shader&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_SM5\_ComputeShader@{\_SM5\_ComputeShader}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!\_SM5\_ComputeShader@{\_SM5\_ComputeShader}}
+}\Hypertarget{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea9dc3978bb166b9c0a8ebb1d7fabe8893}\label{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea9dc3978bb166b9c0a8ebb1d7fabe8893} 
+\+\_\+\+SM5\+\_\+\+Compute\+Shader&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{d3d11__backend_8hxx_doc-func-members}
+\Hypertarget{d3d11__backend_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{d3d11__backend_8hxx_a1aef6239b4dd70a4296946527fcaa458}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}}
+\index{CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{CLASS\_FORWARD\_DECLARATION()}{CLASS\_FORWARD\_DECLARATION()}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a1aef6239b4dd70a4296946527fcaa458} 
+CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_f_e}{FE}}}]{}{, }\item[{\doxymbox{\hyperlink{classrenderer}{renderer}}}]{}{}\end{DoxyParamCaption})}
+
+
+
+\label{d3d11__backend_8hxx_doc-var-members}
+\Hypertarget{d3d11__backend_8hxx_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{d3d11__backend_8hxx_abaa2842f619a3cd8de23cbd455bf9403}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_compute\_shader\_target@{SM5\_compute\_shader\_target}}
+\index{SM5\_compute\_shader\_target@{SM5\_compute\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_compute\_shader\_target}{SM5\_compute\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_abaa2842f619a3cd8de23cbd455bf9403} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+compute\+\_\+shader\+\_\+target = "{}cs\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_a49cff843f929a1392da56cb1a1a2ed83}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_domain\_shader\_target@{SM5\_domain\_shader\_target}}
+\index{SM5\_domain\_shader\_target@{SM5\_domain\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_domain\_shader\_target}{SM5\_domain\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a49cff843f929a1392da56cb1a1a2ed83} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+domain\+\_\+shader\+\_\+target = "{}ds\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_a4fb0c803b3efb0d4414821408dd46fe6}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_geometry\_shader\_target@{SM5\_geometry\_shader\_target}}
+\index{SM5\_geometry\_shader\_target@{SM5\_geometry\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_geometry\_shader\_target}{SM5\_geometry\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a4fb0c803b3efb0d4414821408dd46fe6} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+geometry\+\_\+shader\+\_\+target = "{}gs\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_af021526f4d8e99ae916b0f608e5bb7d9}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_hull\_shader\_target@{SM5\_hull\_shader\_target}}
+\index{SM5\_hull\_shader\_target@{SM5\_hull\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_hull\_shader\_target}{SM5\_hull\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_af021526f4d8e99ae916b0f608e5bb7d9} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+hull\+\_\+shader\+\_\+target = "{}hs\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_a59211c9d33c48e2cac6d191ad734c058}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_pixel\_shader\_target@{SM5\_pixel\_shader\_target}}
+\index{SM5\_pixel\_shader\_target@{SM5\_pixel\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_pixel\_shader\_target}{SM5\_pixel\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a59211c9d33c48e2cac6d191ad734c058} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+pixel\+\_\+shader\+\_\+target = "{}ps\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_aae8383f44cd0054c07486bd447a61da8}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM5\_vertex\_shader\_target@{SM5\_vertex\_shader\_target}}
+\index{SM5\_vertex\_shader\_target@{SM5\_vertex\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM5\_vertex\_shader\_target}{SM5\_vertex\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_aae8383f44cd0054c07486bd447a61da8} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM5\+\_\+vertex\+\_\+shader\+\_\+target = "{}vs\+\_\+5\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_a1f7f9dbc4f8437264f36bfd8c29c687c}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_compute\_shader\_target@{SM6\_compute\_shader\_target}}
+\index{SM6\_compute\_shader\_target@{SM6\_compute\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_compute\_shader\_target}{SM6\_compute\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_a1f7f9dbc4f8437264f36bfd8c29c687c} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+compute\+\_\+shader\+\_\+target = "{}cs\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_afe84d6e919fc9a06438c0818ae1fdf45}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_domain\_shader\_target@{SM6\_domain\_shader\_target}}
+\index{SM6\_domain\_shader\_target@{SM6\_domain\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_domain\_shader\_target}{SM6\_domain\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_afe84d6e919fc9a06438c0818ae1fdf45} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+domain\+\_\+shader\+\_\+target = "{}ds\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_aaedee11d5ce5e70aaffc2aaf85de8ff8}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_geometry\_shader\_target@{SM6\_geometry\_shader\_target}}
+\index{SM6\_geometry\_shader\_target@{SM6\_geometry\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_geometry\_shader\_target}{SM6\_geometry\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_aaedee11d5ce5e70aaffc2aaf85de8ff8} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+geometry\+\_\+shader\+\_\+target = "{}gs\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_ac9969e2fb20e1e71ea13e93fd66000ab}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_hull\_shader\_target@{SM6\_hull\_shader\_target}}
+\index{SM6\_hull\_shader\_target@{SM6\_hull\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_hull\_shader\_target}{SM6\_hull\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_ac9969e2fb20e1e71ea13e93fd66000ab} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+hull\+\_\+shader\+\_\+target = "{}hs\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_aba3e7a45da67d9e118df1d31f20e1d9c}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_pixel\_shader\_target@{SM6\_pixel\_shader\_target}}
+\index{SM6\_pixel\_shader\_target@{SM6\_pixel\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_pixel\_shader\_target}{SM6\_pixel\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_aba3e7a45da67d9e118df1d31f20e1d9c} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+pixel\+\_\+shader\+\_\+target = "{}ps\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+\Hypertarget{d3d11__backend_8hxx_ab15d8e68f7bb5fd72ca6be3b180f52bf}\index{d3d11\_backend.hxx@{d3d11\_backend.hxx}!SM6\_vertex\_shader\_target@{SM6\_vertex\_shader\_target}}
+\index{SM6\_vertex\_shader\_target@{SM6\_vertex\_shader\_target}!d3d11\_backend.hxx@{d3d11\_backend.hxx}}
+\doxysubsubsection{\texorpdfstring{SM6\_vertex\_shader\_target}{SM6\_vertex\_shader\_target}}
+{\footnotesize\ttfamily \label{d3d11__backend_8hxx_ab15d8e68f7bb5fd72ca6be3b180f52bf} 
+\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}}\texorpdfstring{$\ast$}{*} const SM6\+\_\+vertex\+\_\+shader\+\_\+target = "{}vs\+\_\+6\+\_\+0"{}\hspace{0.3cm}{\ttfamily [constexpr]}}
+

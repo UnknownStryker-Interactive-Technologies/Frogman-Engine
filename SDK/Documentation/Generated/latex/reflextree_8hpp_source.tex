@@ -1,0 +1,102 @@
+\doxysection{reflextree.\+hpp}
+\hypertarget{reflextree_8hpp_source}{}\label{reflextree_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/reflextree.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/reflextree.hpp}}
+\doxymbox{\hyperlink{reflextree_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_HEADER\_TOOL\_REFLEXTREE\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_HEADER\_TOOL\_REFLEXTREE\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2024\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ std::unique\_ptr}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ std::string\_view}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <string\_view>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55}{ClassType}}\ :\ FE::int32}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{fiber_8hxx_aee057e5f06a7b2533e6f58bde34d15faa3ac4859ade1e43cf0ef7a49ce290e162}{\_None}}\ =\ 0,}
+\DoxyCodeLine{00034\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55a8f6d774add6444e8ca0ba28578a966cd}{\_ChildOfArchetypeBase}}\ =\ 1,}
+\DoxyCodeLine{00035\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55a3f5e9ff771011600b427567f6b1eb901}{\_ChildOfComponentBase}}\ =\ 2,}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\_ChildOfSystemBase\ =\ 3,}}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55a27a6855b7389a9c8da3e1bb0f8b5bd2e}{\_ChildOfCppClass}}\ =\ 4}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ =\ std::pmr::basic\_string<var::UTF8>;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structclass__node}{class\_node}}}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55}{ClassType}}\ \doxymbox{\hyperlink{structclass__node_a8bce54366ed125c661cbb59fce251c2d}{\_class\_type}}\ =\ \doxymbox{\hyperlink{reflextree_8hpp_a4f2d9a942007eb8c39fe63b870b6fa55a2f0a83900f5dbea06718d1f4b6eb0616}{ClassType::\_None}};}
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a3d0ff8440d6ca765617d941d680efd5e}{var::boolean}}\ \doxymbox{\hyperlink{structclass__node_a92db84ddd8588e9bb60efe921f8b1a68}{\_has\_pure\_virtual}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00048\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structclass__node_a06c7361906481995be2e841f9ea5723a}{\_this\_class\_name}};}
+\DoxyCodeLine{00049\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structclass__node_a6a7a0c3624842644ab73b36b50dba547}{\_base\_class\_name}};}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structstruct__node}{struct\_node}}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structstruct__node_a34aba309b296293a33be13820524c670}{\_identifier}};}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structenum__struct__node}{enum\_struct\_node}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structenum__struct__node_a51c37de5228da330a33ec76734a95e55}{\_target\_enum\_struct\_name}};}
+\DoxyCodeLine{00062\ \ \ \ \ std::pmr::vector<identifier>\ \doxymbox{\hyperlink{structenum__struct__node_a55ccb5dfcc453b43ec24822bd2e40c3c}{\_enum\_struct\_fields}};}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structsystem__node}{system\_node}}}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structsystem__node_ad42affb83d3cae54f9b39e399378793f}{\_syscall\_phase}};}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structsystem__node_a01ee1dff3b06008dd639bfe04dda86b0}{\_target\_component\_type}};}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structsystem__node_acd24372666629d6636417dc8f78d5ee7}{\_world\_tag\_enum\_type}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structsystem__node_acdea77dfeb415ceae04a0bb4484bf3d9}{\_sysname}};}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structnamespace__node}{namespace\_node}}}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \doxymbox{\hyperlink{reflextree_8hpp_a87caf8d4ca65e6da2e2d56860ec40724}{identifier}}\ \doxymbox{\hyperlink{structnamespace__node_af06927dd57ae6f8e8c277ca00f9e6c78}{\_target\_namespace\_name}};}
+\DoxyCodeLine{00077\ \ \ \ \ std::pmr::vector<namespace\_node>\ \doxymbox{\hyperlink{structnamespace__node_ac4d266e75bb7e0ee44076f11d268bbcb}{\_nested\_namespaces}};}
+\DoxyCodeLine{00078\ \ \ \ \ std::pmr::vector<class\_node>\ \doxymbox{\hyperlink{structnamespace__node_a3a7bbaf7bb4b225bc4030a43d8884137}{\_classes}};}
+\DoxyCodeLine{00079\ \ \ \ \ std::pmr::vector<struct\_node>\ \doxymbox{\hyperlink{structnamespace__node_aaf604ca662be8a256c5a3d3e9567c35b}{\_structs}};}
+\DoxyCodeLine{00080\ \ \ \ \ std::pmr::vector<enum\_struct\_node>\ \doxymbox{\hyperlink{structnamespace__node_a2c23fa217e6badec88bbea74554713c5}{\_enum\_structs}};}
+\DoxyCodeLine{00081\ \ \ \ \ std::pmr::vector<system\_node>\ \doxymbox{\hyperlink{structnamespace__node_ace474f0edd5b8daf1a8bc1c803a9ebe1}{\_system\_fptrs}};}
+\DoxyCodeLine{00082\ \};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structheader__file__root}{header\_file\_root}}}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ std::wstring\_view\ \doxymbox{\hyperlink{structheader__file__root_a37974ec9c8aa2b3b16fcaf4e8c51d036}{\_path\_to\_the\_header\_file}};}
+\DoxyCodeLine{00088\ \ \ \ \ std::pmr::vector<namespace\_node>\ \doxymbox{\hyperlink{structheader__file__root_ae96cbe1c443bd17947d2fa0ff27fbe3a}{\_namespaces}};}
+\DoxyCodeLine{00089\ \ \ \ \ std::pmr::vector<class\_node>\ \doxymbox{\hyperlink{structheader__file__root_a2216bbfa6a08d07651a550df29d5d0d6}{\_classes}};}
+\DoxyCodeLine{00090\ \ \ \ \ std::pmr::vector<struct\_node>\ \doxymbox{\hyperlink{structheader__file__root_a15519d817eedc88449011ff6c6643c56}{\_structs}};}
+\DoxyCodeLine{00091\ \ \ \ \ std::pmr::vector<enum\_struct\_node>\ \doxymbox{\hyperlink{structheader__file__root_ac96492ac274b82f48d07e83c3138ea4a}{\_enum\_structs}};}
+\DoxyCodeLine{00092\ \ \ \ \ std::pmr::vector<system\_node>\ \doxymbox{\hyperlink{structheader__file__root_a34b170274d6e8815d402c40f5da456f5}{\_system\_fptrs}};}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

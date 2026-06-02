@@ -1,0 +1,7 @@
+<map id="static_mesh_vertex" name="static_mesh_vertex">
+<area shape="rect" id="Node000001" title=" " alt="" coords="8,125,143,152"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="25,45,27,74,34,100,43,113,55,124,50,125,39,116,29,102,22,75,24,50"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="96,5,145,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,45,94,102,83,126,79,123,89,100,109,48"/>
+</map>

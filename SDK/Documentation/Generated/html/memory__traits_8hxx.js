@@ -1,0 +1,5 @@
+var memory__traits_8hxx =
+[
+    [ "memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial &gt;", "classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4.html", "classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4" ],
+    [ "memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_NotTrivial &gt;", "classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_typecce90a1879ef9dce2b9ecbcb369274b.html", "classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_typecce90a1879ef9dce2b9ecbcb369274b" ]
+];

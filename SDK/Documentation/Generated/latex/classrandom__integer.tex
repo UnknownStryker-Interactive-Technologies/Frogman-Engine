@@ -1,0 +1,119 @@
+\doxysection{random\+\_\+integer\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classrandom__integer}{}\label{classrandom__integer}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+
+
+{\ttfamily \+\#include $<$random.\+hxx$>$}
+
+
+
+Collaboration diagram for random\+\_\+integer\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classrandom__integer__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classrandom__integer_ab86369d2cd684fad8e78a01fadaedd81}{value\+\_\+type}} = T
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classrandom__integer_ad00383b4356b8ca98bc01fb0ae95157b}{random\+\_\+integer}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classrandom__integer_adec453623a439dc04936d9669a68a625}{\texorpdfstring{$\sim$}{\string~}random\+\_\+integer}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} T \doxymbox{\hyperlink{classrandom__integer_adbc1d97ad280f20e94b8f1bc2363a8f3}{ranged\+\_\+random\+\_\+integer}} (T min\+\_\+range\+\_\+p, T max\+\_\+range\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+optional$<$ std::\+mt19937\+\_\+64 $>$ \doxymbox{\hyperlink{classrandom__integer_ae119eacb58667fade0290256392548d6}{m\+\_\+value\+\_\+generator}}
+\item 
+std::\+optional$<$ std::\+uniform\+\_\+int\+\_\+distribution$<$ T $>$ $>$ \doxymbox{\hyperlink{classrandom__integer_aa99ece037b94daf5f7f88694b181aa43}{m\+\_\+uniform\+\_\+int\+\_\+distribution}}
+\end{DoxyCompactItemize}
+
+
+\label{classrandom__integer_doc-typedef-members}
+\Hypertarget{classrandom__integer_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classrandom__integer_ab86369d2cd684fad8e78a01fadaedd81}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classrandom__integer_ab86369d2cd684fad8e78a01fadaedd81} 
+template$<$typename T$>$ \\
+using \doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+value\+\_\+type = T}
+
+
+
+\label{classrandom__integer_doc-constructors}
+\Hypertarget{classrandom__integer_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classrandom__integer_ad00383b4356b8ca98bc01fb0ae95157b}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!random\_integer@{random\_integer}}
+\index{random\_integer@{random\_integer}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{random\_integer()}{random\_integer()}}
+{\footnotesize\ttfamily \label{classrandom__integer_ad00383b4356b8ca98bc01fb0ae95157b} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+random\+\_\+integer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classrandom__integer_ae119eacb58667fade0290256392548d6}{m\+\_\+value\+\_\+generator}}.
+
+\Hypertarget{classrandom__integer_adec453623a439dc04936d9669a68a625}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!````~random\_integer@{\texorpdfstring{$\sim$}{\string~}random\_integer}}
+\index{````~random\_integer@{\texorpdfstring{$\sim$}{\string~}random\_integer}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}random\_integer()}{\string~random\_integer()}}
+{\footnotesize\ttfamily \label{classrandom__integer_adec453623a439dc04936d9669a68a625} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classrandom__integer_doc-func-members}
+\Hypertarget{classrandom__integer_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classrandom__integer_adbc1d97ad280f20e94b8f1bc2363a8f3}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!ranged\_random\_integer@{ranged\_random\_integer}}
+\index{ranged\_random\_integer@{ranged\_random\_integer}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ranged\_random\_integer()}{ranged\_random\_integer()}}
+{\footnotesize\ttfamily \label{classrandom__integer_adbc1d97ad280f20e94b8f1bc2363a8f3} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} T \doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+ranged\+\_\+random\+\_\+integer (\begin{DoxyParamCaption}\item[{T}]{min\+\_\+range\+\_\+p}{, }\item[{T}]{max\+\_\+range\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classrandom__integer_aa99ece037b94daf5f7f88694b181aa43}{m\+\_\+uniform\+\_\+int\+\_\+distribution}}.
+
+
+
+\label{classrandom__integer_doc-variable-members}
+\Hypertarget{classrandom__integer_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classrandom__integer_aa99ece037b94daf5f7f88694b181aa43}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!m\_uniform\_int\_distribution@{m\_uniform\_int\_distribution}}
+\index{m\_uniform\_int\_distribution@{m\_uniform\_int\_distribution}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{m\_uniform\_int\_distribution}{m\_uniform\_int\_distribution}}
+{\footnotesize\ttfamily \label{classrandom__integer_aa99ece037b94daf5f7f88694b181aa43} 
+template$<$typename T$>$ \\
+std::\+optional$<$std::\+uniform\+\_\+int\+\_\+distribution$<$T$>$ $>$ \doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+m\+\_\+uniform\+\_\+int\+\_\+distribution\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classrandom__integer_adbc1d97ad280f20e94b8f1bc2363a8f3}{ranged\+\_\+random\+\_\+integer()}}.
+
+\Hypertarget{classrandom__integer_ae119eacb58667fade0290256392548d6}\index{random\_integer$<$ T $>$@{random\_integer$<$ T $>$}!m\_value\_generator@{m\_value\_generator}}
+\index{m\_value\_generator@{m\_value\_generator}!random\_integer$<$ T $>$@{random\_integer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{m\_value\_generator}{m\_value\_generator}}
+{\footnotesize\ttfamily \label{classrandom__integer_ae119eacb58667fade0290256392548d6} 
+template$<$typename T$>$ \\
+std::\+optional$<$std::\+mt19937\+\_\+64$>$ \doxymbox{\hyperlink{classrandom__integer}{random\+\_\+integer}}$<$ T $>$::\+m\+\_\+value\+\_\+generator\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classrandom__integer_ad00383b4356b8ca98bc01fb0ae95157b}{random\+\_\+integer()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{random_8hxx}{random.\+hxx}}\end{DoxyCompactItemize}

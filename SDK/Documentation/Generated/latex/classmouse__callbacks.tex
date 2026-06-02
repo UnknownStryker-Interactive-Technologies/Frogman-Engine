@@ -1,0 +1,195 @@
+\doxysection{mouse\+\_\+callbacks Class Reference}
+\hypertarget{classmouse__callbacks}{}\label{classmouse__callbacks}\index{mouse\_callbacks@{mouse\_callbacks}}
+
+
+{\ttfamily \+\#include $<$input\+\_\+device.\+hpp$>$}
+
+
+
+Inheritance diagram for mouse\+\_\+callbacks:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{classmouse__callbacks__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for mouse\+\_\+callbacks:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmouse__callbacks__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} = void(\texorpdfstring{$\ast$}{*})(\doxymbox{\hyperlink{input__device_8hpp_a03bfec859eac87be20f8952c1eb89de0}{Button}} button\+\_\+p, \doxymbox{\hyperlink{input__device_8hpp_a0b147f8652c587d9eac527ff92f2a97c}{Button\+State}} state\+\_\+p, \doxymbox{\hyperlink{input__device_8hpp_a9a3e9087aa9353a2c8ab247c3943a300}{Key\+Mode}} mode\+\_\+p)
+\item 
+using \doxymbox{\hyperlink{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6}{cursor\+\_\+action}} = void(\texorpdfstring{$\ast$}{*})(FE::\+float64 x\+\_\+p, FE::\+float64 y\+\_\+p)
+\item 
+using \doxymbox{\hyperlink{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91}{scroll\+\_\+action}} = void(\texorpdfstring{$\ast$}{*})(FE::\+float64 x\+\_\+offset\+\_\+p, FE::\+float64 y\+\_\+offset\+\_\+p)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_a482580e4feddd7e94181a7b00ad8d078}{mouse\+\_\+callbacks}} () noexcept
+\item 
+virtual \doxymbox{\hyperlink{classmouse__callbacks_a5ebff79395ac81df51d9eba6ccb2413c}{\texorpdfstring{$\sim$}{\string~}mouse\+\_\+callbacks}} () noexcept override=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6}{cursor\+\_\+action}} \doxymbox{\hyperlink{classmouse__callbacks_ac688c49d64c4221f449031e284822438}{\+\_\+cursor\+\_\+position\+\_\+callback}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91}{scroll\+\_\+action}} \doxymbox{\hyperlink{classmouse__callbacks_ae471d380bd93579f2b82be7115d098cf}{\+\_\+scroll\+\_\+callback}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_a31c7f674922ef91f19f2ebf94323a2e5}{\+\_\+button\+\_\+left}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_aa122c98469b4ecde7a4905f3455a4db4}{\+\_\+button\+\_\+right}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_a08c2c2b720eec69fa2fb79666eaf6694}{\+\_\+button\+\_\+middle}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_a3d2f09483ba8aa4461854f882a7aa109}{\+\_\+button\+\_\+4th}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_ab568254e0d35cddbf70b76b71d838f42}{\+\_\+button\+\_\+5th}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_aaf96e7572037c0a4abaad5ce382b1e6f}{\+\_\+button\+\_\+6th}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_a657513ab9ae24c732e2437294707c3e4}{\+\_\+button\+\_\+7th}}
+\item 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} \doxymbox{\hyperlink{classmouse__callbacks_a92ddef05d2704e3f38345d707d5b9b6f}{\+\_\+button\+\_\+8th}}
+\end{DoxyCompactItemize}
+
+
+\label{classmouse__callbacks_doc-typedef-members}
+\Hypertarget{classmouse__callbacks_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}\index{mouse\_callbacks@{mouse\_callbacks}!action@{action}}
+\index{action@{action}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{action}{action}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa} 
+using \doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{mouse\+\_\+callbacks::\+action}} = void(\texorpdfstring{$\ast$}{*})(\doxymbox{\hyperlink{input__device_8hpp_a03bfec859eac87be20f8952c1eb89de0}{Button}} button\+\_\+p, \doxymbox{\hyperlink{input__device_8hpp_a0b147f8652c587d9eac527ff92f2a97c}{Button\+State}} state\+\_\+p, \doxymbox{\hyperlink{input__device_8hpp_a9a3e9087aa9353a2c8ab247c3943a300}{Key\+Mode}} mode\+\_\+p)}
+
+\Hypertarget{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6}\index{mouse\_callbacks@{mouse\_callbacks}!cursor\_action@{cursor\_action}}
+\index{cursor\_action@{cursor\_action}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{cursor\_action}{cursor\_action}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6} 
+using \doxymbox{\hyperlink{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6}{mouse\+\_\+callbacks::\+cursor\+\_\+action}} = void(\texorpdfstring{$\ast$}{*})(FE::\+float64 x\+\_\+p, FE::\+float64 y\+\_\+p)}
+
+\Hypertarget{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91}\index{mouse\_callbacks@{mouse\_callbacks}!scroll\_action@{scroll\_action}}
+\index{scroll\_action@{scroll\_action}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{scroll\_action}{scroll\_action}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91} 
+using \doxymbox{\hyperlink{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91}{mouse\+\_\+callbacks::\+scroll\+\_\+action}} = void(\texorpdfstring{$\ast$}{*})(FE::\+float64 x\+\_\+offset\+\_\+p, FE::\+float64 y\+\_\+offset\+\_\+p)}
+
+
+
+\label{classmouse__callbacks_doc-constructors}
+\Hypertarget{classmouse__callbacks_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classmouse__callbacks_a482580e4feddd7e94181a7b00ad8d078}\index{mouse\_callbacks@{mouse\_callbacks}!mouse\_callbacks@{mouse\_callbacks}}
+\index{mouse\_callbacks@{mouse\_callbacks}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{mouse\_callbacks()}{mouse\_callbacks()}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a482580e4feddd7e94181a7b00ad8d078} 
+mouse\+\_\+callbacks::\+mouse\+\_\+callbacks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classmouse__callbacks_a5ebff79395ac81df51d9eba6ccb2413c}{\texorpdfstring{$\sim$}{\string~}mouse\+\_\+callbacks()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmouse__callbacks_a482580e4feddd7e94181a7b00ad8d078_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmouse__callbacks_a5ebff79395ac81df51d9eba6ccb2413c}\index{mouse\_callbacks@{mouse\_callbacks}!````~mouse\_callbacks@{\texorpdfstring{$\sim$}{\string~}mouse\_callbacks}}
+\index{````~mouse\_callbacks@{\texorpdfstring{$\sim$}{\string~}mouse\_callbacks}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}mouse\_callbacks()}{\string~mouse\_callbacks()}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a5ebff79395ac81df51d9eba6ccb2413c} 
+virtual mouse\+\_\+callbacks::\+\texorpdfstring{$\sim$}{\string~}mouse\+\_\+callbacks (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classmouse__callbacks_a482580e4feddd7e94181a7b00ad8d078}{mouse\+\_\+callbacks()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmouse__callbacks_a5ebff79395ac81df51d9eba6ccb2413c_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classmouse__callbacks_doc-variable-members}
+\Hypertarget{classmouse__callbacks_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classmouse__callbacks_a3d2f09483ba8aa4461854f882a7aa109}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_4th@{\_button\_4th}}
+\index{\_button\_4th@{\_button\_4th}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_4th}{\_button\_4th}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a3d2f09483ba8aa4461854f882a7aa109} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+4th}
+
+\Hypertarget{classmouse__callbacks_ab568254e0d35cddbf70b76b71d838f42}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_5th@{\_button\_5th}}
+\index{\_button\_5th@{\_button\_5th}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_5th}{\_button\_5th}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_ab568254e0d35cddbf70b76b71d838f42} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+5th}
+
+\Hypertarget{classmouse__callbacks_aaf96e7572037c0a4abaad5ce382b1e6f}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_6th@{\_button\_6th}}
+\index{\_button\_6th@{\_button\_6th}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_6th}{\_button\_6th}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_aaf96e7572037c0a4abaad5ce382b1e6f} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+6th}
+
+\Hypertarget{classmouse__callbacks_a657513ab9ae24c732e2437294707c3e4}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_7th@{\_button\_7th}}
+\index{\_button\_7th@{\_button\_7th}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_7th}{\_button\_7th}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a657513ab9ae24c732e2437294707c3e4} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+7th}
+
+\Hypertarget{classmouse__callbacks_a92ddef05d2704e3f38345d707d5b9b6f}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_8th@{\_button\_8th}}
+\index{\_button\_8th@{\_button\_8th}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_8th}{\_button\_8th}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a92ddef05d2704e3f38345d707d5b9b6f} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+8th}
+
+\Hypertarget{classmouse__callbacks_a31c7f674922ef91f19f2ebf94323a2e5}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_left@{\_button\_left}}
+\index{\_button\_left@{\_button\_left}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_left}{\_button\_left}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a31c7f674922ef91f19f2ebf94323a2e5} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+left}
+
+\Hypertarget{classmouse__callbacks_a08c2c2b720eec69fa2fb79666eaf6694}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_middle@{\_button\_middle}}
+\index{\_button\_middle@{\_button\_middle}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_middle}{\_button\_middle}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_a08c2c2b720eec69fa2fb79666eaf6694} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+middle}
+
+\Hypertarget{classmouse__callbacks_aa122c98469b4ecde7a4905f3455a4db4}\index{mouse\_callbacks@{mouse\_callbacks}!\_button\_right@{\_button\_right}}
+\index{\_button\_right@{\_button\_right}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_button\_right}{\_button\_right}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_aa122c98469b4ecde7a4905f3455a4db4} 
+\doxymbox{\hyperlink{classmouse__callbacks_aa987dfef533519b4bfa150fec3a4c3fa}{action}} mouse\+\_\+callbacks::\+\+\_\+button\+\_\+right}
+
+\Hypertarget{classmouse__callbacks_ac688c49d64c4221f449031e284822438}\index{mouse\_callbacks@{mouse\_callbacks}!\_cursor\_position\_callback@{\_cursor\_position\_callback}}
+\index{\_cursor\_position\_callback@{\_cursor\_position\_callback}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_cursor\_position\_callback}{\_cursor\_position\_callback}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_ac688c49d64c4221f449031e284822438} 
+\doxymbox{\hyperlink{classmouse__callbacks_a66ffd14fd33edcb1b3dddfe569b2ffa6}{cursor\+\_\+action}} mouse\+\_\+callbacks::\+\+\_\+cursor\+\_\+position\+\_\+callback}
+
+\Hypertarget{classmouse__callbacks_ae471d380bd93579f2b82be7115d098cf}\index{mouse\_callbacks@{mouse\_callbacks}!\_scroll\_callback@{\_scroll\_callback}}
+\index{\_scroll\_callback@{\_scroll\_callback}!mouse\_callbacks@{mouse\_callbacks}}
+\doxysubsubsection{\texorpdfstring{\_scroll\_callback}{\_scroll\_callback}}
+{\footnotesize\ttfamily \label{classmouse__callbacks_ae471d380bd93579f2b82be7115d098cf} 
+\doxymbox{\hyperlink{classmouse__callbacks_a191f3dac1995c5cd5cc3f2e65dcb3c91}{scroll\+\_\+action}} mouse\+\_\+callbacks::\+\+\_\+scroll\+\_\+callback}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Engine/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{input__device_8hpp}{input\+\_\+device.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,116 @@
+\doxysection{graph2D Class Reference}
+\hypertarget{classgraph2_d}{}\label{classgraph2_d}\index{graph2D@{graph2D}}
+
+
+{\ttfamily \+\#include $<$math.\+hxx$>$}
+
+
+
+Collaboration diagram for graph2D:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=175pt]{classgraph2_d__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classgraph2_d_a01dc42744db3d7df07e31f8c3a76a3f9}{graph2D}} (\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}resource\+\_\+p=std::\+pmr::\+get\+\_\+default\+\_\+resource()) noexcept
+\item 
+\doxymbox{\hyperlink{classgraph2_d_a7e119c263a096f640a6819ac1f717071}{\texorpdfstring{$\sim$}{\string~}graph2D}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classgraph2_d_aec65cdca38883af376ac42faf0d50704}{add\+\_\+points}} (const std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{structpoint2_d}{point2D}} $>$ \&\&points\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$\doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549}{Interpolation}} Mode = Interpolation::\+\+\_\+\+Linear$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+float64 \doxymbox{\hyperlink{classgraph2_d_ae4d974dc6b3cb5ec97de4e22849c9528}{f}} (FE::\+float64 x\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{structpoint2_d}{point2D}} $>$ \doxymbox{\hyperlink{classgraph2_d_a1d8c9ef744bb7819173e685891500295}{m\+\_\+lut}}
+\end{DoxyCompactItemize}
+
+
+\label{classgraph2_d_doc-constructors}
+\Hypertarget{classgraph2_d_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classgraph2_d_a01dc42744db3d7df07e31f8c3a76a3f9}\index{graph2D@{graph2D}!graph2D@{graph2D}}
+\index{graph2D@{graph2D}!graph2D@{graph2D}}
+\doxysubsubsection{\texorpdfstring{graph2D()}{graph2D()}}
+{\footnotesize\ttfamily \label{classgraph2_d_a01dc42744db3d7df07e31f8c3a76a3f9} 
+graph2\+D::\+graph2D (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}}]{resource\+\_\+p}{ = {\ttfamily std:\+:\+pmr:\+:\+get\+\_\+default\+\_\+resource()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classgraph2_d_a1d8c9ef744bb7819173e685891500295}{m\+\_\+lut}}.
+
+\Hypertarget{classgraph2_d_a7e119c263a096f640a6819ac1f717071}\index{graph2D@{graph2D}!````~graph2D@{\texorpdfstring{$\sim$}{\string~}graph2D}}
+\index{````~graph2D@{\texorpdfstring{$\sim$}{\string~}graph2D}!graph2D@{graph2D}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}graph2D()}{\string~graph2D()}}
+{\footnotesize\ttfamily \label{classgraph2_d_a7e119c263a096f640a6819ac1f717071} 
+graph2\+D::\+\texorpdfstring{$\sim$}{\string~}graph2D (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classgraph2_d_doc-func-members}
+\Hypertarget{classgraph2_d_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classgraph2_d_aec65cdca38883af376ac42faf0d50704}\index{graph2D@{graph2D}!add\_points@{add\_points}}
+\index{add\_points@{add\_points}!graph2D@{graph2D}}
+\doxysubsubsection{\texorpdfstring{add\_points()}{add\_points()}}
+{\footnotesize\ttfamily \label{classgraph2_d_aec65cdca38883af376ac42faf0d50704} 
+void graph2\+D::\+add\+\_\+points (\begin{DoxyParamCaption}\item[{const std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{structpoint2_d}{point2D}} $>$ \&\&}]{points\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{structpoint2_d_a82ccebd7c4899fe6a6c85b05df657217}{point2\+D::\+\+\_\+x}}, \doxymbox{\hyperlink{classgraph2_d_aec65cdca38883af376ac42faf0d50704}{add\+\_\+points()}}, \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}, and \doxymbox{\hyperlink{classgraph2_d_a1d8c9ef744bb7819173e685891500295}{m\+\_\+lut}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgraph2_d_aec65cdca38883af376ac42faf0d50704}{add\+\_\+points()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=186pt]{classgraph2_d_aec65cdca38883af376ac42faf0d50704_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=186pt]{classgraph2_d_aec65cdca38883af376ac42faf0d50704_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classgraph2_d_ae4d974dc6b3cb5ec97de4e22849c9528}\index{graph2D@{graph2D}!f@{f}}
+\index{f@{f}!graph2D@{graph2D}}
+\doxysubsubsection{\texorpdfstring{f()}{f()}}
+{\footnotesize\ttfamily \label{classgraph2_d_ae4d974dc6b3cb5ec97de4e22849c9528} 
+template$<$\doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549}{Interpolation}} Mode = Interpolation::\+\+\_\+\+Linear$>$ \\
+FE::\+float64 graph2\+D::\+f (\begin{DoxyParamCaption}\item[{FE::\+float64}]{x\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549adc02209042493c5abcdfcc9180c7da7c}{\+\_\+\+Cubic\+Hermite}}, \doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549a4472e2432501fb571aecefc15db112ab}{\+\_\+\+Linear}}, \doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549ae99dfe15fbffe14bba3221482d5daada}{\+\_\+\+Monotone\+Cubic}}, \doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549ac7031d99df72982363660edb3b404af6}{\+\_\+\+Smooth\+Step}}, \doxymbox{\hyperlink{math_8hxx_a817402314dfc91b23b3642e5b6bb4549a947d381daff59d86ec72b12f4b5e4b32}{\+\_\+\+Step}}, \doxymbox{\hyperlink{structpoint2_d_a82ccebd7c4899fe6a6c85b05df657217}{point2\+D::\+\+\_\+x}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classgraph2_d_a1d8c9ef744bb7819173e685891500295}{m\+\_\+lut}}.
+
+
+
+\label{classgraph2_d_doc-variable-members}
+\Hypertarget{classgraph2_d_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classgraph2_d_a1d8c9ef744bb7819173e685891500295}\index{graph2D@{graph2D}!m\_lut@{m\_lut}}
+\index{m\_lut@{m\_lut}!graph2D@{graph2D}}
+\doxysubsubsection{\texorpdfstring{m\_lut}{m\_lut}}
+{\footnotesize\ttfamily \label{classgraph2_d_a1d8c9ef744bb7819173e685891500295} 
+std::\+pmr::\+vector$<$\doxymbox{\hyperlink{structpoint2_d}{point2D}}$>$ graph2\+D::\+m\+\_\+lut\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classgraph2_d_aec65cdca38883af376ac42faf0d50704}{add\+\_\+points()}}, \doxymbox{\hyperlink{classgraph2_d_ae4d974dc6b3cb5ec97de4e22849c9528}{f()}}, and \doxymbox{\hyperlink{classgraph2_d_a01dc42744db3d7df07e31f8c3a76a3f9}{graph2\+D()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+algorithm/\+\doxymbox{\hyperlink{math_8hxx}{math.\+hxx}}\end{DoxyCompactItemize}

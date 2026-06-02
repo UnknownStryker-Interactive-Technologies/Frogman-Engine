@@ -1,0 +1,15 @@
+<map id="large::memory_resource" name="large::memory_resource">
+<area shape="rect" id="Node000001" title=" " alt="" coords="412,164,573,191"/>
+<area shape="rect" id="Node000002" href="$classstd_1_1pmr_1_1memory__resource.html" title=" " alt="" coords="14,5,196,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,15,301,27,346,40,389,59,421,82,449,110,486,164,481,163,445,114,418,86,386,64,344,45,300,33,212,20"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="16,56,194,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,85,298,99,389,123,433,141,471,163,466,164,430,146,387,128,296,105,210,90"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="16,123,194,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="209,150,413,169,409,172,209,156"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="16,189,194,232"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="209,207,296,203,387,195,429,190,424,192,388,200,297,208,210,212"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="13,256,197,299"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="212,269,299,257,387,235,433,213,470,192,475,190,436,218,389,240,300,263,213,274"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,323,205,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="220,342,305,329,347,316,386,298,419,274,446,244,482,193,486,190,450,247,422,278,389,302,349,321,306,334,221,347"/>
+</map>

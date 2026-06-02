@@ -1,0 +1,63 @@
+\doxysection{static\+\_\+mesh.\+hxx}
+\hypertarget{static__mesh_8hxx_source}{}\label{static__mesh_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/static\_mesh.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/static\_mesh.hxx}}
+\doxymbox{\hyperlink{static__mesh_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_RENDERER\_STATIC\_MESH\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_RENDERER\_STATIC\_MESH\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <d3d11.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <glm/glm.hpp>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <wrl/client.h>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <ufbx.h>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::internal::renderer)}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ struct\ \doxymbox{\hyperlink{structstatic__mesh__vertex}{static\_mesh\_vertex}}}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ glm::vec3\ \doxymbox{\hyperlink{structstatic__mesh__vertex_ab2129129780b264b64b2d37d107a8739}{\_position}};}
+\DoxyCodeLine{00034\ \ \ \ \ glm::vec3\ \doxymbox{\hyperlink{structstatic__mesh__vertex_aeb8ac4fb9aad104d993c31ff0ffec552}{\_normal}};}
+\DoxyCodeLine{00035\ \ \ \ \ glm::vec2\ \doxymbox{\hyperlink{structstatic__mesh__vertex_a8c240627729d2b9084be43aaa2f17bd0}{\_uv}};}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structstatic__mesh}{static\_mesh}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ Microsoft::WRL::ComPtr<ID3D11Buffer>\ \doxymbox{\hyperlink{structstatic__mesh_a2bc23fec79ddcf36d7003b19aadfbf63}{\_vertex\_buffer}};}
+\DoxyCodeLine{00041\ \ \ \ \ Microsoft::WRL::ComPtr<ID3D11Buffer>\ \doxymbox{\hyperlink{structstatic__mesh_a47d92a3455865a2d4de57e0cb1ba4c30}{\_index\_buffer}};}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::uint64}}\ \doxymbox{\hyperlink{structstatic__mesh_a99c6e8d5c0662e6682e57c9e4ba9dbea}{\_vertex\_count}}\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::uint64}}\ \doxymbox{\hyperlink{structstatic__mesh_ac74d81b938ac1990e7fb14e4a0ad5491}{\_index\_count}}\ =\ 0;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_ab7c86026319b1c2b7d5173bdd7bd1e03}{var::uint32}}\ \doxymbox{\hyperlink{structstatic__mesh_a8fdfd3c3c7cbd7f929e6be4b847c8893}{\_size\_of\_vertex}}\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structstatic__mesh__vertex}{static\_mesh\_vertex}});}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structstatic__mesh__instance}{static\_mesh\_instance}}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_ab7c86026319b1c2b7d5173bdd7bd1e03}{var::uint32}}\ \doxymbox{\hyperlink{structstatic__mesh__instance_ab1f7728b3673929aa2e86ce1cfb6d4b1}{\_mesh\_index}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ glm::mat4\ \doxymbox{\hyperlink{structstatic__mesh__instance_ad7a4133e7c1bb4b8b59f21d4293fa991}{\_local\_transform}};}
+\DoxyCodeLine{00053\ \ \ \ \ glm::mat4\ \doxymbox{\hyperlink{structstatic__mesh__instance_ab54fb791cd50859079683f7c4f917370}{\_world\_transform}};}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

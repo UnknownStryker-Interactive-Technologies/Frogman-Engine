@@ -1,0 +1,30 @@
+\doxysection{suppress\+\_\+warnings.\+hxx}
+\hypertarget{suppress__warnings_8hxx_source}{}\label{suppress__warnings_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/miscellaneous/suppress\_warnings.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/miscellaneous/suppress\_warnings.hxx}}
+\doxymbox{\hyperlink{suppress__warnings_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_SUPPRESS\_WARNINGS\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_SUPPRESS\_WARNINGS\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ defined(\_CLANG\_)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wambiguous-\/reversed-\/operator"{}\ }\textcolor{comment}{//\ Silence,\ there\ is\ no\ obscurity\ in\ the\ FE.core.iterator\ comparison\ operators\ definition.}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#elif\ defined(\_V143\_)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#pragma\ warning\ (disable:\ 4702)\ }\textcolor{comment}{//\ 1>C:\(\backslash\)Users\(\backslash\)leeho\(\backslash\)OneDrive\(\backslash\)문서\(\backslash\)GitHub\(\backslash\)Frogman-\/Engine\(\backslash\)SDK\(\backslash\)Core\(\backslash\)Source\(\backslash\)format\_string.cpp(213,1):\ warning\ C4702:\ unreachable\ code}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

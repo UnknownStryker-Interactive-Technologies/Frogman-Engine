@@ -1,0 +1,85 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Engine/\+\+Include/\+\+FE/\+ecs.hpp File Reference}
+\hypertarget{ecs_8hpp}{}\label{ecs_8hpp}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/ecs.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/ecs.hpp}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+framework/\+\+ECS.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+engine.\+hpp$>$}\newline
+Include dependency graph for ecs.\+hpp:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ecs_8hpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Archetype, typename ... Arguments$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ Archetype $>$ \doxymbox{\hyperlink{ecs_8hpp_a5ee623c121f6468d431779622a737330}{create\+\_\+entity}} (Arguments \&\&...arguments\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{ecs_8hpp_a72cb7e8d110a40af888e0cdf6f2f0cf1}{create\+\_\+entity\+\_\+from\+\_\+initializer}} (const FE::\+framework::\+initializer \&serialized\+\_\+entity\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{ecs_8hpp_a1ea4c4a8d3f67ead62cc1ee11762e5ff}{create\+\_\+\+ADE}} () noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{ecs_8hpp_ae2ff789f4ff4b65d4bc5644a31c6b565}{set\+\_\+\+ADE}} (FE::\+framework::\+initializer \&default\+\_\+values\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+framework::\+initializer \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{ecs_8hpp_a80ab2fd2d4ef0856b5d8047f22a9a66c}{get\+\_\+\+ADE\+\_\+initializer}} () noexcept
+\end{DoxyCompactItemize}
+
+
+\label{ecs_8hpp_doc-func-members}
+\Hypertarget{ecs_8hpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{ecs_8hpp_a1ea4c4a8d3f67ead62cc1ee11762e5ff}\index{ecs.hpp@{ecs.hpp}!create\_ADE@{create\_ADE}}
+\index{create\_ADE@{create\_ADE}!ecs.hpp@{ecs.hpp}}
+\doxysubsubsection{\texorpdfstring{create\_ADE()}{create\_ADE()}}
+{\footnotesize\ttfamily \label{ecs_8hpp_a1ea4c4a8d3f67ead62cc1ee11762e5ff} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ FE::\+archetype\+\_\+base $>$ create\+\_\+\+ADE (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{ecs_8hpp_a5ee623c121f6468d431779622a737330}\index{ecs.hpp@{ecs.hpp}!create\_entity@{create\_entity}}
+\index{create\_entity@{create\_entity}!ecs.hpp@{ecs.hpp}}
+\doxysubsubsection{\texorpdfstring{create\_entity()}{create\_entity()}}
+{\footnotesize\ttfamily \label{ecs_8hpp_a5ee623c121f6468d431779622a737330} 
+template$<$class Archetype, typename ... Arguments$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ Archetype $>$ create\+\_\+entity (\begin{DoxyParamCaption}\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{ecs_8hpp_a72cb7e8d110a40af888e0cdf6f2f0cf1}\index{ecs.hpp@{ecs.hpp}!create\_entity\_from\_initializer@{create\_entity\_from\_initializer}}
+\index{create\_entity\_from\_initializer@{create\_entity\_from\_initializer}!ecs.hpp@{ecs.hpp}}
+\doxysubsubsection{\texorpdfstring{create\_entity\_from\_initializer()}{create\_entity\_from\_initializer()}}
+{\footnotesize\ttfamily \label{ecs_8hpp_a72cb7e8d110a40af888e0cdf6f2f0cf1} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{_e_c_s_8hxx_a1326fc2446ce8f1c4dac7b3272a6791f}{FE::\+entity}}$<$ FE::\+archetype\+\_\+base $>$ create\+\_\+entity\+\_\+from\+\_\+initializer (\begin{DoxyParamCaption}\item[{const FE::\+framework::\+initializer \&}]{serialized\+\_\+entity\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{ecs_8hpp_a80ab2fd2d4ef0856b5d8047f22a9a66c}\index{ecs.hpp@{ecs.hpp}!get\_ADE\_initializer@{get\_ADE\_initializer}}
+\index{get\_ADE\_initializer@{get\_ADE\_initializer}!ecs.hpp@{ecs.hpp}}
+\doxysubsubsection{\texorpdfstring{get\_ADE\_initializer()}{get\_ADE\_initializer()}}
+{\footnotesize\ttfamily \label{ecs_8hpp_a80ab2fd2d4ef0856b5d8047f22a9a66c} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+framework::\+initializer \texorpdfstring{$\ast$}{*}const get\+\_\+\+ADE\+\_\+initializer (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{ecs_8hpp_ae2ff789f4ff4b65d4bc5644a31c6b565}\index{ecs.hpp@{ecs.hpp}!set\_ADE@{set\_ADE}}
+\index{set\_ADE@{set\_ADE}!ecs.hpp@{ecs.hpp}}
+\doxysubsubsection{\texorpdfstring{set\_ADE()}{set\_ADE()}}
+{\footnotesize\ttfamily \label{ecs_8hpp_ae2ff789f4ff4b65d4bc5644a31c6b565} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void set\+\_\+\+ADE (\begin{DoxyParamCaption}\item[{FE::\+framework::\+initializer \&}]{default\+\_\+values\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+

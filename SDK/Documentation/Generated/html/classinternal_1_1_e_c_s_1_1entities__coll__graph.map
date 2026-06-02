@@ -1,0 +1,9 @@
+<map id="internal::ECS::entities" name="internal::ECS::entities">
+<area shape="rect" id="Node000001" title=" " alt="" coords="101,120,251,147"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,51,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,50,67,73,90,94,137,119,132,120,87,98,63,77,45,55"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="74,5,278,48"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,62,178,120,174,118,174,65"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="302,13,404,40"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="326,48,251,98,205,122,203,117,248,94,321,50"/>
+</map>

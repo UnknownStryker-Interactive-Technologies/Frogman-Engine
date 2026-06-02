@@ -1,0 +1,12 @@
+<map id="ECS::instanciate_archetype_default_entity" name="ECS::instanciate_archetype_default_entity">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,39,190,81"/>
+<area shape="rect" id="Node000002" href="$class_e_c_s.html#ac5753c3a0458b5bcaa20a2aecd9f93fc" title=" " alt="" coords="248,5,387,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,43,234,39,229,41,191,49"/>
+<area shape="rect" id="Node000003" href="$class_e_c_s.html#a3be1b81df8293c41fda2dd552186d201" title=" " alt="" coords="238,72,397,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="190,71,224,78,219,79,190,77"/>
+<area shape="rect" id="Node000004" href="$class_e_c_s.html#a57f5c7bcd070225787ba140ae5a7e54d" title=" " alt="" coords="446,43,604,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="397,76,429,73,434,72,398,82"/>
+<area shape="rect" id="Node000005" href="$class_e_c_s.html#a9f03aed70478100039d775f1c1240034" title=" " alt="" coords="445,117,604,144"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="397,105,434,114,429,114,397,110"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="489,116,483,109,488,99,502,93,525,91,549,93,564,103,559,102,548,98,525,96,503,98,491,103,489,108,494,118"/>
+</map>

@@ -1,0 +1,1415 @@
+\doxysection{list\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classlist}{}\label{classlist}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+
+
+{\ttfamily \+\#include $<$list.\+hxx$>$}
+
+
+
+Collaboration diagram for list\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classlist_1_1node}{node}}
+\item 
+class \doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}
+\item 
+class \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}} = T
+\item 
+using \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} = std::\+allocator\+\_\+traits$<$Allocator$>$::\+template rebind\+\_\+alloc$<$\doxymbox{\hyperlink{classlist_1_1node}{node}}$>$
+\item 
+using \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}
+\item 
+using \doxymbox{\hyperlink{classlist_aab2b2359a9c8945e7fe6e0ba815dcf8d}{difference\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}
+\item 
+using \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} = \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}}\&
+\item 
+using \doxymbox{\hyperlink{classlist_a032f46047e65682966c82ffaf63552b7}{const\+\_\+reference}} = const \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}}\&
+\item 
+using \doxymbox{\hyperlink{classlist_a73285d735c862c6fcccc4e9337c1590f}{pointer}} = typename std::\+allocator\+\_\+traits$<$Allocator$>$::\+pointer
+\item 
+using \doxymbox{\hyperlink{classlist_aa347d26a76570a8f6b3f019508e7f70f}{const\+\_\+pointer}} = typename std::\+allocator\+\_\+traits$<$Allocator$>$::\+const\+\_\+pointer
+\item 
+using \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$
+\item 
+using \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+const\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$
+\item 
+using \doxymbox{\hyperlink{classlist_ad484b2ff1147837fe2cd207a5651dfd6}{reverse\+\_\+iterator}} = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+reverse\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$
+\item 
+using \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+const\+\_\+reverse\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a624d65f751dfa45e8ab0104caac561cd}{list}} (const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_aa9a775ca7b805f36f454f44091b9dd7c}{list}} (const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} count\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p=\doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list}} (const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} count\+\_\+p, const T \&value\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p=\doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()) noexcept
+\item 
+{\footnotesize template$<$class Iterator$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list}} (Iterator first\+\_\+p, Iterator last\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p=\doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list}} (const \doxymbox{\hyperlink{classlist}{list}} \&other\+\_\+p)
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9b8aecd752bc0664c76da09e3808b64b}{list}} (\doxymbox{\hyperlink{classlist}{list}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_aaff0cb77f9f161440dff99a2ff97493f}{list}} (const \doxymbox{\hyperlink{classlist}{list}} \&other\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ad98363a891a5c141a03e43608ae69f7a}{list}} (\doxymbox{\hyperlink{classlist}{list}} \&\&other\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ada405a47a7c2da0010ca035895298837}{list}} (std::\+initializer\+\_\+list$<$ T $>$ init\+\_\+p, const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&alloc\+\_\+p=\doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ac9559038df1a4bbc884c3a37c872ccd1}{\texorpdfstring{$\sim$}{\string~}list}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=}} (const \doxymbox{\hyperlink{classlist}{list}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=}} (\doxymbox{\hyperlink{classlist}{list}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=}} (const std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}} $>$ \&ilist\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=}} (std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}} $>$ \&\&ilist\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classlist_a3a9cbe60f6548af4f57e3d184e9a6576}{get\+\_\+allocator}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5}{front}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a032f46047e65682966c82ffaf63552b7}{const\+\_\+reference}} \doxymbox{\hyperlink{classlist_a65effe10a104e6113dbeab3c2eacd9cc}{front}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist_ab8b444b3505f81eda7c60e732b998b41}{back}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a032f46047e65682966c82ffaf63552b7}{const\+\_\+reference}} \doxymbox{\hyperlink{classlist_aea0e6f6293c5f4bfd932527d7718ab5b}{back}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_ab254755fc870771751dcc98b87f68834}{begin}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a5e1d207a254685681e215e7a68cae77d}{begin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a4231e347f37ad15ac4021f8e12fef1d0}{cbegin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a394d64923e52126a093cecad679bbde8}{end}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a4c09a832ac8af4bb4203d235a41d69b5}{end}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}{cend}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ad484b2ff1147837fe2cd207a5651dfd6}{reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_aa0c13c3f698753cd8d085d2042ed3b63}{rbegin}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a02e42af703c68e41375157f11177ec3f}{rbegin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a6d4372738bbd143a64a1b951fe003b90}{crbegin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ad484b2ff1147837fe2cd207a5651dfd6}{reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a7e9fa94dfaa140c726ceacc169e1eb60}{rend}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_a73ca6696ad4f45d5e61e428ff6a372d5}{rend}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist_ac3854e19e8a196bfcad2c9b00781e74e}{crend}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_aa33273108109f6f64a8829ba4eae9c9d}{is\+\_\+empty}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} \doxymbox{\hyperlink{classlist_a7c11e7b96970a4243696fcf076b3e828}{size}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, T \&\&value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, const T \&value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a210e2bdc5756a12e36f667d60983ea48}{insert}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} count\+\_\+p, const T \&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_add3fcea1a4e54274fac93f1cc1745c27}{insert}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, Iterator first\+\_\+p, Iterator last\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a17e2d8f7819d1e74f767a056bfd28e55}{insert}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, std::\+initializer\+\_\+list$<$ T $>$ ilist\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Arguments$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, Arguments \&\&... arguments\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist_a7942ff94a2330d74a1d32881bf67d52b}{erase}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} first\+\_\+p, \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} last\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back}} (const T \&value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a7fedd84c5b0a77fc88881969f43f1f29}{push\+\_\+back}} (T \&\&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Arguments$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back}} (Arguments \&\&... arguments\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a1c21ce0741b3d6918e16bc0c73760644}{pop\+\_\+back}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a782781c60dde18e98980bb60b6b0884d}{push\+\_\+front}} (const T \&value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a8022aa940feeb5be76ab5061fa2daca6}{push\+\_\+front}} (T \&\&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Arguments$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist_a935a537c9052c4f548ce1519727147c1}{emplace\+\_\+front}} (Arguments \&\&... arguments\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a409380047a30e80fccb143526ea3c0f9}{pop\+\_\+front}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize}} (\doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} count\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap}} (\doxymbox{\hyperlink{classlist}{list}} \&other\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classlist_a2e332157226f9e594e65e6f16361fddf}{swap\+\_\+extremes}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice}} (\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} pos\+\_\+p, \doxymbox{\hyperlink{classlist}{list}} \&other\+\_\+p, \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} it\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+FE::\+pair$<$ \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}, \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*} $>$ \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes}} (const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} count\+\_\+p, const T \&value\+\_\+p=T()) const noexcept
+\item 
+void \doxymbox{\hyperlink{classlist_a141a4dfacb2a5c5ed4257bf237b43861}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+from\+\_\+begin\+\_\+to\+\_\+before\+\_\+end}} (\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const begin\+\_\+p, \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const end\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all}} (\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const first\+\_\+p, \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const last\+\_\+p) const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\+\_\+\+FE\+\_\+\+NO\+\_\+\+UNIQUE\+\_\+\+ADDRESS\+\_\+}} \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}
+\item 
+\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}
+\item 
+\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}
+\item 
+\doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}
+\end{DoxyCompactItemize}
+
+
+\label{classlist_doc-typedef-members}
+\Hypertarget{classlist_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classlist_aec62d29e68e238193f182dadfe37c848}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!allocator\_type@{allocator\_type}}
+\index{allocator\_type@{allocator\_type}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{allocator\_type}{allocator\_type}}
+{\footnotesize\ttfamily \label{classlist_aec62d29e68e238193f182dadfe37c848} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+allocator\+\_\+type = std::\+allocator\+\_\+traits$<$Allocator$>$::\+template rebind\+\_\+alloc$<$\doxymbox{\hyperlink{classlist_1_1node}{node}}$>$}
+
+\Hypertarget{classlist_a4eb02fea6914567e0781c7dee049c24a}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!const\_iterator@{const\_iterator}}
+\index{const\_iterator@{const\_iterator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{const\_iterator}{const\_iterator}}
+{\footnotesize\ttfamily \label{classlist_a4eb02fea6914567e0781c7dee049c24a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+const\+\_\+iterator = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+const\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$}
+
+\Hypertarget{classlist_aa347d26a76570a8f6b3f019508e7f70f}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classlist_aa347d26a76570a8f6b3f019508e7f70f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+const\+\_\+pointer = typename std::\+allocator\+\_\+traits$<$Allocator$>$::\+const\+\_\+pointer}
+
+\Hypertarget{classlist_a032f46047e65682966c82ffaf63552b7}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classlist_a032f46047e65682966c82ffaf63552b7} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+const\+\_\+reference = const \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}}\&}
+
+\Hypertarget{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!const\_reverse\_iterator@{const\_reverse\_iterator}}
+\index{const\_reverse\_iterator@{const\_reverse\_iterator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reverse\_iterator}{const\_reverse\_iterator}}
+{\footnotesize\ttfamily \label{classlist_a1dad21bf77097a0fbb1e1bfd14687e15} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+const\+\_\+reverse\+\_\+iterator = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+const\+\_\+reverse\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$}
+
+\Hypertarget{classlist_aab2b2359a9c8945e7fe6e0ba815dcf8d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classlist_aab2b2359a9c8945e7fe6e0ba815dcf8d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+difference\+\_\+type = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}}
+
+\Hypertarget{classlist_a9ef810da808bdcc241d3bb2abf2c130e}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!iterator@{iterator}}
+\index{iterator@{iterator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{iterator}{iterator}}
+{\footnotesize\ttfamily \label{classlist_a9ef810da808bdcc241d3bb2abf2c130e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+iterator = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$}
+
+\Hypertarget{classlist_a73285d735c862c6fcccc4e9337c1590f}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!pointer@{pointer}}
+\index{pointer@{pointer}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classlist_a73285d735c862c6fcccc4e9337c1590f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+pointer = typename std::\+allocator\+\_\+traits$<$Allocator$>$::\+pointer}
+
+\Hypertarget{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!reference@{reference}}
+\index{reference@{reference}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+reference = \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}}\&}
+
+\Hypertarget{classlist_ad484b2ff1147837fe2cd207a5651dfd6}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!reverse\_iterator@{reverse\_iterator}}
+\index{reverse\_iterator@{reverse\_iterator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{reverse\_iterator}{reverse\_iterator}}
+{\footnotesize\ttfamily \label{classlist_ad484b2ff1147837fe2cd207a5651dfd6} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+reverse\+\_\+iterator = \doxymbox{\hyperlink{classlist_1_1list__iterator__wrapper}{list\+\_\+iterator\+\_\+wrapper}}$<$FE::\+reverse\+\_\+iterator$<$\doxymbox{\hyperlink{classlist_1_1list__iterator}{list\+\_\+iterator}}$>$$>$}
+
+\Hypertarget{classlist_a472744d4280f64064a018058d2c094a7}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!size\_type@{size\_type}}
+\index{size\_type@{size\_type}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{size\_type}{size\_type}}
+{\footnotesize\ttfamily \label{classlist_a472744d4280f64064a018058d2c094a7} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+size\+\_\+type = \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}}}
+
+\Hypertarget{classlist_aa12cfb689632493f67da976d0b20dbcf}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classlist_aa12cfb689632493f67da976d0b20dbcf} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+value\+\_\+type = T}
+
+
+
+\label{classlist_doc-constructors}
+\Hypertarget{classlist_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classlist_ae86ccaf50eea593f7f221387d55f2117}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [1/10]}}
+{\footnotesize\ttfamily \label{classlist_ae86ccaf50eea593f7f221387d55f2117} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_aaff0cb77f9f161440dff99a2ff97493f}{list()}}, \doxymbox{\hyperlink{classlist_aa9a775ca7b805f36f454f44091b9dd7c}{list()}}, \doxymbox{\hyperlink{classlist_a9b8aecd752bc0664c76da09e3808b64b}{list()}}, \doxymbox{\hyperlink{classlist_ad98363a891a5c141a03e43608ae69f7a}{list()}}, \doxymbox{\hyperlink{classlist_ada405a47a7c2da0010ca035895298837}{list()}}, \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=()}}, \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=()}}, \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}, and \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=240pt]{classlist_ae86ccaf50eea593f7f221387d55f2117_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a624d65f751dfa45e8ab0104caac561cd}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [2/10]}}
+{\footnotesize\ttfamily \label{classlist_a624d65f751dfa45e8ab0104caac561cd} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classlist_aa9a775ca7b805f36f454f44091b9dd7c}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [3/10]}}
+{\footnotesize\ttfamily \label{classlist_aa9a775ca7b805f36f454f44091b9dd7c} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}}}]{count\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{ = {\ttfamily \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classlist_aa9a775ca7b805f36f454f44091b9dd7c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a97bbf1727f7516d3a1a800ef121139ad}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [4/10]}}
+{\footnotesize\ttfamily \label{classlist_a97bbf1727f7516d3a1a800ef121139ad} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}}}]{count\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{ = {\ttfamily \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a97bbf1727f7516d3a1a800ef121139ad_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a08aaef87d6f115d54598ce0bb1d66f87}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [5/10]}}
+{\footnotesize\ttfamily \label{classlist_a08aaef87d6f115d54598ce0bb1d66f87} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+template$<$class Iterator$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{Iterator}]{first\+\_\+p}{, }\item[{Iterator}]{last\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{ = {\ttfamily \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a08aaef87d6f115d54598ce0bb1d66f87_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a684228a3edb57787444834a5ed06f65d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [6/10]}}
+{\footnotesize\ttfamily \label{classlist_a684228a3edb57787444834a5ed06f65d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes()}}, \doxymbox{\hyperlink{classlist_1_1node_affb852371c8492506e9e9e2231e09eb2}{list$<$ T, Allocator $>$::\+node::\+\+\_\+value}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a684228a3edb57787444834a5ed06f65d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a9b8aecd752bc0664c76da09e3808b64b}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [7/10]}}
+{\footnotesize\ttfamily \label{classlist_a9b8aecd752bc0664c76da09e3808b64b} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classlist_a9b8aecd752bc0664c76da09e3808b64b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_aaff0cb77f9f161440dff99a2ff97493f}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [8/10]}}
+{\footnotesize\ttfamily \label{classlist_aaff0cb77f9f161440dff99a2ff97493f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&}]{other\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classlist_aaff0cb77f9f161440dff99a2ff97493f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_ad98363a891a5c141a03e43608ae69f7a}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [9/10]}}
+{\footnotesize\ttfamily \label{classlist_ad98363a891a5c141a03e43608ae69f7a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&\&}]{other\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classlist_ad98363a891a5c141a03e43608ae69f7a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_ada405a47a7c2da0010ca035895298837}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{list()}{list()}\hspace{0.1cm}{\footnotesize\ttfamily [10/10]}}
+{\footnotesize\ttfamily \label{classlist_ada405a47a7c2da0010ca035895298837} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ T $>$}]{init\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \&}]{alloc\+\_\+p}{ = {\ttfamily \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ab254755fc870771751dcc98b87f68834}{begin()}}, \doxymbox{\hyperlink{classlist_a394d64923e52126a093cecad679bbde8}{end()}}, and \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classlist_ada405a47a7c2da0010ca035895298837_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_ac9559038df1a4bbc884c3a37c872ccd1}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!````~list@{\texorpdfstring{$\sim$}{\string~}list}}
+\index{````~list@{\texorpdfstring{$\sim$}{\string~}list}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}list()}{\string~list()}}
+{\footnotesize\ttfamily \label{classlist_ac9559038df1a4bbc884c3a37c872ccd1} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classlist}{list}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_ac9559038df1a4bbc884c3a37c872ccd1_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classlist_doc-func-members}
+\Hypertarget{classlist_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!\_\_allocate\_and\_construct\_nodes@{\_\_allocate\_and\_construct\_nodes}}
+\index{\_\_allocate\_and\_construct\_nodes@{\_\_allocate\_and\_construct\_nodes}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_allocate\_and\_construct\_nodes()}{\_\_allocate\_and\_construct\_nodes()}}
+{\footnotesize\ttfamily \label{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+FE::\+pair$<$ \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}, \doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*} $>$ \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}}}]{count\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{ = {\ttfamily T()}}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list()}}, \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list()}}, and \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=299pt]{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_ab035a90c89d04d758d398e227dfc4395}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!\_\_deallocate\_and\_destruct\_all@{\_\_deallocate\_and\_destruct\_all}}
+\index{\_\_deallocate\_and\_destruct\_all@{\_\_deallocate\_and\_destruct\_all}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_deallocate\_and\_destruct\_all()}{\_\_deallocate\_and\_destruct\_all()}}
+{\footnotesize\ttfamily \label{classlist_ab035a90c89d04d758d398e227dfc4395} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const}]{first\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const}]{last\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a141a4dfacb2a5c5ed4257bf237b43861}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+from\+\_\+begin\+\_\+to\+\_\+before\+\_\+end()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, and \doxymbox{\hyperlink{classlist_ac9559038df1a4bbc884c3a37c872ccd1}{\texorpdfstring{$\sim$}{\string~}list()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_ab035a90c89d04d758d398e227dfc4395_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_ab035a90c89d04d758d398e227dfc4395_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a141a4dfacb2a5c5ed4257bf237b43861}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end@{\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end}}
+\index{\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end@{\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end()}{\_\_deallocate\_and\_destruct\_from\_begin\_to\_before\_end()}}
+{\footnotesize\ttfamily \label{classlist_a141a4dfacb2a5c5ed4257bf237b43861} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+from\+\_\+begin\+\_\+to\+\_\+before\+\_\+end (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const}]{begin\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist_1_1node}{node}} \texorpdfstring{$\ast$}{*}const}]{end\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, and \doxymbox{\hyperlink{classlist_1_1node_a338015a8b365dea889485e487d2f2a4b}{list$<$ T, Allocator $>$::\+node::\+\texorpdfstring{$\sim$}{\string~}node()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all()}}, and \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classlist_a141a4dfacb2a5c5ed4257bf237b43861_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a141a4dfacb2a5c5ed4257bf237b43861_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_aea0e6f6293c5f4bfd932527d7718ab5b}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!back@{back}}
+\index{back@{back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_aea0e6f6293c5f4bfd932527d7718ab5b} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a032f46047e65682966c82ffaf63552b7}{const\+\_\+reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+back (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+\Hypertarget{classlist_ab8b444b3505f81eda7c60e732b998b41}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!back@{back}}
+\index{back@{back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_ab8b444b3505f81eda7c60e732b998b41} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+back (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=232pt]{classlist_ab8b444b3505f81eda7c60e732b998b41_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a5e1d207a254685681e215e7a68cae77d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!begin@{begin}}
+\index{begin@{begin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a5e1d207a254685681e215e7a68cae77d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+\Hypertarget{classlist_ab254755fc870771751dcc98b87f68834}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!begin@{begin}}
+\index{begin@{begin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_ab254755fc870771751dcc98b87f68834} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_ada405a47a7c2da0010ca035895298837}{list()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classlist_ab254755fc870771751dcc98b87f68834_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a4231e347f37ad15ac4021f8e12fef1d0}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!cbegin@{cbegin}}
+\index{cbegin@{cbegin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{cbegin()}{cbegin()}}
+{\footnotesize\ttfamily \label{classlist_a4231e347f37ad15ac4021f8e12fef1d0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+cbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=240pt]{classlist_a4231e347f37ad15ac4021f8e12fef1d0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!cend@{cend}}
+\index{cend@{cend}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{cend()}{cend()}}
+{\footnotesize\ttfamily \label{classlist_a865ec19c5cd6ed2d8152eb4a939f38af} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+cend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, and \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a865ec19c5cd6ed2d8152eb4a939f38af_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a90e3d9299f41a952f970e80cbbb81021}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!clear@{clear}}
+\index{clear@{clear}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{classlist_a90e3d9299f41a952f970e80cbbb81021} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=()}}, \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=()}}, and \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a90e3d9299f41a952f970e80cbbb81021_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{classlist_a90e3d9299f41a952f970e80cbbb81021_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a6d4372738bbd143a64a1b951fe003b90}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!crbegin@{crbegin}}
+\index{crbegin@{crbegin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{crbegin()}{crbegin()}}
+{\footnotesize\ttfamily \label{classlist_a6d4372738bbd143a64a1b951fe003b90} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+crbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+\Hypertarget{classlist_ac3854e19e8a196bfcad2c9b00781e74e}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!crend@{crend}}
+\index{crend@{crend}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{crend()}{crend()}}
+{\footnotesize\ttfamily \label{classlist_ac3854e19e8a196bfcad2c9b00781e74e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+crend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!emplace@{emplace}}
+\index{emplace@{emplace}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{emplace()}{emplace()}}
+{\footnotesize\ttfamily \label{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+template$<$typename... Arguments$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+emplace (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}{cend()}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!emplace\_back@{emplace\_back}}
+\index{emplace\_back@{emplace\_back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{emplace\_back()}{emplace\_back()}}
+{\footnotesize\ttfamily \label{classlist_a1dd5dfb34c772dc36626fa91bbd3feee} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+template$<$typename... Arguments$>$ \\
+\doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+emplace\+\_\+back (\begin{DoxyParamCaption}\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, and \doxymbox{\hyperlink{classlist_a935a537c9052c4f548ce1519727147c1}{emplace\+\_\+front()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=297pt]{classlist_a1dd5dfb34c772dc36626fa91bbd3feee_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=310pt]{classlist_a1dd5dfb34c772dc36626fa91bbd3feee_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a935a537c9052c4f548ce1519727147c1}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!emplace\_front@{emplace\_front}}
+\index{emplace\_front@{emplace\_front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{emplace\_front()}{emplace\_front()}}
+{\footnotesize\ttfamily \label{classlist_a935a537c9052c4f548ce1519727147c1} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+template$<$typename... Arguments$>$ \\
+\doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+emplace\+\_\+front (\begin{DoxyParamCaption}\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1node_affb852371c8492506e9e9e2231e09eb2}{list$<$ T, Allocator $>$::\+node::\+\+\_\+value}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a935a537c9052c4f548ce1519727147c1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a4c09a832ac8af4bb4203d235a41d69b5}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!end@{end}}
+\index{end@{end}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a4c09a832ac8af4bb4203d235a41d69b5} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classlist_a394d64923e52126a093cecad679bbde8}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!end@{end}}
+\index{end@{end}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a394d64923e52126a093cecad679bbde8} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, and \doxymbox{\hyperlink{classlist_ada405a47a7c2da0010ca035895298837}{list()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{classlist_a394d64923e52126a093cecad679bbde8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a7942ff94a2330d74a1d32881bf67d52b}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!erase@{erase}}
+\index{erase@{erase}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{erase()}{erase()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a7942ff94a2330d74a1d32881bf67d52b} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+erase (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{first\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{last\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a7942ff94a2330d74a1d32881bf67d52b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a0c006ff8a731dd967bf0b718927379d5}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!erase@{erase}}
+\index{erase@{erase}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{erase()}{erase()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a0c006ff8a731dd967bf0b718927379d5} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+erase (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a394d64923e52126a093cecad679bbde8}{end()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a338015a8b365dea889485e487d2f2a4b}{list$<$ T, Allocator $>$::\+node::\+\texorpdfstring{$\sim$}{\string~}node()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a7942ff94a2330d74a1d32881bf67d52b}{erase()}}, \doxymbox{\hyperlink{classlist_a1c21ce0741b3d6918e16bc0c73760644}{pop\+\_\+back()}}, and \doxymbox{\hyperlink{classlist_a409380047a30e80fccb143526ea3c0f9}{pop\+\_\+front()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=264pt]{classlist_a0c006ff8a731dd967bf0b718927379d5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{classlist_a0c006ff8a731dd967bf0b718927379d5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a65effe10a104e6113dbeab3c2eacd9cc}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!front@{front}}
+\index{front@{front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a65effe10a104e6113dbeab3c2eacd9cc} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a032f46047e65682966c82ffaf63552b7}{const\+\_\+reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+front (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+\Hypertarget{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!front@{front}}
+\index{front@{front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a4cacdf462b1c00d6f7303c6c9463e1b3}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+front (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a3a9cbe60f6548af4f57e3d184e9a6576}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!get\_allocator@{get\_allocator}}
+\index{get\_allocator@{get\_allocator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{get\_allocator()}{get\_allocator()}}
+{\footnotesize\ttfamily \label{classlist_a3a9cbe60f6548af4f57e3d184e9a6576} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+get\+\_\+allocator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}.
+
+\Hypertarget{classlist_ac317f987e40ba68a8cae84b22fa90a2d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!insert@{insert}}
+\index{insert@{insert}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily \label{classlist_ac317f987e40ba68a8cae84b22fa90a2d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+insert (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}{cend()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}, and \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_ac317f987e40ba68a8cae84b22fa90a2d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_add3fcea1a4e54274fac93f1cc1745c27}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!insert@{insert}}
+\index{insert@{insert}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily \label{classlist_add3fcea1a4e54274fac93f1cc1745c27} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+template$<$class Iterator$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+insert (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{Iterator}]{first\+\_\+p}{, }\item[{Iterator}]{last\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_add3fcea1a4e54274fac93f1cc1745c27_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a210e2bdc5756a12e36f667d60983ea48}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!insert@{insert}}
+\index{insert@{insert}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily \label{classlist_a210e2bdc5756a12e36f667d60983ea48} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+insert (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}}}]{count\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a210e2bdc5756a12e36f667d60983ea48_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a17e2d8f7819d1e74f767a056bfd28e55}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!insert@{insert}}
+\index{insert@{insert}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily \label{classlist_a17e2d8f7819d1e74f767a056bfd28e55} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+insert (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{std::\+initializer\+\_\+list$<$ T $>$}]{ilist\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a17e2d8f7819d1e74f767a056bfd28e55_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a61a593dcd01838e678195090e731a453}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!insert@{insert}}
+\index{insert@{insert}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily \label{classlist_a61a593dcd01838e678195090e731a453} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a9ef810da808bdcc241d3bb2abf2c130e}{iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+insert (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{T \&\&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}{cend()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}, and \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_add3fcea1a4e54274fac93f1cc1745c27}{insert()}}, \doxymbox{\hyperlink{classlist_a210e2bdc5756a12e36f667d60983ea48}{insert()}}, \doxymbox{\hyperlink{classlist_a17e2d8f7819d1e74f767a056bfd28e55}{insert()}}, \doxymbox{\hyperlink{classlist_a782781c60dde18e98980bb60b6b0884d}{push\+\_\+front()}}, and \doxymbox{\hyperlink{classlist_a8022aa940feeb5be76ab5061fa2daca6}{push\+\_\+front()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a61a593dcd01838e678195090e731a453_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=255pt]{classlist_a61a593dcd01838e678195090e731a453_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_aa33273108109f6f64a8829ba4eae9c9d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!is\_empty@{is\_empty}}
+\index{is\_empty@{is\_empty}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{is\_empty()}{is\_empty()}}
+{\footnotesize\ttfamily \label{classlist_aa33273108109f6f64a8829ba4eae9c9d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{classlist_aa33273108109f6f64a8829ba4eae9c9d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a691b36ee243bbf36975aafdebce6d348}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{classlist_a691b36ee243bbf36975aafdebce6d348} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1node_affb852371c8492506e9e9e2231e09eb2}{list$<$ T, Allocator $>$::\+node::\+\+\_\+value}}, \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, and \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a691b36ee243bbf36975aafdebce6d348_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+operator= (\begin{DoxyParamCaption}\item[{const std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}} $>$ \&}]{ilist\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_af2aa2d8eae2672110cedfcd325dfacd7}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{classlist_af2aa2d8eae2672110cedfcd325dfacd7} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_af2aa2d8eae2672110cedfcd325dfacd7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a7608932b2b11b1f42cbbaf12630e696f}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{classlist_a7608932b2b11b1f42cbbaf12630e696f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+operator= (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classlist_aa12cfb689632493f67da976d0b20dbcf}{value\+\_\+type}} $>$ \&\&}]{ilist\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a7608932b2b11b1f42cbbaf12630e696f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a1c21ce0741b3d6918e16bc0c73760644}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!pop\_back@{pop\_back}}
+\index{pop\_back@{pop\_back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{pop\_back()}{pop\_back()}}
+{\footnotesize\ttfamily \label{classlist_a1c21ce0741b3d6918e16bc0c73760644} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+pop\+\_\+back (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a1c21ce0741b3d6918e16bc0c73760644_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a409380047a30e80fccb143526ea3c0f9}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!pop\_front@{pop\_front}}
+\index{pop\_front@{pop\_front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{pop\_front()}{pop\_front()}}
+{\footnotesize\ttfamily \label{classlist_a409380047a30e80fccb143526ea3c0f9} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+pop\+\_\+front (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a409380047a30e80fccb143526ea3c0f9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a5289a422645e42209b7449b326b76d2e}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!push\_back@{push\_back}}
+\index{push\_back@{push\_back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push\_back()}{push\_back()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a5289a422645e42209b7449b326b76d2e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+push\+\_\+back (\begin{DoxyParamCaption}\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, and \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{classlist_a5289a422645e42209b7449b326b76d2e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a5289a422645e42209b7449b326b76d2e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a7fedd84c5b0a77fc88881969f43f1f29}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!push\_back@{push\_back}}
+\index{push\_back@{push\_back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push\_back()}{push\_back()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a7fedd84c5b0a77fc88881969f43f1f29} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+push\+\_\+back (\begin{DoxyParamCaption}\item[{T \&\&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}, and \doxymbox{\hyperlink{classlist_1_1node_a5f9cc7c9d0562a5e99cf7a35ea8079e9}{list$<$ T, Allocator $>$::\+node::\+node()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=281pt]{classlist_a7fedd84c5b0a77fc88881969f43f1f29_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a782781c60dde18e98980bb60b6b0884d}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!push\_front@{push\_front}}
+\index{push\_front@{push\_front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push\_front()}{push\_front()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a782781c60dde18e98980bb60b6b0884d} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+push\+\_\+front (\begin{DoxyParamCaption}\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a782781c60dde18e98980bb60b6b0884d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a8022aa940feeb5be76ab5061fa2daca6}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!push\_front@{push\_front}}
+\index{push\_front@{push\_front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{push\_front()}{push\_front()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a8022aa940feeb5be76ab5061fa2daca6} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+push\+\_\+front (\begin{DoxyParamCaption}\item[{T \&\&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, and \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a8022aa940feeb5be76ab5061fa2daca6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a02e42af703c68e41375157f11177ec3f}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!rbegin@{rbegin}}
+\index{rbegin@{rbegin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{rbegin()}{rbegin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a02e42af703c68e41375157f11177ec3f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+rbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+\Hypertarget{classlist_aa0c13c3f698753cd8d085d2042ed3b63}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!rbegin@{rbegin}}
+\index{rbegin@{rbegin}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{rbegin()}{rbegin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_aa0c13c3f698753cd8d085d2042ed3b63} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ad484b2ff1147837fe2cd207a5651dfd6}{reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+rbegin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}.
+
+\Hypertarget{classlist_a73ca6696ad4f45d5e61e428ff6a372d5}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!rend@{rend}}
+\index{rend@{rend}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{rend()}{rend()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_a73ca6696ad4f45d5e61e428ff6a372d5} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a1dad21bf77097a0fbb1e1bfd14687e15}{const\+\_\+reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+rend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classlist_a7e9fa94dfaa140c726ceacc169e1eb60}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!rend@{rend}}
+\index{rend@{rend}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{rend()}{rend()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_a7e9fa94dfaa140c726ceacc169e1eb60} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_ad484b2ff1147837fe2cd207a5651dfd6}{reverse\+\_\+iterator}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+rend (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!resize@{resize}}
+\index{resize@{resize}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily \label{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+resize (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}}}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes()}}, \doxymbox{\hyperlink{classlist_a141a4dfacb2a5c5ed4257bf237b43861}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+from\+\_\+begin\+\_\+to\+\_\+before\+\_\+end()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=()}}, \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=()}}, and \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=253pt]{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a7c11e7b96970a4243696fcf076b3e828}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!size@{size}}
+\index{size@{size}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{classlist_a7c11e7b96970a4243696fcf076b3e828} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+\Hypertarget{classlist_a3116625214ee8228cb5d7520d24a10ac}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!splice@{splice}}
+\index{splice@{splice}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{splice()}{splice()}}
+{\footnotesize\ttfamily \label{classlist_a3116625214ee8228cb5d7520d24a10ac} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+splice (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{pos\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&}]{other\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classlist_a4eb02fea6914567e0781c7dee049c24a}{const\+\_\+iterator}}}]{it\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a4c99351d8d3c5b65d07d7eae7bf7a01f}{\+\_\+\+FE\+\_\+\+UNLIKELY\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\+\_\+\+FE\+\_\+\+VECTOR\+\_\+\+CALL\+\_\+}}, \doxymbox{\hyperlink{classlist_ab8b444b3505f81eda7c60e732b998b41}{back()}}, \doxymbox{\hyperlink{classlist_a4231e347f37ad15ac4021f8e12fef1d0}{cbegin()}}, \doxymbox{\hyperlink{classlist_a865ec19c5cd6ed2d8152eb4a939f38af}{cend()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5}{front()}}, \doxymbox{\hyperlink{classlist_aa33273108109f6f64a8829ba4eae9c9d}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{classlist_a3116625214ee8228cb5d7520d24a10ac_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_aedadb57d10b92da19f64aa8714fb7574}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!swap@{swap}}
+\index{swap@{swap}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily \label{classlist_aedadb57d10b92da19f64aa8714fb7574} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+swap (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$ \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_aeac01f6a8745e302799d42aa089f4674}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classlist_aedadb57d10b92da19f64aa8714fb7574_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_a2e332157226f9e594e65e6f16361fddf}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!swap\_extremes@{swap\_extremes}}
+\index{swap\_extremes@{swap\_extremes}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{swap\_extremes()}{swap\_extremes()}}
+{\footnotesize\ttfamily \label{classlist_a2e332157226f9e594e65e6f16361fddf} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+swap\+\_\+extremes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_a238790833d3fa1de4d3c9d19b5de7b36}{m\+\_\+back}}, \doxymbox{\hyperlink{classlist_a0053139e3b91e14583614b4009e86dab}{m\+\_\+front}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, and \doxymbox{\hyperlink{classlist_a4ec902a9782b0b9d52c141481b6c7e89}{m\+\_\+size}}.
+
+
+
+\label{classlist_doc-variable-members}
+\Hypertarget{classlist_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classlist_aeac01f6a8745e302799d42aa089f4674}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!m\_allocator@{m\_allocator}}
+\index{m\_allocator@{m\_allocator}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{m\_allocator}{m\_allocator}}
+{\footnotesize\ttfamily \label{classlist_aeac01f6a8745e302799d42aa089f4674} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\+\_\+\+FE\+\_\+\+NO\+\_\+\+UNIQUE\+\_\+\+ADDRESS\+\_\+}} \doxymbox{\hyperlink{classlist_aec62d29e68e238193f182dadfe37c848}{allocator\+\_\+type}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+m\+\_\+allocator\hspace{0.3cm}{\ttfamily [mutable]}, {\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a2cd139cbdb4204760c5e1bcaae40fcc1}{\+\_\+\+\_\+allocate\+\_\+and\+\_\+construct\+\_\+nodes()}}, \doxymbox{\hyperlink{classlist_ab035a90c89d04d758d398e227dfc4395}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+all()}}, \doxymbox{\hyperlink{classlist_a141a4dfacb2a5c5ed4257bf237b43861}{\+\_\+\+\_\+deallocate\+\_\+and\+\_\+destruct\+\_\+from\+\_\+begin\+\_\+to\+\_\+before\+\_\+end()}}, \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a935a537c9052c4f548ce1519727147c1}{emplace\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{classlist_a3a9cbe60f6548af4f57e3d184e9a6576}{get\+\_\+allocator()}}, \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list()}}, \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a7fedd84c5b0a77fc88881969f43f1f29}{push\+\_\+back()}}, and \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap()}}.
+
+\Hypertarget{classlist_a238790833d3fa1de4d3c9d19b5de7b36}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!m\_back@{m\_back}}
+\index{m\_back@{m\_back}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{m\_back}{m\_back}}
+{\footnotesize\ttfamily \label{classlist_a238790833d3fa1de4d3c9d19b5de7b36} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+m\+\_\+back\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_aea0e6f6293c5f4bfd932527d7718ab5b}{back()}}, \doxymbox{\hyperlink{classlist_ab8b444b3505f81eda7c60e732b998b41}{back()}}, \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_a6d4372738bbd143a64a1b951fe003b90}{crbegin()}}, \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list()}}, \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list()}}, \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=()}}, \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=()}}, \doxymbox{\hyperlink{classlist_a1c21ce0741b3d6918e16bc0c73760644}{pop\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a7fedd84c5b0a77fc88881969f43f1f29}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a02e42af703c68e41375157f11177ec3f}{rbegin()}}, \doxymbox{\hyperlink{classlist_aa0c13c3f698753cd8d085d2042ed3b63}{rbegin()}}, \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}, \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}, \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap()}}, \doxymbox{\hyperlink{classlist_a2e332157226f9e594e65e6f16361fddf}{swap\+\_\+extremes()}}, and \doxymbox{\hyperlink{classlist_ac9559038df1a4bbc884c3a37c872ccd1}{\texorpdfstring{$\sim$}{\string~}list()}}.
+
+\Hypertarget{classlist_a0053139e3b91e14583614b4009e86dab}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!m\_front@{m\_front}}
+\index{m\_front@{m\_front}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{m\_front}{m\_front}}
+{\footnotesize\ttfamily \label{classlist_a0053139e3b91e14583614b4009e86dab} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+m\+\_\+front\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a5e1d207a254685681e215e7a68cae77d}{begin()}}, \doxymbox{\hyperlink{classlist_ab254755fc870771751dcc98b87f68834}{begin()}}, \doxymbox{\hyperlink{classlist_a4231e347f37ad15ac4021f8e12fef1d0}{cbegin()}}, \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a935a537c9052c4f548ce1519727147c1}{emplace\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{classlist_a65effe10a104e6113dbeab3c2eacd9cc}{front()}}, \doxymbox{\hyperlink{classlist_a65d67c1c7e12a29fdaedfe827ef8a8f5}{front()}}, \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list()}}, \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list()}}, \doxymbox{\hyperlink{classlist_a691b36ee243bbf36975aafdebce6d348}{operator=()}}, \doxymbox{\hyperlink{classlist_a9f7cf388bcef3d1d4188d5d7a34ed164}{operator=()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, \doxymbox{\hyperlink{classlist_a7608932b2b11b1f42cbbaf12630e696f}{operator=()}}, \doxymbox{\hyperlink{classlist_a409380047a30e80fccb143526ea3c0f9}{pop\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a7fedd84c5b0a77fc88881969f43f1f29}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a782781c60dde18e98980bb60b6b0884d}{push\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a8022aa940feeb5be76ab5061fa2daca6}{push\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}, \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}, \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap()}}, \doxymbox{\hyperlink{classlist_a2e332157226f9e594e65e6f16361fddf}{swap\+\_\+extremes()}}, and \doxymbox{\hyperlink{classlist_ac9559038df1a4bbc884c3a37c872ccd1}{\texorpdfstring{$\sim$}{\string~}list()}}.
+
+\Hypertarget{classlist_a4ec902a9782b0b9d52c141481b6c7e89}\index{list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}!m\_size@{m\_size}}
+\index{m\_size@{m\_size}!list$<$ T, Allocator $>$@{list$<$ T, Allocator $>$}}
+\doxysubsubsection{\texorpdfstring{m\_size}{m\_size}}
+{\footnotesize\ttfamily \label{classlist_a4ec902a9782b0b9d52c141481b6c7e89} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_a472744d4280f64064a018058d2c094a7}{size\+\_\+type}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+m\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_a90e3d9299f41a952f970e80cbbb81021}{clear()}}, \doxymbox{\hyperlink{classlist_aaf7dae5b5527f2f7909d53f4b1b18ad7}{emplace()}}, \doxymbox{\hyperlink{classlist_a1dd5dfb34c772dc36626fa91bbd3feee}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a935a537c9052c4f548ce1519727147c1}{emplace\+\_\+front()}}, \doxymbox{\hyperlink{classlist_a0c006ff8a731dd967bf0b718927379d5}{erase()}}, \doxymbox{\hyperlink{classlist_ac317f987e40ba68a8cae84b22fa90a2d}{insert()}}, \doxymbox{\hyperlink{classlist_a61a593dcd01838e678195090e731a453}{insert()}}, \doxymbox{\hyperlink{classlist_aa33273108109f6f64a8829ba4eae9c9d}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classlist_ae86ccaf50eea593f7f221387d55f2117}{list()}}, \doxymbox{\hyperlink{classlist_a684228a3edb57787444834a5ed06f65d}{list()}}, \doxymbox{\hyperlink{classlist_a97bbf1727f7516d3a1a800ef121139ad}{list()}}, \doxymbox{\hyperlink{classlist_a08aaef87d6f115d54598ce0bb1d66f87}{list()}}, \doxymbox{\hyperlink{classlist_af2aa2d8eae2672110cedfcd325dfacd7}{operator=()}}, \doxymbox{\hyperlink{classlist_a5289a422645e42209b7449b326b76d2e}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a7fedd84c5b0a77fc88881969f43f1f29}{push\+\_\+back()}}, \doxymbox{\hyperlink{classlist_a0e5dae6c9dc2b58c1debef8f34adcc65}{resize()}}, \doxymbox{\hyperlink{classlist_a7c11e7b96970a4243696fcf076b3e828}{size()}}, \doxymbox{\hyperlink{classlist_a3116625214ee8228cb5d7520d24a10ac}{splice()}}, \doxymbox{\hyperlink{classlist_aedadb57d10b92da19f64aa8714fb7574}{swap()}}, \doxymbox{\hyperlink{classlist_a2e332157226f9e594e65e6f16361fddf}{swap\+\_\+extremes()}}, and \doxymbox{\hyperlink{classlist_ac9559038df1a4bbc884c3a37c872ccd1}{\texorpdfstring{$\sim$}{\string~}list()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{list_8hxx}{list.\+hxx}}\end{DoxyCompactItemize}

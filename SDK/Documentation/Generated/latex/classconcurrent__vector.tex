@@ -1,0 +1,785 @@
+\doxysection{concurrent\+\_\+vector\texorpdfstring{$<$}{<} T, Allocator, Shared\+Mutex \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classconcurrent__vector}{}\label{classconcurrent__vector}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+
+
+{\ttfamily \+\#include $<$concurrent\+\_\+vector.\+hxx$>$}
+
+
+
+Collaboration diagram for concurrent\+\_\+vector\texorpdfstring{$<$}{<} T, Allocator, Shared\+Mutex \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} = Allocator
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+value\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a22ac13394e0ae295a375f6116ead3bba}{difference\+\_\+type}} = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+difference\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+size\+\_\+type
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}} = \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}}\&
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}} = const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}}\&
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+pointer
+\item 
+using \doxymbox{\hyperlink{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}{const\+\_\+pointer}} = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+const\+\_\+pointer
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classconcurrent__vector_afabbc5ad59ff27f589072f1646b8768e}{concurrent\+\_\+vector}} (const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \&allocator\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector}} (std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} $>$ init\+\_\+p, const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \&allocator\+\_\+p=\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}()) noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}{\texorpdfstring{$\sim$}{\string~}concurrent\+\_\+vector}} ()
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}{read\+\_\+at}} (\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} index\+\_\+p, \doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}} out\+\_\+dest\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}{write\+\_\+at}} (\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} index\+\_\+p, \doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}} value\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a6e657a363bc3fb38806aafbb984c162f}{front}} (\doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}} out\+\_\+dest\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a1e665f0836218b06a1c7f0aa3e8be15d}{front}} (\doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}} value\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02}{back}} (\doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}} out\+\_\+dest\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6}{back}} (\doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}} value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back}} (const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} \&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back}} (Args \&\&... args\+\_\+p) noexcept
+\item 
+bool \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve}} (const \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} new\+\_\+capacity\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a}{push\+\_\+back}} (const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} \&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename... Args$>$ }\\\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a}{emplace\+\_\+back}} (Args \&\&... args\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size}} () const noexcept
+\item 
+bool \doxymbox{\hyperlink{classconcurrent__vector_a2bb9156ae4efdf525ff7f1b1e9399e1d}{is\+\_\+empty}} () const noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector_a081cfe78e4e42acd9e8bd50472711122}{capacity}} () const noexcept
+\item 
+const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classconcurrent__vector_afe7d26f20e75ab167961690ebda2b321}{get\+\_\+allocator}} () const noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classconcurrent__vector_a2fd4b81ab0029683af2cb93db625164e}{get\+\_\+allocator}} () noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} \doxymbox{\hyperlink{classconcurrent__vector_ab3f7e5344151e02620773d590335c1d6}{begin}} () noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}{const\+\_\+pointer}} \doxymbox{\hyperlink{classconcurrent__vector_a6b0de4b24a861fc486d0d20d8931db5b}{begin}} () const noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} \doxymbox{\hyperlink{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4}{end}} () noexcept
+\item 
+\doxymbox{\hyperlink{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}{const\+\_\+pointer}} \doxymbox{\hyperlink{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36}{end}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from\+\_\+initializer\+\_\+list}} (std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} $>$ \&init\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from}} (\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} source\+\_\+p, \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} src\+\_\+size\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b}{\+\_\+\+\_\+tear\+\_\+down}} (\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} target\+\_\+p, \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} target\+\_\+size\+\_\+p, \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} target\+\_\+capacity\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+atomic$<$ \doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} $>$ \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}
+\item 
+std::\+atomic$<$ \doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} $>$ \doxymbox{\hyperlink{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd}{m\+\_\+reserved}}
+\item 
+std::\+atomic$<$ \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} $>$ \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}
+\item 
+std::\+atomic$<$ \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} $>$ \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}
+\item 
+Shared\+Mutex \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}
+\item 
+Allocator \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} size\+\_\+t \doxymbox{\hyperlink{classconcurrent__vector_a5b45b262e3110d3157d7d1763baef834}{default\+\_\+size}} = 16
+\end{DoxyCompactItemize}
+
+
+\label{classconcurrent__vector_doc-typedef-members}
+\Hypertarget{classconcurrent__vector_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!allocator\_type@{allocator\_type}}
+\index{allocator\_type@{allocator\_type}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{allocator\_type}{allocator\_type}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+allocator\+\_\+type = Allocator}
+
+\Hypertarget{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+const\+\_\+pointer = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+const\+\_\+pointer}
+
+\Hypertarget{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+const\+\_\+reference = const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}}\&}
+
+\Hypertarget{classconcurrent__vector_a22ac13394e0ae295a375f6116ead3bba}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a22ac13394e0ae295a375f6116ead3bba} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+difference\+\_\+type = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+difference\+\_\+type}
+
+\Hypertarget{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!pointer@{pointer}}
+\index{pointer@{pointer}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+pointer = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+pointer}
+
+\Hypertarget{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!reference@{reference}}
+\index{reference@{reference}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+reference = \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}}\&}
+
+\Hypertarget{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!size\_type@{size\_type}}
+\index{size\_type@{size\_type}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{size\_type}{size\_type}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+size\+\_\+type = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+size\+\_\+type}
+
+\Hypertarget{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+using \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+value\+\_\+type = typename std::\+allocator\+\_\+traits$<$\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}$>$::\+value\+\_\+type}
+
+
+
+\label{classconcurrent__vector_doc-constructors}
+\Hypertarget{classconcurrent__vector_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!concurrent\_vector@{concurrent\_vector}}
+\index{concurrent\_vector@{concurrent\_vector}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{concurrent\_vector()}{concurrent\_vector()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+concurrent\+\_\+vector (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}, \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}, \doxymbox{\hyperlink{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd}{m\+\_\+reserved}}, and \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_afabbc5ad59ff27f589072f1646b8768e}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!concurrent\_vector@{concurrent\_vector}}
+\index{concurrent\_vector@{concurrent\_vector}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{concurrent\_vector()}{concurrent\_vector()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_afabbc5ad59ff27f589072f1646b8768e} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+concurrent\+\_\+vector (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \&}]{allocator\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{classconcurrent__vector_afabbc5ad59ff27f589072f1646b8768e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!concurrent\_vector@{concurrent\_vector}}
+\index{concurrent\_vector@{concurrent\_vector}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{concurrent\_vector()}{concurrent\_vector()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+concurrent\+\_\+vector (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} $>$}]{init\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \&}]{allocator\+\_\+p}{ = {\ttfamily \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}}()}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from\+\_\+initializer\+\_\+list()}}, \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}, \doxymbox{\hyperlink{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd}{m\+\_\+reserved}}, \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}, and \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!````~concurrent\_vector@{\texorpdfstring{$\sim$}{\string~}concurrent\_vector}}
+\index{````~concurrent\_vector@{\texorpdfstring{$\sim$}{\string~}concurrent\_vector}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}concurrent\_vector()}{\string~concurrent\_vector()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, and \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classconcurrent__vector_doc-func-members}
+\Hypertarget{classconcurrent__vector_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!\_\_allocate\_default\_sized\_raw\_on\_construction@{\_\_allocate\_default\_sized\_raw\_on\_construction}}
+\index{\_\_allocate\_default\_sized\_raw\_on\_construction@{\_\_allocate\_default\_sized\_raw\_on\_construction}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_allocate\_default\_sized\_raw\_on\_construction()}{\_\_allocate\_default\_sized\_raw\_on\_construction()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a5b45b262e3110d3157d7d1763baef834}{default\+\_\+size}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}, and \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, and \doxymbox{\hyperlink{classconcurrent__vector_afabbc5ad59ff27f589072f1646b8768e}{concurrent\+\_\+vector()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!\_\_move\_construct\_from@{\_\_move\_construct\_from}}
+\index{\_\_move\_construct\_from@{\_\_move\_construct\_from}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_move\_construct\_from()}{\_\_move\_construct\_from()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+\+\_\+\+\_\+move\+\_\+construct\+\_\+from (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}}}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{src\+\_\+size\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!\_\_move\_construct\_from\_initializer\_list@{\_\_move\_construct\_from\_initializer\_list}}
+\index{\_\_move\_construct\_from\_initializer\_list@{\_\_move\_construct\_from\_initializer\_list}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_move\_construct\_from\_initializer\_list()}{\_\_move\_construct\_from\_initializer\_list()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+\+\_\+\+\_\+move\+\_\+construct\+\_\+from\+\_\+initializer\+\_\+list (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} $>$ \&}]{init\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, and \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!\_\_tear\_down@{\_\_tear\_down}}
+\index{\_\_tear\_down@{\_\_tear\_down}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_tear\_down()}{\_\_tear\_down()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+\+\_\+\+\_\+tear\+\_\+down (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}}}]{target\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{target\+\_\+size\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{target\+\_\+capacity\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!back@{back}}
+\index{back@{back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+back (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}}}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}{write\+\_\+at()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!back@{back}}
+\index{back@{back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{back()}{back()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+back (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}}}]{out\+\_\+dest\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}{read\+\_\+at()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a6b0de4b24a861fc486d0d20d8931db5b}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!begin@{begin}}
+\index{begin@{begin}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a6b0de4b24a861fc486d0d20d8931db5b} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}{const\+\_\+pointer}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}.
+
+\Hypertarget{classconcurrent__vector_ab3f7e5344151e02620773d590335c1d6}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!begin@{begin}}
+\index{begin@{begin}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ab3f7e5344151e02620773d590335c1d6} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+begin (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}.
+
+\Hypertarget{classconcurrent__vector_a081cfe78e4e42acd9e8bd50472711122}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!capacity@{capacity}}
+\index{capacity@{capacity}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{capacity()}{capacity()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a081cfe78e4e42acd9e8bd50472711122} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+capacity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}.
+
+\Hypertarget{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!emplace\_back@{emplace\_back}}
+\index{emplace\_back@{emplace\_back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{emplace\_back()}{emplace\_back()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+template$<$typename... Args$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+emplace\+\_\+back (\begin{DoxyParamCaption}\item[{Args \&\&...}]{args\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!end@{end}}
+\index{end@{end}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a8835686f426e0eb0a2215b24c092bfd8}{const\+\_\+pointer}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, and \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!end@{end}}
+\index{end@{end}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+end (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, and \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a1e665f0836218b06a1c7f0aa3e8be15d}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!front@{front}}
+\index{front@{front}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a1e665f0836218b06a1c7f0aa3e8be15d} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+front (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}}}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}{write\+\_\+at()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classconcurrent__vector_a1e665f0836218b06a1c7f0aa3e8be15d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a6e657a363bc3fb38806aafbb984c162f}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!front@{front}}
+\index{front@{front}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a6e657a363bc3fb38806aafbb984c162f} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+front (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}}}]{out\+\_\+dest\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}{read\+\_\+at()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classconcurrent__vector_a6e657a363bc3fb38806aafbb984c162f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_afe7d26f20e75ab167961690ebda2b321}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!get\_allocator@{get\_allocator}}
+\index{get\_allocator@{get\_allocator}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{get\_allocator()}{get\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_afe7d26f20e75ab167961690ebda2b321} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+const \doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+get\+\_\+allocator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}.
+
+\Hypertarget{classconcurrent__vector_a2fd4b81ab0029683af2cb93db625164e}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!get\_allocator@{get\_allocator}}
+\index{get\_allocator@{get\_allocator}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{get\_allocator()}{get\_allocator()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a2fd4b81ab0029683af2cb93db625164e} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a1caaacda90060a1bf5fac837591bdc89}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+get\+\_\+allocator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}.
+
+\Hypertarget{classconcurrent__vector_a2bb9156ae4efdf525ff7f1b1e9399e1d}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!is\_empty@{is\_empty}}
+\index{is\_empty@{is\_empty}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{is\_empty()}{is\_empty()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a2bb9156ae4efdf525ff7f1b1e9399e1d} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+bool \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+is\+\_\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+\Hypertarget{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!push\_back@{push\_back}}
+\index{push\_back@{push\_back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{push\_back()}{push\_back()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+push\+\_\+back (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!read\_at@{read\_at}}
+\index{read\_at@{read\_at}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{read\_at()}{read\_at()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+read\+\_\+at (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{index\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classconcurrent__vector_a634abd4123a3b418be6d4e2e664ba24e}{reference}}}]{out\+\_\+dest\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, and \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02}{back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a6e657a363bc3fb38806aafbb984c162f}{front()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!size@{size}}
+\index{size@{size}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, and \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6}{back()}}, \doxymbox{\hyperlink{classconcurrent__vector_ac467dabe4fcce9b508cc5c873b63ba02}{back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36}{end()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4}{end()}}, and \doxymbox{\hyperlink{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}{\texorpdfstring{$\sim$}{\string~}concurrent\+\_\+vector()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!try\_emplace\_back@{try\_emplace\_back}}
+\index{try\_emplace\_back@{try\_emplace\_back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{try\_emplace\_back()}{try\_emplace\_back()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+template$<$typename... Args$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+try\+\_\+emplace\+\_\+back (\begin{DoxyParamCaption}\item[{Args \&\&...}]{args\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}, and \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a}{emplace\+\_\+back()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!try\_push\_back@{try\_push\_back}}
+\index{try\_push\_back@{try\_push\_back}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{try\_push\_back()}{try\_push\_back()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}} \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+try\+\_\+push\+\_\+back (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classconcurrent__vector_ab329fb3aad8a48db410b654ab062ae00}{value\+\_\+type}} \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}, and \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a}{push\+\_\+back()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!try\_reserve@{try\_reserve}}
+\index{try\_reserve@{try\_reserve}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{try\_reserve()}{try\_reserve()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+bool \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+try\+\_\+reserve (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{new\+\_\+capacity\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from()}}, \doxymbox{\hyperlink{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b}{\+\_\+\+\_\+tear\+\_\+down()}}, \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, \doxymbox{\hyperlink{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}{m\+\_\+capacity}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}, \doxymbox{\hyperlink{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd}{m\+\_\+reserved}}, and \doxymbox{\hyperlink{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}{m\+\_\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a}{emplace\+\_\+back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a}{push\+\_\+back()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!write\_at@{write\_at}}
+\index{write\_at@{write\_at}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{write\_at()}{write\_at()}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+void \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+write\+\_\+at (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}}]{index\+\_\+p}{, }\item[{\doxymbox{\hyperlink{classconcurrent__vector_a460d7b81c6b687f543773e8bf646b441}{const\+\_\+reference}}}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}{m\+\_\+active}}, and \doxymbox{\hyperlink{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}{m\+\_\+length\+\_\+modifier\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a78dd0f51a5c20c284b37ee4c036d9ec6}{back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a1e665f0836218b06a1c7f0aa3e8be15d}{front()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{classconcurrent__vector_doc-variable-members}
+\Hypertarget{classconcurrent__vector_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classconcurrent__vector_a5b45b262e3110d3157d7d1763baef834}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!default\_size@{default\_size}}
+\index{default\_size@{default\_size}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{default\_size}{default\_size}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a5b45b262e3110d3157d7d1763baef834} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+size\+\_\+t \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+default\+\_\+size = 16\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}.
+
+\Hypertarget{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_active@{m\_active}}
+\index{m\_active@{m\_active}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_active}{m\_active}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a8f180e71a17a1c39fbc03e6fb159054d} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+std::\+atomic$<$\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}}$>$ \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+active\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}, \doxymbox{\hyperlink{classconcurrent__vector_ac09c2b1c74cbea75ce7f8b182f2b6258}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from()}}, \doxymbox{\hyperlink{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from\+\_\+initializer\+\_\+list()}}, \doxymbox{\hyperlink{classconcurrent__vector_a6b0de4b24a861fc486d0d20d8931db5b}{begin()}}, \doxymbox{\hyperlink{classconcurrent__vector_ab3f7e5344151e02620773d590335c1d6}{begin()}}, \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a90469861e8f645e29545ee6994b36d36}{end()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2871e5ce9530179ed31f75f0d20d71d4}{end()}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}{read\+\_\+at()}}, \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}, \doxymbox{\hyperlink{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}{write\+\_\+at()}}, and \doxymbox{\hyperlink{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}{\texorpdfstring{$\sim$}{\string~}concurrent\+\_\+vector()}}.
+
+\Hypertarget{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_allocator@{m\_allocator}}
+\index{m\_allocator@{m\_allocator}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_allocator}{m\_allocator}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_afbed65aa4aee0697a2fa707e508542da} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+Allocator \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+allocator\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}, \doxymbox{\hyperlink{classconcurrent__vector_a5031aacb05d7cd9d688c908aca33f43b}{\+\_\+\+\_\+tear\+\_\+down()}}, \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_afe7d26f20e75ab167961690ebda2b321}{get\+\_\+allocator()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2fd4b81ab0029683af2cb93db625164e}{get\+\_\+allocator()}}, \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}, and \doxymbox{\hyperlink{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}{\texorpdfstring{$\sim$}{\string~}concurrent\+\_\+vector()}}.
+
+\Hypertarget{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_capacity@{m\_capacity}}
+\index{m\_capacity@{m\_capacity}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_capacity}{m\_capacity}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a077d736edf5c0c50ecb1bdeba820ce38} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+std::\+atomic$<$\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}$>$ \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+capacity\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a6c11d68ef8d69a13ccec7acb8ae62c80}{\+\_\+\+\_\+allocate\+\_\+default\+\_\+sized\+\_\+raw\+\_\+on\+\_\+construction()}}, \doxymbox{\hyperlink{classconcurrent__vector_a08984be087b48e11e5137f3b7aa3dd33}{\+\_\+\+\_\+move\+\_\+construct\+\_\+from\+\_\+initializer\+\_\+list()}}, \doxymbox{\hyperlink{classconcurrent__vector_a081cfe78e4e42acd9e8bd50472711122}{capacity()}}, \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_aeacea55a9212fe4fb0b504c626cb4c5a}{emplace\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_acb9fd3a8669bf80d8dd5fa35c4f5ec8a}{push\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}, \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}, and \doxymbox{\hyperlink{classconcurrent__vector_ac81cad4fc1b765441d18d14c6e4557b9}{\texorpdfstring{$\sim$}{\string~}concurrent\+\_\+vector()}}.
+
+\Hypertarget{classconcurrent__vector_aeb16029450dd804c2703178018e9972a}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_length\_modifier\_lock@{m\_length\_modifier\_lock}}
+\index{m\_length\_modifier\_lock@{m\_length\_modifier\_lock}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_length\_modifier\_lock}{m\_length\_modifier\_lock}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_aeb16029450dd804c2703178018e9972a} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+Shared\+Mutex \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+length\+\_\+modifier\+\_\+lock\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_aeb37607c85f0ed6832be1074e25dc2fd}{read\+\_\+at()}}, \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a794c64ac363af3393ad0c6d3e45322b4}{write\+\_\+at()}}.
+
+\Hypertarget{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_reserved@{m\_reserved}}
+\index{m\_reserved@{m\_reserved}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_reserved}{m\_reserved}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_af2af8612ba231b16f0e1e96c8369e4fd} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+std::\+atomic$<$\doxymbox{\hyperlink{classconcurrent__vector_adf85e4f094cc163a3dc82b2b79ff1a17}{pointer}}$>$ \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+reserved\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+\Hypertarget{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0}\index{concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}!m\_size@{m\_size}}
+\index{m\_size@{m\_size}!concurrent\_vector$<$ T, Allocator, SharedMutex $>$@{concurrent\_vector$<$ T, Allocator, SharedMutex $>$}}
+\doxysubsubsection{\texorpdfstring{m\_size}{m\_size}}
+{\footnotesize\ttfamily \label{classconcurrent__vector_a8a56c3e7fa3de1361b43b8c0cae6a0a0} 
+template$<$typename T, class Allocator = std::\+pmr::\+polymorphic\+\_\+allocator$<$\+T$>$, class Shared\+Mutex = std::\+shared\+\_\+mutex$>$ \\
+std::\+atomic$<$\doxymbox{\hyperlink{classconcurrent__vector_a0bbdcc3f8ab5587541538d3b18999725}{size\+\_\+type}}$>$ \doxymbox{\hyperlink{classconcurrent__vector}{concurrent\+\_\+vector}}$<$ T, Allocator, Shared\+Mutex $>$::\+m\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classconcurrent__vector_a43fd48a1fb2ef19bb00db4d77de93371}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a3659899a2c00af188af3b3b0dc23a825}{concurrent\+\_\+vector()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2bb9156ae4efdf525ff7f1b1e9399e1d}{is\+\_\+empty()}}, \doxymbox{\hyperlink{classconcurrent__vector_a2377fdded5e15d43f4b5a1812eac6630}{size()}}, \doxymbox{\hyperlink{classconcurrent__vector_ad825490c7975a7d616380de6ebcaa60e}{try\+\_\+emplace\+\_\+back()}}, \doxymbox{\hyperlink{classconcurrent__vector_a4886cda8fb23885b1dc417fc7f719e0d}{try\+\_\+push\+\_\+back()}}, and \doxymbox{\hyperlink{classconcurrent__vector_a99617611407b67c8d5c4d0da12580e6c}{try\+\_\+reserve()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{concurrent__vector_8hxx}{concurrent\+\_\+vector.\+hxx}}\end{DoxyCompactItemize}

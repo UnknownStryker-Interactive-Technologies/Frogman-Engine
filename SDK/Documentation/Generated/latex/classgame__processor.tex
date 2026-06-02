@@ -1,0 +1,322 @@
+\doxysection{game\+\_\+processor Class Reference}
+\hypertarget{classgame__processor}{}\label{classgame__processor}\index{game\_processor@{game\_processor}}
+
+
+{\ttfamily \+\#include $<$game\+\_\+processor.\+hxx$>$}
+
+
+
+Collaboration diagram for game\+\_\+processor:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classgame__processor__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classgame__processor_aa7e9c30711ec17db115c91f6593d27af}{game\+\_\+processor}} (FE::\+world \&world\+\_\+p, FE::\+size fiber\+\_\+stack\+\_\+size\+\_\+p=FE::\+one\+\_\+\+MiB) noexcept
+\item 
+\doxymbox{\hyperlink{classgame__processor_ac613151011aa39410303a1e4b883abb3}{\texorpdfstring{$\sim$}{\string~}game\+\_\+processor}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classgame__processor_a561c5129bce6bc0272791cd28153eb6f}{execute}} () noexcept
+\item 
+void \doxymbox{\hyperlink{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd}{terminate}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+float64 \doxymbox{\hyperlink{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f}{get\+\_\+delta\+\_\+milliseconds}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \doxymbox{\hyperlink{classgame__processor_a835aa7eb9639af583af6d53762622327}{\+\_\+\+\_\+game\+\_\+main\+\_\+loop}} (FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const arg\+\_\+p) noexcept
+\item 
+static void \doxymbox{\hyperlink{classgame__processor_a286dc52db63883addc6c27782f06d18e}{\+\_\+\+\_\+gc\+\_\+main}} (FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const arg\+\_\+p) noexcept
+\item 
+static void \doxymbox{\hyperlink{classgame__processor_a53d2d61b0cb97b9143e7110982ce059c}{\+\_\+\+\_\+run\+\_\+investigator}} (FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const arg\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_f_e_1_1fiber__scheduler}{FE::\+fiber\+\_\+scheduler}} \doxymbox{\hyperlink{classgame__processor_a7d25071ebb5c68c67ad8d6e97b6e23a6}{m\+\_\+scheduler}}
+\item 
+FE::\+world \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classgame__processor_a83cf6b10abd4a9d1755411e48c536ff1}{m\+\_\+world}}
+\item 
+\doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}} \doxymbox{\hyperlink{classgame__processor_a5e8f119ed985b6f8d24adfb5417132fb}{m\+\_\+game\+\_\+delta\+\_\+ms}}
+\item 
+std::\+atomic\+\_\+bool \doxymbox{\hyperlink{classgame__processor_a17197320c9e449b4089a92c038f5c47b}{m\+\_\+should\+\_\+terminate}}
+\item 
+\doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} \doxymbox{\hyperlink{classgame__processor_ad5d75ef119a985fe81ca866a4b19e0e4}{m\+\_\+gc\+\_\+batch\+\_\+count}}
+\item 
+std::\+vector$<$ \doxymbox{\hyperlink{structgc__metadata}{gc\+\_\+metadata}}, FE::\+cache\+\_\+aligned\+\_\+allocator$<$ \doxymbox{\hyperlink{structgc__metadata}{gc\+\_\+metadata}} $>$ $>$ \doxymbox{\hyperlink{classgame__processor_aa4f16e2bc5a77a2ebfacaf15f5736e3a}{m\+\_\+metadata\+\_\+stack}}
+\item 
+absl::\+node\+\_\+hash\+\_\+set$<$ class FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}, FE::\+hash$<$ class FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*} $>$, std::\+equal\+\_\+to$<$ class FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*} $>$, FE::\+cache\+\_\+aligned\+\_\+allocator$<$ class FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*} $>$ $>$ \doxymbox{\hyperlink{classgame__processor_aa5ff6eef25d3b09374c1e929915acb84}{m\+\_\+visited\+\_\+components}}
+\item 
+FE::\+smart\+\_\+ptr$<$ \doxymbox{\hyperlink{structdeath__note}{death\+\_\+note}}, FE::\+\+Ref\+Type::\+\+\_\+\+Owner $>$ \doxymbox{\hyperlink{classgame__processor_a626cede923e268138e796fc4994442d8}{m\+\_\+death\+\_\+note}}
+\item 
+\doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}} \doxymbox{\hyperlink{classgame__processor_a9bc8711157a017f013601b8ff67fcf84}{m\+\_\+gc\+\_\+delta\+\_\+ms}}
+\item 
+std::\+mutex \doxymbox{\hyperlink{classgame__processor_a24b0fca27bf4ed7cb5a9633ce309ecb1}{m\+\_\+mutex}}
+\item 
+std::\+condition\+\_\+variable \doxymbox{\hyperlink{classgame__processor_a6016a47af5ddeb69b3fa72ee2bbcd367}{m\+\_\+condition\+\_\+variable}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classgame__processor_a51a48a79c4dfb57814298c106ac4f40c}{FE::\+engine}}
+\item 
+class \doxymbox{\hyperlink{classgame__processor_a95178006db154730b1dbdea45c1b8a17}{FE::\+mutex}}
+\item 
+class \doxymbox{\hyperlink{classgame__processor_ab24b01f61b189f99b7c93d169ce95fc8}{FE::\+shared\+\_\+mutex}}
+\end{DoxyCompactItemize}
+
+
+\label{classgame__processor_doc-constructors}
+\Hypertarget{classgame__processor_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classgame__processor_aa7e9c30711ec17db115c91f6593d27af}\index{game\_processor@{game\_processor}!game\_processor@{game\_processor}}
+\index{game\_processor@{game\_processor}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{game\_processor()}{game\_processor()}}
+{\footnotesize\ttfamily \label{classgame__processor_aa7e9c30711ec17db115c91f6593d27af} 
+game\+\_\+processor::\+game\+\_\+processor (\begin{DoxyParamCaption}\item[{FE::\+world \&}]{world\+\_\+p}{, }\item[{FE::\+size}]{fiber\+\_\+stack\+\_\+size\+\_\+p}{ = {\ttfamily FE:\+:\+one\+\_\+MiB}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{classgame__processor_ac613151011aa39410303a1e4b883abb3}\index{game\_processor@{game\_processor}!````~game\_processor@{\texorpdfstring{$\sim$}{\string~}game\_processor}}
+\index{````~game\_processor@{\texorpdfstring{$\sim$}{\string~}game\_processor}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}game\_processor()}{\string~game\_processor()}}
+{\footnotesize\ttfamily \label{classgame__processor_ac613151011aa39410303a1e4b883abb3} 
+game\+\_\+processor::\+\texorpdfstring{$\sim$}{\string~}game\+\_\+processor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+\label{classgame__processor_doc-func-members}
+\Hypertarget{classgame__processor_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classgame__processor_a835aa7eb9639af583af6d53762622327}\index{game\_processor@{game\_processor}!\_\_game\_main\_loop@{\_\_game\_main\_loop}}
+\index{\_\_game\_main\_loop@{\_\_game\_main\_loop}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{\_\_game\_main\_loop()}{\_\_game\_main\_loop()}}
+{\footnotesize\ttfamily \label{classgame__processor_a835aa7eb9639af583af6d53762622327} 
+void game\+\_\+processor::\+\+\_\+\+\_\+game\+\_\+main\+\_\+loop (\begin{DoxyParamCaption}\item[{FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const}]{arg\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classgame__processor_a286dc52db63883addc6c27782f06d18e}\index{game\_processor@{game\_processor}!\_\_gc\_main@{\_\_gc\_main}}
+\index{\_\_gc\_main@{\_\_gc\_main}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{\_\_gc\_main()}{\_\_gc\_main()}}
+{\footnotesize\ttfamily \label{classgame__processor_a286dc52db63883addc6c27782f06d18e} 
+void game\+\_\+processor::\+\+\_\+\+\_\+gc\+\_\+main (\begin{DoxyParamCaption}\item[{FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const}]{arg\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classgame__processor_a53d2d61b0cb97b9143e7110982ce059c}\index{game\_processor@{game\_processor}!\_\_run\_investigator@{\_\_run\_investigator}}
+\index{\_\_run\_investigator@{\_\_run\_investigator}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{\_\_run\_investigator()}{\_\_run\_investigator()}}
+{\footnotesize\ttfamily \label{classgame__processor_a53d2d61b0cb97b9143e7110982ce059c} 
+void game\+\_\+processor::\+\+\_\+\+\_\+run\+\_\+investigator (\begin{DoxyParamCaption}\item[{FE::\+component\+\_\+base \texorpdfstring{$\ast$}{*}const}]{arg\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{classgame__processor_a561c5129bce6bc0272791cd28153eb6f}\index{game\_processor@{game\_processor}!execute@{execute}}
+\index{execute@{execute}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{classgame__processor_a561c5129bce6bc0272791cd28153eb6f} 
+void game\+\_\+processor::\+execute (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classgame__processor_a561c5129bce6bc0272791cd28153eb6f}{execute()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_a561c5129bce6bc0272791cd28153eb6f}{execute()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classgame__processor_a561c5129bce6bc0272791cd28153eb6f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{classgame__processor_a561c5129bce6bc0272791cd28153eb6f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f}\index{game\_processor@{game\_processor}!get\_delta\_milliseconds@{get\_delta\_milliseconds}}
+\index{get\_delta\_milliseconds@{get\_delta\_milliseconds}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{get\_delta\_milliseconds()}{get\_delta\_milliseconds()}}
+{\footnotesize\ttfamily \label{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+float64 game\+\_\+processor::\+get\+\_\+delta\+\_\+milliseconds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f}{get\+\_\+delta\+\_\+milliseconds()}}, and \doxymbox{\hyperlink{classgame__processor_a5e8f119ed985b6f8d24adfb5417132fb}{m\+\_\+game\+\_\+delta\+\_\+ms}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f}{get\+\_\+delta\+\_\+milliseconds()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd}\index{game\_processor@{game\_processor}!terminate@{terminate}}
+\index{terminate@{terminate}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{terminate()}{terminate()}}
+{\footnotesize\ttfamily \label{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd} 
+void game\+\_\+processor::\+terminate (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd}{terminate()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd}{terminate()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=215pt]{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=215pt]{classgame__processor_a733c0bc5f607a2ef9491f9d6490df2fd_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{classgame__processor_doc-related-members}
+\Hypertarget{classgame__processor_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classgame__processor_a51a48a79c4dfb57814298c106ac4f40c}\index{game\_processor@{game\_processor}!FE::engine@{FE::engine}}
+\index{FE::engine@{FE::engine}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{FE::engine}{FE::engine}}
+{\footnotesize\ttfamily \label{classgame__processor_a51a48a79c4dfb57814298c106ac4f40c} 
+friend class FE::\+engine\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classgame__processor_a51a48a79c4dfb57814298c106ac4f40c}{FE::\+engine}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_a51a48a79c4dfb57814298c106ac4f40c}{FE::\+engine}}.
+
+\Hypertarget{classgame__processor_a95178006db154730b1dbdea45c1b8a17}\index{game\_processor@{game\_processor}!FE::mutex@{FE::mutex}}
+\index{FE::mutex@{FE::mutex}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{FE::mutex}{FE::mutex}}
+{\footnotesize\ttfamily \label{classgame__processor_a95178006db154730b1dbdea45c1b8a17} 
+friend class FE::\+mutex\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classgame__processor_a95178006db154730b1dbdea45c1b8a17}{FE::\+mutex}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_a95178006db154730b1dbdea45c1b8a17}{FE::\+mutex}}.
+
+\Hypertarget{classgame__processor_ab24b01f61b189f99b7c93d169ce95fc8}\index{game\_processor@{game\_processor}!FE::shared\_mutex@{FE::shared\_mutex}}
+\index{FE::shared\_mutex@{FE::shared\_mutex}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{FE::shared\_mutex}{FE::shared\_mutex}}
+{\footnotesize\ttfamily \label{classgame__processor_ab24b01f61b189f99b7c93d169ce95fc8} 
+friend class FE::\+shared\+\_\+mutex\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classgame__processor_ab24b01f61b189f99b7c93d169ce95fc8}{FE::\+shared\+\_\+mutex}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_ab24b01f61b189f99b7c93d169ce95fc8}{FE::\+shared\+\_\+mutex}}.
+
+
+
+\label{classgame__processor_doc-variable-members}
+\Hypertarget{classgame__processor_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classgame__processor_a6016a47af5ddeb69b3fa72ee2bbcd367}\index{game\_processor@{game\_processor}!m\_condition\_variable@{m\_condition\_variable}}
+\index{m\_condition\_variable@{m\_condition\_variable}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_condition\_variable}{m\_condition\_variable}}
+{\footnotesize\ttfamily \label{classgame__processor_a6016a47af5ddeb69b3fa72ee2bbcd367} 
+std::\+condition\+\_\+variable game\+\_\+processor::\+m\+\_\+condition\+\_\+variable\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a626cede923e268138e796fc4994442d8}\index{game\_processor@{game\_processor}!m\_death\_note@{m\_death\_note}}
+\index{m\_death\_note@{m\_death\_note}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_death\_note}{m\_death\_note}}
+{\footnotesize\ttfamily \label{classgame__processor_a626cede923e268138e796fc4994442d8} 
+FE::\+smart\+\_\+ptr$<$\doxymbox{\hyperlink{structdeath__note}{death\+\_\+note}}, FE::\+\+Ref\+Type::\+\+\_\+\+Owner$>$ game\+\_\+processor::\+m\+\_\+death\+\_\+note\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a5e8f119ed985b6f8d24adfb5417132fb}\index{game\_processor@{game\_processor}!m\_game\_delta\_ms@{m\_game\_delta\_ms}}
+\index{m\_game\_delta\_ms@{m\_game\_delta\_ms}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_game\_delta\_ms}{m\_game\_delta\_ms}}
+{\footnotesize\ttfamily \label{classgame__processor_a5e8f119ed985b6f8d24adfb5417132fb} 
+\doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}} game\+\_\+processor::\+m\+\_\+game\+\_\+delta\+\_\+ms\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classgame__processor_acfb4cc47c4af8e427bf6ed06ff396e1f}{get\+\_\+delta\+\_\+milliseconds()}}.
+
+\Hypertarget{classgame__processor_ad5d75ef119a985fe81ca866a4b19e0e4}\index{game\_processor@{game\_processor}!m\_gc\_batch\_count@{m\_gc\_batch\_count}}
+\index{m\_gc\_batch\_count@{m\_gc\_batch\_count}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_gc\_batch\_count}{m\_gc\_batch\_count}}
+{\footnotesize\ttfamily \label{classgame__processor_ad5d75ef119a985fe81ca866a4b19e0e4} 
+\doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} game\+\_\+processor::\+m\+\_\+gc\+\_\+batch\+\_\+count\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a9bc8711157a017f013601b8ff67fcf84}\index{game\_processor@{game\_processor}!m\_gc\_delta\_ms@{m\_gc\_delta\_ms}}
+\index{m\_gc\_delta\_ms@{m\_gc\_delta\_ms}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_gc\_delta\_ms}{m\_gc\_delta\_ms}}
+{\footnotesize\ttfamily \label{classgame__processor_a9bc8711157a017f013601b8ff67fcf84} 
+\doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}} game\+\_\+processor::\+m\+\_\+gc\+\_\+delta\+\_\+ms\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_aa4f16e2bc5a77a2ebfacaf15f5736e3a}\index{game\_processor@{game\_processor}!m\_metadata\_stack@{m\_metadata\_stack}}
+\index{m\_metadata\_stack@{m\_metadata\_stack}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_metadata\_stack}{m\_metadata\_stack}}
+{\footnotesize\ttfamily \label{classgame__processor_aa4f16e2bc5a77a2ebfacaf15f5736e3a} 
+std::\+vector$<$\doxymbox{\hyperlink{structgc__metadata}{gc\+\_\+metadata}}, FE::\+cache\+\_\+aligned\+\_\+allocator$<$\doxymbox{\hyperlink{structgc__metadata}{gc\+\_\+metadata}}$>$ $>$ game\+\_\+processor::\+m\+\_\+metadata\+\_\+stack\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a24b0fca27bf4ed7cb5a9633ce309ecb1}\index{game\_processor@{game\_processor}!m\_mutex@{m\_mutex}}
+\index{m\_mutex@{m\_mutex}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_mutex}{m\_mutex}}
+{\footnotesize\ttfamily \label{classgame__processor_a24b0fca27bf4ed7cb5a9633ce309ecb1} 
+std::\+mutex game\+\_\+processor::\+m\+\_\+mutex\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a7d25071ebb5c68c67ad8d6e97b6e23a6}\index{game\_processor@{game\_processor}!m\_scheduler@{m\_scheduler}}
+\index{m\_scheduler@{m\_scheduler}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_scheduler}{m\_scheduler}}
+{\footnotesize\ttfamily \label{classgame__processor_a7d25071ebb5c68c67ad8d6e97b6e23a6} 
+\doxymbox{\hyperlink{class_f_e_1_1fiber__scheduler}{FE::\+fiber\+\_\+scheduler}} game\+\_\+processor::\+m\+\_\+scheduler\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a17197320c9e449b4089a92c038f5c47b}\index{game\_processor@{game\_processor}!m\_should\_terminate@{m\_should\_terminate}}
+\index{m\_should\_terminate@{m\_should\_terminate}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_should\_terminate}{m\_should\_terminate}}
+{\footnotesize\ttfamily \label{classgame__processor_a17197320c9e449b4089a92c038f5c47b} 
+std::\+atomic\+\_\+bool game\+\_\+processor::\+m\+\_\+should\+\_\+terminate\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_aa5ff6eef25d3b09374c1e929915acb84}\index{game\_processor@{game\_processor}!m\_visited\_components@{m\_visited\_components}}
+\index{m\_visited\_components@{m\_visited\_components}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_visited\_components}{m\_visited\_components}}
+{\footnotesize\ttfamily \label{classgame__processor_aa5ff6eef25d3b09374c1e929915acb84} 
+absl::\+node\+\_\+hash\+\_\+set$<$class FE::\+component\+\_\+base\texorpdfstring{$\ast$}{*}, FE::\+hash$<$class FE::\+component\+\_\+base\texorpdfstring{$\ast$}{*}$>$, std::\+equal\+\_\+to$<$class FE::\+component\+\_\+base\texorpdfstring{$\ast$}{*}$>$, FE::\+cache\+\_\+aligned\+\_\+allocator$<$class FE::\+component\+\_\+base\texorpdfstring{$\ast$}{*}$>$ $>$ game\+\_\+processor::\+m\+\_\+visited\+\_\+components\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classgame__processor_a83cf6b10abd4a9d1755411e48c536ff1}\index{game\_processor@{game\_processor}!m\_world@{m\_world}}
+\index{m\_world@{m\_world}!game\_processor@{game\_processor}}
+\doxysubsubsection{\texorpdfstring{m\_world}{m\_world}}
+{\footnotesize\ttfamily \label{classgame__processor_a83cf6b10abd4a9d1755411e48c536ff1} 
+FE::\+world\texorpdfstring{$\ast$}{*} game\+\_\+processor::\+m\+\_\+world\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{game__processor_8hxx}{game\+\_\+processor.\+hxx}}\end{DoxyCompactItemize}

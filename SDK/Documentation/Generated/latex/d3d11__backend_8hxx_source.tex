@@ -1,0 +1,148 @@
+\doxysection{d3d11\+\_\+backend.\+hxx}
+\hypertarget{d3d11__backend_8hxx_source}{}\label{d3d11__backend_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/d3d11\_backend.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Renderer/Include/FE/d3d11\_backend.hxx}}
+\doxymbox{\hyperlink{d3d11__backend_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_RENDERER\_D3D11\_BACKEND\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_RENDERER\_D3D11\_BACKEND\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <glm/glm.hpp>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <span>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <absl/container/flat\_hash\_map.h>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ \_FE\_ON\_WINDOWS\_X86\_64\_}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <d3dcommon.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <d3d11\_4.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <dxgi1\_6.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <d3dcompiler.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <wrl/client.h>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{namespace\ }wrl}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{using\ }com\_ptr\ =\ Microsoft::WRL::ComPtr<T>;}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \doxymbox{\hyperlink{definitions_8hxx_a7f2d664b1db52b38619b55103ff1be50}{CLASS\_FORWARD\_DECLARATION}}(\doxymbox{\hyperlink{namespace_f_e}{FE}},\ \doxymbox{\hyperlink{classrenderer}{renderer}});}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::internal::renderer)}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classshader}{shader}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_aae8383f44cd0054c07486bd447a61da8}{SM5\_vertex\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}vs\_5\_0"{}};}
+\DoxyCodeLine{00053\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_a59211c9d33c48e2cac6d191ad734c058}{SM5\_pixel\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}ps\_5\_0"{}};}
+\DoxyCodeLine{00054\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_a4fb0c803b3efb0d4414821408dd46fe6}{SM5\_geometry\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}gs\_5\_0"{}};}
+\DoxyCodeLine{00055\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_af021526f4d8e99ae916b0f608e5bb7d9}{SM5\_hull\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}hs\_5\_0"{}};}
+\DoxyCodeLine{00056\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_a49cff843f929a1392da56cb1a1a2ed83}{SM5\_domain\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}ds\_5\_0"{}};}
+\DoxyCodeLine{00057\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_abaa2842f619a3cd8de23cbd455bf9403}{SM5\_compute\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}cs\_5\_0"{}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_ab15d8e68f7bb5fd72ca6be3b180f52bf}{SM6\_vertex\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}vs\_6\_0"{}};}
+\DoxyCodeLine{00060\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_aba3e7a45da67d9e118df1d31f20e1d9c}{SM6\_pixel\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}ps\_6\_0"{}};}
+\DoxyCodeLine{00061\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_aaedee11d5ce5e70aaffc2aaf85de8ff8}{SM6\_geometry\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}gs\_6\_0"{}};}
+\DoxyCodeLine{00062\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_ac9969e2fb20e1e71ea13e93fd66000ab}{SM6\_hull\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}hs\_6\_0"{}};}
+\DoxyCodeLine{00063\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_afe84d6e919fc9a06438c0818ae1fdf45}{SM6\_domain\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}ds\_6\_0"{}};}
+\DoxyCodeLine{00064\ \textcolor{keyword}{constexpr}\ FE::ASCII*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_a1f7f9dbc4f8437264f36bfd8c29c687c}{SM6\_compute\_shader\_target}}\ =\ \textcolor{stringliteral}{"{}cs\_6\_0"{}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820e}{ShaderTarget}}}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ead20b96c36ccbc19fea22d6401bc09163}{\_SM5\_VertexShader}},}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab58e584ee4a5b145c6b988db1e3b401c}{\_SM5\_PixelShader}},}
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea1edbc513fe83963a1fbf95d73c0783b7}{\_SM5\_GeometryShader}},}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eac28f7b91101bfddb4e7f7672db78df7a}{\_SM5\_HullShader}},}
+\DoxyCodeLine{00072\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820eab8d9d19607d953a2a16c6109ba1e97de}{\_SM5\_DomainShader}},}
+\DoxyCodeLine{00073\ \ \ \ \ \doxymbox{\hyperlink{d3d11__backend_8hxx_a20f2fd514985d33ebb9cebe14da0820ea9dc3978bb166b9c0a8ebb1d7fabe8893}{\_SM5\_ComputeShader}}}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classd3d11__backend_a8729c5b767fea96dcf06acd4f96b2721}{d3d11\_backend}}}
+\DoxyCodeLine{00078\ \{}
+\DoxyCodeLine{00079\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classd3d11__backend_a70cba3d9070fc4348eb4990dccc66194}{gpu\_info}}\ =\ DXGI\_ADAPTER\_DESC3;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{class\ }FE::renderer*\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classd3d11__backend_a7e7239e4f3a86d96a3fd3296b956518c}{m\_frontend}};}
+\DoxyCodeLine{00084\ \ \ \ \ wrl::com\_ptr<ID3D11Device5>\ \doxymbox{\hyperlink{classd3d11__backend_ad769ebfc658c9b0fb80a427c5634e500}{m\_device}};}
+\DoxyCodeLine{00085\ \ \ \ \ wrl::com\_ptr<ID3D11DeviceContext4>\ \doxymbox{\hyperlink{classd3d11__backend_a2ff7ea17e26cbda9c80a8c431c1349ca}{m\_context}};}
+\DoxyCodeLine{00086\ \ \ \ \ wrl::com\_ptr<IDXGISwapChain4>\ \doxymbox{\hyperlink{classd3d11__backend_a8beaa8872d58383367826af0f557944c}{m\_swapchain}};}
+\DoxyCodeLine{00087\ \ \ \ \ wrl::com\_ptr<ID3D11Texture2D1>\ \doxymbox{\hyperlink{classd3d11__backend_a47b29f6c029ec108c8630fbd61471d24}{m\_back\_buffer}};}
+\DoxyCodeLine{00088\ \ \ \ \ wrl::com\_ptr<ID3D11RenderTargetView>\ \doxymbox{\hyperlink{classd3d11__backend_a8906caa60a7aac2cb69afdd1f7193594}{m\_render\_target\_view}};}
+\DoxyCodeLine{00089\ \ \ \ \ wrl::com\_ptr<IDXGIFactory7>\ \doxymbox{\hyperlink{classd3d11__backend_aaac766bad23a1d15d92bf5f0ea6b32b4}{m\_factory}};}
+\DoxyCodeLine{00090\ \ \ \ \ wrl::com\_ptr<IDXGIAdapter4>\ \doxymbox{\hyperlink{classd3d11__backend_acb4e4391ecdccfbdb7f8fc03b1631b4f}{m\_adapter}};}
+\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a70cba3d9070fc4348eb4990dccc66194}{gpu\_info}}\ \doxymbox{\hyperlink{classd3d11__backend_a5bd73154103eddeacebe3ef194c973f1}{m\_adapter\_desc}};}
+\DoxyCodeLine{00092\ \ \ \ \ BOOL\ \doxymbox{\hyperlink{classd3d11__backend_af1eee630006bf2e0325530a0e546d98f}{m\_should\_allow\_tearing}};}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#if\ defined(\_DEBUG\_)\ ||\ defined(\_RELWITHDEBINFO\_)}}
+\DoxyCodeLine{00094\ \ \ \ \ wrl::com\_ptr<ID3D11Debug>\ m\_debug;}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ \ \ \ \ DXGI\_PRESENT\_PARAMETERS\ \doxymbox{\hyperlink{classd3d11__backend_a1482f2315345c70619388a0202133475}{m\_present\_params}};}
+\DoxyCodeLine{00097\ \ \ \ \ FE::float32\ \doxymbox{\hyperlink{classd3d11__backend_a0c8bcdead955f0c93872e6374ae456d4}{m\_clear\_color}}[4];}
+\DoxyCodeLine{00098\ \ \ \ \ D3D11\_VIEWPORT\ \doxymbox{\hyperlink{classd3d11__backend_aab3b9d1c748ceee9ec9986788e37a30a}{m\_viewport}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ wrl::com\_ptr<ID3D11Texture2D>\ \doxymbox{\hyperlink{classd3d11__backend_ad9f247be738cc9ded7f142470dc9d1c1}{m\_depth\_stencil\_buffer}};}
+\DoxyCodeLine{00101\ \ \ \ \ wrl::com\_ptr<ID3D11DepthStencilView>\ \doxymbox{\hyperlink{classd3d11__backend_a616fc832bb2456b474eae4c19a60d7b0}{m\_depth\_stencil\_view}};}
+\DoxyCodeLine{00102\ \ \ \ \ wrl::com\_ptr<ID3D11DepthStencilState>\ \doxymbox{\hyperlink{classd3d11__backend_a71db920a3eb472738b547e0af45332fa}{m\_depth\_stencil\_state}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map}}\ =\ absl::flat\_hash\_map<\ \ var::uint64,\ wrl::com\_ptr<T>,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ absl::lts\_20260107::DefaultHashContainerHash<var::uint64>,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ absl::lts\_20260107::DefaultHashContainerEq<var::uint64>,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ std::pmr::polymorphic\_allocator<std::pair<FE::uint64,\ wrl::com\_ptr<T>>>}
+\DoxyCodeLine{00109\ \ \ \ \ >;}
+\DoxyCodeLine{00110\ \ \ \ \ }
+\DoxyCodeLine{00111\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11VertexShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_a5360bee8b065c37daaaa509767342d3c}{m\_vertex\_shader\_cache}};}
+\DoxyCodeLine{00112\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11PixelShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_a1947fd828190dffb18455268cc94a34e}{m\_pixel\_shader\_cache}};}
+\DoxyCodeLine{00113\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11GeometryShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_a1acd440bf48af43d7acec20945795e9d}{m\_geometry\_shader\_cache}};}
+\DoxyCodeLine{00114\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11HullShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_a4877376e456445e02dc4777a72adf115}{m\_hull\_shader\_cache}};}
+\DoxyCodeLine{00115\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11DomainShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_abdde1195d9332ba6f32e1d1f948384fc}{m\_domain\_shader\_cache}};}
+\DoxyCodeLine{00116\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11ComputeShader>}}\ \doxymbox{\hyperlink{classd3d11__backend_af871ad50f78a702c6ee5ded7496a865c}{m\_compute\_shader\_cache}};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a3f1fb2b69cc91a63fb6ed610957eb0af}{cache\_map<ID3D11InputLayout>}}\ \doxymbox{\hyperlink{classd3d11__backend_a02a26411fdd5aab12ae667d131f79126}{m\_input\_layout\_cache}};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a8729c5b767fea96dcf06acd4f96b2721}{d3d11\_backend}}(\textcolor{keyword}{class}\ FE::renderer*\ \textcolor{keyword}{const}\ frontend\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00122\ \ \ \ \ \doxymbox{\hyperlink{classd3d11__backend_a5b74de915dbfca51b143cb0ddf76888b}{\string~d3d11\_backend}}()\ noexcept;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classd3d11__backend_aee5583baad36f55176d97217d47a4bd5}{resize\_swap\_chain\_buffers}}(\doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ new\_width\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ new\_height\_p)\ noexcept;}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classd3d11__backend_a25b1122e342bc43fdc91edd400a7c294}{begin\_frame}}()\ noexcept;}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classd3d11__backend_a02e873397fce9bb51939a985635be69a}{end\_frame}}()\ noexcept;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ ID3D11Device5*\ \doxymbox{\hyperlink{classd3d11__backend_ae406b7becfa40a3494601e45362c5970}{get\_device}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classd3d11__backend_ad769ebfc658c9b0fb80a427c5634e500}{m\_device}}.Get();\ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ ID3D11DeviceContext4*\ \doxymbox{\hyperlink{classd3d11__backend_ae40d2079cb28ceddbb6d637f5d160f09}{get\_context}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classd3d11__backend_a2ff7ea17e26cbda9c80a8c431c1349ca}{m\_context}}.Get();\ \}}
+\DoxyCodeLine{00131\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classd3d11__backend_a70cba3d9070fc4348eb4990dccc66194}{gpu\_info}}\&\ \doxymbox{\hyperlink{classd3d11__backend_a2c7d98bcd21430ab7291a0625e2c151a}{get\_gpu\_info}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classd3d11__backend_a5bd73154103eddeacebe3ef194c973f1}{m\_adapter\_desc}};\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classd3d11__backend_aa842f729afd481f8135b33f568bcf745}{register\_shaders}}(std::pmr::vector<class\ ::FE::internal::renderer::shader>\&\ shaders\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classd3d11__backend_ad952da23de0d8995276e0c0595992b20}{create\_hlsl\_struct\_memory\_layout}}(std::pmr::vector<class\ ::FE::internal::renderer::shader>\&\ shaders\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00135\ \};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#ifdef\ \_FE\_ON\_WINDOWS\_X86\_64\_}}
+\DoxyCodeLine{00138\ \textcolor{keyword}{using\ }backend\ =\ \doxymbox{\hyperlink{classd3d11__backend}{d3d11\_backend}};}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

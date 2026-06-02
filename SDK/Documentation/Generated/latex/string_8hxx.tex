@@ -1,0 +1,633 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+algorithm/\+string.hxx File Reference}
+\hypertarget{string_8hxx}{}\label{string_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/algorithm/string.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/algorithm/string.hxx}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+iterator.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+memory.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$optional$>$}\newline
+{\ttfamily \+\#include $<$boost/\+hash2/\+fnv1a.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$boost/\+hash2/\+hash\+\_\+append.\+hpp$>$}\newline
+Include dependency graph for string.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{string_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structcount}{count$<$ S $>$}}
+\item 
+struct \doxymbox{\hyperlink{structrange}{range}}
+\item 
+struct \doxymbox{\hyperlink{structequal__to}{equal\+\_\+to$<$ Char\+T $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{string_8hxx_ab8f74f52ba5bdd1842f2eb50db0e5b8d}{STRING\+\_\+\+SWITCH}}(x)
+\item 
+\+\#define \doxymbox{\hyperlink{string_8hxx_a5b68250596103861e4970948bd97b67d}{STRING\+\_\+\+CASE}}(x)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename CharT, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{FE::\+\+Address}} Dest\+Address\+Alignment = FE::\+\+Address::\+\+\_\+\+Not\+Aligned, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{FE::\+\+Address}} Source\+Address\+Alignment = FE::\+\+Address::\+\+\_\+\+Not\+Aligned$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{string_8hxx_af0b63c4afa4ee24147b0fa7c08cd19cc}{copy}} (CharT \texorpdfstring{$\ast$}{*}const out\+\_\+dest\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{structcount}{count}}$<$ CharT $>$ \doxymbox{\hyperlink{string_8hxx_ab1eab0a5997c4772f28d4221c660365a}{count\+\_\+chars}} (const CharT \texorpdfstring{$\ast$}{*}string\+\_\+p, const CharT target\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void \doxymbox{\hyperlink{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f}{capitalize}} (CharT \texorpdfstring{$\ast$}{*}in\+\_\+out\+\_\+string\+\_\+buffer\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} CharT \doxymbox{\hyperlink{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9}{capitalize}} (const CharT value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void \doxymbox{\hyperlink{string_8hxx_ac7cba17599b246c87c0b0160b23189cc}{to\+\_\+lowercase}} (CharT \texorpdfstring{$\ast$}{*}in\+\_\+out\+\_\+string\+\_\+buffer\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} CharT \doxymbox{\hyperlink{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3}{to\+\_\+lowercase}} (const CharT value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void \doxymbox{\hyperlink{string_8hxx_a36c0674476884f89af763c3a7d559aa1}{capitalize\+\_\+the\+\_\+first\+\_\+letter\+\_\+of\+\_\+words}} (CharT \texorpdfstring{$\ast$}{*}in\+\_\+out\+\_\+string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{structcount}{count}}$<$ CharT $>$ \doxymbox{\hyperlink{string_8hxx_a2d1707bf967f730a7cbc7d49cbb963f4}{count\+\_\+chars\+\_\+within\+\_\+range}} (const CharT \texorpdfstring{$\ast$}{*}string\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} string\+\_\+range\+\_\+p, const CharT target\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{string_8hxx_a43d72d1381c453f1efea292093adda8d}{compare}} (const CharT \texorpdfstring{$\ast$}{*}const lstr\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const rstr\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{string_8hxx_a6261fc650761fde36f2d3f53daf09613}{compare\+\_\+ranged}} (const CharT \texorpdfstring{$\ast$}{*}const lstr\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} lstr\+\_\+range\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const rstr\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} rstr\+\_\+range\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{string_8hxx_ad112ed03a8f3b001740cc045bee35bdd}{insensitive\+\_\+comparison}} (const CharT \texorpdfstring{$\ast$}{*}lstr\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}rstr\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{string_8hxx_a1736832d3b86479b8ff51dcf19448a9b}{insensitive\+\_\+ranged\+\_\+comparison}} (const CharT \texorpdfstring{$\ast$}{*}const lstr\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} lstr\+\_\+range\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const rstr\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} rstr\+\_\+range\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{string_8hxx_adb811bd8b43e30caa8be98c65aee5a16}{concatenate}} (CharT \texorpdfstring{$\ast$}{*}const out\+\_\+dest\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} string\+\_\+buffer\+\_\+size\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} source\+\_\+total\+\_\+count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}} \doxymbox{\hyperlink{string_8hxx_a3daad76adbb167b36cfc588d3900921c}{concatenate}} (CharT \texorpdfstring{$\ast$}{*}const out\+\_\+string\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}} string\+\_\+buffer\+\_\+size\+\_\+p, ::\+std::\+initializer\+\_\+list$<$ const CharT \texorpdfstring{$\ast$}{*}const $>$ \&\&strings\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{string_8hxx_a975f614a659378c5128f615fe484f832}{concatenate}} (CharT \texorpdfstring{$\ast$}{*}const out\+\_\+string\+\_\+buffer\+\_\+p, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}} string\+\_\+buffer\+\_\+size\+\_\+p, ::\+std::\+initializer\+\_\+list$<$ const CharT $>$ \&\&chars\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_aaf9b82b64fa4ed552c9dcc6e6877b547}{find\+\_\+the\+\_\+first}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const CharT target\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_ab616fda41b1526d143652665d24407de}{find\+\_\+the\+\_\+last}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const CharT target\+\_\+char\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_aeb6dac57d79c6193a618f021c39f5814}{find\+\_\+the\+\_\+first\+\_\+within\+\_\+range}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} string\+\_\+range\+\_\+p, const CharT target\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_ae7c41fc8bad8b4dda380173ff7b901d0}{find\+\_\+the\+\_\+last\+\_\+within\+\_\+range}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} string\+\_\+range\+\_\+p, const CharT target\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_a55f254f42572717ff7a0715692918cc9}{find\+\_\+the\+\_\+first}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const target\+\_\+substring\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_ac5ff193d2048a916f3784c70a1929d35}{find\+\_\+the\+\_\+last}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const target\+\_\+substring\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_aae7bf5b8b453e6e303c6bb4488824ebe}{find\+\_\+the\+\_\+first\+\_\+within\+\_\+range}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} string\+\_\+range\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const target\+\_\+substring\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ \doxymbox{\hyperlink{string_8hxx_ab2c5c1e8155e53ff156f167af274677f}{find\+\_\+the\+\_\+last\+\_\+within\+\_\+range}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p, const \doxymbox{\hyperlink{structrange}{range}} string\+\_\+range\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const target\+\_\+substring\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT, typename IntT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} IntT \doxymbox{\hyperlink{string_8hxx_a8595dc0d992482d636a7650b7003aee9}{char\+\_\+to\+\_\+integer}} (const CharT value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT, typename IntT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} IntT \doxymbox{\hyperlink{string_8hxx_a99c4385543b71504d5964784d8749d2c}{string\+\_\+to\+\_\+integer}} (const CharT \texorpdfstring{$\ast$}{*}string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void \doxymbox{\hyperlink{string_8hxx_a654d9d5cd02582018cbc8966ee5aa347}{invert}} (CharT \texorpdfstring{$\ast$}{*}const in\+\_\+out\+\_\+string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} \doxymbox{\hyperlink{string_8hxx_a524299c4c249d769ac0be82769b8ed9e}{space\+\_\+insensitive\+\_\+length}} (const CharT \texorpdfstring{$\ast$}{*}const string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{FE::\+boolean}} \doxymbox{\hyperlink{string_8hxx_a2fbe611fe5ee8a1ba6c8a4b92371fe01}{space\+\_\+insensitive\+\_\+comparison}} (const CharT \texorpdfstring{$\ast$}{*}const lhs\+\_\+p, \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}} lhs\+\_\+len\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const rhs\+\_\+p, \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}} rhs\+\_\+len\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{FE::\+boolean}} \doxymbox{\hyperlink{string_8hxx_a982915dde135da824e93d0bc98ce0c4f}{space\+\_\+insensitive\+\_\+contains}} (const CharT \texorpdfstring{$\ast$}{*}const str\+\_\+p, const std::\+size\+\_\+t str\+\_\+len\+\_\+p, const CharT \texorpdfstring{$\ast$}{*}const target\+\_\+substr\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename UTF$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} UTF \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{string_8hxx_ad3cba0aa0d2e6a6437c39c4d534ce2c4}{skip\+\_\+\+BOM}} (UTF \texorpdfstring{$\ast$}{*}string\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename CharT$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} \doxymbox{\hyperlink{string_8hxx_a22c648d532f028aded968f525ed76c23}{hash\+\_\+bytes}} (const CharT \texorpdfstring{$\ast$}{*}string\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} count\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \doxymbox{\hyperlink{string_8hxx_a2f064b416eebab36f43ac890f4dc6a4e}{\+\_\+\+ASCII\+\_\+a\+\_\+}} = 97
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \doxymbox{\hyperlink{string_8hxx_a9a48e3fb48fc00d51f4b943a9264fe4c}{\+\_\+\+ASCII\+\_\+z\+\_\+}} = 122
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \doxymbox{\hyperlink{string_8hxx_a42404468c73e908ab669cd137a8fba1d}{\+\_\+\+ASCII\+\_\+\+A\+\_\+}} = 65
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \doxymbox{\hyperlink{string_8hxx_abaa0a49701e13b2fe44d691a748f8aad}{\+\_\+\+ASCII\+\_\+\+Z\+\_\+}} = 90
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \doxymbox{\hyperlink{string_8hxx_ac95810a005fc659ffebc39793e618ea4}{\+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+}} = 32
+\end{DoxyCompactItemize}
+
+
+\label{string_8hxx_doc-define-members}
+\Hypertarget{string_8hxx_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{string_8hxx_a5b68250596103861e4970948bd97b67d}\index{string.hxx@{string.hxx}!STRING\_CASE@{STRING\_CASE}}
+\index{STRING\_CASE@{STRING\_CASE}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{STRING\_CASE}{STRING\_CASE}}
+{\footnotesize\ttfamily \label{string_8hxx_a5b68250596103861e4970948bd97b67d} 
+\+\#define STRING\+\_\+\+CASE(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{case\ ::FE::algorithm::string::hash\_bytes<\ FE::remove\_all\_t<\textcolor{keyword}{decltype}(x)>\ >(x,\ ::FE::algorithm::string::length<\ FE::remove\_all\_t<\textcolor{keyword}{decltype}(x)>\ >(x))}
+
+\end{DoxyCode}
+\Hypertarget{string_8hxx_ab8f74f52ba5bdd1842f2eb50db0e5b8d}\index{string.hxx@{string.hxx}!STRING\_SWITCH@{STRING\_SWITCH}}
+\index{STRING\_SWITCH@{STRING\_SWITCH}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{STRING\_SWITCH}{STRING\_SWITCH}}
+{\footnotesize\ttfamily \label{string_8hxx_ab8f74f52ba5bdd1842f2eb50db0e5b8d} 
+\+\#define STRING\+\_\+\+SWITCH(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{switch}\ (\ ::FE::algorithm::string::hash\_bytes<\ FE::remove\_all\_t<\textcolor{keyword}{decltype}(x)>\ >(x,\ ::FE::algorithm::string::length<\ FE::remove\_all\_t<\textcolor{keyword}{decltype}(x)>\ >(x)\ ))}
+
+\end{DoxyCode}
+
+
+\label{string_8hxx_doc-func-members}
+\Hypertarget{string_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f}\index{string.hxx@{string.hxx}!capitalize@{capitalize}}
+\index{capitalize@{capitalize}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{capitalize()}{capitalize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void capitalize (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}}]{in\+\_\+out\+\_\+string\+\_\+buffer\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{string_8hxx_a2f064b416eebab36f43ac890f4dc6a4e}{\+\_\+\+ASCII\+\_\+a\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_ac95810a005fc659ffebc39793e618ea4}{\+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_a9a48e3fb48fc00d51f4b943a9264fe4c}{\+\_\+\+ASCII\+\_\+z\+\_\+}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9}\index{string.hxx@{string.hxx}!capitalize@{capitalize}}
+\index{capitalize@{capitalize}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{capitalize()}{capitalize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} CharT capitalize (\begin{DoxyParamCaption}\item[{const CharT}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{string_8hxx_a2f064b416eebab36f43ac890f4dc6a4e}{\+\_\+\+ASCII\+\_\+a\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_ac95810a005fc659ffebc39793e618ea4}{\+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_a9a48e3fb48fc00d51f4b943a9264fe4c}{\+\_\+\+ASCII\+\_\+z\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}.
+
+\Hypertarget{string_8hxx_a36c0674476884f89af763c3a7d559aa1}\index{string.hxx@{string.hxx}!capitalize\_the\_first\_letter\_of\_words@{capitalize\_the\_first\_letter\_of\_words}}
+\index{capitalize\_the\_first\_letter\_of\_words@{capitalize\_the\_first\_letter\_of\_words}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{capitalize\_the\_first\_letter\_of\_words()}{capitalize\_the\_first\_letter\_of\_words()}}
+{\footnotesize\ttfamily \label{string_8hxx_a36c0674476884f89af763c3a7d559aa1} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void capitalize\+\_\+the\+\_\+first\+\_\+letter\+\_\+of\+\_\+words (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}}]{in\+\_\+out\+\_\+string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_a8595dc0d992482d636a7650b7003aee9}\index{string.hxx@{string.hxx}!char\_to\_integer@{char\_to\_integer}}
+\index{char\_to\_integer@{char\_to\_integer}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{char\_to\_integer()}{char\_to\_integer()}}
+{\footnotesize\ttfamily \label{string_8hxx_a8595dc0d992482d636a7650b7003aee9} 
+template$<$typename CharT, typename IntT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} IntT char\+\_\+to\+\_\+integer (\begin{DoxyParamCaption}\item[{const CharT}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{string_8hxx_a43d72d1381c453f1efea292093adda8d}\index{string.hxx@{string.hxx}!compare@{compare}}
+\index{compare@{compare}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{compare()}{compare()}}
+{\footnotesize\ttfamily \label{string_8hxx_a43d72d1381c453f1efea292093adda8d} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} compare (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{lstr\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{rstr\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{structequal__to_a704d8949e35c2fa26eb2e361a9c49457}{equal\+\_\+to$<$ Char\+T $>$::\+operator()()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=270pt]{string_8hxx_a43d72d1381c453f1efea292093adda8d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_a6261fc650761fde36f2d3f53daf09613}\index{string.hxx@{string.hxx}!compare\_ranged@{compare\_ranged}}
+\index{compare\_ranged@{compare\_ranged}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{compare\_ranged()}{compare\_ranged()}}
+{\footnotesize\ttfamily \label{string_8hxx_a6261fc650761fde36f2d3f53daf09613} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} compare\+\_\+ranged (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{lstr\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{lstr\+\_\+range\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{rstr\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{rstr\+\_\+range\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+\Hypertarget{string_8hxx_adb811bd8b43e30caa8be98c65aee5a16}\index{string.hxx@{string.hxx}!concatenate@{concatenate}}
+\index{concatenate@{concatenate}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{concatenate()}{concatenate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{string_8hxx_adb811bd8b43e30caa8be98c65aee5a16} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void concatenate (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}const}]{out\+\_\+dest\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{string\+\_\+buffer\+\_\+size\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{source\+\_\+total\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+\Hypertarget{string_8hxx_a3daad76adbb167b36cfc588d3900921c}\index{string.hxx@{string.hxx}!concatenate@{concatenate}}
+\index{concatenate@{concatenate}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{concatenate()}{concatenate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{string_8hxx_a3daad76adbb167b36cfc588d3900921c} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}} concatenate (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}const}]{out\+\_\+string\+\_\+buffer\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}}]{string\+\_\+buffer\+\_\+size\+\_\+p}{, }\item[{::\+std::\+initializer\+\_\+list$<$ const CharT \texorpdfstring{$\ast$}{*}const $>$ \&\&}]{strings\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, and \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}.
+
+\Hypertarget{string_8hxx_a975f614a659378c5128f615fe484f832}\index{string.hxx@{string.hxx}!concatenate@{concatenate}}
+\index{concatenate@{concatenate}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{concatenate()}{concatenate()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{string_8hxx_a975f614a659378c5128f615fe484f832} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void concatenate (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}const}]{out\+\_\+string\+\_\+buffer\+\_\+p}{, }\item[{\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}}]{string\+\_\+buffer\+\_\+size\+\_\+p}{, }\item[{::\+std::\+initializer\+\_\+list$<$ const CharT $>$ \&\&}]{chars\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_af0b63c4afa4ee24147b0fa7c08cd19cc}\index{string.hxx@{string.hxx}!copy@{copy}}
+\index{copy@{copy}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}}
+{\footnotesize\ttfamily \label{string_8hxx_af0b63c4afa4ee24147b0fa7c08cd19cc} 
+template$<$typename CharT, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{FE::\+\+Address}} Dest\+Address\+Alignment = FE::\+\+Address::\+\+\_\+\+Not\+Aligned, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{FE::\+\+Address}} Source\+Address\+Alignment = FE::\+\+Address::\+\+\_\+\+Not\+Aligned$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void copy (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}const}]{out\+\_\+dest\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}}}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967da832f2ca35af9c4cbc7c0eb6fd78a3f7e}{\+\_\+\+Aligned}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967da3e47ce27b511085224124f9dfc356fcb}{\+\_\+\+Not\+Aligned}}, \doxymbox{\hyperlink{memory_8hxx_afa8c5937c82f2f1411c990ae0077e225}{FE\+\_\+\+ALIGNED\+\_\+\+MEMCPY}}, \doxymbox{\hyperlink{memory_8hxx_a1ba73b86ae9020ff5975902a697230bf}{FE\+\_\+\+DEST\+\_\+\+ALIGNED\+\_\+\+MEMCPY}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{memory_8hxx_a3564346a7afd99e8a3c5753bf9ebe8c1}{FE\+\_\+\+SOURCE\+\_\+\+ALIGNED\+\_\+\+MEMCPY}}, \doxymbox{\hyperlink{memory_8hxx_a07eb55f2817a8c5247700c92ff540bbd}{FE\+\_\+\+UNALIGNED\+\_\+\+MEMCPY}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_ab1eab0a5997c4772f28d4221c660365a}\index{string.hxx@{string.hxx}!count\_chars@{count\_chars}}
+\index{count\_chars@{count\_chars}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{count\_chars()}{count\_chars()}}
+{\footnotesize\ttfamily \label{string_8hxx_ab1eab0a5997c4772f28d4221c660365a} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{structcount}{count}}$<$ CharT $>$ count\+\_\+chars (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}}]{string\+\_\+p}{, }\item[{const CharT}]{target\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{structcount_afb41a2bdd32d5fbc00f9c07c4584ef89}{count$<$ S $>$::\+\+\_\+match\+\_\+count}}, \doxymbox{\hyperlink{structcount_a612efe2a719a9f45b35465d0b4b2c1a6}{count$<$ S $>$::\+\+\_\+target}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_a2d1707bf967f730a7cbc7d49cbb963f4}\index{string.hxx@{string.hxx}!count\_chars\_within\_range@{count\_chars\_within\_range}}
+\index{count\_chars\_within\_range@{count\_chars\_within\_range}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{count\_chars\_within\_range()}{count\_chars\_within\_range()}}
+{\footnotesize\ttfamily \label{string_8hxx_a2d1707bf967f730a7cbc7d49cbb963f4} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{structcount}{count}}$<$ CharT $>$ count\+\_\+chars\+\_\+within\+\_\+range (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}}]{string\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{string\+\_\+range\+\_\+p}{, }\item[{const CharT}]{target\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{structcount_afb41a2bdd32d5fbc00f9c07c4584ef89}{count$<$ S $>$::\+\+\_\+match\+\_\+count}}, \doxymbox{\hyperlink{structcount_a612efe2a719a9f45b35465d0b4b2c1a6}{count$<$ S $>$::\+\+\_\+target}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=258pt]{string_8hxx_a2d1707bf967f730a7cbc7d49cbb963f4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_a55f254f42572717ff7a0715692918cc9}\index{string.hxx@{string.hxx}!find\_the\_first@{find\_the\_first}}
+\index{find\_the\_first@{find\_the\_first}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_first()}{find\_the\_first()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_a55f254f42572717ff7a0715692918cc9} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+first (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{target\+\_\+substring\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{string_8hxx_a55f254f42572717ff7a0715692918cc9_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_aaf9b82b64fa4ed552c9dcc6e6877b547}\index{string.hxx@{string.hxx}!find\_the\_first@{find\_the\_first}}
+\index{find\_the\_first@{find\_the\_first}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_first()}{find\_the\_first()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_aaf9b82b64fa4ed552c9dcc6e6877b547} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+first (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const CharT}]{target\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+\Hypertarget{string_8hxx_aae7bf5b8b453e6e303c6bb4488824ebe}\index{string.hxx@{string.hxx}!find\_the\_first\_within\_range@{find\_the\_first\_within\_range}}
+\index{find\_the\_first\_within\_range@{find\_the\_first\_within\_range}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_first\_within\_range()}{find\_the\_first\_within\_range()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_aae7bf5b8b453e6e303c6bb4488824ebe} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+first\+\_\+within\+\_\+range (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{string\+\_\+range\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{target\+\_\+substring\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{string_8hxx_aae7bf5b8b453e6e303c6bb4488824ebe_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_aeb6dac57d79c6193a618f021c39f5814}\index{string.hxx@{string.hxx}!find\_the\_first\_within\_range@{find\_the\_first\_within\_range}}
+\index{find\_the\_first\_within\_range@{find\_the\_first\_within\_range}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_first\_within\_range()}{find\_the\_first\_within\_range()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_aeb6dac57d79c6193a618f021c39f5814} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+first\+\_\+within\+\_\+range (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{string\+\_\+range\+\_\+p}{, }\item[{const CharT}]{target\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{string_8hxx_aeb6dac57d79c6193a618f021c39f5814_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_ac5ff193d2048a916f3784c70a1929d35}\index{string.hxx@{string.hxx}!find\_the\_last@{find\_the\_last}}
+\index{find\_the\_last@{find\_the\_last}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_last()}{find\_the\_last()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_ac5ff193d2048a916f3784c70a1929d35} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+last (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{target\+\_\+substring\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{string_8hxx_ac5ff193d2048a916f3784c70a1929d35_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_ab616fda41b1526d143652665d24407de}\index{string.hxx@{string.hxx}!find\_the\_last@{find\_the\_last}}
+\index{find\_the\_last@{find\_the\_last}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_last()}{find\_the\_last()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_ab616fda41b1526d143652665d24407de} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+last (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const CharT}]{target\+\_\+char\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=230pt]{string_8hxx_ab616fda41b1526d143652665d24407de_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_ab2c5c1e8155e53ff156f167af274677f}\index{string.hxx@{string.hxx}!find\_the\_last\_within\_range@{find\_the\_last\_within\_range}}
+\index{find\_the\_last\_within\_range@{find\_the\_last\_within\_range}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_last\_within\_range()}{find\_the\_last\_within\_range()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_ab2c5c1e8155e53ff156f167af274677f} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+last\+\_\+within\+\_\+range (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{string\+\_\+range\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{target\+\_\+substring\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{string_8hxx_ab2c5c1e8155e53ff156f167af274677f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_ae7c41fc8bad8b4dda380173ff7b901d0}\index{string.hxx@{string.hxx}!find\_the\_last\_within\_range@{find\_the\_last\_within\_range}}
+\index{find\_the\_last\_within\_range@{find\_the\_last\_within\_range}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{find\_the\_last\_within\_range()}{find\_the\_last\_within\_range()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_ae7c41fc8bad8b4dda380173ff7b901d0} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} std::\+optional$<$ \doxymbox{\hyperlink{structrange}{range}} $>$ find\+\_\+the\+\_\+last\+\_\+within\+\_\+range (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{string\+\_\+range\+\_\+p}{, }\item[{const CharT}]{target\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa5d8609460cfe799322dd3b9e5d2367ca}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Access\+Violation}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{string_8hxx_ae7c41fc8bad8b4dda380173ff7b901d0_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_a22c648d532f028aded968f525ed76c23}\index{string.hxx@{string.hxx}!hash\_bytes@{hash\_bytes}}
+\index{hash\_bytes@{hash\_bytes}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{hash\_bytes()}{hash\_bytes()}}
+{\footnotesize\ttfamily \label{string_8hxx_a22c648d532f028aded968f525ed76c23} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} hash\+\_\+bytes (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}}]{string\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}}}]{count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{string_8hxx_ad112ed03a8f3b001740cc045bee35bdd}\index{string.hxx@{string.hxx}!insensitive\_comparison@{insensitive\_comparison}}
+\index{insensitive\_comparison@{insensitive\_comparison}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{insensitive\_comparison()}{insensitive\_comparison()}}
+{\footnotesize\ttfamily \label{string_8hxx_ad112ed03a8f3b001740cc045bee35bdd} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} insensitive\+\_\+comparison (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}}]{lstr\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}}]{rstr\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_a1736832d3b86479b8ff51dcf19448a9b}\index{string.hxx@{string.hxx}!insensitive\_ranged\_comparison@{insensitive\_ranged\_comparison}}
+\index{insensitive\_ranged\_comparison@{insensitive\_ranged\_comparison}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{insensitive\_ranged\_comparison()}{insensitive\_ranged\_comparison()}}
+{\footnotesize\ttfamily \label{string_8hxx_a1736832d3b86479b8ff51dcf19448a9b} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} insensitive\+\_\+ranged\+\_\+comparison (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{lstr\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{lstr\+\_\+range\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{rstr\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structrange}{range}}}]{rstr\+\_\+range\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+\Hypertarget{string_8hxx_a654d9d5cd02582018cbc8966ee5aa347}\index{string.hxx@{string.hxx}!invert@{invert}}
+\index{invert@{invert}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{invert()}{invert()}}
+{\footnotesize\ttfamily \label{string_8hxx_a654d9d5cd02582018cbc8966ee5aa347} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void invert (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}const}]{in\+\_\+out\+\_\+string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{string_8hxx_acf997407b8ed5733ee0226f18e90132a}{length()}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{string_8hxx_a654d9d5cd02582018cbc8966ee5aa347_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_acf997407b8ed5733ee0226f18e90132a}\index{string.hxx@{string.hxx}!length@{length}}
+\index{length@{length}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{length()}{length()}}
+{\footnotesize\ttfamily \label{string_8hxx_acf997407b8ed5733ee0226f18e90132a} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} length (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_a2d1707bf967f730a7cbc7d49cbb963f4}{count\+\_\+chars\+\_\+within\+\_\+range()}}, \doxymbox{\hyperlink{string_8hxx_a55f254f42572717ff7a0715692918cc9}{find\+\_\+the\+\_\+first()}}, \doxymbox{\hyperlink{string_8hxx_aae7bf5b8b453e6e303c6bb4488824ebe}{find\+\_\+the\+\_\+first\+\_\+within\+\_\+range()}}, \doxymbox{\hyperlink{string_8hxx_aeb6dac57d79c6193a618f021c39f5814}{find\+\_\+the\+\_\+first\+\_\+within\+\_\+range()}}, \doxymbox{\hyperlink{string_8hxx_ac5ff193d2048a916f3784c70a1929d35}{find\+\_\+the\+\_\+last()}}, \doxymbox{\hyperlink{string_8hxx_ab616fda41b1526d143652665d24407de}{find\+\_\+the\+\_\+last()}}, \doxymbox{\hyperlink{string_8hxx_ab2c5c1e8155e53ff156f167af274677f}{find\+\_\+the\+\_\+last\+\_\+within\+\_\+range()}}, \doxymbox{\hyperlink{string_8hxx_ae7c41fc8bad8b4dda380173ff7b901d0}{find\+\_\+the\+\_\+last\+\_\+within\+\_\+range()}}, and \doxymbox{\hyperlink{string_8hxx_a654d9d5cd02582018cbc8966ee5aa347}{invert()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{string_8hxx_acf997407b8ed5733ee0226f18e90132a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{string_8hxx_ad3cba0aa0d2e6a6437c39c4d534ce2c4}\index{string.hxx@{string.hxx}!skip\_BOM@{skip\_BOM}}
+\index{skip\_BOM@{skip\_BOM}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{skip\_BOM()}{skip\_BOM()}}
+{\footnotesize\ttfamily \label{string_8hxx_ad3cba0aa0d2e6a6437c39c4d534ce2c4} 
+template$<$typename UTF$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} UTF \texorpdfstring{$\ast$}{*} skip\+\_\+\+BOM (\begin{DoxyParamCaption}\item[{UTF \texorpdfstring{$\ast$}{*}}]{string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{string_8hxx_a2fbe611fe5ee8a1ba6c8a4b92371fe01}\index{string.hxx@{string.hxx}!space\_insensitive\_comparison@{space\_insensitive\_comparison}}
+\index{space\_insensitive\_comparison@{space\_insensitive\_comparison}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{space\_insensitive\_comparison()}{space\_insensitive\_comparison()}}
+{\footnotesize\ttfamily \label{string_8hxx_a2fbe611fe5ee8a1ba6c8a4b92371fe01} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{FE::\+boolean}} space\+\_\+insensitive\+\_\+comparison (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{lhs\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}}}]{lhs\+\_\+len\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{rhs\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{FE::\+size}}}]{rhs\+\_\+len\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a666716edb7d0ad3222337bc50a1d09c8}{\+\_\+\+FE\+\_\+\+FALLTHROUGH\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+\Hypertarget{string_8hxx_a982915dde135da824e93d0bc98ce0c4f}\index{string.hxx@{string.hxx}!space\_insensitive\_contains@{space\_insensitive\_contains}}
+\index{space\_insensitive\_contains@{space\_insensitive\_contains}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{space\_insensitive\_contains()}{space\_insensitive\_contains()}}
+{\footnotesize\ttfamily \label{string_8hxx_a982915dde135da824e93d0bc98ce0c4f} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{FE::\+boolean}} space\+\_\+insensitive\+\_\+contains (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{str\+\_\+p}{, }\item[{const std::\+size\+\_\+t}]{str\+\_\+len\+\_\+p}{, }\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{target\+\_\+substr\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a4c99351d8d3c5b65d07d7eae7bf7a01f}{\+\_\+\+FE\+\_\+\+UNLIKELY\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+\Hypertarget{string_8hxx_a524299c4c249d769ac0be82769b8ed9e}\index{string.hxx@{string.hxx}!space\_insensitive\_length@{space\_insensitive\_length}}
+\index{space\_insensitive\_length@{space\_insensitive\_length}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{space\_insensitive\_length()}{space\_insensitive\_length()}}
+{\footnotesize\ttfamily \label{string_8hxx_a524299c4c249d769ac0be82769b8ed9e} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{FE::\+uint64}} space\+\_\+insensitive\+\_\+length (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}const}]{string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+\Hypertarget{string_8hxx_a99c4385543b71504d5964784d8749d2c}\index{string.hxx@{string.hxx}!string\_to\_integer@{string\_to\_integer}}
+\index{string\_to\_integer@{string\_to\_integer}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{string\_to\_integer()}{string\_to\_integer()}}
+{\footnotesize\ttfamily \label{string_8hxx_a99c4385543b71504d5964784d8749d2c} 
+template$<$typename CharT, typename IntT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} IntT string\+\_\+to\+\_\+integer (\begin{DoxyParamCaption}\item[{const CharT \texorpdfstring{$\ast$}{*}}]{string\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_ac7cba17599b246c87c0b0160b23189cc}\index{string.hxx@{string.hxx}!to\_lowercase@{to\_lowercase}}
+\index{to\_lowercase@{to\_lowercase}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{to\_lowercase()}{to\_lowercase()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_ac7cba17599b246c87c0b0160b23189cc} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} void to\+\_\+lowercase (\begin{DoxyParamCaption}\item[{CharT \texorpdfstring{$\ast$}{*}}]{in\+\_\+out\+\_\+string\+\_\+buffer\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{string_8hxx_a42404468c73e908ab669cd137a8fba1d}{\+\_\+\+ASCII\+\_\+\+A\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_ac95810a005fc659ffebc39793e618ea4}{\+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_abaa0a49701e13b2fe44d691a748f8aad}{\+\_\+\+ASCII\+\_\+\+Z\+\_\+}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a5eba21663e5fe53c68f491eaf7d6e2d3}{null}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3}\index{string.hxx@{string.hxx}!to\_lowercase@{to\_lowercase}}
+\index{to\_lowercase@{to\_lowercase}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{to\_lowercase()}{to\_lowercase()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3} 
+template$<$typename CharT$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}} CharT to\+\_\+lowercase (\begin{DoxyParamCaption}\item[{const CharT}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{string_8hxx_a42404468c73e908ab669cd137a8fba1d}{\+\_\+\+ASCII\+\_\+\+A\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_ac95810a005fc659ffebc39793e618ea4}{\+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+}}, \doxymbox{\hyperlink{string_8hxx_abaa0a49701e13b2fe44d691a748f8aad}{\+\_\+\+ASCII\+\_\+\+Z\+\_\+}}, and \doxymbox{\hyperlink{definitions_8hxx_acdbd1e372db5b390129ce9a4ec8e3f90}{\+\_\+\+FE\+\_\+\+CONSTEXPR17\+\_\+}}.
+
+
+
+\label{string_8hxx_doc-var-members}
+\Hypertarget{string_8hxx_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{string_8hxx_a42404468c73e908ab669cd137a8fba1d}\index{string.hxx@{string.hxx}!\_ASCII\_A\_@{\_ASCII\_A\_}}
+\index{\_ASCII\_A\_@{\_ASCII\_A\_}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{\_ASCII\_A\_}{\_ASCII\_A\_}}
+{\footnotesize\ttfamily \label{string_8hxx_a42404468c73e908ab669cd137a8fba1d} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \+\_\+\+ASCII\+\_\+\+A\+\_\+ = 65\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_ac7cba17599b246c87c0b0160b23189cc}{to\+\_\+lowercase()}}, and \doxymbox{\hyperlink{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3}{to\+\_\+lowercase()}}.
+
+\Hypertarget{string_8hxx_a2f064b416eebab36f43ac890f4dc6a4e}\index{string.hxx@{string.hxx}!\_ASCII\_a\_@{\_ASCII\_a\_}}
+\index{\_ASCII\_a\_@{\_ASCII\_a\_}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{\_ASCII\_a\_}{\_ASCII\_a\_}}
+{\footnotesize\ttfamily \label{string_8hxx_a2f064b416eebab36f43ac890f4dc6a4e} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \+\_\+\+ASCII\+\_\+a\+\_\+ = 97\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f}{capitalize()}}, and \doxymbox{\hyperlink{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9}{capitalize()}}.
+
+\Hypertarget{string_8hxx_ac95810a005fc659ffebc39793e618ea4}\index{string.hxx@{string.hxx}!\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_@{\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_}}
+\index{\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_@{\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_}{\_ASCII\_GAP\_BETWEEN\_UPPERCASE\_and\_lowercase\_}}
+{\footnotesize\ttfamily \label{string_8hxx_ac95810a005fc659ffebc39793e618ea4} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \+\_\+\+ASCII\+\_\+\+GAP\+\_\+\+BETWEEN\+\_\+\+UPPERCASE\+\_\+and\+\_\+lowercase\+\_\+ = 32\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f}{capitalize()}}, \doxymbox{\hyperlink{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9}{capitalize()}}, \doxymbox{\hyperlink{string_8hxx_ac7cba17599b246c87c0b0160b23189cc}{to\+\_\+lowercase()}}, and \doxymbox{\hyperlink{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3}{to\+\_\+lowercase()}}.
+
+\Hypertarget{string_8hxx_abaa0a49701e13b2fe44d691a748f8aad}\index{string.hxx@{string.hxx}!\_ASCII\_Z\_@{\_ASCII\_Z\_}}
+\index{\_ASCII\_Z\_@{\_ASCII\_Z\_}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{\_ASCII\_Z\_}{\_ASCII\_Z\_}}
+{\footnotesize\ttfamily \label{string_8hxx_abaa0a49701e13b2fe44d691a748f8aad} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \+\_\+\+ASCII\+\_\+\+Z\+\_\+ = 90\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_ac7cba17599b246c87c0b0160b23189cc}{to\+\_\+lowercase()}}, and \doxymbox{\hyperlink{string_8hxx_aff68e1caaa8712a80b264fd9f74be9a3}{to\+\_\+lowercase()}}.
+
+\Hypertarget{string_8hxx_a9a48e3fb48fc00d51f4b943a9264fe4c}\index{string.hxx@{string.hxx}!\_ASCII\_z\_@{\_ASCII\_z\_}}
+\index{\_ASCII\_z\_@{\_ASCII\_z\_}!string.hxx@{string.hxx}}
+\doxysubsubsection{\texorpdfstring{\_ASCII\_z\_}{\_ASCII\_z\_}}
+{\footnotesize\ttfamily \label{string_8hxx_a9a48e3fb48fc00d51f4b943a9264fe4c} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}} \+\_\+\+ASCII\+\_\+z\+\_\+ = 122\hspace{0.3cm}{\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{string_8hxx_a4585cdd15f5e70cd7a55ee05a3d8ff9f}{capitalize()}}, and \doxymbox{\hyperlink{string_8hxx_aef622b79cde800a3ecf6a6ed93a304a9}{capitalize()}}.
+

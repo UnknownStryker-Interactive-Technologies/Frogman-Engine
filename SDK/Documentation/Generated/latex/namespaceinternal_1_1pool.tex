@@ -1,0 +1,159 @@
+\doxysection{internal::\+pool Namespace Reference}
+\hypertarget{namespaceinternal_1_1pool}{}\label{namespaceinternal_1_1pool}\index{internal::pool@{internal::pool}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk}{chunk}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___block_00_01_alignment_01_4}{chunk$<$ Pool\+Type::\+\+\_\+\+Block, Alignment $>$}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___block_large_page_00_01_alignment_01_4}{chunk$<$ Pool\+Type::\+\+\_\+\+Block\+Large\+Page, Alignment $>$}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1chunk_3_01_pool_type_1_1___scalable_00_01_alignment_01_4}{chunk$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1from__low__address}{from\+\_\+low\+\_\+address}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1greater__than}{greater\+\_\+than}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1less__than}{less\+\_\+than}}
+\item 
+class \doxymbox{\hyperlink{classinternal_1_1pool_1_1uninitialized__bytes}{uninitialized\+\_\+bytes}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9}{Page\+List\+Class}} :\+ FE::\+int8 \{ \newline
+\doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1}{\+\_\+\+Unavailable}} = -\/1
+, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d}{\+\_\+6\+\_\+25\+\_\+\+Percent\+Remaining}} = 0
+, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534}{\+\_\+12\+\_\+5\+\_\+\+Percent}} = 1
+, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5}{\+\_\+25\+\_\+\+Percent}} = 2
+, \newline
+\doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b}{\+\_\+50\+\_\+\+Percent}} = 3
+, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7}{\+\_\+75\+\_\+\+Percent}} = 4
+, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc}{\+\_\+100\+\_\+\+Percent}} = 5
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool \doxymbox{\hyperlink{namespaceinternal_1_1pool_a8f92cc2e05c63a85d38a43caf57c3d77}{operator==}} (const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&lhs\+\_\+p, const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&rhs\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool \doxymbox{\hyperlink{namespaceinternal_1_1pool_abd8a4d1d5e6436c910bf7f5171bd0073}{operator!=}} (const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&lhs\+\_\+p, const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&rhs\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{namespaceinternal_1_1pool_a37ed8cec648b02b373cbff6c59e6def3}{\+\_\+\+\_\+enable\+\_\+large\+\_\+pages}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9}{Page\+List\+Class}} \doxymbox{\hyperlink{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284}{\+\_\+\+\_\+select\+\_\+page\+\_\+list\+\_\+by\+\_\+capacity}} (FE::\+uint32 allocation\+\_\+request\+\_\+in\+\_\+bytes\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+
+
+\label{namespaceinternal_1_1pool_doc-enum-members}
+\Hypertarget{namespaceinternal_1_1pool_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9}\index{internal::pool@{internal::pool}!PageListClass@{PageListClass}}
+\index{PageListClass@{PageListClass}!internal::pool@{internal::pool}}
+\doxysubsubsection{\texorpdfstring{PageListClass}{PageListClass}}
+{\footnotesize\ttfamily \label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9} 
+enum struct \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9}{internal::\+pool::\+\+Page\+List\+Class}} :\+ FE::\+int8\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Unavailable@{\_Unavailable}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_Unavailable@{\_Unavailable}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1} 
+\+\_\+\+Unavailable&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_6\_25\_PercentRemaining@{\_6\_25\_PercentRemaining}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_6\_25\_PercentRemaining@{\_6\_25\_PercentRemaining}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d} 
+\+\_\+6\+\_\+25\+\_\+\+Percent\+Remaining&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_12\_5\_Percent@{\_12\_5\_Percent}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_12\_5\_Percent@{\_12\_5\_Percent}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534} 
+\+\_\+12\+\_\+5\+\_\+\+Percent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_25\_Percent@{\_25\_Percent}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_25\_Percent@{\_25\_Percent}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5} 
+\+\_\+25\+\_\+\+Percent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_50\_Percent@{\_50\_Percent}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_50\_Percent@{\_50\_Percent}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b} 
+\+\_\+50\+\_\+\+Percent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_75\_Percent@{\_75\_Percent}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_75\_Percent@{\_75\_Percent}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7} 
+\+\_\+75\+\_\+\+Percent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_100\_Percent@{\_100\_Percent}!internal::pool@{internal::pool}}
+\index{internal::pool@{internal::pool}!\_100\_Percent@{\_100\_Percent}}
+}\Hypertarget{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc}\label{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc} 
+\+\_\+100\+\_\+\+Percent&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{namespaceinternal_1_1pool_doc-func-members}
+\Hypertarget{namespaceinternal_1_1pool_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceinternal_1_1pool_a37ed8cec648b02b373cbff6c59e6def3}\index{internal::pool@{internal::pool}!\_\_enable\_large\_pages@{\_\_enable\_large\_pages}}
+\index{\_\_enable\_large\_pages@{\_\_enable\_large\_pages}!internal::pool@{internal::pool}}
+\doxysubsubsection{\texorpdfstring{\_\_enable\_large\_pages()}{\_\_enable\_large\_pages()}}
+{\footnotesize\ttfamily \label{namespaceinternal_1_1pool_a37ed8cec648b02b373cbff6c59e6def3} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void internal::\+pool::\+\+\_\+\+\_\+enable\+\_\+large\+\_\+pages (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fa0690a2f4fd1dd647722095262fe1ba7b}{FE::\+\+\_\+\+Fatal\+Win\+API\+\_\+\+Error\+\_\+4\+XX\+\_\+\+Adjust\+Token\+Privileges\+Failure}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fae55ada0bbac6d7ed5cb3859ddcc38f86}{FE::\+\+\_\+\+Fatal\+Win\+API\+\_\+\+Error\+\_\+4\+XX\+\_\+\+Open\+Process\+Token\+Failure}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}.
+
+\Hypertarget{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284}\index{internal::pool@{internal::pool}!\_\_select\_page\_list\_by\_capacity@{\_\_select\_page\_list\_by\_capacity}}
+\index{\_\_select\_page\_list\_by\_capacity@{\_\_select\_page\_list\_by\_capacity}!internal::pool@{internal::pool}}
+\doxysubsubsection{\texorpdfstring{\_\_select\_page\_list\_by\_capacity()}{\_\_select\_page\_list\_by\_capacity()}}
+{\footnotesize\ttfamily \label{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9}{Page\+List\+Class}} internal::\+pool::\+\+\_\+\+\_\+select\+\_\+page\+\_\+list\+\_\+by\+\_\+capacity (\begin{DoxyParamCaption}\item[{FE::\+uint32}]{allocation\+\_\+request\+\_\+in\+\_\+bytes\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9affa759e108346494d950371d5a1af7bc}{\+\_\+100\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9ab6f4298ee23d93f205f69a961bb66534}{\+\_\+12\+\_\+5\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9086e99f6da42ad9b7c2aa546ec320b5}{\+\_\+25\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9a9676e044ee39efca2bf8ed4063a0fc7b}{\+\_\+50\+\_\+\+Percent}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aae22e865bf2eb0f276674a99a669587d}{\+\_\+6\+\_\+25\+\_\+\+Percent\+Remaining}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9abf4faf8600e0212d7e56ce5349e854e7}{\+\_\+75\+\_\+\+Percent}}, \doxymbox{\hyperlink{definitions_8hxx_a666716edb7d0ad3222337bc50a1d09c8}{\+\_\+\+FE\+\_\+\+FALLTHROUGH\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a8f80a737b1ab1289e2045f878424c332}{\+\_\+\+FE\+\_\+\+NODEFAULT\+\_\+}}, \doxymbox{\hyperlink{namespaceinternal_1_1pool_a094f846b9af5ef71ee8f68f24e3b85c9aef99c660c71d7bc0bbe910e3d7fd60f1}{\+\_\+\+Unavailable}}, and \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a30f96ea593c757b2cdecb1a841f7106a}{pool$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$::\+allocate()}}, and \doxymbox{\hyperlink{classpool_3_01_pool_type_1_1___scalable_00_01_alignment_01_4_a293a15d41cd466e95563b42ac1af0896}{pool$<$ Pool\+Type::\+\+\_\+\+Scalable, Alignment $>$::\+deallocate()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceinternal_1_1pool_abd086e6a9ae9e4a2e89d3f97b8201284_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespaceinternal_1_1pool_abd8a4d1d5e6436c910bf7f5171bd0073}\index{internal::pool@{internal::pool}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!internal::pool@{internal::pool}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{namespaceinternal_1_1pool_abd8a4d1d5e6436c910bf7f5171bd0073} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool internal::\+pool::\+operator!= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&}]{lhs\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&}]{rhs\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+\Hypertarget{namespaceinternal_1_1pool_a8f92cc2e05c63a85d38a43caf57c3d77}\index{internal::pool@{internal::pool}!operator==@{operator==}}
+\index{operator==@{operator==}!internal::pool@{internal::pool}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{namespaceinternal_1_1pool_a8f92cc2e05c63a85d38a43caf57c3d77} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} bool internal::\+pool::\+operator== (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&}]{lhs\+\_\+p}{, }\item[{const \doxymbox{\hyperlink{structinternal_1_1pool_1_1block__info}{block\+\_\+info}} \&}]{rhs\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+

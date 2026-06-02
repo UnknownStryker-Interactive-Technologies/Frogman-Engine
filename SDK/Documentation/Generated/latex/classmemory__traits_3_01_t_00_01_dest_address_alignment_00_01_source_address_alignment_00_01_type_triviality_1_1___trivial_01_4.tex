@@ -1,0 +1,303 @@
+\doxysection{memory\+\_\+traits\texorpdfstring{$<$}{<} T, Dest\+Address\+Alignment, Source\+Address\+Alignment, Type\+Triviality::\+\+\_\+\+Trivial \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4}{}\label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+
+
+{\ttfamily \+\#include $<$memory\+\_\+traits.\+hxx$>$}
+
+
+
+Inheritance diagram for memory\+\_\+traits\texorpdfstring{$<$}{<} T, Dest\+Address\+Alignment, Source\+Address\+Alignment, Type\+Triviality::\+\+\_\+\+Trivial \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_typ772d46a0e87c7c6f40164dcf7b425ba5}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for memory\+\_\+traits\texorpdfstring{$<$}{<} T, Dest\+Address\+Alignment, Source\+Address\+Alignment, Type\+Triviality::\+\+\_\+\+Trivial \texorpdfstring{$>$}{>}:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_typf5a25a1420cc8b4b71080a4af294ece8}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_af63ebc83c114229364f6d204902eb258}{value\+\_\+type}} = T
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Iterator$>$ }\\static void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3}{construct}} (Iterator in\+\_\+out\+\_\+dest\+\_\+first\+\_\+p, Iterator in\+\_\+out\+\_\+dest\+\_\+last\+\_\+p, const T \&value\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct}} (Iterator out\+\_\+dest\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} dest\+\_\+capacity\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} source\+\_\+count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_ac33546481ff664ac6f64ca13831ef638}{copy\+\_\+construct}} (Iterator out\+\_\+dest\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} count\+\_\+to\+\_\+copy\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_abbc433d19a903a0d5959a00f0acb53e1}{move\+\_\+construct}} (Iterator out\+\_\+dest\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} dest\+\_\+capacity\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} source\+\_\+count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a73d5bb5782ca88664f809fc3d734d831}{move\+\_\+construct}} (Iterator out\+\_\+dest\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} count\+\_\+to\+\_\+copy\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acd1755d338a7b9e0aaf1b6e9752ed3b1}{copy\+\_\+assign}} (Iterator out\+\_\+dest\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} dest\+\_\+capacity\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} source\+\_\+count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a4495990be145c4216cd1b18ecac1f64d}{copy\+\_\+assign}} (Iterator out\+\_\+dest\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} count\+\_\+to\+\_\+copy\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a5f5a7e769c86c719182b36019a4d9270}{move\+\_\+assign}} (Iterator out\+\_\+dest\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} dest\+\_\+count\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} source\+\_\+count\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator, class Input\+Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a148357eb4bed53f4bb5379ae5f979099}{move\+\_\+assign}} (Iterator out\+\_\+dest\+\_\+p, Input\+Iterator source\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} count\+\_\+to\+\_\+copy\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Iterator$>$ }\\static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a1334bb2240aecd64d2ec93801e3de9f6}{assign}} (Iterator in\+\_\+out\+\_\+dest\+\_\+first\+\_\+p, Iterator in\+\_\+out\+\_\+dest\+\_\+last\+\_\+p, const T \&value\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}{Type\+Triviality}} \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a282b795f062a2c3df9a4a6354541f463}{is\+\_\+trivial}} = \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}}
+\end{DoxyCompactItemize}
+
+
+\label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-typedef-members}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_af63ebc83c114229364f6d204902eb258}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_af63ebc83c114229364f6d204902eb258} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+using \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+value\+\_\+type = T}
+
+
+
+\label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-func-members}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a1334bb2240aecd64d2ec93801e3de9f6}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!assign@{assign}}
+\index{assign@{assign}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a1334bb2240aecd64d2ec93801e3de9f6} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+assign (\begin{DoxyParamCaption}\item[{Iterator}]{in\+\_\+out\+\_\+dest\+\_\+first\+\_\+p}{, }\item[{Iterator}]{in\+\_\+out\+\_\+dest\+\_\+last\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fac9d147f7f4f6fb7cfc61edd6a16554bc}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Iterator}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3}{construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a1334bb2240aecd64d2ec93801e3de9f6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!construct@{construct}}
+\index{construct@{construct}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{construct()}{construct()}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator$>$ \\
+void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+construct (\begin{DoxyParamCaption}\item[{Iterator}]{in\+\_\+out\+\_\+dest\+\_\+first\+\_\+p}{, }\item[{Iterator}]{in\+\_\+out\+\_\+dest\+\_\+last\+\_\+p}{, }\item[{const T \&}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176fac9d147f7f4f6fb7cfc61edd6a16554bc}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Invalid\+Iterator}}, \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{types_8hxx_a40115bdf72c54d8f386cf342621bd017}{int8}}, \doxymbox{\hyperlink{iterator_8hxx_a87a6afeed077c4d60b5ec92c7a411eeb}{iterator\+\_\+cast()}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a1334bb2240aecd64d2ec93801e3de9f6}{assign()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acebc5a135463ed0cf8091c68470cefe3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a4495990be145c4216cd1b18ecac1f64d}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!copy\_assign@{copy\_assign}}
+\index{copy\_assign@{copy\_assign}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_assign()}{copy\_assign()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a4495990be145c4216cd1b18ecac1f64d} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+copy\+\_\+assign (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{count\+\_\+to\+\_\+copy\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a4495990be145c4216cd1b18ecac1f64d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acd1755d338a7b9e0aaf1b6e9752ed3b1}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!copy\_assign@{copy\_assign}}
+\index{copy\_assign@{copy\_assign}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_assign()}{copy\_assign()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acd1755d338a7b9e0aaf1b6e9752ed3b1} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+copy\+\_\+assign (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{dest\+\_\+capacity\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{source\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acd1755d338a7b9e0aaf1b6e9752ed3b1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_ac33546481ff664ac6f64ca13831ef638}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!copy\_construct@{copy\_construct}}
+\index{copy\_construct@{copy\_construct}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_construct()}{copy\_construct()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_ac33546481ff664ac6f64ca13831ef638} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+copy\+\_\+construct (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{count\+\_\+to\+\_\+copy\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{iterator_8hxx_a87a6afeed077c4d60b5ec92c7a411eeb}{iterator\+\_\+cast()}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_ac33546481ff664ac6f64ca13831ef638_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!copy\_construct@{copy\_construct}}
+\index{copy\_construct@{copy\_construct}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{copy\_construct()}{copy\_construct()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+copy\+\_\+construct (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{dest\+\_\+capacity\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{source\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{iterator_8hxx_a87a6afeed077c4d60b5ec92c7a411eeb}{iterator\+\_\+cast()}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a4495990be145c4216cd1b18ecac1f64d}{copy\+\_\+assign()}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_acd1755d338a7b9e0aaf1b6e9752ed3b1}{copy\+\_\+assign()}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a148357eb4bed53f4bb5379ae5f979099}{move\+\_\+assign()}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a5f5a7e769c86c719182b36019a4d9270}{move\+\_\+assign()}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a73d5bb5782ca88664f809fc3d734d831}{move\+\_\+construct()}}, and \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_abbc433d19a903a0d5959a00f0acb53e1}{move\+\_\+construct()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a148357eb4bed53f4bb5379ae5f979099}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!move\_assign@{move\_assign}}
+\index{move\_assign@{move\_assign}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{move\_assign()}{move\_assign()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a148357eb4bed53f4bb5379ae5f979099} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+move\+\_\+assign (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{count\+\_\+to\+\_\+copy\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a148357eb4bed53f4bb5379ae5f979099_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a5f5a7e769c86c719182b36019a4d9270}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!move\_assign@{move\_assign}}
+\index{move\_assign@{move\_assign}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{move\_assign()}{move\_assign()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a5f5a7e769c86c719182b36019a4d9270} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+move\+\_\+assign (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{dest\+\_\+count\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{source\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a5f5a7e769c86c719182b36019a4d9270_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a73d5bb5782ca88664f809fc3d734d831}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!move\_construct@{move\_construct}}
+\index{move\_construct@{move\_construct}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{move\_construct()}{move\_construct()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a73d5bb5782ca88664f809fc3d734d831} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+move\+\_\+construct (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{count\+\_\+to\+\_\+copy\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a73d5bb5782ca88664f809fc3d734d831_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_abbc433d19a903a0d5959a00f0acb53e1}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!move\_construct@{move\_construct}}
+\index{move\_construct@{move\_construct}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{move\_construct()}{move\_construct()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_abbc433d19a903a0d5959a00f0acb53e1} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+template$<$class Iterator, class Input\+Iterator$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+move\+\_\+construct (\begin{DoxyParamCaption}\item[{Iterator}]{out\+\_\+dest\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{dest\+\_\+capacity\+\_\+p}{, }\item[{Input\+Iterator}]{source\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{source\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a49bd715490bc4bc206485c30f1e955c1}{copy\+\_\+construct()}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_abbc433d19a903a0d5959a00f0acb53e1_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-variable-members}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a282b795f062a2c3df9a4a6354541f463}\index{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}!is\_trivial@{is\_trivial}}
+\index{is\_trivial@{is\_trivial}!memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$@{memory\_traits$<$ T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::\_Trivial $>$}}
+\doxysubsubsection{\texorpdfstring{is\_trivial}{is\_trivial}}
+{\footnotesize\ttfamily \label{classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4_a282b795f062a2c3df9a4a6354541f463} 
+template$<$typename T, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Dest\+Address\+Alignment, \doxymbox{\hyperlink{memory_8hxx_a7dbac2f3fbf4dd5368f448803abe967d}{Address}} Source\+Address\+Alignment$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3}{Type\+Triviality}} \doxymbox{\hyperlink{classmemory__traits}{memory\+\_\+traits}}$<$ T, Dest\+Address\+Alignment, Source\+Address\+Alignment, \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}} $>$::\+is\+\_\+trivial = \doxymbox{\hyperlink{type__traits_8hxx_a1295b734a19dfba54bdb18605ce07af3a2cfb484bb5db4b7bd35ea5bc0212b748}{Type\+Triviality::\+\+\_\+\+Trivial}}\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+private/\+\doxymbox{\hyperlink{memory__traits_8hxx}{memory\+\_\+traits.\+hxx}}\end{DoxyCompactItemize}

@@ -1,0 +1,69 @@
+\doxysection{clock.\+hxx}
+\hypertarget{clock_8hxx_source}{}\label{clock_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/clock.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/clock.hxx}}
+\doxymbox{\hyperlink{clock_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_CLOCK\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_CLOCK\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{types_8hxx}{FE/types.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ boost}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <boost/chrono.hpp>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ std}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ class\ \doxymbox{\hyperlink{classclock_a29d05968aca6a8e9471463d6b8ae8202}{clock}}\ final}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{char\_type}}\ =\ char;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ const\ char*\ FE::clock::get\_current\_local\_time()\ noexcept;}}
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{classclock_ab99623a827c296279d3715c96cdd99b2}{current\_local\_time\_buffer\_size}}\ =\ 64;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00041\ \ \ \ \ boost::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\_starting\_point}};}
+\DoxyCodeLine{00042\ \ \ \ \ boost::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\_ending\_point}};}
+\DoxyCodeLine{00043\ \ \ \ \ boost::chrono::duration<var::float64,\ boost::milli>\ \doxymbox{\hyperlink{classclock_a10aadd86485ca41c58756f6e33aa6075}{m\_delta}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{classclock_a29d05968aca6a8e9471463d6b8ae8202}{clock}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00047\ \ \ \ \ \string~\doxymbox{\hyperlink{classclock_a29d05968aca6a8e9471463d6b8ae8202}{clock}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classclock_acc50d58df35c099adaa418bc26002760}{start\_clock}}()\ noexcept\ \{\ \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\_starting\_point}}\ =\ boost::chrono::steady\_clock::now();\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classclock_a9ea6852cf38d194aff28b28315271d3d}{end\_clock}}()\ noexcept\ \{\ \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\_ending\_point}}\ =\ boost::chrono::steady\_clock::now();\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{types_8hxx_a1e7a0f65188fcad549252600671e3a78}{float64}}\ \doxymbox{\hyperlink{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}{get\_delta\_milliseconds}}()\ noexcept}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classclock_a10aadd86485ca41c58756f6e33aa6075}{m\_delta}}\ =\ \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\_ending\_point}}\ -\/\ \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\_starting\_point}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classclock_a10aadd86485ca41c58756f6e33aa6075}{m\_delta}}.count();}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{char\_type}}*\ \doxymbox{\hyperlink{classclock_a33d960143b28198afc9d54324e1a6535}{get\_current\_local\_time}}()\ noexcept;}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

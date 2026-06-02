@@ -1,0 +1,587 @@
+\doxysection{list\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>}::\+list\+\_\+iterator Class Reference}
+\hypertarget{classlist_1_1list__iterator}{}\label{classlist_1_1list__iterator}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+
+
+Collaboration diagram for list\texorpdfstring{$<$}{<} T, Allocator \texorpdfstring{$>$}{>}::\+list\+\_\+iterator:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{classlist_1_1list__iterator__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_a4a088e97a7f24a0607909a5c1474f2b0}{iterator\+\_\+category}} = std::\+bidirectional\+\_\+iterator\+\_\+tag
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_a6053e329548146c654380b411a0825e0}{value\+\_\+type}} = \doxymbox{\hyperlink{classlist_1_1node}{node}}
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} = \doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*}
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} = \doxymbox{\hyperlink{classlist_1_1node}{node}}\&
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_aa6215e60bae3847ab398201915787e31}{const\+\_\+pointer}} = const \doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*}
+\item 
+using \doxymbox{\hyperlink{classlist_1_1list__iterator_a043c00c9c4d083a32668f847fadfbdcb}{const\+\_\+reference}} = const \doxymbox{\hyperlink{classlist_1_1node}{node}}\&
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a7974ff5faf4da3eb8fa2be9bb21fcf7e}{list\+\_\+iterator}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0dc5beb21965d0363dff27d1b8ad3f4f}{list\+\_\+iterator}} (\doxymbox{\hyperlink{classlist_1_1list__iterator_aa6215e60bae3847ab398201915787e31}{const\+\_\+pointer}} const value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f}{list\+\_\+iterator}} (const list\+\_\+iterator \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e}{list\+\_\+iterator}} (list\+\_\+iterator \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a513b7e35301bab96bee9eb30aefe23ac}{\texorpdfstring{$\sim$}{\string~}list\+\_\+iterator}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0083afb83406e4fb9a071c95107b5a43}{is\+\_\+null}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a4eab32830fa2993514e4970afefd83b0}{operator\texorpdfstring{$\ast$}{*}}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist_1_1list__iterator_ab2e3a2dd1d96d1861f3b8a5fb27a3697}{operator-\/$>$}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a66a6525fa511d6e7296a60b0818c4765}{operator\texorpdfstring{$\ast$}{*}}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a233c63d3386f3d3783bc3686c563f58f}{operator-\/$>$}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_1_1list__iterator_a749efc9644d219a72a4f3eb69078b034}{operator++}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_1_1list__iterator_a3ab934de1cc994b8c43162528b8b6269}{operator-\/-\/}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a87a5eee62ef3bfa04c8fb20525e9b55a}{operator+}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_1_1list__iterator_ac7e7598bb3386c10250220bf3ff9716a}{operator+=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aae4d7c1db37bc6d90072ab5d584c965e}{operator-\/}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist_1_1list__iterator_aaa6f20cfb3c7189510d90931f5047add}{operator-\/=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} pointer\+\_\+offset\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} \doxymbox{\hyperlink{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51}{operator-\/}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&value\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist_1_1list__iterator_ae3666a273ba16aaa00bcf885cf4453c7}{operator\+[$\,$]\+}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} index\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a2e0a5606d950fffddbc98810037c5ff0}{operator\+[$\,$]\+}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} index\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \& \doxymbox{\hyperlink{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2}{operator=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \& \doxymbox{\hyperlink{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745}{operator=}} (\doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&\&rvalue\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978}{operator$<$}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a}{operator$<$=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171}{operator$>$}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789}{operator$>$=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a}{operator==}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f}{operator!=}} (const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&other\+\_\+p) const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classlist_1_1list__iterator_a39e8296e3b93358d0af90000b5d9113c}{list}}
+\item 
+class \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}
+\end{DoxyCompactItemize}
+
+
+\label{classlist_1_1list__iterator_doc-typedef-members}
+\Hypertarget{classlist_1_1list__iterator_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classlist_1_1list__iterator_aa6215e60bae3847ab398201915787e31}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!const\_pointer@{const\_pointer}}
+\index{const\_pointer@{const\_pointer}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{const\_pointer}{const\_pointer}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_aa6215e60bae3847ab398201915787e31} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+const\+\_\+pointer = const \doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classlist_1_1list__iterator_a043c00c9c4d083a32668f847fadfbdcb}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!const\_reference@{const\_reference}}
+\index{const\_reference@{const\_reference}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{const\_reference}{const\_reference}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a043c00c9c4d083a32668f847fadfbdcb} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+const\+\_\+reference = const \doxymbox{\hyperlink{classlist_1_1node}{node}}\&}
+
+\Hypertarget{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!difference\_type@{difference\_type}}
+\index{difference\_type@{difference\_type}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{difference\_type}{difference\_type}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+difference\+\_\+type = \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::\+ptrdiff}}}
+
+\Hypertarget{classlist_1_1list__iterator_a4a088e97a7f24a0607909a5c1474f2b0}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!iterator\_category@{iterator\_category}}
+\index{iterator\_category@{iterator\_category}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{iterator\_category}{iterator\_category}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a4a088e97a7f24a0607909a5c1474f2b0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+iterator\+\_\+category = std::\+bidirectional\+\_\+iterator\+\_\+tag}
+
+\Hypertarget{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!pointer@{pointer}}
+\index{pointer@{pointer}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{pointer}{pointer}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+pointer = \doxymbox{\hyperlink{classlist_1_1node}{node}}\texorpdfstring{$\ast$}{*}}
+
+\Hypertarget{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!reference@{reference}}
+\index{reference@{reference}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{reference}{reference}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+reference = \doxymbox{\hyperlink{classlist_1_1node}{node}}\&}
+
+\Hypertarget{classlist_1_1list__iterator_a6053e329548146c654380b411a0825e0}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a6053e329548146c654380b411a0825e0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+using \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+value\+\_\+type = \doxymbox{\hyperlink{classlist_1_1node}{node}}}
+
+
+
+\label{classlist_1_1list__iterator_doc-constructors}
+\Hypertarget{classlist_1_1list__iterator_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classlist_1_1list__iterator_a7974ff5faf4da3eb8fa2be9bb21fcf7e}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list\_iterator@{list\_iterator}}
+\index{list\_iterator@{list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list\_iterator()}{list\_iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a7974ff5faf4da3eb8fa2be9bb21fcf7e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+list\+\_\+iterator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+\Hypertarget{classlist_1_1list__iterator_a0dc5beb21965d0363dff27d1b8ad3f4f}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list\_iterator@{list\_iterator}}
+\index{list\_iterator@{list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list\_iterator()}{list\_iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a0dc5beb21965d0363dff27d1b8ad3f4f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+list\+\_\+iterator (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_1_1list__iterator_aa6215e60bae3847ab398201915787e31}{const\+\_\+pointer}} const}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+\Hypertarget{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list\_iterator@{list\_iterator}}
+\index{list\_iterator@{list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list\_iterator()}{list\_iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+list\+\_\+iterator (\begin{DoxyParamCaption}\item[{const list\+\_\+iterator \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list\_iterator@{list\_iterator}}
+\index{list\_iterator@{list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list\_iterator()}{list\_iterator()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+list\+\_\+iterator (\begin{DoxyParamCaption}\item[{list\+\_\+iterator \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a513b7e35301bab96bee9eb30aefe23ac}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!````~list\_iterator@{\texorpdfstring{$\sim$}{\string~}list\_iterator}}
+\index{````~list\_iterator@{\texorpdfstring{$\sim$}{\string~}list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}list\_iterator()}{\string~list\_iterator()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a513b7e35301bab96bee9eb30aefe23ac} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+\texorpdfstring{$\sim$}{\string~}list\+\_\+iterator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classlist_1_1list__iterator_doc-func-members}
+\Hypertarget{classlist_1_1list__iterator_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classlist_1_1list__iterator_a0083afb83406e4fb9a071c95107b5a43}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!is\_null@{is\_null}}
+\index{is\_null@{is\_null}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{is\_null()}{is\_null()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a0083afb83406e4fb9a071c95107b5a43} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+is\+\_\+null (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+\Hypertarget{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator!= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a66a6525fa511d6e7296a60b0818c4765}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a66a6525fa511d6e7296a60b0818c4765} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_a4eab32830fa2993514e4970afefd83b0}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a4eab32830fa2993514e4970afefd83b0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_a87a5eee62ef3bfa04c8fb20525e9b55a}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator+@{operator+}}
+\index{operator+@{operator+}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a87a5eee62ef3bfa04c8fb20525e9b55a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, \doxymbox{\hyperlink{classlist_1_1node_a415090522e47c57dde18b53d01197579}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+next}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_a749efc9644d219a72a4f3eb69078b034}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator++@{operator++}}
+\index{operator++@{operator++}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator++()}{operator++()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a749efc9644d219a72a4f3eb69078b034} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator++ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_ac7e7598bb3386c10250220bf3ff9716a}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator+=()}{operator+=()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_ac7e7598bb3386c10250220bf3ff9716a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator+= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_aae4d7c1db37bc6d90072ab5d584c965e}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_aae4d7c1db37bc6d90072ab5d584c965e} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, \doxymbox{\hyperlink{classlist_1_1node_ac6f09f2588b19b73dfb1df49cd52876e}{list$<$ T, Allocator $>$::\+node::\+m\+\_\+prev}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{value\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a3ab934de1cc994b8c43162528b8b6269}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/-\/@{operator-\/-\/}}
+\index{operator-\/-\/@{operator-\/-\/}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/-\/()}{operator--()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a3ab934de1cc994b8c43162528b8b6269} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/-\/ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_aaa6f20cfb3c7189510d90931f5047add}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/=()}{operator-=()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_aaa6f20cfb3c7189510d90931f5047add} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{pointer\+\_\+offset\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_a233c63d3386f3d3783bc3686c563f58f}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a233c63d3386f3d3783bc3686c563f58f} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_ab2e3a2dd1d96d1861f3b8a5fb27a3697}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_ab2e3a2dd1d96d1861f3b8a5fb27a3697} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator-\/$>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faf7dd6b4b7e2f75587b42d10606221843}{FE::\+\+\_\+\+Fatal\+Memory\+Error\+\_\+1\+XX\+\_\+\+Null\+Ptr}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}, and \doxymbox{\hyperlink{log_8hxx_ac1e00f464dbeba79b1b9a5bdcf143cd7}{TO\+\_\+\+STRING}}.
+
+\Hypertarget{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator$<$()}{operator<()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator$<$ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator$<$=@{operator$<$=}}
+\index{operator$<$=@{operator$<$=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator$<$=()}{operator<=()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator$<$= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator=@{operator=}}
+\index{operator=@{operator=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \& \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&\&}]{rvalue\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator==@{operator==}}
+\index{operator==@{operator==}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator== (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator$>$@{operator$>$}}
+\index{operator$>$@{operator$>$}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator$>$()}{operator>()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator$>$ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator$>$=@{operator$>$=}}
+\index{operator$>$=@{operator$>$=}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator$>$=()}{operator>=()}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a1a5c6788080bc041e520d63b94b2f97f}{boolean}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator$>$= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=282pt]{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classlist_1_1list__iterator_ae3666a273ba16aaa00bcf885cf4453c7}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator\+[]\+@{operator[]}}
+\index{operator\+[]\+@{operator[]}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_ae3666a273ba16aaa00bcf885cf4453c7} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator\+[$\,$]\+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{index\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+\Hypertarget{classlist_1_1list__iterator_a2e0a5606d950fffddbc98810037c5ff0}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!operator\+[]\+@{operator[]}}
+\index{operator\+[]\+@{operator[]}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a2e0a5606d950fffddbc98810037c5ff0} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classlist_1_1list__iterator_a04879a0848f6c3a1f18081d8e1fabde2}{reference}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+operator\+[$\,$]\+ (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classlist_1_1list__iterator_a883ecc48689ef665e4f0c1cd04e37bfa}{difference\+\_\+type}}}]{index\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ab976bb8b6e8f903af0fda125d5b6b421}{\+\_\+\+FE\+\_\+\+DEPRECATED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}{m\+\_\+iterator}}.
+
+
+
+\label{classlist_1_1list__iterator_doc-related-members}
+\Hypertarget{classlist_1_1list__iterator_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classlist_1_1list__iterator_a39e8296e3b93358d0af90000b5d9113c}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list@{list}}
+\index{list@{list}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list}{list}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a39e8296e3b93358d0af90000b5d9113c} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+friend class \doxymbox{\hyperlink{classlist}{list}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_a39e8296e3b93358d0af90000b5d9113c}{list}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_1_1list__iterator_a39e8296e3b93358d0af90000b5d9113c}{list}}.
+
+\Hypertarget{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!list\_iterator@{list\_iterator}}
+\index{list\_iterator@{list\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{list\_iterator}{list\_iterator}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+friend class list\+\_\+iterator\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0819e464dcaaab1201575bfc7c55e226}{list\+\_\+iterator}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f}{operator!=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51}{operator-\/()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978}{operator$<$()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a}{operator$<$=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2}{operator=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745}{operator=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a}{operator==()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171}{operator$>$()}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789}{operator$>$=()}}.
+
+
+
+\label{classlist_1_1list__iterator_doc-variable-members}
+\Hypertarget{classlist_1_1list__iterator_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36}\index{list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}!m\_iterator@{m\_iterator}}
+\index{m\_iterator@{m\_iterator}!list$<$ T, Allocator $>$::list\_iterator@{list$<$ T, Allocator $>$::list\_iterator}}
+\doxysubsubsection{\texorpdfstring{m\_iterator}{m\_iterator}}
+{\footnotesize\ttfamily \label{classlist_1_1list__iterator_acc9a0ddf094d7ce99e4b364e127b9c36} 
+template$<$typename T, class Allocator = FE::\+polymorphic\+\_\+allocator$<$\+T$>$$>$ \\
+\doxymbox{\hyperlink{classlist_1_1list__iterator_aac4e00a466b017cc1ef55ccbea887fc0}{pointer}} \doxymbox{\hyperlink{classlist}{list}}$<$ T, Allocator $>$::\+list\+\_\+iterator::\+m\+\_\+iterator\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlist_1_1list__iterator_a0083afb83406e4fb9a071c95107b5a43}{is\+\_\+null()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a7974ff5faf4da3eb8fa2be9bb21fcf7e}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a6412a5e82349436b242dcb8f5db00c5f}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a0dc5beb21965d0363dff27d1b8ad3f4f}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a98a391b4216c2adffe812b6092fcb40e}{list\+\_\+iterator()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a886eea8c27df3d8a0c50784e30d9cb8f}{operator!=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a66a6525fa511d6e7296a60b0818c4765}{operator\texorpdfstring{$\ast$}{*}()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a4eab32830fa2993514e4970afefd83b0}{operator\texorpdfstring{$\ast$}{*}()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a87a5eee62ef3bfa04c8fb20525e9b55a}{operator+()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a749efc9644d219a72a4f3eb69078b034}{operator++()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_ac7e7598bb3386c10250220bf3ff9716a}{operator+=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_aae4d7c1db37bc6d90072ab5d584c965e}{operator-\/()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_af05df06132814306bb49432f09952f51}{operator-\/()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a3ab934de1cc994b8c43162528b8b6269}{operator-\/-\/()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_aaa6f20cfb3c7189510d90931f5047add}{operator-\/=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a233c63d3386f3d3783bc3686c563f58f}{operator-\/$>$()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_ab2e3a2dd1d96d1861f3b8a5fb27a3697}{operator-\/$>$()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_afc991a10956b4b850af8fdb30bb60978}{operator$<$()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a1cbf54d2cdc101d0c55d00ac1507209a}{operator$<$=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_aa5f683284f22ba748c3ef7d1256bc8b2}{operator=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_adb734cafff57a72708da6e84fc926745}{operator=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a5cf7ed713473c2e24a7be8d7011fe55a}{operator==()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_ad7a55a06bf43eb73a27541f7c6b41171}{operator$>$()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_a57621c0f9d10b123d2d78b231837f789}{operator$>$=()}}, \doxymbox{\hyperlink{classlist_1_1list__iterator_ae3666a273ba16aaa00bcf885cf4453c7}{operator\+[$\,$]\+()}}, and \doxymbox{\hyperlink{classlist_1_1list__iterator_a2e0a5606d950fffddbc98810037c5ff0}{operator\+[$\,$]\+()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{list_8hxx}{list.\+hxx}}\end{DoxyCompactItemize}

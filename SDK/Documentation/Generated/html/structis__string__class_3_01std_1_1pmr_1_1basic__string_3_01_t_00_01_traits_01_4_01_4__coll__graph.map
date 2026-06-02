@@ -1,0 +1,10 @@
+<map id="is_string_class&lt; std::pmr::basic_string&lt; T, Traits &gt; &gt;" name="is_string_class&lt; std::pmr::basic_string&lt; T, Traits &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="68,201,207,260"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,45,64,76,71,107,93,157,120,201,114,201,88,160,66,109,59,77,59,50"/>
+<area shape="rect" id="Node000004" href="$structis__string__class.html" title=" " alt="" coords="80,81,219,108"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="86,39,137,80,132,82,86,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="254,81,355,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="306,121,302,152,288,179,270,195,251,207,208,222,207,217,248,202,267,190,284,176,297,150,303,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,121,142,132,139,202,134,200,137,132,140,126"/>
+</map>

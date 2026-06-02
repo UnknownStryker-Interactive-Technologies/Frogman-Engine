@@ -1,0 +1,317 @@
+\doxysection{type\+\_\+info Class Reference}
+\hypertarget{classtype__info}{}\label{classtype__info}\index{type\_info@{type\_info}}
+
+
+{\ttfamily \+\#include $<$type\+\_\+info.\+hxx$>$}
+
+
+
+Collaboration diagram for type\+\_\+info:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtype__info__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classtype__info_ad60d411a237845ea0df863e5f9b75abf}{type\+\_\+info}} () noexcept
+\item 
+\doxymbox{\hyperlink{classtype__info_a1539a55c6c81409edfc6fc434e881e36}{\texorpdfstring{$\sim$}{\string~}type\+\_\+info}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classtype__info_aafaae78bcc02366e9cf973f09c1f7e08}{name}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} std::\+size\+\_\+t \doxymbox{\hyperlink{classtype__info_a5251defc9d0dee0d860853cf39ff235f}{hash\+\_\+code}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classtype__info_a1d57e22fc3bfafc78b8bebd914e18f99}{base\+\_\+name}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} std::\+size\+\_\+t \doxymbox{\hyperlink{classtype__info_a8e5f3d64786dbe17c641db2a49989b2b}{base\+\_\+hash\+\_\+code}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} \doxymbox{\hyperlink{classtype__info_a89bee77faace86ca8b71f8b043b382b5}{component\+\_\+typeid}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static FE::\+\+ASCII \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classtype__info_addcca660b7c4cc3fc603366fbb0f58c6}{get\+\_\+base\+\_\+name\+\_\+of}} (const std::\+string\+\_\+view \&this\+\_\+type\+\_\+name\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8}{table\+\_\+type}}
+\item 
+using \doxymbox{\hyperlink{classtype__info_a4d5c2590b49605dc8afe836ed5944d31}{lock\+\_\+type}} = std::\+shared\+\_\+mutex
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}{\+\_\+\+\_\+demangle\+\_\+type\+\_\+name}} (std::\+pmr::\+string \&out\+\_\+ret\+\_\+p, const char \texorpdfstring{$\ast$}{*}mangled\+\_\+name\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classinternal_1_1type__info_1_1metadata}{internal::\+type\+\_\+info::\+metadata}} \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static std::\+shared\+\_\+ptr$<$ std::\+pmr::\+monotonic\+\_\+buffer\+\_\+resource $>$ \doxymbox{\hyperlink{classtype__info_a71182a3545b4aa333173f83fd16c84fe}{tl\+\_\+s\+\_\+resource}}
+\item 
+static \doxymbox{\hyperlink{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8}{table\+\_\+type}} \doxymbox{\hyperlink{classtype__info_a4a90faf0e44d04e02f02238b37b824aa}{tl\+\_\+s\+\_\+type\+\_\+information}}
+\item 
+static std::\+atomic\+\_\+uint64\+\_\+t \doxymbox{\hyperlink{classtype__info_a0ebb9d093dbf0d517cd6f8b7624af6f1}{s\+\_\+type\+\_\+id\+\_\+counter}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} friend \doxymbox{\hyperlink{classtype__info}{type\+\_\+info}} \& \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+id}} ()
+\end{DoxyCompactItemize}
+
+
+\label{classtype__info_doc-typedef-members}
+\Hypertarget{classtype__info_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classtype__info_a4d5c2590b49605dc8afe836ed5944d31}\index{type\_info@{type\_info}!lock\_type@{lock\_type}}
+\index{lock\_type@{lock\_type}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{lock\_type}{lock\_type}}
+{\footnotesize\ttfamily \label{classtype__info_a4d5c2590b49605dc8afe836ed5944d31} 
+using \doxymbox{\hyperlink{classtype__info_a4d5c2590b49605dc8afe836ed5944d31}{type\+\_\+info::\+lock\+\_\+type}} = std::\+shared\+\_\+mutex\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8}\index{type\_info@{type\_info}!table\_type@{table\_type}}
+\index{table\_type@{table\_type}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{table\_type}{table\_type}}
+{\footnotesize\ttfamily \label{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8} 
+using \doxymbox{\hyperlink{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8}{type\+\_\+info::\+table\+\_\+type}}\hspace{0.3cm}{\ttfamily [private]}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{std::pmr::unordered\_map<\textcolor{keyword}{typename}\ \doxymbox{\hyperlink{classinternal_1_1type__info_1_1metadata_a71ccfce733405c31e51a9d588baf792c}{internal::type\_info::metadata::string\_type}},\ \doxymbox{\hyperlink{classinternal_1_1type__info_1_1metadata}{internal::type\_info::metadata}}}
+\DoxyCodeLine{\ \ \ >}
+
+\end{DoxyCode}
+
+
+\label{classtype__info_doc-constructors}
+\Hypertarget{classtype__info_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classtype__info_ad60d411a237845ea0df863e5f9b75abf}\index{type\_info@{type\_info}!type\_info@{type\_info}}
+\index{type\_info@{type\_info}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{type\_info()}{type\_info()}}
+{\footnotesize\ttfamily \label{classtype__info_ad60d411a237845ea0df863e5f9b75abf} 
+type\+\_\+info::\+type\+\_\+info (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+id}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=311pt]{classtype__info_ad60d411a237845ea0df863e5f9b75abf_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classtype__info_a1539a55c6c81409edfc6fc434e881e36}\index{type\_info@{type\_info}!````~type\_info@{\texorpdfstring{$\sim$}{\string~}type\_info}}
+\index{````~type\_info@{\texorpdfstring{$\sim$}{\string~}type\_info}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}type\_info()}{\string~type\_info()}}
+{\footnotesize\ttfamily \label{classtype__info_a1539a55c6c81409edfc6fc434e881e36} 
+type\+\_\+info::\+\texorpdfstring{$\sim$}{\string~}type\+\_\+info (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classtype__info_doc-func-members}
+\Hypertarget{classtype__info_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}\index{type\_info@{type\_info}!\_\_demangle\_type\_name@{\_\_demangle\_type\_name}}
+\index{\_\_demangle\_type\_name@{\_\_demangle\_type\_name}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{\_\_demangle\_type\_name()}{\_\_demangle\_type\_name()}}
+{\footnotesize\ttfamily \label{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15} 
+void type\+\_\+info::\+\+\_\+\+\_\+demangle\+\_\+type\+\_\+name (\begin{DoxyParamCaption}\item[{std::\+pmr::\+string \&}]{out\+\_\+ret\+\_\+p}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{mangled\+\_\+name\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}{\+\_\+\+\_\+demangle\+\_\+type\+\_\+name()}}, \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a89a54c77d5b016539038c2c471536dc1}{FE\+\_\+\+NEGATIVE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classtype__info_a71182a3545b4aa333173f83fd16c84fe}{tl\+\_\+s\+\_\+resource}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}{\+\_\+\+\_\+demangle\+\_\+type\+\_\+name()}}, and \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classtype__info_a8e5f3d64786dbe17c641db2a49989b2b}\index{type\_info@{type\_info}!base\_hash\_code@{base\_hash\_code}}
+\index{base\_hash\_code@{base\_hash\_code}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{base\_hash\_code()}{base\_hash\_code()}}
+{\footnotesize\ttfamily \label{classtype__info_a8e5f3d64786dbe17c641db2a49989b2b} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} std::\+size\+\_\+t type\+\_\+info::\+base\+\_\+hash\+\_\+code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+\Hypertarget{classtype__info_a1d57e22fc3bfafc78b8bebd914e18f99}\index{type\_info@{type\_info}!base\_name@{base\_name}}
+\index{base\_name@{base\_name}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{base\_name()}{base\_name()}}
+{\footnotesize\ttfamily \label{classtype__info_a1d57e22fc3bfafc78b8bebd914e18f99} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} type\+\_\+info::\+base\+\_\+name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+\Hypertarget{classtype__info_a89bee77faace86ca8b71f8b043b382b5}\index{type\_info@{type\_info}!component\_typeid@{component\_typeid}}
+\index{component\_typeid@{component\_typeid}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{component\_typeid()}{component\_typeid()}}
+{\footnotesize\ttfamily \label{classtype__info_a89bee77faace86ca8b71f8b043b382b5} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} type\+\_\+info::\+component\+\_\+typeid (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+\Hypertarget{classtype__info_addcca660b7c4cc3fc603366fbb0f58c6}\index{type\_info@{type\_info}!get\_base\_name\_of@{get\_base\_name\_of}}
+\index{get\_base\_name\_of@{get\_base\_name\_of}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{get\_base\_name\_of()}{get\_base\_name\_of()}}
+{\footnotesize\ttfamily \label{classtype__info_addcca660b7c4cc3fc603366fbb0f58c6} 
+FE::\+\+ASCII \texorpdfstring{$\ast$}{*} type\+\_\+info::\+get\+\_\+base\+\_\+name\+\_\+of (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{this\+\_\+type\+\_\+name\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ae0c216154270b26649f829d357ec666e}{\+\_\+\+FE\+\_\+\+LIKELY\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_ae9c129c4f0cda55d43b05a65a1d7a796}{FE\+\_\+\+LOG}}, and \doxymbox{\hyperlink{classtype__info_a4a90faf0e44d04e02f02238b37b824aa}{tl\+\_\+s\+\_\+type\+\_\+information}}.
+
+\Hypertarget{classtype__info_a5251defc9d0dee0d860853cf39ff235f}\index{type\_info@{type\_info}!hash\_code@{hash\_code}}
+\index{hash\_code@{hash\_code}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{hash\_code()}{hash\_code()}}
+{\footnotesize\ttfamily \label{classtype__info_a5251defc9d0dee0d860853cf39ff235f} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} std::\+size\+\_\+t type\+\_\+info::\+hash\+\_\+code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+\Hypertarget{classtype__info_aafaae78bcc02366e9cf973f09c1f7e08}\index{type\_info@{type\_info}!name@{name}}
+\index{name@{name}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \label{classtype__info_aafaae78bcc02366e9cf973f09c1f7e08} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} type\+\_\+info::\+name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}.
+
+\Hypertarget{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}\index{type\_info@{type\_info}!set@{set}}
+\index{set@{set}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily \label{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8} 
+template$<$typename T$>$ \\
+void type\+\_\+info::\+set (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}{\+\_\+\+\_\+demangle\+\_\+type\+\_\+name()}}, \doxymbox{\hyperlink{classtype__info_af9f4a33d20075caa8bf445523329340b}{m\+\_\+info}}, \doxymbox{\hyperlink{classtype__info_a0ebb9d093dbf0d517cd6f8b7624af6f1}{s\+\_\+type\+\_\+id\+\_\+counter}}, and \doxymbox{\hyperlink{classtype__info_a4a90faf0e44d04e02f02238b37b824aa}{tl\+\_\+s\+\_\+type\+\_\+information}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+id}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=285pt]{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{classtype__info_doc-related-members}
+\Hypertarget{classtype__info_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}\index{type\_info@{type\_info}!type\_id@{type\_id}}
+\index{type\_id@{type\_id}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{type\_id}{type\_id}}
+{\footnotesize\ttfamily \label{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} friend \doxymbox{\hyperlink{classtype__info}{type\+\_\+info}} \& type\+\_\+id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{do__once_8hxx_a3fb2765437a9c401962402a41e30c1be}{\+\_\+\+DO\+\_\+\+ONCE\+\_\+\+PER\+\_\+\+THREAD\+\_\+}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{do__once_8hxx_a46f63a33fe174e867dd6e44436db16c0}{FE\+\_\+\+DO\+\_\+\+ONCE}}, \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set()}}, \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+id}}, and \doxymbox{\hyperlink{classtype__info_ad60d411a237845ea0df863e5f9b75abf}{type\+\_\+info()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+id}}.
+
+
+
+\label{classtype__info_doc-variable-members}
+\Hypertarget{classtype__info_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classtype__info_af9f4a33d20075caa8bf445523329340b}\index{type\_info@{type\_info}!m\_info@{m\_info}}
+\index{m\_info@{m\_info}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{m\_info}{m\_info}}
+{\footnotesize\ttfamily \label{classtype__info_af9f4a33d20075caa8bf445523329340b} 
+\doxymbox{\hyperlink{classinternal_1_1type__info_1_1metadata}{internal::\+type\+\_\+info::\+metadata}} type\+\_\+info::\+m\+\_\+info\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_a8e5f3d64786dbe17c641db2a49989b2b}{base\+\_\+hash\+\_\+code()}}, \doxymbox{\hyperlink{classtype__info_a1d57e22fc3bfafc78b8bebd914e18f99}{base\+\_\+name()}}, \doxymbox{\hyperlink{classtype__info_a89bee77faace86ca8b71f8b043b382b5}{component\+\_\+typeid()}}, \doxymbox{\hyperlink{classtype__info_a5251defc9d0dee0d860853cf39ff235f}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classtype__info_aafaae78bcc02366e9cf973f09c1f7e08}{name()}}, \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set()}}, and \doxymbox{\hyperlink{classtype__info_ad60d411a237845ea0df863e5f9b75abf}{type\+\_\+info()}}.
+
+\Hypertarget{classtype__info_a0ebb9d093dbf0d517cd6f8b7624af6f1}\index{type\_info@{type\_info}!s\_type\_id\_counter@{s\_type\_id\_counter}}
+\index{s\_type\_id\_counter@{s\_type\_id\_counter}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{s\_type\_id\_counter}{s\_type\_id\_counter}}
+{\footnotesize\ttfamily \label{classtype__info_a0ebb9d093dbf0d517cd6f8b7624af6f1} 
+std::\+atomic\+\_\+uint64\+\_\+t type\+\_\+info::\+s\+\_\+type\+\_\+id\+\_\+counter\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set()}}.
+
+\Hypertarget{classtype__info_a71182a3545b4aa333173f83fd16c84fe}\index{type\_info@{type\_info}!tl\_s\_resource@{tl\_s\_resource}}
+\index{tl\_s\_resource@{tl\_s\_resource}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{tl\_s\_resource}{tl\_s\_resource}}
+{\footnotesize\ttfamily \label{classtype__info_a71182a3545b4aa333173f83fd16c84fe} 
+std::\+shared\+\_\+ptr$<$std::\+pmr::\+monotonic\+\_\+buffer\+\_\+resource$>$ type\+\_\+info::\+tl\+\_\+s\+\_\+resource\hspace{0.3cm}{\ttfamily [thread_local]}, {\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ae3d1d3c3fbfc55bcb868168e62dcfb15}{\+\_\+\+\_\+demangle\+\_\+type\+\_\+name()}}.
+
+\Hypertarget{classtype__info_a4a90faf0e44d04e02f02238b37b824aa}\index{type\_info@{type\_info}!tl\_s\_type\_information@{tl\_s\_type\_information}}
+\index{tl\_s\_type\_information@{tl\_s\_type\_information}!type\_info@{type\_info}}
+\doxysubsubsection{\texorpdfstring{tl\_s\_type\_information}{tl\_s\_type\_information}}
+{\footnotesize\ttfamily \label{classtype__info_a4a90faf0e44d04e02f02238b37b824aa} 
+\doxymbox{\hyperlink{classtype__info_ac902a84aaa7d64def57021e4fad3f4c8}{table\+\_\+type}} type\+\_\+info::\+tl\+\_\+s\+\_\+type\+\_\+information\hspace{0.3cm}{\ttfamily [thread_local]}, {\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_addcca660b7c4cc3fc603366fbb0f58c6}{get\+\_\+base\+\_\+name\+\_\+of()}}, and \doxymbox{\hyperlink{classtype__info_aadf4304e695214ad2f44eaae35fcfbd8}{set()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{type__info_8hxx}{type\+\_\+info.\+hxx}}\end{DoxyCompactItemize}

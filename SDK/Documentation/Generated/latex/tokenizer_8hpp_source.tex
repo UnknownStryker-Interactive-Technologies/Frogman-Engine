@@ -1,0 +1,94 @@
+\doxysection{tokenizer.\+hpp}
+\hypertarget{tokenizer_8hpp_source}{}\label{tokenizer_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/tokenizer.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/tokenizer.hpp}}
+\doxymbox{\hyperlink{tokenizer_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_HEADER\_TOOL\_TOKENIZER\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_HEADER\_TOOL\_TOKENIZER\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2024\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{context_8hpp}{context.hpp}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{token_8hpp}{token.hpp}}"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{vocabulary_8hpp}{vocabulary.hpp}}"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ std}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <algorithm>}\ \textcolor{comment}{//\ std::find\_if}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <fstream>}\ \textcolor{comment}{//\ std::basic\_ifstream}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <list>}\ \textcolor{comment}{//\ std::pmr::pmr::list}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <string>}\ \textcolor{comment}{//\ std::pmr::basic\_string}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <string\_view>}\ \textcolor{comment}{//\ std::basic\_string\_view}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <vector>}\ \textcolor{comment}{//\ std::pmr::vector}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer}{FHT::tokenizer}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ std::pmr::list<token>\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a3b2bdfaeaf3eff41b2d8f55330a02f10}{tokenize\_header}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\_buffer\_t}}\&\ file\_p,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\_t}}\&\ path\_p);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ const\ char*\ p\ =\ "{}/*\ text\ */"{},\ f\ =\ "{}//text"{};\ the\ 'text'\ is\ recognized\ as\ comments\ by\ FHT\ are\ purged\ from\ the\ token\ list.}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af94b977c0a6a262b7fa6d21799acdf12}{purge\_comments}}(std::pmr::list<token>\&\ out\_list\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_adc8166b1071b6dd5c0609f8732e55671}{purge\_preprocessor}}(std::pmr::list<token>\&\ out\_list\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a4d2ad3ff3de2ebf60e46a2fcff24425e}{purge\_string\_literals\_and\_backslashes}}(std::pmr::list<token>\&\ out\_list\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ac8eaaabf1586236d4ba57465769dab15}{purge\_template}}(std::pmr::list<token>\&\ out\_list\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a69f69e4d6045da4d6600e8d09f60147e}{purge\_forward\_declaration}}(std::pmr::list<token>\&\ out\_list\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structtoken}{token}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ab544bd555957587c1da35077f51bc732}{tokenize\_identifiable}}(\textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\_FE\_NODISCARD\_}}\ \doxymbox{\hyperlink{structtoken}{token}}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ab502a3a3258e5d9f2c977f1c22ef3fbd}{tokenize\_unidentifiable}}(\textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a9b3eca555c3a150987e38d32034c98c9}{tokenize\_comment}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a00c12a910e3f9931590cff5a19277fb7}{tokenize\_preprocessor}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a694f654690864ec6367fad6059777427}{tokenize\_string\_literal}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00062\ \ \ \ \ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a6aae8dcbcffa74f6541178c40d89dd1f}{extract\_raw\_text\_delimiter\_from\_the\_left\_quote}}(\doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\_buffer\_t}}\&\ out\_return\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a64bad395ea2a3aa59d7bd82b18e43ca2}{tokenize\_template}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_ad64215dec4b8b791926e59dd8cb892f9}{tokenize\_other}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af1b115d8e1c8d8c06e1f7d4991b13a16}{tokenize\_reflection\_macros}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_aec02824fe4042d30a479b9cbad9d89ad}{tokenize\_class}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a9e3464d86aee0b0475235b9a158f1f6f}{tokenize\_struct}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a5ec47e4b57c79810da6eed72d0982606}{tokenize\_enum\_struct}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_af77eff5f4196fe54a8cbdea1a017773c}{tokenize\_namespace}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a482e164ef065f8bfa42e999543f4147a}{tokenize\_class\_struct\_enum\_forward\_decl\_and\_using\_namespace}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_f_h_t_1_1tokenizer_a023e27d8ed04b598c3571aa24a7bef9d}{tokenize\_template\_body}}(\doxymbox{\hyperlink{structtoken}{token}}\&\ out\_token\_p,\ \textcolor{keyword}{typename}\ file\_buffer\_t::const\_pointer\ code\_iterator\_p,\ \doxymbox{\hyperlink{namespace_f_h_t_a52e292c848425016de24d46f09748d54}{FHT::context\_stack\_t}}\&\ context\_stack\_p);}
+\DoxyCodeLine{00086\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

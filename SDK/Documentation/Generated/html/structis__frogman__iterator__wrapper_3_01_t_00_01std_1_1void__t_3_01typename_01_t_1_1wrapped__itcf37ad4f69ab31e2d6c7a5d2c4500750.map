@@ -1,0 +1,10 @@
+<map id="is_frogman_iterator_wrapper&lt; T, std::void_t&lt; typename T::wrapped_iterator_type &gt; &gt;" name="is_frogman_iterator_wrapper&lt; T, std::void_t&lt; typename T::wrapped_iterator_type &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="58,217,226,292"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,45,63,84,71,123,92,172,118,217,113,217,87,175,66,125,58,85,58,50"/>
+<area shape="rect" id="Node000004" href="$structis__frogman__iterator__wrapper.html" title=" " alt="" coords="81,81,250,124"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="87,39,141,80,136,82,87,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="298,89,399,116"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="351,129,348,164,341,181,332,195,309,215,283,230,227,248,226,243,281,225,306,210,328,192,337,178,342,163,348,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,136,146,149,141,183,141,218,136,216,136,183,141,147,145,140"/>
+</map>

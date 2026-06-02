@@ -1,0 +1,19 @@
+<map id="internal::pool::chunk&lt; PoolType::_Scalable, Alignment &gt;" name="internal::pool::chunk&lt; PoolType::_Scalable, Alignment &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="576,220,732,279"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="270,40,326,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="341,47,388,47,443,52,500,65,553,90,586,118,612,152,631,187,645,220,640,219,627,190,607,155,582,122,551,94,499,70,442,57,388,52,343,52"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="268,92,328,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="343,108,442,128,499,145,553,167,591,191,625,220,620,220,588,195,551,172,497,150,441,133,344,114"/>
+<area shape="rect" id="Node000004" href="$structinternal_1_1pool_1_1block__info.html" title=" " alt="" coords="217,236,379,263"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="394,247,578,248,574,251,395,252"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="11,198,67,224"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="81,205,168,201,285,199,418,203,552,218,578,225,573,225,552,223,418,208,285,204,168,206,83,210"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="80,224,97,228,157,238,218,245,214,248,157,244,96,233,82,229"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,331,73,358"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="87,352,147,361,220,368,300,369,380,360,440,344,498,323,596,280,601,278,500,328,441,350,380,365,300,375,220,373,147,366,88,357"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="86,324,260,261,258,266,89,329"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="275,423,320,450"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="336,441,383,446,438,446,497,437,525,428,551,415,584,386,610,350,629,312,642,281,646,277,634,314,615,353,588,390,553,420,527,433,498,443,439,452,382,451,336,446"/>
+<area shape="rect" id="Node000008" href="$classinternal_1_1pool_1_1chunk.html" title=" " alt="" coords="216,482,380,524"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="395,523,435,526,475,524,515,516,551,498,575,476,596,450,612,421,625,390,641,329,649,281,653,277,646,330,630,392,617,423,600,453,579,480,553,502,516,521,476,530,434,532,395,528"/>
+</map>

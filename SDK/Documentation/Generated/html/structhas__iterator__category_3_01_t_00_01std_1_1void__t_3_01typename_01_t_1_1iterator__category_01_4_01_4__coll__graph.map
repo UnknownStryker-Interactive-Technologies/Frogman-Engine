@@ -1,0 +1,10 @@
+<map id="has_iterator_category&lt; T, std::void_t&lt; typename T::iterator_category &gt; &gt;" name="has_iterator_category&lt; T, std::void_t&lt; typename T::iterator_category &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="46,217,224,276"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,45,63,84,71,123,92,173,118,217,112,217,87,176,66,125,58,85,58,50"/>
+<area shape="rect" id="Node000004" href="$structhas__iterator__category.html" title=" " alt="" coords="80,81,227,124"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="85,39,132,80,127,82,85,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="268,89,370,116"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="322,129,318,164,312,181,302,195,286,210,266,222,225,238,223,233,264,217,282,206,298,192,307,178,313,163,318,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,136,139,148,135,184,135,218,130,216,130,184,134,148,137,141"/>
+</map>

@@ -1,0 +1,120 @@
+\doxysection{enum\+\_\+registry Class Reference}
+\hypertarget{classenum__registry}{}\label{classenum__registry}\index{enum\_registry@{enum\_registry}}
+
+
+{\ttfamily \+\#include $<$reflection.\+hxx$>$}
+
+
+
+Collaboration diagram for enum\+\_\+registry:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=320pt]{classenum__registry__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classenum__registry_a0115259dd8e6059eb4b0b2ed3552499c}{enum\+\_\+registry}} (\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}const resource\+\_\+p, FE::\+size capacity\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{classenum__registry_aa5cae4806926cda549c60e34dc9576a7}{\texorpdfstring{$\sim$}{\string~}enum\+\_\+registry}} () noexcept=default
+\item 
+{\footnotesize template$<$typename Enum\+Struct$>$ }\\void \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{register\+\_\+enum\+\_\+struct}} (const std::\+string\+\_\+view \&enum\+\_\+struct\+\_\+name\+\_\+p, std::\+initializer\+\_\+list$<$ FE::\+pair$<$ Enum\+Struct, FE::\+\+ASCII \texorpdfstring{$\ast$}{*} $>$ $>$ \&\&field\+\_\+list\+\_\+p)
+\item 
+\doxymbox{\hyperlink{classenum__metadata}{enum\+\_\+metadata}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classenum__registry_a27020ee7d388f35e3244f675c6fa16d3}{retrieve\+\_\+enum\+\_\+struct\+\_\+metadata}} (const std::\+string\+\_\+view \&enum\+\_\+struct\+\_\+name\+\_\+p)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+tsl::\+array\+\_\+map$<$ \doxymbox{\hyperlink{namespacevar_a7307772b6a8ac63bf68c2d45994f7081}{var::\+\+ASCII}}, \doxymbox{\hyperlink{classenum__metadata}{enum\+\_\+metadata}} $>$ \doxymbox{\hyperlink{classenum__registry_ac2320a33c77dbe612f7802a0c33d108e}{m\+\_\+enum\+\_\+registry}}
+\item 
+\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classenum__registry_a6cf13c79885c54e8930a2086dc096ce7}{m\+\_\+resource}}
+\end{DoxyCompactItemize}
+
+
+\label{classenum__registry_doc-constructors}
+\Hypertarget{classenum__registry_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classenum__registry_a0115259dd8e6059eb4b0b2ed3552499c}\index{enum\_registry@{enum\_registry}!enum\_registry@{enum\_registry}}
+\index{enum\_registry@{enum\_registry}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{enum\_registry()}{enum\_registry()}}
+{\footnotesize\ttfamily \label{classenum__registry_a0115259dd8e6059eb4b0b2ed3552499c} 
+enum\+\_\+registry::\+enum\+\_\+registry (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}const}]{resource\+\_\+p}{, }\item[{FE::\+size}]{capacity\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{classenum__registry_aa5cae4806926cda549c60e34dc9576a7}\index{enum\_registry@{enum\_registry}!````~enum\_registry@{\texorpdfstring{$\sim$}{\string~}enum\_registry}}
+\index{````~enum\_registry@{\texorpdfstring{$\sim$}{\string~}enum\_registry}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}enum\_registry()}{\string~enum\_registry()}}
+{\footnotesize\ttfamily \label{classenum__registry_aa5cae4806926cda549c60e34dc9576a7} 
+enum\+\_\+registry::\+\texorpdfstring{$\sim$}{\string~}enum\+\_\+registry (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+\label{classenum__registry_doc-func-members}
+\Hypertarget{classenum__registry_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}\index{enum\_registry@{enum\_registry}!register\_enum\_struct@{register\_enum\_struct}}
+\index{register\_enum\_struct@{register\_enum\_struct}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{register\_enum\_struct()}{register\_enum\_struct()}}
+{\footnotesize\ttfamily \label{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be} 
+template$<$typename Enum\+Struct$>$ \\
+void enum\+\_\+registry::\+register\+\_\+enum\+\_\+struct (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{enum\+\_\+struct\+\_\+name\+\_\+p}{, }\item[{std::\+initializer\+\_\+list$<$ FE::\+pair$<$ Enum\+Struct, FE::\+\+ASCII \texorpdfstring{$\ast$}{*} $>$ $>$ \&\&}]{field\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+References \doxymbox{\hyperlink{namespace_f_e_a0b749fd5b22d00920f90657cd023176faceb56aef233cf1dacc483514be39bfe3}{FE::\+\+\_\+\+Fatal\+Error\+\_\+\+Table\+Insertion\+Failure}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_a2f507ca45d2631c9021bcb77e99cf6c3}{FE\+\_\+\+EXIT\+\_\+\+IF}}, \doxymbox{\hyperlink{classenum__registry_ac2320a33c77dbe612f7802a0c33d108e}{m\+\_\+enum\+\_\+registry}}, \doxymbox{\hyperlink{classenum__registry_a6cf13c79885c54e8930a2086dc096ce7}{m\+\_\+resource}}, \doxymbox{\hyperlink{classenum__metadata_a3766afea9f0298596a336a280d65473a}{enum\+\_\+metadata::\+m\+\_\+string\+\_\+to\+\_\+value\+\_\+map}}, \doxymbox{\hyperlink{classenum__metadata_a32839e9ecb4239e80e1ad90b47434e30}{enum\+\_\+metadata::\+m\+\_\+typename}}, \doxymbox{\hyperlink{classenum__metadata_a71a632ad4f18fc35a2febd1ce793a422}{enum\+\_\+metadata::\+m\+\_\+value\+\_\+to\+\_\+string\+\_\+map}}, and \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{register\+\_\+enum\+\_\+struct()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{register\+\_\+enum\+\_\+struct()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classenum__registry_a27020ee7d388f35e3244f675c6fa16d3}\index{enum\_registry@{enum\_registry}!retrieve\_enum\_struct\_metadata@{retrieve\_enum\_struct\_metadata}}
+\index{retrieve\_enum\_struct\_metadata@{retrieve\_enum\_struct\_metadata}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{retrieve\_enum\_struct\_metadata()}{retrieve\_enum\_struct\_metadata()}}
+{\footnotesize\ttfamily \label{classenum__registry_a27020ee7d388f35e3244f675c6fa16d3} 
+\doxymbox{\hyperlink{classenum__metadata}{enum\+\_\+metadata}} \texorpdfstring{$\ast$}{*} enum\+\_\+registry::\+retrieve\+\_\+enum\+\_\+struct\+\_\+metadata (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{enum\+\_\+struct\+\_\+name\+\_\+p}{}\end{DoxyParamCaption})}
+
+
+
+\label{classenum__registry_doc-variable-members}
+\Hypertarget{classenum__registry_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classenum__registry_ac2320a33c77dbe612f7802a0c33d108e}\index{enum\_registry@{enum\_registry}!m\_enum\_registry@{m\_enum\_registry}}
+\index{m\_enum\_registry@{m\_enum\_registry}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_enum\_registry}{m\_enum\_registry}}
+{\footnotesize\ttfamily \label{classenum__registry_ac2320a33c77dbe612f7802a0c33d108e} 
+tsl::\+array\+\_\+map$<$ \doxymbox{\hyperlink{namespacevar_a7307772b6a8ac63bf68c2d45994f7081}{var::\+\+ASCII}}, \doxymbox{\hyperlink{classenum__metadata}{enum\+\_\+metadata}} $>$ enum\+\_\+registry::\+m\+\_\+enum\+\_\+registry\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{register\+\_\+enum\+\_\+struct()}}.
+
+\Hypertarget{classenum__registry_a6cf13c79885c54e8930a2086dc096ce7}\index{enum\_registry@{enum\_registry}!m\_resource@{m\_resource}}
+\index{m\_resource@{m\_resource}!enum\_registry@{enum\_registry}}
+\doxysubsubsection{\texorpdfstring{m\_resource}{m\_resource}}
+{\footnotesize\ttfamily \label{classenum__registry_a6cf13c79885c54e8930a2086dc096ce7} 
+\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}}\texorpdfstring{$\ast$}{*} enum\+\_\+registry::\+m\+\_\+resource\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{register\+\_\+enum\+\_\+struct()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{reflection_8hxx}{reflection.\+hxx}}\end{DoxyCompactItemize}

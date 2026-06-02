@@ -1,0 +1,188 @@
+\doxysection{definitions.\+hxx}
+\hypertarget{definitions_8hxx_source}{}\label{definitions_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/definitions.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/definitions.hxx}}
+\doxymbox{\hyperlink{definitions_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_MACRO\_DEFINITIONS\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_MACRO\_DEFINITIONS\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_WITH\_MSVC\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\ \ \ \ \#include\ <vcruntime.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#elif\ defined(\ \_\_GLIBCXX\_\_\ )\ ||\ defined(\ \_\_GLIBCPP\_\_\ )}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \ \ \#include\ <cxxabi.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FROGMAN\_ENGINE\_CORE\_HAS\_CXXABI\_H\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ \_\_GABIXX\_CXXABI\_H\_\_\ }\textcolor{comment}{//\ This\ code\ has\ referenced\ Boost.demangle.hpp}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ \#undef\ \_FROGMAN\_ENGINE\_CORE\_HAS\_CXXABI\_H\_}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#if\ defined(\_FE\_ON\_WINDOWS\_X86\_64\_)\ ||\ defined(\_FE\_ON\_LINUX\_X86\_64\_)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_ON\_X86\_64\_}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#elif\ defined(\_\_aarch64\_\_)\ ||\ defined(\_FE\_ON\_ANDROID\_ARM64\_)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_ON\_ARM64\_}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#error\ platform\ macro\ not\ defined.}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ \_\_cplusplus\ >=\ 202004L}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX23\_}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX17\_}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#elif\ \_\_cplusplus\ >=\ 202002L}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX17\_}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#elif\ \_\_cplusplus\ >=\ 201703L}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_HAS\_CXX17\_}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ please\ add\ /Zc:\_\_cplusplus\ to\ the\ aditional\ options.\ [\ C/C++\ -\/>\ Command\ Line\ -\/>\ Aditional\ Options\ ]}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \#error\ Archaic\ C++\ version\ detected.\ Use\ C++\ 17\ or\ later\ versions.\ Please\ add\ /Zc:\_\_cplusplus\ to\ the\ aditional\ options.\ [\ C/C++\ -\/>\ Command\ Line\ -\/>\ Aditional\ Options\ ]}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#ifdef\ \_FE\_WITH\_MSVC\_}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_FORCE\_INLINE\_\ \_\_forceinline}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_FORCE\_INLINE\_\ inline\ \_\_attribute\_\_((always\_inline))}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ \_FE\_VECTOR\_CALL\_\ \_\_vectorcall}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ \_FE\_CDECL\_\ \_\_cdecl}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX17\_}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEXPR17\_\ constexpr}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEXPR17\_}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_CONSTEXPR20\_\ constexpr}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEVAL20\_\ consteval}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ \#define\ constexpr}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEVAL20\_}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX23\_}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEXPR23\_\ constexpr}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEVAL23\_\ consteval}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEXPR23\_}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_CONSTEVAL23\_}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#ifdef\ \_FE\_ON\_WINDOWS\_X86\_64\_}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_TEXT(s)\ L\#s}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_CHAR(s)\ (*(static\_cast<const\ wchar\_t*>(\ FE\_TEXT(s)\ )))}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#elif\ defined(\_FE\_ON\_LINUX\_X86\_64\_)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_TEXT(s)\ \#s}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_CHAR(s)\ (*(static\_cast<const\ char*>(\ FE\_TEXT(s)\ )))}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ \_FE\_NODISCARD\_\ [[nodiscard]]}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ \_FE\_FALLTHROUGH\_\ [[fallthrough]]}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ \_FE\_MAYBE\_UNUSED\_\ [[maybe\_unused]]}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ \_FE\_DISCARD\_\ \_FE\_MAYBE\_UNUSED\_}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ \_FE\_NORETURN\_\ [[noreturn]]}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ \_FE\_DEPRECATED\_\ [[deprecated]]}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ \_FE\_IN\_DEVELOPMENT\_\ \_FE\_DEPRECATED\_}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#ifdef\ \_FE\_HAS\_CXX20\_}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_LIKELY\_\ [[likely]]}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_UNLIKELY\_\ [[unlikely]]}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_LIKELY(c)\ (c)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_UNLIKELY(c)\ (c)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_NO\_UNIQUE\_ADDRESS\_\ [[no\_unique\_address]]}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ \_FE\_ON\_LINUX\_X86\_64\_}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ FE\_LIKELY(c)\ \_\_builtin\_expect((c),\ 1)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ FE\_UNLIKELY(c)\ \_\_builtin\_expect((c),\ 0)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ FE\_LIKELY(c)\ (c)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ FE\_UNLIKELY(c)\ (c)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_LIKELY\_\ }}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_UNLIKELY\_}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \#define\ \_FE\_NO\_UNIQUE\_ADDRESS\_}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ BEGIN\_NAMESPACE(NAME\_P)\ namespace\ NAME\_P\ \{}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ END\_NAMESPACE\ \}}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ CLASS\_FORWARD\_DECLARATION(namespace\_p,\ class\_p)\ namespace\ namespace\_p\ \{\ class\ class\_p;\ \}}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ STRUCT\_FORWARD\_DECLARATION(namespace\_p,\ struct\_p)\ namespace\ namespace\_p\ \{\ struct\ struct\_p;\ \}}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ ENUM\_STRUCT\_FORWARD\_DECLARATION(namespace\_p,\ enum\_struct\_p)\ namespace\ namespace\_p\ \{\ enum\ struct\ enum\_struct\_p;\ \}}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ \_SOURCE\_CODE\_LOCATION\_\ \_\_FILE\_\_,\ \_\_func\_\_,\ \_\_LINE\_\_}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ \_MAX\_PATH\_LENGTH\_\ 4096\ }\textcolor{comment}{//\ hard-\/code\ the\ limit\ regardless\ of\ platform.}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#ifdef\ FE\_CLASS\_HAS\_A\_BASE}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\ \ \ \ \#error\ FE\_CLASS\_HAS\_A\_BASE\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_CLASS\_HAS\_A\_BASE(base\_class)\ \(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ \ \ using\ base\_type\ =\ base\_class;\ }}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#ifdef\ FE\_ENUM\_STRUCT}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \#error\ FE\_ENUM\_STRUCT\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_ENUM\_STRUCT()\ }\textcolor{comment}{//\ THis\ is\ an\ indicator\ for\ the\ FHT.}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#ifdef\ FE\_CLASS}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \#error\ FE\_CLASS\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_CLASS()}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#ifdef\ FE\_STRUCT}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \#error\ FE\_STRUCT\ is\ a\ reserved\ Frogman\ Engine\ macro\ keyword.}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ \#define\ FE\_STRUCT()}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ STBI\_MALLOC(s)\ \_aligned\_malloc(s,\ FE::CPU\_L1\_cache\_line::size)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ STBI\_REALLOC(p,\ s)\ \_aligned\_realloc(p,\ s,\ FE::CPU\_L1\_cache\_line::size)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ STBI\_FREE(p)\ \_aligned\_free(p)}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ }
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

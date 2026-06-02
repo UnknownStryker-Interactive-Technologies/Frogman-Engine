@@ -1,0 +1,78 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Engine/\+\+Include/\+\+FE/\+window\+\_\+control.hpp File Reference}
+\hypertarget{window__control_8hpp}{}\label{window__control_8hpp}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/window\_control.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/window\_control.hpp}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$GLFW/\+glfw3.\+h$>$}\newline
+{\ttfamily \+\#include $<$FE/\+engine.\+hpp$>$}\newline
+Include dependency graph for window\+\_\+control.\+hpp:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{window__control_8hpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{Cursor\+Mode}} :\+ FE::\+int32 \{ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bccafaa62b49fca3b167fda9f380701e62e6}{\+\_\+\+Visible\+And\+Free}} = GLFW\+\_\+\+CURSOR\+\_\+\+NORMAL
+, \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca725435316ff0baf2863b2aa470eea3b8}{\+\_\+\+Invisible}} = GLFW\+\_\+\+CURSOR\+\_\+\+HIDDEN
+, \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca1f7d9df6c7475f7c189bdb4a352fb870}{\+\_\+\+Gaming}} = GLFW\+\_\+\+CURSOR\+\_\+\+DISABLED
+, \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca0489710dc315fed8d66e475e1d432eaa}{\+\_\+\+Visible\+And\+Confined}} = GLFW\+\_\+\+CURSOR\+\_\+\+CAPTURED
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{window__control_8hpp_ab6ea546a2ecb1c64a12f794330f27c48}{set\+\_\+window\+\_\+cursor\+\_\+mode}} (\doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{Cursor\+Mode}} mode\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+
+
+\label{window__control_8hpp_doc-enum-members}
+\Hypertarget{window__control_8hpp_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}\index{window\_control.hpp@{window\_control.hpp}!CursorMode@{CursorMode}}
+\index{CursorMode@{CursorMode}!window\_control.hpp@{window\_control.hpp}}
+\doxysubsubsection{\texorpdfstring{CursorMode}{CursorMode}}
+{\footnotesize\ttfamily \label{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc} 
+enum struct \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{Cursor\+Mode}} :\+ \doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{FE::\+int32}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_VisibleAndFree@{\_VisibleAndFree}!window\_control.hpp@{window\_control.hpp}}
+\index{window\_control.hpp@{window\_control.hpp}!\_VisibleAndFree@{\_VisibleAndFree}}
+}\Hypertarget{window__control_8hpp_a77c792760cc33e324ab1a1662c025bccafaa62b49fca3b167fda9f380701e62e6}\label{window__control_8hpp_a77c792760cc33e324ab1a1662c025bccafaa62b49fca3b167fda9f380701e62e6} 
+\+\_\+\+Visible\+And\+Free&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Invisible@{\_Invisible}!window\_control.hpp@{window\_control.hpp}}
+\index{window\_control.hpp@{window\_control.hpp}!\_Invisible@{\_Invisible}}
+}\Hypertarget{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca725435316ff0baf2863b2aa470eea3b8}\label{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca725435316ff0baf2863b2aa470eea3b8} 
+\+\_\+\+Invisible&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_Gaming@{\_Gaming}!window\_control.hpp@{window\_control.hpp}}
+\index{window\_control.hpp@{window\_control.hpp}!\_Gaming@{\_Gaming}}
+}\Hypertarget{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca1f7d9df6c7475f7c189bdb4a352fb870}\label{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca1f7d9df6c7475f7c189bdb4a352fb870} 
+\+\_\+\+Gaming&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_VisibleAndConfined@{\_VisibleAndConfined}!window\_control.hpp@{window\_control.hpp}}
+\index{window\_control.hpp@{window\_control.hpp}!\_VisibleAndConfined@{\_VisibleAndConfined}}
+}\Hypertarget{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca0489710dc315fed8d66e475e1d432eaa}\label{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca0489710dc315fed8d66e475e1d432eaa} 
+\+\_\+\+Visible\+And\+Confined&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{window__control_8hpp_doc-func-members}
+\Hypertarget{window__control_8hpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{window__control_8hpp_ab6ea546a2ecb1c64a12f794330f27c48}\index{window\_control.hpp@{window\_control.hpp}!set\_window\_cursor\_mode@{set\_window\_cursor\_mode}}
+\index{set\_window\_cursor\_mode@{set\_window\_cursor\_mode}!window\_control.hpp@{window\_control.hpp}}
+\doxysubsubsection{\texorpdfstring{set\_window\_cursor\_mode()}{set\_window\_cursor\_mode()}}
+{\footnotesize\ttfamily \label{window__control_8hpp_ab6ea546a2ecb1c64a12f794330f27c48} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void set\+\_\+window\+\_\+cursor\+\_\+mode (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{Cursor\+Mode}}}]{mode\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+

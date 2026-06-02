@@ -1,0 +1,10 @@
+<map id="has_allocator_type&lt; T, std::void_t&lt; typename T::allocator_type &gt; &gt;" name="has_allocator_type&lt; T, std::void_t&lt; typename T::allocator_type &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="34,217,212,276"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,45,64,84,71,123,89,173,110,217,104,217,84,175,66,125,59,84,59,50"/>
+<area shape="rect" id="Node000004" href="$structhas__allocator__type.html" title=" " alt="" coords="80,81,211,124"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="83,40,126,80,121,82,83,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="256,89,358,116"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="310,129,306,164,300,181,290,195,274,210,254,222,213,238,211,233,252,217,270,206,286,192,295,178,301,163,306,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="129,136,127,149,122,184,123,218,118,216,117,183,122,147,126,140"/>
+</map>

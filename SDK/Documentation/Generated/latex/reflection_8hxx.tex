@@ -1,0 +1,181 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+reflection.hxx File Reference}
+\hypertarget{reflection_8hxx}{}\label{reflection_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/reflection.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/reflection.hxx}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+algorithm/\+string.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+algorithm/\+utility.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+do\+\_\+once.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+function.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+fstream\+\_\+guard.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+hash.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+type\+\_\+traits.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+pair.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+framework/\+type\+\_\+info.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$filesystem$>$}\newline
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$map$>$}\newline
+{\ttfamily \+\#include $<$memory\+\_\+resource$>$}\newline
+{\ttfamily \+\#include $<$mutex$>$}\newline
+{\ttfamily \+\#include $<$optional$>$}\newline
+{\ttfamily \+\#include $<$string$>$}\newline
+{\ttfamily \+\#include $<$string\+\_\+view$>$}\newline
+{\ttfamily \+\#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include $<$boost/\+thread/\+shared\+\_\+mutex.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$boost/\+thread/\+shared\+\_\+lock\+\_\+guard.\+hpp$>$}\newline
+{\ttfamily \+\#include $<$absl/\+container/\+flat\+\_\+hash\+\_\+map.\+h$>$}\newline
+{\ttfamily \+\#include $<$absl/\+container/\+node\+\_\+hash\+\_\+map.\+h$>$}\newline
+{\ttfamily \+\#include $<$tsl/\+array-\/hash/\+array\+\_\+map.\+h$>$}\newline
+Include dependency graph for reflection.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{reflection_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classmethod__registry}{method\+\_\+registry}}
+\item 
+struct \doxymbox{\hyperlink{structproperty__metadata}{property\+\_\+metadata}}
+\item 
+class \doxymbox{\hyperlink{classinstance__metadata}{instance\+\_\+metadata}}
+\item 
+class \doxymbox{\hyperlink{classproperty__registry}{property\+\_\+registry}}
+\item 
+class \doxymbox{\hyperlink{classenum__metadata}{enum\+\_\+metadata}}
+\item 
+class \doxymbox{\hyperlink{classenum__registry}{enum\+\_\+registry}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_f_e}{FE}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{reflection_8hxx_abbc429ba50bba604389d02f8293d331a}{FE\+\_\+\+SYSTEM}}(Sys\+Call\+Phase,  Target\+Component\+Type,  World\+Tag\+Enum\+Type)
+\item 
+\+\#define \doxymbox{\hyperlink{reflection_8hxx_af829c08e4aea8f5fab26cee6176389ff}{FE\+\_\+\+METHOD}}(method\+\_\+name, ...)
+\item 
+\+\#define \doxymbox{\hyperlink{reflection_8hxx_a1a323f5833aa5a621aae1e9c3caba61f}{FE\+\_\+\+STATIC\+\_\+\+METHOD}}(method\+\_\+name, ...)
+\item 
+\+\#define \doxymbox{\hyperlink{reflection_8hxx_aed9348f901992c301abe2c505aa6371a}{FE\+\_\+\+PROPERTY}}(property\+\_\+name)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1}{FE::\+\+System\+Call\+Phase}} :\+ var::\+uint32 \{ \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a42ddf302d573eba758696166473327fc}{FE::\+\+\_\+\+Engine\+Initialization}} = 0
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a21063be49556335214ae7515f4ff694b}{FE::\+\+\_\+\+Game\+Initialization}} = 1
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a85d62618f1c59a2a37cc00296f215b62}{FE::\+\+\_\+\+World\+Initialization}} = 2
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a50146024fedb482db0b960c43bd2d3b3}{FE::\+\+\_\+\+World\+Default\+Entity\+Initialization}} = 3
+, \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ae27388e058cbc2403dbf5d81e797d986}{FE::\+\+\_\+\+Game\+Begin}} = 4
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a54bfd63beac04255345c689bc2710e0c}{FE::\+\+\_\+\+World\+Begin}} = 5
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ae3c2c24347c422105d9c7ff2d2a0f846}{FE::\+\+\_\+\+Entity\+Set\+Up}} = 6
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1adca1fa5be77a383064a9db698f2410d5}{FE::\+\+\_\+\+Entity\+Controller\+Set\+Up}} = 7
+, \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ab9ce67a0da6ecfaf88ff9095e0d350a6}{FE::\+\+\_\+\+Game\+Tick}} = 8
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a79d5cca3a2d4433944e0cb4bd1c8899e}{FE::\+\+\_\+\+World\+Tick}} = 9
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ac40a5b31cecaf29983c98ee2bb5f16fc}{FE::\+\+\_\+\+Entity\+Tick}} = 10
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a19f98302e2865b670e204b8c29b1eae1}{FE::\+\+\_\+\+Entity\+Controller\+Tick}} = 11
+, \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a2135c7369e4a306fd1c578143f0c2c25}{FE::\+\+\_\+\+Pre\+Physics}} = 12
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ac292693f2dd777314aaf44da8bd252d2}{FE::\+\+\_\+\+Start\+Physics}} = 13
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1aa84a4aa4a163e0f550c1bf596b61d6b6}{FE::\+\+\_\+\+Physics}} = 14
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1aa21f20e224f4afd1fa3206201222bc0b}{FE::\+\+\_\+\+End\+Physics}} = 15
+, \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a592223029209da5c310e8d85fb74a614}{FE::\+\+\_\+\+Post\+Physics}} = 16
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a5e1119d8f4a667437791d87a40d9c23c}{FE::\+\+\_\+\+Post\+Entity\+Tick}} = 17
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a451e8db018a333ffcac450aa56fca1b9}{FE::\+\+\_\+\+Pre\+Render}} = 18
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a25d46fb2e67b5e47b00996c67b5d7ef5}{FE::\+\+\_\+\+Post\+Render}} = 19
+, \newline
+\doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ab6d8d1754c9c33edf79c9abc7d4d12e5}{FE::\+\+\_\+\+Entity\+Clean\+Up}} = 20
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a33f2fc227baa95a907454b81c5ee9f4f}{FE::\+\+\_\+\+World\+Clean\+Up}} = 21
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1ae068ea4c6e6c5e3b158daf4b7f79004c}{FE::\+\+\_\+\+Game\+Clean\+Up}} = 22
+, \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1a6009344ae061531e1780ad6cc133bb5f}{FE::\+\+\_\+\+Engine\+Clean\+Up}} = 23
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{reflection_8hxx_a78adce34e57e67f26128b4d0de2bcdbb}{CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION}} (FE::\+framework, \doxymbox{\hyperlink{classframework__base}{framework\+\_\+base}})
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} \doxymbox{\hyperlink{namespace_f_e_a9d5005e8fdcb3c838d606143a6de9048}{FE::\+syscall\+\_\+phase\+\_\+count}} = 24
+\end{DoxyCompactItemize}
+
+
+\label{reflection_8hxx_doc-define-members}
+\Hypertarget{reflection_8hxx_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{reflection_8hxx_af829c08e4aea8f5fab26cee6176389ff}\index{reflection.hxx@{reflection.hxx}!FE\_METHOD@{FE\_METHOD}}
+\index{FE\_METHOD@{FE\_METHOD}!reflection.hxx@{reflection.hxx}}
+\doxysubsubsection{\texorpdfstring{FE\_METHOD}{FE\_METHOD}}
+{\footnotesize\ttfamily \label{reflection_8hxx_af829c08e4aea8f5fab26cee6176389ff} 
+\+\#define FE\+\_\+\+METHOD(\begin{DoxyParamCaption}\item[{}]{method\+\_\+name}{, }\item[{}]{}...{}\end{DoxyParamCaption})}
+
+\Hypertarget{reflection_8hxx_aed9348f901992c301abe2c505aa6371a}\index{reflection.hxx@{reflection.hxx}!FE\_PROPERTY@{FE\_PROPERTY}}
+\index{FE\_PROPERTY@{FE\_PROPERTY}!reflection.hxx@{reflection.hxx}}
+\doxysubsubsection{\texorpdfstring{FE\_PROPERTY}{FE\_PROPERTY}}
+{\footnotesize\ttfamily \label{reflection_8hxx_aed9348f901992c301abe2c505aa6371a} 
+\+\#define FE\+\_\+\+PROPERTY(\begin{DoxyParamCaption}\item[{}]{property\+\_\+name}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{class\ }property\_metadata\_\#\#property\_name\ :\ \textcolor{keyword}{public}\ ::FE::internal::ECS::gc\_metadata\_base\ \(\backslash\)}
+\DoxyCodeLine{\{\ \(\backslash\)}
+\DoxyCodeLine{\textcolor{keyword}{public}:\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ property\_metadata\_\#\#property\_name(\textcolor{keyword}{auto}*\ this\_p)\ \textcolor{keyword}{noexcept}\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ FE\_DO\_ONCE(\doxymbox{\hyperlink{do__once_8hxx_a5ee4f4bd1c5d7d01ee34aa5670a823ee}{\_DO\_ONCE\_PER\_APP\_EXECUTION\_}},\ ::FE::framework::framework\_base::get\_framework().get\_property\_reflection()\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .register\_property<::std::remove\_pointer\_t<::std::remove\_const\_t<\textcolor{keyword}{decltype}(this\_p)>>,\ \textcolor{keyword}{decltype}(this\_p-\/>property\_name)>\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ *this\_p,\ this\_p-\/>property\_name,\ \#property\_name\ )\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ );\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (::std::is\_base\_of\_v<\ ::FE::component\_base,\ ::std::remove\_pointer\_t<::std::remove\_const\_t<\textcolor{keyword}{decltype}(this\_p)>>\ >)\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ ::FE::internal::ECS::gc\_metadata\_base::add\_watch<\textcolor{keyword}{decltype}(this\_p-\/>property\_name)>(this\_p,\ this\_p-\/>property\_name);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \(\backslash\)}
+\DoxyCodeLine{\};\ \(\backslash\)}
+\DoxyCodeLine{\doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\_FE\_NO\_UNIQUE\_ADDRESS\_}}\ property\_metadata\_\#\#property\_name\ property\_name\#\#\_property\_meta\ =\ \textcolor{keyword}{this};\ \(\backslash\)}
+\DoxyCodeLine{\textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }property\_metadata\_\#\#property\_name;}
+
+\end{DoxyCode}
+\Hypertarget{reflection_8hxx_a1a323f5833aa5a621aae1e9c3caba61f}\index{reflection.hxx@{reflection.hxx}!FE\_STATIC\_METHOD@{FE\_STATIC\_METHOD}}
+\index{FE\_STATIC\_METHOD@{FE\_STATIC\_METHOD}!reflection.hxx@{reflection.hxx}}
+\doxysubsubsection{\texorpdfstring{FE\_STATIC\_METHOD}{FE\_STATIC\_METHOD}}
+{\footnotesize\ttfamily \label{reflection_8hxx_a1a323f5833aa5a621aae1e9c3caba61f} 
+\+\#define FE\+\_\+\+STATIC\+\_\+\+METHOD(\begin{DoxyParamCaption}\item[{}]{method\+\_\+name}{, }\item[{}]{}...{}\end{DoxyParamCaption})}
+
+\Hypertarget{reflection_8hxx_abbc429ba50bba604389d02f8293d331a}\index{reflection.hxx@{reflection.hxx}!FE\_SYSTEM@{FE\_SYSTEM}}
+\index{FE\_SYSTEM@{FE\_SYSTEM}!reflection.hxx@{reflection.hxx}}
+\doxysubsubsection{\texorpdfstring{FE\_SYSTEM}{FE\_SYSTEM}}
+{\footnotesize\ttfamily \label{reflection_8hxx_abbc429ba50bba604389d02f8293d331a} 
+\+\#define FE\+\_\+\+SYSTEM(\begin{DoxyParamCaption}\item[{}]{Sys\+Call\+Phase}{, }\item[{}]{Target\+Component\+Type}{, }\item[{}]{World\+Tag\+Enum\+Type}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{/*\ This\ macro\ is\ an\ indicator\ for\ the\ Frogman\ Engine\ Header\ Tool.\ Incorrectly\ placing\ the\ arguments\ will\ fail\ the\ generated\ code\ compilation.\ */}\ \(\backslash\)}
+\DoxyCodeLine{static\_assert(::std::is\_same\_v<\textcolor{keyword}{decltype}(SysCallPhase),\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{namespace_f_e_afe310470b71528ea290b8cfcd05e4ba1}{::FE::SystemCallPhase}}>,\ \textcolor{stringliteral}{"{}Frogman\ Engine\ C++:\ an\ incorrectly\ typed\ value\ passed\ to\ the\ SysCallPhase\ parameter."{}});\ \(\backslash\)}
+\DoxyCodeLine{static\_assert(::std::is\_base\_of\_v<class\ ::FE::component\_base,\ TargetComponentType>,\ \textcolor{stringliteral}{"{}Frogman\ Engine\ C++:\ the\ TargetComponentType\ must\ be\ derived\ from\ FE::component\_base."{}});\ \(\backslash\)}
+\DoxyCodeLine{static\_assert(::std::is\_enum\_v<\ \textcolor{keyword}{decltype}(WorldTagEnumType)\ >,\ \textcolor{stringliteral}{"{}Frogman\ Engine\ C++:\ the\ WorldTagEnumType\ is\ not\ a\ valid\ enum\ value"{}});}
+
+\end{DoxyCode}
+
+
+\label{reflection_8hxx_doc-func-members}
+\Hypertarget{reflection_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{reflection_8hxx_a78adce34e57e67f26128b4d0de2bcdbb}\index{reflection.hxx@{reflection.hxx}!CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}}
+\index{CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}!reflection.hxx@{reflection.hxx}}
+\doxysubsubsection{\texorpdfstring{CLASS\_FORWARD\_DECLARATION()}{CLASS\_FORWARD\_DECLARATION()}}
+{\footnotesize\ttfamily \label{reflection_8hxx_a78adce34e57e67f26128b4d0de2bcdbb} 
+CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION (\begin{DoxyParamCaption}\item[{FE::\+framework}]{}{, }\item[{\doxymbox{\hyperlink{classframework__base}{framework\+\_\+base}}}]{}{}\end{DoxyParamCaption})}
+

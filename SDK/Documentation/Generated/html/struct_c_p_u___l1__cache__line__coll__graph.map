@@ -1,0 +1,5 @@
+<map id="CPU_L1_cache_line" name="CPU_L1_cache_line">
+<area shape="rect" id="Node000001" title=" " alt="" coords="35,120,175,147"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,205,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,62,108,120,102,119,103,65"/>
+</map>

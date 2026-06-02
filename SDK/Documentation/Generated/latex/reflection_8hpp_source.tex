@@ -1,0 +1,69 @@
+\doxysection{reflection.\+hpp}
+\hypertarget{reflection_8hpp_source}{}\label{reflection_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/reflection.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/reflection.hpp}}
+\doxymbox{\hyperlink{reflection_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_REFLECTION\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_REFLECTION\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{framework_2framework_8hxx}{FE/framework/framework.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{reflection_8hxx}{FE/framework/reflection.hxx}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{function_8hxx}{FE/function.hxx}}>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(FE::reflection)}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ using\ \textcolor{keywordtype}{object}\ =\ \doxymbox{\hyperlink{namespaceframework}{framework}}::reflection::\doxymbox{\hyperlink{classinstance__metadata}{instance\_metadata}};}
+\DoxyCodeLine{00030\ using\ \doxymbox{\hyperlink{reflection_8hpp_ab1af666dad76b5aa23abfa859b96ae1c}{enum\_struct}}\ =\ \doxymbox{\hyperlink{namespaceframework}{framework}}::reflection::\doxymbox{\hyperlink{classenum__metadata}{enum\_metadata}};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ template<typename\ T>}
+\DoxyCodeLine{00034\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{object}*\ \doxymbox{\hyperlink{reflection_8hpp_a19dec64186c2c0d693483706af982537}{get\_object}}()\ noexcept\ \textcolor{comment}{//\ This\ method\ may\ return\ a\ nullptr.}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::framework::framework\_base::get\_framework().get\_property\_reflection().get\_instance\_metadata<T>();}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::task\_base*\ \doxymbox{\hyperlink{reflection_8hpp_aef65066c9732864fa0dcdaffce975f7e}{get\_method}}(FE::ASCII*\ \textcolor{keyword}{const}\ signature\_p)\ \textcolor{keyword}{noexcept}\ \textcolor{comment}{//\ This\ method\ may\ return\ a\ nullptr.}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::framework::framework\_base::get\_framework().get\_method\_reflection().retrieve(signature\_p);}
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{reflection_8hpp_ab1af666dad76b5aa23abfa859b96ae1c}{enum\_struct}}*\ \doxymbox{\hyperlink{reflection_8hpp_aea3a7b9544f1a31360f4aee36777eace}{get\_enum\_struct}}(FE::ASCII*\ \textcolor{keyword}{const}\ identifier\_p)\ \textcolor{comment}{//\ This\ method\ may\ return\ a\ nullptr.}}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{return}\ FE::framework::framework\_base::get\_framework().get\_enum\_reflection().retrieve\_enum\_struct\_metadata(identifier\_p);}
+\DoxyCodeLine{00047\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00050\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{reflection_8hpp_aca71721e01a90dd31bb9a94b5953c6a0}{serialize}}(std::pmr::string\&\ out\_ret\_buffer\_p,\ \textcolor{keyword}{const}\ T\&\ object\_p,\ FE::ASCII*\ \textcolor{keyword}{const}\ version\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ FE::framework::framework\_base::get\_framework().get\_property\_reflection().serialize<T>(out\_ret\_buffer\_p,\ object\_p,\ version\_p);}
+\DoxyCodeLine{00053\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00056\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{reflection_8hpp_a8461076517f95d0ee32342b069eb7511}{deserialize}}(\textcolor{keyword}{const}\ std::pmr::string\&\ data\_p,\ T\&\ out\_object\_p,\ FE::ASCII*\ \textcolor{keyword}{const}\ version\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ FE::framework::framework\_base::get\_framework().get\_property\_reflection().deserialize<T>(data\_p,\ out\_object\_p,\ version\_p);}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

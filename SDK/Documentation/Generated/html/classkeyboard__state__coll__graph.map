@@ -1,0 +1,9 @@
+<map id="keyboard_state" name="keyboard_state">
+<area shape="rect" id="Node000001" title=" " alt="" coords="158,317,268,344"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,151,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,45,210,316,205,318,87,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="174,5,251,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,47,215,317,210,317,210,49"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="300,5,376,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="345,45,353,98,354,163,350,198,342,232,329,265,311,295,292,312,269,322,267,317,289,307,307,292,324,263,337,231,344,197,348,163,347,98,342,50"/>
+</map>

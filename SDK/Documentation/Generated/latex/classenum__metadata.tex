@@ -1,0 +1,162 @@
+\doxysection{enum\+\_\+metadata Class Reference}
+\hypertarget{classenum__metadata}{}\label{classenum__metadata}\index{enum\_metadata@{enum\_metadata}}
+
+
+{\ttfamily \+\#include $<$reflection.\+hxx$>$}
+
+
+
+Collaboration diagram for enum\+\_\+metadata:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classenum__metadata__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classenum__metadata_a8871019b1002fdf7bcb123df891de7bd}{enum\+\_\+metadata}} (\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}const resource\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classenum__metadata_aefa1c4a8a3e53a1b53d2a17962c0dab2}{get\+\_\+typename}} () const noexcept
+\item 
+{\footnotesize template$<$typename Enum\+Struct$>$ }\\std::\+optional$<$ Enum\+Struct $>$ \doxymbox{\hyperlink{classenum__metadata_a9691ebb921ebfa2bd3009a51d0d5be32}{string\+\_\+to\+\_\+enum}} (const std::\+string\+\_\+view \&enum\+\_\+value\+\_\+string\+\_\+p) const noexcept
+\item 
+{\footnotesize template$<$typename Enum\+Struct$>$ }\\FE::\+\+ASCII \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classenum__metadata_a9ee27aba0aa47ab162643877f5f1bf14}{enum\+\_\+to\+\_\+string}} (const Enum\+Struct value\+\_\+p) const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+uint32 \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} = 8
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string\+\_\+view \doxymbox{\hyperlink{classenum__metadata_a32839e9ecb4239e80e1ad90b47434e30}{m\+\_\+typename}}
+\item 
+absl::\+flat\+\_\+hash\+\_\+map$<$ std::\+string\+\_\+view, std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$, FE::\+hash$<$ std::\+string\+\_\+view $>$, std::\+equal\+\_\+to$<$ std::\+string\+\_\+view $>$, FE::\+polymorphic\+\_\+allocator$<$ std::\+pair$<$ const std::\+string\+\_\+view, std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$ $>$ $>$ $>$ \doxymbox{\hyperlink{classenum__metadata_a3766afea9f0298596a336a280d65473a}{m\+\_\+string\+\_\+to\+\_\+value\+\_\+map}}
+\item 
+absl::\+flat\+\_\+hash\+\_\+map$<$ std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$, std::\+string\+\_\+view, FE::\+hash$<$ std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$ $>$, std::\+equal\+\_\+to$<$ std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$ $>$, FE::\+polymorphic\+\_\+allocator$<$ std::\+pair$<$ const std::\+array$<$ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}} $>$, std::\+string\+\_\+view $>$ $>$ $>$ \doxymbox{\hyperlink{classenum__metadata_a71a632ad4f18fc35a2febd1ce793a422}{m\+\_\+value\+\_\+to\+\_\+string\+\_\+map}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classenum__metadata_a9b8e23bda48efeb063f90aebabbc7af6}{enum\+\_\+registry}}
+\end{DoxyCompactItemize}
+
+
+\label{classenum__metadata_doc-constructors}
+\Hypertarget{classenum__metadata_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classenum__metadata_a8871019b1002fdf7bcb123df891de7bd}\index{enum\_metadata@{enum\_metadata}!enum\_metadata@{enum\_metadata}}
+\index{enum\_metadata@{enum\_metadata}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{enum\_metadata()}{enum\_metadata()}}
+{\footnotesize\ttfamily \label{classenum__metadata_a8871019b1002fdf7bcb123df891de7bd} 
+enum\+\_\+metadata::\+enum\+\_\+metadata (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::\+pmr::\+memory\+\_\+resource}} \texorpdfstring{$\ast$}{*}const}]{resource\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+\label{classenum__metadata_doc-func-members}
+\Hypertarget{classenum__metadata_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classenum__metadata_a9ee27aba0aa47ab162643877f5f1bf14}\index{enum\_metadata@{enum\_metadata}!enum\_to\_string@{enum\_to\_string}}
+\index{enum\_to\_string@{enum\_to\_string}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{enum\_to\_string()}{enum\_to\_string()}}
+{\footnotesize\ttfamily \label{classenum__metadata_a9ee27aba0aa47ab162643877f5f1bf14} 
+template$<$typename Enum\+Struct$>$ \\
+FE::\+\+ASCII \texorpdfstring{$\ast$}{*} enum\+\_\+metadata::\+enum\+\_\+to\+\_\+string (\begin{DoxyParamCaption}\item[{const Enum\+Struct}]{value\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}, and \doxymbox{\hyperlink{classenum__metadata_a71a632ad4f18fc35a2febd1ce793a422}{m\+\_\+value\+\_\+to\+\_\+string\+\_\+map}}.
+
+\Hypertarget{classenum__metadata_aefa1c4a8a3e53a1b53d2a17962c0dab2}\index{enum\_metadata@{enum\_metadata}!get\_typename@{get\_typename}}
+\index{get\_typename@{get\_typename}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{get\_typename()}{get\_typename()}}
+{\footnotesize\ttfamily \label{classenum__metadata_aefa1c4a8a3e53a1b53d2a17962c0dab2} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+\+ASCII \texorpdfstring{$\ast$}{*} enum\+\_\+metadata::\+get\+\_\+typename (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classenum__metadata_a32839e9ecb4239e80e1ad90b47434e30}{m\+\_\+typename}}.
+
+\Hypertarget{classenum__metadata_a9691ebb921ebfa2bd3009a51d0d5be32}\index{enum\_metadata@{enum\_metadata}!string\_to\_enum@{string\_to\_enum}}
+\index{string\_to\_enum@{string\_to\_enum}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{string\_to\_enum()}{string\_to\_enum()}}
+{\footnotesize\ttfamily \label{classenum__metadata_a9691ebb921ebfa2bd3009a51d0d5be32} 
+template$<$typename Enum\+Struct$>$ \\
+std::\+optional$<$ Enum\+Struct $>$ enum\+\_\+metadata::\+string\+\_\+to\+\_\+enum (\begin{DoxyParamCaption}\item[{const std::\+string\+\_\+view \&}]{enum\+\_\+value\+\_\+string\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}, and \doxymbox{\hyperlink{classenum__metadata_a3766afea9f0298596a336a280d65473a}{m\+\_\+string\+\_\+to\+\_\+value\+\_\+map}}.
+
+
+
+\label{classenum__metadata_doc-related-members}
+\Hypertarget{classenum__metadata_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classenum__metadata_a9b8e23bda48efeb063f90aebabbc7af6}\index{enum\_metadata@{enum\_metadata}!enum\_registry@{enum\_registry}}
+\index{enum\_registry@{enum\_registry}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{enum\_registry}{enum\_registry}}
+{\footnotesize\ttfamily \label{classenum__metadata_a9b8e23bda48efeb063f90aebabbc7af6} 
+friend class \doxymbox{\hyperlink{classenum__registry}{enum\+\_\+registry}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+References \doxymbox{\hyperlink{classenum__metadata_a9b8e23bda48efeb063f90aebabbc7af6}{enum\+\_\+registry}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__metadata_a9b8e23bda48efeb063f90aebabbc7af6}{enum\+\_\+registry}}.
+
+
+
+\label{classenum__metadata_doc-variable-members}
+\Hypertarget{classenum__metadata_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}\index{enum\_metadata@{enum\_metadata}!field\_max\_size@{field\_max\_size}}
+\index{field\_max\_size@{field\_max\_size}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{field\_max\_size}{field\_max\_size}}
+{\footnotesize\ttfamily \label{classenum__metadata_ad28786a42509c88043d32c6e32187dd0} 
+FE::\+uint32 enum\+\_\+metadata::\+field\+\_\+max\+\_\+size = 8\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__metadata_a9ee27aba0aa47ab162643877f5f1bf14}{enum\+\_\+to\+\_\+string()}}, and \doxymbox{\hyperlink{classenum__metadata_a9691ebb921ebfa2bd3009a51d0d5be32}{string\+\_\+to\+\_\+enum()}}.
+
+\Hypertarget{classenum__metadata_a3766afea9f0298596a336a280d65473a}\index{enum\_metadata@{enum\_metadata}!m\_string\_to\_value\_map@{m\_string\_to\_value\_map}}
+\index{m\_string\_to\_value\_map@{m\_string\_to\_value\_map}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{m\_string\_to\_value\_map}{m\_string\_to\_value\_map}}
+{\footnotesize\ttfamily \label{classenum__metadata_a3766afea9f0298596a336a280d65473a} 
+absl::\+flat\+\_\+hash\+\_\+map$<$ std::\+string\+\_\+view, std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$, FE::\+hash$<$std::\+string\+\_\+view$>$, std::\+equal\+\_\+to$<$std::\+string\+\_\+view$>$, FE::\+polymorphic\+\_\+allocator$<$std::\+pair$<$const std::\+string\+\_\+view, std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$ $>$ $>$ $>$ enum\+\_\+metadata::\+m\+\_\+string\+\_\+to\+\_\+value\+\_\+map\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{enum\+\_\+registry::\+register\+\_\+enum\+\_\+struct()}}, and \doxymbox{\hyperlink{classenum__metadata_a9691ebb921ebfa2bd3009a51d0d5be32}{string\+\_\+to\+\_\+enum()}}.
+
+\Hypertarget{classenum__metadata_a32839e9ecb4239e80e1ad90b47434e30}\index{enum\_metadata@{enum\_metadata}!m\_typename@{m\_typename}}
+\index{m\_typename@{m\_typename}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{m\_typename}{m\_typename}}
+{\footnotesize\ttfamily \label{classenum__metadata_a32839e9ecb4239e80e1ad90b47434e30} 
+std::\+string\+\_\+view enum\+\_\+metadata::\+m\+\_\+typename\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__metadata_aefa1c4a8a3e53a1b53d2a17962c0dab2}{get\+\_\+typename()}}, and \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{enum\+\_\+registry::\+register\+\_\+enum\+\_\+struct()}}.
+
+\Hypertarget{classenum__metadata_a71a632ad4f18fc35a2febd1ce793a422}\index{enum\_metadata@{enum\_metadata}!m\_value\_to\_string\_map@{m\_value\_to\_string\_map}}
+\index{m\_value\_to\_string\_map@{m\_value\_to\_string\_map}!enum\_metadata@{enum\_metadata}}
+\doxysubsubsection{\texorpdfstring{m\_value\_to\_string\_map}{m\_value\_to\_string\_map}}
+{\footnotesize\ttfamily \label{classenum__metadata_a71a632ad4f18fc35a2febd1ce793a422} 
+absl::\+flat\+\_\+hash\+\_\+map$<$std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$, std::\+string\+\_\+view, FE::\+hash$<$std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$ $>$, std::\+equal\+\_\+to$<$std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$ $>$, FE::\+polymorphic\+\_\+allocator$<$std::\+pair$<$const std::\+array$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}, \doxymbox{\hyperlink{classenum__metadata_ad28786a42509c88043d32c6e32187dd0}{field\+\_\+max\+\_\+size}}$>$, std::\+string\+\_\+view$>$ $>$ $>$ enum\+\_\+metadata::\+m\+\_\+value\+\_\+to\+\_\+string\+\_\+map\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classenum__metadata_a9ee27aba0aa47ab162643877f5f1bf14}{enum\+\_\+to\+\_\+string()}}, and \doxymbox{\hyperlink{classenum__registry_a4af4b9d6f7beae62b3d6cbbf384232be}{enum\+\_\+registry::\+register\+\_\+enum\+\_\+struct()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{reflection_8hxx}{reflection.\+hxx}}\end{DoxyCompactItemize}

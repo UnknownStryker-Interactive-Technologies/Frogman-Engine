@@ -1,0 +1,109 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+framework.hxx File Reference}
+\hypertarget{framework_2framework_8hxx}{}\label{framework_2framework_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/framework.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Framework/Include/FE/framework/framework.hxx}}
+{\ttfamily \+\#include $<$FE/\+prerequisites.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+pair.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include $<$functional$>$}\newline
+{\ttfamily \+\#include $<$FE/\+framework/\+reflection.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$FE/\+framework/\+thread\+\_\+id.\+hxx$>$}\newline
+Include dependency graph for framework.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{framework_2framework_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{classprogram__option}{program\+\_\+option}}
+\item 
+class \doxymbox{\hyperlink{classframework__base}{framework\+\_\+base}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{framework_2framework_8hxx_a3d3b45ac7c97b012cbd0d4a61f8492e5}{CUSTOM\+\_\+\+ENGINE}}(framework\+\_\+class\+\_\+name,  program\+\_\+option\+\_\+class\+\_\+name)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum struct \doxymbox{\hyperlink{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427}{Restart\+Or\+Not}} :\+ uint8 \{ \doxymbox{\hyperlink{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a978cb7a47b5728cd0d2471864870cfb2}{\+\_\+\+No\+Operation}} = 0
+, \doxymbox{\hyperlink{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a49bf6167bf89861f1c39ec1312cccdb6}{\+\_\+\+Has\+To\+Restart}} = 1
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{framework_2framework_8hxx_ab8ce6831e30ce7f5fccc760b761199e3}{CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION}} (FE::\+framework, \doxymbox{\hyperlink{class_e_c_s}{ECS}})
+\item 
+\doxymbox{\hyperlink{framework_2framework_8hxx_a3a39acabfe6998dbc4ab025cd767865d}{CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION}} (FE::\+framework, \doxymbox{\hyperlink{classprocessors}{processors}})
+\item 
+int \doxymbox{\hyperlink{framework_2framework_8hxx_a441f2663b243d257de640def209a80ee}{main}} (\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{FE::\+int32}} argc\+\_\+p, \doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv\+\_\+p)
+\end{DoxyCompactItemize}
+
+
+\label{framework_2framework_8hxx_doc-define-members}
+\Hypertarget{framework_2framework_8hxx_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{framework_2framework_8hxx_a3d3b45ac7c97b012cbd0d4a61f8492e5}\index{framework.hxx@{framework.hxx}!CUSTOM\_ENGINE@{CUSTOM\_ENGINE}}
+\index{CUSTOM\_ENGINE@{CUSTOM\_ENGINE}!framework.hxx@{framework.hxx}}
+\doxysubsubsection{\texorpdfstring{CUSTOM\_ENGINE}{CUSTOM\_ENGINE}}
+{\footnotesize\ttfamily \label{framework_2framework_8hxx_a3d3b45ac7c97b012cbd0d4a61f8492e5} 
+\+\#define CUSTOM\+\_\+\+ENGINE(\begin{DoxyParamCaption}\item[{}]{framework\+\_\+class\+\_\+name}{, }\item[{}]{program\+\_\+option\+\_\+class\+\_\+name}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{static\ ::std::function<\doxymbox{\hyperlink{class_f_e_1_1framework_1_1framework__base}{::FE::framework::framework\_base}}*\ (FE::int32,\ FE::ASCII**)>\ CustomEngine\ =\ ::FE::framework::framework\_base::allocate\_framework(\ [](FE::int32\ argc\_p,\ FE::ASCII**\ argv\_p)\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ framework\_class\_name(\ ::std::make\_unique<program\_option\_class\_name>(argc\_p,\ argv\_p)\ );\ \}\ );}
+
+\end{DoxyCode}
+
+
+\label{framework_2framework_8hxx_doc-enum-members}
+\Hypertarget{framework_2framework_8hxx_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427}\index{framework.hxx@{framework.hxx}!RestartOrNot@{RestartOrNot}}
+\index{RestartOrNot@{RestartOrNot}!framework.hxx@{framework.hxx}}
+\doxysubsubsection{\texorpdfstring{RestartOrNot}{RestartOrNot}}
+{\footnotesize\ttfamily \label{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427} 
+enum struct \doxymbox{\hyperlink{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427}{Restart\+Or\+Not}} :\+ \doxymbox{\hyperlink{types_8hxx_a4975f0ed4e8143fee4bddc72f539761a}{uint8}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_NoOperation@{\_NoOperation}!framework.hxx@{framework.hxx}}
+\index{framework.hxx@{framework.hxx}!\_NoOperation@{\_NoOperation}}
+}\Hypertarget{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a978cb7a47b5728cd0d2471864870cfb2}\label{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a978cb7a47b5728cd0d2471864870cfb2} 
+\+\_\+\+No\+Operation&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{\_HasToRestart@{\_HasToRestart}!framework.hxx@{framework.hxx}}
+\index{framework.hxx@{framework.hxx}!\_HasToRestart@{\_HasToRestart}}
+}\Hypertarget{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a49bf6167bf89861f1c39ec1312cccdb6}\label{framework_2framework_8hxx_a44587ecccb3e977081194cc30e4ab427a49bf6167bf89861f1c39ec1312cccdb6} 
+\+\_\+\+Has\+To\+Restart&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{framework_2framework_8hxx_doc-func-members}
+\Hypertarget{framework_2framework_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{framework_2framework_8hxx_ab8ce6831e30ce7f5fccc760b761199e3}\index{framework.hxx@{framework.hxx}!CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}}
+\index{CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}!framework.hxx@{framework.hxx}}
+\doxysubsubsection{\texorpdfstring{CLASS\_FORWARD\_DECLARATION()}{CLASS\_FORWARD\_DECLARATION()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{framework_2framework_8hxx_ab8ce6831e30ce7f5fccc760b761199e3} 
+CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION (\begin{DoxyParamCaption}\item[{FE::\+framework}]{}{, }\item[{\doxymbox{\hyperlink{class_e_c_s}{ECS}}}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{framework_2framework_8hxx_a3a39acabfe6998dbc4ab025cd767865d}\index{framework.hxx@{framework.hxx}!CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}}
+\index{CLASS\_FORWARD\_DECLARATION@{CLASS\_FORWARD\_DECLARATION}!framework.hxx@{framework.hxx}}
+\doxysubsubsection{\texorpdfstring{CLASS\_FORWARD\_DECLARATION()}{CLASS\_FORWARD\_DECLARATION()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{framework_2framework_8hxx_a3a39acabfe6998dbc4ab025cd767865d} 
+CLASS\+\_\+\+FORWARD\+\_\+\+DECLARATION (\begin{DoxyParamCaption}\item[{FE::\+framework}]{}{, }\item[{\doxymbox{\hyperlink{classprocessors}{processors}}}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{framework_2framework_8hxx_a441f2663b243d257de640def209a80ee}\index{framework.hxx@{framework.hxx}!main@{main}}
+\index{main@{main}!framework.hxx@{framework.hxx}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{framework_2framework_8hxx_a441f2663b243d257de640def209a80ee} 
+int main (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{FE::\+int32}}}]{argc\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{FE::\+\+ASCII}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv\+\_\+p}{}\end{DoxyParamCaption})}
+

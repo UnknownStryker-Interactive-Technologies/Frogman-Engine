@@ -1,0 +1,78 @@
+\doxysection{FHT::\+file\+\_\+io Namespace Reference}
+\hypertarget{namespace_f_h_t_1_1file__io}{}\label{namespace_f_h_t_1_1file__io}\index{FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+FE::\+boolean \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a5c0c94633375790e9c895718f3583aeb}{is\+\_\+file\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM}} (FE::\+wchar \texorpdfstring{$\ast$}{*}directory\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a4e1f787a482b001bc4befb6ea39f6beb}{make\+\_\+header\+\_\+file\+\_\+list}} (FE::\+int32 argc\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} $>$ \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a69c8663024bf121afc852319fd64c9ea}{map\+\_\+header\+\_\+files}} (const std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ \&file\+\_\+list\+\_\+p) noexcept
+\item 
+FE::\+boolean \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a452ece77c5f917a35b29bd254d3fa7c6}{is\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM}} (FE::\+\+UTF8 \texorpdfstring{$\ast$}{*}const buffer\+\_\+entry\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a388e2ed2bd88e66ed21f799a1a71cf39}{read\+\_\+copyright\+\_\+notice}} (FE::\+int32 argc\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constinit FE::\+uint8 \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a6e6632208346e899f66346d3317c0729}{UTF8\+\_\+\+BOM}} \+[3]\+
+\end{DoxyCompactItemize}
+
+
+\label{namespace_f_h_t_1_1file__io_doc-func-members}
+\Hypertarget{namespace_f_h_t_1_1file__io_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_f_h_t_1_1file__io_a452ece77c5f917a35b29bd254d3fa7c6}\index{FHT::file\_io@{FHT::file\_io}!is\_encoded\_with\_UTF8\_BOM@{is\_encoded\_with\_UTF8\_BOM}}
+\index{is\_encoded\_with\_UTF8\_BOM@{is\_encoded\_with\_UTF8\_BOM}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{is\_encoded\_with\_UTF8\_BOM()}{is\_encoded\_with\_UTF8\_BOM()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a452ece77c5f917a35b29bd254d3fa7c6} 
+FE::\+boolean FHT::\+file\+\_\+io::\+is\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM (\begin{DoxyParamCaption}\item[{FE::\+\+UTF8 \texorpdfstring{$\ast$}{*}const}]{buffer\+\_\+entry\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1file__io_a5c0c94633375790e9c895718f3583aeb}\index{FHT::file\_io@{FHT::file\_io}!is\_file\_encoded\_with\_UTF8\_BOM@{is\_file\_encoded\_with\_UTF8\_BOM}}
+\index{is\_file\_encoded\_with\_UTF8\_BOM@{is\_file\_encoded\_with\_UTF8\_BOM}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{is\_file\_encoded\_with\_UTF8\_BOM()}{is\_file\_encoded\_with\_UTF8\_BOM()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a5c0c94633375790e9c895718f3583aeb} 
+FE::\+boolean FHT::\+file\+\_\+io::\+is\+\_\+file\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM (\begin{DoxyParamCaption}\item[{FE::\+wchar \texorpdfstring{$\ast$}{*}}]{directory\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{namespace_f_h_t_1_1file__io_a4e1f787a482b001bc4befb6ea39f6beb}\index{FHT::file\_io@{FHT::file\_io}!make\_header\_file\_list@{make\_header\_file\_list}}
+\index{make\_header\_file\_list@{make\_header\_file\_list}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{make\_header\_file\_list()}{make\_header\_file\_list()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a4e1f787a482b001bc4befb6ea39f6beb} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ FHT::\+file\+\_\+io::\+make\+\_\+header\+\_\+file\+\_\+list (\begin{DoxyParamCaption}\item[{FE::\+int32}]{argc\+\_\+p}{, }\item[{FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{namespace_f_h_t_1_1file__io_a69c8663024bf121afc852319fd64c9ea}\index{FHT::file\_io@{FHT::file\_io}!map\_header\_files@{map\_header\_files}}
+\index{map\_header\_files@{map\_header\_files}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{map\_header\_files()}{map\_header\_files()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a69c8663024bf121afc852319fd64c9ea} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} $>$ FHT::\+file\+\_\+io::\+map\+\_\+header\+\_\+files (\begin{DoxyParamCaption}\item[{const std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ \&}]{file\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+\Hypertarget{namespace_f_h_t_1_1file__io_a388e2ed2bd88e66ed21f799a1a71cf39}\index{FHT::file\_io@{FHT::file\_io}!read\_copyright\_notice@{read\_copyright\_notice}}
+\index{read\_copyright\_notice@{read\_copyright\_notice}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{read\_copyright\_notice()}{read\_copyright\_notice()}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a388e2ed2bd88e66ed21f799a1a71cf39} 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} FHT::\+file\+\_\+io::\+read\+\_\+copyright\+\_\+notice (\begin{DoxyParamCaption}\item[{FE::\+int32}]{argc\+\_\+p}{, }\item[{FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{argv\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}}.
+
+
+
+\label{namespace_f_h_t_1_1file__io_doc-var-members}
+\Hypertarget{namespace_f_h_t_1_1file__io_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{namespace_f_h_t_1_1file__io_a6e6632208346e899f66346d3317c0729}\index{FHT::file\_io@{FHT::file\_io}!UTF8\_BOM@{UTF8\_BOM}}
+\index{UTF8\_BOM@{UTF8\_BOM}!FHT::file\_io@{FHT::file\_io}}
+\doxysubsubsection{\texorpdfstring{UTF8\_BOM}{UTF8\_BOM}}
+{\footnotesize\ttfamily \label{namespace_f_h_t_1_1file__io_a6e6632208346e899f66346d3317c0729} 
+FE::\+uint8 FHT::\+file\+\_\+io::\+\+UTF8\+\_\+\+BOM\+[3]\+\hspace{0.3cm}{\ttfamily [extern]}, {\ttfamily [constinit]}}
+

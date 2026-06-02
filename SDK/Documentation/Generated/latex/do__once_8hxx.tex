@@ -1,0 +1,67 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+do\+\_\+once.hxx File Reference}
+\hypertarget{do__once_8hxx}{}\label{do__once_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/do\_once.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/do\_once.hxx}}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_f_e_1_1internal_1_1do__once}{FE::\+internal::\+do\+\_\+once}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_f_e}{FE}}
+\item 
+namespace \doxymbox{\hyperlink{namespace_f_e_1_1internal}{FE::\+internal}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{do__once_8hxx_a5ee4f4bd1c5d7d01ee34aa5670a823ee}{\+\_\+\+DO\+\_\+\+ONCE\+\_\+\+PER\+\_\+\+APP\+\_\+\+EXECUTION\+\_\+}}~static
+\item 
+\+\#define \doxymbox{\hyperlink{do__once_8hxx_a3fb2765437a9c401962402a41e30c1be}{\+\_\+\+DO\+\_\+\+ONCE\+\_\+\+PER\+\_\+\+THREAD\+\_\+}}~thread\+\_\+local static
+\item 
+\+\#define \doxymbox{\hyperlink{do__once_8hxx_a46f63a33fe174e867dd6e44436db16c0}{FE\+\_\+\+DO\+\_\+\+ONCE}}(frequency, ...)
+\end{DoxyCompactItemize}
+
+
+\label{do__once_8hxx_doc-define-members}
+\Hypertarget{do__once_8hxx_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{do__once_8hxx_a5ee4f4bd1c5d7d01ee34aa5670a823ee}\index{do\_once.hxx@{do\_once.hxx}!\_DO\_ONCE\_PER\_APP\_EXECUTION\_@{\_DO\_ONCE\_PER\_APP\_EXECUTION\_}}
+\index{\_DO\_ONCE\_PER\_APP\_EXECUTION\_@{\_DO\_ONCE\_PER\_APP\_EXECUTION\_}!do\_once.hxx@{do\_once.hxx}}
+\doxysubsubsection{\texorpdfstring{\_DO\_ONCE\_PER\_APP\_EXECUTION\_}{\_DO\_ONCE\_PER\_APP\_EXECUTION\_}}
+{\footnotesize\ttfamily \label{do__once_8hxx_a5ee4f4bd1c5d7d01ee34aa5670a823ee} 
+\+\#define \+\_\+\+DO\+\_\+\+ONCE\+\_\+\+PER\+\_\+\+APP\+\_\+\+EXECUTION\+\_\+~static}
+
+
+
+Referenced by \doxymbox{\hyperlink{classlarge_1_1pool_3_01_pool_type_1_1___block_large_page_00_01_alignment_01_4_a6d44c6ba60ef2b927bd59c560f2fddcd}{large::\+pool$<$ Pool\+Type::\+\+\_\+\+Block\+Large\+Page, Alignment $>$::\+pool()}}, and \doxymbox{\hyperlink{classlarge_1_1pool_3_01_pool_type_1_1___scalable_large_page_00_01_alignment_01_4_af2e5b8ba1770df9289675febcfaeaeae}{large::\+pool$<$ Pool\+Type::\+\+\_\+\+Scalable\+Large\+Page, Alignment $>$::\+pool()}}.
+
+\Hypertarget{do__once_8hxx_a3fb2765437a9c401962402a41e30c1be}\index{do\_once.hxx@{do\_once.hxx}!\_DO\_ONCE\_PER\_THREAD\_@{\_DO\_ONCE\_PER\_THREAD\_}}
+\index{\_DO\_ONCE\_PER\_THREAD\_@{\_DO\_ONCE\_PER\_THREAD\_}!do\_once.hxx@{do\_once.hxx}}
+\doxysubsubsection{\texorpdfstring{\_DO\_ONCE\_PER\_THREAD\_}{\_DO\_ONCE\_PER\_THREAD\_}}
+{\footnotesize\ttfamily \label{do__once_8hxx_a3fb2765437a9c401962402a41e30c1be} 
+\+\#define \+\_\+\+DO\+\_\+\+ONCE\+\_\+\+PER\+\_\+\+THREAD\+\_\+~thread\+\_\+local static}
+
+
+
+Referenced by \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+info::\+type\+\_\+id}}.
+
+\Hypertarget{do__once_8hxx_a46f63a33fe174e867dd6e44436db16c0}\index{do\_once.hxx@{do\_once.hxx}!FE\_DO\_ONCE@{FE\_DO\_ONCE}}
+\index{FE\_DO\_ONCE@{FE\_DO\_ONCE}!do\_once.hxx@{do\_once.hxx}}
+\doxysubsubsection{\texorpdfstring{FE\_DO\_ONCE}{FE\_DO\_ONCE}}
+{\footnotesize\ttfamily \label{do__once_8hxx_a46f63a33fe174e867dd6e44436db16c0} 
+\+\#define FE\+\_\+\+DO\+\_\+\+ONCE(\begin{DoxyParamCaption}\item[{}]{frequency}{, }\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ frequency\ ::FE::internal::do\_once\ \_\_FE\_DO\_ONCE\_INSTANCE\_\_(\ [\&]()\ \{\ \_\_VA\_ARGS\_\_;\ \}\ );\ \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Referenced by \doxymbox{\hyperlink{classlarge_1_1pool_3_01_pool_type_1_1___block_large_page_00_01_alignment_01_4_a6d44c6ba60ef2b927bd59c560f2fddcd}{large::\+pool$<$ Pool\+Type::\+\+\_\+\+Block\+Large\+Page, Alignment $>$::\+pool()}}, \doxymbox{\hyperlink{classlarge_1_1pool_3_01_pool_type_1_1___scalable_large_page_00_01_alignment_01_4_af2e5b8ba1770df9289675febcfaeaeae}{large::\+pool$<$ Pool\+Type::\+\+\_\+\+Scalable\+Large\+Page, Alignment $>$::\+pool()}}, and \doxymbox{\hyperlink{classtype__info_ac5a59e16ab95402d743f26f2d1eacbe2}{type\+\_\+info::\+type\+\_\+id}}.
+

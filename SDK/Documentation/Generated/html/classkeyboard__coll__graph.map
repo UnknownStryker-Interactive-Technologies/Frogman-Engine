@@ -1,0 +1,17 @@
+<map id="keyboard" name="keyboard">
+<area shape="rect" id="Node000001" title=" " alt="" coords="198,416,273,443"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="156,5,302,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,47,238,416,233,415,227,49"/>
+<area shape="rect" id="Node000003" href="$classkeyboard__callbacks.html" title=" " alt="" coords="17,317,153,344"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="221,45,220,57,202,126,192,182,176,235,162,263,140,295,112,319,109,315,136,292,157,261,172,233,187,180,197,125,214,55,219,49"/>
+<area shape="rect" id="Node000005" href="$classkeyboard__state.html" title=" " alt="" coords="280,317,391,344"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="248,42,257,55,288,130,311,206,336,317,331,316,306,208,283,132,252,57,248,47"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="80,357,83,376,89,390,106,401,134,410,201,423,195,425,132,415,103,406,85,394,77,377,78,362"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,133,32"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="73,47,87,317,82,317,68,49"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="314,354,250,418,247,414,309,356"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="326,5,402,32"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="356,44,355,56,344,133,339,209,338,318,333,316,334,209,339,133,350,56,353,49"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="438,5,513,32"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="483,45,491,98,492,164,488,199,480,233,467,266,448,295,423,315,392,326,390,321,420,311,444,292,463,263,475,231,483,198,487,164,486,99,480,50"/>
+</map>

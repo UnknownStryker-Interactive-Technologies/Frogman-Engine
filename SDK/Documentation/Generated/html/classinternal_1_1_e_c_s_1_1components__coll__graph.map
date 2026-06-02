@@ -1,0 +1,9 @@
+<map id="internal::ECS::components" name="internal::ECS::components">
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,120,265,147"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,51,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="35,52,47,75,61,94,81,107,106,119,100,120,79,112,58,98,42,78,34,57"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="74,5,278,48"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,62,178,120,174,118,174,65"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="302,13,404,40"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="335,50,310,77,280,98,225,122,223,117,277,94,306,73,330,52"/>
+</map>

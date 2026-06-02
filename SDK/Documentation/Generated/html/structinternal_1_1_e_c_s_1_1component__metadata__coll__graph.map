@@ -1,0 +1,13 @@
+<map id="internal::ECS::component_metadata" name="internal::ECS::component_metadata">
+<area shape="rect" id="Node000001" title=" " alt="" coords="477,112,649,155"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="170,5,335,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="350,52,454,81,521,111,516,112,452,87,350,57"/>
+<area shape="rect" id="Node000003" href="$classiterator.html" title=" " alt="" coords="165,88,339,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="355,109,480,124,474,125,355,115"/>
+<area shape="rect" id="Node000004" href="$class_implementation.html" title=" " alt="" coords="5,88,116,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="130,99,167,100,162,103,132,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="224,157,280,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="296,173,370,177,412,176,453,171,511,156,516,155,454,176,412,181,370,182,296,179"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="219,212,285,239"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="300,226,374,223,414,217,452,207,499,182,536,156,541,154,502,187,454,212,415,223,374,229,301,231"/>
+</map>

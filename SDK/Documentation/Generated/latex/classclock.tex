@@ -1,0 +1,211 @@
+\doxysection{clock Class Reference}
+\hypertarget{classclock}{}\label{classclock}\index{clock@{clock}}
+
+
+{\ttfamily \+\#include $<$clock.\+hxx$>$}
+
+
+
+Collaboration diagram for clock:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classclock__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{char\+\_\+type}} = char
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classclock_a29d05968aca6a8e9471463d6b8ae8202}{clock}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{classclock_added7c31e36fd31f000b21a083ba614d}{\texorpdfstring{$\sim$}{\string~}clock}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classclock_acc50d58df35c099adaa418bc26002760}{start\+\_\+clock}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{classclock_a9ea6852cf38d194aff28b28315271d3d}{end\+\_\+clock}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1e7a0f65188fcad549252600671e3a78}{float64}} \doxymbox{\hyperlink{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}{get\+\_\+delta\+\_\+milliseconds}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static const \doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{char\+\_\+type}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classclock_a33d960143b28198afc9d54324e1a6535}{get\+\_\+current\+\_\+local\+\_\+time}} () noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} int \doxymbox{\hyperlink{classclock_ab99623a827c296279d3715c96cdd99b2}{current\+\_\+local\+\_\+time\+\_\+buffer\+\_\+size}} = 64
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+boost::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\+\_\+starting\+\_\+point}}
+\item 
+boost::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\+\_\+ending\+\_\+point}}
+\item 
+boost::\+chrono::\+duration$<$ \doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}}, boost::\+milli $>$ \doxymbox{\hyperlink{classclock_a10aadd86485ca41c58756f6e33aa6075}{m\+\_\+delta}}
+\end{DoxyCompactItemize}
+
+
+\label{classclock_doc-typedef-members}
+\Hypertarget{classclock_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}\index{clock@{clock}!char\_type@{char\_type}}
+\index{char\_type@{char\_type}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{char\_type}{char\_type}}
+{\footnotesize\ttfamily \label{classclock_a5a1ff76c0c5dabc6faadda0908df55a8} 
+using \doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{clock::\+char\+\_\+type}} = char}
+
+
+
+\label{classclock_doc-constructors}
+\Hypertarget{classclock_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classclock_a29d05968aca6a8e9471463d6b8ae8202}\index{clock@{clock}!clock@{clock}}
+\index{clock@{clock}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{clock()}{clock()}}
+{\footnotesize\ttfamily \label{classclock_a29d05968aca6a8e9471463d6b8ae8202} 
+clock::\+clock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classclock_added7c31e36fd31f000b21a083ba614d}{\texorpdfstring{$\sim$}{\string~}clock()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=259pt]{classclock_a29d05968aca6a8e9471463d6b8ae8202_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classclock_added7c31e36fd31f000b21a083ba614d}\index{clock@{clock}!````~clock@{\texorpdfstring{$\sim$}{\string~}clock}}
+\index{````~clock@{\texorpdfstring{$\sim$}{\string~}clock}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}clock()}{\string~clock()}}
+{\footnotesize\ttfamily \label{classclock_added7c31e36fd31f000b21a083ba614d} 
+clock::\+\texorpdfstring{$\sim$}{\string~}clock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classclock_a29d05968aca6a8e9471463d6b8ae8202}{clock()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=259pt]{classclock_added7c31e36fd31f000b21a083ba614d_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classclock_doc-func-members}
+\Hypertarget{classclock_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classclock_a9ea6852cf38d194aff28b28315271d3d}\index{clock@{clock}!end\_clock@{end\_clock}}
+\index{end\_clock@{end\_clock}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{end\_clock()}{end\_clock()}}
+{\footnotesize\ttfamily \label{classclock_a9ea6852cf38d194aff28b28315271d3d} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void clock::\+end\+\_\+clock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\+\_\+ending\+\_\+point}}.
+
+\Hypertarget{classclock_a33d960143b28198afc9d54324e1a6535}\index{clock@{clock}!get\_current\_local\_time@{get\_current\_local\_time}}
+\index{get\_current\_local\_time@{get\_current\_local\_time}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{get\_current\_local\_time()}{get\_current\_local\_time()}}
+{\footnotesize\ttfamily \label{classclock_a33d960143b28198afc9d54324e1a6535} 
+const \doxymbox{\hyperlink{classclock_a5a1ff76c0c5dabc6faadda0908df55a8}{char\+\_\+type}} \texorpdfstring{$\ast$}{*} clock::\+get\+\_\+current\+\_\+local\+\_\+time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\+\_\+\+NAMESPACE}}.
+
+\Hypertarget{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}\index{clock@{clock}!get\_delta\_milliseconds@{get\_delta\_milliseconds}}
+\index{get\_delta\_milliseconds@{get\_delta\_milliseconds}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{get\_delta\_milliseconds()}{get\_delta\_milliseconds()}}
+{\footnotesize\ttfamily \label{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{types_8hxx_a1e7a0f65188fcad549252600671e3a78}{float64}} clock::\+get\+\_\+delta\+\_\+milliseconds (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classclock_a10aadd86485ca41c58756f6e33aa6075}{m\+\_\+delta}}, \doxymbox{\hyperlink{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}{m\+\_\+ending\+\_\+point}}, and \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\+\_\+starting\+\_\+point}}.
+
+\Hypertarget{classclock_acc50d58df35c099adaa418bc26002760}\index{clock@{clock}!start\_clock@{start\_clock}}
+\index{start\_clock@{start\_clock}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{start\_clock()}{start\_clock()}}
+{\footnotesize\ttfamily \label{classclock_acc50d58df35c099adaa418bc26002760} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void clock::\+start\+\_\+clock (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classclock_a808b97d000251a11fc967190066610ff}{m\+\_\+starting\+\_\+point}}, and \doxymbox{\hyperlink{classclock_acc50d58df35c099adaa418bc26002760}{start\+\_\+clock()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classclock_acc50d58df35c099adaa418bc26002760}{start\+\_\+clock()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=173pt]{classclock_acc50d58df35c099adaa418bc26002760_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=173pt]{classclock_acc50d58df35c099adaa418bc26002760_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{classclock_doc-variable-members}
+\Hypertarget{classclock_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classclock_ab99623a827c296279d3715c96cdd99b2}\index{clock@{clock}!current\_local\_time\_buffer\_size@{current\_local\_time\_buffer\_size}}
+\index{current\_local\_time\_buffer\_size@{current\_local\_time\_buffer\_size}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{current\_local\_time\_buffer\_size}{current\_local\_time\_buffer\_size}}
+{\footnotesize\ttfamily \label{classclock_ab99623a827c296279d3715c96cdd99b2} 
+\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\+\_\+\+FE\+\_\+\+MAYBE\+\_\+\+UNUSED\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} int clock::\+current\+\_\+local\+\_\+time\+\_\+buffer\+\_\+size = 64\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [constexpr]}}
+
+\Hypertarget{classclock_a10aadd86485ca41c58756f6e33aa6075}\index{clock@{clock}!m\_delta@{m\_delta}}
+\index{m\_delta@{m\_delta}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{m\_delta}{m\_delta}}
+{\footnotesize\ttfamily \label{classclock_a10aadd86485ca41c58756f6e33aa6075} 
+boost::\+chrono::\+duration$<$\doxymbox{\hyperlink{namespacevar_adc6842d65fc6937bd85a849d46375859}{var::\+float64}}, boost::\+milli$>$ clock::\+m\+\_\+delta\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}{get\+\_\+delta\+\_\+milliseconds()}}.
+
+\Hypertarget{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e}\index{clock@{clock}!m\_ending\_point@{m\_ending\_point}}
+\index{m\_ending\_point@{m\_ending\_point}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{m\_ending\_point}{m\_ending\_point}}
+{\footnotesize\ttfamily \label{classclock_a3e4116a5eab76f29d1cf1d9c08707a5e} 
+boost::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point clock::\+m\+\_\+ending\+\_\+point\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classclock_a9ea6852cf38d194aff28b28315271d3d}{end\+\_\+clock()}}, and \doxymbox{\hyperlink{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}{get\+\_\+delta\+\_\+milliseconds()}}.
+
+\Hypertarget{classclock_a808b97d000251a11fc967190066610ff}\index{clock@{clock}!m\_starting\_point@{m\_starting\_point}}
+\index{m\_starting\_point@{m\_starting\_point}!clock@{clock}}
+\doxysubsubsection{\texorpdfstring{m\_starting\_point}{m\_starting\_point}}
+{\footnotesize\ttfamily \label{classclock_a808b97d000251a11fc967190066610ff} 
+boost::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point clock::\+m\+\_\+starting\+\_\+point\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classclock_a3c2656ce3c88dbb8bfa39c2d3d93a6ac}{get\+\_\+delta\+\_\+milliseconds()}}, and \doxymbox{\hyperlink{classclock_acc50d58df35c099adaa418bc26002760}{start\+\_\+clock()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{clock_8hxx}{clock.\+hxx}}\end{DoxyCompactItemize}

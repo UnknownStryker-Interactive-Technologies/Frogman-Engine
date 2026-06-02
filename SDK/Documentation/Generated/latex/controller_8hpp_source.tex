@@ -1,0 +1,68 @@
+\doxysection{controller.\+hpp}
+\hypertarget{controller_8hpp_source}{}\label{controller_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/controller.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/controller.hpp}}
+\doxymbox{\hyperlink{controller_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_CONTROLLER\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_CONTROLLER\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_e_c_s_8hxx}{FE/framework/ECS.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{input__device_8hpp}{FE/input\_device.hpp}}>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ enum\ struct\ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{ControllerType}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9a325453d8f0c9d0d5dd5e4e4a4e7802d3}{\_KeyboardAndMouse}},}
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9a63df67d67b3542f33893f7a6f194704a}{\_SpearX}},}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9acb9b328cf08fa6a1855a58a9612f35ae}{\_AI}}}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classcontroller_a1b5bc0db300058326b4b2870cffa56cd}{controller}}\ :\ \textcolor{keyword}{public}\ FE::archetype\_base}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classcontroller_adade9cf636e4f2bf2ddc1186b7fd3bd1}{base\_type}}\ =\ FE::archetype\_base;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{ControllerType}}\ \doxymbox{\hyperlink{classcontroller_aff80014066793550acc999fd97108750}{m\_device\_type}};}
+\DoxyCodeLine{00041\ \ \ \ \ FE::entity<FE::archetype\_base>\ \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\_player}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ FE::component\_view<FE::input\_device::keyboard>\ \doxymbox{\hyperlink{classcontroller_ae897845e28482166f68d89316caa242a}{m\_keyboard\_view}};}
+\DoxyCodeLine{00044\ \ \ \ \ FE::component\_view<FE::input\_device::mouse>\ \doxymbox{\hyperlink{classcontroller_ac553e42e77cf15787024b249dbd02b97}{m\_mouse\_view}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{classcontroller_a1b5bc0db300058326b4b2870cffa56cd}{controller}}(framework::ECS\&\ host\_p,\ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{ControllerType}}\ device\_type\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classcontroller_a9a4f1f3b10097f4e05bef17a7e3da905}{\string~controller}}()\ noexcept\ override;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{controller_8hpp_a81059b4122c9dd4608d347eb117ae8c9}{ControllerType}}\ \doxymbox{\hyperlink{classcontroller_a796ae74a5c922e0135fd4745b577ad7c}{get\_device\_type}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classcontroller_aff80014066793550acc999fd97108750}{m\_device\_type}};\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::entity<FE::archetype\_base>\ \doxymbox{\hyperlink{classcontroller_a24f13c93365cbe674bfda62ac676362b}{get\_player}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\_player}};\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::entity<FE::archetype\_base>\ \doxymbox{\hyperlink{classcontroller_a6d9a04b5b51a8719016bf50cfa0b4d6d}{get\_player}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\_player}};\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classcontroller_af3f91125801924170b43d074d521e2ab}{set\_player}}(\textcolor{keyword}{const}\ FE::entity<FE::archetype\_base>\&\ player\_p)\ \textcolor{keyword}{noexcept}\ \{\ \doxymbox{\hyperlink{classcontroller_a342ba3aeba77dd6902b9848fc27afea8}{m\_player}}\ =\ player\_p;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::input\_device::keyboard\&\ \doxymbox{\hyperlink{classcontroller_ae60a602b0129a9ebc26b331c69a29f60}{get\_keyboard}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *\doxymbox{\hyperlink{classcontroller_ae897845e28482166f68d89316caa242a}{m\_keyboard\_view}};\ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::input\_device::mouse\&\ \doxymbox{\hyperlink{classcontroller_a9a34df42269851ba341e8a73eda73dd9}{get\_mouse}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *\doxymbox{\hyperlink{classcontroller_ac553e42e77cf15787024b249dbd02b97}{m\_mouse\_view}};\ \}}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

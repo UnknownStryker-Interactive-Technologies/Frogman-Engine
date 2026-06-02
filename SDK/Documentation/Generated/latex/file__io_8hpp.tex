@@ -1,0 +1,48 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Header-\/\+Tool/\+\+Include/\+file\+\_\+io.hpp File Reference}
+\hypertarget{file__io_8hpp}{}\label{file__io_8hpp}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/file\_io.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/file\_io.hpp}}
+{\ttfamily \+\#include "{}token.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}error\+\_\+code.\+hpp"{}}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+Include dependency graph for file\+\_\+io.\+hpp:\+
+% FIG 0
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_f_h_t}{FHT}}
+\item 
+namespace \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io}{FHT::\+file\+\_\+io}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{file__io_8hpp_af08ec37a8c99d747fb60fa15bc28678b}{\+\_\+\+CRT\+\_\+\+SECURE\+\_\+\+NO\+\_\+\+WARNINGS}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+FE::\+boolean \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a5c0c94633375790e9c895718f3583aeb}{FHT::\+file\+\_\+io::\+is\+\_\+file\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM}} (FE::\+wchar \texorpdfstring{$\ast$}{*}directory\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a4e1f787a482b001bc4befb6ea39f6beb}{FHT::\+file\+\_\+io::\+make\+\_\+header\+\_\+file\+\_\+list}} (FE::\+int32 argc\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} $>$ \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a69c8663024bf121afc852319fd64c9ea}{FHT::\+file\+\_\+io::\+map\+\_\+header\+\_\+files}} (const std::\+pmr::\+vector$<$ \doxymbox{\hyperlink{token_8hpp_a7c7e9c4230447b27f780af1269f02b6c}{directory\+\_\+t}} $>$ \&file\+\_\+list\+\_\+p) noexcept
+\item 
+FE::\+boolean \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a452ece77c5f917a35b29bd254d3fa7c6}{FHT::\+file\+\_\+io::\+is\+\_\+encoded\+\_\+with\+\_\+\+UTF8\+\_\+\+BOM}} (FE::\+\+UTF8 \texorpdfstring{$\ast$}{*}const buffer\+\_\+entry\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a2e2ca0097e75d01712f46b5ea9d53b6e}{\+\_\+\+FE\+\_\+\+NODISCARD\+\_\+}} \doxymbox{\hyperlink{token_8hpp_ab7574426f0b7bd5a9d030ff8fbea324a}{file\+\_\+buffer\+\_\+t}} \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a388e2ed2bd88e66ed21f799a1a71cf39}{FHT::\+file\+\_\+io::\+read\+\_\+copyright\+\_\+notice}} (FE::\+int32 argc\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}argv\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constinit FE::\+uint8 \doxymbox{\hyperlink{namespace_f_h_t_1_1file__io_a6e6632208346e899f66346d3317c0729}{FHT::\+file\+\_\+io::\+\+UTF8\+\_\+\+BOM}} \+[3]\+
+\end{DoxyCompactItemize}
+
+
+\label{file__io_8hpp_doc-define-members}
+\Hypertarget{file__io_8hpp_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{file__io_8hpp_af08ec37a8c99d747fb60fa15bc28678b}\index{file\_io.hpp@{file\_io.hpp}!\_CRT\_SECURE\_NO\_WARNINGS@{\_CRT\_SECURE\_NO\_WARNINGS}}
+\index{\_CRT\_SECURE\_NO\_WARNINGS@{\_CRT\_SECURE\_NO\_WARNINGS}!file\_io.hpp@{file\_io.hpp}}
+\doxysubsubsection{\texorpdfstring{\_CRT\_SECURE\_NO\_WARNINGS}{\_CRT\_SECURE\_NO\_WARNINGS}}
+{\footnotesize\ttfamily \label{file__io_8hpp_af08ec37a8c99d747fb60fa15bc28678b} 
+\+\#define \+\_\+\+CRT\+\_\+\+SECURE\+\_\+\+NO\+\_\+\+WARNINGS}
+

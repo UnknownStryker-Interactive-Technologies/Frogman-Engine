@@ -1,0 +1,122 @@
+\doxysection{vocabulary.\+hpp}
+\hypertarget{vocabulary_8hpp_source}{}\label{vocabulary_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/vocabulary.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Header-\/Tool/Include/vocabulary.hpp}}
+\doxymbox{\hyperlink{vocabulary_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_HEADER\_TOOL\_VOCABULARY\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_HEADER\_TOOL\_VOCABULARY\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2024\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ trie}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <tsl/htrie\_map.h>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065}{Vocabulary}}\ :\ FE::uint32}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a99b8e8f98ec8efcf4b56a1fa0ec5997b}{\_Undefined}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab3615f2c54c82f5a099d9d6346223ea5}{\_EndOfCode}},}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5a06eed9653185f36622d7ca16c1d170}{\_AnyDecl}},}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1}{\_LineComment}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8b3ea1bd49643376a6b61024d119c0f3}{\_LineEnd}},}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9}{\_CommentBegin}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2}{\_CommentEnd}},}
+\DoxyCodeLine{00034\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a79dec327a9e8ee84b7858235478cd088}{\_CommentBody}},}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8}{\_BeginNamespace}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507}{\_EndNamespace}},}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a1db22cb15042a2b61385331e797576a4}{\_Namespace}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718}{\_NamespaceConcatenator}},}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afd2b6dcafaf9ec20484194e9fd07b095}{\_Template}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4c6dec3535bb22abfae47d18d99461b}{\_BeginTemplateArgs}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac00e33848d422c0736d097a7438facab}{\_Typename}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a893c51429255a7da27f8f389ca4b353e}{\_TemplateArg}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a2039f0aca0ceed17c357242883f30ebe}{\_EndTemplateArgs}},}
+\DoxyCodeLine{00040\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9e1fdefd21c40a4c8b7abf110b1b0de8}{\_TemplateBody}},}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afec3c3a1002be26952cb8116eba7533d}{\_Class}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9264400ad12d1a8458abed8b080839d8}{\_Struct}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a237da50c7c4b3716f9e73e2c3b4258eb}{\_EnumStruct}},}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065afe637dbdfe071bb3544957f3b5f417fe}{\_ClassStructEnumForwardDeclaration}},}
+\DoxyCodeLine{00044\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a311b09a3b446ee3ba12a2b8c3cff221b}{\_FieldType}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8f1ca47f544372dbc605a3867aa7d163}{\_FieldIdentifier}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac46254636214e0a1752e2ef7a01e69c0}{\_EnumStructField}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ae360c2baf727af8f3e3a7f2a9ee7ce2d}{\_EnumStructFieldInitialValue}},}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9d5db9a2f9dbbda8908205196fa5d5f2}{\_Colon}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee6b32fc86b0ebe723034e82f158fe05}{\_Semicolon}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa092ce4be0fdc357ff9d1bae9b17246f}{\_Comma}},}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a368d6f342c7137ffae57c8a4e12b29dc}{\_BackSlash}},}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad6066dc4012876fc8eb3e1c773dd52d1}{\_TextLiteralPrefix}},}
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aab1991c3eae67799a94ede3fc8e5068f}{\_StringLiteral}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3b49a70500fb1ae3f8d307d5ee5ddcbe}{\_CharLiteral}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeb1a2177279992441b16eb5963a5a77b}{\_NumberValue}},}
+\DoxyCodeLine{00052\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8707dcc0102953abb94ddf23b2075802}{\_Operator}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08c471abdc60cd1538f2893ac87bce78}{\_AssignmentOperator}},}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e}{\_Virtual}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652}{\_Override}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5}{\_Final}},}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78}{\_Private}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd}{\_Protected}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6}{\_Public}},}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7}{\_Static}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d}{\_ThreadLocal}},}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579}{\_Const}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958}{\_Volatile}},}
+\DoxyCodeLine{00061\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065adb5c3a47e2b7e3f8c2aa80a7c69ffd8c}{\_Reference}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a6d109a29ab54ba4b620552b396a279a5}{\_Pointer}},}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac}{\_Noexcept}},}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50}{\_Constexpr}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f}{\_Consteval}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935}{\_Constinit}},}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aaefe03700a63e594bc70aa2f48967ace}{\_LeftParen}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7d8770d6216fb91f7659af13114909bd}{\_RightParen}},}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065abcb4e9b971723ae32c86b903e7c1a0f6}{\_LeftBracket}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28a74918e1c780911597c1f8f42512d}{\_RightBracket}},}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aa01c4999c9402eb81dfd497d72466b13}{\_LeftCurlyBracket}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3db6868480de515408089e58c30d0824}{\_RightCurlyBracket}},}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af28f0ac81fad7d93e4da285e98fab1a6}{\_CallingConvention}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a8fa9d30e85e82cfbfa81db753ce8d9c2}{\_FnReturnType}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aade38001c19d46238a92fb8655ad1996}{\_FnIdentifier}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065af4d1538f2a5dd42aeade5f8c911b769a}{\_FnParameterList}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a415a61486fa7f108ae131bfb8853db74}{\_FnBody}},}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb}{\_StaticAssert}},}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a012157b56671d3cd56827dd8fec4ec3e}{\_FrogmanEngineBaseClassReflectionMacro}},}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114}{\_FrogmanEngineClassReflectionMacro}},}
+\DoxyCodeLine{00076\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1}{\_FrogmanEngineStructReflectionMacro}},}
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7eb60689ec28f8f3d4c82e3aaadcff35}{\_FrogmanEnginePropertyReflectionMacro}},}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a3c50258ab0f4ce7bf3a2749392e90d71}{\_FrogmanEngineStaticMethodReflectionMacro}},}
+\DoxyCodeLine{00079\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a578e01c16b161145a900cf9c37cca6d6}{\_FrogmanEngineMethodReflectionMacro}},}
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06}{\_FrogmanEngineEnumStructReflectionMacro}},}
+\DoxyCodeLine{00081\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f}{\_FrogmanEngineSystemMacro}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a08dffbc204c9db4ae5cd8ea617a5a334}{\_FrogmanEngineSystemArgSysCallPhase}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad7c64aed723208d09cc570f7f50b3779}{\_FrogmanEngineSystemArgTargetComponentType}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad0cc36f8dd185ec0981d89a2f704995f}{\_FrogmanEngineSystemArgWorldTagEnumType}},}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ad04c89bd21e7cfca8391ba6713635eaa}{\_PreprocessorDirective}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aef7e45679ec14f91903a1f36ebce452d}{\_PreprocessorNextLine}},}
+\DoxyCodeLine{00084\ \ \ \ \ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065acd14ba1cb2b51fb72f606e48167dda41}{\_Preprocessor}},}
+\DoxyCodeLine{00085\ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{const}\ tsl::htrie\_map<var::ASCII,\ Vocabulary>\ \doxymbox{\hyperlink{vocabulary_8hpp_a519523e96179a8ae2497a3085c050eb8}{g\_vocabulary}}\ =}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \{\textcolor{stringliteral}{"{}//"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a33cbe733ea0a7d46b3644f38bd323cb1}{Vocabulary::\_LineComment}}\},}
+\DoxyCodeLine{00091\ \ \ \ \ \{\textcolor{stringliteral}{"{}/*"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0c7f1c22076cd18fb0344f91f65764a9}{Vocabulary::\_CommentBegin}}\},\ \{\textcolor{stringliteral}{"{}*/"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9f5d8bde970f9930c4281c4c29a492a2}{Vocabulary::\_CommentEnd}}\},}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}BEGIN\_NAMESPACE"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a89ce2683cd1c320852586e5dc68395b8}{Vocabulary::\_BeginNamespace}}\ \},\ \{\ \textcolor{stringliteral}{"{}END\_NAMESPACE"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4b429f9c7251bc30593d501ff8a5e507}{Vocabulary::\_EndNamespace}}\ \},}
+\DoxyCodeLine{00094\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}::"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a0a27a2b2f3cee2f9e31935e4ee45e718}{Vocabulary::\_NamespaceConcatenator}}\ \},}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}virtual"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ab031ad81df1878d75f43fda2b85de67e}{Vocabulary::\_Virtual}}\},\ \{\ \textcolor{stringliteral}{"{}override"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a9c75c9d8493fce3a1fb029aa4833c652}{Vocabulary::\_Override}}\},\ \{\ \textcolor{stringliteral}{"{}final"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a45e1d4dfe51b953a5bf1f0c70705eea5}{Vocabulary::\_Final}}\},}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}private"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac11d7ecd764373e467a54b84c61b7f78}{Vocabulary::\_Private}}\ \},\ \{\ \textcolor{stringliteral}{"{}protected"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a00148a85d57bb4ecfa3543c0ccec8fbd}{Vocabulary::\_Protected}}\ \},\ \{\ \textcolor{stringliteral}{"{}public"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a912e849c4ee0c66cb9370a45bd9ff6c6}{Vocabulary::\_Public}}\ \},}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}static"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a5b3e9c07863ff91e7cc1a5e4c848b9c7}{Vocabulary::\_Static}}\ \},\ \{\ \textcolor{stringliteral}{"{}thread\_local"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065ac3f7c42c5606c6f4f3baad076c7fab8d}{Vocabulary::\_ThreadLocal}}\ \},}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}const"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a90c695c77cc63cdf6fec489b1ca7b579}{Vocabulary::\_Const}}\ \},\ \{\ \textcolor{stringliteral}{"{}volatile"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a883d61dcf8b08237685e979d904ed958}{Vocabulary::\_Volatile}}\},}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}noexcept"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aee0dc16af610d01b5af2508caa6f16ac}{Vocabulary::\_Noexcept}}\ \},}
+\DoxyCodeLine{00105\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}constexpr"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065aeae51b6e1066a579844bc9b9a2f31f50}{Vocabulary::\_Constexpr}}\ \},\ \{\ \textcolor{stringliteral}{"{}consteval"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a7696f1cca72b2ffefcde0d7f6ae2d63f}{Vocabulary::\_Consteval}}\ \},\ \{\ \textcolor{stringliteral}{"{}constinit"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a4fa10c829be41ee911bad70e71b5e935}{Vocabulary::\_Constinit}}\ \},}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}static\_assert"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a56c5fdd825b45c67e4126d61f88691fb}{Vocabulary::\_StaticAssert}}\ \},}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_CLASS"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a74f81e9b0e63393cb38ee249b7dab114}{Vocabulary::\_FrogmanEngineClassReflectionMacro}}\ \},}
+\DoxyCodeLine{00110\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_STRUCT"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a52705ef071c1aeb192ea2231abfc07d1}{Vocabulary::\_FrogmanEngineStructReflectionMacro}}\ \},}
+\DoxyCodeLine{00111\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_ENUM\_STRUCT"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a658efbcc1678af15b0d048651108bf06}{Vocabulary::\_FrogmanEngineEnumStructReflectionMacro}}\ \},}
+\DoxyCodeLine{00112\ \ \ \ \ \{\ \textcolor{stringliteral}{"{}FE\_SYSTEM"{}},\ \doxymbox{\hyperlink{vocabulary_8hpp_a638cbd852976842850de9c53c70ff065a174de4f7e525f78c3f7940325436256f}{Vocabulary::\_FrogmanEngineSystemMacro}}\ \}}
+\DoxyCodeLine{00113\ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

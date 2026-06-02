@@ -1,0 +1,135 @@
+\doxysection{memory\+\_\+resource.\+hxx}
+\hypertarget{memory__resource_8hxx_source}{}\label{memory__resource_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/pool/memory\_resource.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/pool/memory\_resource.hxx}}
+\doxymbox{\hyperlink{memory__resource_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_POOL\_MEMORY\_RESOURCE\_HXX\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_POOL\_MEMORY\_RESOURCE\_HXX\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{memory_8hxx}{FE/memory.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{block__pool_8hxx}{FE/pool/block\_pool.hxx}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{scalable__pool_8hxx}{FE/pool/scalable\_pool.hxx}}>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <memory\_resource>}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}\ \doxymbox{\hyperlink{memory__resource_8hxx_a41d695c39497a7af9da04d364ac80f2e}{xmmword\_size}}\ =\ 16;}
+\DoxyCodeLine{00032\ \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}\ \doxymbox{\hyperlink{memory__resource_8hxx_af37f7610d7e6aff598f8ae035dd4ab3a}{ymmword\_size}}\ =\ 32;}
+\DoxyCodeLine{00033\ \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}\ \doxymbox{\hyperlink{memory__resource_8hxx_a0557c77757872fee61d860429f1ad7ed}{zmmword\_size}}\ =\ 64;}
+\DoxyCodeLine{00034\ \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}}\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}\ \doxymbox{\hyperlink{memory__resource_8hxx_a9fa690978aa794f7f326b62e7a9b5ee0}{dzmmword\_size}}\ =\ 128;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ namespace\ \doxymbox{\hyperlink{namespaceinternal}{internal}}}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{enum\ struct}\ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39}{AllocatorType}}}
+\DoxyCodeLine{00040\ \ \ \ \ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39a5fad4488ff3351497824f0e826101738}{\_XMMWordAllocator}},}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39acabee4f1e87ec6b130c9b4aa01485088}{\_YMMWordAllocator}},}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39a06bf0d34ee49dcae977fc588cded0183}{\_ZMMWordAllocator}},}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39ac24a8389ec60c0e087a7d69240c57f54}{\_DZMMWordAllocator}},}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39a96daca3a430eca5098a68e3e0d897dcb}{\_ScalableAllocator}},}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39a73fad4460a3531b836e3f189c549cef3}{\_AlignedMalloc}}}
+\DoxyCodeLine{00047\ \ \ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \doxymbox{\hyperlink{namespaceinternal_ad379ca3289429f3a7467d4ecbbbe8a39}{AllocatorType}}\ \doxymbox{\hyperlink{definitions_8hxx_ad455e65a157c280ec1d6135d516714ce}{\_FE\_VECTOR\_CALL\_}}\ \doxymbox{\hyperlink{namespaceinternal_aaba2035679bf8a79f8ff83bb63b049e1}{\_\_select\_allocator}}(std::size\_t\ bytes\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00054\ \textcolor{comment}{The\ FE::memory\_resource\ is\ a\ class\ template\ provides\ a\ memory\ resource\ that\ utilizes\ a\ bunch\ of\ pool\ allocators\ for\ efficient\ memory\ management}}
+\DoxyCodeLine{00055\ \textcolor{comment}{inheriting\ from\ std::pmr::memory\_resource.}}
+\DoxyCodeLine{00056\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::pmr::memory\_resource}}}
+\DoxyCodeLine{00058\ \{}
+\DoxyCodeLine{00059\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classmemory__resource_a3abe71fa591aa56dee0911813806f69d}{xmmword\_pool\_type}}\ =\ FE::block\_allocator<xmmword\_size,\ FE::align\_16bytes>;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classmemory__resource_a391cb748da36405555aff31fb914cbae}{ymmword\_pool\_type}}\ =\ FE::block\_allocator<ymmword\_size,\ FE::align\_32bytes>;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classmemory__resource_ae0e00500cf521cdbf8302166b071730b}{zmmword\_pool\_type}}\ =\ FE::block\_allocator<zmmword\_size,\ FE::align\_64bytes>;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classmemory__resource_a454a4211d5f1e52ef3f32ea93de73702}{dzmmword\_pool\_type}}\ =\ FE::block\_allocator<dzmmword\_size,\ FE::align\_128bytes>;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classmemory__resource_a64a15f4733f2aca48f1e8514dd54e795}{scalable\_pool\_type}}\ =\ FE::scalable\_allocator<FE::SIMD\_auto\_alignment>;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a3abe71fa591aa56dee0911813806f69d}{xmmword\_pool\_type}}\ \doxymbox{\hyperlink{classmemory__resource_a706e2d01b79b9b12cd00a26872d0c8cd}{m\_xmmword\_block\_pool}};}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a391cb748da36405555aff31fb914cbae}{ymmword\_pool\_type}}\ \doxymbox{\hyperlink{classmemory__resource_a8d9805478a6bcdd2896dd51516f4fb68}{m\_ymmword\_block\_pool}};}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_ae0e00500cf521cdbf8302166b071730b}{zmmword\_pool\_type}}\ \doxymbox{\hyperlink{classmemory__resource_a4acd9f2f4046997b99167a8116011395}{m\_zmmword\_block\_pool}};}
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a454a4211d5f1e52ef3f32ea93de73702}{dzmmword\_pool\_type}}\ \doxymbox{\hyperlink{classmemory__resource_afb019392757418d09a1b94721f1ddf23}{m\_dzmmword\_block\_pool}};}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a64a15f4733f2aca48f1e8514dd54e795}{scalable\_pool\_type}}\ \doxymbox{\hyperlink{classmemory__resource_a55a43803b22f5cf5313ef3f0fae1fee4}{m\_scalable\_pool}};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00075\ \ \ \ \ virtual\ \string~\doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}()\ noexcept\ override\ =\ default;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}(\doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&\&\ other\_p)\ noexcept;}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&\ operator=(\doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&\&\ other\_p)\ noexcept;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}(const\ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&)\ =\ delete;}
+\DoxyCodeLine{00081\ \ \ \ \ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&\ operator=(const\ \doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&)\ =\ delete;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ protected:}
+\DoxyCodeLine{00084\ \ \ \ \ virtual\ \textcolor{keywordtype}{void}*\ \doxymbox{\hyperlink{classmemory__resource_a2efca49cf8da5a3f2b749cd55f1a247c}{do\_allocate}}(std::\textcolor{keywordtype}{size\_t}\ bytes\_p,\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ std::\textcolor{keywordtype}{size\_t}\ alignment\_p)\ noexcept\ override;}
+\DoxyCodeLine{00085\ \ \ \ \ virtual\ \textcolor{keywordtype}{void}\ \ \doxymbox{\hyperlink{classmemory__resource_a2f2754078b84506f25a7d573438d8920}{do\_deallocate}}(\textcolor{keywordtype}{void}*\ ptr\_p,\ std::\textcolor{keywordtype}{size\_t}\ bytes\_p,\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ std::\textcolor{keywordtype}{size\_t}\ alignment\_p)\ noexcept\ override;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ virtual\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classmemory__resource_ab8711cc2d40971af46e2803b1df18bd0}{do\_is\_equal}}(const\ std::pmr::\doxymbox{\hyperlink{classmemory__resource_a432d9afd500dbaad2d7e044785b628b1}{memory\_resource}}\&\ other\_p)\ const\ noexcept\ override;}
+\DoxyCodeLine{00088\ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ namespace\ \doxymbox{\hyperlink{namespacelarge}{large}}}
+\DoxyCodeLine{00092\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classstd_1_1pmr_1_1memory__resource}{std::pmr::memory\_resource}}}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_adee5f90b910b988eda1f380ecc9c586a}{xmmword\_pool\_type}}\ =\ FE::large::block\_allocator<xmmword\_size,\ FE::align\_16bytes>;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_a1c5695322671dfbdcea2572c1374a88c}{ymmword\_pool\_type}}\ =\ FE::large::block\_allocator<ymmword\_size,\ FE::align\_32bytes>;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_ae50f02fde59b1539a4349793ebeac7fc}{zmmword\_pool\_type}}\ =\ FE::large::block\_allocator<zmmword\_size,\ FE::align\_64bytes>;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_a5888d751a573861cd3b998f4a42e38a7}{dzmmword\_pool\_type}}\ =\ FE::large::block\_allocator<dzmmword\_size,\ FE::align\_128bytes>;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classlarge_1_1memory__resource_a40d20077749ea1702e5e64de1605b377}{scalable\_pool\_type}}\ =\ FE::large::scalable\_allocator<FE::SIMD\_auto\_alignment>;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_adee5f90b910b988eda1f380ecc9c586a}{xmmword\_pool\_type}}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a7b51f5b7ac7b00d2660f0961da56960f}{m\_xmmword\_block\_pool}};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a1c5695322671dfbdcea2572c1374a88c}{ymmword\_pool\_type}}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a8200bc3edb04edb3f873b9b3a6f30e74}{m\_ymmword\_block\_pool}};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_ae50f02fde59b1539a4349793ebeac7fc}{zmmword\_pool\_type}}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a30699ae22126cf06997d479b165cc21d}{m\_zmmword\_block\_pool}};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a5888d751a573861cd3b998f4a42e38a7}{dzmmword\_pool\_type}}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a75d984471fce9806bf8da942a3fcb6e6}{m\_dzmmword\_block\_pool}};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a40d20077749ea1702e5e64de1605b377}{scalable\_pool\_type}}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aa0cba38281297c4db16d1167faa75d7e}{m\_scalable\_pool}};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}()\ noexcept\ =\ default;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ virtual\ \string~\doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}()\ noexcept\ override\ =\ default;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}(\doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&\&\ other\_p)\ noexcept;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&\ operator=(\doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&\&\ other\_p)\ noexcept;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}(const\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&)\ =\ delete;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&\ operator=(const\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&)\ =\ delete;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ protected:}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ virtual\ \textcolor{keywordtype}{void}*\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a1b01a310a12de707ba8e82f36dbe5c5d}{do\_allocate}}(std::\textcolor{keywordtype}{size\_t}\ bytes\_p,\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ std::\textcolor{keywordtype}{size\_t}\ alignment\_p)\ noexcept\ override;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ virtual\ \textcolor{keywordtype}{void}\ \ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a4576d9ab3e3c9ea014abc1d0e7b26ccf}{do\_deallocate}}(\textcolor{keywordtype}{void}*\ ptr\_p,\ std::\textcolor{keywordtype}{size\_t}\ bytes\_p,\ \doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ std::\textcolor{keywordtype}{size\_t}\ alignment\_p)\ noexcept\ override;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ virtual\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classlarge_1_1memory__resource_a2242f8119d27989440d826e4b99ceb98}{do\_is\_equal}}(const\ std::pmr::\doxymbox{\hyperlink{classlarge_1_1memory__resource_aad1ea35f894dbe3c02a96c2a62f6d116}{memory\_resource}}\&\ other\_p)\ const\ noexcept\ override;}
+\DoxyCodeLine{00124\ \ \ \ \ \};}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

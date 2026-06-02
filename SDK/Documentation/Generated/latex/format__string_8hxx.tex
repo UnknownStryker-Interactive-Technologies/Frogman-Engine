@@ -1,0 +1,106 @@
+\doxysection{C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+log/\+format\+\_\+string.hxx File Reference}
+\hypertarget{format__string_8hxx}{}\label{format__string_8hxx}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/log/format\_string.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/log/format\_string.hxx}}
+{\ttfamily \+\#include $<$FE/\+types.\+hxx$>$}\newline
+{\ttfamily \+\#include $<$cstring$>$}\newline
+{\ttfamily \+\#include $<$initializer\+\_\+list$>$}\newline
+Include dependency graph for format\+\_\+string.\+hxx:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{format__string_8hxx__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file:\+
+% FIG 0
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803}{format\+\_\+string}} (char \texorpdfstring{$\ast$}{*}out\+\_\+buffer\+\_\+pointer\+\_\+p, const char \texorpdfstring{$\ast$}{*}string\+\_\+format\+\_\+p, \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}} buffer\+\_\+size\+\_\+p, const void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}arguments\+\_\+pointer\+\_\+p, \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}} arguments\+\_\+count\+\_\+p) noexcept
+\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418}{buffered\+\_\+string\+\_\+formatter}} (std::\+initializer\+\_\+list$<$ const void \texorpdfstring{$\ast$}{*} $>$ arguments\+\_\+p) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{types_8hxx_a7f8dd3e3c36b59a01241d6c99766688c}{FE::\+uint32}} \doxymbox{\hyperlink{format__string_8hxx_a19743f54bed3d6806ee182cef6d09685}{string\+\_\+formatter\+\_\+buffer\+\_\+size}} = 8192
+\item 
+\doxymbox{\hyperlink{format__string_8hxx_af62f309405e845d2fa8f3541acbabc51}{END\+\_\+\+NAMESPACE}}
+\end{DoxyCompactItemize}
+
+
+\label{format__string_8hxx_doc-func-members}
+\Hypertarget{format__string_8hxx_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418}\index{format\_string.hxx@{format\_string.hxx}!buffered\_string\_formatter@{buffered\_string\_formatter}}
+\index{buffered\_string\_formatter@{buffered\_string\_formatter}!format\_string.hxx@{format\_string.hxx}}
+\doxysubsubsection{\texorpdfstring{buffered\_string\_formatter()}{buffered\_string\_formatter()}}
+{\footnotesize\ttfamily \label{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418} 
+const char \texorpdfstring{$\ast$}{*} buffered\+\_\+string\+\_\+formatter (\begin{DoxyParamCaption}\item[{std::\+initializer\+\_\+list$<$ const void \texorpdfstring{$\ast$}{*} $>$}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418}{buffered\+\_\+string\+\_\+formatter()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418}{buffered\+\_\+string\+\_\+formatter()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=204pt]{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=204pt]{format__string_8hxx_a38362cb789042ff0ba43ffbeb9ebe418_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803}\index{format\_string.hxx@{format\_string.hxx}!format\_string@{format\_string}}
+\index{format\_string@{format\_string}!format\_string.hxx@{format\_string.hxx}}
+\doxysubsubsection{\texorpdfstring{format\_string()}{format\_string()}}
+{\footnotesize\ttfamily \label{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803} 
+void format\+\_\+string (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{out\+\_\+buffer\+\_\+pointer\+\_\+p}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{string\+\_\+format\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}}]{buffer\+\_\+size\+\_\+p}{, }\item[{const void \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{arguments\+\_\+pointer\+\_\+p}{, }\item[{\doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}}]{arguments\+\_\+count\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803}{format\+\_\+string()}}, \doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}}, and \doxymbox{\hyperlink{types_8hxx_aab96c7043e87278dd7dca56e59e045b2}{uint64}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803}{format\+\_\+string()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=153pt]{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=153pt]{format__string_8hxx_a71fae77f08e1f6203c7acd9d51de9803_icgraph}
+\end{center}
+\end{figure}
+
+
+\label{format__string_8hxx_doc-var-members}
+\Hypertarget{format__string_8hxx_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{format__string_8hxx_af62f309405e845d2fa8f3541acbabc51}\index{format\_string.hxx@{format\_string.hxx}!END\_NAMESPACE@{END\_NAMESPACE}}
+\index{END\_NAMESPACE@{END\_NAMESPACE}!format\_string.hxx@{format\_string.hxx}}
+\doxysubsubsection{\texorpdfstring{END\_NAMESPACE}{END\_NAMESPACE}}
+{\footnotesize\ttfamily \label{format__string_8hxx_af62f309405e845d2fa8f3541acbabc51} 
+END\+\_\+\+NAMESPACE}
+
+\Hypertarget{format__string_8hxx_a19743f54bed3d6806ee182cef6d09685}\index{format\_string.hxx@{format\_string.hxx}!string\_formatter\_buffer\_size@{string\_formatter\_buffer\_size}}
+\index{string\_formatter\_buffer\_size@{string\_formatter\_buffer\_size}!format\_string.hxx@{format\_string.hxx}}
+\doxysubsubsection{\texorpdfstring{string\_formatter\_buffer\_size}{string\_formatter\_buffer\_size}}
+{\footnotesize\ttfamily \label{format__string_8hxx_a19743f54bed3d6806ee182cef6d09685} 
+\doxymbox{\hyperlink{types_8hxx_a7f8dd3e3c36b59a01241d6c99766688c}{FE::\+uint32}} string\+\_\+formatter\+\_\+buffer\+\_\+size = 8192\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}}
+

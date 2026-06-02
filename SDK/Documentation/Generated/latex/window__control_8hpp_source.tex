@@ -1,0 +1,50 @@
+\doxysection{window\+\_\+control.\+hpp}
+\hypertarget{window__control_8hpp_source}{}\label{window__control_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/window\_control.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/window\_control.hpp}}
+\doxymbox{\hyperlink{window__control_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_WINDOW\_CONTROL\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_WINDOW\_CONTROL\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4005)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <GLFW/glfw3.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{engine_8hpp}{FE/engine.hpp}}>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ enum\ struct\ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{CursorMode}}\ :\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bccafaa62b49fca3b167fda9f380701e62e6}{\_VisibleAndFree}}\ =\ GLFW\_CURSOR\_NORMAL,}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca725435316ff0baf2863b2aa470eea3b8}{\_Invisible}}\ =\ GLFW\_CURSOR\_HIDDEN,}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca1f7d9df6c7475f7c189bdb4a352fb870}{\_Gaming}}\ =\ GLFW\_CURSOR\_DISABLED,}
+\DoxyCodeLine{00034\ \ \ \ \ \doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcca0489710dc315fed8d66e475e1d432eaa}{\_VisibleAndConfined}}\ =\ GLFW\_CURSOR\_CAPTURED}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{window__control_8hpp_ab6ea546a2ecb1c64a12f794330f27c48}{set\_window\_cursor\_mode}}(\doxymbox{\hyperlink{window__control_8hpp_a77c792760cc33e324ab1a1662c025bcc}{CursorMode}}\ mode\_p)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ glfwSetInputMode(FE::engine::get\_engine().get\_renderer().get\_window(),\ GLFW\_CURSOR,\ \textcolor{keyword}{static\_cast<}FE::int32\textcolor{keyword}{>}(mode\_p));}
+\DoxyCodeLine{00040\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,186 @@
+\doxysection{engine.\+hpp}
+\hypertarget{engine_8hpp_source}{}\label{engine_8hpp_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/engine.hpp@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Engine/Include/FE/engine.hpp}}
+\doxymbox{\hyperlink{engine_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FROGMAN\_ENGINE\_HPP\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FROGMAN\_ENGINE\_HPP\_}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{framework_8hxx}{FE/framework.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{game_8hpp}{FE/game.hpp}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{renderer_8hxx}{FE/renderer.hxx}}>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#pragma\ warning(disable\ :\ 4324)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <boost/json.hpp>}\ \textcolor{comment}{//\ read\ game\ configurations\ from\ .froggy\ file}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <boost/hash2/fnv1a.hpp>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ FROGMAN\_ENGINE()\ CUSTOM\_ENGINE(::FE::engine,\ ::FE::engine\_program\_options)}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \doxymbox{\hyperlink{definitions_8hxx_a7f2d664b1db52b38619b55103ff1be50}{CLASS\_FORWARD\_DECLARATION}}(\doxymbox{\hyperlink{namespaceframework}{framework}},\ \doxymbox{\hyperlink{classgame__processor}{game\_processor}});}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ struct\ \doxymbox{\hyperlink{structengine__info}{engine\_info}}\ \textcolor{comment}{//\ fields\ are\ immutable\ after\ window\ creation;\ modifying\ these\ values\ will\ not\ affect\ any.}}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ std::pmr::string\ \doxymbox{\hyperlink{structengine__info_a5b2f87387b602c513344419456951028}{\_version}};}
+\DoxyCodeLine{00044\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{structengine__info_aff605f9d808cc62f39b051e49345d440}{\_installation\_path}};}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structpath__lut}{path\_lut}}\ \textcolor{comment}{//\ fields\ are\ immutable\ after\ window\ creation;\ modifying\ these\ values\ will\ not\ affect\ any.}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{structpath__lut_acc1ecdcbd75b79f064d6e6c89312a881}{\_entry\_world\_path}};}
+\DoxyCodeLine{00050\ \ \ \ \ std::pmr::vector<FE::directory\_string>\ \doxymbox{\hyperlink{structpath__lut_aeb8b636d4e0f672c0fa77b84c324f2cb}{\_world\_paths}};}
+\DoxyCodeLine{00051\ \ \ \ \ std::pmr::vector<FE::directory\_string>\ \doxymbox{\hyperlink{structpath__lut_a704c26152c6425f18ba95de470af3134}{\_module\_paths}};}
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structproject__config}{project\_config}}\ \textcolor{comment}{//\ fields\ are\ immutable\ after\ window\ creation;\ modifying\ these\ values\ will\ not\ affect\ any.}}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \doxymbox{\hyperlink{structpath__lut}{path\_lut}}\ \doxymbox{\hyperlink{structproject__config_ae85901077da86eb9a13162aa879cbb50}{\_path\_lookup\_table}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ FE::system\ \doxymbox{\hyperlink{structproject__config_abb2b8b301d44cb919ea7ae8474e5ff90}{\_compression\_method}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00060\ \ \ \ \ FE::system\ \doxymbox{\hyperlink{structproject__config_a63fde53b1aaf6bb5469fe3610830ce02}{\_decompression\_method}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00061\ \ \ \ \ FE::system\ \doxymbox{\hyperlink{structproject__config_a3f580c6993f1909c09a5d9cbcbbd55da}{\_encryption\_method}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00062\ \ \ \ \ FE::system\ \doxymbox{\hyperlink{structproject__config_a3fa04e2fbbd22fae5bc9a6004de6b86a}{\_decryption\_method}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00063\ \ \ \ \ FE::uint64\ \doxymbox{\hyperlink{structproject__config_af78b3bd88c5e8e596823eff234294327}{\_max\_engine\_component\_type\_count\_hint}}\ =\ 1024;}
+\DoxyCodeLine{00064\ \ \ \ \ FE::uint32\ \doxymbox{\hyperlink{structproject__config_ac38092b3290556dea1c573ddc70882e2}{\_gc\_batch\_count}}\ =\ 30;}
+\DoxyCodeLine{00065\ \ \ \ \ FE::uint32\ \doxymbox{\hyperlink{structproject__config_ad2fe7296977158d309dfa0186229c93b}{\_frames\_per\_reachability\_analysis}}\ =\ 60;}
+\DoxyCodeLine{00066\ \ \ \ \ FE::uint64\ \doxymbox{\hyperlink{structproject__config_a90483ac0a40cafb6acdf4599e94e07ca}{\_fiber\_stack\_size}}\ =\ FE::one\_MiB;}
+\DoxyCodeLine{00067\ \ \ \ \ FE::uint16\ \doxymbox{\hyperlink{structproject__config_a68b84f8a9c93c48e15c558ccc1e70ac6}{\_fibers\_per\_thread}}\ =\ 3;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ FE::window\_config\ \doxymbox{\hyperlink{structproject__config_ab9bdd3dae15b63bd62f65a4813fb64f7}{\_window\_config}};}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classengine__program__options_a576073a4e852a4ec49e9b3dad2ac056d}{engine\_program\_options}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_f_e_1_1framework_1_1program__option}{FE::framework::program\_option}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classengine__program__options_a677f12d56660e67e3db0d3edef725496}{base}}\ =\ \doxymbox{\hyperlink{class_f_e_1_1framework_1_1program__option}{FE::framework::program\_option}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ FE::pair<::FE::ASCII*,\ var::boolean>\ \doxymbox{\hyperlink{classengine__program__options_a2f6a14b54eaee623b29a8c197753a980}{m\_enable\_fullscreen}};}
+\DoxyCodeLine{00078\ \ \ \ \ FE::pair<::FE::ASCII*,\ var::boolean>\ \doxymbox{\hyperlink{classengine__program__options_a3f2716bc174a75a8ab33416ee33665cd}{m\_enable\_vsync}};}
+\DoxyCodeLine{00079\ \ \ \ \ FE::pair<::FE::ASCII*,\ var::boolean>\ \doxymbox{\hyperlink{classengine__program__options_a78bed0cc287094fd13cdacbba60872e3}{m\_recompile\_shaders}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00082\ \ \ \ \ \doxymbox{\hyperlink{classengine__program__options_a576073a4e852a4ec49e9b3dad2ac056d}{engine\_program\_options}}(FE::int32\ argc\_p,\ FE::ASCII**\ argv\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classengine__program__options_a253755e5cd91899bef6080c3707989da}{\string~engine\_program\_options}}()\ noexcept\ override\ =\ default;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\textcolor{keywordtype}{boolean}\ \doxymbox{\hyperlink{classengine__program__options_a6aeda54ca265c0f8f15d0e721e1554ec}{is\_fullscreen\_enabled}}()\ const\ noexcept;}
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*\ \doxymbox{\hyperlink{classengine__program__options_acd9299e6e330ec41a475028bb4520683}{view\_enable\_fullscreen\_title}}()\ const\ noexcept;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\textcolor{keywordtype}{boolean}\ \doxymbox{\hyperlink{classengine__program__options_a3ceeb72b875e0c5425df4393add9e34f}{is\_vsync\_enabled}}()\ const\ noexcept;}
+\DoxyCodeLine{00089\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*\ \doxymbox{\hyperlink{classengine__program__options_aafcc13f2510aacca18c37b264344a1c7}{view\_enable\_vsync\_title}}()\ const\ noexcept;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\textcolor{keywordtype}{boolean}\ \doxymbox{\hyperlink{classengine__program__options_a49ce05863de53bfb5666fe89f451d54e}{is\_recompile\_shaders\_enabled}}()\ const\ noexcept;}
+\DoxyCodeLine{00092\ \ \ \ \ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_a78b7eacf0cd60f619d4231efe4207ea8}{ASCII}}*\ \doxymbox{\hyperlink{classengine__program__options_aa98e2e5c53b1dbf21d4c92ca64c1bee5}{view\_recompile\_shaders\_title}}()\ const\ noexcept;}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ class\ alignas(\doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{struct_c_p_u___l1__cache__line}{CPU\_L1\_cache\_line}}::\doxymbox{\hyperlink{types_8hxx_a277ecf80bc8881a4dec2415b5b21e95a}{size}})\ \doxymbox{\hyperlink{classengine_a43a1f719ed6912f4dd731ad8a17e5f41}{engine}}\ :\ public\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{namespaceframework}{framework}}::\doxymbox{\hyperlink{classframework__base}{framework\_base}}}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classengine_ac6cb751dab5caf602aa0eff34e235e2b}{base}}\ =\ \doxymbox{\hyperlink{class_f_e_1_1framework_1_1framework__base}{FE::framework::framework\_base}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classengine_1_1auth_a67e560dceb5a279c346c693103388d89}{auth}}}
+\DoxyCodeLine{00102\ \ \ \ \ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }FE::renderer;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }FE::internal::renderer::shader;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{classengine_1_1auth_a67e560dceb5a279c346c693103388d89}{auth}}()\ noexcept\ \{\};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{classengine_1_1auth_aab1ba560bb86f0559518f8b02b6eb583}{\string~auth}}()\ noexcept\ \{\};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{classengine_1_1auth_a36847db721c06eff6030ed8b2511e757}{auth}}(\doxymbox{\hyperlink{classengine_1_1auth_a67e560dceb5a279c346c693103388d89}{auth}}\&\&)\ noexcept\ \{\};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \doxymbox{\hyperlink{classengine_1_1auth_aaac234a2eca46922c70fe1eccb4107c2}{auth}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine_1_1auth_a67e560dceb5a279c346c693103388d89}{auth}}\&)\ \textcolor{keyword}{noexcept}\ \{\};}
+\DoxyCodeLine{00111\ \ \ \ \ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classengine_a0afffc5577f514b961ae0e3c2fc9df88}{shader\_header\_list}}\ =\ absl::flat\_hash\_map<FE::directory\_string,\ ::FE::internal::renderer::hlsli>;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classengine_ac204566c654e589effced884ca9e7002}{shader\_list}}\ =\ std::pmr::vector<::FE::internal::renderer::shader>;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00117\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{classengine_a89dce1484c643279032d7930039937a4}{m\_runtime\_path}};}
+\DoxyCodeLine{00118\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{classengine_a9aa24d9b58315516afc1f52a6f533146}{m\_game\_root\_directory}};}
+\DoxyCodeLine{00119\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{classengine_a250aaee12e89ff09902b2c758864348c}{m\_shader\_root\_directory}};}
+\DoxyCodeLine{00120\ \ \ \ \ FE::directory\_string\ \doxymbox{\hyperlink{classengine_a4a5f7d3026c8f743d2342c60b35f4b1f}{m\_froggy\_path}};}
+\DoxyCodeLine{00121\ \ \ \ \ std::pmr::string\ \doxymbox{\hyperlink{classengine_ac9e1a5154f69105c9649e3ef1e8e341e}{m\_froggy}};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ FE::engine\_info\ \doxymbox{\hyperlink{classengine_aeb0664ab4772e08b401bdb0326b60ada}{m\_engine\_info}};}
+\DoxyCodeLine{00124\ \ \ \ \ FE::project\_config\ \doxymbox{\hyperlink{classengine_a2fdf70cd047114b93fe3e520fb1b9a61}{m\_project\_config}};}
+\DoxyCodeLine{00125\ \ \ \ \ \doxymbox{\hyperlink{classengine_a0afffc5577f514b961ae0e3c2fc9df88}{shader\_header\_list}}\ \doxymbox{\hyperlink{classengine_a98d7406c7f4cc7bdd6eaa81f7c4c692a}{m\_shader\_headers}};}
+\DoxyCodeLine{00126\ \ \ \ \ \doxymbox{\hyperlink{classengine_ac204566c654e589effced884ca9e7002}{shader\_list}}\ \doxymbox{\hyperlink{classengine_afef36869a3b60ea0d90abf3349d561ab}{m\_shaders}};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ FE::smart\_ptr<FE::game,\ FE::RefType::\_Owner>\ \doxymbox{\hyperlink{classengine_a05c28b6aed7105273496f28959bd67d8}{m\_game\_instance}};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ FE::smart\_ptr<class\ FE::framework::game\_processor,\ FE::RefType::\_Owner>\ \doxymbox{\hyperlink{classengine_a3e991b7f7cbe031549b71459f48c1ac0}{m\_game\_processor}};}
+\DoxyCodeLine{00131\ \ \ \ \ FE::smart\_ptr<FE::renderer,\ FE::RefType::\_Owner>\ \doxymbox{\hyperlink{classengine_aaae2e42eb77aa9da92756a4b637db7ee}{m\_renderer}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00134\ \ \ \ \ \doxymbox{\hyperlink{classengine_a43a1f719ed6912f4dd731ad8a17e5f41}{engine}}(std::unique\_ptr<engine\_program\_options>\ options\_p)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{classengine_ac41d2b77551b1c39cccbd6f68c6f9240}{\string~engine}}()\ noexcept\ override;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ public:}
+\DoxyCodeLine{00138\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ static\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{classengine_a43a1f719ed6912f4dd731ad8a17e5f41}{engine}}\&\ \doxymbox{\hyperlink{classengine_a0da0da6af3118148258b8c7f612e2410}{get\_engine}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}FE::engine\&\textcolor{keyword}{>}(FE::framework::framework\_base::get\_framework());\ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine__program__options}{engine\_program\_options}}\&\ \doxymbox{\hyperlink{classengine_a4371e41e679dc1f1808ee9b0ccc4e75b}{get\_program\_options}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }\doxymbox{\hyperlink{classengine__program__options}{engine\_program\_options}}\&\textcolor{keyword}{>}(*m\_program\_options);\ \}}
+\DoxyCodeLine{00141\ \ \ \ \ }
+\DoxyCodeLine{00142\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::directory\_char\_t*\ \doxymbox{\hyperlink{classengine_a3a5fa4ade9e1adb086eadfaca515c242}{get\_runtime\_path}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a89dce1484c643279032d7930039937a4}{m\_runtime\_path}}.c\_str();\ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::directory\_char\_t*\ \doxymbox{\hyperlink{classengine_afaa75be216644f30b0d6c3f592288b72}{get\_game\_root\_directory}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a9aa24d9b58315516afc1f52a6f533146}{m\_game\_root\_directory}}.c\_str();\ \}}
+\DoxyCodeLine{00145\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::directory\_char\_t*\ \doxymbox{\hyperlink{classengine_ab945dcdcea08b1966f10cda409b3030c}{get\_shader\_root\_directory}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a250aaee12e89ff09902b2c758864348c}{m\_shader\_root\_directory}}.c\_str();\ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{const}\ FE::engine\_info\&\ \doxymbox{\hyperlink{classengine_aeac0fb4286a551bba8bb0c39619312c8}{get\_engine\_info}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_aeb0664ab4772e08b401bdb0326b60ada}{m\_engine\_info}};\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{const}\ FE::project\_config\&\ \doxymbox{\hyperlink{classengine_af1688560581dab55db006c7143f859d5}{get\_project\_config}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a2fdf70cd047114b93fe3e520fb1b9a61}{m\_project\_config}};\ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::project\_config\&\ \doxymbox{\hyperlink{classengine_aca8975858b91a40c9e0999110cb903fa}{get\_project\_config}}(\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine_1_1auth}{auth}}\&\ access\_p)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a2fdf70cd047114b93fe3e520fb1b9a61}{m\_project\_config}};\ \}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{classengine_a0afffc5577f514b961ae0e3c2fc9df88}{shader\_header\_list}}\&\ \doxymbox{\hyperlink{classengine_a4f9b610a5129559f15084ce4c001c5de}{get\_shader\_headers}}(\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine_1_1auth}{auth}}\&\ access\_p)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_a98d7406c7f4cc7bdd6eaa81f7c4c692a}{m\_shader\_headers}};\ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \doxymbox{\hyperlink{classengine_ac204566c654e589effced884ca9e7002}{shader\_list}}\&\ \doxymbox{\hyperlink{classengine_a7453c7819122b486d90ea43a21a000d9}{get\_shaders}}(\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine_1_1auth}{auth}}\&\ access\_p)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classengine_afef36869a3b60ea0d90abf3349d561ab}{m\_shaders}};\ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ \textcolor{keyword}{static}\ FE::game\&\ \doxymbox{\hyperlink{classengine_a5a4ada75b1f536c0186a46c1d740d7a9}{get\_game\_instance}}()\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *(\doxymbox{\hyperlink{classengine_a0da0da6af3118148258b8c7f612e2410}{get\_engine}}().m\_game\_instance);\ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::int32\ \doxymbox{\hyperlink{classengine_a08d6608067715c5c32f7e23fc7ded1b3}{count\_async\_processors}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ base::get\_program\_options().get\_max\_concurrency()\ -\/\ 2;\ \textcolor{comment}{/*\ -\/(game\ +\ renderer)\ */}\ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_aebc8b4b783e929e0c0585c3da8c2518d}{terminate\_all\_processors}}()\ noexcept;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ const\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{classrenderer}{renderer}}\&\ \doxymbox{\hyperlink{classengine_a846a9f44876517de7387918029ab6306}{get\_renderer}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ *\doxymbox{\hyperlink{classengine_aaae2e42eb77aa9da92756a4b637db7ee}{m\_renderer}};\ \}}
+\DoxyCodeLine{00161\ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\_FE\_FORCE\_INLINE\_}}\ FE::renderer\&\ \doxymbox{\hyperlink{classengine_a1e406818d501d5e36d6093cf5440cc5b}{get\_renderer}}(\doxymbox{\hyperlink{definitions_8hxx_a97668ce3ecfcfdbd9110846f6223e5aa}{\_FE\_MAYBE\_UNUSED\_}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classengine_1_1auth}{auth}}\&\ access\_p)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ *\doxymbox{\hyperlink{classengine_aaae2e42eb77aa9da92756a4b637db7ee}{m\_renderer}};\ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{virtual}\ FE::int32\ \doxymbox{\hyperlink{classengine_a65748e097cc43195c53869677adca747}{launch}}(FE::int32\ argc\_p,\ FE::ASCII**\ argv\_p)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{virtual}\ FE::int32\ \doxymbox{\hyperlink{classengine_a896d7c1f3c56a4b73d6d1d4d4a8cb203}{run}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{virtual}\ FE::int32\ \doxymbox{\hyperlink{classengine_ab535d89d10dd0c39c8f1d6b7d93e1ead}{shutdown}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_a174e3cdd7a21d68e7612be1ba159482a}{\_\_read\_froggy}}()\ noexcept;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ public:\ \textcolor{comment}{//\ Callbacks}}
+\DoxyCodeLine{00172\ \ \ \ \ static\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_a1dc7679033cc0d86dd5deea5ae879e44}{key\_callback}}(GLFWwindow*\ const\ window\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ key\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ scancode\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ action\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ mods\_p)\ noexcept;}
+\DoxyCodeLine{00173\ \ \ \ \ static\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_a4c73226053f878be4611964a0c138e97}{mouse\_button\_callback}}(GLFWwindow*\ const\ window\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ button\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ action\_p,\ \doxymbox{\hyperlink{namespace_f_e}{FE}}::\doxymbox{\hyperlink{types_8hxx_ac57d20b9cfef266a6fee8de0273fb1f2}{int32}}\ mods\_p)\ noexcept;}
+\DoxyCodeLine{00174\ \ \ \ \ static\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_ae3136d62eecb18bcdb1cd2243ca81cfd}{cursor\_position\_callback}}(GLFWwindow*\ const\ window\_p,\ \textcolor{keywordtype}{double}\ x\_p,\ \textcolor{keywordtype}{double}\ y\_p)\ noexcept;}
+\DoxyCodeLine{00175\ \ \ \ \ static\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classengine_ada9e152b91f54365e0cac7935128855b}{scroll\_callback}}(GLFWwindow*\ const\ window\_p,\ \textcolor{keywordtype}{double}\ x\_offset\_p,\ \textcolor{keywordtype}{double}\ y\_offset\_p)\ noexcept;}
+\DoxyCodeLine{00176\ \};}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

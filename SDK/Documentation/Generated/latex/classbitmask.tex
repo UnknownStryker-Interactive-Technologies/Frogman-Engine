@@ -1,0 +1,574 @@
+\doxysection{bitmask Class Reference}
+\hypertarget{classbitmask}{}\label{classbitmask}\index{bitmask@{bitmask}}
+
+
+{\ttfamily \+\#include $<$bitmask.\+hxx$>$}
+
+
+
+Collaboration diagram for bitmask:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classbitmask__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{allocator\+\_\+type}} = FE::\+polymorphic\+\_\+allocator$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}{bitmask}} (FE::\+uint64 value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}{\texorpdfstring{$\sim$}{\string~}bitmask}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \& \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask}} (\doxymbox{\hyperlink{classbitmask}{bitmask}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \& \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=}} (\doxymbox{\hyperlink{classbitmask}{bitmask}} \&\&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{allocator\+\_\+type}} \& \doxymbox{\hyperlink{classbitmask_aff1c8dd9102e340280380212316fa43b}{get\+\_\+allocator}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}{read\+\_\+at}} (FE::\+size index\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}{write\+\_\+at}} (FE::\+size index\+\_\+p, bool value\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve}} (FE::\+size new\+\_\+capacity\+\_\+in\+\_\+bits\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize}} (FE::\+size new\+\_\+capacity\+\_\+in\+\_\+bits\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} void \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+size \doxymbox{\hyperlink{classbitmask_a54bef13eb8b6887c3b395cfc6e0b4a45}{bitwidth\+\_\+capacity}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \& \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \& \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \& \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} \doxymbox{\hyperlink{classbitmask}{bitmask}} \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}}} () noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} bool \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=}} (const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&other\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+uint64 \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+byte \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbitmask_a98f149c1ae838db1fa89d2c8b859876e}{data}} () const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+size \doxymbox{\hyperlink{classbitmask_ae7c0824c6522886d1f86a052939f42b1}{capacity\+\_\+in\+\_\+bytes}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+size \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes}} (FE::\+size capacity\+\_\+in\+\_\+bits\+\_\+p) const noexcept
+\item 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+boolean \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{allocator\+\_\+type}} \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}
+\item 
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}
+\item 
+\doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}} \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}
+\item 
+\doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}
+\end{DoxyCompactItemize}
+
+
+\label{classbitmask_doc-typedef-members}
+\Hypertarget{classbitmask_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classbitmask_a7296970652a4852711d665cd57498d56}\index{bitmask@{bitmask}!allocator\_type@{allocator\_type}}
+\index{allocator\_type@{allocator\_type}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{allocator\_type}{allocator\_type}}
+{\footnotesize\ttfamily \label{classbitmask_a7296970652a4852711d665cd57498d56} 
+using \doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{bitmask::\+allocator\+\_\+type}} = FE::\+polymorphic\+\_\+allocator$<$\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}$>$}
+
+
+
+\label{classbitmask_doc-constructors}
+\Hypertarget{classbitmask_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classbitmask_a956a4732d8cfe675ed675cc2328388bd}\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{bitmask()}{bitmask()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily \label{classbitmask_a956a4732d8cfe675ed675cc2328388bd} 
+bitmask::\+bitmask (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, and \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=312pt]{classbitmask_a956a4732d8cfe675ed675cc2328388bd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{bitmask()}{bitmask()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily \label{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45} 
+bitmask::\+bitmask (\begin{DoxyParamCaption}\item[{FE::\+uint64}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+\Hypertarget{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}\index{bitmask@{bitmask}!````~bitmask@{\texorpdfstring{$\sim$}{\string~}bitmask}}
+\index{````~bitmask@{\texorpdfstring{$\sim$}{\string~}bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}bitmask()}{\string~bitmask()}}
+{\footnotesize\ttfamily \label{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b} 
+bitmask::\+\texorpdfstring{$\sim$}{\string~}bitmask (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=329pt]{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a66162b843af1336a5001e45eece2b6be}\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{bitmask()}{bitmask()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily \label{classbitmask_a66162b843af1336a5001e45eece2b6be} 
+bitmask::\+bitmask (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=323pt]{classbitmask_a66162b843af1336a5001e45eece2b6be_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\index{bitmask@{bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{bitmask()}{bitmask()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily \label{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f} 
+bitmask::\+bitmask (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classbitmask}{bitmask}} \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classbitmask_doc-func-members}
+\Hypertarget{classbitmask_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}\index{bitmask@{bitmask}!\_\_calculate\_size\_of\_bits\_in\_bytes@{\_\_calculate\_size\_of\_bits\_in\_bytes}}
+\index{\_\_calculate\_size\_of\_bits\_in\_bytes@{\_\_calculate\_size\_of\_bits\_in\_bytes}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{\_\_calculate\_size\_of\_bits\_in\_bytes()}{\_\_calculate\_size\_of\_bits\_in\_bytes()}}
+{\footnotesize\ttfamily \label{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+size bitmask::\+\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes (\begin{DoxyParamCaption}\item[{FE::\+size}]{capacity\+\_\+in\+\_\+bits\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ae7c0824c6522886d1f86a052939f42b1}{capacity\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear()}}, \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}, \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve()}}, \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize()}}, and \doxymbox{\hyperlink{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}{\texorpdfstring{$\sim$}{\string~}bitmask()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}\index{bitmask@{bitmask}!\_\_large\_bitset\_engaged@{\_\_large\_bitset\_engaged}}
+\index{\_\_large\_bitset\_engaged@{\_\_large\_bitset\_engaged}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{\_\_large\_bitset\_engaged()}{\_\_large\_bitset\_engaged()}}
+{\footnotesize\ttfamily \label{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} FE::\+boolean bitmask::\+\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [private]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_a98f149c1ae838db1fa89d2c8b859876e}{data()}}, \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}, \doxymbox{\hyperlink{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}{read\+\_\+at()}}, and \doxymbox{\hyperlink{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}{write\+\_\+at()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a54bef13eb8b6887c3b395cfc6e0b4a45}\index{bitmask@{bitmask}!bitwidth\_capacity@{bitwidth\_capacity}}
+\index{bitwidth\_capacity@{bitwidth\_capacity}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{bitwidth\_capacity()}{bitwidth\_capacity()}}
+{\footnotesize\ttfamily \label{classbitmask_a54bef13eb8b6887c3b395cfc6e0b4a45} 
+FE::\+size bitmask::\+bitwidth\+\_\+capacity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+\Hypertarget{classbitmask_ae7c0824c6522886d1f86a052939f42b1}\index{bitmask@{bitmask}!capacity\_in\_bytes@{capacity\_in\_bytes}}
+\index{capacity\_in\_bytes@{capacity\_in\_bytes}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{capacity\_in\_bytes()}{capacity\_in\_bytes()}}
+{\footnotesize\ttfamily \label{classbitmask_ae7c0824c6522886d1f86a052939f42b1} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+size bitmask::\+capacity\+\_\+in\+\_\+bytes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{classbitmask_ae7c0824c6522886d1f86a052939f42b1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}\index{bitmask@{bitmask}!clear@{clear}}
+\index{clear@{clear}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170} 
+void bitmask::\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a98f149c1ae838db1fa89d2c8b859876e}\index{bitmask@{bitmask}!data@{data}}
+\index{data@{data}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{data()}{data()}}
+{\footnotesize\ttfamily \label{classbitmask_a98f149c1ae838db1fa89d2c8b859876e} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+byte \texorpdfstring{$\ast$}{*} bitmask::\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, and \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=309pt]{classbitmask_a98f149c1ae838db1fa89d2c8b859876e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_aff1c8dd9102e340280380212316fa43b}\index{bitmask@{bitmask}!get\_allocator@{get\_allocator}}
+\index{get\_allocator@{get\_allocator}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{get\_allocator()}{get\_allocator()}}
+{\footnotesize\ttfamily \label{classbitmask_aff1c8dd9102e340280380212316fa43b} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} \doxymbox{\hyperlink{definitions_8hxx_a72f0657181cca64b44eb186b707eb380}{constexpr}} const \doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{allocator\+\_\+type}} \& bitmask::\+get\+\_\+allocator (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}.
+
+\Hypertarget{classbitmask_a3394840dae0f3a0ec79641b2b508620d}\index{bitmask@{bitmask}!hash\_code@{hash\_code}}
+\index{hash\_code@{hash\_code}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{hash\_code()}{hash\_code()}}
+{\footnotesize\ttfamily \label{classbitmask_a3394840dae0f3a0ec79641b2b508620d} 
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+uint64 bitmask::\+hash\+\_\+code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classbitmask_a3394840dae0f3a0ec79641b2b508620d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}\index{bitmask@{bitmask}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5} 
+bool bitmask::\+operator!= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}\index{bitmask@{bitmask}!operator\&=@{operator\&=}}
+\index{operator\&=@{operator\&=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator\&=()}{operator\&=()}}
+{\footnotesize\ttfamily \label{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} \& bitmask::\+operator\&= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a6511dce04454dca392f889199a2f7c9e}\index{bitmask@{bitmask}!operator=@{operator=}}
+\index{operator=@{operator=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classbitmask_a6511dce04454dca392f889199a2f7c9e} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} \& bitmask::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classbitmask}{bitmask}} \&\&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{classbitmask_a6511dce04454dca392f889199a2f7c9e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a77d419af84f58483295c3549de7ad1d5}\index{bitmask@{bitmask}!operator=@{operator=}}
+\index{operator=@{operator=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classbitmask_a77d419af84f58483295c3549de7ad1d5} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} \& bitmask::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{classbitmask_a77d419af84f58483295c3549de7ad1d5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a28ed04f29423b95a848a51c47bd91479}\index{bitmask@{bitmask}!operator==@{operator==}}
+\index{operator==@{operator==}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{classbitmask_a28ed04f29423b95a848a51c47bd91479} 
+bool bitmask::\+operator== (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=337pt]{classbitmask_a28ed04f29423b95a848a51c47bd91479_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}\index{bitmask@{bitmask}!operator\texorpdfstring{$^\wedge$}{\string^}=@{operator\texorpdfstring{$^\wedge$}{\string^}=}}
+\index{operator\texorpdfstring{$^\wedge$}{\string^}=@{operator\texorpdfstring{$^\wedge$}{\string^}=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$^\wedge$}{\string^}=()}{operator\string^=()}}
+{\footnotesize\ttfamily \label{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} \& bitmask::\+operator\texorpdfstring{$^\wedge$}{\string^}= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}\index{bitmask@{bitmask}!operator\texttt{"|}=@{operator\texttt{"|}=}}
+\index{operator\texttt{"|}=@{operator\texttt{"|}=}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator\texttt{"|}=()}{operator|=()}}
+{\footnotesize\ttfamily \label{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} \& bitmask::\+operator\texorpdfstring{$\vert$}{|}= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{classbitmask}{bitmask}} \&}]{other\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}\index{bitmask@{bitmask}!operator\texorpdfstring{$\sim$}{\string~}@{operator\texorpdfstring{$\sim$}{\string~}}}
+\index{operator\texorpdfstring{$\sim$}{\string~}@{operator\texorpdfstring{$\sim$}{\string~}}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\sim$}{\string~}()}{operator\string~()}}
+{\footnotesize\ttfamily \label{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02} 
+\doxymbox{\hyperlink{classbitmask}{bitmask}} bitmask::\+operator\texorpdfstring{$\sim$}{\string~} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}\index{bitmask@{bitmask}!read\_at@{read\_at}}
+\index{read\_at@{read\_at}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{read\_at()}{read\_at()}}
+{\footnotesize\ttfamily \label{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc} 
+bool bitmask::\+read\+\_\+at (\begin{DoxyParamCaption}\item[{FE::\+size}]{index\+\_\+p}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}\index{bitmask@{bitmask}!reserve@{reserve}}
+\index{reserve@{reserve}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{reserve()}{reserve()}}
+{\footnotesize\ttfamily \label{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de} 
+void bitmask::\+reserve (\begin{DoxyParamCaption}\item[{FE::\+size}]{new\+\_\+capacity\+\_\+in\+\_\+bits\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a023cd560b8deed23f9825d14ad054d9f}\index{bitmask@{bitmask}!resize@{resize}}
+\index{resize@{resize}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily \label{classbitmask_a023cd560b8deed23f9825d14ad054d9f} 
+void bitmask::\+resize (\begin{DoxyParamCaption}\item[{FE::\+size}]{new\+\_\+capacity\+\_\+in\+\_\+bits\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_aa9dfa42a2e6e4d192fab5088df4de5aa}{\+\_\+\+\_\+calculate\+\_\+size\+\_\+of\+\_\+bits\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}{m\+\_\+allocator}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=315pt]{classbitmask_a023cd560b8deed23f9825d14ad054d9f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}\index{bitmask@{bitmask}!write\_at@{write\_at}}
+\index{write\_at@{write\_at}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{write\_at()}{write\_at()}}
+{\footnotesize\ttfamily \label{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86} 
+void bitmask::\+write\+\_\+at (\begin{DoxyParamCaption}\item[{FE::\+size}]{index\+\_\+p}{, }\item[{bool}]{value\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{classbitmask_a22728589907dce291f440747f7e563d9}{m\+\_\+64bit\+\_\+buffer}}, \doxymbox{\hyperlink{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}{m\+\_\+bitmask}}, and \doxymbox{\hyperlink{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}{m\+\_\+capacity\+\_\+in\+\_\+bits}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=324pt]{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{classbitmask_doc-variable-members}
+\Hypertarget{classbitmask_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classbitmask_a22728589907dce291f440747f7e563d9}\index{bitmask@{bitmask}!m\_64bit\_buffer@{m\_64bit\_buffer}}
+\index{m\_64bit\_buffer@{m\_64bit\_buffer}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{m\_64bit\_buffer}{m\_64bit\_buffer}}
+{\footnotesize\ttfamily \label{classbitmask_a22728589907dce291f440747f7e563d9} 
+\doxymbox{\hyperlink{namespacevar_a6de86b9bf769c13eda69add87e57ec67}{var::\+uint64}} bitmask::\+m\+\_\+64bit\+\_\+buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear()}}, \doxymbox{\hyperlink{classbitmask_a98f149c1ae838db1fa89d2c8b859876e}{data()}}, \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}, \doxymbox{\hyperlink{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}{read\+\_\+at()}}, \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve()}}, \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize()}}, and \doxymbox{\hyperlink{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}{write\+\_\+at()}}.
+
+\Hypertarget{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5}\index{bitmask@{bitmask}!m\_allocator@{m\_allocator}}
+\index{m\_allocator@{m\_allocator}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{m\_allocator}{m\_allocator}}
+{\footnotesize\ttfamily \label{classbitmask_a4b31ac3fcefe9a7c71818bc8da1501f5} 
+\doxymbox{\hyperlink{classbitmask_a7296970652a4852711d665cd57498d56}{allocator\+\_\+type}} bitmask::\+m\+\_\+allocator\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear()}}, \doxymbox{\hyperlink{classbitmask_aff1c8dd9102e340280380212316fa43b}{get\+\_\+allocator()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve()}}, \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize()}}, and \doxymbox{\hyperlink{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}{\texorpdfstring{$\sim$}{\string~}bitmask()}}.
+
+\Hypertarget{classbitmask_a3ae504a66017b6af340d7a9808bc51ab}\index{bitmask@{bitmask}!m\_bitmask@{m\_bitmask}}
+\index{m\_bitmask@{m\_bitmask}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{m\_bitmask}{m\_bitmask}}
+{\footnotesize\ttfamily \label{classbitmask_a3ae504a66017b6af340d7a9808bc51ab} 
+\doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::\+byte}}\texorpdfstring{$\ast$}{*} bitmask::\+m\+\_\+bitmask\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear()}}, \doxymbox{\hyperlink{classbitmask_a98f149c1ae838db1fa89d2c8b859876e}{data()}}, \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}, \doxymbox{\hyperlink{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}{read\+\_\+at()}}, \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve()}}, \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize()}}, \doxymbox{\hyperlink{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}{write\+\_\+at()}}, and \doxymbox{\hyperlink{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}{\texorpdfstring{$\sim$}{\string~}bitmask()}}.
+
+\Hypertarget{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1}\index{bitmask@{bitmask}!m\_capacity\_in\_bits@{m\_capacity\_in\_bits}}
+\index{m\_capacity\_in\_bits@{m\_capacity\_in\_bits}!bitmask@{bitmask}}
+\doxysubsubsection{\texorpdfstring{m\_capacity\_in\_bits}{m\_capacity\_in\_bits}}
+{\footnotesize\ttfamily \label{classbitmask_a6fe9fee3d8eda21a3f07d9852ad89fd1} 
+\doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::\+size}} bitmask::\+m\+\_\+capacity\+\_\+in\+\_\+bits\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{classbitmask_ad3ac1a7bc5029dd5a1d4358c726fc843}{\+\_\+\+\_\+large\+\_\+bitset\+\_\+engaged()}}, \doxymbox{\hyperlink{classbitmask_a956a4732d8cfe675ed675cc2328388bd}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ae06eeffd1b7826f9fe75ebd9baab2b3f}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a66162b843af1336a5001e45eece2b6be}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_ac8d05efde4f42e2e52a3e3000a20fc45}{bitmask()}}, \doxymbox{\hyperlink{classbitmask_a54bef13eb8b6887c3b395cfc6e0b4a45}{bitwidth\+\_\+capacity()}}, \doxymbox{\hyperlink{classbitmask_ae7c0824c6522886d1f86a052939f42b1}{capacity\+\_\+in\+\_\+bytes()}}, \doxymbox{\hyperlink{classbitmask_ab7838e97e0d7d42a0acad1e5bb7e8170}{clear()}}, \doxymbox{\hyperlink{classbitmask_a3394840dae0f3a0ec79641b2b508620d}{hash\+\_\+code()}}, \doxymbox{\hyperlink{classbitmask_a144496fde9acdad7eba7db9f58e7e6e5}{operator!=()}}, \doxymbox{\hyperlink{classbitmask_a2d6575231d8a3c92a27eb64aa99ea1fc}{operator\&=()}}, \doxymbox{\hyperlink{classbitmask_a6511dce04454dca392f889199a2f7c9e}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a77d419af84f58483295c3549de7ad1d5}{operator=()}}, \doxymbox{\hyperlink{classbitmask_a28ed04f29423b95a848a51c47bd91479}{operator==()}}, \doxymbox{\hyperlink{classbitmask_a46c2e828cfbb7a428034e2d926a4b5ff}{operator\texorpdfstring{$^\wedge$}{\string^}=()}}, \doxymbox{\hyperlink{classbitmask_a4bf478dac47d65b14316ec7ad71bb1e1}{operator\texorpdfstring{$\vert$}{|}=()}}, \doxymbox{\hyperlink{classbitmask_ab8adf8170b8c067ea746eb5aacf81d02}{operator\texorpdfstring{$\sim$}{\string~}()}}, \doxymbox{\hyperlink{classbitmask_afdc627d38fa1f05e5b99bf47df06d4dc}{read\+\_\+at()}}, \doxymbox{\hyperlink{classbitmask_a82f3bd4216b01e11e7a5877a402bf6de}{reserve()}}, \doxymbox{\hyperlink{classbitmask_a023cd560b8deed23f9825d14ad054d9f}{resize()}}, \doxymbox{\hyperlink{classbitmask_a1ebb58b2ef47a5d30dde21baa327ec86}{write\+\_\+at()}}, and \doxymbox{\hyperlink{classbitmask_a38caf0b8b26817ca571bb574bc76ef8b}{\texorpdfstring{$\sim$}{\string~}bitmask()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Core/\+\+Include/\+\+FE/\+\doxymbox{\hyperlink{bitmask_8hxx}{bitmask.\+hxx}}\end{DoxyCompactItemize}

@@ -1,0 +1,107 @@
+\doxysection{deque.\+hxx}
+\hypertarget{deque_8hxx_source}{}\label{deque_8hxx_source}\index{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/deque.hxx@{C:/Users/leeho/Documents/GitHub/Frogman-\/Engine/SDK/Core/Include/FE/deque.hxx}}
+\doxymbox{\hyperlink{deque_8hxx}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_FE\_CORE\_DEQUE\_HXX}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_FE\_CORE\_DEQUE\_HXX}}
+\DoxyCodeLine{00003\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{Copyright\ ©\ from\ 2022\ to\ present,\ UNKNOWN\ STRYKER.\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{Licensed\ under\ the\ Frogman\ Engine\ License\ (the\ "{}License"{});}}
+\DoxyCodeLine{00007\ \textcolor{comment}{you\ may\ not\ use\ this\ file\ except\ in\ compliance\ with\ the\ License.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{You\ may\ obtain\ a\ copy\ of\ the\ License\ at}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ https://github.com/UnknownStryker-\/Interactive-\/Technologies/Frogman-\/Engine-\/License/blob/release/LICENSE.md}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{Unless\ required\ by\ applicable\ law\ or\ agreed\ to\ in\ writing,\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{distributed\ under\ the\ License\ is\ distributed\ on\ an\ "{}AS\ IS"{}\ BASIS,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{WITHOUT\ WARRANTIES\ OR\ CONDITIONS\ OF\ ANY\ KIND,\ either\ express\ or\ implied.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{See\ the\ License\ for\ the\ specific\ language\ governing\ permissions\ and}}
+\DoxyCodeLine{00016\ \textcolor{comment}{limitations\ under\ the\ License.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{prerequisites_8hxx}{FE/prerequisites.hxx}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{memory_8hxx}{FE/memory.hxx}}>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \doxymbox{\hyperlink{definitions_8hxx_a75c2e24261689771f7f4ab1d2dfab5a1}{BEGIN\_NAMESPACE}}(\doxymbox{\hyperlink{namespace_f_e}{FE}})}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ namespace\ \doxymbox{\hyperlink{namespaceinternal}{internal}}::\doxymbox{\hyperlink{namespaceinternal_1_1deque}{deque}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{consteval}\ FE::size\ \doxymbox{\hyperlink{namespaceinternal_1_1deque_a30ba8d7fdb8e3a0aee5d2a44f18745ac}{calculate\_node\_size}}()\ noexcept}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\ \textcolor{keyword}{sizeof}(T)\ >=\ (\ (4\ *\ FE::one\_KiB)\ -\/\ 32\ )\ )}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 2;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constinit}\ \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::size}}\ l\_size\ =\ (FE::CPU\_L1\_cache\_line::size\ /\ \textcolor{keyword}{sizeof}(T));}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (l\_size\ <=\ 1)}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ l\_size\ =\ ((4\ *\ FE::one\_KiB)\ -\/\ 32)\ /\ \textcolor{keyword}{sizeof}(T);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ l\_size;}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{class}\ Allocator\ =\ FE::polymorphic\_allocator<T>>\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classdeque}{deque}}}
+\DoxyCodeLine{00050\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classdeque_1_1node}{node}}}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ FE::size\ \doxymbox{\hyperlink{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}{array\_size}}\ =\ FE::internal::deque::calculate\_node\_size<T>();}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{static}\ FE::size\ \doxymbox{\hyperlink{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}{array\_size\_in\_bytes}}\ =\ \doxymbox{\hyperlink{classdeque_1_1node_a98164a4c971edaacce3d2bf835e90eaa}{array\_size}}\ *\ \textcolor{keyword}{sizeof}(T);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a2f75027611cb2ab5af3b21ea45770642}{var::byte}}\ \doxymbox{\hyperlink{classdeque_1_1node_ad917a46abfe90b0ce3e1cc2068af2660}{m\_data}}[\doxymbox{\hyperlink{classdeque_1_1node_a072b5cb74cefdc99e5306eef0e562f20}{array\_size\_in\_bytes}}];}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ T*\ \doxymbox{\hyperlink{classdeque_1_1node_a531ec1fa987d0d9d85f70af8983dbf13}{m\_front}};}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ T*\ \doxymbox{\hyperlink{classdeque_1_1node_a0afec65767e5d7a1e44b3975795011f6}{m\_back}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ emplace\_front,\ emplace\_back,\ pop\_front,\ pop\_back}}
+\DoxyCodeLine{00064\ \ \ \ \ \};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a1bac71a3e9c0420296a5b4a17656d375}{value\_type}}\ =\ T;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a09bd556199f669b08bdff03835d6bdd0}{allocator\_type}}\ =\ std::allocator\_traits<Allocator>::template\ rebind\_alloc<node>;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a519bd8e00ddb60d95c817cd7f6d6a2ae}{size\_type}}\ =\ \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::size}};}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a2ce858ebaaf958c1cb8e94fb20f74dbd}{difference\_type}}\ =\ \doxymbox{\hyperlink{namespacevar_a77317676352a6cfb468d840534327193}{var::ptrdiff}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_ad8c430b9395455dda6ce6bef0a8791cb}{reference}}\ =\ \doxymbox{\hyperlink{classdeque_a1bac71a3e9c0420296a5b4a17656d375}{value\_type}}\&;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a0ee0fd00f8b30387c84d6192ffd0a5f0}{const\_reference}}\ =\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classdeque_a1bac71a3e9c0420296a5b4a17656d375}{value\_type}}\&;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a734af27fbe2fd3a695f668bd97317bea}{pointer}}\ =\ \textcolor{keyword}{typename}\ std::allocator\_traits<Allocator>::pointer;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a3ede81f749e5fc51ac77ad6f79673941}{const\_pointer}}\ =\ \textcolor{keyword}{typename}\ std::allocator\_traits<Allocator>::const\_pointer;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_ae9895129e2472bcdd4b1a07bb461437c}{iterator}}\ =\ void;\ \textcolor{comment}{//\ to\ be\ implemented}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a02a2d636fe51f38434457e586af4f93f}{const\_iterator}}\ =\ void;\ \textcolor{comment}{//\ to\ be\ implemented}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a9e0db43cc547a1395ee86322f28cc5ee}{reverse\_iterator}}\ =\ void;\ \textcolor{comment}{//\ to\ be\ implemented}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{using\ }\doxymbox{\hyperlink{classdeque_a722f07b593831440d4fa30984aedba03}{const\_reverse\_iterator}}\ =\ void;\ \textcolor{comment}{//\ to\ be\ implemented}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classdeque_1_1nodes}{nodes}}}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{definitions_8hxx_a06fc02101f78326cfeb6d7b18d6e7246}{\_FE\_NO\_UNIQUE\_ADDRESS\_}}\ \doxymbox{\hyperlink{classdeque_a09bd556199f669b08bdff03835d6bdd0}{allocator\_type}}\ \doxymbox{\hyperlink{classdeque_1_1nodes_a4a08809d50b3b6775b186c8e1d90d2a1}{m\_allocator}};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdeque_1_1node}{node}}*\ \doxymbox{\hyperlink{classdeque_1_1nodes_adc8bf32085f28dea4a9c1aa4eda7b2fd}{m\_array}};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::size}}\ \doxymbox{\hyperlink{classdeque_1_1nodes_a87c155a5c1a4d2eb154986da895d95b2}{m\_size}};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ops}}
+\DoxyCodeLine{00087\ \ \ \ \ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00090\ \ \ \ \ }
+\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{classdeque_1_1nodes}{nodes}}\ \doxymbox{\hyperlink{classdeque_a591222b32e71f98a21c05f1818600649}{m\_nodes}};}
+\DoxyCodeLine{00092\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::size}}\ \doxymbox{\hyperlink{classdeque_ab2c2d7b7a88e30fcbcb2329543dac11b}{m\_capacity}};}
+\DoxyCodeLine{00093\ \ \ \ \ \doxymbox{\hyperlink{namespacevar_a173808d7c663354a8ddafb3c93da5a23}{var::size}}\ \doxymbox{\hyperlink{classdeque_a4541873c86243feb17b08c513b797a15}{m\_size}};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ see:\ https://en.cppreference.com/w/cpp/container/deque.html}}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \doxymbox{\hyperlink{definitions_8hxx_a28886d59fbdc2dccd82cc4887e967d0d}{END\_NAMESPACE}}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,509 @@
+\doxysection{ECS Class Reference}
+\hypertarget{class_e_c_s}{}\label{class_e_c_s}\index{ECS@{ECS}}
+
+
+{\ttfamily \+\#include $<$ECS.\+hxx$>$}
+
+
+
+Collaboration diagram for ECS:\+
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_e_c_s_1_1gc__root}{gc\+\_\+root}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \doxymbox{\hyperlink{class_e_c_s_a81bd358d71f621290607f8bf052090ac}{archetype\+\_\+table}} = FE::\+list$<$ FE::\+internal::\+\+ECS::\+entities, FE::\+page\+\_\+aligned\+\_\+allocator$<$FE::\+internal::\+\+ECS::\+entities$>$ $>$
+\item 
+using \doxymbox{\hyperlink{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9}{component\+\_\+table}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d}{ECS}} (FE::\+size component\+\_\+type\+\_\+count\+\_\+hint\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{class_e_c_s_af9481950102a453a184b42a775bcc2af}{initialize}} (\doxymbox{\hyperlink{namespaceframework_a4953a4ccde9e6b3672c321efc54d078a}{framework::\+initializer\+\_\+list}} \&\&initializer\+\_\+list\+\_\+p) noexcept
+\item 
+\doxymbox{\hyperlink{class_e_c_s_a0ec2e01da85de765712c4c92adc01083}{\texorpdfstring{$\sim$}{\string~}\+ECS}} () noexcept=default
+\item 
+\doxymbox{\hyperlink{class_e_c_s_a96abc03c5f0fa73925ca1d0cb6310a63}{ECS}} (const \doxymbox{\hyperlink{class_e_c_s}{ECS}} \&) noexcept=delete
+\item 
+\doxymbox{\hyperlink{class_e_c_s}{ECS}} \& \doxymbox{\hyperlink{class_e_c_s_a212b7d4bf004f095572d9a3405a3da7b}{operator=}} (const \doxymbox{\hyperlink{class_e_c_s}{ECS}} \&) noexcept=delete
+\item 
+{\footnotesize template$<$class Archetype, typename ... Arguments$>$ }\\FE::\+entity$<$ Archetype $>$ \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity}} (Arguments \&\&...arguments\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer}} (const FE::\+framework::\+initializer \&serialized\+\_\+entity\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ \doxymbox{\hyperlink{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff}{instanciate\+\_\+archetype\+\_\+default\+\_\+entity}} () noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{class_e_c_s_ac8b958b23e0124f6a7c22888cb6f2538}{set\+\_\+archetype\+\_\+default\+\_\+entity}} (FE::\+framework::\+initializer \&\&default\+\_\+values\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Archetype$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+framework::\+initializer \texorpdfstring{$\ast$}{*}const \doxymbox{\hyperlink{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc}{get\+\_\+archetype\+\_\+default\+\_\+entity}} () noexcept
+\item 
+{\footnotesize template$<$class Component, typename ... Arguments$>$ }\\FE::\+component\+\_\+view$<$ Component $>$ \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p, Arguments \&\&...arguments\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Component$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+component\+\_\+view$<$ FE::\+component\+\_\+base $>$ \doxymbox{\hyperlink{class_e_c_s_a8d13af31043af5ee5b6d32863c7ed00c}{instanciate\+\_\+component}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Component$>$ }\\\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void \doxymbox{\hyperlink{class_e_c_s_a5a2704d79a002d52ce0b441d1e23d0cd}{remove\+\_\+component}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p) noexcept
+\item 
+void \doxymbox{\hyperlink{class_e_c_s_a1d10b5c3fab491e69101c67309f56b71}{attatch\+\_\+component}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p, const ::\+\+FE::\+component\+\_\+view$<$ \doxymbox{\hyperlink{classcomponent__base}{component\+\_\+base}} $>$ \&to\+\_\+attatch\+\_\+p) noexcept
+\item 
+{\footnotesize template$<$class Component$>$ }\\FE::\+component\+\_\+view$<$ Component $>$ \doxymbox{\hyperlink{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5}{detach\+\_\+component}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p) noexcept
+\item 
+FE::\+framework::\+initializer \doxymbox{\hyperlink{class_e_c_s_aaac261fe4d23a108ce8f1409a76c1798}{serialize\+\_\+entity}} (FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ entt\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const entity\+\_\+memory\+\_\+layout\+\_\+version) noexcept
+\item 
+void \doxymbox{\hyperlink{class_e_c_s_a57f5c7bcd070225787ba140ae5a7e54d}{deserialize\+\_\+entity}} (const FE::\+framework::\+initializer \&serialized\+\_\+components\+\_\+p, FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$ out\+\_\+entt\+\_\+p, FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const entity\+\_\+memory\+\_\+layout\+\_\+version) noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_e_c_s_1_1gc__root}{gc\+\_\+root}} \doxymbox{\hyperlink{class_e_c_s_ac95b6ff6cab73c224caa24895a40677f}{m\+\_\+gc\+\_\+root}}
+\item 
+FE::\+memory\+\_\+resource \doxymbox{\hyperlink{class_e_c_s_ac52ed7abe082faf5d9a27b5d46fa3581}{m\+\_\+memory\+\_\+resource}}
+\item 
+FE::\+memory\+\_\+resource \doxymbox{\hyperlink{class_e_c_s_a86536ef9023d4896f6f98de2d97bb3ea}{m\+\_\+archetype\+\_\+pool}}
+\item 
+\doxymbox{\hyperlink{class_e_c_s_a81bd358d71f621290607f8bf052090ac}{archetype\+\_\+table}} \doxymbox{\hyperlink{class_e_c_s_ab15cdd7c05bcd4b0be7a022033d316b8}{m\+\_\+entity\+\_\+list}}
+\item 
+\doxymbox{\hyperlink{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9}{component\+\_\+table}} \doxymbox{\hyperlink{class_e_c_s_a76697f4b56b602817701e4c45fc8c845}{m\+\_\+component\+\_\+table}}
+\item 
+\doxymbox{\hyperlink{namespaceframework_a4953a4ccde9e6b3672c321efc54d078a}{framework::\+initializer\+\_\+list}} \doxymbox{\hyperlink{class_e_c_s_a67a31bd9ac08ae33b8e0621bf9129fa5}{m\+\_\+archetype\+\_\+default\+\_\+entities}}
+\item 
+std::\+pmr::\+string \doxymbox{\hyperlink{class_e_c_s_a96b2d57fee07849b3f59b36bab8fb083}{m\+\_\+buffer}}
+\item 
+FE::\+mutex \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_e_c_s_a4ea929ee292fea78215d07aedcc03c52}{::\+\+FE::\+archetype\+\_\+base}}
+\item 
+class \doxymbox{\hyperlink{class_e_c_s_a7e9e621cfc1f0ce388babb72a116dce1}{FE::\+framework::\+game\+\_\+processor}}
+\end{DoxyCompactItemize}
+
+
+\label{class_e_c_s_doc-typedef-members}
+\Hypertarget{class_e_c_s_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{class_e_c_s_a81bd358d71f621290607f8bf052090ac}\index{ECS@{ECS}!archetype\_table@{archetype\_table}}
+\index{archetype\_table@{archetype\_table}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{archetype\_table}{archetype\_table}}
+{\footnotesize\ttfamily \label{class_e_c_s_a81bd358d71f621290607f8bf052090ac} 
+using \doxymbox{\hyperlink{class_e_c_s_a81bd358d71f621290607f8bf052090ac}{ECS::\+archetype\+\_\+table}} = FE::\+list$<$ FE::\+internal::\+\+ECS::\+entities, FE::\+page\+\_\+aligned\+\_\+allocator$<$FE::\+internal::\+\+ECS::\+entities$>$ $>$}
+
+\Hypertarget{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9}\index{ECS@{ECS}!component\_table@{component\_table}}
+\index{component\_table@{component\_table}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{component\_table}{component\_table}}
+{\footnotesize\ttfamily \label{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9} 
+using \doxymbox{\hyperlink{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9}{ECS::\+component\+\_\+table}}}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{absl::node\_hash\_map<std::size\_t,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FE::pair<\ \ \ FE::memory\_resource,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FE::list<FE::internal::ECS::components,\ FE::page\_aligned\_allocator<FE::internal::ECS::components>>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ >}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ >}
+
+\end{DoxyCode}
+
+
+\label{class_e_c_s_doc-constructors}
+\Hypertarget{class_e_c_s_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d}\index{ECS@{ECS}!ECS@{ECS}}
+\index{ECS@{ECS}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{ECS()}{ECS()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d} 
+ECS::\+\+ECS (\begin{DoxyParamCaption}\item[{FE::\+size}]{component\+\_\+type\+\_\+count\+\_\+hint\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a96abc03c5f0fa73925ca1d0cb6310a63}{ECS()}}, and \doxymbox{\hyperlink{class_e_c_s_a212b7d4bf004f095572d9a3405a3da7b}{operator=()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=264pt]{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a0ec2e01da85de765712c4c92adc01083}\index{ECS@{ECS}!````~ECS@{\texorpdfstring{$\sim$}{\string~}ECS}}
+\index{````~ECS@{\texorpdfstring{$\sim$}{\string~}ECS}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ECS()}{\string~ECS()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a0ec2e01da85de765712c4c92adc01083} 
+ECS::\+\texorpdfstring{$\sim$}{\string~}\+ECS (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_e_c_s_a96abc03c5f0fa73925ca1d0cb6310a63}\index{ECS@{ECS}!ECS@{ECS}}
+\index{ECS@{ECS}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{ECS()}{ECS()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_e_c_s_a96abc03c5f0fa73925ca1d0cb6310a63} 
+ECS::\+\+ECS (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_e_c_s}{ECS}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d}{ECS()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{class_e_c_s_a96abc03c5f0fa73925ca1d0cb6310a63_cgraph}
+\end{center}
+\end{figure}
+
+
+\label{class_e_c_s_doc-func-members}
+\Hypertarget{class_e_c_s_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_e_c_s_a7c2105ffac1da3d971e281522464c950}\index{ECS@{ECS}!add\_component@{add\_component}}
+\index{add\_component@{add\_component}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{add\_component()}{add\_component()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a7c2105ffac1da3d971e281522464c950} 
+template$<$class Component, typename ... Arguments$>$ \\
+FE::\+component\+\_\+view$<$ Component $>$ ECS::\+add\+\_\+component (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{, }\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_ae0c216154270b26649f829d357ec666e}{\+\_\+\+FE\+\_\+\+LIKELY\+\_\+}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{log_8hxx_ae9c129c4f0cda55d43b05a65a1d7a796}{FE\+\_\+\+LOG}}, \doxymbox{\hyperlink{class_e_c_s_a76697f4b56b602817701e4c45fc8c845}{m\+\_\+component\+\_\+table}}, \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}, \doxymbox{\hyperlink{class_e_c_s_ac95b6ff6cab73c224caa24895a40677f}{m\+\_\+gc\+\_\+root}}, and \doxymbox{\hyperlink{class_e_c_s_ac52ed7abe082faf5d9a27b5d46fa3581}{m\+\_\+memory\+\_\+resource}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a8d13af31043af5ee5b6d32863c7ed00c}{instanciate\+\_\+component()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a7c2105ffac1da3d971e281522464c950_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a1d10b5c3fab491e69101c67309f56b71}\index{ECS@{ECS}!attatch\_component@{attatch\_component}}
+\index{attatch\_component@{attatch\_component}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{attatch\_component()}{attatch\_component()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a1d10b5c3fab491e69101c67309f56b71} 
+void ECS::\+attatch\+\_\+component (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{, }\item[{const ::\+\+FE::\+component\+\_\+view$<$ \doxymbox{\hyperlink{classcomponent__base}{component\+\_\+base}} $>$ \&}]{to\+\_\+attatch\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_e_c_s_a57f5c7bcd070225787ba140ae5a7e54d}\index{ECS@{ECS}!deserialize\_entity@{deserialize\_entity}}
+\index{deserialize\_entity@{deserialize\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{deserialize\_entity()}{deserialize\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a57f5c7bcd070225787ba140ae5a7e54d} 
+void ECS::\+deserialize\+\_\+entity (\begin{DoxyParamCaption}\item[{const FE::\+framework::\+initializer \&}]{serialized\+\_\+components\+\_\+p}{, }\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{out\+\_\+entt\+\_\+p}{, }\item[{FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const}]{entity\+\_\+memory\+\_\+layout\+\_\+version}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a57f5c7bcd070225787ba140ae5a7e54d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5}\index{ECS@{ECS}!detach\_component@{detach\_component}}
+\index{detach\_component@{detach\_component}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{detach\_component()}{detach\_component()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5} 
+template$<$class Component$>$ \\
+FE::\+component\+\_\+view$<$ Component $>$ ECS::\+detach\+\_\+component (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, and \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a5a2704d79a002d52ce0b441d1e23d0cd}{remove\+\_\+component()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc}\index{ECS@{ECS}!get\_archetype\_default\_entity@{get\_archetype\_default\_entity}}
+\index{get\_archetype\_default\_entity@{get\_archetype\_default\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{get\_archetype\_default\_entity()}{get\_archetype\_default\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+framework::\+initializer \texorpdfstring{$\ast$}{*}const ECS::\+get\+\_\+archetype\+\_\+default\+\_\+entity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{class_e_c_s_a67a31bd9ac08ae33b8e0621bf9129fa5}{m\+\_\+archetype\+\_\+default\+\_\+entities}}, and \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff}{instanciate\+\_\+archetype\+\_\+default\+\_\+entity()}}.
+
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_af9481950102a453a184b42a775bcc2af}\index{ECS@{ECS}!initialize@{initialize}}
+\index{initialize@{initialize}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily \label{class_e_c_s_af9481950102a453a184b42a775bcc2af} 
+void ECS::\+initialize (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespaceframework_a4953a4ccde9e6b3672c321efc54d078a}{framework::\+initializer\+\_\+list}} \&\&}]{initializer\+\_\+list\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff}\index{ECS@{ECS}!instanciate\_archetype\_default\_entity@{instanciate\_archetype\_default\_entity}}
+\index{instanciate\_archetype\_default\_entity@{instanciate\_archetype\_default\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{instanciate\_archetype\_default\_entity()}{instanciate\_archetype\_default\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff} 
+template$<$class Archetype$>$ \\
+FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ ECS::\+instanciate\+\_\+archetype\+\_\+default\+\_\+entity (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc}{get\+\_\+archetype\+\_\+default\+\_\+entity()}}, and \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a8d13af31043af5ee5b6d32863c7ed00c}\index{ECS@{ECS}!instanciate\_component@{instanciate\_component}}
+\index{instanciate\_component@{instanciate\_component}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{instanciate\_component()}{instanciate\_component()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a8d13af31043af5ee5b6d32863c7ed00c} 
+template$<$class Component$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} FE::\+component\+\_\+view$<$ FE::\+component\+\_\+base $>$ ECS::\+instanciate\+\_\+component (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a8d13af31043af5ee5b6d32863c7ed00c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a9f03aed70478100039d775f1c1240034}\index{ECS@{ECS}!instanciate\_entity@{instanciate\_entity}}
+\index{instanciate\_entity@{instanciate\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{instanciate\_entity()}{instanciate\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a9f03aed70478100039d775f1c1240034} 
+template$<$class Archetype, typename ... Arguments$>$ \\
+FE::\+entity$<$ Archetype $>$ ECS::\+instanciate\+\_\+entity (\begin{DoxyParamCaption}\item[{Arguments \&\&...}]{arguments\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}, \doxymbox{\hyperlink{class_e_c_s_a86536ef9023d4896f6f98de2d97bb3ea}{m\+\_\+archetype\+\_\+pool}}, \doxymbox{\hyperlink{class_e_c_s_ab15cdd7c05bcd4b0be7a022033d316b8}{m\+\_\+entity\+\_\+list}}, \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}, \doxymbox{\hyperlink{class_e_c_s_ac95b6ff6cab73c224caa24895a40677f}{m\+\_\+gc\+\_\+root}}, and \doxymbox{\hyperlink{class_e_c_s_ac52ed7abe082faf5d9a27b5d46fa3581}{m\+\_\+memory\+\_\+resource}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}, and \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=200pt]{class_e_c_s_a9f03aed70478100039d775f1c1240034_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a9f03aed70478100039d775f1c1240034_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}\index{ECS@{ECS}!instanciate\_entity\_from\_initializer@{instanciate\_entity\_from\_initializer}}
+\index{instanciate\_entity\_from\_initializer@{instanciate\_entity\_from\_initializer}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{instanciate\_entity\_from\_initializer()}{instanciate\_entity\_from\_initializer()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a3be1b81df8293c41fda2dd552186d201} 
+template$<$class Archetype$>$ \\
+FE::\+entity$<$ FE::\+archetype\+\_\+base $>$ ECS::\+instanciate\+\_\+entity\+\_\+from\+\_\+initializer (\begin{DoxyParamCaption}\item[{const FE::\+framework::\+initializer \&}]{serialized\+\_\+entity\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_e_c_s_a57f5c7bcd070225787ba140ae5a7e54d}{deserialize\+\_\+entity()}}, \doxymbox{\hyperlink{log_8hxx_a634e33eb1b9cb9330ad063c76906c4fc}{FE\+\_\+\+ASSERT}}, \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}, \doxymbox{\hyperlink{class_e_c_s_a96b2d57fee07849b3f59b36bab8fb083}{m\+\_\+buffer}}, and \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a5ea163bdfde5047828c1e9ffe10b3fff}{instanciate\+\_\+archetype\+\_\+default\+\_\+entity()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a3be1b81df8293c41fda2dd552186d201_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a3be1b81df8293c41fda2dd552186d201_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a212b7d4bf004f095572d9a3405a3da7b}\index{ECS@{ECS}!operator=@{operator=}}
+\index{operator=@{operator=}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a212b7d4bf004f095572d9a3405a3da7b} 
+\doxymbox{\hyperlink{class_e_c_s}{ECS}} \& ECS::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_e_c_s}{ECS}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{class_e_c_s_aa498498bf25eace30345c2c93d3b0a8d}{ECS()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=264pt]{class_e_c_s_a212b7d4bf004f095572d9a3405a3da7b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_a5a2704d79a002d52ce0b441d1e23d0cd}\index{ECS@{ECS}!remove\_component@{remove\_component}}
+\index{remove\_component@{remove\_component}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{remove\_component()}{remove\_component()}}
+{\footnotesize\ttfamily \label{class_e_c_s_a5a2704d79a002d52ce0b441d1e23d0cd} 
+template$<$class Component$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void ECS::\+remove\+\_\+component (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, and \doxymbox{\hyperlink{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5}{detach\+\_\+component()}}.
+
+Here is the call graph for this function:\+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_e_c_s_a5a2704d79a002d52ce0b441d1e23d0cd_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_e_c_s_aaac261fe4d23a108ce8f1409a76c1798}\index{ECS@{ECS}!serialize\_entity@{serialize\_entity}}
+\index{serialize\_entity@{serialize\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{serialize\_entity()}{serialize\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_aaac261fe4d23a108ce8f1409a76c1798} 
+FE::\+framework::\+initializer ECS::\+serialize\+\_\+entity (\begin{DoxyParamCaption}\item[{FE::\+entity$<$ \doxymbox{\hyperlink{classarchetype__base}{archetype\+\_\+base}} $>$}]{entt\+\_\+p}{, }\item[{FE::\+\+ASCII \texorpdfstring{$\ast$}{*}const}]{entity\+\_\+memory\+\_\+layout\+\_\+version}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_e_c_s_ac8b958b23e0124f6a7c22888cb6f2538}\index{ECS@{ECS}!set\_archetype\_default\_entity@{set\_archetype\_default\_entity}}
+\index{set\_archetype\_default\_entity@{set\_archetype\_default\_entity}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{set\_archetype\_default\_entity()}{set\_archetype\_default\_entity()}}
+{\footnotesize\ttfamily \label{class_e_c_s_ac8b958b23e0124f6a7c22888cb6f2538} 
+template$<$class Archetype$>$ \\
+\doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}} void ECS::\+set\+\_\+archetype\+\_\+default\+\_\+entity (\begin{DoxyParamCaption}\item[{FE::\+framework::\+initializer \&\&}]{default\+\_\+values\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+
+
+References \doxymbox{\hyperlink{definitions_8hxx_aca323b428a1ec1c79da54688c3485102}{\+\_\+\+FE\+\_\+\+FORCE\+\_\+\+INLINE\+\_\+}}, \doxymbox{\hyperlink{class_e_c_s_a67a31bd9ac08ae33b8e0621bf9129fa5}{m\+\_\+archetype\+\_\+default\+\_\+entities}}, and \doxymbox{\hyperlink{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}{m\+\_\+fiber\+\_\+lock}}.
+
+
+
+\label{class_e_c_s_doc-related-members}
+\Hypertarget{class_e_c_s_doc-related-members}
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{class_e_c_s_a4ea929ee292fea78215d07aedcc03c52}\index{ECS@{ECS}!::FE::archetype\_base@{::FE::archetype\_base}}
+\index{::FE::archetype\_base@{::FE::archetype\_base}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{::FE::archetype\_base}{::FE::archetype\_base}}
+{\footnotesize\ttfamily \label{class_e_c_s_a4ea929ee292fea78215d07aedcc03c52} 
+friend class ::\+\+FE::\+archetype\+\_\+base\hspace{0.3cm}{\ttfamily [friend]}}
+
+\Hypertarget{class_e_c_s_a7e9e621cfc1f0ce388babb72a116dce1}\index{ECS@{ECS}!FE::framework::game\_processor@{FE::framework::game\_processor}}
+\index{FE::framework::game\_processor@{FE::framework::game\_processor}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{FE::framework::game\_processor}{FE::framework::game\_processor}}
+{\footnotesize\ttfamily \label{class_e_c_s_a7e9e621cfc1f0ce388babb72a116dce1} 
+friend class FE::\+framework::\+game\+\_\+processor\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\label{class_e_c_s_doc-variable-members}
+\Hypertarget{class_e_c_s_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_e_c_s_a67a31bd9ac08ae33b8e0621bf9129fa5}\index{ECS@{ECS}!m\_archetype\_default\_entities@{m\_archetype\_default\_entities}}
+\index{m\_archetype\_default\_entities@{m\_archetype\_default\_entities}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_archetype\_default\_entities}{m\_archetype\_default\_entities}}
+{\footnotesize\ttfamily \label{class_e_c_s_a67a31bd9ac08ae33b8e0621bf9129fa5} 
+\doxymbox{\hyperlink{namespaceframework_a4953a4ccde9e6b3672c321efc54d078a}{framework::\+initializer\+\_\+list}} ECS::\+m\+\_\+archetype\+\_\+default\+\_\+entities\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc}{get\+\_\+archetype\+\_\+default\+\_\+entity()}}, and \doxymbox{\hyperlink{class_e_c_s_ac8b958b23e0124f6a7c22888cb6f2538}{set\+\_\+archetype\+\_\+default\+\_\+entity()}}.
+
+\Hypertarget{class_e_c_s_a86536ef9023d4896f6f98de2d97bb3ea}\index{ECS@{ECS}!m\_archetype\_pool@{m\_archetype\_pool}}
+\index{m\_archetype\_pool@{m\_archetype\_pool}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_archetype\_pool}{m\_archetype\_pool}}
+{\footnotesize\ttfamily \label{class_e_c_s_a86536ef9023d4896f6f98de2d97bb3ea} 
+FE::\+memory\+\_\+resource ECS::\+m\+\_\+archetype\+\_\+pool\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}.
+
+\Hypertarget{class_e_c_s_a96b2d57fee07849b3f59b36bab8fb083}\index{ECS@{ECS}!m\_buffer@{m\_buffer}}
+\index{m\_buffer@{m\_buffer}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_buffer}{m\_buffer}}
+{\footnotesize\ttfamily \label{class_e_c_s_a96b2d57fee07849b3f59b36bab8fb083} 
+std::\+pmr::\+string ECS::\+m\+\_\+buffer\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer()}}.
+
+\Hypertarget{class_e_c_s_a76697f4b56b602817701e4c45fc8c845}\index{ECS@{ECS}!m\_component\_table@{m\_component\_table}}
+\index{m\_component\_table@{m\_component\_table}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_component\_table}{m\_component\_table}}
+{\footnotesize\ttfamily \label{class_e_c_s_a76697f4b56b602817701e4c45fc8c845} 
+\doxymbox{\hyperlink{class_e_c_s_a89d515d7b70a06d1784e08aecf10cea9}{component\+\_\+table}} ECS::\+m\+\_\+component\+\_\+table\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component()}}.
+
+\Hypertarget{class_e_c_s_ab15cdd7c05bcd4b0be7a022033d316b8}\index{ECS@{ECS}!m\_entity\_list@{m\_entity\_list}}
+\index{m\_entity\_list@{m\_entity\_list}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_entity\_list}{m\_entity\_list}}
+{\footnotesize\ttfamily \label{class_e_c_s_ab15cdd7c05bcd4b0be7a022033d316b8} 
+\doxymbox{\hyperlink{class_e_c_s_a81bd358d71f621290607f8bf052090ac}{archetype\+\_\+table}} ECS::\+m\+\_\+entity\+\_\+list\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}.
+
+\Hypertarget{class_e_c_s_a8ffb5addb17040d53228d457d7b65501}\index{ECS@{ECS}!m\_fiber\_lock@{m\_fiber\_lock}}
+\index{m\_fiber\_lock@{m\_fiber\_lock}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_fiber\_lock}{m\_fiber\_lock}}
+{\footnotesize\ttfamily \label{class_e_c_s_a8ffb5addb17040d53228d457d7b65501} 
+FE::\+mutex ECS::\+m\+\_\+fiber\+\_\+lock\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component()}}, \doxymbox{\hyperlink{class_e_c_s_a8e8f11becdbbf9a583506208b0489bd5}{detach\+\_\+component()}}, \doxymbox{\hyperlink{class_e_c_s_ac5753c3a0458b5bcaa20a2aecd9f93fc}{get\+\_\+archetype\+\_\+default\+\_\+entity()}}, \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}, \doxymbox{\hyperlink{class_e_c_s_a3be1b81df8293c41fda2dd552186d201}{instanciate\+\_\+entity\+\_\+from\+\_\+initializer()}}, and \doxymbox{\hyperlink{class_e_c_s_ac8b958b23e0124f6a7c22888cb6f2538}{set\+\_\+archetype\+\_\+default\+\_\+entity()}}.
+
+\Hypertarget{class_e_c_s_ac95b6ff6cab73c224caa24895a40677f}\index{ECS@{ECS}!m\_gc\_root@{m\_gc\_root}}
+\index{m\_gc\_root@{m\_gc\_root}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_gc\_root}{m\_gc\_root}}
+{\footnotesize\ttfamily \label{class_e_c_s_ac95b6ff6cab73c224caa24895a40677f} 
+\doxymbox{\hyperlink{struct_e_c_s_1_1gc__root}{gc\+\_\+root}} ECS::\+m\+\_\+gc\+\_\+root\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component()}}, and \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}.
+
+\Hypertarget{class_e_c_s_ac52ed7abe082faf5d9a27b5d46fa3581}\index{ECS@{ECS}!m\_memory\_resource@{m\_memory\_resource}}
+\index{m\_memory\_resource@{m\_memory\_resource}!ECS@{ECS}}
+\doxysubsubsection{\texorpdfstring{m\_memory\_resource}{m\_memory\_resource}}
+{\footnotesize\ttfamily \label{class_e_c_s_ac52ed7abe082faf5d9a27b5d46fa3581} 
+FE::\+memory\+\_\+resource ECS::\+m\+\_\+memory\+\_\+resource\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Referenced by \doxymbox{\hyperlink{class_e_c_s_a7c2105ffac1da3d971e281522464c950}{add\+\_\+component()}}, and \doxymbox{\hyperlink{class_e_c_s_a9f03aed70478100039d775f1c1240034}{instanciate\+\_\+entity()}}.
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+C:\+/\+\+Users/\+leeho/\+\+Documents/\+\+Git\+Hub/\+\+Frogman-\/\+Engine/\+\+SDK/\+\+Framework/\+\+Include/\+\+FE/\+framework/\+\doxymbox{\hyperlink{_e_c_s_8hxx}{ECS.\+hxx}}\end{DoxyCompactItemize}
