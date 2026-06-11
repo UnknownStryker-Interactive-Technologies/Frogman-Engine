@@ -94,12 +94,12 @@ struct movement
 	var::float64 _speed; // value range: [0.0, 1.0]
 };
 
-_FE_FORCE_INLINE_ movement calculate_movement(const glm::vec2& vector_p)
+_FE_FORCE_INLINE_ movement calculate_movement(FE::float64 forward_p, FE::float64 horizontal_p)
 {
 	movement l_result = 
 	{
-		._direction = std::atan2(vector_p.x, vector_p.y) * 180.0f / pi,
-		._speed = std::sqrt((vector_p.x * vector_p.x) + (vector_p.y * vector_p.y))
+		._direction = std::atan2(horizontal_p, forward_p) * 180.0f / pi,
+		._speed = std::sqrt((horizontal_p * horizontal_p) + (forward_p * forward_p))
 	};
 
 	if (l_result._speed > 1.0f)
