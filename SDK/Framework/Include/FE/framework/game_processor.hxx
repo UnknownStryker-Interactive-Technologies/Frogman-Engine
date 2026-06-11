@@ -1,4 +1,4 @@
-#ifndef _FE_GAME_PROCESSOR_HXX_
+﻿#ifndef _FE_GAME_PROCESSOR_HXX_
 #define _FE_GAME_PROCESSOR_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

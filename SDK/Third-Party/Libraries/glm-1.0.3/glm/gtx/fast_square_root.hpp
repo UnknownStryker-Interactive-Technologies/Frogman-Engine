@@ -1,4 +1,4 @@
-/// @ref gtx_fast_square_root
+﻿/// @ref gtx_fast_square_root
 /// @file glm/gtx/fast_square_root.hpp
 ///
 /// @see core (dependence)

@@ -1,4 +1,4 @@
-#ifndef KASTORS_POISSON_H
+﻿#ifndef KASTORS_POISSON_H
 #define KASTORS_POISSON_H
 #include <cassert>
 #include <string>

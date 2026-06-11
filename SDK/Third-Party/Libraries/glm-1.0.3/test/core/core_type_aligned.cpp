@@ -1,4 +1,4 @@
-#include <glm/detail/setup.hpp>
+﻿#include <glm/detail/setup.hpp>
 
 #if GLM_PLATFORM & GLM_PLATFORM_APPLE // Fail on Github macOS-latest (macOS-13 was fine)
 int main()

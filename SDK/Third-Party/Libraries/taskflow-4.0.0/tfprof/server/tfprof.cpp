@@ -1,4 +1,4 @@
-// 3rd-party include
+﻿// 3rd-party include
 
 #include <httplib/httplib.hpp>
 #include <CLI11/CLI11.hpp>

@@ -1,4 +1,4 @@
-/// @ref gtx_type_trait
+﻿/// @ref gtx_type_trait
 /// @file glm/gtx/type_trait.hpp
 ///
 /// @see core (dependence)

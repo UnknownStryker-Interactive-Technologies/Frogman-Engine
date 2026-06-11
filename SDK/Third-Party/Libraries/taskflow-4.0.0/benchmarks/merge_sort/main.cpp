@@ -1,4 +1,4 @@
-#include "merge_sort.hpp"
+﻿#include "merge_sort.hpp"
 #include <CLI11.hpp>
 
 void merge_sort(

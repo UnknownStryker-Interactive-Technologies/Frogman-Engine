@@ -1,4 +1,4 @@
-#include <glm/ext/matrix_int4x2_sized.hpp>
+﻿#include <glm/ext/matrix_int4x2_sized.hpp>
 
 #if GLM_HAS_STATIC_ASSERT
 static_assert(sizeof(glm::i8mat4x2) == 8, "int8 size isn't 1 byte on this platform");

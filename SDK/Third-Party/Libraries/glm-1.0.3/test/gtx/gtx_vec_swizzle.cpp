@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/vec_swizzle.hpp>
 
 int main()

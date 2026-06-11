@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  regularize.cxx
 // Author :  L. Plagne <laurent.plagne@edf.fr)>        
 // Copyright (C) EDF R&D,  lun sep 30 14:23:15 CEST 2002

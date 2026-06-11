@@ -1,4 +1,4 @@
-#include "../Eigen/LU"
+﻿#include "../Eigen/LU"
 
 #ifdef EIGEN_SHOULD_FAIL_TO_BUILD
 #define SCALAR int

@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/glm.hpp
 ///
 /// @mainpage OpenGL Mathematics (GLM)

@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  action_axpy.hh
 // Author :  L. Plagne <laurent.plagne@edf.fr)>
 // Copyright (C) EDF R&D,  lun sep 30 14:23:19 CEST 2002

@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
 #include <glm/ext/scalar_relational.hpp>
 #include <glm/vec2.hpp>

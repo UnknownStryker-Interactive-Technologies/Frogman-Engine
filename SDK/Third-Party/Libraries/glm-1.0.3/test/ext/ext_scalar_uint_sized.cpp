@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_uint_sized.hpp>
+﻿#include <glm/ext/scalar_uint_sized.hpp>
 
 #if GLM_HAS_STATIC_ASSERT
 	static_assert(sizeof(glm::uint8) == 1, "uint8 size isn't 1 byte on this platform");

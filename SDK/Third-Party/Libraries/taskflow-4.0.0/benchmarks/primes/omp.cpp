@@ -1,4 +1,4 @@
-#include "primes.hpp"
+﻿#include "primes.hpp"
 #include <omp.h>
 #include <ranges>
 

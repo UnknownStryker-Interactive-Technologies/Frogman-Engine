@@ -1,4 +1,4 @@
-/// @ref ext_vector_bool1
+﻿/// @ref ext_vector_bool1
 /// @file glm/ext/vector_bool1.hpp
 ///
 /// @defgroup ext_vector_bool1 GLM_EXT_vector_bool1

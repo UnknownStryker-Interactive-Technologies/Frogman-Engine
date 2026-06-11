@@ -1,4 +1,4 @@
-#include "dnn.hpp"
+﻿#include "dnn.hpp"
 
 void run_sequential(MNIST& D, unsigned) {
 

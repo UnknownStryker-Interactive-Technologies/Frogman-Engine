@@ -1,4 +1,4 @@
-/// @ref gtx_std_based_type
+﻿/// @ref gtx_std_based_type
 /// @file glm/gtx/std_based_type.hpp
 ///
 /// @see core (dependence)

@@ -1,4 +1,4 @@
-#include <glm/ext/quaternion_trigonometric.hpp>
+﻿#include <glm/ext/quaternion_trigonometric.hpp>
 #include <glm/ext/quaternion_float.hpp>
 #include <glm/ext/vector_relational.hpp>
 #include <glm/ext/scalar_relational.hpp>

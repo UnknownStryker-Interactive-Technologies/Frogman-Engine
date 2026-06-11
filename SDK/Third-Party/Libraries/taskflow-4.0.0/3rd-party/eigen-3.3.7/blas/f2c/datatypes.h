@@ -1,4 +1,4 @@
-/* This contains a limited subset of the typedefs exposed by f2c
+﻿/* This contains a limited subset of the typedefs exposed by f2c
    for use by the Eigen BLAS C-only implementation.
 */
 

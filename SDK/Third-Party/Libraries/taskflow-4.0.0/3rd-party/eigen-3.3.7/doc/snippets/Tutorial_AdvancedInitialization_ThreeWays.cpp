@@ -1,4 +1,4 @@
-const int size = 6;
+﻿const int size = 6;
 MatrixXd mat1(size, size);
 mat1.topLeftCorner(size/2, size/2)     = MatrixXd::Zero(size/2, size/2);
 mat1.topRightCorner(size/2, size/2)    = MatrixXd::Identity(size/2, size/2);

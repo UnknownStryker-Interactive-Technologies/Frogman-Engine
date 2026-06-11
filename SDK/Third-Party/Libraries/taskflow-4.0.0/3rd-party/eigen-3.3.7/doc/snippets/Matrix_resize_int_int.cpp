@@ -1,4 +1,4 @@
-MatrixXd m(2,3);
+﻿MatrixXd m(2,3);
 m << 1,2,3,4,5,6;
 cout << "here's the 2x3 matrix m:" << endl << m << endl;
 cout << "let's resize m to 3x2. This is a conservative resizing because 2*3==3*2." << endl;

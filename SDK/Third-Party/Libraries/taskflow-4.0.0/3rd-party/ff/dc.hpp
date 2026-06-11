@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
+﻿/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 
 #ifndef FF_DAC_MDF_HPP
 #define FF_DAC_MDF_HPP

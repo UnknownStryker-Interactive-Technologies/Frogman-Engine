@@ -1,4 +1,4 @@
-/// @ref gtx_projection
+﻿/// @ref gtx_projection
 /// @file glm/gtx/projection.hpp
 ///
 /// @see core (dependence)

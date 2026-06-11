@@ -1,4 +1,4 @@
-// A simple example with a semaphore constraint that only one task can
+﻿// A simple example with a semaphore constraint that only one task can
 // execute at a time.
 
 #include <taskflow/taskflow.hpp>

@@ -1,4 +1,4 @@
-// Small bench routine for Eigen available in Eigen
+﻿// Small bench routine for Eigen available in Eigen
 // (C) Desire NUENTSA WAKAM, INRIA
 
 #include <iostream>

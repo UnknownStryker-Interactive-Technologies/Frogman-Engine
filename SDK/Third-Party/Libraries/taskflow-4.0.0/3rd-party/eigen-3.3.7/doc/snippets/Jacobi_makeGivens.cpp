@@ -1,4 +1,4 @@
-Vector2f v = Vector2f::Random();
+﻿Vector2f v = Vector2f::Random();
 JacobiRotation<float> G;
 G.makeGivens(v.x(), v.y());
 cout << "Here is the vector v:" << endl << v << endl;

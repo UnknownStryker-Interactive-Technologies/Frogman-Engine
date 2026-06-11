@@ -1,4 +1,4 @@
-#include "linear_chain.hpp"
+﻿#include "linear_chain.hpp"
 #include <omp.h>
 
 // linear_chain_omp

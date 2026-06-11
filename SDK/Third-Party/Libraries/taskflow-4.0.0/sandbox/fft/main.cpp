@@ -1,4 +1,4 @@
-//	14 APR 2011 Lukasz G. Szafaryn
+﻿//	14 APR 2011 Lukasz G. Szafaryn
 
 #include <chrono>
 #include <iostream>

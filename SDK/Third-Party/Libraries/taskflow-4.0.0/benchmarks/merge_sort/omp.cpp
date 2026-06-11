@@ -1,4 +1,4 @@
-#include "merge_sort.hpp"
+﻿#include "merge_sort.hpp"
 #include <omp.h>
 
 template <typename T>

@@ -1,4 +1,4 @@
-// The skynet benchmark as described here:
+﻿// The skynet benchmark as described here:
 // https://github.com/atemerev/skynet
 
 #include "skynet.hpp"

@@ -1,4 +1,4 @@
-namespace glm
+﻿namespace glm
 {
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<4, bool, Q> equal(qua<T, Q> const& x, qua<T, Q> const& y)

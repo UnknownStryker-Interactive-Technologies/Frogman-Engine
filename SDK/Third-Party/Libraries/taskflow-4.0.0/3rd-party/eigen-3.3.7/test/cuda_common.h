@@ -1,4 +1,4 @@
-
+﻿
 #ifndef EIGEN_TEST_CUDA_COMMON_H
 #define EIGEN_TEST_CUDA_COMMON_H
 

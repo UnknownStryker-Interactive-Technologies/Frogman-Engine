@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/fast_square_root.hpp>
 #include <glm/gtc/type_precision.hpp>
 #include <glm/gtc/epsilon.hpp>

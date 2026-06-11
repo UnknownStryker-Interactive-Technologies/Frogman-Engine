@@ -1,4 +1,4 @@
-#ifndef UFBX_UFBX_MATH_H_INCLUDED
+﻿#ifndef UFBX_UFBX_MATH_H_INCLUDED
 #define UFBX_UFBX_MATH_H_INCLUDED
 
 #if defined(__cplusplus)

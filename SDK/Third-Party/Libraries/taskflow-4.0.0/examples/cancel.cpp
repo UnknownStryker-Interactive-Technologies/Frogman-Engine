@@ -1,4 +1,4 @@
-// The program demonstrates how to cancel a submitted taskflow
+﻿// The program demonstrates how to cancel a submitted taskflow
 // graph and wait until the cancellation completes.
 
 #include <taskflow/taskflow.hpp>

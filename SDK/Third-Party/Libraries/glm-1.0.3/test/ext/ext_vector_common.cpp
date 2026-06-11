@@ -1,4 +1,4 @@
-#include <glm/ext/vector_common.hpp>
+﻿#include <glm/ext/vector_common.hpp>
 
 #include <glm/ext/vector_bool1.hpp>
 #include <glm/ext/vector_bool1_precision.hpp>

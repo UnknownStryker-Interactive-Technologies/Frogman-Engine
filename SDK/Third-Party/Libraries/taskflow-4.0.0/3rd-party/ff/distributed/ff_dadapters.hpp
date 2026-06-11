@@ -1,4 +1,4 @@
-#ifndef ADAPTERS_H
+﻿#ifndef ADAPTERS_H
 #define ADAPTERS_H
 
 #include <iostream>

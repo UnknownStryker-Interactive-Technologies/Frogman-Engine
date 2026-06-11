@@ -1,4 +1,4 @@
-// This file is part of Eigen, a lightweight C++ template library
+﻿// This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 //
 // Copyright (C) 2012-2013 Desire Nuentsa <desire.nuentsa_wakam@inria.fr>

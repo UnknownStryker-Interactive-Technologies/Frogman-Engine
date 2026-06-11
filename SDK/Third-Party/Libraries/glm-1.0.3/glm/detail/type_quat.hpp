@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/detail/type_quat.hpp
 
 #pragma once

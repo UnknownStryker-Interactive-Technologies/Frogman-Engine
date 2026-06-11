@@ -1,4 +1,4 @@
-// g++ -O3 -DNDEBUG -I.. -L /usr/lib64/atlas/ benchBlasGemm.cpp -o benchBlasGemm -lrt -lcblas
+﻿// g++ -O3 -DNDEBUG -I.. -L /usr/lib64/atlas/ benchBlasGemm.cpp -o benchBlasGemm -lrt -lcblas
 // possible options:
 //    -DEIGEN_DONT_VECTORIZE
 //    -msse2

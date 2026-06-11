@@ -1,4 +1,4 @@
-/// @ref gtc_type_precision
+﻿/// @ref gtc_type_precision
 /// @file glm/gtc/type_precision.hpp
 ///
 /// @see core (dependence)

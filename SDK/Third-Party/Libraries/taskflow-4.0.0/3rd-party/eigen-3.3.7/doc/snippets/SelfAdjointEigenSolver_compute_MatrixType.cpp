@@ -1,4 +1,4 @@
-SelfAdjointEigenSolver<MatrixXf> es(4);
+﻿SelfAdjointEigenSolver<MatrixXf> es(4);
 MatrixXf X = MatrixXf::Random(4,4);
 MatrixXf A = X + X.transpose();
 es.compute(A);

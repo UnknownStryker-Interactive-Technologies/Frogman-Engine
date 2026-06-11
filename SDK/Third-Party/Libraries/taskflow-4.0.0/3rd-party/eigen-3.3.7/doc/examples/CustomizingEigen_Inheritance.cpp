@@ -1,4 +1,4 @@
-#include <Eigen/Core>
+﻿#include <Eigen/Core>
 #include <iostream>
 
 class MyVectorType : public Eigen::VectorXd

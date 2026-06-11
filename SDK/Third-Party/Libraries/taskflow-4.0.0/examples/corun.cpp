@@ -1,4 +1,4 @@
-// This example demonstrates how to use the corun method from a running worker
+﻿// This example demonstrates how to use the corun method from a running worker
 // of an executor to avoid deadlock.
 #include <taskflow/taskflow.hpp>
 

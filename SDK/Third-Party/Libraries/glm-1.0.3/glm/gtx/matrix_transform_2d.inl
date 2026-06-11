@@ -1,4 +1,4 @@
-/// @ref gtx_matrix_transform_2d
+﻿/// @ref gtx_matrix_transform_2d
 /// @author Miguel Ángel Pérez Martínez
 
 #include "../trigonometric.hpp"

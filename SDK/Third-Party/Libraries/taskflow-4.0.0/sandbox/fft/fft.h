@@ -1,4 +1,4 @@
-#ifndef FFT_H
+﻿#ifndef FFT_H
 #define FFT_H
 
 /* our real numbers */

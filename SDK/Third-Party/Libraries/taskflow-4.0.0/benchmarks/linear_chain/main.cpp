@@ -1,4 +1,4 @@
-#include "linear_chain.hpp"
+﻿#include "linear_chain.hpp"
 #include <CLI11.hpp>
 
 void linear_chain(

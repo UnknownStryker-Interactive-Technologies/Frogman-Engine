@@ -1,4 +1,4 @@
-#ifndef _FE_RENDERER_IMAGE_HPP_
+﻿#ifndef _FE_RENDERER_IMAGE_HPP_
 #define _FE_RENDERER_IMAGE_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.

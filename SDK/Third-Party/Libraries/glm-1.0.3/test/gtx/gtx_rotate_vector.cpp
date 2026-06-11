@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/ext/vector_relational.hpp>

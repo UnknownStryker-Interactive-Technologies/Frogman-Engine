@@ -1,4 +1,4 @@
-#include "nqueens.hpp"
+﻿#include "nqueens.hpp"
 #include <CLI11.hpp>
 
 void bench_nqueens(

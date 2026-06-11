@@ -1,4 +1,4 @@
-#include "sort.hpp"
+﻿#include "sort.hpp"
 #include <omp.h>
 
 // OMP parallel sort

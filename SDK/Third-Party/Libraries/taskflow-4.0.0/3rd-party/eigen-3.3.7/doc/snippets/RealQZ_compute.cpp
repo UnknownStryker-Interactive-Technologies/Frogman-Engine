@@ -1,4 +1,4 @@
-MatrixXf A = MatrixXf::Random(4,4);
+﻿MatrixXf A = MatrixXf::Random(4,4);
 MatrixXf B = MatrixXf::Random(4,4);
 RealQZ<MatrixXf> qz(4); // preallocate space for 4x4 matrices
 qz.compute(A,B);  // A = Q S Z,  B = Q T Z

@@ -1,4 +1,4 @@
-#include "merge_sort.hpp"
+﻿#include "merge_sort.hpp"
 
 template <typename T>
 void msort(std::vector<T>& data, std::vector<T>& buffer, size_t begin, size_t end) {

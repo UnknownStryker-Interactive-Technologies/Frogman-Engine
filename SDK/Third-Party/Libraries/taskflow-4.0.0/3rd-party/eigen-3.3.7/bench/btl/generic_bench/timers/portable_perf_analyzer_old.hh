@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  portable_perf_analyzer.hh
 // Author :  L. Plagne <laurent.plagne@edf.fr)>
 // Copyright (C) EDF R&D,  mar d�c 3 18:59:35 CET 2002

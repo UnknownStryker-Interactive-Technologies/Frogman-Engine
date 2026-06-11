@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 /**
 @file taskflow/cuda/algorithm/single_task.hpp

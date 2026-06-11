@@ -1,4 +1,4 @@
-int main()
+﻿int main()
 {
 	int Error = 0;
 

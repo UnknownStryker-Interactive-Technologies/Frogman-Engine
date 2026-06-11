@@ -1,4 +1,4 @@
-#define GLM_FORCE_LEFT_HANDED
+﻿#define GLM_FORCE_LEFT_HANDED
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

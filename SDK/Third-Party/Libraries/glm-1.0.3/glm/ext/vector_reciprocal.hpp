@@ -1,4 +1,4 @@
-/// @ref ext_vector_reciprocal
+﻿/// @ref ext_vector_reciprocal
 /// @file glm/ext/vector_reciprocal.hpp
 ///
 /// @see core (dependence)

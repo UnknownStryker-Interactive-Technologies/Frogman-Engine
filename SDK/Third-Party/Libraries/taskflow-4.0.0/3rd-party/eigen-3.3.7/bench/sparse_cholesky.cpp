@@ -1,4 +1,4 @@
-// #define EIGEN_TAUCS_SUPPORT
+﻿// #define EIGEN_TAUCS_SUPPORT
 // #define EIGEN_CHOLMOD_SUPPORT
 #include <iostream>
 #include <Eigen/Sparse>

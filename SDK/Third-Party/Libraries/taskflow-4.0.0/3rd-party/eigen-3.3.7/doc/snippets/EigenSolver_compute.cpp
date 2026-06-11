@@ -1,4 +1,4 @@
-EigenSolver<MatrixXf> es;
+﻿EigenSolver<MatrixXf> es;
 MatrixXf A = MatrixXf::Random(4,4);
 es.compute(A, /* computeEigenvectors = */ false);
 cout << "The eigenvalues of A are: " << es.eigenvalues().transpose() << endl;

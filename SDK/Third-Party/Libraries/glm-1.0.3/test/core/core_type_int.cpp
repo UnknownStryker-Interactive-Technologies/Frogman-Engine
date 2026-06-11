@@ -1,4 +1,4 @@
-#include <glm/glm.hpp>
+﻿#include <glm/glm.hpp>
 #include <glm/ext/scalar_int_sized.hpp>
 
 static int test_bit_operator()

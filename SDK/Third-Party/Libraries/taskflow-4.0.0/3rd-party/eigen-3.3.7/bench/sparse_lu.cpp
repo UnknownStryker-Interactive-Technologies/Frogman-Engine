@@ -1,4 +1,4 @@
-
+﻿
 // g++ -I.. sparse_lu.cpp -O3 -g0 -I /usr/include/superlu/ -lsuperlu -lgfortran -DSIZE=1000 -DDENSITY=.05 && ./a.out
 
 #define EIGEN_SUPERLU_SUPPORT

@@ -1,4 +1,4 @@
-#ifndef FF_ABSTRACT_DCAS_H
+﻿#ifndef FF_ABSTRACT_DCAS_H
 #define FF_ABSTRACT_DCAS_H
 
 /* 

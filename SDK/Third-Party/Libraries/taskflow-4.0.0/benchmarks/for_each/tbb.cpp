@@ -1,4 +1,4 @@
-#include "for_each.hpp"
+﻿#include "for_each.hpp"
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/global_control.h>

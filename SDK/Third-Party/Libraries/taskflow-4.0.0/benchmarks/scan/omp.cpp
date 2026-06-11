@@ -1,4 +1,4 @@
-#include "scan.hpp"
+﻿#include "scan.hpp"
 #include <omp.h>
 
 template <typename T, typename Op>

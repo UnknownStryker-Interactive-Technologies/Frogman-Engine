@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/packing.hpp
 ///
 /// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.4 Floating-Point Pack and Unpack Functions</a>

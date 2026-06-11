@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
+﻿/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 /* ***************************************************************************
  *  FastFlow is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Lesser General Public License version 3 as

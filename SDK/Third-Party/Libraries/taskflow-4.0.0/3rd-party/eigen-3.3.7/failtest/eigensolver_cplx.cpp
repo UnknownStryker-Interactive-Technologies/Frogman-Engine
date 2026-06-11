@@ -1,4 +1,4 @@
-#include "../Eigen/Eigenvalues"
+﻿#include "../Eigen/Eigenvalues"
 
 #ifdef EIGEN_SHOULD_FAIL_TO_BUILD
 #define SCALAR std::complex<double>

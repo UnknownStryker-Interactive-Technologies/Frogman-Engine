@@ -1,4 +1,4 @@
-
+﻿
 //g++-4.4 -DNOMTL  -Wl,-rpath /usr/local/lib/oski -L /usr/local/lib/oski/ -l oski -l oski_util -l oski_util_Tid  -DOSKI -I ~/Coding/LinearAlgebra/mtl4/  spmv.cpp  -I .. -O2 -DNDEBUG -lrt  -lm -l oski_mat_CSC_Tid  -loskilt && ./a.out r200000 c200000 n100 t1 p1
 
 #define SCALAR double

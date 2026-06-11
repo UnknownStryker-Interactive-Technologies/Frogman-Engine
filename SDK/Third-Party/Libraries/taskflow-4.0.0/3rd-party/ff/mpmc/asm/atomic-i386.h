@@ -1,4 +1,4 @@
-/* Massimo: 
+﻿/* Massimo: 
  *  This is a slightly modified version of the linux kernel file 
  *   /<source-dir>/include/asm-x86/atomic_32.h
  *

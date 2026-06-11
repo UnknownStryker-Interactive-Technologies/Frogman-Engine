@@ -1,4 +1,4 @@
-
+﻿
 #define BLAS_FUNC(NAME) CAT(CAT(SCALAR_PREFIX,NAME),_)
 
 template<> class blas_interface<SCALAR> : public c_interface_base<SCALAR>

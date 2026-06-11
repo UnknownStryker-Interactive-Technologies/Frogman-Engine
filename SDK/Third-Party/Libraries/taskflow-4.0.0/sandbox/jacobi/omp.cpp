@@ -1,4 +1,4 @@
-#include "poisson.hpp"
+﻿#include "poisson.hpp"
 
 /* #pragma omp task/taskwait version of SWEEP. */
 void omp_block_for(int nx, int ny, double dx, double dy, double *f_,

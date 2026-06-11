@@ -1,4 +1,4 @@
-#include "../Eigen/Sparse"
+﻿#include "../Eigen/Sparse"
 
 #ifdef EIGEN_SHOULD_FAIL_TO_BUILD
 #define CV_QUALIFIER const

@@ -1,4 +1,4 @@
-// BEGIN GENERATED CODE; DO NOT EDIT
+﻿// BEGIN GENERATED CODE; DO NOT EDIT
 // clang-format off
 
 #include "absl/random/gaussian_distribution.h"

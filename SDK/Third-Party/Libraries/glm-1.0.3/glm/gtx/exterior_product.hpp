@@ -1,4 +1,4 @@
-/// @ref gtx_exterior_product
+﻿/// @ref gtx_exterior_product
 /// @file glm/gtx/exterior_product.hpp
 ///
 /// @see core (dependence)

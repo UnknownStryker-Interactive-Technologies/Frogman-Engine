@@ -1,4 +1,4 @@
-/// @ref ext_matrix_projection
+﻿/// @ref ext_matrix_projection
 /// @file glm/ext/matrix_projection.hpp
 ///
 /// @defgroup ext_matrix_projection GLM_EXT_matrix_projection

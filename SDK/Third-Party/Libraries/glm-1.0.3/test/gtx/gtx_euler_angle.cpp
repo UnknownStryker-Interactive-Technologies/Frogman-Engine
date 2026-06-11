@@ -1,4 +1,4 @@
-// Code sample from Filippo Ramaciotti
+﻿// Code sample from Filippo Ramaciotti
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>

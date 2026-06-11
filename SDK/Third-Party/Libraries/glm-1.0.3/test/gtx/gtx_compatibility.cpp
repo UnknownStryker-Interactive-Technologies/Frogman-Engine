@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/compatibility.hpp>
 
 // This file has divisions by zero to test isnan

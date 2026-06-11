@@ -1,4 +1,4 @@
-typedef Matrix<float,1,Dynamic> MatrixType;
+﻿typedef Matrix<float,1,Dynamic> MatrixType;
 typedef Map<MatrixType> MapType;
 typedef Map<const MatrixType> MapTypeConst;   // a read-only map
 const int n_dims = 5;

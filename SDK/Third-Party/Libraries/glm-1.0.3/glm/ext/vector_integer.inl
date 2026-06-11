@@ -1,4 +1,4 @@
-#include "scalar_integer.hpp"
+﻿#include "scalar_integer.hpp"
 
 namespace glm
 {

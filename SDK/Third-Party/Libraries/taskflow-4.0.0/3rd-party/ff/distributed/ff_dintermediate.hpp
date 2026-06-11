@@ -1,4 +1,4 @@
-#ifndef IR_HPP
+﻿#ifndef IR_HPP
 #define IR_HPP
 #include <ff/distributed/ff_network.hpp>
 #include <ff/node.hpp>

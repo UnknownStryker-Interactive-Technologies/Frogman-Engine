@@ -1,4 +1,4 @@
-cout << "Even spacing inputs:" << endl;
+﻿cout << "Even spacing inputs:" << endl;
 cout << VectorXi::LinSpaced(8,1,4).transpose() << endl;
 cout << VectorXi::LinSpaced(8,1,8).transpose() << endl;
 cout << VectorXi::LinSpaced(8,1,15).transpose() << endl;

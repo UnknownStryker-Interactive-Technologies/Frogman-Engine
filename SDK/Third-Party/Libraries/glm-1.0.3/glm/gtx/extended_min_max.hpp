@@ -1,4 +1,4 @@
-/// @ref gtx_extended_min_max
+﻿/// @ref gtx_extended_min_max
 /// @file glm/gtx/extended_min_max.hpp
 ///
 /// @see core (dependence)

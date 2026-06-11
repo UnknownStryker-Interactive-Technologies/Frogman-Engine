@@ -1,4 +1,4 @@
-/// @ref gtx_io
+﻿/// @ref gtx_io
 /// @author Jan P Springer (regnirpsj@gmail.com)
 
 #include <iomanip>                  // std::fixed, std::setfill<>, std::setprecision, std::right, std::setw

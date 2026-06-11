@@ -1,4 +1,4 @@
-
+﻿
 #ifndef BTL_C_INTERFACE_BASE_H
 #define BTL_C_INTERFACE_BASE_H
 

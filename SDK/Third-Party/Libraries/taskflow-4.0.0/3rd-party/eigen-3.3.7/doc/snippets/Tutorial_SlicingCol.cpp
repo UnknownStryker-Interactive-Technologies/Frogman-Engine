@@ -1,4 +1,4 @@
-MatrixXf M1 = MatrixXf::Random(3,8);
+﻿MatrixXf M1 = MatrixXf::Random(3,8);
 cout << "Column major input:" << endl << M1 << "\n";
 Map<MatrixXf,0,OuterStride<> > M2(M1.data(), M1.rows(), (M1.cols()+2)/3, OuterStride<>(M1.outerStride()*3));
 cout << "1 column over 3:" << endl << M2 << "\n";

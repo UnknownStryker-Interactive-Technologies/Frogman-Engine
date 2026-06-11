@@ -1,4 +1,4 @@
-/// @ref ext_vector_relational
+﻿/// @ref ext_vector_relational
 /// @file glm/ext/vector_relational.inl
 
 // Dependency:

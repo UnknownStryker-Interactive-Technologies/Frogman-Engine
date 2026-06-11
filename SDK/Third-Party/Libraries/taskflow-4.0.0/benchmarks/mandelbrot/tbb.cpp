@@ -1,4 +1,4 @@
-#include "mandel.hpp"
+﻿#include "mandel.hpp"
 #include <tbb/global_control.h>
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>

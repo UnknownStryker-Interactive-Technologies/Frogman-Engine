@@ -1,4 +1,4 @@
-#include "scan.hpp"
+﻿#include "scan.hpp"
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_scan.h>
 #include <tbb/blocked_range.h>

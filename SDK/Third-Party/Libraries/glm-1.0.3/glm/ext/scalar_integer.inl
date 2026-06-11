@@ -1,4 +1,4 @@
-#include "../integer.hpp"
+﻿#include "../integer.hpp"
 
 namespace glm{
 namespace detail

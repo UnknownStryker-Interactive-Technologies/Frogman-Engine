@@ -1,4 +1,4 @@
-/// @ref gtx_matrix_decompose
+﻿/// @ref gtx_matrix_decompose
 /// @file glm/gtx/matrix_decompose.hpp
 ///
 /// @see core (dependence)

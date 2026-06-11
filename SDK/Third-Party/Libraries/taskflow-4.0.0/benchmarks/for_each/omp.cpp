@@ -1,4 +1,4 @@
-#include "for_each.hpp"
+﻿#include "for_each.hpp"
 #include <omp.h>
 
 // for_each_omp

@@ -1,4 +1,4 @@
-#ifndef BLAS_H
+﻿#ifndef BLAS_H
 #define BLAS_H
 
 #define BLASFUNC(FUNC) FUNC##_

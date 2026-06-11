@@ -1,4 +1,4 @@
-/// @ref ext_scalar_integer
+﻿/// @ref ext_scalar_integer
 /// @file glm/ext/scalar_integer.hpp
 ///
 /// @see core (dependence)

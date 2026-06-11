@@ -1,4 +1,4 @@
-//  To use the simple FFT implementation
+﻿//  To use the simple FFT implementation
 //  g++ -o demofft -I.. -Wall -O3 FFT.cpp 
 
 //  To use the FFTW implementation

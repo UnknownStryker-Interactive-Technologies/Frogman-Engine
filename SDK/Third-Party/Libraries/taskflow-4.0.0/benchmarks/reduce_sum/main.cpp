@@ -1,4 +1,4 @@
-#include "reduce_sum.hpp"
+﻿#include "reduce_sum.hpp"
 #include <CLI11.hpp>
 
 void reduce_sum(

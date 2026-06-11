@@ -1,4 +1,4 @@
-
+﻿
 #include <stdio.h>
 
 #if (defined __GNUC__) && (!defined __MINGW32__) && (!defined __CYGWIN__)

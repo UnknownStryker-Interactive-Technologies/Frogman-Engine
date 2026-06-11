@@ -1,4 +1,4 @@
-#ifndef GLM_FORCE_CXX_UNKNOWN
+﻿#ifndef GLM_FORCE_CXX_UNKNOWN
 #	define GLM_FORCE_CXX_UNKNOWN
 #endif
 

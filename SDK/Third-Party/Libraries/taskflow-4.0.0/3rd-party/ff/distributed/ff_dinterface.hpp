@@ -1,4 +1,4 @@
-#ifndef FF_DINTERFACE_H
+﻿#ifndef FF_DINTERFACE_H
 #define FF_DINTERFACE_H
 
 #include <ff/ff.hpp>

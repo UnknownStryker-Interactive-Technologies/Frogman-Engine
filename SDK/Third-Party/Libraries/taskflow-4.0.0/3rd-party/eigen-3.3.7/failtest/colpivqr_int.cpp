@@ -1,4 +1,4 @@
-#include "../Eigen/QR"
+﻿#include "../Eigen/QR"
 
 #ifdef EIGEN_SHOULD_FAIL_TO_BUILD
 #define SCALAR int

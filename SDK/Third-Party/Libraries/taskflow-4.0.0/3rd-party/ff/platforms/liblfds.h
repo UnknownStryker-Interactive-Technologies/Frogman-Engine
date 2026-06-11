@@ -1,4 +1,4 @@
-#ifndef FF_LIBLFDS_H
+﻿#ifndef FF_LIBLFDS_H
 #define FF_LIBLFDS_H
 
 /* 

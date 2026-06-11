@@ -1,4 +1,4 @@
-Matrix2f m = Matrix2f::Random();
+﻿Matrix2f m = Matrix2f::Random();
 m = (m + m.adjoint()).eval();
 JacobiRotation<float> J;
 J.makeJacobi(m, 0, 1);

@@ -1,4 +1,4 @@
-
+﻿
 // This anonymous enum is essential to trigger the linking issue
 enum {
   Foo

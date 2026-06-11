@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  bench_static.hh
 // Author :  L. Plagne <laurent.plagne@edf.fr)>
 // Copyright (C) EDF R&D,  lun sep 30 14:23:16 CEST 2002

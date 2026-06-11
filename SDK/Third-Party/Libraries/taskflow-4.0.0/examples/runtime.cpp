@@ -1,4 +1,4 @@
-// This program demonstrates how to use a runtime task to forcefully
+﻿// This program demonstrates how to use a runtime task to forcefully
 // schedule an active task that would never be scheduled.
 
 #include <taskflow/taskflow.hpp>

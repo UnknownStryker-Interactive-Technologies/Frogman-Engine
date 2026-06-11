@@ -1,4 +1,4 @@
-#include "common.hpp"
+﻿#include "common.hpp"
 #include <omp.h>
 
 //int bs_omp(void *tid_ptr) {

@@ -1,4 +1,4 @@
-#define EIGEN_USE_SYCL
+﻿#define EIGEN_USE_SYCL
 
 #include <SYCL/sycl.hpp>
 #include <iostream>

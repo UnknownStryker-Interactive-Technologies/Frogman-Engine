@@ -1,4 +1,4 @@
-/// @ref gtx_structured_bindings
+﻿/// @ref gtx_structured_bindings
 /// @file glm/gtx/structured_bindings.hpp
 ///
 /// @defgroup gtx_structured_bindings GLM_GTX_structured_bindings

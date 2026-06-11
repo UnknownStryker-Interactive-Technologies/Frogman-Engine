@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2003, 2007 Matteo Frigo
  * Copyright (c) 2003, 2007 Massachusetts Institute of Technology
  * 

@@ -1,4 +1,4 @@
-namespace glm
+﻿namespace glm
 {
 	template<typename genType>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genType identity()

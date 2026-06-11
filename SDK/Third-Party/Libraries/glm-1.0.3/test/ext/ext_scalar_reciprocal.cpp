@@ -1,4 +1,4 @@
-#include <glm/ext/scalar_reciprocal.hpp>
+﻿#include <glm/ext/scalar_reciprocal.hpp>
 #include <glm/ext/scalar_relational.hpp>
 #include <glm/ext/scalar_constants.hpp>
 

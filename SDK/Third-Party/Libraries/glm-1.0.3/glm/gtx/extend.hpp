@@ -1,4 +1,4 @@
-/// @ref gtx_extend
+﻿/// @ref gtx_extend
 /// @file glm/gtx/extend.hpp
 ///
 /// @see core (dependence)

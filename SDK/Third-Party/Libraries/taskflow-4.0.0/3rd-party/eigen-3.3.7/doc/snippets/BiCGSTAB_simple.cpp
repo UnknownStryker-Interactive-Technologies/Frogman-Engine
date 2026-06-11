@@ -1,4 +1,4 @@
-  int n = 10000;
+﻿  int n = 10000;
   VectorXd x(n), b(n);
   SparseMatrix<double> A(n,n);
   /* ... fill A and b ... */ 

@@ -1,4 +1,4 @@
-/// @ref gtx_matrix_interpolation
+﻿/// @ref gtx_matrix_interpolation
 /// @file glm/gtx/matrix_interpolation.hpp
 /// @author Ghenadii Ursachi (the.asteroth@gmail.com)
 ///

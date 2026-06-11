@@ -1,4 +1,4 @@
-// reference:
+﻿// reference:
 // - gomp: https://github.com/gcc-mirror/gcc/blob/master/libgomp/iter.c
 // - komp: https://github.com/llvm-mirror/openmp/blob/master/runtime/src/kmp_dispatch.cpp
 

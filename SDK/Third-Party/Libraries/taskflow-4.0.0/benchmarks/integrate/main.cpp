@@ -1,4 +1,4 @@
-#include "integrate.hpp"
+﻿#include "integrate.hpp"
 #include <CLI11.hpp>
 
 void bench_integrate(

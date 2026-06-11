@@ -1,4 +1,4 @@
-#ifndef FF_TYPETRAITS_H
+﻿#ifndef FF_TYPETRAITS_H
 #define FF_TYPETRAITS_H
 
 #include <type_traits>

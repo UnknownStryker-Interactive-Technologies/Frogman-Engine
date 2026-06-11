@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/structured_bindings.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>

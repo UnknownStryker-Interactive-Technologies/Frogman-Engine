@@ -1,4 +1,4 @@
-/// @ref gtx_iteration
+﻿/// @ref gtx_iteration
 /// @file glm/gtx/iteration.hpp
 /// 
 /// @defgroup gtx_iteration GLM_GTX_iteration

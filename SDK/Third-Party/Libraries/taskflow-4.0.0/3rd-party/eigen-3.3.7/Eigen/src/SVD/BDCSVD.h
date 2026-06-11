@@ -1,4 +1,4 @@
-// This file is part of Eigen, a lightweight C++ template library
+﻿// This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 // 
 // We used the "A Divide-And-Conquer Algorithm for the Bidiagonal SVD"

@@ -1,4 +1,4 @@
-/// @ref gtc_epsilon
+﻿/// @ref gtc_epsilon
 /// @file glm/gtc/epsilon.hpp
 ///
 /// @see core (dependence)

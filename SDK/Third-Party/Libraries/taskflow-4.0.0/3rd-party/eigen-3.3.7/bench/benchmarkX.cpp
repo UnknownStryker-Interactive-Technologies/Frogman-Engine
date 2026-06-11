@@ -1,4 +1,4 @@
-// g++ -fopenmp -I .. -O3 -DNDEBUG -finline-limit=1000 benchmarkX.cpp -o b && time ./b
+﻿// g++ -fopenmp -I .. -O3 -DNDEBUG -finline-limit=1000 benchmarkX.cpp -o b && time ./b
 
 #include <iostream>
 

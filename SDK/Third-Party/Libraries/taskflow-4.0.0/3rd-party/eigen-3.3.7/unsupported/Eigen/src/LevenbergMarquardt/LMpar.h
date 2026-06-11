@@ -1,4 +1,4 @@
-// This file is part of Eigen, a lightweight C++ template library
+﻿// This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 //
 // This code initially comes from MINPACK whose original authors are:

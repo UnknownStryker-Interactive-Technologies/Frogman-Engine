@@ -1,4 +1,4 @@
-#ifndef FF_VERSION_HPP
+﻿#ifndef FF_VERSION_HPP
 #define FF_VERSION_HPP
 
 #define FF_MAJOR_VERSION 3

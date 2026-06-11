@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext/quaternion_relational.hpp>
 #include <glm/gtc/epsilon.hpp>
 #include <glm/gtc/type_ptr.hpp>

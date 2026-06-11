@@ -1,4 +1,4 @@
-/// @ref ext_vector_int3_sized
+﻿/// @ref ext_vector_int3_sized
 /// @file glm/ext/vector_int3_sized.hpp
 ///
 /// @defgroup ext_vector_int3_sized GLM_EXT_vector_int3_sized

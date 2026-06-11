@@ -1,4 +1,4 @@
-RowVectorXd vec1(3);
+﻿RowVectorXd vec1(3);
 vec1 << 1, 2, 3;
 std::cout << "vec1 = " << vec1 << std::endl;
 

@@ -1,4 +1,4 @@
-#include "mandel.hpp"
+﻿#include "mandel.hpp"
 #include <taskflow/taskflow.hpp>
 #include <taskflow/algorithm/for_each.hpp>
 

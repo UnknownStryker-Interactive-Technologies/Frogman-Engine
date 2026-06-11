@@ -1,4 +1,4 @@
-#if __cplusplus >= 201103L
+﻿#if __cplusplus >= 201103L
 
 #include <glm/detail/setup.hpp>
 

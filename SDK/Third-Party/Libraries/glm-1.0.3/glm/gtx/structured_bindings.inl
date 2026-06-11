@@ -1,4 +1,4 @@
-namespace glm
+﻿namespace glm
 {
 	template<length_t I, length_t L, typename T, qualifier Q>
 	GLM_CONSTEXPR T& get(vec<L, T, Q>& v) {

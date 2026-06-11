@@ -1,4 +1,4 @@
-/// @ref gtx_pca
+﻿/// @ref gtx_pca
 /// @file glm/gtx/pca.hpp
 ///
 /// @see core (dependence)

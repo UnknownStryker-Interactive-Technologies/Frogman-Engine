@@ -1,4 +1,4 @@
-#include <glm/gtc/type_precision.hpp>
+﻿#include <glm/gtc/type_precision.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/ext/vector_relational.hpp>

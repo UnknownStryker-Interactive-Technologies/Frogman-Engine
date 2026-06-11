@@ -1,4 +1,4 @@
-#include "dnn.hpp"
+﻿#include "dnn.hpp"
 #include <omp.h>
 
 void run_omp(MNIST& D, unsigned num_threads) {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ***************************************************************************
  * NOTE:
  * Merge of the icl_hash.h icl_hash.c files from PLASMA 2.5.2 (October 2013).

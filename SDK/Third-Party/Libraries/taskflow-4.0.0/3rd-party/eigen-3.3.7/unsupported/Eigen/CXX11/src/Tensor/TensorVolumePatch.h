@@ -1,4 +1,4 @@
-// This file is part of Eigen, a lightweight C++ template library
+﻿// This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 
 #ifndef EIGEN_CXX11_TENSOR_TENSOR_VOLUME_PATCH_H

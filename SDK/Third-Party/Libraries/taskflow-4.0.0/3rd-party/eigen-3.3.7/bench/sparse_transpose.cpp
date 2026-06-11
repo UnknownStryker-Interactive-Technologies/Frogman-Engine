@@ -1,4 +1,4 @@
-
+﻿
 //g++ -O3 -g0 -DNDEBUG  sparse_transpose.cpp -I.. -I/home/gael/Coding/LinearAlgebra/mtl4/ -DDENSITY=0.005 -DSIZE=10000 && ./a.out
 // -DNOGMM -DNOMTL
 // -DCSPARSE -I /home/gael/Coding/LinearAlgebra/CSparse/Include/ /home/gael/Coding/LinearAlgebra/CSparse/Lib/libcsparse.a

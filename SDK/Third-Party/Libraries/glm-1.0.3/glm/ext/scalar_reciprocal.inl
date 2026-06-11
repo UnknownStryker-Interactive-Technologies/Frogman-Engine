@@ -1,4 +1,4 @@
-/// @ref ext_scalar_reciprocal
+﻿/// @ref ext_scalar_reciprocal
 
 #include "../trigonometric.hpp"
 #include <limits>

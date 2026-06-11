@@ -1,4 +1,4 @@
-/*
+﻿/*
  Copyright (c) 2011, Intel Corporation. All rights reserved.
  Copyright (C) 2015 Gael Guennebaud <gael.guennebaud@inria.fr>
  

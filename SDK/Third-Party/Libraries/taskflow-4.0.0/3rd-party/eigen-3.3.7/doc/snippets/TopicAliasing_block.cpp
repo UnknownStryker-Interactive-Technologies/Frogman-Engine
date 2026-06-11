@@ -1,4 +1,4 @@
-MatrixXi mat(3,3); 
+﻿MatrixXi mat(3,3); 
 mat << 1, 2, 3,   4, 5, 6,   7, 8, 9;
 cout << "Here is the matrix mat:\n" << mat << endl;
 

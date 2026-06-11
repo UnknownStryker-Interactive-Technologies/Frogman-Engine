@@ -1,4 +1,4 @@
-VectorXd v(10);
+﻿VectorXd v(10);
 v.resize(3);
 RowVector3d w;
 w.resize(3); // this is legal, but has no effect

@@ -1,4 +1,4 @@
-#include <bench/spbench/spbenchsolver.h>
+﻿#include <bench/spbench/spbenchsolver.h>
 
 void bench_printhelp()
 {

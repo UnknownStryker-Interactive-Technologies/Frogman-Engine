@@ -1,4 +1,4 @@
-//#if defined(_MSC_VER) && (_MSC_VER<=1500)
+﻿//#if defined(_MSC_VER) && (_MSC_VER<=1500)
 // For Visual Studio <= 2008 (ver 9)
 #ifndef HAVE_STDINT_H
 typedef __int32 int32_t;

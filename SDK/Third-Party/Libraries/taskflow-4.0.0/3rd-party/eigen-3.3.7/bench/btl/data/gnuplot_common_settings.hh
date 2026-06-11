@@ -1,4 +1,4 @@
-set noclip points
+﻿set noclip points
 set clip one
 set noclip two
 set bar 1.000000

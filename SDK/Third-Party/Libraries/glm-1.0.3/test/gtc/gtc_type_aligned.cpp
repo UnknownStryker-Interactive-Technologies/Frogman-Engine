@@ -1,4 +1,4 @@
-// Force explicit ctors in this test to catch returning the wrong vector size from e.g. glm::xyz
+﻿// Force explicit ctors in this test to catch returning the wrong vector size from e.g. glm::xyz
 #define GLM_FORCE_EXPLICIT_CTOR
 
 #include <glm/glm.hpp>

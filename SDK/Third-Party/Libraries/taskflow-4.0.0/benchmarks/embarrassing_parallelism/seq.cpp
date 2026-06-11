@@ -1,4 +1,4 @@
-#include "embarrassing_parallelism.hpp"
+﻿#include "embarrassing_parallelism.hpp"
 
 // embarrassing_parallelism computation
 void embarrassing_parallelism_seq(size_t num_tasks) {

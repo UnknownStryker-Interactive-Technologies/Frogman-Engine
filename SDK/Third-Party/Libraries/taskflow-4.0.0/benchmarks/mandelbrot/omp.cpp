@@ -1,4 +1,4 @@
-#include "mandel.hpp"
+﻿#include "mandel.hpp"
 #include <omp.h>
 
 void mandelbrot_omp(unsigned num_threads, int d = D) {

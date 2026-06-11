@@ -1,4 +1,4 @@
-/// @ref gtc_type_ptr
+﻿/// @ref gtc_type_ptr
 
 #include <cstring>
 

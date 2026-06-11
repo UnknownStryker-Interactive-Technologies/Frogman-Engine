@@ -1,4 +1,4 @@
-#include "primes.hpp"
+﻿#include "primes.hpp"
 #include <CLI11.hpp>
 
 void bench_primes(

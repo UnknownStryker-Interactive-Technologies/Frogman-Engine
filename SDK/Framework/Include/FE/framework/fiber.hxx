@@ -1,4 +1,4 @@
-#ifndef _FE_FRAMEWORK_FIBER_HXX_
+﻿#ifndef _FE_FRAMEWORK_FIBER_HXX_
 #define _FE_FRAMEWORK_FIBER_HXX_
 #pragma warning(push)
 #pragma warning(disable: 4324) // structure was padded due to alignment specifier

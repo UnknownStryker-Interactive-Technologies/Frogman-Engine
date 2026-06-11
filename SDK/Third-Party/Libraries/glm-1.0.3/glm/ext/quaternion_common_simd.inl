@@ -1,4 +1,4 @@
-#if GLM_ARCH & GLM_ARCH_SSE2_BIT
+﻿#if GLM_ARCH & GLM_ARCH_SSE2_BIT
 
 namespace glm{
 namespace detail

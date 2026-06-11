@@ -1,4 +1,4 @@
-#include "data_pipeline.hpp"
+﻿#include "data_pipeline.hpp"
 #include <CLI11.hpp>
 
 int main(int argc, char* argv[]) {

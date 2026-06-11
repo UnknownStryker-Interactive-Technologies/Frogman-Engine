@@ -1,4 +1,4 @@
-/// @ref ext_vector_common
+﻿/// @ref ext_vector_common
 /// @file glm/ext/vector_common.hpp
 ///
 /// @defgroup ext_vector_common GLM_EXT_vector_common

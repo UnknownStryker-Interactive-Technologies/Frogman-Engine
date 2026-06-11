@@ -1,4 +1,4 @@
-#include <glm/glm.hpp>
+﻿#include <glm/glm.hpp>
 
 #if GLM_CONFIG_ANONYMOUS_STRUCT == GLM_ENABLE
 struct vec2;

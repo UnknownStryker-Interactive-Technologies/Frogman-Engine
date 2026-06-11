@@ -1,4 +1,4 @@
-/// @ref gtx_normalize_dot
+﻿/// @ref gtx_normalize_dot
 /// @file glm/gtx/normalize_dot.hpp
 ///
 /// @see core (dependence)

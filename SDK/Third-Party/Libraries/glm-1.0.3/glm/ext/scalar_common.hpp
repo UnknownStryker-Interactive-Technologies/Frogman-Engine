@@ -1,4 +1,4 @@
-/// @ref ext_scalar_common
+﻿/// @ref ext_scalar_common
 /// @file glm/ext/scalar_common.hpp
 ///
 /// @defgroup ext_scalar_common GLM_EXT_scalar_common

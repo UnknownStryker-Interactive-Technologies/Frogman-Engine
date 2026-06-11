@@ -1,4 +1,4 @@
-#include <omp.h>
+﻿#include <omp.h>
 #include "skynet.hpp"
 
 size_t skynet_one_omp(size_t BaseNum, size_t Depth, size_t MaxDepth) {

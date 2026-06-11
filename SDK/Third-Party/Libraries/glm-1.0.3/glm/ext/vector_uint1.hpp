@@ -1,4 +1,4 @@
-/// @ref ext_vector_uint1
+﻿/// @ref ext_vector_uint1
 /// @file glm/ext/vector_uint1.hpp
 ///
 /// @defgroup ext_vector_uint1 GLM_EXT_vector_uint1

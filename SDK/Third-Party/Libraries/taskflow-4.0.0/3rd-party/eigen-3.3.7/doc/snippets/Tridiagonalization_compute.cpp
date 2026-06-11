@@ -1,4 +1,4 @@
-Tridiagonalization<MatrixXf> tri;
+﻿Tridiagonalization<MatrixXf> tri;
 MatrixXf X = MatrixXf::Random(4,4);
 MatrixXf A = X + X.transpose();
 tri.compute(A);

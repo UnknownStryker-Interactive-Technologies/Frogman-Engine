@@ -1,4 +1,4 @@
-/// @ref ext_vector_ulp
+﻿/// @ref ext_vector_ulp
 /// @file glm/ext/vector_ulp.hpp
 ///
 /// @defgroup ext_vector_ulp GLM_EXT_vector_ulp

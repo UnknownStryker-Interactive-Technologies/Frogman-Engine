@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  portable_timer.hh
 // Author :  L. Plagne <laurent.plagne@edf.fr)> from boost lib
 // Copyright (C) EDF R&D,  lun sep 30 14:23:17 CEST 2002

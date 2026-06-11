@@ -1,4 +1,4 @@
-Matrix3d m = Matrix3d::Zero();
+﻿Matrix3d m = Matrix3d::Zero();
 m.triangularView<Eigen::Upper>().setOnes();
 cout << "Here is the matrix m:\n" << m << endl;
 Matrix3d n = Matrix3d::Ones();

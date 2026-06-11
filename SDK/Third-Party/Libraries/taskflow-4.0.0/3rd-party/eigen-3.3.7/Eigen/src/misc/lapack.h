@@ -1,4 +1,4 @@
-#ifndef LAPACK_H
+﻿#ifndef LAPACK_H
 #define LAPACK_H
 
 #include "blas.h"

@@ -1,4 +1,4 @@
-// This example shows how to compose a taskflow
+﻿// This example shows how to compose a taskflow
 #include <taskflow/taskflow.hpp>
 
 void composition_example_1() {

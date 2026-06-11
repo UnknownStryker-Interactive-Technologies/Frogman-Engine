@@ -1,4 +1,4 @@
-  Matrix3f m = Matrix3f::Random();
+﻿  Matrix3f m = Matrix3f::Random();
   std::ptrdiff_t i, j;
   float minOfM = m.minCoeff(&i,&j);
   cout << "Here is the matrix m:\n" << m << endl;

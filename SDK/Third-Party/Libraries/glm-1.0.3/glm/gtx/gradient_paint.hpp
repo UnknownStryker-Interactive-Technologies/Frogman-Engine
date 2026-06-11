@@ -1,4 +1,4 @@
-/// @ref gtx_gradient_paint
+﻿/// @ref gtx_gradient_paint
 /// @file glm/gtx/gradient_paint.hpp
 ///
 /// @see core (dependence)

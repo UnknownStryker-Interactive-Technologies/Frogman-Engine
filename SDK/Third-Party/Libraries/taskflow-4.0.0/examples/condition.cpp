@@ -1,4 +1,4 @@
-// The example creates the following cyclic graph of one iterative loop:
+﻿// The example creates the following cyclic graph of one iterative loop:
 //
 //       A
 //       |

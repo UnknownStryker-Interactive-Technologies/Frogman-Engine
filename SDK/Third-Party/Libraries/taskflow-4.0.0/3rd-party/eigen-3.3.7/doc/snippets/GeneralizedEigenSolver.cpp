@@ -1,4 +1,4 @@
-GeneralizedEigenSolver<MatrixXf> ges;
+﻿GeneralizedEigenSolver<MatrixXf> ges;
 MatrixXf A = MatrixXf::Random(4,4);
 MatrixXf B = MatrixXf::Random(4,4);
 ges.compute(A, B);

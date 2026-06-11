@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/ext/vector_double3_precision.hpp
 
 #pragma once

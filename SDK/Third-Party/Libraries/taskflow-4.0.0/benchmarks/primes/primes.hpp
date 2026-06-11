@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <algorithm> // for std::max
 #include <cassert>

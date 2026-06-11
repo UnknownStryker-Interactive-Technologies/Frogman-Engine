@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
+﻿/* -*- Mode: C++; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
 
 /*! \file dnode.hpp
  *  \brief Contains the definition of the \p ff_dnode class, which is an extension 

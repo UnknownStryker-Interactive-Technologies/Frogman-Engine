@@ -1,4 +1,4 @@
-MatrixXd X = MatrixXd::Random(5,5);
+﻿MatrixXd X = MatrixXd::Random(5,5);
 MatrixXd A = X + X.transpose();
 cout << "Here is a random symmetric matrix, A:" << endl << A << endl;
 X = MatrixXd::Random(5,5);

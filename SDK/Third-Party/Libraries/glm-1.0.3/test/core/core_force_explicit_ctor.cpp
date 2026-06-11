@@ -1,4 +1,4 @@
-#define GLM_FORCE_EXPLICIT_CTOR
+﻿#define GLM_FORCE_EXPLICIT_CTOR
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

@@ -1,4 +1,4 @@
-#define GLM_ENABLE_EXPERIMENTAL
+﻿#define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_CTOR_INIT
 #include <glm/gtx/dual_quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>

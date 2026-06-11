@@ -1,4 +1,4 @@
-#include <glm/ext/vector_uint3_sized.hpp>
+﻿#include <glm/ext/vector_uint3_sized.hpp>
 
 #if GLM_HAS_STATIC_ASSERT
 static_assert(sizeof(glm::u8vec3) == 3, "int8 size isn't 1 byte on this platform");

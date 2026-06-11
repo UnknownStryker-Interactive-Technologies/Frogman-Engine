@@ -1,4 +1,4 @@
-SparseMatrix<double> A(3,3);
+﻿SparseMatrix<double> A(3,3);
 A.insert(1,2) = 0;
 A.insert(0,1) = 1;
 A.insert(2,0) = 2;

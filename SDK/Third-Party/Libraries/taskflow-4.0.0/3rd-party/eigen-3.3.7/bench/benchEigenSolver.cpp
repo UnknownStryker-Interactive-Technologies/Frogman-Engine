@@ -1,4 +1,4 @@
-
+﻿
 // g++ -DNDEBUG -O3 -I.. benchEigenSolver.cpp  -o benchEigenSolver && ./benchEigenSolver
 // options:
 //  -DBENCH_GMM

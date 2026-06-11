@@ -1,4 +1,4 @@
-//=====================================================
+﻿//=====================================================
 // File   :  STL_interface.hh
 // Author :  L. Plagne <laurent.plagne@edf.fr)>
 // Copyright (C) EDF R&D,  lun sep 30 14:23:24 CEST 2002

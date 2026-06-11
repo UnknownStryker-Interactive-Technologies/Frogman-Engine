@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright (C) 2014 Jens Korinth, TU Darmstadt
 //
 // This file is part of ThreadPoolComposer (TPC).

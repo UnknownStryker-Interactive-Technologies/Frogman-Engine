@@ -1,4 +1,4 @@
-#include "common.hpp"
+﻿#include "common.hpp"
 #include <tbb/global_control.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>

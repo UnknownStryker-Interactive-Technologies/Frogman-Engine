@@ -1,4 +1,4 @@
-/// @ref gtx_color_encoding
+﻿/// @ref gtx_color_encoding
 /// @file glm/gtx/color_encoding.hpp
 ///
 /// @see core (dependence)

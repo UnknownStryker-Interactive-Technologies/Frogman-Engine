@@ -1,4 +1,4 @@
-#include "sort.hpp"
+﻿#include "sort.hpp"
 #include <CLI11.hpp>
 
 void reduce_sum(

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <cublas_v2.h>
 

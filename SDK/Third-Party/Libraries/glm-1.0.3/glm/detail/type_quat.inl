@@ -1,4 +1,4 @@
-#include "../trigonometric.hpp"
+﻿#include "../trigonometric.hpp"
 #include "../exponential.hpp"
 #include "../ext/quaternion_common.hpp"
 #include "../ext/quaternion_geometric.hpp"

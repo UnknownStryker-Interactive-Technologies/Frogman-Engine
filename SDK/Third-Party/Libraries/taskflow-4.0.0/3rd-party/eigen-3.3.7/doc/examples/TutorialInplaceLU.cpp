@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 struct init {
   init() { std::cout << "[" << "init" << "]" << std::endl; }
 };

@@ -1,4 +1,4 @@
-#include "reduce_sum.hpp"
+﻿#include "reduce_sum.hpp"
 #include <omp.h>
 
 // reduce_sum_omp

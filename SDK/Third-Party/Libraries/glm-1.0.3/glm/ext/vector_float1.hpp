@@ -1,4 +1,4 @@
-/// @ref ext_vector_float1
+﻿/// @ref ext_vector_float1
 /// @file glm/ext/vector_float1.hpp
 ///
 /// @defgroup ext_vector_float1 GLM_EXT_vector_float1

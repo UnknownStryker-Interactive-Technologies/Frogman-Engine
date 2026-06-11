@@ -1,4 +1,4 @@
-// 2020/03/13 - modified by Tsung-Wei Huang
+﻿// 2020/03/13 - modified by Tsung-Wei Huang
 //  - fixed bug in aligning memory
 //
 // 2020/02/02 - modified by Tsung-Wei Huang
