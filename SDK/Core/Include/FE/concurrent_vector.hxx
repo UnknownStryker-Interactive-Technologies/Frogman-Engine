@@ -132,7 +132,7 @@ private: // Concurrently unsafe methods
         }
     }
 
-public: // Concurrently safe methods; use the length modifier lock.
+public: // Concurrency-unsafe methods; use the length modifier lock.
     /*
         concurrent_vector( concurrent_vector&& other_p ) noexcept
         {

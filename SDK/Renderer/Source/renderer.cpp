@@ -292,7 +292,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 		l_taskflow.clear();
 	}	// l_intro destructs → MF::Shutdown → HWND free for the D3D backend
 
-	FE::internal::renderer::__build_include_dependency_graph(l_token_lists, l_shader_headers, l_shaders);
+	FE::internal::renderer::__build_and_traverse_include_dependency_graph(l_token_lists, l_shader_headers, l_shaders);
 
 	{
 		var::uint64 l_total_permutations = 0;

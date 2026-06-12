@@ -450,7 +450,7 @@ void FE::internal::renderer::__tokenize_hlsl_include_directives(std::pmr::list<:
 	}
 }
 
-void FE::internal::renderer::__build_include_dependency_graph(	concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
+void FE::internal::renderer::__build_and_traverse_include_dependency_graph(	concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>>& token_lists_p,
 																absl::flat_hash_map<FE::directory_string, FE::internal::renderer::hlsli>& in_out_shader_headers_p,
 																std::pmr::vector<::FE::internal::renderer::shader>& in_out_shaders_p) noexcept
 {
