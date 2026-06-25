@@ -17,8 +17,7 @@ limitations under the License.
 */
 #include <FE/types.hxx>
 
-// boost
-#include <boost/chrono.hpp>
+#include <chrono>
 
 // std
 #include <memory>
@@ -38,16 +37,16 @@ public:
     _FE_MAYBE_UNUSED_ static constexpr int current_local_time_buffer_size = 64;
 
 private:
-    boost::chrono::steady_clock::time_point m_starting_point;
-    boost::chrono::steady_clock::time_point m_ending_point;
-    boost::chrono::duration<var::float64, boost::milli> m_delta;
+    std::chrono::steady_clock::time_point m_starting_point;
+    std::chrono::steady_clock::time_point m_ending_point;
+    std::chrono::duration<var::float64, std::milli> m_delta;
 
 public:
     clock() noexcept = default;
     ~clock() noexcept = default;
 
-    _FE_FORCE_INLINE_ void start_clock() noexcept { m_starting_point = boost::chrono::steady_clock::now(); }
-    _FE_FORCE_INLINE_ void end_clock() noexcept { m_ending_point = boost::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void start_clock() noexcept { m_starting_point = std::chrono::steady_clock::now(); }
+    _FE_FORCE_INLINE_ void end_clock() noexcept { m_ending_point = std::chrono::steady_clock::now(); }
 
     _FE_FORCE_INLINE_ float64 get_delta_milliseconds() noexcept
     {
