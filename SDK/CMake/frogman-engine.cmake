@@ -54,57 +54,113 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 
 
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
-    SET(BOOST_CHRONO 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
-    )
+IF (CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
-     SET(BOOST_CONTAINER 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-    )
+    IF (${CMAKE_VS_PLATFORM_TOOLSET} STREQUAL "v143")
+        SET(BOOST_CHRONO
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc143-mt-s-x64-1_91.lib>
+        )
 
-    SET(BOOST_FILESYSTEM
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
-    )
+        SET(BOOST_CONTAINER 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
+        )
 
-    SET(BOOST_LOCALE
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
-    )
+        SET(BOOST_FILESYSTEM
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc143-mt-s-x64-1_91.lib>
+        )
 
-    SET(BOOST_JSON 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-    )
+        SET(BOOST_LOCALE
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc143-mt-s-x64-1_91.lib>
+        )
 
-    SET(BOOST_STACKTRACE 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
-    )
+        SET(BOOST_JSON 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
+        )
 
-    SET(BOOST_THREAD 
-        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-sgd-x64-1_91.lib>
-        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
-        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
-    )
+        SET(BOOST_STACKTRACE 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_THREAD 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc143-mt-s-x64-1_91.lib>
+        )
+
+    ELSEIF (${CMAKE_VS_PLATFORM_TOOLSET} STREQUAL "v145")
+        SET(BOOST_CHRONO
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_chrono-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_CONTAINER 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_FILESYSTEM
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_filesystem-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_LOCALE
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_locale-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_JSON 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_STACKTRACE 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc145-mt-s-x64-1_91.lib>
+        )
+
+        SET(BOOST_THREAD 
+            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc145-mt-sgd-x64-1_91.lib>
+            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc145-mt-s-x64-1_91.lib>
+            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_thread-vc145-mt-s-x64-1_91.lib>
+        )
+
+    ENDIF()
+
 
     SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib dxguid.lib uuid.lib version.lib )
+
 
     IF(SIMD STREQUAL AVX512F)
         FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/Debug/*.lib")
@@ -116,13 +172,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
             $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
             $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
-        )
-
-        SET(ASSIMP
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX512F/Debug/assimp-vc143-mtd.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/assimp-vc143-mt.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX512F/Release/assimp-vc143-mt.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX512F/MinSizeRel/assimp-vc143-mt.lib>
         )
 
         SET(GLFW
@@ -145,14 +194,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/Release/lz4.lib>
             $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/MinSizeRel/lz4.lib>
         )
-
-        SET(SIMD_JSON
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/Debug/simdjson.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/simdjson.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/Release/simdjson.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX512F/MinSizeRel/simdjson.lib>
-        )
-
 
         SET(FE_CORE
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/Debug/FE.Core.lib>
@@ -182,13 +223,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Engine.lib>
         )
 
-        SET(FE_ENGINE
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/Debug/FE.Engine.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Engine.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/Release/FE.Engine.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Engine.lib>
-        )
-
     ELSE()
         FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/*.lib")
         FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/*.lib")
@@ -200,13 +234,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
             $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
         )
-
-        #SET(ASSIMP
-        #    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/assimp-vc143-mtd.lib>
-        #    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/assimp-vc143-mt.lib>
-        #    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/Release/assimp-vc143-mt.lib>
-        #    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/assimp-6.0.4/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/assimp-vc143-mt.lib>
-        #)
 
         SET(GLFW
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/glfw3.lib>
@@ -228,15 +255,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
             $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/Release/lz4.lib>
             $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/lz4.lib>
         )
-
-
-        #SET(SIMD_JSON
-        #    $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/simdjson.lib>
-        #    $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/simdjson.lib>
-        #    $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/Release/simdjson.lib>
-        #    $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/simdjson.lib>
-        #)
-
 
         SET(FE_CORE
             $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Core.lib>
@@ -293,7 +311,7 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
     IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
         # Print paths for debugging
-        SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/Release/FE.HeaderTool.exe)
+        SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/RelWithDebInfo/FE.HeaderTool.exe)
 
         MESSAGE(STATUS "The path to Frogman Engine Header Tool is: ${PATH_TO_HEADER_TOOL}")
         MESSAGE(STATUS "The target header files are: ${HEADER_FILES_PATHS}")
@@ -537,6 +555,7 @@ FUNCTION(SET_SHADERS)
     FILE(WRITE "${FROGGY}" "${FROGGY_BUFFER}")
 
 ENDFUNCTION()
+
 
 SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${BOOST_CHRONO} ${BOOST_CONTAINER} ${BOOST_FILESYSTEM} ${BOOST_JSON} ${BOOST_LOCALE} ${BOOST_STACKTRACE} ${BOOST_THREAD} ${FE_CORE} ${FE_FRAMEWORK} )
 SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} )
