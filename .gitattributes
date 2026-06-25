@@ -6,3 +6,5 @@
 
 *.sh binary
 *.bat binary
+
+*.exe binary
