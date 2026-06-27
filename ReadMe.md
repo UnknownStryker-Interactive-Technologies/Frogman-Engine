@@ -24,8 +24,8 @@ https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
 
 # Prerequisites: 
-1. CMake 3.26.0 or the latest.  
-2. The latest Visual Studio 2022.  
+1. CMake 4.2.X.  
+2. Visual Studio 2022/2026.  
 3. Git and Git LFS.
 4. Microsoft Parallel Patterns Library.  
 
