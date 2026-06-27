@@ -16,13 +16,11 @@ https://github.com/user-attachments/assets/81ea57c7-0b17-45bd-bfd0-a50467f7bd56
   
 If you prefer installing and setting up the engine with just a few clicks, those  tools will be the right choice for you to get started. Please send me an email to **unknownstryker416@gmail.com** if you finds some bugs or the installer does not properly download or build libraries on your system.
 
-https://github.com/user-attachments/assets/76906e5c-3ef9-4b8e-8e28-f6940f4b07f1
+https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 
 <img width="6000" height="3375" alt="Frogman Engine" src="https://github.com/user-attachments/assets/393a9994-962b-4633-806d-52ec8d8ba40c" />
 
-# Frogman Engine Website (incomplete)
-Currently, programming convention is only available.  
-SDK guide, API documentation, etc are unavailable yet.  
+# Frogman Engine Web Page
 https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
 
 # Prerequisites: 
