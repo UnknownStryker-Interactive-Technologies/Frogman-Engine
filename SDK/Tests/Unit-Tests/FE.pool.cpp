@@ -10,7 +10,7 @@
 #include <boost/pool/pool_alloc.hpp>
 #include <boost/pool/pool.hpp>
 
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/algorithm/utility.hxx>
 #include <FE/pool/block_pool.hxx>
 #include <FE/pool/scalable_pool.hxx>

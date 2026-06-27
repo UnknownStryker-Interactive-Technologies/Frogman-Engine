@@ -1,7 +1,0 @@
-<map id="path_lut" name="path_lut">
-<area shape="rect" id="Node000001" title=" " alt="" coords="344,60,411,87"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,182,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,45,320,61,346,68,341,68,319,67,197,50"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="21,89,166,132"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,119,250,118,285,114,319,107,340,97,357,88,362,86,343,102,321,112,286,120,250,124,181,124"/>
-</map>

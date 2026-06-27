@@ -1,7 +1,0 @@
-<map id="internal::pool::block_info" name="internal::pool::block_info">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,168,131"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="14,5,69,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="38,45,41,64,45,79,54,91,67,103,62,104,50,95,40,81,35,65,37,50"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="100,5,167,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,45,95,105,90,102,118,47"/>
-</map>

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/algorithm/math.hxx>
 #include <FE/algorithm/utility.hxx>
 

@@ -1,7 +1,0 @@
-<map id="uint_info" name="uint_info">
-<area shape="rect" id="Node000001" title=" " alt="" coords="48,104,118,131"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,73,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,45,54,79,72,103,67,104,49,81,41,50"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="97,5,157,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="118,45,91,105,86,102,113,47"/>
-</map>

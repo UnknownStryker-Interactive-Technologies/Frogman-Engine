@@ -1,6 +1,6 @@
 ﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/framework/fiber.hxx>
 
 

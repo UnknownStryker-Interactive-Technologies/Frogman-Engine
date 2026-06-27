@@ -5,7 +5,7 @@
 #include <FE/framework/smart_ptr.hxx>
 #include <memory_resource>
 
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/memory.hxx>
 #include <FE/algorithm/string.hxx>
 #include <FE/bitmask.hxx>

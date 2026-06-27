@@ -1,7 +1,7 @@
 ﻿#ifndef _FE_MUTEX_HPP_
 #define _FE_MUTEX_HPP_
 /*
-Copyright 2025 Unknown Stryker
+Copyright 2025 UNKNOWN STRYKER (Hojin Lee / Joey)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

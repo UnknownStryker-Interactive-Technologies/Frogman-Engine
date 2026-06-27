@@ -1,8 +1,0 @@
-<map id="ECS::instanciate_entity" name="ECS::instanciate_entity">
-<area shape="rect" id="Node000001" title=" " alt="" coords="445,29,604,56"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="559,14,548,10,525,8,503,10,491,15,489,20,494,30,489,28,483,21,488,11,502,5,525,3,549,5,564,15"/>
-<area shape="rect" id="Node000002" href="$class_e_c_s.html#a3be1b81df8293c41fda2dd552186d201" title=" " alt="" coords="238,21,397,64"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="427,43,397,45,397,40,432,43"/>
-<area shape="rect" id="Node000003" href="$class_e_c_s.html#a5ea163bdfde5047828c1e9ffe10b3fff" title=" " alt="" coords="5,21,190,64"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="220,43,190,45,190,40,225,42"/>
-</map>

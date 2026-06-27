@@ -1,7 +1,0 @@
-<map id="engine_info" name="engine_info">
-<area shape="rect" id="Node000001" title=" " alt="" coords="58,136,145,163"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,21,59,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="49,59,96,135,91,136,46,63"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="82,5,259,64"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,77,144,114,120,138,117,133,139,110,156,81"/>
-</map>

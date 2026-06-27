@@ -1,9 +1,0 @@
-<map id="static_mesh" name="static_mesh">
-<area shape="rect" id="Node000001" title=" " alt="" coords="185,125,277,152"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,174,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,44,116,73,137,99,160,114,187,127,182,127,158,119,134,103,111,76,98,49"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="197,5,264,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,46,233,126,228,124,229,50"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="318,5,386,32"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="350,45,342,76,325,103,303,119,278,130,277,125,300,115,321,100,337,74,346,49"/>
-</map>

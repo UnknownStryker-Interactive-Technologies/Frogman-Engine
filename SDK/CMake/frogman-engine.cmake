@@ -1,4 +1,4 @@
-# Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+# Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 SET(LIST_DIRECTORIES true)
 GET_FILENAME_COMPONENT(FROGMAN_ENGINE_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR} ABSOLUTE)
 

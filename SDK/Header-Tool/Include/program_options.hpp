@@ -1,7 +1,7 @@
 ﻿#ifndef _FE_HEADER_TOOL_PROGRAM_OPTIONS_HPP_
 #define _FE_HEADER_TOOL_PROGRAM_OPTIONS_HPP_
 /*
-Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
@@ -56,9 +56,6 @@ public:
 
 	FE::ASCII* view_fno_copyright_notice_option_title() const noexcept { return m_fno_options.find("-fno-copyright-notice")->first.data(); }
 	FE::boolean is_fno_copyright_notice_defined() const noexcept { return m_fno_options.find("-fno-copyright-notice")->second; }
-
-	FE::ASCII* view_fno_code_style_guide_option_title() const noexcept { return m_fno_options.find("-fno-code-style-guide")->first.data(); }
-	FE::boolean is_fno_code_style_guide_defined() const noexcept { return m_fno_options.find("-fno-code-style-guide")->second; }
 
 	FE::ASCII* view_fno_reflection_helper_option_title() const noexcept { return m_fno_options.find("-fno-reflection-helper")->first.data(); }
 	FE::boolean is_fno_reflection_helper_defined() const noexcept { return m_fno_options.find("-fno-reflection-helper")->second; }

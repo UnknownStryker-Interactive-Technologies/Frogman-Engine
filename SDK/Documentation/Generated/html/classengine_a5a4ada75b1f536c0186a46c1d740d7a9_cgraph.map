@@ -1,8 +1,0 @@
-<map id="engine::get_game_instance" name="engine::get_game_instance">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,186,56"/>
-<area shape="rect" id="Node000002" href="$classengine.html#a0da0da6af3118148258b8c7f612e2410" title=" " alt="" coords="234,29,364,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,40,221,43,215,43,186,45"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="270,28,265,21,269,11,280,5,299,3,319,5,331,15,326,14,317,10,299,8,282,10,273,15,270,20,275,30"/>
-<area shape="rect" id="Node000003" href="$classengine.html#a43a1f719ed6912f4dd731ad8a17e5f41" title=" " alt="" coords="412,29,517,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="365,40,399,43,394,43,365,45"/>
-</map>

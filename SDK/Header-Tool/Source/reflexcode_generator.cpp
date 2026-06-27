@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
@@ -254,7 +254,7 @@ namespace FHT::reflexcode_generator
 	{
 		std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
 		l_generated_code.reserve(1 * FE::one_MiB);
-		l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.hxx> \n#include <FE/framework.hxx> \n";
+		l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.hxx> \n#include <FE/framework.hxx> \n";
 		for (const metadata& header_file : metadata_set_p) // #include <> statements gereration
 		{
 			l_generated_code += L"#include <";

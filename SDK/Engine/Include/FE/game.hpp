@@ -1,7 +1,7 @@
 ﻿#ifndef _FROGMAN_ENGINE_GAME_HPP_
 #define _FROGMAN_ENGINE_GAME_HPP_
 /*
-Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.

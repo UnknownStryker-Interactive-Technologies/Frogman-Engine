@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,11 @@ program_options::program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	:	base(argc_p, argv_p),
 		m_path_options({
 		{ "-path-to-copyright-notice=", "\0" },
-		{ "-path-to-code-style-guide=", "\0" },
 		{ "-path-to-project=", "\0" }
 		}),
 
 	m_fno_options({
 		{ "-fno-copyright-notice", false },
-		{ "-fno-code-style-guide", false },
 		{ "-fno-reflection-helper", false },
 		{ "-fno-op", false },
 		{ "-fno-write", false }

@@ -1,7 +1,7 @@
 ﻿#ifndef _FE_HEADER_TOOL_HPP_
 #define _FE_HEADER_TOOL_HPP_
 /*
-Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved.
+Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ using framework = FE::framework::framework_base;
 
 /*
 * Test arguments:
--fno-copyright-notice -path-to-project=C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\Documents\GitHub\Frogman-Engine\SDK\Core\Include\FE\list.hxx
+-fno-copyright-notice -path-to-project=C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Header-Tool\CMake C:\Users\leeho\OneDrive\문서\GitHub\Frogman-Engine\SDK\Tests\FHT-Test\app.hpp
 */
 
 /*

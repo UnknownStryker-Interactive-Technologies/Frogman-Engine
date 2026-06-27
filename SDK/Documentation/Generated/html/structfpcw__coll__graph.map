@@ -1,7 +1,0 @@
-<map id="fpcw" name="fpcw">
-<area shape="rect" id="Node000001" title=" " alt="" coords="98,232,147,259"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,51,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="19,50,14,82,11,124,15,167,21,188,31,206,45,220,62,230,100,241,95,243,60,235,42,224,27,210,16,190,10,168,5,124,9,81,20,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="168,5,270,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="223,45,225,82,222,125,212,169,191,210,172,228,148,239,146,234,169,223,187,206,207,167,217,124,220,82,220,50"/>
-</map>

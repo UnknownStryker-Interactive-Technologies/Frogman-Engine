@@ -1,4 +1,4 @@
-﻿// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+﻿// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/prerequisites.hxx>
 #include <FE/algorithm/utility.hxx>
 #include <gtest/gtest.h>

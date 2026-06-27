@@ -1,7 +1,0 @@
-<map id="keyboard_callbacks" name="keyboard_callbacks">
-<area shape="rect" id="Node000001" title=" " alt="" coords="90,317,226,344"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,151,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,157,317,152,317,83,48"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="174,5,302,32"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,47,164,318,159,316,228,47"/>
-</map>

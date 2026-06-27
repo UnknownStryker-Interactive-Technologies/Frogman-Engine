@@ -1,7 +1,0 @@
-<map id="internal::ECS::gc_metadata" name="internal::ECS::gc_metadata">
-<area shape="rect" id="Node000001" title=" " alt="" coords="92,120,274,147"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,180,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,61,100,80,108,94,122,107,141,120,135,119,119,112,104,98,95,82,92,66"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="204,5,347,48"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,61,248,98,232,112,214,122,212,117,229,107,244,94,263,64"/>
-</map>

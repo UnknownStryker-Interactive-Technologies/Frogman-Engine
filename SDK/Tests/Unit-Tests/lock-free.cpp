@@ -1,6 +1,6 @@
 ﻿#include <benchmark/benchmark.h>
 #include <gtest/gtest.h>
-// Copyright © from 2023 to current, UNKNOWN STRYKER. All Rights Reserved.
+// Copyright © from 2023 to current, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <iostream>
 #include <thread>
 #include <vector>

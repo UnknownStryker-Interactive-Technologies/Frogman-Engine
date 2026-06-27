@@ -11,9 +11,12 @@ https://github.com/user-attachments/assets/81ea57c7-0b17-45bd-bfd0-a50467f7bd56
 
 ### Frogman Engine GDK has these two major GUI utility apps  
 - Frogman Engine Installer: https://github.com/UnknownStryker-Interactive-Technologies/Installer  
-- Frogman Engine Launcher: https://github.com/UnknownStryker-Interactive-Technologies/Launcher  
+- Frogman Engine Launcher: https://github.com/UnknownStryker-Interactive-Technologies/Launcher
+- Frogman Engine VSIX for Visual Studio 2022/2026: https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-VSIX-for-Visual-Studio-2022
   
 If you prefer installing and setting up the engine with just a few clicks, those  tools will be the right choice for you to get started. Please send me an email to **unknownstryker416@gmail.com** if you finds some bugs or the installer does not properly download or build libraries on your system.
+
+https://github.com/user-attachments/assets/76906e5c-3ef9-4b8e-8e28-f6940f4b07f1
 
 <img width="6000" height="3375" alt="Frogman Engine" src="https://github.com/user-attachments/assets/393a9994-962b-4633-806d-52ec8d8ba40c" />
 
@@ -102,7 +105,7 @@ RUN_FROGMAN_HEADER_TOOL(${FE_LOG_HEADERS};${FE_POOL_HEADERS};${FE_CORE_HEADERS};
 This lets Frogman Engine dynamically instantiate objects without hard-coded object construction statements when reading a game configuration file to instantiate the necessary objects.
 ```C++
 // generated.cpp
-// Copyright © from 2024 to present, UNKNOWN STRYKER. All Rights Reserved. 
+// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. 
 #include <FE/framework/reflection/private/load_reflection_data.h> 
 #include <FE/framework/framework.hpp> 
 #include <C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Unit-Tests/FE.ECS.hpp>

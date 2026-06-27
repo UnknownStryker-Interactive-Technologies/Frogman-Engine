@@ -1,9 +1,0 @@
-<map id="logger_base" name="logger_base">
-<area shape="rect" id="Node000001" title=" " alt="" coords="217,120,308,147"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,205,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,61,122,80,133,94,151,107,173,117,219,130,213,130,171,122,149,112,129,98,117,82,111,66"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="234,13,290,40"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="264,53,265,121,260,118,260,57"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="384,13,437,40"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="407,54,398,78,383,98,347,119,309,130,308,125,345,114,379,94,393,76,402,57"/>
-</map>

@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.26.0...4.3.0)
-# Copyright © 2023~ UNKNOWN STRYKER. All Rights Reserved.
+# Copyright © 2023~ UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 PROJECT(FE_UNIT_TEST
         VERSION 0.0
         DESCRIPTION "A group of executable unit test code binaries"

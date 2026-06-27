@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.26.0...4.3.0)
-# Copyright © 2024 to present UNKNOWN STRYKER. All Rights Reserved.
+# Copyright © 2024 to present UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 PROJECT(FE.HeaderTool
         VERSION 0.0
         DESCRIPTION "Frogman Engine Header Tool is an executable in-house tool."

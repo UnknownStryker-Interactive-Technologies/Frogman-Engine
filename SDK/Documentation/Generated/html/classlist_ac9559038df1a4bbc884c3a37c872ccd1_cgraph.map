@@ -1,9 +1,0 @@
-<map id="list::~list" name="list::~list">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,21,77,48"/>
-<area shape="rect" id="Node000002" href="$classlist.html#ab035a90c89d04d758d398e227dfc4395" title=" " alt="" coords="125,13,248,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,32,112,34,107,35,78,37"/>
-<area shape="rect" id="Node000003" href="$classlist.html#a141a4dfacb2a5c5ed4257bf237b43861" title=" " alt="" coords="296,5,470,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="248,32,283,34,278,35,249,37"/>
-<area shape="rect" id="Node000004" href="$classlist_1_1node.html#a338015a8b365dea889485e487d2f2a4b" title=" " alt="" coords="518,21,637,48"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="471,32,505,35,500,35,471,37"/>
-</map>

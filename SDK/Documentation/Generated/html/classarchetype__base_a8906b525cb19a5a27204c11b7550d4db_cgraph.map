@@ -1,6 +1,0 @@
-<map id="archetype_base::__switch_ecs_host" name="archetype_base::__switch_ecs_host">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,179,72"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="52,28,50,19,57,10,71,5,92,3,115,5,130,13,124,14,113,10,92,8,72,10,60,15,56,21,57,29"/>
-<area shape="rect" id="Node000002" href="$classarchetype__base.html#a767c7a582811215e1b6cb02e7fcc6540" title=" " alt="" coords="227,37,376,64"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="179,48,214,50,209,51,179,53"/>
-</map>

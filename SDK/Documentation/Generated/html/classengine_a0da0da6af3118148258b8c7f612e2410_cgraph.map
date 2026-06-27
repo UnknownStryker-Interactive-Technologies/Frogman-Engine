@@ -1,6 +1,0 @@
-<map id="engine::get_engine" name="engine::get_engine">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,136,56"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="41,29,37,21,40,11,52,5,71,3,91,5,102,14,97,14,89,10,70,8,53,10,44,15,42,20,47,29"/>
-<area shape="rect" id="Node000002" href="$classengine.html#a43a1f719ed6912f4dd731ad8a17e5f41" title=" " alt="" coords="184,29,289,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,40,171,42,165,43,136,45"/>
-</map>

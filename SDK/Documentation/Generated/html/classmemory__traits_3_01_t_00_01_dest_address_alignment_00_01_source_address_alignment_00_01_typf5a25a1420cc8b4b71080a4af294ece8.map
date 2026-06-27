@@ -1,7 +1,0 @@
-<map id="memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial &gt;" name="memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="464,47,702,105"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="25,5,224,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,33,440,53,466,59,460,59,439,59,240,39"/>
-<area shape="rect" id="Node000003" href="$classmemory__traits.html" title=" " alt="" coords="5,95,244,153"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,130,348,129,439,120,503,106,508,106,440,125,349,134,260,135"/>
-</map>

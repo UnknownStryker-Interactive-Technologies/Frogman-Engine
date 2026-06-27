@@ -1,7 +1,0 @@
-<map id="memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial &gt;::assign" name="memory_traits&lt; T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial &gt;::assign">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,244,64"/>
-<area shape="rect" id="Node000002" href="$classmemory__traits_3_01_t_00_01_dest_address_alignment_00_01_source_address_alignment_00_01_type_triviality_1_1___trivial_01_4.html#acebc5a135463ed0cf8091c68470cefe3" title=" " alt="" coords="292,5,530,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,32,279,34,274,35,244,37"/>
-<area shape="rect" id="Node000003" href="$iterator_8hxx.html#a87a6afeed077c4d60b5ec92c7a411eeb" title=" " alt="" coords="578,21,671,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="530,32,565,35,560,35,530,37"/>
-</map>

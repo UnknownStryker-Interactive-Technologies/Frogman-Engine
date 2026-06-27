@@ -1,7 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classlogger__base.html" title=" " alt="" coords="5,31,97,57"/>
-<area shape="rect" id="Node000001" href="$classfatal__error__logger__base.html" title=" " alt="" coords="145,5,301,32"/>
-<area shape="poly" id="edge34_Node000000_Node000001" title=" " alt="" coords="111,32,147,29,142,31,113,38"/>
-<area shape="rect" id="Node000002" href="$classmessage__logger__base.html" title=" " alt="" coords="147,56,298,83"/>
-<area shape="poly" id="edge35_Node000000_Node000002" title=" " alt="" coords="112,50,150,58,144,59,112,56"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="archetype_base::archetype_base" name="archetype_base::archetype_base">
-<area shape="rect" id="Node000001" title=" " alt="" coords="267,31,480,57"/>
-<area shape="rect" id="Node000002" href="$classarchetype__base.html#a8d942548e45f4c685e14db15cf0d4439" title=" " alt="" coords="5,5,219,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,32,219,32,219,26,254,32"/>
-<area shape="rect" id="Node000003" href="$classarchetype__base.html#a3fe23f505041ed803ee55e6c449d223f" title=" " alt="" coords="24,56,200,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,56,201,63,200,58,254,56"/>
-</map>

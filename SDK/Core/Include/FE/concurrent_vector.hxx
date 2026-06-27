@@ -1,7 +1,7 @@
 ﻿#ifndef _FE_CORE_CONCURRENT_VECTOR_HXX_
 #define _FE_CORE_CONCURRENT_VECTOR_HXX_
 /* https://oneapi-spec.uxlfoundation.org/specifications/oneapi/v1.3-rev-1/elements/onetbb/source/containers/concurrent_vector_cls
-Copyright 2025 by Unknown Stryker
+Copyright 2025 by UNKNOWN STRYKER (Hojin Lee / Joey)
 
 Licensed under the Frogman Engine License (the "License");
 you may not use this file except in compliance with the License.

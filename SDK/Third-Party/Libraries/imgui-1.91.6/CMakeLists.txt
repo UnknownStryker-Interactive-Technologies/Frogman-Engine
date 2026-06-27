@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.26.0...4.3.0)
-# Copyright © from 2022 to present, UNKNOWN STRYKER. All Rights Reserved.
+# Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 PROJECT(ImGUI-1.91.6
         VERSION 0.0
         DESCRIPTION "Dear ImGUI 1.91.6"
