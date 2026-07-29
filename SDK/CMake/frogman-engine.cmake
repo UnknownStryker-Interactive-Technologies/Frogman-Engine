@@ -7,8 +7,8 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Ha
 FILE(GLOB THIRD_PARTY_CITY_HASH "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Hash/*.cc" "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/City-Hash/*.h")
 
 
-INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.22.0)
-FILE(GLOB THIRD_PARTY_UFBX "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.22.0/*.c" "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.22.0/*.h")
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.23.0)
+FILE(GLOB THIRD_PARTY_UFBX "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.23.0/*.c" "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/ufbx-0.23.0/*.h")
 
 
 FILE(GLOB_RECURSE FE_CORE_HEADERS "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.h" "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.hpp" "${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Include/*.hxx")

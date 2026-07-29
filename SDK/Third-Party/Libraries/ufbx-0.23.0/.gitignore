@@ -1,0 +1,25 @@
+
+# Project files
+proj/
+
+# Build output
+build/
+
+# Temporary files
+temp/
+
+# Python cache files
+__pycache__/
+
+# Editor files
+.vscode/
+
+# Coverage files
+*.lcov
+*.gcov
+*.gcda
+*.gcno
+
+# FBX backup files
+
+*.bck/
