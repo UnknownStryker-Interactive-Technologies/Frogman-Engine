@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#pragma warning(push)
+#pragma warning(disable: 4723)
 #include "absl/random/internal/distribution_test_util.h"
 
 #include <cassert>
@@ -416,3 +417,4 @@ double MaxErrorTolerance(double acceptance_probability) {
 }  // namespace random_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
+#pragma warning(pop)
