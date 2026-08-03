@@ -19,5 +19,5 @@ limitations under the License.
 
 
 thread_local std::shared_ptr<std::pmr::monotonic_buffer_resource> FE::framework::reflection::type_info::tl_s_resource = std::make_shared<std::pmr::monotonic_buffer_resource>();
-thread_local typename FE::framework::reflection::type_info::table_type FE::framework::reflection::type_info::tl_s_type_information(FE::framework::reflection::type_info::tl_s_resource.get());
+thread_local typename FE::framework::reflection::type_info::table_type FE::framework::reflection::type_info::tl_s_type_information;
 std::atomic_uint64_t FE::framework::reflection::type_info::s_type_id_counter = 0;

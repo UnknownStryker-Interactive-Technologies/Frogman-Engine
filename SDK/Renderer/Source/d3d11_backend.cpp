@@ -62,16 +62,18 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 
 		m_input_layout_cache(FE::framework::framework_base::get_framework().get_large_memory_resource())
 {
-	UINT l_create_device_flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+	UINT l_create_device_flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+	l_create_device_flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_VIDEO_SUPPORT;
 #if defined(_RELEASE_) || defined(_MINSIZEREL_)
+	l_create_device_flags |= D3D11_CREATE_DEVICE_DISABLE_GPU_TIMEOUT;
 	l_create_device_flags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 #elif defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
 	l_create_device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 	HRESULT l_result = 0;
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+#ifdef _DEBUG_
 	l_result = CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&m_factory));
 	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure,
@@ -88,7 +90,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
 				"Failed to detect a GPU; the error code is ${%d@0}.", &l_result);
 
-	l_result = m_adapter->GetDesc(&m_adapter_desc);
+	l_result = m_adapter->GetDesc3(&m_adapter_desc);
 	FE_EXIT_IF( l_result != S_OK,
 				FE::ErrorCode::_FatalRendererError_5XX_RendererBackendDeviceCreationFailure, 
 				"Failed to retrieve the GPU description; the error code is ${%d@0}.", &l_result);

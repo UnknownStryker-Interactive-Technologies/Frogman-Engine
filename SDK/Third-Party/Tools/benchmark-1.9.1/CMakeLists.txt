@@ -10,6 +10,10 @@ option(BENCHMARK_USE_LIBCXX "Build and test using libc++ as the standard library
 option(BENCHMARK_ENABLE_WERROR "Build Release candidates with -Werror." ON)
 option(BENCHMARK_FORCE_WERROR "Build Release candidates with -Werror regardless of compiler issues." OFF)
 
+if(MSVC)
+    add_compile_options(/utf-8)
+endif()
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "PGI")
   # PGC++ maybe reporting false positives.
   set(BENCHMARK_ENABLE_WERROR OFF)

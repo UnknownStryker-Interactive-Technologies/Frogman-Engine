@@ -21,7 +21,6 @@ limitations under the License.
 #include <FE/bitmask.hxx>
 #include <FE/concurrent_vector.hxx> // needs a bit of rework and design shifts to remove an internal lock.
 #include <FE/farray.hxx>
-#include <FE/hash.hxx>
 #include <FE/list.hxx>
 #include <FE/memory.hxx>
 #include <FE/pool/memory_resource.hxx> 
@@ -36,6 +35,8 @@ limitations under the License.
 #include <absl/container/node_hash_map.h>
 
 #include <FE/framework/mutex.hpp> // fiber lock
+
+#include <boost/hash2/xxhash.hpp>
 
 
 
@@ -66,14 +67,14 @@ using component_view = FE::smart_ptr<Component, FE::RefType::_Observer>;
 namespace framework
 {
 	using initializer = absl::flat_hash_map<std::pmr::string, std::pmr::string,
-		FE::hash<std::pmr::string>,
-		std::equal_to<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::polymorphic_allocator< std::pair<const std::pmr::string, std::pmr::string> >
 	>;
 
 	using initializer_list = absl::flat_hash_map<	std::pmr::string, initializer,
-		FE::hash<std::pmr::string>,
-		std::equal_to<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::polymorphic_allocator< std::pair<const std::pmr::string, initializer> >
 	>;
 }
@@ -246,8 +247,8 @@ class archetype_base
 	friend class ::FE::framework::game_processor;
 
 	using component_view_table = absl::flat_hash_map<var::size, ::FE::component_view<component_base>,
-		FE::hash<var::size>,
-		std::equal_to<var::size>,
+		absl::lts_20260107::DefaultHashContainerHash<var::size>,
+		absl::lts_20260107::DefaultHashContainerEq<var::size>,
 		FE::polymorphic_allocator< std::pair< FE::size, ::FE::component_view<component_base> > >
 	>;
 

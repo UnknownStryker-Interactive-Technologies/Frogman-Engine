@@ -1,4 +1,4 @@
-#ifndef UFBX_STL_H
+﻿#ifndef UFBX_STL_H
 #define UFBX_STL_H
 
 #if !defined(UFBX_VERSION)

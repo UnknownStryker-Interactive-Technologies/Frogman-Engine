@@ -16,7 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/hash.hxx>
 #include <FE/memory.hxx>
 
 
@@ -417,11 +416,14 @@ public:
 
 	_FE_FORCE_INLINE_ FE::uint64 hash_code() const noexcept
 	{
+		boost::hash2::xxhash_64 l_xxhash_64;
 		if (__large_bitset_engaged())
 		{
-			return CityHash64((FE::ASCII*)m_bitmask, __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
+			l_xxhash_64.update(reinterpret_cast<const unsigned char*>(m_bitmask), __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
+			return l_xxhash_64.result();
 		}
-		return CityHash64(reinterpret_cast<const char*>(&m_64bit_buffer), sizeof(m_64bit_buffer));
+		l_xxhash_64.update(reinterpret_cast<const unsigned char*>(&m_64bit_buffer), sizeof(m_64bit_buffer));
+		return l_xxhash_64.result();
 	}
 
 	_FE_FORCE_INLINE_ FE::byte* data() const noexcept

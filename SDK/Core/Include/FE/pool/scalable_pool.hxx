@@ -1111,9 +1111,7 @@ namespace large
         pool_type m_pages_with_100_capacity; // ~4KiB
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        using page_validation_table = absl::flat_hash_set<chunk_type*,
-            FE::hash<chunk_type*>, std::equal_to<chunk_type*>,
-            FE::cache_aligned_allocator<chunk_type*>>;
+        using page_validation_table = absl::flat_hash_set<chunk_type*>;
         page_validation_table m_page_validation_table;
 #endif
 

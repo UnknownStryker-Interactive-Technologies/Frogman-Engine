@@ -17,7 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/do_once.hxx>
-#include <FE/hash.hxx>
 #include <FE/list.hxx>
 #include <FE/memory.hxx>
 #include <FE/type_traits.hxx>

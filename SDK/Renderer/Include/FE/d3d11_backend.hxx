@@ -25,7 +25,7 @@ limitations under the License.
 
 #ifdef _FE_ON_WINDOWS_X86_64_
 #include <d3dcommon.h>
-#include <d3d11.h>
+#include <d3d11_4.h>
 #include <dxgi1_6.h>
 #include <d3dcompiler.h>
 #include <wrl/client.h>
@@ -77,17 +77,17 @@ enum struct ShaderTarget
 class d3d11_backend
 {
 public:
-    using gpu_info = DXGI_ADAPTER_DESC;
+    using gpu_info = DXGI_ADAPTER_DESC3;
 
 private:
     class FE::renderer* const m_frontend;
-    wrl::com_ptr<ID3D11Device> m_device;
-    wrl::com_ptr<ID3D11DeviceContext> m_context;
-    wrl::com_ptr<IDXGISwapChain> m_swapchain;
-    wrl::com_ptr<ID3D11Texture2D> m_back_buffer;
+    wrl::com_ptr<ID3D11Device5> m_device;
+    wrl::com_ptr<ID3D11DeviceContext4> m_context;
+    wrl::com_ptr<IDXGISwapChain4> m_swapchain;
+    wrl::com_ptr<ID3D11Texture2D1> m_back_buffer;
     wrl::com_ptr<ID3D11RenderTargetView> m_render_target_view;
-    wrl::com_ptr<IDXGIFactory6> m_factory;
-	wrl::com_ptr<IDXGIAdapter> m_adapter;
+    wrl::com_ptr<IDXGIFactory7> m_factory;
+	wrl::com_ptr<IDXGIAdapter4> m_adapter;
     gpu_info m_adapter_desc;
 	BOOL m_should_allow_tearing;
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
@@ -126,8 +126,8 @@ public:
 	void begin_frame() noexcept;
     void end_frame() noexcept;
 
-    _FE_FORCE_INLINE_ ID3D11Device* get_device() const noexcept { return m_device.Get(); }
-    _FE_FORCE_INLINE_ ID3D11DeviceContext* get_context() const noexcept { return m_context.Get(); }
+    _FE_FORCE_INLINE_ ID3D11Device5* get_device() const noexcept { return m_device.Get(); }
+    _FE_FORCE_INLINE_ ID3D11DeviceContext4* get_context() const noexcept { return m_context.Get(); }
     _FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_adapter_desc; }
 
     void register_shaders(std::pmr::vector<class ::FE::internal::renderer::shader>& shaders_p) noexcept;

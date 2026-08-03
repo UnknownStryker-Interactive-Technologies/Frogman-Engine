@@ -70,8 +70,8 @@ class game_processor
 	std::vector<gc_metadata, FE::cache_aligned_allocator<gc_metadata>> m_metadata_stack;
 
 	absl::node_hash_set<class FE::component_base*,
-		FE::hash<class FE::component_base*>,
-		std::equal_to<class FE::component_base*>,
+		absl::lts_20260107::DefaultHashContainerHash<class FE::component_base*>,
+		absl::lts_20260107::DefaultHashContainerEq<class FE::component_base*>,
 		FE::cache_aligned_allocator<class FE::component_base*>> m_visited_components;
 
 	FE::smart_ptr<death_note, FE::RefType::_Owner> m_death_note;

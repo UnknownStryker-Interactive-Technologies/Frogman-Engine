@@ -24,7 +24,6 @@ limitations under the License.
 #include <FE/do_once.hxx>
 #include <FE/function.hxx>
 #include <FE/fstream_guard.hxx>
-#include <FE/hash.hxx>
 #include <FE/type_traits.hxx>
 #include <FE/pair.hxx>
 
@@ -117,8 +116,8 @@ public:
 private:
 	using lock_type = boost::shared_mutex;
 	using internal_map_type = absl::flat_hash_map<std::pmr::string, FE::task_base*,
-		FE::hash<std::pmr::string>,
-		std::equal_to<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::cache_aligned_allocator<std::pmr::string>>;
 
 	using world_tag_t = var::uint64;
@@ -127,18 +126,18 @@ private:
 
 	using system_table = absl::node_hash_map<	world_tag_t,
 												std::array<absl::node_hash_map<component_typeid_t, std::pmr::vector<system_t>,
-																				FE::hash<component_typeid_t>,
-																				std::equal_to<component_typeid_t>,
+																				absl::lts_20260107::DefaultHashContainerHash<component_typeid_t>,
+																				absl::lts_20260107::DefaultHashContainerEq<component_typeid_t>,
 																				FE::polymorphic_allocator< std::pair<const component_typeid_t, std::pmr::vector<system_t>> >
 																				>,
 															syscall_phase_count
 															>,
-		FE::hash<world_tag_t>,
-		std::equal_to<world_tag_t>,
+		absl::lts_20260107::DefaultHashContainerHash<world_tag_t>,
+		absl::lts_20260107::DefaultHashContainerEq<world_tag_t>,
 		FE::polymorphic_allocator<std::pair<const world_tag_t,
 											std::array<absl::node_hash_map<component_typeid_t, std::pmr::vector<system_t>,
-																			FE::hash<component_typeid_t>,
-																			std::equal_to<component_typeid_t>,
+																			absl::lts_20260107::DefaultHashContainerHash<component_typeid_t>,
+																			absl::lts_20260107::DefaultHashContainerEq<component_typeid_t>,
 																			FE::polymorphic_allocator< std::pair<const component_typeid_t, std::pmr::vector<system_t>> >
 																			>,
 														syscall_phase_count
@@ -327,8 +326,8 @@ public:
 	by adding -DMEMORY_POOL_FE_STRINGS=1 option to cmake.
 	*/
 	using internal_map_type = absl::node_hash_map<std::pmr::string, std::pmr::map<var::ptrdiff, property_metadata>,
-		FE::hash<std::pmr::string>,
-		std::equal_to<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::cache_aligned_allocator<std::pmr::string>>;
 
 	using class_name_type = internal_map_type::key_type;
@@ -897,13 +896,13 @@ public:
 private:
 	std::string_view m_typename;
 	absl::flat_hash_map< std::string_view, std::array<var::byte, field_max_size>,
-		FE::hash<std::string_view>,
-		std::equal_to<std::string_view>,
+		absl::lts_20260107::DefaultHashContainerHash<std::string_view>,
+		absl::lts_20260107::DefaultHashContainerEq<std::string_view>,
 		FE::polymorphic_allocator<std::pair<const std::string_view, std::array<var::byte, field_max_size>>>> m_string_to_value_map;
 
 	absl::flat_hash_map<std::array<var::byte, field_max_size>, std::string_view, 
-						FE::hash<std::array<var::byte, field_max_size>>, 
-						std::equal_to<std::array<var::byte, field_max_size>>,
+						absl::lts_20260107::DefaultHashContainerHash<std::array<var::byte, field_max_size>>,
+						absl::lts_20260107::DefaultHashContainerEq<std::array<var::byte, field_max_size>>,
 						FE::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
 						> m_value_to_string_map;
 
@@ -924,9 +923,8 @@ public:
 
 		if (l_result->first == enum_value_string_p)
 		{
-			std::array<var::byte, field_max_size> l_result = l_result->second;
 			EnumStruct l_ret;
-			FE::memcpy(&l_ret, sizeof(EnumStruct), l_result.data(), l_result.size());
+			FE::memcpy(&l_ret, sizeof(EnumStruct), l_result->second.data(), l_result->second.size());
 			return l_ret;
 		}
 

@@ -32,7 +32,7 @@ TEST(BitmaskSmallMode, ReadWriteBits)
 TEST(BitmaskConstructFromUint64, MSB_and_LSB)
 {
 	// index 0 is leftmost (MSB), index 63 is rightmost (LSB)
-	constexpr uint64 value = (uint64(1) << 63) | uint64(1);
+	constexpr FE::uint64 value = (FE::uint64(1) << 63) | FE::uint64(1);
 	FE::bitmask b(value);
 
 	EXPECT_TRUE(b.read_at(0));   // MSB
@@ -91,7 +91,7 @@ TEST(BitmaskBitwiseOperatorsSmall, AndOrXor)
 
 TEST(BitmaskEqualityAndHash, EqualSmall)
 {
-	const uint64 v = 0x0123456789ABCDEFULL;
+	const FE::uint64 v = 0x0123456789ABCDEFULL;
 	FE::bitmask a(v);
 	FE::bitmask b(v);
 

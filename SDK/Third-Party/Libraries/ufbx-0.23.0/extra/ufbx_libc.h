@@ -1,4 +1,4 @@
-#ifndef UFBX_UFBX_LIBC_H_INCLUDED
+﻿#ifndef UFBX_UFBX_LIBC_H_INCLUDED
 #define UFBX_UFBX_LIBC_H_INCLUDED
 
 #include <stdint.h>

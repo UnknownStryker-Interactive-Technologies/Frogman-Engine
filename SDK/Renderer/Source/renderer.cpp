@@ -18,6 +18,7 @@ limitations under the License.
 
 #include <FE/blacklist_evaluator.hxx>
 #include <FE/clock.hxx>
+#include <FE/random.hxx>
 #include <FE/engine.hpp>
 #include <FE/image.hpp>
 #include <FE/video_player.hpp>

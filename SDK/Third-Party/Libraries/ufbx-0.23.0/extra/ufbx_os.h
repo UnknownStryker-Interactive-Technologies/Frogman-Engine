@@ -1,4 +1,4 @@
-#ifndef UFBX_OS_H_INCLUDED
+﻿#ifndef UFBX_OS_H_INCLUDED
 #define UFBX_OS_H_INCLUDED
 
 #include <stdint.h>

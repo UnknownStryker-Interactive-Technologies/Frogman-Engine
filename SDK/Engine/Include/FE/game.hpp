@@ -34,8 +34,8 @@ class game : public FE::archetype_base
 	using base_type = FE::archetype_base;
 
 	using world_list = absl::flat_hash_map<world_tag, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
-		FE::hash<world_tag>,
-		std::equal_to<world_tag>,
+		absl::lts_20260107::DefaultHashContainerHash<world_tag>,
+		absl::lts_20260107::DefaultHashContainerEq<world_tag>,
 		std::pmr::polymorphic_allocator < std::pair<const world_tag, FE::smart_ptr<FE::world, FE::RefType::_Owner>> >>;
 	
 	world_list m_world_list;

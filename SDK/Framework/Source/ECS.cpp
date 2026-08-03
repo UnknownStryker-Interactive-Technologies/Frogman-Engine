@@ -90,12 +90,12 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::compo
 	FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
 	FE_ASSERT(to_attatch_p.is_valid() == true, "Assertion failed: the component to attatch is not valid.");
 
-
-	const std::size_t l_hash_code = CityHash64(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
+	thread_local static boost::hash2::xxhash_64 l_xxhash_64;
+	l_xxhash_64.update(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
 
 	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
 
-	entt_p->m_component_view_table[l_hash_code] = to_attatch_p;
+	entt_p->m_component_view_table[l_xxhash_64.result()] = to_attatch_p;
 }
 
 

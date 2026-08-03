@@ -17,7 +17,6 @@ limitations under the License.
 */
 #include <FE/definitions.hxx>
 #include <FE/do_once.hxx>
-#include <FE/hash.hxx>
 #include <FE/memory.hxx>
 #include <FE/types.hxx>
 #include <FE/type_traits.hxx>
@@ -31,6 +30,7 @@ limitations under the License.
 #include <typeinfo>
 
 // boost
+#include <boost/hash2/xxhash.hpp>
 #include <boost/thread/shared_lock_guard.hpp>
 
 #include <absl/container/flat_hash_map.h>
@@ -70,8 +70,7 @@ namespace internal::type_info
 
 class type_info
 {
-    using table_type = std::pmr::unordered_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata
-    >;
+    using table_type = absl::flat_hash_map<typename internal::type_info::metadata::string_type, internal::type_info::metadata>;
     using lock_type = std::shared_mutex;
    
 
@@ -102,12 +101,15 @@ private:
     void set() noexcept
     {
         __demangle_type_name( m_info._typename, typeid(T).name() );
-		m_info._hashed_name = CityHash64(m_info._typename.data(), m_info._typename.length());
+		boost::hash2::xxhash_64 l_hasher;
+		l_hasher.update(reinterpret_cast<const unsigned char*>(m_info._typename.data()), m_info._typename.length());
+		m_info._hashed_name = l_hasher.result();
 
         if constexpr (FE::has_base_type<T>::value == true)
         { 
             __demangle_type_name( m_info._base_typename, typeid(typename T::base_type).name() );
-			m_info._hashed_base_name = CityHash64(m_info._base_typename.data(), m_info._base_typename.length());
+			l_hasher.update(reinterpret_cast<const unsigned char*>(m_info._base_typename.data()), m_info._base_typename.length());
+			m_info._hashed_base_name = l_hasher.result();
         }
 
         if constexpr (std::is_base_of_v<FE::component_base, T> == true)
