@@ -49,73 +49,52 @@
   },
   "ShaderHeaders" : 
   [
-    "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hlsli",
-    "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test2.hlsli"
+    "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hlsli",
+    "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test2.hlsli"
   ],
   "Shaders" : 
   [
     {
-      "Defines" : 
-      [
-        {
-          "_DEBUG_" : [ 0, 1 ]
-        },
-        {
-          "_RELWITHDEBINFO_" : [ 0, 1 ]
-        },
-        {
-          "_MINSIZEREL_" : [ 0, 1 ]
-        },
-        {
-          "_RELEASE_" : [ 0, 1 ]
-        }
-      ],
+      "Defines" : [],
       "MainFunction" : "vs_main",
-      "PermutationBlacklist" : 
-      [
-        "(_DEBUG_ == 1) && ((_RELWITHDEBINFO_ == 1) || (_MINSIZEREL_ == 1) || (_RELEASE_ == 1))",
-        "(_RELWITHDEBINFO_ == 1) && ((_MINSIZEREL_ == 1) || (_RELEASE_ == 1) || (_DEBUG_ == 1))",
-        "(_MINSIZEREL_ == 1) && ((_RELEASE_ == 1) || (_DEBUG_ == 1) || (_RELWITHDEBINFO_ == 1))",
-        "(_RELEASE_ == 1) && ((_DEBUG_ == 1) || (_RELWITHDEBINFO_ == 1) || (_MINSIZEREL_ == 1))",
-        "(_DEBUG_ == 0) && (_RELWITHDEBINFO_ == 0) && (_MINSIZEREL_ == 0) && (_RELEASE_ == 0)"
-      ],
+      "PermutationBlacklist" : [],
       "ShaderTarget" : "vs_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.vertex.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.vertex.hlsl"
     },
     {
       "Defines" : [],
       "MainFunction" : "ps_main",
       "PermutationBlacklist" : [],
       "ShaderTarget" : "ps_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.pixel.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.pixel.hlsl"
     },
     {
       "Defines" : [],
       "MainFunction" : "gs_main",
       "PermutationBlacklist" : [],
       "ShaderTarget" : "gs_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.geometry.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.geometry.hlsl"
     },
     {
       "Defines" : [],
       "MainFunction" : "hs_main",
       "PermutationBlacklist" : [],
       "ShaderTarget" : "hs_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hull.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.hull.hlsl"
     },
     {
       "Defines" : [],
       "MainFunction" : "ds_main",
       "PermutationBlacklist" : [],
       "ShaderTarget" : "ds_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.domain.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.domain.hlsl"
     },
     {
       "Defines" : [],
       "MainFunction" : "cs_main",
       "PermutationBlacklist" : [],
       "ShaderTarget" : "cs_5_0",
-      "Source" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.compute.hlsl"
+      "Source" : "C:\\Users\\leeho\\OneDrive\\\ubb38\uc11c\\GitHub\\Frogman-Engine\\SDK\\Tests\\Integration Tests\\IntegrationTest\\CMake\\..\\Assets\\Shaders\\test.compute.hlsl"
     }
   ]
 }
