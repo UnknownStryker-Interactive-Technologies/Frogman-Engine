@@ -24,6 +24,7 @@ limitations under the License.
 #include <FE/do_once.hxx>
 #include <FE/function.hxx>
 #include <FE/fstream_guard.hxx>
+#include <FE/memory.hxx>
 #include <FE/type_traits.hxx>
 #include <FE/pair.hxx>
 
@@ -41,12 +42,16 @@ limitations under the License.
 #include <type_traits>
 #include <vector>
 
+// Boost.Json is used to prevent deserializing binaries with wrong offsets and sizes. This let us use the property identifiers as the keys mapped to the binary sequence fragments.
+#include <boost/json.hpp>
+
 // boost::shared_lock_guard
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/shared_lock_guard.hpp>
 
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
+
 #include <tsl/array-hash/array_map.h>
 
 
@@ -274,12 +279,12 @@ Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smar
 struct property_metadata
 {
 	FE::TypeTriviality _is_trivial;
-	var::boolean _is_serializable;
 	var::uint32 _size_in_byte;
 	var::ptrdiff _offset_from_this;
 
+	FE::ASCII* _host_name;
 	FE::ASCII* _name;
-	FE::ASCII* m_typename;
+	FE::ASCII* _typename;
 };
 
 
@@ -304,7 +309,7 @@ public:
 			if (property_name_p == it.value()->_name)
 			{
 				FE_ASSERT(sizeof(T) == it.value()->_size_in_byte, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
-				FE_ASSERT(algorithm::string::compare(it.value()->m_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
+				FE_ASSERT(algorithm::string::compare(it.value()->_typename, reflection::type_id<T>().name()) == true, "Assertion Failure: interpreting bytes with the incorrect type 'typename T' is not allowed.");
 
 				var::byte* l_address = reinterpret_cast<var::byte*>(&instance_p) + it.value()->_offset_from_this;
 				return reinterpret_cast<T*>(l_address);
@@ -336,24 +341,27 @@ public:
 	using class_property_metadata_type = typename class_property_list::mapped_type;
 
 	using class_layer_stack = std::pmr::vector< FE::pair<class_property_list*, typename class_property_list::iterator> >;
-	using data_on_heap_size_record = std::pmr::deque<var::size>; // Used std::pmr::deque because std::queue does not support pmr.
 
 	using lock_type = std::mutex;
 	using file_handler = std::fstream;
-	using input_buffer_type = std::pmr::string;
-	using input_buffer_iterator_type = typename input_buffer_type::iterator;
+	using buffer_type = std::pmr::string;
+	using input_buffer_iterator_type = typename buffer_type::iterator;
 
 private:
 	std::pmr::memory_resource* m_pool;
 	internal_map_type m_property_registry;
 	class_layer_stack m_class_layer;
-	data_on_heap_size_record m_scalable_container_size_record;
 
 	lock_type m_lock;
-	input_buffer_type m_input_buffer;
-	input_buffer_iterator_type m_position;
+	buffer_type m_key_buffer;
+	buffer_type m_buffer;
+	//input_buffer_iterator_type m_position;
 
-	absl::node_hash_map<std::pmr::string, instance_metadata> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
+	absl::node_hash_map<std::pmr::string, instance_metadata, 
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>, 
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>, 
+		FE::cache_aligned_allocator<instance_metadata>
+	> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
 
 public:
 	property_registry(FE::size reflection_map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
@@ -382,12 +390,12 @@ public:
 		
 		property_metadata l_property_meta_data;
 		l_property_meta_data._is_trivial = static_cast<TypeTriviality>(FE::is_trivial<T>::value);
-		l_property_meta_data._is_serializable = FE::is_serializable<T>::value;
 		static_assert(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
+		l_property_meta_data._host_name = reflection::type_id<C>().name();
 		l_property_meta_data._name = property_name_p.data();
-		l_property_meta_data.m_typename = reflection::type_id<T>().name();
+		l_property_meta_data._typename = reflection::type_id<T>().name();
 
 		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), m_pool);
@@ -404,8 +412,8 @@ public:
 		{
 			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
 			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(std::pmr::string&, const void*)>>(__get_serialization_task_name(l_property_meta_data.m_typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)>>(__get_deserialization_task_name(l_property_meta_data.m_typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(boost::json::object&, const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const boost::json::value&, void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
 
 			if constexpr (FE::has_value_type<T>::value == true)
 			{
@@ -451,11 +459,14 @@ public:
 	{
 		static_assert(std::is_class_v<T>, "Non-class/struct field variables cannot be serialized.");
 		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		FE_ASSERT(version_p != nullptr, "Assertion failure: the serialization file version string cannot be null.");
 		out_ret_buffer_p.clear();
 		out_ret_buffer_p.reserve(one_KiB); // Pre-allocate 1 KiB.
 
-		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);
+
+		std::lock_guard<lock_type> l_lock(m_lock);
+
 		auto l_search_result = m_property_registry.find(l_typename);
 		if (l_search_result == m_property_registry.end())
 		{
@@ -472,24 +483,26 @@ public:
 		{
 			__push_parent_class_layers_recursive<T>();
 		}
-		out_ret_buffer_p += version_p;
-		out_ret_buffer_p += "\n";
-		out_ret_buffer_p += l_typename;
-		out_ret_buffer_p += "{";
-		__serialize_mutually_recursive<T>(out_ret_buffer_p, object_p);
-		out_ret_buffer_p += "};$-";
 
-		while (m_scalable_container_size_record.empty() == false)
+
+		boost::json::value l_frogman_object = {}; // .fo
+		boost::json::object& l_fo_root = l_frogman_object.emplace_object();
+		
+		l_fo_root.emplace("version", version_p);
+		l_fo_root.emplace("typename", l_typename);
+
+		__serialize_mutually_recursive<T>(l_fo_root, object_p);
+	
+		boost::json::serializer l_serializer;
+		l_serializer.reset(&l_frogman_object);
+
+		char l_buffer[one_KiB];
+		std::string_view l_view;
+		while (l_serializer.done() == false)
 		{
-			std::pmr::string l_buffer(m_pool);
-			l_buffer.reserve(FE::algorithm::utility::count_int_digit_length(m_scalable_container_size_record.front()));
-			FE::algorithm::utility::uint_to_string(l_buffer.data(), l_buffer.capacity(), m_scalable_container_size_record.front());
-
-			out_ret_buffer_p += l_buffer.c_str();
-			out_ret_buffer_p += "-";
-			m_scalable_container_size_record.pop_front();
+			l_view = l_serializer.read(l_buffer);
+			out_ret_buffer_p.append(l_buffer, l_view.size());
 		}
-		out_ret_buffer_p += "EOF\0";
 	}
 
 
@@ -498,6 +511,7 @@ public:
 	{
 		static_assert(std::is_class_v<T>, "Non-class/struct field variables cannot be serialized.");
 		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
+		FE_ASSERT(version_p != nullptr, "Assertion failure: the serialization file version string cannot be null.");
 
 		if (data_p.empty() == true)
 		{
@@ -509,8 +523,11 @@ public:
 			return;
 		}
 
-		std::lock_guard<lock_type> l_lock(m_lock);
+
 		std::pmr::string l_typename(reflection::type_id<T>().name(), m_pool);
+
+		std::lock_guard<lock_type> l_lock(m_lock);
+
 		auto l_search_result = m_property_registry.find(l_typename);
 		FE_EXIT_IF((l_search_result == m_property_registry.end()) || (l_search_result->second.size() == 0), ErrorCode::_FatalSerializationError_3XX_TypeNotFound, "serialization failed: could not find the requested type information or the class/struct is empty");
 		m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
@@ -520,43 +537,25 @@ public:
 			__push_parent_class_layers_recursive<T>();
 		}
 
-		m_input_buffer = data_p;
-		// Checks the file version
-		FE_EXIT_IF(!algorithm::string::compare_ranged<char>(m_input_buffer.data(), algorithm::string::range{ 0, std::strlen(version_p) },
-															version_p, algorithm::string::range{ 0, std::strlen(version_p) }),
-															FE::ErrorCode::_FatalSerializationError_3XX_FileVersionMismatch, "Assertion failure: the serialization file version is not supported.");
 
-		m_position = m_input_buffer.begin();
-		m_position += m_input_buffer.find('{');
-		FE_NEGATIVE_ASSERT(m_position == m_input_buffer.end(), "The serialization file is ill-formed or unsupported.");
-
-		// Checks the class type name
-		FE_EXIT_IF(!algorithm::string::compare_ranged<char>(l_typename.data(), algorithm::string::range{0, std::strlen(l_typename.data())},
-															m_input_buffer.c_str(), algorithm::string::range{ std::strlen(version_p) + sizeof('\n'), static_cast<uint64>(m_position - m_input_buffer.begin())}),
-			FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
-		++m_position; // Point the first byte.
-
-		auto l_size_indicator = m_input_buffer.begin();
-		auto l_pos = m_input_buffer.rfind("$-");
-		FE_ASSERT(l_pos != m_input_buffer.npos, "Assertion failure: the serialization file is ill-formed or unsupported.");
-
-		l_size_indicator += l_pos;
-		l_size_indicator += 2; // to skip the "$-" and point to the first one.
-
-		std::pmr::string::size_type l_eof_pos = m_input_buffer.find("EOF\0");
-		FE_ASSERT(l_eof_pos != m_input_buffer.npos, "Assertion failure: the serialization file is ill-formed or unsupported.");
-		auto l_file_end = m_input_buffer.begin() + l_eof_pos;
-		FE_ASSERT(l_file_end <= m_input_buffer.end(), "Assertion failure: the serialization file is ill-formed or unsupported.");
-		while (l_size_indicator != l_file_end)
+		boost::json::parse_options l_parse_options = 
 		{
-			algorithm::utility::uint_info l_info = algorithm::utility::string_to_uint(FE::iterator_cast<FE::ASCII*>(l_size_indicator));
-			FE_LOG_IF(l_info._value == 0, FE::log::Severity::_Warning, "Warning: the size of the container is zero. Please debug if the file is corrupted.");
-			m_scalable_container_size_record.push_back(l_info._value);
-			l_size_indicator += l_info._digit_length; // move to the next.
-			++l_size_indicator; // to skip the '-'.
-		}
+			.max_depth = FE::max_value<size_t>,
+			.allow_comments = false,
+			.allow_trailing_commas = false,
+			.allow_invalid_utf8 = true,
+			.allow_invalid_utf16 = true,
+			.allow_infinity_and_nan = false
+		};
 
-		__deserialize_mutually_recursive<T>(out_object_p);
+		std::error_code l_parse_error = {};
+		boost::json::value l_frogman_object = boost::json::parse(data_p, l_parse_error, {}, l_parse_options); // .fo 
+		FE_ASSERT(l_parse_error.value() == 0, "Assertion failure: the serialization file is ill-formed or unsupported.");
+
+		FE_EXIT_IF(l_frogman_object.at("version").as_string() != version_p, FE::ErrorCode::_FatalSerializationError_3XX_FileVersionMismatch, "Assertion failure: the serialization file version is not supported.");
+		FE_EXIT_IF(l_frogman_object.at("typename").as_string() != l_typename, FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
+
+		__deserialize_mutually_recursive<T>(l_frogman_object, out_object_p);
 	}
 
 
@@ -578,7 +577,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_serialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(std::pmr::string&, const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__serialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(boost::json::object&, const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__serialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -593,7 +592,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_deserialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const boost::json::value&, void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -650,7 +649,7 @@ private:
 	void __push_parent_class_layers_by_typename_string_recursive(const std::string_view& typename_p) noexcept;
 
 	template<typename T>
-	void __serialize_mutually_recursive(std::pmr::string& out_ret_buffer_p, const T& object_p) noexcept
+	void __serialize_mutually_recursive(boost::json::object& out_ret_buffer_p, const T& object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
@@ -662,9 +661,16 @@ private:
 				// Check if the field variable meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
-				out_ret_buffer_p.append(reinterpret_cast<const char*>(&object_p) + l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property( __get_the_top_class_property_list_iterator() ), 
-										__get_metadata_of_the_property( __get_the_top_class_property_list_iterator() )._size_in_byte);
+				m_buffer.assign(reinterpret_cast<const char*>(&object_p) + l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()),
+								__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte
+				);
 
+				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+				m_key_buffer += "::";
+				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
+
+				out_ret_buffer_p.emplace(m_key_buffer, m_buffer);
+				
 				// Look for the next registered property of the class.
 				++(__get_the_top_class_property_list_iterator());
 
@@ -685,13 +691,13 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is serializable with foreach?
 				{
-					FE::arguments<std::pmr::string&, const void*> l_task_args; // Any containers with begin() and end() can be serialized and deserialized.
+					FE::arguments<boost::json::object&, const void*> l_task_args; // Any containers with begin() and end() can be serialized and deserialized.
 					l_task_args._first = out_ret_buffer_p;
 					l_task_args._second = reinterpret_cast<FE::byte*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_task_args); // The pointed task knows what to do with the arguments type casting.
@@ -722,7 +728,7 @@ private:
 	}
 
 	template<typename T>
-	void __deserialize_mutually_recursive(T& out_object_p) noexcept
+	void __deserialize_mutually_recursive(const boost::json::value& frogman_object_p, T& out_object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
@@ -733,10 +739,16 @@ private:
 			{
 				// Check if the meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
+				
+				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+				m_key_buffer += "::";
+				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
-				// Write the bits to the object_base, from a buffer.	
-				FE::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), FE::iterator_cast<FE::ASCII*>(m_position), __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte);
-				m_position += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte; // Iterate to the next bits.
+				m_buffer = frogman_object_p.at(m_key_buffer).as_string();
+				::memcpy(	reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), 
+							m_buffer.c_str(),
+							m_buffer.size()
+				);
 
 				// Look for the next registered property of the class layer.
 				++(__get_the_top_class_property_list_iterator());
@@ -758,14 +770,15 @@ private:
 				}
 
 				// Find the class/struct meta data that contains its memory layer.
-				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename);
+				auto l_search_result = m_property_registry.find(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename);
 
 				// This is to serialize and deserialize containers and class instances that can be iterated through foreach. 
-				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator()).m_typename)); // Load method pointer.
+				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is deserializable with foreach?
 				{
-					FE::arguments<void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
-					l_pointer_to_container._first = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
+					FE::arguments<const boost::json::value&, void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
+					l_pointer_to_container._first = frogman_object_p;
+					l_pointer_to_container._second = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
 
 					// Look for the next registered property of the class layer.
@@ -794,40 +807,46 @@ private:
 	}
 
 	template<class Container>
-	void __serialize_by_foreach_mutually_recursive(std::pmr::string& out_ret_buffer_p, const void* const data_p) noexcept
+	void __serialize_by_foreach_mutually_recursive(boost::json::object& out_ret_buffer_p, const void* const data_p) noexcept
 	{
-		//FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
+		FE_ASSERT(data_p != nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
 		static_assert(FE::is_serializable<Container>::value, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
-		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
+
 		const Container* const l_container = static_cast<const Container* const>(data_p);
 
 		if constexpr (FE::is_trivial<Container>::value == false)
 		{
-			if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
+			static_assert(FE::is_serializable<typename Container::value_type>::value == true, "The value type of the container is not serializable.");
+
+			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true)
 			{
-				if constexpr (std::is_array<Container>::value == true)
-				{
-					out_ret_buffer_p.append(reinterpret_cast<const char*>(l_container), sizeof(Container));
-				}
-				else
-				{
-					m_scalable_container_size_record.push_back(l_container->size());
-					out_ret_buffer_p.append(reinterpret_cast<const char*>(l_container->data()), sizeof(typename Container::value_type) * l_container->size());
-				}
+				m_buffer.assign(reinterpret_cast<const char*>(l_container->data()), 
+								l_container->size() * sizeof(typename Container::value_type)
+				);
+
+				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+				m_key_buffer += "::";
+				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
+
+				out_ret_buffer_p.emplace(m_key_buffer, m_buffer);
+				return;
 			}
-			else
+
+
+			m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+			m_key_buffer += "::";
+			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
+
+			boost::json::array& l_json_array = out_ret_buffer_p[m_key_buffer].emplace_array();
+			for (auto& element : *l_container)
 			{
-				m_scalable_container_size_record.push_back(l_container->size());
-				for (auto& element : *l_container)
+				if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == false) // is a nested container
 				{
-					if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
-					{
-						__serialize_by_foreach_mutually_recursive<typename Container::value_type>(out_ret_buffer_p, &element);
-					}
-					else
-					{
-						__serialize_mutually_recursive<typename Container::value_type>(out_ret_buffer_p, element);
-					}
+					__serialize_by_foreach_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), &element);
+				}
+				else // is not a nested container
+				{
+					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), element);
 				}
 			}
 		}
@@ -836,44 +855,48 @@ private:
 	std::string_view __get_serialization_task_name(const std::string_view& property_typename_p) noexcept;
 
 	template<class Container>
-	void __deserialize_by_foreach_mutually_recursive(void* const data_p) noexcept
+	void __deserialize_by_foreach_mutually_recursive(const boost::json::value& frogman_object_p, void* const data_p) noexcept
 	{
-		//FE_NEGATIVE_STATIC_ASSERT(FE::is_trivial<Container>::value == true, "Incorrect template argument type: serializable containers are not trivially constructible and destructible.");
+		FE_ASSERT(data_p != nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
 		static_assert(FE::is_serializable<Container>::value, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
-		FE_NEGATIVE_ASSERT(data_p == nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
+
 		Container* const l_container = static_cast<Container* const>(data_p);
 
 		if constexpr (FE::is_trivial<Container>::value == false)
 		{
-			l_container->resize(m_scalable_container_size_record.front());
-			m_scalable_container_size_record.pop_front();
+			static_assert(FE::is_serializable<typename Container::value_type>::value == true, "The value type of the container is not serializable.");
 
-			if constexpr (FE::is_trivial<typename Container::value_type>::value == true)
+			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true)
 			{
-				if constexpr (std::is_array<Container>::value == true)
-				{
-					FE::memcpy(reinterpret_cast<var::byte*>(l_container), FE::iterator_cast<FE::ASCII*>(m_position), sizeof(Container));
-					m_position += sizeof(Container); // Iterate to the next bit.
-				}
-				else
-				{
-					FE::memcpy(reinterpret_cast<var::byte*>(l_container->data()), FE::iterator_cast<FE::ASCII*>(m_position), sizeof(typename Container::value_type) * l_container->size());
-					m_position += sizeof(typename Container::value_type) * l_container->size(); // Iterate to the next bit.
-				}
+				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+				m_key_buffer += "::";
+				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
+
+				const boost::json::string& l_data_stream = frogman_object_p.at(m_key_buffer).as_string();
+				l_container->resize(l_data_stream.size() / sizeof(typename Container::value_type));
+				::memcpy(l_container->data(), l_data_stream.data(), l_data_stream.size());
+				return;
 			}
-			else
+
+
+			m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
+			m_key_buffer += "::";
+			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
+
+			const boost::json::array& l_json_array = frogman_object_p.at(m_key_buffer).as_array();
+			l_container->resize(l_json_array.size());
+			auto l_container_it = l_container->begin();
+			for (const auto& element : l_json_array)
 			{
-				for (auto& element : *l_container)
+				if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == false) // is a nested container
 				{
-					if constexpr ((FE::is_serializable<typename Container::value_type>::value == true) && (FE::is_trivial<typename Container::value_type>::value == false))
-					{
-						__deserialize_by_foreach_mutually_recursive<typename Container::value_type>(&element);
-					}
-					else
-					{
-						__deserialize_mutually_recursive<typename Container::value_type>(element);
-					}
+					__deserialize_by_foreach_mutually_recursive<typename Container::value_type>(element, l_container_it.operator->());
 				}
+				else // is not a nested container
+				{
+					__deserialize_mutually_recursive<typename Container::value_type>(element, *l_container_it);
+				}
+				++l_container_it;
 			}
 		}
 	}
@@ -1015,30 +1038,30 @@ public: \
 	} \
 private: \
 	template <typename T = void> \
-	::std::string& __get_signature() noexcept \
+	const char* __get_signature() noexcept \
 	{ \
-		static ::std::string l_s_full_signature; \
+		static ::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-			::std::string l_signature_body = " "; \
+			::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_signature_body = " "; \
 			l_signature_body.reserve(128); \
 			l_signature_body += ::FE::framework::reflection::type_id<T>().name(); \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
-			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
+			::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
 			auto l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
 			l_full_signature.insert( l_prop_registry_insertion_result->_begin, l_signature_body ); \
 			l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
-			if (l_prop_registry_insertion_result != std::nullopt) \
+			if (l_prop_registry_insertion_result != ::std::nullopt) \
 			{ \
 				l_full_signature.erase(l_prop_registry_insertion_result->_begin, l_prop_registry_insertion_result->_end - l_prop_registry_insertion_result->_begin); \
 			} \
-			l_s_full_signature = std::move(l_full_signature); \
+			l_s_full_signature = ::std::move(l_full_signature); \
 		); \
-		return l_s_full_signature; \
+		return l_s_full_signature.c_str(); \
 	} \
-	::std::string_view m_method_name; \
+	const char* m_method_name; \
 public: \
-	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
+    const char* const get_method_name() const noexcept { return m_method_name; } \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta = this;
 #endif
@@ -1065,30 +1088,30 @@ public: \
 	} \
 private: \
 	template <typename T = void> \
-	::std::string& __get_signature() noexcept \
+	const char* __get_signature() noexcept \
 	{ \
-		static ::std::string l_s_full_signature; \
+		static ::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_s_full_signature; \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, \
-			::std::string l_signature_body = " "; \
+			::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_signature_body = " "; \
 			l_signature_body.reserve(128); \
 			l_signature_body += ::FE::framework::reflection::type_id<T>().name(); \
 			l_signature_body += "::"; \
 			l_signature_body += #method_name; \
-			::std::string l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
+			::std::basic_string<char, ::std::char_traits<char>, ::FE::cache_aligned_allocator<char>> l_full_signature = ::FE::framework::reflection::type_id<__VA_ARGS__>().name(); \
 			auto l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), '(' ); \
 			l_full_signature.insert( l_prop_registry_insertion_result->_begin, l_signature_body ); \
 			l_prop_registry_insertion_result = ::FE::algorithm::string::find_the_last( l_full_signature.c_str(), " __ptr64" ); \
-			if (l_prop_registry_insertion_result != std::nullopt) \
+			if (l_prop_registry_insertion_result != ::std::nullopt) \
 			{ \
 				l_full_signature.erase(l_prop_registry_insertion_result->_begin, l_prop_registry_insertion_result->_end - l_prop_registry_insertion_result->_begin); \
 			} \
-			l_s_full_signature = std::move(l_full_signature); \
+			l_s_full_signature = ::std::move(l_full_signature); \
 		); \
-		return l_s_full_signature; \
+		return l_s_full_signature.c_str(); \
 	} \
-	::std::string_view m_method_name; \
+	const char* m_method_name; \
 public: \
-	const ::std::string_view& get_method_name() const noexcept { return m_method_name; } \
+    const char* const get_method_name() const noexcept { return m_method_name; } \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ static_method_metadata_##method_name method_name##_static_method_meta = this;
 #endif

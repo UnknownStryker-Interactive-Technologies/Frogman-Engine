@@ -243,6 +243,19 @@ template<typename T>
 _FE_MAYBE_UNUSED_ constexpr inline bool is_primitive_v = is_primitive<T>::value;
 
 
+template<typename T>
+struct is_serializable_primitive
+{
+	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (
+		(FE::is_boolean<T>::value == true) || (FE::is_char<T>::value == true) ||
+		(std::is_integral_v<T> == true) || (std::is_floating_point_v<T> == true)
+		);
+};
+
+template<typename T>
+_FE_MAYBE_UNUSED_ constexpr inline bool is_serializable_primitive_v = is_serializable_primitive<T>::value;
+
+
 
 
 template<typename T>
@@ -397,6 +410,21 @@ struct is_string_class<std::basic_string_view<T, Traits>> : std::true_type {};
 
 template<typename T>
 _FE_MAYBE_UNUSED_ constexpr inline bool is_string_class_v = is_string_class<T>::value;
+
+
+
+
+namespace internal
+{
+	template <typename T, typename = void>
+	struct __is_serializable : std::false_type {};
+
+	template <typename T>
+	struct __is_serializable<T, std::void_t<typename T::IsSerializable>> : std::true_type {};
+
+	template<typename T>
+	_FE_MAYBE_UNUSED_ constexpr inline bool __is_serializable_v = __is_serializable<T>::value;
+}
 
 
 
@@ -585,7 +613,8 @@ template<typename T>
 struct is_serializable
 {
 	_FE_MAYBE_UNUSED_ static constexpr inline bool value = (
-		(FE::is_trivial<T>::value == true) ||
+		(FE::is_serializable_primitive_v<T> == true) ||
+		(FE::internal::__is_serializable_v<T> == true) ||
 		(FE::is_scalable_array<T>::value == true) ||
 		(FE::is_array<T>::value == true) ||
 		(FE::is_string_class<T>::value == true)

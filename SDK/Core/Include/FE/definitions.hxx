@@ -157,14 +157,14 @@ limitations under the License.
 #ifdef FE_CLASS
     #error FE_CLASS is a reserved Frogman Engine macro keyword.
 #else
-    #define FE_CLASS()
+#define FE_CLASS() using IsSerializable = decltype(true); // This is an indicator for the FE runtime reflection.
 #endif
 
 
 #ifdef FE_STRUCT
     #error FE_STRUCT is a reserved Frogman Engine macro keyword.
 #else
-    #define FE_STRUCT()
+    #define FE_STRUCT() FE_CLASS()
 #endif
 
 

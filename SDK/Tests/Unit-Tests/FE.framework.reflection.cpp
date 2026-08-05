@@ -17,6 +17,7 @@
 template<typename T>
 class generic_base
 {
+	FE_CLASS();
 
 private:
 	FE_PROPERTY(m_value);
@@ -37,6 +38,7 @@ public:
 class child_of_generic_base : public generic_base<int>
 {
 	FE_CLASS_HAS_A_BASE(generic_base<int>);
+	FE_CLASS();
 
 private:
 	FE_PROPERTY(m_child_value);
@@ -56,17 +58,9 @@ public:
 
 struct plain_old_data
 {
+	FE_STRUCT();
 
-
-	class property_metadata__a : public ::FE::internal::ECS::gc_metadata_base {
-	public: __forceinline property_metadata__a(auto* this_p) noexcept {
-		{
-			[[maybe_unused]] static ::FE::internal::do_once __FE_DO_ONCE_INSTANCE__([&]() { ::FE::framework::framework_base::get_framework().get_property_reflection().register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(this_p->_a)>(*this_p, this_p->_a, "_a"); });
-		}; if constexpr (::std::is_base_of_v< ::FE::component_base, ::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>> >) {
-			::FE::internal::ECS::gc_metadata_base::add_watch<decltype(this_p->_a)>(this_p, this_p->_a);
-		}
-	}
-	}; [[no_unique_address]] property_metadata__a _a_property_meta = this; friend class property_metadata__a;;
+	FE_PROPERTY(_a);
 	var::int32 _a;
 
 	FE_PROPERTY(_b);
@@ -78,6 +72,8 @@ struct plain_old_data
 
 struct pod_with_array
 {
+	FE_STRUCT();
+
 	var::int32 _a;
 	var::float32 _b;
 	var::uint16 _c;
@@ -86,7 +82,7 @@ struct pod_with_array
 
 struct object_with_string
 {
-
+	FE_STRUCT();
 
 	FE_PROPERTY(_a);
 	std::string _a;
@@ -94,16 +90,19 @@ struct object_with_string
 
 struct object_with_vector
 {
-
+	FE_STRUCT();
 
 	FE_PROPERTY(_a);
 	std::vector<std::string> _a;
+
+	FE_PROPERTY(_b);
+	std::vector<std::vector<std::vector<pod_with_array>>> _b;
 };
 
 class object : public object_with_vector
 {
 	FE_CLASS_HAS_A_BASE(object_with_vector);
-
+	FE_CLASS();
 	
 	FE_PROPERTY(m_text);
 	std::string m_text;
@@ -132,11 +131,11 @@ TEST(reflection, POD_serialization)
 	l_pod._b = 2.0f;
 	l_pod._c = 3;
 
-	std::pmr::string serialized_pod;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized_pod, l_pod, "v0.0.0");
+	std::pmr::string l_serialized_pod;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(l_serialized_pod, l_pod, "v0.0.0");
 
 	plain_old_data l_new_pod;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized_pod, l_new_pod, "v0.0.0");
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(l_serialized_pod, l_new_pod, "v0.0.0");
 
 	EXPECT_EQ(l_pod._a, l_new_pod._a);
 	EXPECT_EQ(l_pod._b, l_new_pod._b);
@@ -148,11 +147,11 @@ TEST(reflection, object_with_string_serialization)
 	object_with_string l_str;
 	l_str._a = "Hello World";
 
-	std::pmr::string serialized;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_str, "v0.0.0");
+	std::pmr::string l_serialized;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(l_serialized, l_str, "v0.0.0");
 
 	object_with_string l_new_str;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_str, "v0.0.0");
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(l_serialized, l_new_str, "v0.0.0");
 
 	EXPECT_STREQ(l_str._a.data(), l_new_str._a.data());
 }
@@ -163,14 +162,27 @@ TEST(reflection, object_with_vector_serialization)
 	l_strs._a.push_back("Hello World");
 	l_strs._a.push_back("Bye World");
 
-	std::pmr::string serialized;
-	FE::framework::framework_base::get_framework().get_property_reflection().serialize(serialized, l_strs, "v0.0.0");
+	auto& l_ = l_strs._b.emplace_back().emplace_back().emplace_back();
+	l_._a = 42;
+	l_._b = 3.14f;
+	l_._c = 7;
+	memset(l_._d, 0, sizeof(l_._d));
+	l_._d[0] = 1;
+
+
+	std::pmr::string l_serialized;
+	FE::framework::framework_base::get_framework().get_property_reflection().serialize(l_serialized, l_strs, "v0.0.0");
 
 	object_with_vector l_new_strs;
-	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(serialized, l_new_strs, "v0.0.0");
+	FE::framework::framework_base::get_framework().get_property_reflection().deserialize(l_serialized, l_new_strs, "v0.0.0");
 
 	EXPECT_STREQ(l_strs._a[0].data(), l_new_strs._a[0].data());
 	EXPECT_STREQ(l_strs._a[1].data(), l_new_strs._a[1].data());
+
+	EXPECT_EQ(l_strs._b[0][0][0]._a, l_new_strs._b[0][0][0]._a);
+	EXPECT_EQ(l_strs._b[0][0][0]._b, l_new_strs._b[0][0][0]._b);
+	EXPECT_EQ(l_strs._b[0][0][0]._c, l_new_strs._b[0][0][0]._c);
+	EXPECT_EQ(l_strs._b[0][0][0]._d[0], l_new_strs._b[0][0][0]._d[0]);
 }
 
 TEST(reflection, method_call)
@@ -211,15 +223,15 @@ TEST(reflection, enum_struct)
 {
 	FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct<Color>("Color",
 		{
-			{Color::_Red, "Red"},
+			{Color::_Red, "_Red"},
 			{Color::_Green, "_Green"},
-			{Color::_Blue, "Blue"}
+			{Color::_Blue, "_Blue"}
 		}
 	);
 
 	FE::framework::reflection::enum_metadata* l_enum_struct_metadata = FE::framework::framework_base::get_framework().get_enum_reflection().retrieve_enum_struct_metadata("Color");
 	EXPECT_TRUE(l_enum_struct_metadata != nullptr);
-	EXPECT_STREQ(l_enum_struct_metadata->enum_to_string(Color::_Red), "Red"); // Should return "Red"
+	EXPECT_STREQ(l_enum_struct_metadata->enum_to_string(Color::_Red), "_Red"); // Should return "Red"
 	EXPECT_EQ(*l_enum_struct_metadata->string_to_enum<Color>("_Green"), Color::_Green); // Should return Color::Green
 	EXPECT_STREQ(l_enum_struct_metadata->get_typename(), "Color");
 }

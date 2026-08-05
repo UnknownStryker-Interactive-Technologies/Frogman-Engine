@@ -61,10 +61,13 @@ FE::task_base* method_registry::retrieve(const std::string_view& key_p) noexcept
 
 
 property_registry::property_registry(FE::size reflection_map_capacity_p, std::pmr::memory_resource* pool_p) noexcept
-	: m_pool(pool_p), m_property_registry(reflection_map_capacity_p),
-	m_class_layer(m_pool), m_scalable_container_size_record(m_pool),
-	m_lock(), m_input_buffer(m_pool), m_position(),
-	m_instance_metadata_lut(reflection_map_capacity_p) 
+	:	m_pool(pool_p), 
+		m_property_registry(reflection_map_capacity_p),
+		m_class_layer(m_pool),
+		m_lock(),
+		m_key_buffer(m_pool),
+		m_buffer(m_pool),
+		m_instance_metadata_lut(reflection_map_capacity_p) 
 {
 }
 
@@ -84,7 +87,7 @@ void property_registry::__push_parent_class_layers_by_typename_string_recursive(
 
 std::string_view property_registry::__get_serialization_task_name(const std::string_view& property_typename_p) noexcept
 {
-	static std::string l_s_serialization_task_name;
+	static std::basic_string<char, std::char_traits<char>, FE::cache_aligned_allocator<char>> l_s_serialization_task_name;
 	l_s_serialization_task_name = "FE::framework::reflection::property_registry::__serialize_by_foreach_mutually_recursive< >";
 	l_s_serialization_task_name.replace(l_s_serialization_task_name.find(' '), 1, property_typename_p);
 	return l_s_serialization_task_name.c_str();
@@ -92,7 +95,7 @@ std::string_view property_registry::__get_serialization_task_name(const std::str
 
 std::string_view property_registry::__get_deserialization_task_name(const std::string_view& property_typename_p) noexcept
 {
-	static std::string l_s_deserialization_task_name;
+	static std::basic_string<char, std::char_traits<char>, FE::cache_aligned_allocator<char>> l_s_deserialization_task_name;
 	l_s_deserialization_task_name = "FE::framework::reflection::property_registry::__deserialize_by_foreach_mutually_recursive< >";
 	l_s_deserialization_task_name.replace(l_s_deserialization_task_name.find(' '), 1, property_typename_p);
 	return l_s_deserialization_task_name.c_str();
