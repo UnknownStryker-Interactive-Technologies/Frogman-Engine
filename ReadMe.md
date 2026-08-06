@@ -4,12 +4,14 @@
 [![SIMD](https://img.shields.io/badge/SIMD-AVX512F-red.svg)](PLATFORM)
 
 # Frogman-Engine™
-
 **LICENSE**: https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
+
+### Frogman Engine Web Page
+https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
 
 https://github.com/user-attachments/assets/81ea57c7-0b17-45bd-bfd0-a50467f7bd56
 
-### Frogman Engine GDK has these two major GUI utility apps  
+## Frogman Engine GDK has these utility apps  
 - Frogman Engine Installer: https://github.com/UnknownStryker-Interactive-Technologies/Installer  
 - Frogman Engine Launcher: https://github.com/UnknownStryker-Interactive-Technologies/Launcher
 - Frogman Engine VSIX for Visual Studio 2022/2026: https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-VSIX-for-Visual-Studio-2022
@@ -18,28 +20,17 @@ If you prefer installing and setting up the engine with just a few clicks, those
 
 https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 
-<img width="6000" height="3375" alt="Frogman Engine" src="https://github.com/user-attachments/assets/393a9994-962b-4633-806d-52ec8d8ba40c" />
-
-# Frogman Engine Web Page
-https://savory-moth-a00.notion.site/Frogman-Engine-1735fa4fb82e800e8fccc8df394eec5b
-
-# Prerequisites: 
-1. CMake 4.2.X.  
-2. Visual Studio 2022/2026.  
-3. Git and Git LFS.
-4. Microsoft Parallel Patterns Library.  
-
-# C++ standard version: 
+## C++ standard version: 
 C++ 20 or the latest.  
 All project settings can be adjusted by modifying CMakeLists.txt.
 
-# The current development status.
+## The current development status.
 | Platform     | Architecture  | Status           |
 |--------------|---------------|------------------|
 | Windows 11   | X86-64        | In Development   |
 | Android      | ARM64         | Pending          |
 
-# This project leverages:
+## This project leverages:
 - abseil 20260107.1  
 https://github.com/abseil/abseil-cpp/releases/tag/20260107.1
 
@@ -225,6 +216,15 @@ In order to build boost libraries using Microsoft Visual Studio 2022 Clang CL (t
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug  
 ./b2 toolset=clang-win architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release  
 ```
+
+# The Frogman Engine GDK Architecture
+### Current
+<img width="680" height="560" alt="Current" src="https://github.com/user-attachments/assets/03d3f380-ab46-4ad7-9e81-b60a5d3fd7e9" />
+
+
+
+### Planned
+<img width="680" height="920" alt="Planned" src="https://github.com/user-attachments/assets/2b0c6299-e101-4ba2-b878-b920b7c017e5" />
 
 # Research Papers
 ~~The Frogman Engine Runtime Reflection System: https://1drv.ms/w/c/1b09399108712a7a/IQBmG2Q_gzsIQ7W7kQiyZHB9AZ7pBBd6sCWoF7OvIwkwVUo~~
