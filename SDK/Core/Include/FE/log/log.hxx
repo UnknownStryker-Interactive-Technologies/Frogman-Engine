@@ -270,23 +270,21 @@ namespace FE
 		_FatalWinAPI_Error_4XX_OpenProcessTokenFailure = 400,
 		_FatalWinAPI_Error_4XX_LookupPrivilegeValueFailure = 401,
 		_FatalWinAPI_Error_4XX_AdjustTokenPrivilegesFailure = 402,
-		_FatalMemoryError_4XX_VirtualAllocFailure = 403,
-		_FatalMemoryError_4XX_VirtualLockFailure = 404,
-		_FatalMemoryError_4XX_VirtualUnlockFailure = 405,
-		_FatalMemoryError_4XX_VirtualFreeFailure = 406,
+		_FatalWinAPI_Error_4XX_VirtualAllocFailure = 403,
+		_FatalWinAPI_Error_4XX_VirtualLockFailure = 404,
+		_FatalWinAPI_Error_4XX_VirtualUnlockFailure = 405,
+		_FatalWinAPI_Error_4XX_VirtualFreeFailure = 406,
 		_FatalWinAPI_Error_4XX_GetTokenInformationFailure = 407,
 		_FatalWinAPI_Error_4XX_LsaOpenPolicyFailure = 408,
 		_FatalWinAPI_Error_4XX_LsaAddAccountRights = 409,
-		_FatalMemoryError_4XX_LargePageEnablementFailure = 410,
+		_FatalWinAPI_Error_4XX_LargePageEnablementFailure = 410,
 		_FatalWinAPI_MF_Error_4XX_VideoFileMalformed = 411,
 		_FatalWinAPI_MF_Error_4XX_VideoTextureCreationFailure = 412,
 		_FatalWinAPI_MF_Error_4XX_VideoFileOpenFailure = 413,
 
 		_FatalRendererError_5XX_GLFW_InitializationFailure = 500,
 		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,
-		_FatalRendererError_5XX_RendererBackendDeviceCreationFailure = 502,
-		_FatalRendererError_5XX_RendererSwapChainCreationFailure = 503,
-		_FatalRendererError_5XX_RendererRenderTargetViewCreationFailure = 504,
+
 		_FatalRendererError_5XX_ShaderCompilationFailure = 505,
 		_FatalRendererError_5XX_ShaderCreationFailure = 506,
 		_FatalRendererError_5XX_InputLayoutCreationFailure = 507,
@@ -299,11 +297,25 @@ namespace FE
 		_FatalRendererError_5XX_ShaderReflectionFailure = 514,
 		_FatalRendererError_5XX_BufferCreationFailure = 515,
 		_FatalRendererError_5XX_FBXImportFailure = 516,
-
 		_FatalRendererError_5XX_ShaderBlobStashFailure = 517,
 		_FatalRendererError_5XX_ShaderBlobCacheLoadFailure = 518,
 		_FatalRendererError_5XX_ShaderSubDirectoryCreationRestricted = 519,
-		_HlslDirectoryMalformed = 520
+		_FatalRendererError_5XX_HlslDirectoryMalformed = 520,
+
+		_FatalRendererError_5XX_RendererBackendDeviceCreationFailure = 502,
+		_FatalRendererError_5XX_RendererBackendSwapChainCreationFailure = 503,
+		_FatalRendererError_5XX_RendererBackendRenderTargetViewCreationFailure = 504,
+		_FatalRendererError_5XX_RendererBackendDxgiFactoryCreationFailure = 521,
+		_FatalRendererError_5XX_RendererBackendGpuDetectionFailure = 522,
+		_FatalRendererError_5XX_RendererBackendDxgiAdapterDescRetrievalFailure = 523,
+		_FatalRendererError_5XX_RendererBackendFeatureLevelD3D11_1Unavailable = 524,
+		_FatalRendererError_5XX_RendererBackendID3D11Device5Unavailable = 525,
+		_FatalRendererError_5XX_RendererBackendID3D11DeviceContext4Unavailable = 526,
+		_FatalRendererError_5XX_RendererBackendID3D11DebugUnavailable = 527,
+		_FatalRendererError_5XX_RendererBackendMakeWindowAssociationFailure = 528,
+		_FatalRendererError_5XX_RendererBackendFrameBufferRetrievalFailure = 529,
+		_FatalRendererError_5XX_RendererBackendRasterizerStateCreationFailure = 530,
+		_FatalRendererError_5XX_RendererBackendFrameBufferResizeFailure = 531
 	};
 }
 #endif

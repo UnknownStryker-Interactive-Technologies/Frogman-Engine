@@ -251,7 +251,7 @@ program_option::program_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 			FE::ASCII* l_error_message = nullptr;
 			FE::boolean l_does_require_reboot_and_was_successful = __try_enable_large_pages(l_error_message);
 			FE_EXIT_IF(l_does_require_reboot_and_was_successful == true, 0, "Frogman Engine Runtime: the large page enablement was successful. Please reboot your system; ${%s@0}.", l_error_message);
-			FE_EXIT_IF(l_does_require_reboot_and_was_successful == false, FE::ErrorCode::_FatalMemoryError_4XX_LargePageEnablementFailure, "Frogman Engine Runtime: failed to enable large pages but the option was specified. The error message is: '${%s@0}'", l_error_message);
+			FE_EXIT_IF(l_does_require_reboot_and_was_successful == false, FE::ErrorCode::_FatalWinAPI_Error_4XX_LargePageEnablementFailure, "Frogman Engine Runtime: failed to enable large pages but the option was specified. The error message is: '${%s@0}'", l_error_message);
 		}
 	}
 }
