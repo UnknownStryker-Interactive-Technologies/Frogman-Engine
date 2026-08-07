@@ -1,0 +1,1 @@
+.\Test-App\AVX512F\Release\FE_UNIT_TEST.exe --benchmark_out=baseline.json --benchmark_out_format=json
