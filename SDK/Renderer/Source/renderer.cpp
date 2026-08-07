@@ -82,7 +82,7 @@ renderer::renderer(const window_config& window_config_p) noexcept
 	glfwWindowHint(GLFW_GREEN_BITS, m_video_mode->greenBits);
 	glfwWindowHint(GLFW_BLUE_BITS, m_video_mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, m_video_mode->refreshRate);
-	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE); // Disable automatic content scaling based on monitor DPI
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Disable automatic content scaling based on monitor DPI
 
 
 	if (m_window_config._is_fullscreen == true)
