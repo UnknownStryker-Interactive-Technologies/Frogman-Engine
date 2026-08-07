@@ -93,6 +93,15 @@ public:
 };
 
 
+#ifdef _FE_SHIPPING_BUILD_
+// Shipping build engine class
+class alignas(FE::CPU_L1_cache_line::size) engine : public FE::framework::framework_base
+{
+    using base = FE::framework::framework_base;
+}
+
+#else
+// Editortime engine class
 class alignas(FE::CPU_L1_cache_line::size) engine : public FE::framework::framework_base
 {
 	using base = FE::framework::framework_base;
@@ -174,6 +183,7 @@ public: // Callbacks
 	static void cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept;
 	static void scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept;
 };
+#endif
 
 
 END_NAMESPACE
