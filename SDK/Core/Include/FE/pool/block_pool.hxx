@@ -36,6 +36,7 @@ namespace internal::pool
         constexpr static FE::size possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
+        // This can be sized down to sizeof(uint32)
         using block_pointer = var::byte*;
 
     private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
@@ -139,10 +140,9 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_page_validation_table.reserve(512);
 #endif
-        m_available_pages.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        m_page_validation_table.insert(&m_available_pages.front());
-#endif
+
+        create_new_page_at_front();
+        create_new_page_at_front();
     }
 
      ~pool() noexcept
@@ -194,14 +194,15 @@ public:
         {
 			m_available_pages.front()._availability = PageGroup::_UnavailablePages; // mark the page as unavailable before moving it to the unavailable list.
 			m_unavailable_pages.splice(m_unavailable_pages.cbegin(), m_available_pages, m_available_pages.cbegin()); // move the page to the Unavailable List (UL).
-
-            m_available_pages.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_page_validation_table.insert(&m_available_pages.front());
-#endif
+            //create_new_page_at_front();
         }
 
-        void* l_allocation_result;
+        if (m_available_pages.size() == 0)
+        {
+            create_new_page_at_front();
+        }
+
+        void* l_allocation_result = nullptr;
         if (m_available_pages.front()._free_blocks.is_empty() == false)
         {
             l_allocation_result = m_available_pages.front()._free_blocks.pop();
@@ -281,6 +282,14 @@ public:
             ++page;
         }
     }
+
+    void create_new_page_at_front() noexcept
+    {
+        m_available_pages.emplace_front();
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+        m_page_validation_table.insert(&m_available_pages.front());
+#endif
+    }
 };
 
 
@@ -308,6 +317,7 @@ namespace internal::pool
         constexpr static FE::size possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
+        // This can be sized down to sizeof(uint32)
         using block_pointer = var::byte*;
 
     private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
@@ -410,10 +420,9 @@ namespace large
             m_page_validation_table.reserve(512);
 #endif
             FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::internal::pool::__enable_large_pages(););
-            m_available_pages.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_page_validation_table.insert(&m_available_pages.front());
-#endif
+
+            create_new_page_at_front();
+            create_new_page_at_front();
         }
 
          ~pool() noexcept
@@ -467,14 +476,15 @@ namespace large
             {
                 m_available_pages.front()._availability = PageGroup::_UnavailablePages; // mark the page as unavailable before moving it to the unavailable list.
                 m_unavailable_pages.splice(m_unavailable_pages.cbegin(), m_available_pages, m_available_pages.cbegin()); // move the page to the Unavailable List (UL).
-
-                m_available_pages.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                m_page_validation_table.insert(&m_available_pages.front());
-#endif
+                //create_new_page_at_front();
             }
 
-            void* l_allocation_result;
+            if (m_available_pages.size() == 0)
+            {
+                create_new_page_at_front();
+            }
+
+            void* l_allocation_result = nullptr;
             if (m_available_pages.front()._free_blocks.is_empty() == false)
             {
                 l_allocation_result = m_available_pages.front()._free_blocks.pop();
@@ -553,6 +563,14 @@ namespace large
                 }
                 ++page;
             }
+        }
+
+        void create_new_page_at_front() noexcept
+        {
+            m_available_pages.emplace_front();
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+            m_page_validation_table.insert(&m_available_pages.front());
+#endif
         }
     };
 

@@ -45,6 +45,7 @@ namespace internal::pool
         var::byte* m_page_end;
         var::uint32 m_free_list_size;
         var::boolean m_is_page_heapified;
+		var::boolean m_has_free_list_been_updated_since_defragmentation;
 
     public:
         var::uint32 _usage_in_bytes;
@@ -55,6 +56,7 @@ namespace internal::pool
         chunk() noexcept
             :   m_free_list_size(0),
                 m_is_page_heapified(false),
+			    m_has_free_list_been_updated_since_defragmentation(false),
                 _usage_in_bytes(0),
                 _remaining_capacity_in_bytes(page_size_in_bytes)
 
@@ -108,14 +110,15 @@ namespace internal::pool
 		FE::uint32 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
 
-        _FE_FORCE_INLINE_ FE::uint32 get_free_list_size() const noexcept { return m_free_list_size; }
-        _FE_FORCE_INLINE_ void set_free_list_size(FE::uint32 size_p) noexcept
-        {
-            m_free_list_size = size_p;
-        }
+        FE::uint32 get_free_list_size() const noexcept { return m_free_list_size; }
+        void set_free_list_size(FE::uint32 size_p) noexcept { m_free_list_size = size_p; }
 
-        _FE_FORCE_INLINE_ FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
-        _FE_FORCE_INLINE_ void set_page_heapified() noexcept { m_is_page_heapified = true; }
+        FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
+		FE::boolean has_free_list_been_updated_since_defragmentation() const noexcept { return m_has_free_list_been_updated_since_defragmentation; }
+		void reset_dirty_flag() noexcept { m_has_free_list_been_updated_since_defragmentation = false; }
+
+        void set_page_heapified() noexcept { m_is_page_heapified = true; }
+        void set_page_unheapified() noexcept { m_is_page_heapified = false; }
 
         _FE_FORCE_INLINE_ FE::uint32 get_usage_as_percentile() const noexcept
         {
@@ -136,6 +139,7 @@ namespace internal::pool
             {
 				std::push_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::less_than{});
             }
+			m_has_free_list_been_updated_since_defragmentation = true;
         }
 
 		// Time complexity: O(2 log n)
@@ -216,7 +220,7 @@ namespace internal::pool
 
         if (allocation_request_in_bytes_p == 0)
         {
-			PageListClass::_Unavailable;
+			return PageListClass::_Unavailable;
         }
 
         switch (l_quotient)
@@ -321,10 +325,8 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_page_validation_table.reserve(512);
 #endif
-        m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+        create_new_page_at_front();
+        create_new_page_at_front();
     }
 
      ~pool() noexcept  = default;
@@ -432,10 +434,7 @@ public:
                 l_page_list_iterator = m_pages_with_100_capacity.begin();
                 if (l_page_list_iterator == m_pages_with_100_capacity.end())
                 {
-                    m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                    m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+                    create_new_page_at_front();
                     l_page_list_iterator = m_pages_with_100_capacity.begin();
                 }
                 break;
@@ -454,12 +453,6 @@ public:
                     l_page_list_iterator = m_pages_with_100_capacity.end();
                     continue;
                 }
-
-                m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
-                l_page_list_iterator = m_pages_with_100_capacity.begin();
                 break;
             }
         } 
@@ -473,10 +466,7 @@ public:
             ++l_page_list_iterator;
             if (l_page_list_iterator == m_pages_with_100_capacity.end())
             {
-                m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+                create_new_page_at_front();
                 l_page_list_iterator = m_pages_with_100_capacity.begin();
             }
             l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
@@ -601,7 +591,12 @@ public:
         l_page_base->add_to_the_free_list(l_block_to_free);
         l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
         FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
-
+        if (l_page_base->_usage_in_bytes == 0) _FE_UNLIKELY_
+        {
+            l_page_base->set_free_list_size(0);
+            l_page_base->set_page_unheapified();
+            l_page_base->_page_iterator = l_page_base->get_page();
+        }
 
         pool_type* l_previous_page_list = nullptr;
         internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
@@ -632,6 +627,7 @@ public:
             break;
 
 		case internal::pool::PageListClass::_100_Percent:
+			l_previous_page_list = &m_pages_with_100_capacity;
 			break;
 
         _FE_NODEFAULT_;
@@ -710,7 +706,18 @@ public:
         }
     }
 
-	_FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return m_pages_with_100_capacity.size(); }
+	FE::size get_page_count() const noexcept 
+    {
+        return m_pages_with_100_capacity.size() + m_pages_with_75_capacity.size() + m_pages_with_50_capacity.size() + m_pages_with_25_capacity.size() + m_pages_with_12_5_capacity.size() + m_pages_with_6_25_capacity.size(); 
+    }
+
+    void create_new_page_at_front() noexcept
+    {
+        m_pages_with_100_capacity.emplace_front();
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+        m_page_validation_table.insert(&m_pages_with_100_capacity.front());
+#endif
+    }
 
 private:
     /* Time complexity: 
@@ -728,6 +735,10 @@ private:
         {
 			if(page_p->retrieve_from_the_free_list(out_result_p, bytes_p) == _FE_FAILED_)
             {
+                if (page_p->has_free_list_been_updated_since_defragmentation() == false)
+                {
+                    return _FE_FAILED_;
+                }
 				// Try defragmenting the page.
 				__defragment(page_p);
                 FE::boolean l_was_successful = page_p->retrieve_from_the_free_list(out_result_p, bytes_p); // Retry it. Traverse to the nxt page if it fails.
@@ -751,10 +762,12 @@ private:
                 out_result_p._address = nullptr;
                 out_result_p._size_in_bytes = out_result_p._size_in_bytes xor out_result_p._size_in_bytes;
 
-                if (page_p->get_free_list_size() > 1) // Can the free list defragmented?
-                {
-                    __defragment(page_p); // Defragment the page.
-                }
+                alignas(16) internal::pool::block_info l_block_to_free;
+                l_block_to_free._address = page_p->_page_iterator;
+                l_block_to_free._size_in_bytes = static_cast<var::uint32>(page_p->get_page_end() - page_p->_page_iterator);
+                page_p->add_to_the_free_list(l_block_to_free);
+
+                __defragment(page_p); // Defragment the page.
 
                 if ((page_p->get_free_list_size() > 0) &&
                     (page_p->is_page_heapified() == true)) // Is the free list not empty?
@@ -776,10 +789,11 @@ private:
 	// Try reducing the pointer offset data to uint32 to save memory, since the page size is no larger than 2MiB.
     static void _FE_VECTOR_CALL_ __defragment(page_iterator page_p) noexcept
     {
-        if (page_p->get_free_list_size() <= 1) _FE_UNLIKELY_
+        if (page_p->get_free_list_size() < 1) _FE_UNLIKELY_
         {
             return;
         }
+
         std::sort<free_list_iterator, internal::pool::from_low_address>(page_p->get_free_list(),
                                                                         page_p->get_free_list() + page_p->get_free_list_size(),
                                                                         internal::pool::from_low_address{}
@@ -826,6 +840,7 @@ private:
 		std::make_heap(page_p->get_free_list(), l_end, internal::pool::less_than{});
 
 		page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
+		page_p->reset_dirty_flag(); // Reset the dirty flag.
     }
 };
 
@@ -856,6 +871,7 @@ namespace internal::large::pool
         var::byte* m_page_end;
         var::uint32 m_free_list_size;
         var::boolean m_is_page_heapified;
+        var::boolean m_has_free_list_been_updated_since_defragmentation;
 
     public:
         var::uint32 _usage_in_bytes;
@@ -866,6 +882,7 @@ namespace internal::large::pool
         chunk() noexcept
             : m_free_list_size(0),
             m_is_page_heapified(false),
+			m_has_free_list_been_updated_since_defragmentation(false),
             _usage_in_bytes(0),
             _remaining_capacity_in_bytes(page_size_in_bytes)
 
@@ -919,16 +936,17 @@ namespace internal::large::pool
         FE::uint32 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
 
-        _FE_FORCE_INLINE_ FE::uint32 get_free_list_size() const noexcept { return m_free_list_size; }
-        _FE_FORCE_INLINE_ void set_free_list_size(FE::uint32 size_p) noexcept
-        {
-            m_free_list_size = size_p;
-        }
+        FE::uint32 get_free_list_size() const noexcept { return m_free_list_size; }
+        void set_free_list_size(FE::uint32 size_p) noexcept { m_free_list_size = size_p; }
 
-        _FE_FORCE_INLINE_ FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
-        _FE_FORCE_INLINE_ void set_page_heapified() noexcept { m_is_page_heapified = true; }
+        FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
+        FE::boolean has_free_list_been_updated_since_defragmentation() const noexcept { return m_has_free_list_been_updated_since_defragmentation; }
+        void reset_dirty_flag() noexcept { m_has_free_list_been_updated_since_defragmentation = false; }
 
-        _FE_FORCE_INLINE_ FE::uint32 get_usage_as_percentile() const noexcept
+        void set_page_heapified() noexcept { m_is_page_heapified = true; }
+        void set_page_unheapified() noexcept { m_is_page_heapified = false; }
+
+        FE::uint32 get_usage_as_percentile() const noexcept
         {
             return static_cast<FE::uint32>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
         }
@@ -947,6 +965,7 @@ namespace internal::large::pool
             {
                 std::push_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::less_than{});
             }
+			m_has_free_list_been_updated_since_defragmentation = true;
         }
 
         // Time complexity: O(2 log n)
@@ -1028,7 +1047,7 @@ namespace internal::large::pool
 
         if (allocation_request_in_bytes_p == 0)
         {
-            FE::internal::pool::PageListClass::_Unavailable;
+            return FE::internal::pool::PageListClass::_Unavailable;
         }
 
         switch (l_quotient)
@@ -1132,10 +1151,9 @@ namespace large
             m_page_validation_table.reserve(512);
 #endif
             FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::internal::pool::__enable_large_pages(););
-            m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+
+            create_new_page_at_front();
+            create_new_page_at_front();
         }
 
          ~pool() noexcept = default;
@@ -1247,10 +1265,7 @@ namespace large
                     l_page_list_iterator = m_pages_with_100_capacity.begin();
                     if (l_page_list_iterator == m_pages_with_100_capacity.end())
                     {
-                        m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                        m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+                        create_new_page_at_front();
                         l_page_list_iterator = m_pages_with_100_capacity.begin();
                     }
                     break;
@@ -1269,12 +1284,6 @@ namespace large
                         l_page_list_iterator = m_pages_with_100_capacity.end();
                         continue;
                     }
-
-                    m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                    m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
-                    l_page_list_iterator = m_pages_with_100_capacity.begin();
                     break;
                 }
             } while (l_page_list_iterator == m_pages_with_100_capacity.end());
@@ -1287,10 +1296,7 @@ namespace large
                 ++l_page_list_iterator;
                 if (l_page_list_iterator == m_pages_with_100_capacity.end())
                 {
-                    m_pages_with_100_capacity.emplace_front();
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-                    m_page_validation_table.insert(&m_pages_with_100_capacity.front());
-#endif
+                    create_new_page_at_front();
                     l_page_list_iterator = m_pages_with_100_capacity.begin();
                 }
                 l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
@@ -1415,7 +1421,12 @@ namespace large
             l_page_base->add_to_the_free_list(l_block_to_free);
             l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
             FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
-
+            if (l_page_base->_usage_in_bytes == 0) _FE_UNLIKELY_
+            {
+				l_page_base->set_free_list_size(0);
+			    l_page_base->set_page_unheapified();
+			    l_page_base->_page_iterator = l_page_base->get_page();
+            }
 
             pool_type* l_previous_page_list = nullptr;
             internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
@@ -1446,6 +1457,7 @@ namespace large
                 break;
 
             case internal::pool::PageListClass::_100_Percent:
+                l_previous_page_list = &m_pages_with_100_capacity;
                 break;
 
                 _FE_NODEFAULT_;
@@ -1526,7 +1538,18 @@ namespace large
             }
         }
 
-        _FE_FORCE_INLINE_ FE::size get_page_count() const noexcept { return m_pages_with_100_capacity.size(); }
+        FE::size get_page_count() const noexcept
+        {
+            return m_pages_with_100_capacity.size() + m_pages_with_75_capacity.size() + m_pages_with_50_capacity.size() + m_pages_with_25_capacity.size() + m_pages_with_12_5_capacity.size() + m_pages_with_6_25_capacity.size();
+        }
+
+        void create_new_page_at_front() noexcept
+        {
+            m_pages_with_100_capacity.emplace_front();
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+            m_page_validation_table.insert(&m_pages_with_100_capacity.front());
+#endif
+        }
 
     private:
         /* Time complexity:
@@ -1544,6 +1567,10 @@ namespace large
             {
                 if (page_p->retrieve_from_the_free_list(out_result_p, bytes_p) == _FE_FAILED_)
                 {
+                    if (page_p->has_free_list_been_updated_since_defragmentation() == false)
+                    {
+                        return _FE_FAILED_;
+                    }
                     // Try defragmenting the page.
                     __defragment(page_p);
                     FE::boolean l_was_successful = page_p->retrieve_from_the_free_list(out_result_p, bytes_p); // Retry it. Traverse to the nxt page if it fails.
@@ -1567,10 +1594,12 @@ namespace large
                     out_result_p._address = nullptr;
                     out_result_p._size_in_bytes = out_result_p._size_in_bytes xor out_result_p._size_in_bytes;
 
-                    if (page_p->get_free_list_size() > 1) // Can the free list defragmented?
-                    {
-                        __defragment(page_p); // Defragment the page.
-                    }
+                    alignas(16) internal::pool::block_info l_block_to_free;
+                    l_block_to_free._address = page_p->_page_iterator;
+                    l_block_to_free._size_in_bytes = static_cast<var::uint32>(page_p->get_page_end() - page_p->_page_iterator);
+                    page_p->add_to_the_free_list(l_block_to_free);
+
+                    __defragment(page_p); // Defragment the page.
 
                     if ((page_p->get_free_list_size() > 0) &&
                         (page_p->is_page_heapified() == true)) // Is the free list not empty?
@@ -1592,10 +1621,11 @@ namespace large
         // Try reducing the pointer offset data to uint32 to save memory, since the page size is no larger than 2MiB.
         static void _FE_VECTOR_CALL_ __defragment(page_iterator page_p) noexcept
         {
-            if (page_p->get_free_list_size() <= 1) _FE_UNLIKELY_
+            if (page_p->get_free_list_size() < 1) _FE_UNLIKELY_
             {
                 return;
             }
+
             std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(   std::execution::parallel_unsequenced_policy{},
                                                                                                                             page_p->get_free_list(),
                                                                                                                             page_p->get_free_list() + page_p->get_free_list_size(),
@@ -1642,6 +1672,7 @@ namespace large
             std::make_heap(page_p->get_free_list(), l_end, internal::pool::less_than{});
 
             page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
+            page_p->reset_dirty_flag(); // Reset the dirty flag.
         }
     };
 
