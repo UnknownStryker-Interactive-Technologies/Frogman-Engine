@@ -127,24 +127,23 @@ void FE::internal::renderer::shader::compile(FE::boolean should_recompile_p) noe
 FE::uint64 FE::internal::renderer::shader::__build_shader_blob_cache_path(std::pmr::wstring& out_path_p, std::pmr::vector<macro>& macro_combination_p) const noexcept
 {
 	boost::hash2::xxhash_64 l_hasher(0);
-	const FE::renderer::gpu_info& l_gpu_info = FE::engine::get_engine().get_renderer().get_gpu_info();
+	//const FE::renderer::gpu_info& l_gpu_info = FE::engine::get_engine().get_renderer().get_gpu_info();
 
+	// GPU identification [NOT FOR BLOB CACHE]
+	//boost::hash2::hash_append(l_hasher, {}, std::wstring_view(l_gpu_info.Description, wcslen(l_gpu_info.Description))); // e.g. NVIDIA GeForce RTX 5070Ti
+	//boost::hash2::hash_append(l_hasher, {}, l_gpu_info.VendorId); // e.g. NVIDIA
+	//boost::hash2::hash_append(l_hasher, {}, l_gpu_info.DeviceId); // e.g. GB203
+	//boost::hash2::hash_append(l_hasher, {}, l_gpu_info.SubSysId); // e.g. ASUS
+	//boost::hash2::hash_append(l_hasher, {}, l_gpu_info.Revision); // GPU chip revision
+	//boost::hash2::hash_append(l_hasher, {}, l_gpu_info.DedicatedVideoMemory); // VRAM; it can vary between models. E.g. RTX 5060Ti 8GiB vs RTX 5060Ti 16GiB
+	// + Driver version identification (e.g. NVIDIA Studio Driver 531.68 WHQL) [NOT FOR BLOB CACHE]
 
-	// GPU identification
-	boost::hash2::hash_append(l_hasher, {}, std::wstring_view(l_gpu_info.Description, wcslen(l_gpu_info.Description))); // e.g. NVIDIA GeForce RTX 5070Ti
-	boost::hash2::hash_append(l_hasher, {}, l_gpu_info.VendorId); // e.g. NVIDIA
-	boost::hash2::hash_append(l_hasher, {}, l_gpu_info.DeviceId); // e.g. GB203
-	boost::hash2::hash_append(l_hasher, {}, l_gpu_info.SubSysId); // e.g. ASUS
-	boost::hash2::hash_append(l_hasher, {}, l_gpu_info.Revision); // GPU chip revision
-	boost::hash2::hash_append(l_hasher, {}, l_gpu_info.DedicatedVideoMemory); // VRAM; it can vary between models. E.g. RTX 5060Ti 8GiB vs RTX 5060Ti 16GiB
-	
-	(macro_combination_p);
 	// Shader Compiler identification
 	{
-		HMODULE l_module_handle = GetModuleHandleA(D3DCOMPILER_DLL_A);
+		HMODULE l_module_handle = GetModuleHandleW(D3DCOMPILER_DLL_W);
 		if (l_module_handle == 0) _FE_UNLIKELY_
 		{
-			l_module_handle = LoadLibraryA(D3DCOMPILER_DLL_A);
+			l_module_handle = LoadLibraryW(D3DCOMPILER_DLL_W);
 			FE_ASSERT(l_module_handle != 0);
 		}
 
@@ -170,7 +169,7 @@ FE::uint64 FE::internal::renderer::shader::__build_shader_blob_cache_path(std::p
 
 			VS_FIXEDFILEINFO* l_file_info = nullptr;
 			_FE_MAYBE_UNUSED_ UINT l_file_info_size = 0;
-			VerQueryValueA(l_version_info_buffer.data(), "\\", (void**)&l_file_info, &l_file_info_size);
+			VerQueryValueW(l_version_info_buffer.data(), L"\\", (void**)&l_file_info, &l_file_info_size);
 
 			boost::hash2::hash_append(l_hasher, {}, l_file_info->dwFileVersionMS);
 			boost::hash2::hash_append(l_hasher, {}, l_file_info->dwFileVersionLS);
@@ -482,10 +481,10 @@ void FE::internal::renderer::__build_and_traverse_include_dependency_graph(	conc
 			l_shader_path += token._value;
 
 			auto l_current_file = in_out_shader_headers_p.find(key);
-			FE_EXIT_IF(l_current_file == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+			FE_EXIT_IF(l_current_file == in_out_shader_headers_p.end(), FE::ErrorCode::_FatalRendererError_5XX_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
 			
 			auto l_to_include = in_out_shader_headers_p.find(l_shader_path);
-			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_FatalRendererError_5XX_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
 
 			l_current_file->second._included_hlslis.emplace_back(&(l_to_include->second));
 		}
@@ -499,7 +498,7 @@ void FE::internal::renderer::__build_and_traverse_include_dependency_graph(	conc
 	for (auto& shader : in_out_shaders_p) // iterate over the list of .hlsl shaders
 	{
 		auto l_shader = token_lists_p.find(shader._source_path); // get the token list of the current .hlsl file.
-		FE_EXIT_IF(l_shader == token_lists_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+		FE_EXIT_IF(l_shader == token_lists_p.end(), FE::ErrorCode::_FatalRendererError_5XX_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
 		
 		for (const auto& token : l_shader->second) // iterate over the refined token list; it is the list of includes directly included by the current .hlsl file.
 		{
@@ -510,7 +509,7 @@ void FE::internal::renderer::__build_and_traverse_include_dependency_graph(	conc
 
 			// find the hlsli from the dictionary using the path
 			auto l_to_include = in_out_shader_headers_p.find(l_shader_path);
-			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
+			FE_EXIT_IF(l_to_include == in_out_shader_headers_p.end(), FE::ErrorCode::_FatalRendererError_5XX_HlslDirectoryMalformed, "HLSL file path malformed: '\\Assets\\Shaders' folder should not have any subfolders.");
 
 			for (auto hlsli = l_to_include->second._included_hlslis.begin(); hlsli != l_to_include->second._included_hlslis.end();) 
 			{
