@@ -69,25 +69,8 @@ namespace internal::pool
 
     struct block_info
     {
-        var::uint32 _address;
-        var::uint32 _size_in_bytes;
-    };
-
-    template <FE::size InBytes>
-    class uninitialized_bytes
-    {
-        var::byte m_page[InBytes];
-    };
-
-    enum struct PageListClass : FE::int8
-    {
-        _Unavailable = -1, // 0B
-        _6_25_PercentRemaining = 0, // 256B
-        _12_5_Percent = 1, // 512B
-        _25_Percent = 2,   // 1KiB
-        _50_Percent = 3,   // 2KiB
-        _75_Percent = 4,   // 3KiB
-        _100_Percent = 5   // 4KiB
+        var::int16 _address;
+        var::int16 _size_in_bytes;
     };
 
     class from_low_address
@@ -127,6 +110,68 @@ namespace internal::pool
         return lhs_p._address != rhs_p._address;
     }
 
+    namespace large
+    {
+        struct block_info
+        {
+            var::int32 _address;
+            var::int32 _size_in_bytes;
+        };
+
+        class from_low_address
+        {
+        public:
+            _FE_FORCE_INLINE_ bool operator()(const large::block_info& lhs_p, const large::block_info& rhs_p) noexcept
+            {
+                return lhs_p._address < rhs_p._address;
+            }
+        };
+
+        class less_than
+        {
+        public:
+            _FE_FORCE_INLINE_ bool operator()(const large::block_info& lhs_p, const large::block_info& rhs_p) noexcept
+            {
+                return lhs_p._size_in_bytes < rhs_p._size_in_bytes;
+            }
+        };
+
+        class greater_than
+        {
+        public:
+            _FE_FORCE_INLINE_ bool operator()(const large::block_info& lhs_p, const large::block_info& rhs_p) noexcept
+            {
+                return lhs_p._size_in_bytes > rhs_p._size_in_bytes;
+            }
+        };
+
+        _FE_FORCE_INLINE_ bool operator==(const large::block_info& lhs_p, const large::block_info& rhs_p) noexcept
+        {
+            return lhs_p._address == rhs_p._address;
+        }
+
+        _FE_FORCE_INLINE_ bool operator!=(const large::block_info& lhs_p, const large::block_info& rhs_p) noexcept
+        {
+            return lhs_p._address != rhs_p._address;
+        }
+    }
+
+    template <FE::size InBytes>
+    class uninitialized_bytes
+    {
+        var::byte m_page[InBytes];
+    };
+
+    enum struct PageListClass : FE::int8
+    {
+        _Unavailable = -1, // 0B
+        _6_25_PercentRemaining = 0, // 256B
+        _12_5_Percent = 1, // 512B
+        _25_Percent = 2,   // 1KiB
+        _50_Percent = 3,   // 2KiB
+        _75_Percent = 4,   // 3KiB
+        _100_Percent = 5   // 4KiB
+    };
 
     _FE_FORCE_INLINE_ void __enable_large_pages() noexcept
     {
