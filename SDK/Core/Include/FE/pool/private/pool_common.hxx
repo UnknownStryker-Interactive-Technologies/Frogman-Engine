@@ -69,7 +69,7 @@ namespace internal::pool
 
     struct block_info
     {
-        var::byte* _address; // Try reducing the pointer offset data to uint32 to save memory, since the page size is no larger than 2MiB.
+        var::uint32 _address;
         var::uint32 _size_in_bytes;
     };
 

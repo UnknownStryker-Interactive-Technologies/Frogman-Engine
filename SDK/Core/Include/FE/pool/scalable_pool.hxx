@@ -94,14 +94,14 @@ namespace internal::pool
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(const block_info& block_info_p) noexcept
         {
-            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address - m_page) / Alignment::size);
+            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address) / Alignment::size);
             FE_EXIT_IF(m_double_free_tracker[l_idx] != 0, FE::ErrorCode::_FatalMemoryError_1XX_HeapCorruption, "Double allocation detected: cannot allocate the same address twice.");
             m_double_free_tracker[l_idx] = (var::uint32)block_info_p._size_in_bytes;
         }
 
         _FE_FORCE_INLINE_ void check_double_free(const block_info& block_info_p) noexcept
         {
-            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address - m_page) / Alignment::size);
+            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address) / Alignment::size);
             FE_EXIT_IF(m_double_free_tracker[l_idx] != block_info_p._size_in_bytes, FE::ErrorCode::_FatalMemoryError_1XX_DoubleFree, "Double free detected: cannot deallocate the same address twice.");
             m_double_free_tracker[l_idx] = 0;
         }
@@ -154,7 +154,7 @@ namespace internal::pool
 
             if (m_free_list_size == 0)
             {
-                out_alloc_result_p._address = nullptr;
+                out_alloc_result_p._address = static_cast<var::uint32>(-1);
                 out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
                 return _FE_FAILED_;
             }
@@ -168,7 +168,7 @@ namespace internal::pool
             {
                 out_alloc_result_p._address = m_free_list[m_free_list_size]._address; 
                 out_alloc_result_p._size_in_bytes = requested_bytes_p;
-                FE_ASSERT((reinterpret_cast<FE::uintptr>(out_alloc_result_p._address) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", out_alloc_result_p._address, &Alignment::size);
+                FE_ASSERT((out_alloc_result_p._address % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &out_alloc_result_p._address, &Alignment::size);
                 
                 m_free_list[m_free_list_size]._address += requested_bytes_p;
                 m_free_list[m_free_list_size]._size_in_bytes -= requested_bytes_p;
@@ -184,7 +184,7 @@ namespace internal::pool
                 add_to_the_free_list(m_free_list[m_free_list_size]);
             }
 
-            out_alloc_result_p._address = nullptr;
+            out_alloc_result_p._address = static_cast<var::uint32>(-1);
             out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
             return _FE_FAILED_; // Try iterate to the next page.
 		}
@@ -364,7 +364,17 @@ public:
         return *this;
     }
 
-	_FE_FORCE_INLINE_ bool operator==(const pool&) const noexcept { return false; }
+    bool operator==(const pool& other_p) const noexcept
+    {
+        if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
+        {
+            return false;
+        }
+
+        auto l_this = dynamic_cast<const pool*>(this);
+        FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
+        return l_this == &other_p;
+    }
 
     pool(const pool&) noexcept = delete;
     pool& operator=(const pool&) noexcept = delete;
@@ -478,14 +488,14 @@ public:
 #endif
         if constexpr (FE::is_trivial_v<U> == false)
         {
-            U* const l_end = reinterpret_cast<U*>(l_memblock_info._address) + size_p;
-            for (U* it = reinterpret_cast<U*>(l_memblock_info._address); it != l_end; ++it)
+            U* const l_end = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()) + size_p;
+            for (U* it = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()); it != l_end; ++it)
             {
                 new(it) U();
             }
         }
 
-        FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_memblock_info._address, &Alignment::size);
+        FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
         l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
 
 
@@ -557,7 +567,7 @@ public:
             }
         }
         
-        return reinterpret_cast<U*>(l_memblock_info._address);
+        return reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page());
     }
 
     // Incorrect type will cause a critical runtime error.
@@ -568,13 +578,14 @@ public:
         FE_ASSERT(count_p > 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(count_p));
         FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_allocator instance.", pointer_p, &Alignment::size);
 
+        // use a pointer arithmetic to find which page the pointer belongs to.
+        chunk_type* l_page_base = reinterpret_cast<chunk_type*>( (FE::uintptr)pointer_p - ( ((FE::uintptr)(pointer_p)) % page_capacity) );
+
         alignas(16) internal::pool::block_info l_block_to_free;
-        l_block_to_free._address = reinterpret_cast<var::byte*>(pointer_p);
+        l_block_to_free._address = static_cast<var::uint32>((var::byte*)pointer_p - l_page_base->get_page());
         l_block_to_free._size_in_bytes = (FE::uint32)FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(count_p);
         FE_ASSERT(l_block_to_free._size_in_bytes <= page_capacity, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
 
-        // use a pointer arithmetic to find which page the pointer belongs to.
-        chunk_type* l_page_base = reinterpret_cast<chunk_type*>( (FE::uintptr)l_block_to_free._address - ( ((FE::uintptr)(l_block_to_free._address)) % page_capacity) );
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
@@ -596,6 +607,7 @@ public:
             l_page_base->set_free_list_size(0);
             l_page_base->set_page_unheapified();
             l_page_base->_page_iterator = l_page_base->get_page();
+            l_page_base->reset_dirty_flag();
         }
 
         pool_type* l_previous_page_list = nullptr;
@@ -751,7 +763,7 @@ private:
         else
         {
 			// Try allocation by pushing the stack pointer.
-            out_result_p._address = page_p->_page_iterator;
+            out_result_p._address = static_cast<var::uint32>(page_p->_page_iterator - page_p->get_page());
             out_result_p._size_in_bytes = bytes_p;
             page_p->_page_iterator += bytes_p;
 
@@ -759,13 +771,17 @@ private:
             if (page_p->_page_iterator > page_p->get_page_end())
             {
                 page_p->_page_iterator -= bytes_p; // Allocation failed, unwind the stack to cancel the allocation.
-                out_result_p._address = nullptr;
+                out_result_p._address = static_cast<var::uint32>(-1);
                 out_result_p._size_in_bytes = out_result_p._size_in_bytes xor out_result_p._size_in_bytes;
 
                 alignas(16) internal::pool::block_info l_block_to_free;
-                l_block_to_free._address = page_p->_page_iterator;
+                l_block_to_free._address = static_cast<var::uint32>(page_p->_page_iterator - page_p->get_page());
                 l_block_to_free._size_in_bytes = static_cast<var::uint32>(page_p->get_page_end() - page_p->_page_iterator);
-                page_p->add_to_the_free_list(l_block_to_free);
+
+                if (l_block_to_free._size_in_bytes > 0)
+                {
+                    page_p->add_to_the_free_list(l_block_to_free);
+                }
 
                 __defragment(page_p); // Defragment the page.
 
@@ -812,7 +828,7 @@ private:
                 l_iterator->_size_in_bytes += l_next->_size_in_bytes;
 
                 // Nullify the block.
-                l_next->_address = nullptr;
+                l_next->_address = static_cast<var::uint32>(-1);
                 l_next->_size_in_bytes = l_next->_size_in_bytes xor l_next->_size_in_bytes;
                 ++l_next; // Look for the next block.
                 continue;
@@ -830,7 +846,7 @@ private:
         l_end = std::partition(page_p->get_free_list(), l_end,
             [](const internal::pool::block_info& block_p)
             {
-                return block_p._address != nullptr;
+                return block_p._size_in_bytes != 0;
             }
         );
         // Reset it.
@@ -920,14 +936,14 @@ namespace internal::large::pool
     public:
         _FE_FORCE_INLINE_ void check_double_allocation(const block_info& block_info_p) noexcept
         {
-            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address - m_page) / Alignment::size);
+            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address) / Alignment::size);
             FE_EXIT_IF(m_double_free_tracker[l_idx] != 0, FE::ErrorCode::_FatalMemoryError_1XX_HeapCorruption, "Double allocation detected: cannot allocate the same address twice.");
             m_double_free_tracker[l_idx] = (var::uint32)block_info_p._size_in_bytes;
         }
 
         _FE_FORCE_INLINE_ void check_double_free(const block_info& block_info_p) noexcept
         {
-            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address - m_page) / Alignment::size);
+            FE::uint32 l_idx = static_cast<FE::uint32>((block_info_p._address) / Alignment::size);
             FE_EXIT_IF(m_double_free_tracker[l_idx] != block_info_p._size_in_bytes, FE::ErrorCode::_FatalMemoryError_1XX_DoubleFree, "Double free detected: cannot deallocate the same address twice.");
             m_double_free_tracker[l_idx] = 0;
         }
@@ -980,7 +996,7 @@ namespace internal::large::pool
 
             if (m_free_list_size == 0)
             {
-                out_alloc_result_p._address = nullptr;
+                out_alloc_result_p._address = static_cast<var::uint32>(-1);
                 out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
                 return _FE_FAILED_;
             }
@@ -994,7 +1010,7 @@ namespace internal::large::pool
             {
                 out_alloc_result_p._address = m_free_list[m_free_list_size]._address;
                 out_alloc_result_p._size_in_bytes = requested_bytes_p;
-                FE_ASSERT((reinterpret_cast<FE::uintptr>(out_alloc_result_p._address) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", out_alloc_result_p._address, &Alignment::size);
+                FE_ASSERT((out_alloc_result_p._address % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &out_alloc_result_p._address, &Alignment::size);
 
                 m_free_list[m_free_list_size]._address += requested_bytes_p;
                 m_free_list[m_free_list_size]._size_in_bytes -= requested_bytes_p;
@@ -1010,7 +1026,7 @@ namespace internal::large::pool
                 add_to_the_free_list(m_free_list[m_free_list_size]);
             }
 
-            out_alloc_result_p._address = nullptr;
+            out_alloc_result_p._address = static_cast<var::uint32>(-1);
             out_alloc_result_p._size_in_bytes = out_alloc_result_p._size_in_bytes xor out_alloc_result_p._size_in_bytes;
             return _FE_FAILED_; // Try iterate to the next page.
         }
@@ -1192,7 +1208,17 @@ namespace large
             return *this;
         }
 
-        _FE_FORCE_INLINE_ bool operator==(const pool&) const noexcept { return false; }
+        bool operator==(const pool& other_p) const noexcept
+        {
+            if (FE::polymorphic_cast<const pool*>(&other_p) == nullptr)
+            {
+                return false;
+            }
+
+            auto l_this = dynamic_cast<const pool*>(this);
+            FE_ASSERT(l_this != nullptr, "Assertion failed: dynamic_cast from 'this' to const pool* has returned a nullptr. This should never happen.");
+            return l_this == &other_p;
+        }
 
         pool(const pool&) noexcept = delete;
         pool& operator=(const pool&) noexcept = delete;
@@ -1308,14 +1334,14 @@ namespace large
 #endif
             if constexpr (FE::is_trivial_v<U> == false)
             {
-                U* const l_end = reinterpret_cast<U*>(l_memblock_info._address) + size_p;
-                for (U* it = reinterpret_cast<U*>(l_memblock_info._address); it != l_end; ++it)
+                U* const l_end = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()) + size_p;
+                for (U* it = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()); it != l_end; ++it)
                 {
                     new(it) U();
                 }
             }
 
-            FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}.", l_memblock_info._address, &Alignment::size);
+            FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
             l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
 
 
@@ -1387,7 +1413,7 @@ namespace large
                 }
             }
 
-            return reinterpret_cast<U*>(l_memblock_info._address);
+            return reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page());
         }
 
         // Incorrect type will cause a critical runtime error.
@@ -1398,13 +1424,14 @@ namespace large
             FE_ASSERT(count_p > 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(count_p));
             FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_allocator instance.", pointer_p, &Alignment::size);
 
+            // use a pointer arithmetic to find which page the pointer belongs to.
+            chunk_type* l_page_base = reinterpret_cast<chunk_type*>((FE::uintptr)pointer_p - (((FE::uintptr)(pointer_p)) % page_capacity));
+
             alignas(16) internal::pool::block_info l_block_to_free;
-            l_block_to_free._address = reinterpret_cast<var::byte*>(pointer_p);
+            l_block_to_free._address = static_cast<var::uint32>((var::byte*)pointer_p - l_page_base->get_page());
             l_block_to_free._size_in_bytes = (FE::uint32)FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(count_p);
             FE_ASSERT(l_block_to_free._size_in_bytes <= page_capacity, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
 
-            // use a pointer arithmetic to find which page the pointer belongs to.
-            chunk_type* l_page_base = reinterpret_cast<chunk_type*>((FE::uintptr)l_block_to_free._address - (((FE::uintptr)(l_block_to_free._address)) % page_capacity));
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
@@ -1426,6 +1453,7 @@ namespace large
 				l_page_base->set_free_list_size(0);
 			    l_page_base->set_page_unheapified();
 			    l_page_base->_page_iterator = l_page_base->get_page();
+                l_page_base->reset_dirty_flag();
             }
 
             pool_type* l_previous_page_list = nullptr;
@@ -1583,7 +1611,7 @@ namespace large
             else
             {
                 // Try allocation by pushing the stack pointer.
-                out_result_p._address = page_p->_page_iterator;
+                out_result_p._address = static_cast<var::uint32>(page_p->_page_iterator - page_p->get_page());
                 out_result_p._size_in_bytes = bytes_p;
                 page_p->_page_iterator += bytes_p;
 
@@ -1591,13 +1619,17 @@ namespace large
                 if (page_p->_page_iterator > page_p->get_page_end())
                 {
                     page_p->_page_iterator -= bytes_p; // Allocation failed, unwind the stack to cancel the allocation.
-                    out_result_p._address = nullptr;
+                    out_result_p._address = static_cast<var::uint32>(-1);
                     out_result_p._size_in_bytes = out_result_p._size_in_bytes xor out_result_p._size_in_bytes;
 
                     alignas(16) internal::pool::block_info l_block_to_free;
-                    l_block_to_free._address = page_p->_page_iterator;
+                    l_block_to_free._address = static_cast<var::uint32>(page_p->_page_iterator - page_p->get_page());
                     l_block_to_free._size_in_bytes = static_cast<var::uint32>(page_p->get_page_end() - page_p->_page_iterator);
-                    page_p->add_to_the_free_list(l_block_to_free);
+                    
+                    if (l_block_to_free._size_in_bytes > 0)
+                    {
+                        page_p->add_to_the_free_list(l_block_to_free);
+                    }
 
                     __defragment(page_p); // Defragment the page.
 
@@ -1626,10 +1658,10 @@ namespace large
                 return;
             }
 
-            std::sort<std::execution::parallel_unsequenced_policy, free_list_iterator, internal::pool::from_low_address>(   std::execution::parallel_unsequenced_policy{},
-                                                                                                                            page_p->get_free_list(),
-                                                                                                                            page_p->get_free_list() + page_p->get_free_list_size(),
-                                                                                                                            internal::pool::from_low_address{});
+            std::sort<free_list_iterator, internal::pool::from_low_address>(
+                                                                            page_p->get_free_list(),
+                                                                            page_p->get_free_list() + page_p->get_free_list_size(),
+                                                                            internal::pool::from_low_address{});
             // Merge the free list.
             free_list_iterator l_iterator = page_p->get_free_list();
             free_list_iterator l_next = l_iterator + 1;
@@ -1644,7 +1676,7 @@ namespace large
                     l_iterator->_size_in_bytes += l_next->_size_in_bytes;
 
                     // Nullify the block.
-                    l_next->_address = nullptr;
+                    l_next->_address = static_cast<var::uint32>(-1);
                     l_next->_size_in_bytes = l_next->_size_in_bytes xor l_next->_size_in_bytes;
                     ++l_next; // Look for the next block.
                     continue;
@@ -1659,10 +1691,10 @@ namespace large
             Best - O(n/2)
             Worst - O(n)
             */
-            l_end = std::partition(std::execution::par_unseq, page_p->get_free_list(), l_end,
+            l_end = std::partition(page_p->get_free_list(), l_end,
                 [](const internal::pool::block_info& block_p)
                 {
-                    return block_p._address != nullptr;
+                    return block_p._size_in_bytes != 0;
                 }
             );
             // Reset it.

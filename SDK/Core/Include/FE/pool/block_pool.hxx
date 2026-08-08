@@ -37,7 +37,7 @@ namespace internal::pool
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
         // This can be sized down to sizeof(uint32)
-        using block_pointer = var::byte*;
+        using block_pointer = var::uint32;
 
     private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
         var::byte m_page[page_size_in_bytes];
@@ -138,7 +138,7 @@ public:
 #endif
     {
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        m_page_validation_table.reserve(512);
+        m_page_validation_table.reserve(1024);
 #endif
 
         create_new_page_at_front();
@@ -194,7 +194,6 @@ public:
         {
 			m_available_pages.front()._availability = PageGroup::_UnavailablePages; // mark the page as unavailable before moving it to the unavailable list.
 			m_unavailable_pages.splice(m_unavailable_pages.cbegin(), m_available_pages, m_available_pages.cbegin()); // move the page to the Unavailable List (UL).
-            //create_new_page_at_front();
         }
 
         if (m_available_pages.size() == 0)
@@ -205,7 +204,7 @@ public:
         void* l_allocation_result = nullptr;
         if (m_available_pages.front()._free_blocks.is_empty() == false)
         {
-            l_allocation_result = m_available_pages.front()._free_blocks.pop();
+            l_allocation_result = m_available_pages.front()._begin + m_available_pages.front()._free_blocks.pop();
         }
         else
         {
@@ -232,7 +231,7 @@ public:
         static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
 		FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.Core.block_allocator: Unable to deallocate() a nullptr.");
         FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.block_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this block_allocator instance.", pointer_p, &Alignment::size);
-        block_pointer l_to_be_freed = reinterpret_cast<block_pointer>(pointer_p);
+        var::byte* l_to_be_freed = reinterpret_cast<var::byte*>(pointer_p);
 
         // use a pointer arithmetic to find which page the pointer belongs to.
         chunk_type* l_page_base = reinterpret_cast<chunk_type*>( reinterpret_cast<FE::uintptr>(l_to_be_freed) - (reinterpret_cast<FE::uintptr>(l_to_be_freed) % page_capacity) );
@@ -244,7 +243,7 @@ public:
         {
             pointer_p->~U();
         }
-        l_page_base->_free_blocks.push(l_to_be_freed);
+        l_page_base->_free_blocks.push(static_cast<FE::uint32>(l_to_be_freed - l_page_base->_begin));
         l_page_base->_usage_in_bytes -= fixed_block_size_in_bytes;
         FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.block_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
         
@@ -318,7 +317,7 @@ namespace internal::pool
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
         // This can be sized down to sizeof(uint32)
-        using block_pointer = var::byte*;
+        using block_pointer = var::uint32;
 
     private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
         var::byte m_page[page_size_in_bytes];
@@ -333,11 +332,11 @@ namespace internal::pool
 
     public:
         chunk() noexcept
-            : _begin(static_cast<var::byte*>(m_page)),
-            _page_iterator(_begin),
-            _end(_page_iterator + page_size_in_bytes),
-            _usage_in_bytes(0),
-            _availability(PageGroup::_AvailablePages)
+            :   _begin(static_cast<var::byte*>(m_page)),
+                _page_iterator(_begin),
+                _end(_page_iterator + page_size_in_bytes),
+                _usage_in_bytes(0),
+                _availability(PageGroup::_AvailablePages)
         {
 #ifdef _ENABLE_ASSERT_
             std::memset(m_double_free_tracker, 0, possible_address_count);
@@ -476,7 +475,6 @@ namespace large
             {
                 m_available_pages.front()._availability = PageGroup::_UnavailablePages; // mark the page as unavailable before moving it to the unavailable list.
                 m_unavailable_pages.splice(m_unavailable_pages.cbegin(), m_available_pages, m_available_pages.cbegin()); // move the page to the Unavailable List (UL).
-                //create_new_page_at_front();
             }
 
             if (m_available_pages.size() == 0)
@@ -487,7 +485,7 @@ namespace large
             void* l_allocation_result = nullptr;
             if (m_available_pages.front()._free_blocks.is_empty() == false)
             {
-                l_allocation_result = m_available_pages.front()._free_blocks.pop();
+                l_allocation_result = m_available_pages.front()._begin + m_available_pages.front()._free_blocks.pop();
             }
             else
             {
@@ -514,7 +512,7 @@ namespace large
             static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
             FE_NEGATIVE_ASSERT(pointer_p == nullptr, "Critical Error in FE.Core.block_allocator: Unable to deallocate() a nullptr.");
             FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.block_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this block_allocator instance.", pointer_p, &Alignment::size);
-            block_pointer l_to_be_freed = reinterpret_cast<block_pointer>(pointer_p);
+            var::byte* l_to_be_freed = reinterpret_cast<var::byte*>(pointer_p);
 
             // use a pointer arithmetic to find which page the pointer belongs to.
             chunk_type* l_page_base = reinterpret_cast<chunk_type*>(reinterpret_cast<FE::uintptr>(l_to_be_freed) - (reinterpret_cast<FE::uintptr>(l_to_be_freed) % page_capacity));
@@ -526,7 +524,7 @@ namespace large
             {
                 pointer_p->~U();
             }
-            l_page_base->_free_blocks.push(l_to_be_freed);
+            l_page_base->_free_blocks.push(static_cast<FE::uint32>(l_to_be_freed - l_page_base->_begin));
             l_page_base->_usage_in_bytes -= fixed_block_size_in_bytes;
             FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.block_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
 
