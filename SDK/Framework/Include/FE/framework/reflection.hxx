@@ -278,7 +278,7 @@ Memory Layer Traversal Order: Entry.FE::string m_raw_name -> FE::string.FE::smar
 */
 struct property_metadata
 {
-	FE::TypeTriviality _is_trivial;
+	var::boolean _is_container;
 	var::uint32 _size_in_byte;
 	var::ptrdiff _offset_from_this;
 
@@ -389,7 +389,7 @@ public:
 		FE_ASSERT(property_name_p.empty() != true, "Assertion failure: property name cannot be null.");
 		
 		property_metadata l_property_meta_data;
-		l_property_meta_data._is_trivial = static_cast<TypeTriviality>(FE::is_trivial<T>::value);
+		l_property_meta_data._is_container = FE::has_value_type_v<T>;
 		static_assert(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
@@ -654,9 +654,9 @@ private:
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
 		{
-			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
+			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_container)
 			{
-			case TypeTriviality::_Trivial:
+			case false:
 			{
 				// Check if the field variable meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
@@ -682,7 +682,7 @@ private:
 				break;
 			}
 
-			case TypeTriviality::_NotTrivial:
+			case true:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
@@ -701,6 +701,11 @@ private:
 					l_task_args._first = out_ret_buffer_p;
 					l_task_args._second = reinterpret_cast<FE::byte*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_task_args); // The pointed task knows what to do with the arguments type casting.
+
+					if (m_class_layer.empty() == true)
+					{
+						break;
+					}
 
 					// Move on to the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
@@ -733,9 +738,9 @@ private:
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
 		{
-			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_trivial)
+			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_container)
 			{
-			case TypeTriviality::_Trivial:
+			case false:
 			{
 				// Check if the meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
@@ -761,7 +766,7 @@ private:
 				break;
 			}
 
-			case TypeTriviality::_NotTrivial:
+			case true:
 
 				if (__get_the_top_class_property_list_iterator() == __get_top_class_property_list().end()) // Pop the class layer if the iterator reached the end of the property list.
 				{
@@ -780,6 +785,11 @@ private:
 					l_pointer_to_container._first = frogman_object_p;
 					l_pointer_to_container._second = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
+
+					if (m_class_layer.empty() == true)
+					{
+						break;
+					}
 
 					// Look for the next registered property of the class layer.
 					++(__get_the_top_class_property_list_iterator());
@@ -810,18 +820,19 @@ private:
 	void __serialize_by_foreach_mutually_recursive(boost::json::object& out_ret_buffer_p, const void* const data_p) noexcept
 	{
 		FE_ASSERT(data_p != nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
-		static_assert(FE::is_serializable<Container>::value, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
+		static_assert(FE::is_serializable_v<Container>, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
 
 		const Container* const l_container = static_cast<const Container* const>(data_p);
 
-		if constexpr (FE::is_trivial<Container>::value == false)
-		{
-			static_assert(FE::is_serializable<typename Container::value_type>::value == true, "The value type of the container is not serializable.");
 
-			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true)
+		if constexpr ((FE::is_trivial_v<Container> == false) && (FE::has_value_type_v<Container> == true))
+		{
+			static_assert(FE::is_serializable_v<typename Container::value_type> == true, "The value type of the container is not serializable.");
+
+			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true) // Non-trivial Containers of Primitive Data
 			{
-				m_buffer.assign(reinterpret_cast<const char*>(l_container->data()), 
-								l_container->size() * sizeof(typename Container::value_type)
+				m_buffer.assign(reinterpret_cast<const char*>(l_container->data()),
+					l_container->size() * sizeof(typename Container::value_type)
 				);
 
 				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
@@ -837,15 +848,34 @@ private:
 			m_key_buffer += "::";
 			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
+
+			if constexpr (!((FE::is_serializable_primitive_v<typename Container::value_type> == false) && (FE::has_value_type_v<typename Container::value_type> == true)))
+			{
+				m_class_layer.pop_back(); // Pop the class layer of the container itself.
+			}
+
+
 			boost::json::array& l_json_array = out_ret_buffer_p[m_key_buffer].emplace_array();
 			for (auto& element : *l_container)
 			{
-				if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == false) // is a nested container
+				if constexpr ((FE::is_serializable_primitive_v<typename Container::value_type> == false)
+					&& (FE::has_value_type_v<typename Container::value_type> == true)) // is a nested container
 				{
 					__serialize_by_foreach_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), &element);
 				}
-				else // is not a nested container
+				else // Non-trivial Containers of Non-trivial Data
 				{
+					// Find the class/struct meta data that contains its memory layer.
+					auto l_search_result = m_property_registry.find(reflection::type_id<typename Container::value_type>().name());
+					if (l_search_result == m_property_registry.end()) // push the meta data onto the stack if found.
+					{
+						continue;
+					}
+					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
+					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+					__push_parent_class_layers_recursive<typename Container::value_type>();
+
+
 					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), element);
 				}
 			}
@@ -858,15 +888,16 @@ private:
 	void __deserialize_by_foreach_mutually_recursive(const boost::json::value& frogman_object_p, void* const data_p) noexcept
 	{
 		FE_ASSERT(data_p != nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
-		static_assert(FE::is_serializable<Container>::value, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
-
+		static_assert(FE::is_serializable_v<Container>, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
+		
 		Container* const l_container = static_cast<Container* const>(data_p);
 
-		if constexpr (FE::is_trivial<Container>::value == false)
-		{
-			static_assert(FE::is_serializable<typename Container::value_type>::value == true, "The value type of the container is not serializable.");
 
-			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true)
+		if constexpr ((FE::is_trivial_v<Container> == false) && (FE::has_value_type_v<Container> == true))
+		{
+			static_assert(FE::is_serializable_v<typename Container::value_type> == true, "The value type of the container is not serializable.");
+
+			if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == true) // Non-trivial Containers of Primitive Data
 			{
 				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
 				m_key_buffer += "::";
@@ -883,17 +914,36 @@ private:
 			m_key_buffer += "::";
 			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
+
+			if constexpr (!((FE::is_serializable_primitive_v<typename Container::value_type> == false) && (FE::has_value_type_v<typename Container::value_type> == true)))
+			{
+				m_class_layer.pop_back(); // Pop the class layer of the container itself.
+			}
+
+
 			const boost::json::array& l_json_array = frogman_object_p.at(m_key_buffer).as_array();
 			l_container->resize(l_json_array.size());
 			auto l_container_it = l_container->begin();
 			for (const auto& element : l_json_array)
 			{
-				if constexpr (FE::is_serializable_primitive_v<typename Container::value_type> == false) // is a nested container
+				if constexpr ((FE::is_serializable_primitive_v<typename Container::value_type> == false)
+					&& (FE::has_value_type_v<typename Container::value_type> == true)) // is a nested container
 				{
 					__deserialize_by_foreach_mutually_recursive<typename Container::value_type>(element, l_container_it.operator->());
 				}
-				else // is not a nested container
+				else // Non-trivial Containers of Non-trivial Data
 				{
+					// Find the class/struct meta data that contains its memory layer.
+					auto l_search_result = m_property_registry.find(reflection::type_id<typename Container::value_type>().name());
+					if (l_search_result == m_property_registry.end()) // push the meta data onto the stack if found.
+					{
+						continue;
+					}
+					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
+					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
+					__push_parent_class_layers_recursive<typename Container::value_type>();
+
+
 					__deserialize_mutually_recursive<typename Container::value_type>(element, *l_container_it);
 				}
 				++l_container_it;

@@ -74,11 +74,19 @@ struct pod_with_array
 {
 	FE_STRUCT();
 
+	FE_PROPERTY(_a);
 	var::int32 _a;
+
+	FE_PROPERTY(_b);
 	var::float32 _b;
+
+	FE_PROPERTY(_c);
 	var::uint16 _c;
+
+	FE_PROPERTY(_d);
 	var::uint32 _d[10];
 };
+//static_assert(FE::is_trivial_v<pod_with_array> == true);
 
 struct object_with_string
 {
