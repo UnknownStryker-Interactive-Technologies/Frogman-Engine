@@ -42,6 +42,7 @@ namespace internal::pool
     private:
         var::byte m_page[page_size_in_bytes];
         free_list_element m_free_list[possible_address_count];
+		var::int16 m_largest_free_fragment_size_in_bytes;
         var::byte* m_page_end;
         var::int16 m_free_list_size;
         var::boolean m_is_page_heapified;
@@ -56,7 +57,8 @@ namespace internal::pool
 
     public:
         chunk() noexcept
-            :   m_free_list_size(0),
+            :   m_largest_free_fragment_size_in_bytes(0),
+                m_free_list_size(0),
                 m_is_page_heapified(false),
 			    m_has_free_list_been_updated_since_defragmentation(false),
                 _usage_in_bytes(0),
@@ -112,6 +114,9 @@ namespace internal::pool
 		FE::int16 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
 
+        FE::int16 get_largest_free_fragment_size() const noexcept { return m_largest_free_fragment_size_in_bytes; }
+        void set_largest_free_fragment_size(FE::int16 size_p) noexcept { m_largest_free_fragment_size_in_bytes = size_p; }
+
         FE::int16 get_free_list_size() const noexcept { return m_free_list_size; }
         void set_free_list_size(FE::int16 size_p) noexcept { m_free_list_size = size_p; }
 
@@ -140,6 +145,7 @@ namespace internal::pool
             if (m_is_page_heapified == true)
             {
 				std::push_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::less_than{});
+                m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
             }
 			m_has_free_list_been_updated_since_defragmentation = true;
         }
@@ -164,6 +170,7 @@ namespace internal::pool
             FE_ASSERT(m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
 			std::pop_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::less_than{});
 			--(m_free_list_size);
+            m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
             
             // Try allocation.
             if (m_free_list[m_free_list_size]._size_in_bytes >= requested_bytes_p)
@@ -458,7 +465,7 @@ public:
                 _FE_NODEFAULT_;
             }
 
-            if (l_page_list_iterator->_remaining_capacity_in_bytes < l_queried_allocation_in_bytes)
+            if (l_page_list_iterator->get_largest_free_fragment_size() <= l_queried_allocation_in_bytes)
             {
                 if (l_required_page_class != internal::pool::PageListClass::_100_Percent)
                 {
@@ -503,7 +510,7 @@ public:
 
 
 		pool_type* l_previous_page_list = nullptr;
-        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
         switch (l_previous_class) // class before allocation
         {
         case internal::pool::PageListClass::_6_25_PercentRemaining:
@@ -530,13 +537,15 @@ public:
             l_previous_page_list = &m_pages_with_100_capacity;
 			break;
 
-		_FE_NODEFAULT_;
+        case internal::pool::PageListClass::_Unavailable:
+            l_previous_page_list = &m_unavailable_pages;
+            break;
         }
 		FE_ASSERT(l_previous_page_list != nullptr, "Assertion Failure: The previous page list cannot be null.");
 
         l_page_list_iterator->_remaining_capacity_in_bytes -= l_memblock_info._size_in_bytes;
 
-        internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+        internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
 		if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
         {
             switch (l_new_class) // new class after allocation
@@ -614,7 +623,7 @@ public:
         }
 
         pool_type* l_previous_page_list = nullptr;
-        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
         switch (l_previous_class) // class before deallocation
         {
         case internal::pool::PageListClass::_Unavailable:
@@ -654,7 +663,7 @@ public:
         typename pool_type::const_iterator l_page_list_iterator = FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base);
 
 
-        internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+        internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
         if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
         {
             switch (l_new_class) // new class after deallocation
@@ -858,6 +867,7 @@ private:
 
 		// Heapify the free list. Time complexity: O(3n)
 		std::make_heap(page_p->get_free_list(), l_end, internal::pool::less_than{});
+        page_p->set_largest_free_fragment_size(page_p->get_free_list()[0]._size_in_bytes);
 
 		page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
 		page_p->reset_dirty_flag(); // Reset the dirty flag.
@@ -888,6 +898,7 @@ namespace internal::large::pool
     private:
         var::byte m_page[page_size_in_bytes];
         free_list_element m_free_list[possible_address_count];
+        var::int32 m_largest_free_fragment_size_in_bytes;
         var::byte* m_page_end;
         var::int32 m_free_list_size;
         var::boolean m_is_page_heapified;
@@ -902,11 +913,12 @@ namespace internal::large::pool
 
     public:
         chunk() noexcept
-            : m_free_list_size(0),
-            m_is_page_heapified(false),
-			m_has_free_list_been_updated_since_defragmentation(false),
-            _usage_in_bytes(0),
-            _remaining_capacity_in_bytes(page_size_in_bytes)
+            :   m_largest_free_fragment_size_in_bytes(0),
+                m_free_list_size(0),
+                m_is_page_heapified(false),
+			    m_has_free_list_been_updated_since_defragmentation(false),
+                _usage_in_bytes(0),
+                _remaining_capacity_in_bytes(page_size_in_bytes)
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             , m_double_free_tracker()
@@ -958,6 +970,9 @@ namespace internal::large::pool
         FE::int32 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
 
+        FE::int32 get_largest_free_fragment_size() const noexcept { return m_largest_free_fragment_size_in_bytes; }
+		void set_largest_free_fragment_size(FE::int32 size_p) noexcept { m_largest_free_fragment_size_in_bytes = size_p; }
+
         FE::int32 get_free_list_size() const noexcept { return m_free_list_size; }
         void set_free_list_size(FE::int32 size_p) noexcept { m_free_list_size = size_p; }
 
@@ -986,6 +1001,7 @@ namespace internal::large::pool
             if (m_is_page_heapified == true)
             {
                 std::push_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::large::less_than{});
+				m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
             }
 			m_has_free_list_been_updated_since_defragmentation = true;
         }
@@ -1010,6 +1026,7 @@ namespace internal::large::pool
             FE_ASSERT(m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
             std::pop_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::large::less_than{});
             --(m_free_list_size);
+            m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
 
             // Try allocation.
             if (m_free_list[m_free_list_size]._size_in_bytes >= requested_bytes_p)
@@ -1309,7 +1326,7 @@ namespace large
                     _FE_NODEFAULT_;
                 }
 
-                if (l_page_list_iterator->_remaining_capacity_in_bytes < l_queried_allocation_in_bytes)
+                if (l_page_list_iterator->get_largest_free_fragment_size() <= l_queried_allocation_in_bytes)
                 {
                     if (l_required_page_class != internal::pool::PageListClass::_100_Percent)
                     {
@@ -1353,7 +1370,7 @@ namespace large
 
 
             pool_type* l_previous_page_list = nullptr;
-            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
             switch (l_previous_class) // class before allocation
             {
             case internal::pool::PageListClass::_6_25_PercentRemaining:
@@ -1380,13 +1397,15 @@ namespace large
                 l_previous_page_list = &m_pages_with_100_capacity;
                 break;
 
-                _FE_NODEFAULT_;
+            case internal::pool::PageListClass::_Unavailable:
+                l_previous_page_list = &m_unavailable_pages;
+                break;
             }
             FE_ASSERT(l_previous_page_list != nullptr, "Assertion Failure: The previous page list cannot be null.");
 
             l_page_list_iterator->_remaining_capacity_in_bytes -= l_memblock_info._size_in_bytes;
 
-            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
             {
                 switch (l_new_class) // new class after allocation
@@ -1464,7 +1483,7 @@ namespace large
             }
 
             pool_type* l_previous_page_list = nullptr;
-            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
             switch (l_previous_class) // class before deallocation
             {
             case internal::pool::PageListClass::_Unavailable:
@@ -1504,7 +1523,7 @@ namespace large
             typename pool_type::const_iterator l_page_list_iterator = FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base);
 
 
-            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->_remaining_capacity_in_bytes);
+            internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
             {
                 switch (l_new_class) // new class after deallocation
@@ -1710,6 +1729,7 @@ namespace large
 
             // Heapify the free list. Time complexity: O(3n)
             std::make_heap(page_p->get_free_list(), l_end, internal::pool::large::less_than{});
+            page_p->set_largest_free_fragment_size(page_p->get_free_list()[0]._size_in_bytes);
 
             page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
             page_p->reset_dirty_flag(); // Reset the dirty flag.
