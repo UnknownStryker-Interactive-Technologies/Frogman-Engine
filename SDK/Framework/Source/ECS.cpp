@@ -16,7 +16,7 @@ limitations under the License.
 #include <FE/framework/ECS.hxx>
 #include <FE/framework.hxx>
 
-#include <FE/framework/mutex.hpp> // fiber lock
+#include <FE/framework/fiber_mutex.hpp> // fiber lock
 
 #include <vector>
 
@@ -93,7 +93,7 @@ void ECS::attatch_component(FE::entity<archetype_base> entt_p, const ::FE::compo
 	thread_local static boost::hash2::xxhash_64 l_xxhash_64;
 	l_xxhash_64.update(to_attatch_p->m_metadata->_typename, std::strlen(to_attatch_p->m_metadata->_typename));
 
-	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+	std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 	entt_p->m_component_view_table[l_xxhash_64.result()] = to_attatch_p;
 }
@@ -156,7 +156,7 @@ initializer ECS::serialize_entity(FE::entity<archetype_base> entt_p, FE::ASCII* 
 
 void ECS::deserialize_entity(const initializer& serialized_components_p, FE::entity<archetype_base> out_entt_p, FE::ASCII* const entity_memory_layout_version) noexcept
 {
-	std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+	std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 	constexpr FE::ASCII* l_function_prefix = "deserialize_component_";
 	constexpr FE::ASCII* l_class = "class";

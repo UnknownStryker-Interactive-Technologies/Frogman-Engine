@@ -80,7 +80,7 @@ void processors::execute() noexcept
 		(
 			[this, t]()
 			{
-				FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = &m_scheduler[t];
+				m_scheduler[t].attach_to_current_thread();
 				while (m_should_terminate.load(std::memory_order_acquire) == false)
 				{
 					const int l_result = m_scheduler[t].execute();
@@ -92,7 +92,7 @@ void processors::execute() noexcept
 						m_anesthetic_cv[t].wait(l_lock);
 					}
 				}
-				FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr; // reset the thread-local pointer to the fiber scheduler before exiting the thread.
+				m_scheduler[t].detach_from_current_thread(); // reset the thread-local pointer to the fiber scheduler before exiting the thread.
 			}
 
 		);

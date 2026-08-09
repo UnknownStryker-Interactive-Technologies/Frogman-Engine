@@ -34,7 +34,7 @@ limitations under the License.
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
 
-#include <FE/framework/mutex.hpp> // fiber lock
+#include <FE/framework/fiber_mutex.hpp> // fiber lock
 
 #include <boost/hash2/xxhash.hpp>
 
@@ -353,7 +353,7 @@ private:
 	
 	framework::initializer_list m_archetype_default_entities;
 	std::pmr::string m_buffer;
-	FE::mutex m_fiber_lock;
+	FE::fiber_mutex m_fiber_lock;
 
 public:
 	ECS(FE::size component_type_count_hint_p) noexcept;
@@ -368,7 +368,7 @@ public:
 	FE::entity<Archetype> instanciate_entity(Arguments&& ...arguments_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 		FE::archetype l_alloc_result = FE::make_owner<Archetype>( &m_archetype_pool, *this, std::forward<Arguments>(arguments_p)... );
 		l_alloc_result->m_component_view_table = typename FE::archetype_base::component_view_table(&m_memory_resource);
@@ -409,7 +409,7 @@ public:
 		FE::entity<FE::archetype_base> l_entity = ECS::instanciate_entity<Archetype>();
 
 		{
-			std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+			std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 			if (l_entity.is_valid() == false)
 			{
@@ -471,7 +471,7 @@ public:
 	_FE_FORCE_INLINE_ void set_archetype_default_entity(FE::framework::initializer&& default_values_p) noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 		m_archetype_default_entities[ FE::framework::reflection::type_id<Archetype>().name() ] = std::move(default_values_p);
 	}
@@ -480,7 +480,7 @@ public:
 	_FE_FORCE_INLINE_ FE::framework::initializer* const get_archetype_default_entity() noexcept
 	{
 		static_assert(std::is_base_of_v<FE::archetype_base, Archetype>, "Static assertion failed: the template argument Archetype must be derived from FE::archetype_base.");
-		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 		typename initializer_list::iterator l_probe_result = m_archetype_default_entities.find( FE::framework::reflection::type_id<Archetype>().name() );
 		if (l_probe_result != m_archetype_default_entities.end())
@@ -496,7 +496,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 		typename component_table::iterator l_probe_result = m_component_table.find(FE::framework::reflection::type_id<Component>().hash_code());
 		if (l_probe_result == m_component_table.end())
@@ -594,7 +594,7 @@ public:
 	{
 		static_assert(std::is_base_of_v<FE::component_base, Component>, "Static assertion failed: the template argument Component must be derived from FE::component_base.");
 		FE_ASSERT(entt_p.is_valid() == true, "Assertion failed: the entity is not valid.");
-		std::lock_guard<FE::mutex> l_lock(m_fiber_lock);
+		std::lock_guard<FE::fiber_mutex> l_lock(m_fiber_lock);
 
 		typename FE::archetype_base::component_view_table::iterator l_probe_result = entt_p->m_component_view_table.find( FE::framework::reflection::type_id<Component>().hash_code() );
 		FE_ASSERT(l_probe_result != entt_p->m_component_view_table.end(), "Assertion failed: the entity must have this component.");

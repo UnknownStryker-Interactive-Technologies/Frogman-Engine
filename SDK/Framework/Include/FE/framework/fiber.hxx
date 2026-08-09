@@ -149,9 +149,6 @@ extern "C"
 
 namespace FE
 {
-	class framework::processors;
-	class framework::game_processor;
-
 	struct task
 	{
 		FE::system _system;
@@ -216,16 +213,13 @@ namespace FE
 
 	class fiber_scheduler final
 	{
-		friend class framework::processors;
-		friend class framework::game_processor;
-
-		FE::fqueue<fiber, 8> m_fiber_pool;
-		FE::fqueue<fiber, 8> m_active_fibers[7];
+		FE::fqueue<FE::fiber, 8> m_fiber_pool;
+		FE::fqueue<FE::fiber, 8> m_active_fibers[7];
 		var::size m_fibers;
-
+		std::atomic_bool m_is_locked;
 		concurrency::concurrent_priority_queue<task, priority_comparator> m_task_queue;
 
-		std::unique_ptr<thread_context[]> m_thread_contexts;
+		std::unique_ptr<thread_context> m_thread_context;
 
 	public:
 		fiber_scheduler() noexcept;
@@ -242,9 +236,18 @@ namespace FE
 		// calling it from other thread is an undefined behavior. The fiber context switch must be called from the same thread that is executing the fiber scheduler.
 		void _FE_CDECL_ switch_fiber_context() noexcept;
 
+		void attach_to_current_thread() noexcept;
+		void detach_from_current_thread() noexcept;
+
+		void sigunlock() noexcept;
+		void siglock() noexcept;
+
+		static void _FE_CDECL_ yield_back_if_not_locked() noexcept;
 		static void _FE_CDECL_ yield() noexcept;
 
+
 		static bool is_fiber() noexcept;
+		static FE::fiber_scheduler* get_current_fiber_scheduler() noexcept;
 
 	private:
 		thread_local static fiber_impl* tl_s_current_fiber;

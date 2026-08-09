@@ -43,12 +43,12 @@ FE::framework::game_processor::game_processor(FE::world& world_p, FE::size fiber
 	m_metadata_stack.reserve(8192); // this is an arbitrary number, but it should be sufficient for most use cases. We can always resize the vector if we need more space.
 	m_visited_components.reserve(8192); // this is an arbitrary number, but it should be sufficient for most use cases. We can always resize the set if we need more space.
 
-	FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = &m_scheduler; // Set the thread-local pointer to this fiber scheduler instance.
+	m_scheduler.attach_to_current_thread(); // Set the thread-local pointer to this fiber scheduler instance.
 }
 
 FE::framework::game_processor::~game_processor() noexcept
 {
-	FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr;
+	m_scheduler.detach_from_current_thread();
 }
 
 

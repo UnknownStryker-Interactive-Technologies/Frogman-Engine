@@ -108,10 +108,12 @@ FE::fiber_scheduler::fiber_scheduler() noexcept
 	:	m_fiber_pool(),
 		m_active_fibers(),
 		m_fibers(0),
+		m_is_locked(false),
 		m_task_queue(),
-		m_thread_contexts(std::make_unique<thread_context[]>(FE::framework::framework_base::get_framework().get_program_options().get_max_concurrency()))
+		m_thread_context(std::make_unique<thread_context>())
 {
 }
+
 
 void _FE_CDECL_ FE::fiber_scheduler::create_fiber(FE::size stack_size_p) noexcept
 {
@@ -141,8 +143,8 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 
 	tl_s_current_fiber = l_to_switch.m_impl;
 
-	auto l_this_thread = &(m_thread_contexts[FE::framework::get_current_thread_id()]._thread_context);
-	__fork_fiber(l_this_thread, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context); // debug it! Errr
+	auto l_this_thread = &(m_thread_context->_thread_context);
+	__fork_fiber(l_this_thread, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context);
 
 	// set a pointer to the fiber to reclaim
 	l_to_switch.m_impl = tl_s_current_fiber;
@@ -235,7 +237,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
 
 			tl_s_current_fiber = l_to_switch.m_impl;
-			__switch_to_new_fiber( l_from, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context, &(m_thread_contexts[FE::framework::get_current_thread_id()]._thread_context)); // try passing the rsp to the func
+			__switch_to_new_fiber( l_from, l_to_switch.m_impl, sizeof(SIMD), &FE::fiber_scheduler::switch_fiber_context, &(m_thread_context->_thread_context)); // try passing the rsp to the func
 			l_to_switch.m_impl = nullptr; // prevent double free
 			return; // exit yield
 		}
@@ -269,6 +271,41 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 	}
 }
 
+
+void FE::fiber_scheduler::attach_to_current_thread() noexcept
+{
+	tl_s_this_thread_fiber_scheduler = this;
+}
+
+void FE::fiber_scheduler::detach_from_current_thread() noexcept
+{
+	tl_s_this_thread_fiber_scheduler = nullptr;
+}
+
+
+void FE::fiber_scheduler::sigunlock() noexcept
+{
+	m_is_locked.store(false, std::memory_order_release);
+}
+
+void FE::fiber_scheduler::siglock() noexcept
+{
+	m_is_locked.store(true, std::memory_order_release);
+}
+
+void _FE_CDECL_ FE::fiber_scheduler::yield_back_if_not_locked() noexcept
+{
+	if (tl_s_this_thread_fiber_scheduler == nullptr) _FE_UNLIKELY_
+	{
+		return; // not running any fiber scheduler on this thread.
+	}
+
+	if (tl_s_this_thread_fiber_scheduler->m_is_locked.load(std::memory_order_acquire) == false)
+	{
+		tl_s_this_thread_fiber_scheduler->switch_fiber_context();
+	}
+}
+
 void _FE_CDECL_ FE::fiber_scheduler::yield() noexcept
 {
 	if (tl_s_this_thread_fiber_scheduler == nullptr) _FE_UNLIKELY_
@@ -279,9 +316,15 @@ void _FE_CDECL_ FE::fiber_scheduler::yield() noexcept
 	tl_s_this_thread_fiber_scheduler->switch_fiber_context();
 }
 
+
 bool FE::fiber_scheduler::is_fiber() noexcept
 {
 	return tl_s_current_fiber != nullptr;
+}
+
+FE::fiber_scheduler* FE::fiber_scheduler::get_current_fiber_scheduler() noexcept
+{
+	return tl_s_this_thread_fiber_scheduler;
 }
 
 
@@ -350,7 +393,4 @@ FE::thread_context::thread_context() noexcept
 	_thread_context._context_ptr->_rsp = (var::byte*)l_fiber_page_ptr;
 	_thread_context._host_thread_id = FE::framework::get_current_thread_id();
 }
-
-
-
 
