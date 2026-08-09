@@ -369,5 +369,11 @@ private:
 	}
 };
 
+namespace xtl
+{
+	template<class T, FE::size Capacity, class Traits>
+	using fstack = FE::fstack<T, Capacity, Traits>;
+}
+
 END_NAMESPACE
 #endif

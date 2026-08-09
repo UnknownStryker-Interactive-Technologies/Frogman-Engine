@@ -344,5 +344,12 @@ protected:
 
 
 END_NAMESPACE
+
+namespace xtl
+{
+	template<class T, FE::size Capacity, class Traits>
+	using fqueue = FE::fqueue<T, Capacity, Traits>;
+}
+
 #pragma warning(pop)
 #endif

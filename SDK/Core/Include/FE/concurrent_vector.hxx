@@ -424,4 +424,11 @@ public:
 
 
 END_NAMESPACE
+
+namespace xtl
+{
+    template <typename T, class Allocator, class SharedMutex>
+	using concurrent_vector = FE::concurrent_vector<T, Allocator, SharedMutex>;
+}
+
 #endif

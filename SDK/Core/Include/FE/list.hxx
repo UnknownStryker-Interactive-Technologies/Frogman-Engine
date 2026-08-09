@@ -1345,4 +1345,12 @@ private: // these are private internal functions mean to operate on the given ar
 };
 
 END_NAMESPACE
+
+// eXeceptionless Template Library
+namespace xtl
+{
+	template <typename T, class Allocator = FE::polymorphic_allocator<T>>
+	using list = FE::list<T, Allocator>;
+}
+
 #endif
