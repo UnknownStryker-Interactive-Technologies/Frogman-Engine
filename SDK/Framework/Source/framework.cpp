@@ -198,6 +198,9 @@ program_option::program_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 	: m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() >> 1 },
 	  m_enable_large_pages{ "-enable-large-pages", false }
 {
+	SYSTEM_INFO l_info; GetSystemInfo(&l_info);
+	FE_EXIT_IF(l_info.dwAllocationGranularity != 64*FE::one_KiB, FE::ErrorCode::_FatalWinAPI_Error_4XX_InvalidAllocationGranularity, "Frogman Engine Runtime: the system's allocation granularity is not suitable for large page allocation.");
+
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
 		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_max_concurrency._first) != std::nullopt)

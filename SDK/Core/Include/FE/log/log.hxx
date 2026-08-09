@@ -281,6 +281,7 @@ namespace FE
 		_FatalWinAPI_MF_Error_4XX_VideoFileMalformed = 411,
 		_FatalWinAPI_MF_Error_4XX_VideoTextureCreationFailure = 412,
 		_FatalWinAPI_MF_Error_4XX_VideoFileOpenFailure = 413,
+		_FatalWinAPI_Error_4XX_InvalidAllocationGranularity = 414,
 
 		_FatalRendererError_5XX_GLFW_InitializationFailure = 500,
 		_FatalRendererError_5XX_GLFW_WindowCreationFailure = 501,
