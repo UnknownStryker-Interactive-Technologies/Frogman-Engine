@@ -17,11 +17,14 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 
+// FE.Core
 #include <FE/clock.hxx>
 #include <FE/pair.hxx>
 
+// FE.Framework
 #include <FE/framework/processors.hxx>
 
+// FE.Renderer
 #include <FE/image.hpp>
 #include <FE/shader.hxx>
 
@@ -120,6 +123,8 @@ public:
 private:
 	static void __on_window_close(GLFWwindow* window_p) noexcept;
 	static void __on_window_resize(GLFWwindow* const window_p, FE::int32 new_width_p, FE::int32 new_height_p) noexcept;
+
+
 	static void __renderer_main(class FE::component_base* const) noexcept;
 };
 
