@@ -31,23 +31,23 @@ namespace internal::pool
     class chunk<PoolType::_Block, Alignment>
     {
     public:
-        constexpr static FE::int16 fixed_block_size_in_bytes = Alignment::size;
-        constexpr static FE::int16 page_size_in_bytes = 4 * FE::one_KiB;
-        constexpr static FE::int16 possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
+        constexpr static FE::int32 fixed_block_size_in_bytes = Alignment::size;
+        constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
+        constexpr static FE::int32 possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
-        using block_pointer = var::int16;
+        using block_pointer = var::int32;
 
     private: // DO NOT MEMZERO THIS ARRAY. IT WILL PUT THE COMPILER INTO AN INFINITE COMPLIATION LOOP.
         var::byte m_page[page_size_in_bytes];
-		static_assert(sizeof(m_page) < FE::max_value<FE::int16>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
+		static_assert(sizeof(m_page) < FE::max_value<FE::int32>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
 
     public:
         FE::fstack<block_pointer, possible_address_count> _free_blocks;
         var::byte* const _begin;
         var::byte* _page_iterator;
         var::byte* const _end;
-        var::int16 _usage_in_bytes;
+        var::int32 _usage_in_bytes;
 		PageGroup _availability;
 
     public:
@@ -76,14 +76,14 @@ namespace internal::pool
     public:
         void check_double_allocation(FE::byte* const address_p) noexcept
         {
-            FE::int16 l_idx = static_cast<FE::int16>((address_p - _begin) / Alignment::size);
+            FE::int32 l_idx = static_cast<FE::int32>((address_p - _begin) / Alignment::size);
             FE_ASSERT(m_double_free_tracker[l_idx] == false, "Double allocation detected: cannot allocate the same address twice.");
             m_double_free_tracker[l_idx] = true;
         }
 
         void check_double_free(FE::byte* const address_p) noexcept
         {
-            FE::int16 l_idx = static_cast<FE::int16>((address_p - _begin) / Alignment::size);
+            FE::int32 l_idx = static_cast<FE::int32>((address_p - _begin) / Alignment::size);
             FE_ASSERT(m_double_free_tracker[l_idx] == true, "Double free detected: cannot deallocate the same address twice.");
             m_double_free_tracker[l_idx] = false;
         }
@@ -93,9 +93,9 @@ namespace internal::pool
             return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
         }
 
-        _FE_FORCE_INLINE_ FE::int16 get_usage_as_percentile() const noexcept
+        _FE_FORCE_INLINE_ FE::int32 get_usage_as_percentile() const noexcept
         {
-            return static_cast<FE::int16>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
+            return static_cast<FE::int32>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
         }
     };
 }
@@ -112,8 +112,8 @@ class pool<PoolType::_Block, Alignment>
     using block_pointer = typename chunk_type::block_pointer;
 
 public:
-    constexpr static FE::int16 fixed_block_size_in_bytes = Alignment::size;
-    constexpr static FE::int16 page_capacity = chunk_type::page_size_in_bytes;
+    constexpr static FE::int32 fixed_block_size_in_bytes = Alignment::size;
+    constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
 
     using alignment_type = Alignment;
 
@@ -243,7 +243,7 @@ public:
         {
             pointer_p->~U();
         }
-        l_page_base->_free_blocks.push(static_cast<FE::int16>(l_to_be_freed - l_page_base->_begin));
+        l_page_base->_free_blocks.push(static_cast<FE::int32>(l_to_be_freed - l_page_base->_begin));
         l_page_base->_usage_in_bytes -= fixed_block_size_in_bytes;
         FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.block_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
         

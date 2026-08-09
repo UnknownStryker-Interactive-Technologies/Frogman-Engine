@@ -69,8 +69,8 @@ namespace internal::pool
 
     struct block_info
     {
-        var::int16 _address;
-        var::int16 _size_in_bytes;
+        var::int32 _address;
+        var::int32 _size_in_bytes;
     };
 
     class from_low_address
