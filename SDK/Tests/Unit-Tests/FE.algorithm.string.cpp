@@ -159,17 +159,22 @@ TEST(FE_algorithm_string, capitalize_the_first_letter_of_words)
 // length
 TEST(FE_algorithm_string, length)
 {
-	char l_buffer[20] = "Hello, World!";
+	EXPECT_EQ(9, FE::algorithm::string::length("Hi, World"));
+
+	char l_buffer[2039] 
+		= "ONE PAGE (HALF) Bit zero wakes first, rightmost, least, the register does not care for grace, only position, only place -- LSB, the quiet start of every count. Sixty-four lanes hum awake in silicon, waiting for a clock signal cast across the die, a comparison, an equal sign, epi8, epi16, epi32 -- the width decides which door in the fence they walk through, BW or F, no third way in between. The mask arrives not as a verdict spoken twice but born already true or false, no vector held a moment in between, predicate from birth, k-register keeper of a truth no wider byte could hold. Somewhere a loop asks a foolish question -- modulo, when less-than would have done, and division answers slow and resentful, twenty cycles then forty, while comparison waits one, impatient, pipelined and forgiving, always cheap. Trailing zeros count the distance to the first yes, countr from the right, countl from the left, symmetric strangers pointing two opposite ways across the same sixty-four rooms, and somewhere in the difference, a width minus one, minus a count, finds the highest bit that ever mattered. Somewhere a console halves its own wide lanes to keep a clock from ever slipping, somewhere a compiler drops a whitepaper's promise of two hundred fifty six and doubles down on native width instead. None of this remembers being asked. The silicon does not know it is a metaphor. It only counts, compares, and moves along. Ninety-five percent of every desktop already carries this, already has the width, the count, the fused compare and branch, so the last five stay a rounding error for a shooter built on Zen and modern Core. A constexpr function may be written around an intrinsic it can never run -- ill-formed, no diagnostic required, five careful words that mean the silence is not proof of safety, only proof that no one asked loudly enough to be told no. Two kilobytes. Half a page, still exact, half the silicon, half the borrowed weight, every byte accounted, nothing wasted, the last line closing exactly where it always must.";
 	auto l_result = FE::algorithm::string::length(l_buffer);
 
-	EXPECT_EQ(13, l_result);
+	EXPECT_EQ(2038, l_result);
 }
 
 void frogman_string_length(benchmark::State& state_p) noexcept
 {
-	char l_buffer[20] = "Hello, World!";
+	char l_buffer[2039] 
+		= "ONE PAGE (HALF) Bit zero wakes first, rightmost, least, the register does not care for grace, only position, only place -- LSB, the quiet start of every count. Sixty-four lanes hum awake in silicon, waiting for a clock signal cast across the die, a comparison, an equal sign, epi8, epi16, epi32 -- the width decides which door in the fence they walk through, BW or F, no third way in between. The mask arrives not as a verdict spoken twice but born already true or false, no vector held a moment in between, predicate from birth, k-register keeper of a truth no wider byte could hold. Somewhere a loop asks a foolish question -- modulo, when less-than would have done, and division answers slow and resentful, twenty cycles then forty, while comparison waits one, impatient, pipelined and forgiving, always cheap. Trailing zeros count the distance to the first yes, countr from the right, countl from the left, symmetric strangers pointing two opposite ways across the same sixty-four rooms, and somewhere in the difference, a width minus one, minus a count, finds the highest bit that ever mattered. Somewhere a console halves its own wide lanes to keep a clock from ever slipping, somewhere a compiler drops a whitepaper's promise of two hundred fifty six and doubles down on native width instead. None of this remembers being asked. The silicon does not know it is a metaphor. It only counts, compares, and moves along. Ninety-five percent of every desktop already carries this, already has the width, the count, the fused compare and branch, so the last five stay a rounding error for a shooter built on Zen and modern Core. A constexpr function may be written around an intrinsic it can never run -- ill-formed, no diagnostic required, five careful words that mean the silence is not proof of safety, only proof that no one asked loudly enough to be told no. Two kilobytes. Half a page, still exact, half the silicon, half the borrowed weight, every byte accounted, nothing wasted, the last line closing exactly where it always must.";
 	for (auto _ : state_p)
 	{
+		benchmark::DoNotOptimize(l_buffer);
 		auto r = FE::algorithm::string::length(l_buffer);
 		(void)r;
 	}
@@ -178,9 +183,11 @@ BENCHMARK(frogman_string_length);
 
 void std_string_length(benchmark::State& state_p) noexcept
 {
-	char l_buffer[20] = "Hello, World!";
+	char l_buffer[2039] 
+		= "ONE PAGE (HALF) Bit zero wakes first, rightmost, least, the register does not care for grace, only position, only place -- LSB, the quiet start of every count. Sixty-four lanes hum awake in silicon, waiting for a clock signal cast across the die, a comparison, an equal sign, epi8, epi16, epi32 -- the width decides which door in the fence they walk through, BW or F, no third way in between. The mask arrives not as a verdict spoken twice but born already true or false, no vector held a moment in between, predicate from birth, k-register keeper of a truth no wider byte could hold. Somewhere a loop asks a foolish question -- modulo, when less-than would have done, and division answers slow and resentful, twenty cycles then forty, while comparison waits one, impatient, pipelined and forgiving, always cheap. Trailing zeros count the distance to the first yes, countr from the right, countl from the left, symmetric strangers pointing two opposite ways across the same sixty-four rooms, and somewhere in the difference, a width minus one, minus a count, finds the highest bit that ever mattered. Somewhere a console halves its own wide lanes to keep a clock from ever slipping, somewhere a compiler drops a whitepaper's promise of two hundred fifty six and doubles down on native width instead. None of this remembers being asked. The silicon does not know it is a metaphor. It only counts, compares, and moves along. Ninety-five percent of every desktop already carries this, already has the width, the count, the fused compare and branch, so the last five stay a rounding error for a shooter built on Zen and modern Core. A constexpr function may be written around an intrinsic it can never run -- ill-formed, no diagnostic required, five careful words that mean the silence is not proof of safety, only proof that no one asked loudly enough to be told no. Two kilobytes. Half a page, still exact, half the silicon, half the borrowed weight, every byte accounted, nothing wasted, the last line closing exactly where it always must.";
 	for (auto _ : state_p)
 	{
+		benchmark::DoNotOptimize(l_buffer);
 		auto r = std::strlen(l_buffer);
 		(void)r;
 	}
