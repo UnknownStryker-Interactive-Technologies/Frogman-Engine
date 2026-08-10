@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/algorithm/math.hxx>
+#include <FE/algorithm/string.hxx>
 #include <FE/iterator.hxx>
 #include <FE/pair.hxx>
 #include <FE/type_traits.hxx>
@@ -552,7 +553,7 @@ constexpr void float_to_string(CharT* const string_out_p, uint64 input_string_ca
 
     algorithm::utility::int_to_string<CharT>(string_out_p, input_string_capacity_p, static_cast<var::int64>(value_p));
 
-    var::uint64 l_integral_part_string_length = FE::internal::strlen<CharT>(string_out_p);
+    var::uint64 l_integral_part_string_length = algorithm::string::length<CharT>(string_out_p);
     string_out_p[l_integral_part_string_length] = '.';
     ++l_integral_part_string_length;
 

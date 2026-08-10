@@ -18,7 +18,6 @@ limitations under the License.
 #include <FE/definitions.hxx>
 #include <FE/log/log.hxx>
 #include <FE/types.hxx>
-#include <FE/private/strlen.hxx>
 
 // std
 #include <array>
