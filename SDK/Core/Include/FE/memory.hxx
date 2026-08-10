@@ -134,23 +134,33 @@ limitations under the License.
 
 
 #ifdef _FE_ON_X86_64_
-	// AVX
+	#include <xmmintrin.h>
+	#include <emmintrin.h>
+	#include <pmmintrin.h>
+	#include <tmmintrin.h>
+	#include <smmintrin.h>
+	#include <nmmintrin.h>
 	#include <immintrin.h>
 
-// You won't be able to run any modern game software if your CPU does not support SSE and SSE2.
-#define _SSE_
-#define _SSE2_
-
-	#ifdef __AVX__
-		#define _AVX_
-	#endif
-
-	#ifdef __AVX2__
-		#define _AVX2_
-	#endif
+#if !defined(__AVX__) || !defined(__AVX2__)
+	#error AVX/AVX2 support is required for running Frogman Engine programs on AMD64.
+#else
+	#define _SSE_
+	#define _SSE2_
+	#define _AVX_
+	#define _AVX2_
+#endif
 
 	#ifdef __AVX512F__
 		#define _AVX512F_
+	#endif
+
+	#ifdef __AVX512BW__
+		#define _AVX512BW_
+	#endif
+
+	#ifdef __AVX512VL__
+		#define _AVX512VL_
 	#endif
 
 #elif defined(_FE_ON_ARM64_)
@@ -260,7 +270,7 @@ specifying different alignment sizes for AVX512, AVX/AVX2, and fallback to a def
 */
 struct SIMD_auto_alignment
 {
-#ifdef _AVX512F_
+#if defined(_AVX512F_) || defined(_AVX512BW_) || defined(_AVX512VL_)
 	using alignment_type = align_64bytes;
 #elif defined(_AVX_) || defined(_AVX2_)
 	using alignment_type = align_32bytes;
@@ -711,25 +721,17 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX_SSE2(void
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
-	// __FE_DIVIDE_BY_32(bytes_p) == SIMD operation count
+	__m256i l_value = _mm256_setzero_si256();
 	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
 	{
-		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p),
-			_mm256_xor_si256(	_mm256_loadu_si256(static_cast<const __m256i*>(out_dest_p)),
-								_mm256_loadu_si256(static_cast<const __m256i*>(out_dest_p))
-			)
-		);
+		_mm256_storeu_si256(static_cast<__m256i*>(out_dest_p), l_value);
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
 	}
 
 	bytes_p = __FE_MODULO_BY_32(bytes_p);
 	if (bytes_p >= 16)
 	{
-		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p),  
-						_mm_xor_si128(	_mm_loadu_si128( static_cast<const __m128i*>(out_dest_p) ),
-										_mm_loadu_si128( static_cast<const __m128i*>(out_dest_p) )
-										)
-						);
+		_mm_storeu_si128(static_cast<__m128i*>(out_dest_p), _mm_setzero_si128());
 		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
 		bytes_p -= 16;
 	}
@@ -745,24 +747,17 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX_SSE2(void* 
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
+	__m256i l_value = _mm256_setzero_si256();
 	for (__m256i* const end = static_cast<__m256i*>(out_dest_p) + __FE_DIVIDE_BY_32(bytes_p); out_dest_p != end;)
 	{
-		_mm256_store_si256(static_cast<__m256i*>(out_dest_p),
-			_mm256_xor_si256(_mm256_load_si256(static_cast<const __m256i*>(out_dest_p)),
-				_mm256_load_si256(static_cast<const __m256i*>(out_dest_p))
-			)
-		);
+		_mm256_store_si256(static_cast<__m256i*>(out_dest_p), l_value);
 		out_dest_p = static_cast<__m256i*>(out_dest_p) + 1;
 	}
 
 	bytes_p = __FE_MODULO_BY_32(bytes_p);
 	if (bytes_p >= 16)
 	{
-		_mm_store_si128(static_cast<__m128i*>(out_dest_p),
-			_mm_xor_si128(_mm_load_si128(static_cast<const __m128i*>(out_dest_p)),
-				_mm_load_si128(static_cast<const __m128i*>(out_dest_p))
-			)
-		);
+		_mm_store_si128(static_cast<__m128i*>(out_dest_p), _mm_setzero_si128());
 		out_dest_p = static_cast<__m128i*>(out_dest_p) + 1;
 		bytes_p -= 16;
 	}
@@ -959,13 +954,10 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_unaligned_memzero_AVX512F_AVX_S
 {
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is a nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 
+	__m512i l_value = _mm512_setzero_si512();
 	for (__m512* const end = static_cast<__m512*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
 	{
-		_mm512_storeu_si512(static_cast<__m512*>(out_dest_p),
-							_mm512_xor_si512(	_mm512_loadu_si512(static_cast<const __m512*>(out_dest_p)),
-												_mm512_loadu_si512(static_cast<const __m512*>(out_dest_p))
-			)
-		);
+		_mm512_storeu_si512(static_cast<__m512*>(out_dest_p), l_value);
 		out_dest_p = static_cast<__m512*>(out_dest_p) + 1;
 	}
 
@@ -980,13 +972,10 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ __x86_64_aligned_memzero_AVX512F_AVX_SSE
 	FE_NEGATIVE_ASSERT(out_dest_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(out_dest_p));
 	FE_ASSERT(__FE_MODULO_BY_64(reinterpret_cast<uintptr>(out_dest_p)) == 0, "${%s@0}: ${%s@1} is not aligned by 64.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_IncorrectAddressAlignment), TO_STRING(out_dest_p));
 
+	__m512i l_value = _mm512_setzero_si512();
 	for (__m512* const end = static_cast<__m512*>(out_dest_p) + __FE_DIVIDE_BY_64(bytes_p); out_dest_p != end;)
 	{
-		_mm512_store_si512(static_cast<__m512*>(out_dest_p),
-							_mm512_xor_si512(	_mm512_load_si512(static_cast<const __m512*>(out_dest_p)),
-												_mm512_load_si512(static_cast<const __m512*>(out_dest_p))
-			)
-		);
+		_mm512_store_si512(static_cast<__m512*>(out_dest_p), l_value);
 		out_dest_p = static_cast<__m512*>(out_dest_p) + 1;
 	}
 
