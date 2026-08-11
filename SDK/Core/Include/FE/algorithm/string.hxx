@@ -59,6 +59,90 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ copy(CharT* const out_dest_p, const Char
     out_dest_p[count_p] = null;
 }
 
+// returns code unit length for UTF8/16/32, and returns character length for ASCII
+template <typename CharT>
+_FE_NODISCARD_ constexpr uint64 _FE_VECTOR_CALL_ length(const CharT* const string_p) noexcept
+{
+    static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
+    FE_ASSERT(string_p != nullptr, "${%s@0}: The input string was nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+    const CharT* l_iterator = string_p;
+#if defined(_AVX512BW_)
+    constexpr FE::uint8 l_simd_alignment = 64;
+#else
+    constexpr FE::uint8 l_simd_alignment = 32;
+#endif
+    FE::uint8 l_misaligned_bytes = (FE::uintptr)l_iterator % l_simd_alignment;
+    FE::uint8 l_bytes_to_align = l_simd_alignment - ((l_misaligned_bytes == 0) ? l_simd_alignment : l_misaligned_bytes);
+    const CharT* const l_non_simd_end = reinterpret_cast<const CharT* const>((const char*)l_iterator + l_bytes_to_align);
+    while (l_iterator < l_non_simd_end)
+    {
+        if (*l_iterator == (CharT)FE::null)
+        {
+            return static_cast<uint64>(l_iterator - string_p);
+        }
+        ++l_iterator;
+    }
+    l_iterator = l_non_simd_end;
+    FE_ASSERT(((FE::uintptr)l_iterator % l_simd_alignment) == 0, "${%s@0}: The input string is not properly aligned.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidAlignment));
+
+
+#if defined(_AVX512BW_)
+    __m512i l_zeros = _mm512_setzero_si512();
+    for (const char* it = reinterpret_cast<const char*>(l_iterator); ; it += 64)
+    {
+        var::uint64 l_mask = 0;
+        if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+        {
+            l_mask = _mm512_cmpeq_epi8_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
+        }
+        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+        {
+            l_mask = _mm512_cmpeq_epi16_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
+        }
+        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+        {
+            l_mask = _mm512_cmpeq_epi32_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
+        }
+
+        if (l_mask != 0) // did cmp result true?
+        {
+            return ((it - (const char*)string_p) / sizeof(CharT)) + std::countr_zero(l_mask);
+        }
+    }
+#else
+    __m256i l_zeros = _mm256_setzero_si256();
+    for (const char* it = reinterpret_cast<const char*>(l_iterator); ; it += 32)
+    {
+        var::uint32 l_mask = 0;
+        if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+        {
+            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi8(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it))));
+        }
+        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+        {
+            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi16(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it))));
+            if (l_mask != 0) // did cmp result true?
+            {
+                return ((it - (const char*)string_p) / sizeof(CharT)) + (std::countr_zero(l_mask) / 2);
+            }
+        }
+        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+        {
+            l_mask = _mm256_movemask_ps(_mm256_castsi256_ps(_mm256_cmpeq_epi32(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it)))));
+        }
+
+        if (l_mask != 0) // did cmp result true?
+        {
+            return ((it - (const char*)string_p) / sizeof(CharT)) + std::countr_zero(l_mask);
+        }
+    }
+#endif
+}
+
 
 template<typename S>
 struct count
@@ -70,24 +154,138 @@ struct count
 
 
 template<typename CharT>
-_FE_NODISCARD_ constexpr count<CharT> count_chars(const CharT* string_p, const CharT target_p) noexcept
+_FE_NODISCARD_ constexpr count<CharT> _FE_VECTOR_CALL_ count_chars(const CharT* string_p, const CharT target_p) noexcept
 {
     static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
-    FE_NEGATIVE_ASSERT(string_p == nullptr, "${%s@0}: The input string was nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
+    FE_ASSERT(string_p != nullptr, "${%s@0}: The input string was nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
 
     var::uint64 l_match_count = 0;
-
-    while (*string_p != (CharT)null)
+    const CharT* l_iterator = string_p;
+#if defined(_AVX512BW_)
+    constexpr FE::uint8 l_simd_alignment = 64;
+#else
+    constexpr FE::uint8 l_simd_alignment = 32;
+#endif
+    FE::uint8 l_misaligned_bytes = (FE::uintptr)l_iterator % l_simd_alignment;
+    FE::uint8 l_bytes_to_align = l_simd_alignment - ((l_misaligned_bytes == 0) ? l_simd_alignment : l_misaligned_bytes);
+    const CharT* const l_non_simd_end = reinterpret_cast<const CharT* const>((const char*)l_iterator + l_bytes_to_align);
+    while (l_iterator < l_non_simd_end)
     {
-        if (target_p == *string_p)
+        if (target_p == *l_iterator)
         {
             ++l_match_count;
         }
-        ++string_p;
+
+        if (*l_iterator == (CharT)FE::null)
+        {
+            count<CharT> l_result;
+            l_result._target = (l_match_count != 0) ? target_p : (CharT)FE::null;
+            l_result._match_count = l_match_count;
+            return l_result;
+        }
+
+        ++l_iterator;
+    }
+    l_iterator = l_non_simd_end;
+    FE_ASSERT(((FE::uintptr)l_iterator % l_simd_alignment) == 0, "${%s@0}: The input string is not properly aligned.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidAlignment));
+
+    const CharT* const l_end = l_iterator + length(l_iterator);
+#if defined(_AVX512BW_)
+    __m512i l_target;
+    if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+        || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+    {
+        l_target = _mm512_set1_epi8(static_cast<FE::int8>(target_p));
+    }
+    else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+        || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+    {
+		static_assert(sizeof(wchar_t) == 2, "FE assumes wchar_t to be 2 bytes on Windows");
+        l_target = _mm512_set1_epi16(static_cast<FE::int16>(target_p));
+    }
+    else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+    {
+        l_target = _mm512_set1_epi32(static_cast<FE::int32>(target_p));
+    }
+
+
+    var::uint64 l_mask = 0;
+    constexpr var::uint64 l_elements_per_block = 64 / sizeof(CharT);
+    for (; l_iterator + l_elements_per_block <= l_end; l_iterator += l_elements_per_block)
+    {
+        if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+        {
+            l_mask = _mm512_cmpeq_epi8_mask(l_target, _mm512_load_si512(reinterpret_cast<const __m512i*>(l_iterator)));
+        }
+        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+        {
+            static_assert(sizeof(wchar_t) == 2, "FE assumes wchar_t to be 2 bytes on Windows");
+            l_mask = _mm512_cmpeq_epi16_mask(l_target, _mm512_load_si512(reinterpret_cast<const __m512i*>(l_iterator)));
+        }
+        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+        {
+            l_mask = _mm512_cmpeq_epi32_mask(l_target, _mm512_load_si512(reinterpret_cast<const __m512i*>(l_iterator)));
+        }
+
+        l_match_count += std::popcount(l_mask);
+    }
+#else
+    __m256i l_target;
+    if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+        || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+    {
+        l_target = _mm256_set1_epi8(static_cast<FE::int8>(target_p));
+    }
+    else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+        || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+    {
+        static_assert(sizeof(wchar_t) == 2, "FE assumes wchar_t to be 2 bytes on Windows");
+        l_target = _mm256_set1_epi16(static_cast<FE::int16>(target_p));
+    }
+    else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+    {
+        l_target = _mm256_set1_epi32(static_cast<FE::int32>(target_p));
+    }
+
+
+    var::uint32 l_mask = 0;
+    constexpr var::uint64 l_elements_per_block = 32 / sizeof(CharT);
+    for (; l_iterator + l_elements_per_block <= l_end; l_iterator += l_elements_per_block)
+    {
+        if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
+        {
+            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi8(l_target, _mm256_load_si256(reinterpret_cast<const __m256i*>(l_iterator))));
+        }
+        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
+            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
+        {
+            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi16(l_target, _mm256_load_si256(reinterpret_cast<const __m256i*>(l_iterator))));
+            l_match_count += (std::popcount(l_mask) / 2);
+			continue;
+        }
+        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
+        {
+            l_mask = _mm256_movemask_ps(_mm256_castsi256_ps(_mm256_cmpeq_epi32(l_target, _mm256_load_si256(reinterpret_cast<const __m256i*>(l_iterator)))));
+        }
+
+        l_match_count += std::popcount(l_mask);
+    }
+#endif
+    while(l_iterator < l_end)
+    {
+        // Process any remainings
+        if (*l_iterator == target_p)
+        {
+            ++l_match_count;
+        }
+        ++l_iterator;
     }
 
     count<CharT> l_result;
-    l_result._target = (l_match_count != 0) ? target_p : (CharT)null;
+    l_result._target = (l_match_count != 0) ? target_p : (CharT)FE::null;
     l_result._match_count = l_match_count;
     return l_result;
 }
@@ -182,89 +380,6 @@ constexpr void capitalize_the_first_letter_of_words(CharT* in_out_string_p) noex
 		}
         ++in_out_string_p;
     }
-}
-
-
-template <typename CharT>
-_FE_NODISCARD_ constexpr uint64 _FE_VECTOR_CALL_ length(const CharT* const string_p) noexcept // returns a string length without the null terminator
-{
-    static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
-    FE_ASSERT(string_p != nullptr, "${%s@0}: The input string was nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
-    const CharT* l_iterator = string_p;
-#if defined(_AVX512BW_)
-    constexpr FE::uint8 l_simd_alignment = 64;
-#else
-    constexpr FE::uint8 l_simd_alignment = 32;
-#endif
-	FE::uint8 l_misaligned_bytes = (FE::uintptr)l_iterator % l_simd_alignment;
-    FE::uint8 l_bytes_to_align = l_simd_alignment - l_misaligned_bytes;
-    const CharT* const l_non_simd_end = reinterpret_cast<const CharT* const>((const char*)l_iterator + l_bytes_to_align);
-    while(l_iterator < l_non_simd_end)
-    {
-        if (*l_iterator == (CharT)FE::null)
-        {
-            return static_cast<uint64>(l_iterator - string_p);
-        }
-        ++l_iterator;
-    }
-    l_iterator = l_non_simd_end;
-    FE_ASSERT( ((FE::uintptr)l_iterator % l_simd_alignment) == 0, "${%s@0}: The input string is not properly aligned.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidAlignment));
-
-#if defined(_AVX512BW_)
-	__m512i l_zeros = _mm512_setzero_si512();
-    for (const char* it = reinterpret_cast<const char*>(l_iterator); ; it += 64)
-    {
-        var::uint64 l_mask = 0;
-        if constexpr ( std::is_same_v<FE::remove_const_reference_t<CharT>, char> 
-            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t> )
-        {
-            l_mask = _mm512_cmpeq_epi8_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
-        }
-        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
-            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
-        {
-            l_mask = _mm512_cmpeq_epi16_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
-        }
-        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
-        {
-            l_mask = _mm512_cmpeq_epi32_mask(l_zeros, _mm512_load_si512(reinterpret_cast<const __m512i*>(it)));
-        }
-
-        if (l_mask != 0) // did cmp result true?
-        {
-            return ((it - (const char*)string_p) / sizeof(CharT)) + std::countr_zero(l_mask);
-        }
-    }
-#else
-    __m256i l_zeros = _mm256_setzero_si256();
-    for (const char* it = reinterpret_cast<const char*>(l_iterator); ; it += 32)
-    {
-        var::uint32 l_mask = 0;
-        if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char>
-            || std::is_same_v<FE::remove_const_reference_t<CharT>, char8_t>)
-        {
-            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi8(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it))));
-        }
-        else if constexpr ((std::is_same_v<FE::remove_const_reference_t<CharT>, wchar_t> && sizeof(wchar_t) == 2)
-            || std::is_same_v<FE::remove_const_reference_t<CharT>, char16_t>)
-        {
-            l_mask = _mm256_movemask_epi8(_mm256_cmpeq_epi16(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it))));
-            if (l_mask != 0) // did cmp result true?
-            {
-                return ((it - (const char*)string_p) / sizeof(CharT)) + (std::countr_zero(l_mask) / 2);
-            }
-        }
-        else if constexpr (std::is_same_v<FE::remove_const_reference_t<CharT>, char32_t>)
-        {
-            l_mask = _mm256_movemask_ps(_mm256_castsi256_ps(_mm256_cmpeq_epi32(l_zeros, _mm256_load_si256(reinterpret_cast<const __m256i*>(it)))));
-        }
-
-        if (l_mask != 0) // did cmp result true?
-        {
-            return ((it - (const char*)string_p) / sizeof(CharT)) + std::countr_zero(l_mask);
-        }
-    }
-#endif
 }
 
 
