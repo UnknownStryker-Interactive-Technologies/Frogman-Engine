@@ -26,6 +26,8 @@ Notes:
 #include <FE/farray.hxx>
 #include <FE/fqueue.hxx>
 #include <FE/fstack.hxx>
+#include <FE/stack.hxx>
+#include <FE/queue.hxx>
 
 #include<FE/pool/memory_resource.hxx>
 
@@ -1164,7 +1166,7 @@ TEST(queue, push_pop)
 
 
 
-void FE_queue_push_and_pop(benchmark::State& state_p) noexcept
+void FE_fqueue_push_and_pop(benchmark::State& state_p) noexcept
 {
 	FE::fqueue<const char*, 64> l_queue;
 
@@ -1174,8 +1176,19 @@ void FE_queue_push_and_pop(benchmark::State& state_p) noexcept
 		l_queue.pop();
 	}
 }
-BENCHMARK(FE_queue_push_and_pop);
+BENCHMARK(FE_fqueue_push_and_pop);
 
+void FE_queue_push_and_pop(benchmark::State& state_p) noexcept
+{
+	FE::queue<const char*> l_queue;
+
+	for (auto _ : state_p)
+	{
+		l_queue.push("Pizza");
+		l_queue.pop();
+	}
+}
+BENCHMARK(FE_queue_push_and_pop);
 
 void std_queue_push_and_pop(benchmark::State& state_p) noexcept
 {
@@ -1343,9 +1356,22 @@ TEST(fstack, container_comparison_)
 
 
 
-void FE_stack_push_and_pop(benchmark::State& state_p) noexcept
+void FE_fstack_push_and_pop(benchmark::State& state_p) noexcept
 {
 	FE::fstack<const char*, 64> l_stack;
+
+	for (auto _ : state_p)
+	{
+		l_stack.push("Pizza");
+		l_stack.pop();
+	}
+}
+BENCHMARK(FE_fstack_push_and_pop);
+
+
+void FE_stack_push_and_pop(benchmark::State& state_p) noexcept
+{
+	FE::stack<const char*> l_stack;
 
 	for (auto _ : state_p)
 	{
