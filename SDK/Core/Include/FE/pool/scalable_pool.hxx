@@ -37,8 +37,10 @@ namespace internal::pool
         using free_list_element = block_info;
 
         constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
-        constexpr static FE::int32 possible_address_count = page_size_in_bytes / Alignment::size;
-        
+        // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
+        constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
+        constexpr static FE::int32 integrity_validator = (page_size_in_bytes / Alignment::size);
+
     private:
         var::byte m_page[page_size_in_bytes];
         free_list_element m_free_list[possible_address_count];
@@ -72,9 +74,9 @@ namespace internal::pool
             m_page_end = _page_iterator + page_size_in_bytes;
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(possible_address_count * sizeof(var::int32), FE::CPU_L1_cache_line::size);
+            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator * sizeof(var::int32), FE::CPU_L1_cache_line::size);
 			FE_EXIT_IF(m_double_free_tracker == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_AllocationFailure, "Fatal Error: Unable to FE_ALIGNED_ALLOC double-free tracker for a scalable_allocator.");
-			std::memset(m_double_free_tracker, 0, possible_address_count * sizeof(var::int32));
+			std::memset(m_double_free_tracker, 0, integrity_validator * sizeof(var::int32));
 #endif
         }
 
@@ -203,7 +205,7 @@ namespace internal::pool
 
     _FE_FORCE_INLINE_ PageListClass __select_page_list_by_capacity(FE::int32 allocation_request_in_bytes_p) noexcept
     {
-        FE_ASSERT((allocation_request_in_bytes_p <= (64 * FE::one_KiB)) && (allocation_request_in_bytes_p >= 0));
+        FE_ASSERT(((FE::uint32)allocation_request_in_bytes_p <= (FE::uint32)(64 * FE::one_KiB)) && (allocation_request_in_bytes_p >= 0));
         constexpr FE::int32 l_divider = (64 * FE::one_KiB) / 16; // 256 bytes
         FE::int32 l_quotient = allocation_request_in_bytes_p / l_divider;
         /*
@@ -395,6 +397,7 @@ public:
     {
         static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
         FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
+        FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
         FE_ASSERT((l_queried_allocation_in_bytes % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the requested allocation size '${%i32@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_in_bytes, &Alignment::size);
         FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT(m_pages_with_100_capacity.end() == nullptr, "Assertion failed: FE::list::end must return an iterator equivalent to a null pointer.");
@@ -892,15 +895,17 @@ namespace internal::large::pool
         using free_list_iterator = large::block_info*;
         using free_list_element = large::block_info;
 
-        constexpr static FE::int32 page_size_in_bytes = 2 * FE::one_MiB;
-        constexpr static FE::int32 possible_address_count = page_size_in_bytes / Alignment::size;
-        
+        constexpr static FE::int32 page_size_in_bytes = (2 * FE::one_MiB) - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
+        // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
+        constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
+        constexpr static FE::int32 integrity_validator = (page_size_in_bytes / Alignment::size);
+
     private:
         var::byte m_page[page_size_in_bytes];
-        free_list_element m_free_list[possible_address_count];
+        free_list_element* m_free_list;
         var::int32 m_largest_free_fragment_size_in_bytes;
-        var::byte* m_page_end;
         var::int32 m_free_list_size;
+        var::byte* m_page_end;
         var::boolean m_is_page_heapified;
         var::boolean m_has_free_list_been_updated_since_defragmentation;
 
@@ -913,7 +918,8 @@ namespace internal::large::pool
 
     public:
         chunk() noexcept
-            :   m_largest_free_fragment_size_in_bytes(0),
+            :   m_free_list(nullptr),
+                m_largest_free_fragment_size_in_bytes(0),
                 m_free_list_size(0),
                 m_is_page_heapified(false),
 			    m_has_free_list_been_updated_since_defragmentation(false),
@@ -924,18 +930,24 @@ namespace internal::large::pool
             , m_double_free_tracker()
 #endif
         {
+			m_free_list = (free_list_element*)FE_ALIGNED_ALLOC(possible_address_count * sizeof(free_list_element), FE::CPU_L1_cache_line::size);
             _page_iterator = static_cast<var::byte*>(m_page);
             m_page_end = _page_iterator + page_size_in_bytes;
+            
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(possible_address_count * sizeof(var::int32), FE::CPU_L1_cache_line::size);
+            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator * sizeof(var::int32), FE::CPU_L1_cache_line::size);
             FE_EXIT_IF(m_double_free_tracker == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_AllocationFailure, "Fatal Error: Unable to FE_ALIGNED_ALLOC double-free tracker for a scalable_allocator.");
-            std::memset(m_double_free_tracker, 0, possible_address_count * sizeof(var::int32));
+            std::memset(m_double_free_tracker, 0, integrity_validator * sizeof(var::int32));
 #endif
         }
 
         ~chunk() noexcept
         {
+			FE_ASSERT(m_free_list != nullptr, "Assertion failed: someone tampered the free list pointer");
+			FE_ALIGNED_FREE(m_free_list);
+
+
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             FE_ASSERT(m_double_free_tracker != nullptr, "Assertion failed: someone tampered the double-free tracker pointer");
             FE_ALIGNED_FREE(m_double_free_tracker);
@@ -1059,7 +1071,7 @@ namespace internal::large::pool
 
     _FE_FORCE_INLINE_ FE::internal::pool::PageListClass __select_page_list_by_capacity(FE::int32 allocation_request_in_bytes_p) noexcept
     {
-        FE_ASSERT((allocation_request_in_bytes_p <= (FE::system_large_page_size)) && (allocation_request_in_bytes_p >= 0));
+        FE_ASSERT(((FE::uint64)allocation_request_in_bytes_p <= FE::system_large_page_size) && (allocation_request_in_bytes_p >= 0));
         constexpr FE::int32 l_divider = 131072; // 131072 bytes because 4096*512 == 2MiB and 256*512 == 131072.
         FE::int32 l_quotient = allocation_request_in_bytes_p / l_divider;
         /*
@@ -1150,6 +1162,8 @@ namespace large
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
         using chunk_type = internal::pool::chunk<PoolType::_ScalableLargePage, Alignment>;
+        static_assert(sizeof(chunk_type) <= (2 * FE::one_MiB), "Static assertion failed: chunk must fit within a single 2 MiB-sized memory page.");
+
         using free_list_iterator = typename chunk_type::free_list_iterator;
 		using free_list_element = typename chunk_type::free_list_element;
 
@@ -1255,6 +1269,7 @@ namespace large
         {
             static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
             FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
+            FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
             FE_ASSERT((l_queried_allocation_in_bytes % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the requested allocation size '${%d@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_in_bytes, &Alignment::size);
             FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
             FE_ASSERT(m_pages_with_100_capacity.end() == nullptr, "Assertion failed: FE::list::end must return an iterator equivalent to a null pointer.");
