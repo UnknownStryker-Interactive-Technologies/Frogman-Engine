@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/framework/processors.hxx>
+#include <FE/processors.hxx>
 
 #include <FE/framework/framework.hxx>
 
@@ -22,7 +22,7 @@ limitations under the License.
 
 
 
-BEGIN_NAMESPACE(FE::framework)
+BEGIN_NAMESPACE(FE)
 
 
 processors::processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, FE::size stack_size_p) noexcept
