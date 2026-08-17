@@ -18,8 +18,10 @@ limitations under the License.
 // FE.Core
 #include <FE/type_traits.hxx>
 
+#include <FE/framework/framework.hxx>
+
 // FE.Renderer
-#include <FE/renderer.hxx>
+#include <FE/window.hxx>
 #include <FE/shader.hxx>
 #include <Shaders/constant_buffer_layouts.h>
 
@@ -38,8 +40,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE::internal::renderer)
 
 
-d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
-    :	m_frontend(frontend_p),  
+d3d11_backend::d3d11_backend(FE::smart_ptr<FE::window, FE::RefType::_Observer> window_p) noexcept
+    :   m_window(window_p),
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_debug(),
 #endif
@@ -69,7 +71,7 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 
         m_input_layout_cache(FE::framework::framework_base::get_framework().get_large_memory_resource())
 {
-    FE_ASSERT(m_frontend != nullptr, "The frontend renderer pointer is null.");
+    FE_ASSERT(m_window.is_valid() == true, "The window pointer is null.");
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     const UINT l_dxgi_factory_flags = DXGI_CREATE_FACTORY_DEBUG;
 #else
@@ -156,20 +158,20 @@ d3d11_backend::d3d11_backend(class FE::renderer* const frontend_p) noexcept
 #endif
 
     
-    HWND l_window_handle = glfwGetWin32Window(m_frontend->m_window);
+    HWND l_window_handle = glfwGetWin32Window(m_window->get_window());
 	FE_ASSERT(l_window_handle != NULL, "Failed to get the native window handle from GLFW window.");
     DXGI_SWAP_CHAIN_DESC1 l_swapchain_desc = 
     {
         .Format = DXGI_FORMAT_B8G8R8A8_UNORM,
         .SampleDesc = {.Count = 1, .Quality = 0 }, // No multi-sampling
         .BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
-        .BufferCount = std::clamp(m_frontend->m_window_config._swap_chain_buffer_count, (var::uint8)2, (var::uint8)16),
+        .BufferCount = std::clamp(m_window->get_window_config()._swap_chain_buffer_count, (var::uint8)2, (var::uint8)16),
         .Scaling = DXGI_SCALING_NONE,
         .SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
         .AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED,
         .Flags = (m_should_allow_tearing == TRUE) ? (UINT)DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u
     };
-    glfwGetFramebufferSize(m_frontend->m_window, (int*)&l_swapchain_desc.Width, (int*)&l_swapchain_desc.Height);
+    glfwGetFramebufferSize(m_window->get_window(), (int*)&l_swapchain_desc.Width, (int*)&l_swapchain_desc.Height);
 	FE_ASSERT(l_swapchain_desc.Width > 0 && l_swapchain_desc.Height > 0, "Invalid framebuffer size retrieved from GLFW window.");
     
     
@@ -332,8 +334,8 @@ void d3d11_backend::begin_frame() noexcept
 
 void d3d11_backend::end_frame() noexcept
 {
-    const HRESULT l_result = m_swapchain->Present(	m_frontend->m_window_config._should_enable_vsync,
-                                                    ((m_frontend->m_window_config._should_enable_vsync == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0
+    const HRESULT l_result = m_swapchain->Present(m_window->get_window_config()._should_enable_vsync,
+                                                    ((m_window->get_window_config()._should_enable_vsync == false) && (m_should_allow_tearing == TRUE)) ? DXGI_PRESENT_ALLOW_TEARING : 0
     );
 
     if (l_result == DXGI_STATUS_OCCLUDED) _FE_UNLIKELY_
