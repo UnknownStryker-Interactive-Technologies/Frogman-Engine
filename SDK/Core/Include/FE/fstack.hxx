@@ -35,12 +35,16 @@ BEGIN_NAMESPACE(FE)
 /*
 The FE::fstack class template is a fixed-capacity stack implementation that utilizes custom memory traits for managing its elements
 providing various constructors and assignment operators for initialization and manipulation of the stack's contents.
+
+m_top_ptr always addresses the top element itself, hence dereferencing it yields the top value rather than the past-the-end slot.
+m_begin_ptr is the first element slot of m_memory, and an empty fstack is denoted by m_top_ptr == m_begin_ptr - 1, which is never dereferenced.
 */
 template<class T, size Capacity, class Traits = FE::internal::memory_traits<T>>
 class fstack final
 {
 	static_assert((std::is_same<T, typename Traits::value_type>::value), "Static Assertion Failed: The template argument T and Traits' value_type have be the same type.");
 	static_assert(std::is_class<Traits>::value, "Static Assertion Failed: The template argument Traits is not a class type.");
+	static_assert(Capacity > 0);
 
 public:
 	using value_type = T;
@@ -60,17 +64,18 @@ private:
 	pointer const m_begin_ptr;
 
 public:
-	fstack() noexcept 
-		:	m_memory(), 
-			m_top_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_begin_ptr(m_top_ptr)
-	{}
+	fstack() noexcept
+		: m_memory(),
+		m_top_ptr(reinterpret_cast<pointer>(m_memory) - 1),
+		m_begin_ptr(reinterpret_cast<pointer>(m_memory))
+	{
+	}
 	~fstack() noexcept { pop_all(); }
 
-	fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept 
-		:	m_memory(), 
-			m_top_ptr(reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()), 
-			m_begin_ptr(reinterpret_cast<pointer>(m_memory))
+	fstack(std::initializer_list<value_type>&& initializer_list_p) noexcept
+		: m_memory(),
+		m_top_ptr((reinterpret_cast<pointer>(m_memory) + initializer_list_p.size()) - 1),
+		m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
@@ -79,10 +84,10 @@ public:
 	}
 
 	template<class InputIterator>
-	fstack(InputIterator begin_p, InputIterator end_p) noexcept 
-		:	m_memory(),
-			m_top_ptr(reinterpret_cast<pointer>(m_memory) + (end_p - begin_p)), 
-			m_begin_ptr(reinterpret_cast<pointer>(m_memory))
+	fstack(InputIterator begin_p, InputIterator end_p) noexcept
+		: m_memory(),
+		m_top_ptr((reinterpret_cast<pointer>(m_memory) + (end_p - begin_p)) - 1),
+		m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		static_assert(std::is_class<InputIterator>::value, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		static_assert((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value), "Static Assertion Failure: InputIterator's value_type has to be the same as fstack's value_type.");
@@ -93,10 +98,10 @@ public:
 		Traits::copy_construct(InputIterator{ m_begin_ptr }, begin_p, end_p - begin_p);
 	}
 
-	fstack(fstack& other_p) noexcept 
-		:	m_memory(), 
-			m_top_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_begin_ptr(m_top_ptr)
+	fstack(const fstack& other_p) noexcept
+		: m_memory(),
+		m_top_ptr(reinterpret_cast<pointer>(m_memory) - 1),
+		m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		if (other_p.is_empty())
 		{
@@ -105,13 +110,13 @@ public:
 
 		Traits::copy_construct(m_begin_ptr, capacity(), other_p.m_begin_ptr, other_p.size());
 
-		__jump_top_pointer(other_p.m_top_ptr - other_p.m_begin_ptr);
+		__jump_top_pointer(other_p.size());
 	}
 
-	fstack(fstack&& rvalue_p) noexcept 
-		:	m_memory(),
-			m_top_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_begin_ptr(m_top_ptr)
+	fstack(fstack&& rvalue_p) noexcept
+		: m_memory(),
+		m_top_ptr(reinterpret_cast<pointer>(m_memory) - 1),
+		m_begin_ptr(reinterpret_cast<pointer>(m_memory))
 	{
 		if (rvalue_p.is_empty())
 		{
@@ -120,8 +125,8 @@ public:
 
 		Traits::move_construct(m_begin_ptr, capacity(), rvalue_p.m_begin_ptr, rvalue_p.size());
 
-		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_begin_ptr);
-		rvalue_p.__set_top_pointer_to_zero();
+		__jump_top_pointer(rvalue_p.size());
+		rvalue_p.pop_all();
 	}
 
 	fstack& operator=(std::initializer_list<value_type> initializer_list_p) noexcept
@@ -129,68 +134,68 @@ public:
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "ERROR!: The length of std::initializer_list exceeds the Capacity");
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 
-		if (is_empty())
+		FE::size l_initializer_list_size = initializer_list_p.size();
+		if (l_initializer_list_size == 0)
 		{
-			this->~fstack();
-			new(this) fstack(std::move(initializer_list_p));
+			pop_all();
 			return *this;
 		}
 
-		FE::size l_initializer_list_size = initializer_list_p.size();
 		__restructure_fstack_with_move_semantics(const_cast<value_type*>(initializer_list_p.begin()), l_initializer_list_size);
+
 		__set_top_pointer_to_zero();
 		__jump_top_pointer(l_initializer_list_size);
 		return *this;
 	}
 
-	fstack& operator=(fstack& other_p) noexcept
+	fstack& operator=(const fstack& other_p) noexcept
 	{
-		FE::size l_other_size = other_p.size();
-		if (l_other_size == 0)
+		if (this == &other_p)
 		{
 			return *this;
 		}
 
-		if (is_empty())
+		FE::size l_other_size = other_p.size();
+		if (l_other_size == 0)
 		{
-			this->~fstack();
-			new(this) fstack(other_p);
+			pop_all();
 			return *this;
 		}
 
 		__restructure_fstack_with_copy_semantics(other_p.m_begin_ptr, l_other_size);
 
 		__set_top_pointer_to_zero();
-		__jump_top_pointer(other_p.m_top_ptr - other_p.m_begin_ptr);
+		__jump_top_pointer(l_other_size);
 		return *this;
 	}
 
 	fstack& operator=(fstack&& rvalue_p) noexcept
 	{
-		FE::size l_other_size = rvalue_p.size();
-		if (l_other_size == 0)
+		if (this == &rvalue_p)
 		{
 			return *this;
 		}
 
-		if (is_empty())
+		FE::size l_other_size = rvalue_p.size();
+		if (l_other_size == 0)
 		{
-			this->~fstack();
-			new(this) fstack(std::move(rvalue_p));
+			pop_all();
 			return *this;
 		}
 
 		__restructure_fstack_with_move_semantics(rvalue_p.m_begin_ptr, l_other_size);
 
 		__set_top_pointer_to_zero();
-		__jump_top_pointer(rvalue_p.m_top_ptr - rvalue_p.m_begin_ptr);
-		rvalue_p.__set_top_pointer_to_zero();
+		__jump_top_pointer(l_other_size);
+		rvalue_p.pop_all();
 		return *this;
 	}
 
 	void push(const value_type& value_p) noexcept
 	{
-		FE_NEGATIVE_ASSERT(m_top_ptr >= m_begin_ptr + Capacity, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
+		FE_NEGATIVE_ASSERT(m_top_ptr >= (m_begin_ptr + Capacity) - 1, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
+
+		++m_top_ptr;
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
@@ -198,17 +203,31 @@ public:
 		}
 		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
 		{
-			*m_top_ptr = value_p;
+			std::memcpy(m_top_ptr, &value_p, sizeof(T));
 		}
+	}
+
+	template<typename... Arguments>
+	void emplace(Arguments&&... value_p) noexcept
+	{
+		FE_NEGATIVE_ASSERT(m_top_ptr >= (m_begin_ptr + Capacity) - 1, "${%s@0}: The fstack top exceeded the index boundary", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 
 		++m_top_ptr;
+
+		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
+		{
+			new(m_top_ptr) T(std::forward<Arguments&&>(value_p)...);
+		}
+		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
+		{
+			*m_top_ptr = T(std::forward<Arguments&&>(value_p)...);
+		}
 	}
 
 	value_type pop() noexcept
 	{
 		FE_NEGATIVE_ASSERT(is_empty() == true, "${%s@0}: The fstack top index reached zero. The index value_p must be greater than zero", TO_STRING(ErrorCode::_FatalMemoryError_1XX_AccessViolation));
 
-		--m_top_ptr;
 		T l_return_value_buffer = std::move(*m_top_ptr);
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
@@ -216,16 +235,17 @@ public:
 			m_top_ptr->~T();
 		}
 
+		--m_top_ptr;
 		return l_return_value_buffer;
 	}
-	
+
 	void pop_all() noexcept
 	{
 		if (is_empty() == false)
 		{
-			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial) 
+			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 			{
-				Traits::destruct(m_begin_ptr, m_top_ptr);
+				Traits::destruct(m_begin_ptr, m_top_ptr + 1);
 			}
 			__set_top_pointer_to_zero();
 		}
@@ -233,27 +253,27 @@ public:
 
 	_FE_FORCE_INLINE_ constexpr const_reference top() const noexcept
 	{
-		return *(m_top_ptr - 1);
+		return *m_top_ptr;
 	}
 
 	_FE_FORCE_INLINE_ constexpr reference top() noexcept
 	{
-		return *(m_top_ptr - 1);
+		return *m_top_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr var::boolean is_empty() const noexcept
 	{
-		return (m_top_ptr == m_begin_ptr) ? true : false;
+		return (m_top_ptr < m_begin_ptr) ? true : false;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type count() const noexcept
 	{
-		return m_top_ptr - m_begin_ptr;
+		return static_cast<size_type>((m_top_ptr - m_begin_ptr) + 1);
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type size() const noexcept
 	{
-		return m_top_ptr - m_begin_ptr;
+		return static_cast<size_type>((m_top_ptr - m_begin_ptr) + 1);
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr size_type max_size() const noexcept
@@ -273,12 +293,12 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cend() const noexcept
 	{
-		return m_top_ptr;
+		return m_top_ptr + 1;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crbegin() const noexcept
 	{
-		return m_top_ptr - 1;
+		return m_top_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crend() const noexcept
@@ -309,30 +329,30 @@ private:
 
 	_FE_FORCE_INLINE_ constexpr void __set_top_pointer_to_zero() noexcept
 	{
-		m_top_ptr = m_begin_ptr;
+		m_top_ptr = m_begin_ptr - 1;
 	}
 
 	void __restructure_fstack_with_move_semantics(value_type* const source_begin_p, FE::size source_size_p) noexcept
 	{
 		FE::size l_this_size = size();
 
-		if (source_size_p > l_this_size)
+		if ((source_size_p > l_this_size) && (l_this_size != 0))
 		{
 			FE::size l_count_to_construct = source_size_p - l_this_size;
-			Traits::move_construct(m_top_ptr, source_begin_p - l_count_to_construct, l_count_to_construct);
 
 			Traits::move_assign(m_begin_ptr, source_begin_p, l_this_size);
+			Traits::move_construct(m_top_ptr + 1, source_begin_p + l_this_size, l_count_to_construct);
 		}
-		else if (source_size_p < l_this_size)
+		else if ((source_size_p < l_this_size) && (l_this_size != 0))
 		{
 			FE::size l_count_to_destruct = l_this_size - source_size_p;
 
+			Traits::move_assign(m_begin_ptr, source_begin_p, source_size_p);
+
 			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 			{
-				Traits::destruct(m_top_ptr - l_count_to_destruct, m_top_ptr);
+				Traits::destruct((m_top_ptr + 1) - l_count_to_destruct, m_top_ptr + 1);
 			}
-
-			Traits::move_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 		else
 		{
@@ -344,23 +364,23 @@ private:
 	{
 		FE::size l_this_size = size();
 
-		if (source_size_p > l_this_size)
+		if ((source_size_p > l_this_size) && (l_this_size != 0))
 		{
 			FE::size l_count_to_construct = source_size_p - l_this_size;
-			Traits::copy_construct(m_top_ptr, source_begin_p - l_count_to_construct, l_count_to_construct);
 
 			Traits::copy_assign(m_begin_ptr, source_begin_p, l_this_size);
+			Traits::copy_construct(m_top_ptr + 1, source_begin_p + l_this_size, l_count_to_construct);
 		}
-		else if (source_size_p < l_this_size)
+		else if ((source_size_p < l_this_size) && (l_this_size != 0))
 		{
 			FE::size l_count_to_destruct = l_this_size - source_size_p;
 
+			Traits::copy_assign(m_begin_ptr, source_begin_p, source_size_p);
+
 			if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 			{
-				Traits::destruct(m_top_ptr - l_count_to_destruct, m_top_ptr);
+				Traits::destruct((m_top_ptr + 1) - l_count_to_destruct, m_top_ptr + 1);
 			}
-
-			Traits::copy_assign(m_begin_ptr, source_begin_p, source_size_p);
 		}
 		else
 		{
