@@ -15,8 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-#include <FE/types.hxx>
-
+#include <sdkddkver.h>
 
 //#if !defined(_CLANG_CL_) && !defined(_CLANG_)
 //#error Frogman Engine requires LLVM Clang to compile.
@@ -24,6 +23,13 @@ limitations under the License.
 
 #if !defined(_FE_ON_WINDOWS_X86_64_) && !defined(_FE_ON_ANDROID_ARM64_)
 #error An Incompatible System Environment Detected: Frogman Engine supports Windows AMD64 and Android ARM64. Please use one of them.
+#endif
+
+
+#ifdef _FE_ON_WINDOWS_X86_64_
+#ifndef NTDDI_WIN10_RS4
+#error Frogman Engine requires Windows SDK 10.0.17134.0 or later. Please update your Windows SDK to the latest version.
+#endif
 #endif
 
 
