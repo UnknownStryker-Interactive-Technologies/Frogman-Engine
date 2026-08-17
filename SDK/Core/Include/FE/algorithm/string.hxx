@@ -61,7 +61,7 @@ _FE_FORCE_INLINE_ void _FE_VECTOR_CALL_ copy(CharT* const out_dest_p, const Char
 
 // returns code unit length for UTF8/16/32, and returns character length for ASCII
 template <typename CharT>
-_FE_NODISCARD_ constexpr uint64 _FE_VECTOR_CALL_ length(const CharT* const string_p) noexcept
+_FE_NODISCARD_ uint64 _FE_VECTOR_CALL_ length(const CharT* const string_p) noexcept
 {
     static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
     FE_ASSERT(string_p != nullptr, "${%s@0}: The input string was nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr));
@@ -1136,17 +1136,36 @@ _FE_FORCE_INLINE_ constexpr UTF* skip_BOM(UTF* string_p) noexcept
 }
 
 
-template <typename CharT>
-constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexcept
+
+
+namespace compiletime
 {
-    boost::hash2::fnv1a_64 l_fnv1a;
-    boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + sizeof(CharT) * count_p);
-    return l_fnv1a.result();
+    template <typename CharT>
+    constexpr FE::uint64 hash_bytes(const CharT* string_p, FE::uint64 count_p) noexcept
+    {
+        boost::hash2::fnv1a_64 l_fnv1a;
+        boost::hash2::hash_append_range(l_fnv1a, {}, string_p, string_p + sizeof(CharT) * count_p);
+        return l_fnv1a.result();
+    }
+
+    template <typename CharT>
+    _FE_NODISCARD_ constexpr uint64 _FE_VECTOR_CALL_ length(const CharT* const string_p) noexcept
+    {
+        static_assert(FE::is_char<CharT>::value, "CharT is not a valid character type");
+        FE_NEGATIVE_ASSERT(string_p == nullptr, "${%s@0}: ${%s@1} is nullptr.", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_NullPtr), TO_STRING(string_p));
+
+        const CharT* l_iterator = string_p;
+        while (*l_iterator != (CharT)FE::null)
+        {
+            ++l_iterator;
+        }
+        return static_cast<uint64>(l_iterator - string_p);
+    }
 }
 
-#define STRING_SWITCH(x) switch ( ::FE::algorithm::string::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::length< FE::remove_all_t<decltype(x)> >(x) ))
+#define STRING_SWITCH(x) switch ( ::FE::algorithm::string::compiletime::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::compiletime::length< FE::remove_all_t<decltype(x)> >(x) ))
 
-#define STRING_CASE(x) case ::FE::algorithm::string::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::length< FE::remove_all_t<decltype(x)> >(x))
+#define STRING_CASE(x) case ::FE::algorithm::string::compiletime::hash_bytes< FE::remove_all_t<decltype(x)> >(x, ::FE::algorithm::string::compiletime::length< FE::remove_all_t<decltype(x)> >(x))
 
 
 END_NAMESPACE
