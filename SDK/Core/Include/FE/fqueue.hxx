@@ -44,7 +44,7 @@ class fqueue final
 {
 	static_assert((std::is_same<T, typename Traits::value_type>::value), "Static Assertion Failed: The template argument T and Traits' value_type have be the same type.");
 	static_assert(std::is_class<Traits>::value, "Static Assertion Failed: The template argument Traits is not a class type.");
-
+	static_assert(Capacity > 0);
 public:
 	using value_type = T;
 	using size_type = var::uint64;
@@ -64,21 +64,22 @@ protected:
 	size_type m_size;
 
 public:
-	fqueue() noexcept 
-		:	m_memory(), 
-			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_back_ptr(m_front_ptr), 
-			m_begin_ptr(m_front_ptr),
-			m_size() 
-	{}
+	fqueue() noexcept
+		: m_memory(),
+		m_front_ptr(reinterpret_cast<pointer>(m_memory)),
+		m_back_ptr(m_front_ptr - 1),
+		m_begin_ptr(m_front_ptr),
+		m_size()
+	{
+	}
 	~fqueue() noexcept { pop_all(); }
 
-	fqueue(std::initializer_list<value_type>&& initializer_list_p) noexcept 
-		:	m_memory(), 
-			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_back_ptr(m_front_ptr + initializer_list_p.size()), 
-			m_begin_ptr(m_front_ptr), 
-			m_size(initializer_list_p.size())
+	fqueue(std::initializer_list<value_type>&& initializer_list_p) noexcept
+		: m_memory(),
+		m_front_ptr(reinterpret_cast<pointer>(m_memory)),
+		m_back_ptr(m_front_ptr + (initializer_list_p.size() - 1)),
+		m_begin_ptr(m_front_ptr),
+		m_size(initializer_list_p.size())
 	{
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() > Capacity, "${%s@0}!: The length of std::initializer_list exceeds the Capacity", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
 		FE_NEGATIVE_ASSERT(initializer_list_p.size() == 0, "${%s@0}!: Cannot assign an empty initializer_list", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize));
@@ -87,12 +88,12 @@ public:
 	}
 
 	template<class InputIterator>
-	fqueue(InputIterator begin_p, InputIterator end_p) noexcept 
-		:	m_memory(), 
-			m_front_ptr(reinterpret_cast<pointer>(m_memory)),
-			m_back_ptr(m_front_ptr + (end_p - begin_p)), 
-			m_begin_ptr(m_front_ptr), 
-			m_size(end_p - begin_p)
+	fqueue(InputIterator begin_p, InputIterator end_p) noexcept
+		: m_memory(),
+		m_front_ptr(reinterpret_cast<pointer>(m_memory)),
+		m_back_ptr(m_front_ptr + ((end_p - begin_p) - 1)),
+		m_begin_ptr(m_front_ptr),
+		m_size(end_p - begin_p)
 	{
 		static_assert(std::is_class<InputIterator>::value, "Static Assertion Failure: The template argument InputIterator must be a class type.");
 		static_assert((std::is_same<typename std::remove_const<typename InputIterator::value_type>::type, typename std::remove_const<value_type>::type>::value), "Static Assertion Failure: InputIterator's value_type has to be the same as fqueue's value_type.");
@@ -104,41 +105,57 @@ public:
 	}
 
 	fqueue(const fqueue& other_p) noexcept
-		:	m_memory(), 
-			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_back_ptr(m_front_ptr),
-			m_begin_ptr(m_front_ptr), 
-			m_size(other_p.m_size)
+		: m_memory(),
+		m_front_ptr(reinterpret_cast<pointer>(m_memory)),
+		m_back_ptr(m_front_ptr - 1),
+		m_begin_ptr(m_front_ptr),
+		m_size(other_p.m_size)
 	{
 		if (other_p.is_empty())
 		{
 			return;
 		}
 
-		Traits::copy_construct(m_front_ptr, other_p.m_front_ptr, other_p.size());
+		if (other_p.m_back_ptr >= other_p.m_front_ptr)
+		{
+			Traits::copy_construct(m_front_ptr, other_p.m_front_ptr, other_p.size());
+		}
+		else
+		{
+			size_type l_front_part_size = static_cast<size_type>((other_p.m_begin_ptr + Capacity) - other_p.m_front_ptr);
+			Traits::copy_construct(m_front_ptr, other_p.m_front_ptr, l_front_part_size);
+			Traits::copy_construct(m_front_ptr + l_front_part_size, other_p.m_begin_ptr, other_p.size() - l_front_part_size);
+		}
 
-		__jump_front_pointer(other_p.m_front_ptr - other_p.m_begin_ptr);
-		__jump_back_pointer(other_p.m_back_ptr - other_p.m_front_ptr);
+		m_back_ptr += m_size;
 	}
 
 	constexpr fqueue(fqueue&& rvalue_p) noexcept
-		:	m_memory(),
-			m_front_ptr(reinterpret_cast<pointer>(m_memory)), 
-			m_back_ptr(m_front_ptr), 
-			m_begin_ptr(m_front_ptr), 
-			m_size(rvalue_p.m_size)
+		: m_memory(),
+		m_front_ptr(reinterpret_cast<pointer>(m_memory)),
+		m_back_ptr(m_front_ptr - 1),
+		m_begin_ptr(m_front_ptr),
+		m_size(rvalue_p.m_size)
 	{
 		if (rvalue_p.is_empty())
 		{
 			return;
 		}
 
-		Traits::move_construct(m_front_ptr, rvalue_p.m_front_ptr, rvalue_p.size());
+		if (rvalue_p.m_back_ptr >= rvalue_p.m_front_ptr)
+		{
+			Traits::move_construct(m_front_ptr, rvalue_p.m_front_ptr, rvalue_p.size());
+		}
+		else
+		{
+			size_type l_front_part_size = static_cast<size_type>((rvalue_p.m_begin_ptr + Capacity) - rvalue_p.m_front_ptr);
+			Traits::move_construct(m_front_ptr, rvalue_p.m_front_ptr, l_front_part_size);
+			Traits::move_construct(m_front_ptr + l_front_part_size, rvalue_p.m_begin_ptr, rvalue_p.size() - l_front_part_size);
+		}
 
-		__jump_front_pointer(rvalue_p.m_front_ptr - rvalue_p.m_begin_ptr);
-		__jump_back_pointer(rvalue_p.m_back_ptr - rvalue_p.m_front_ptr);
-		rvalue_p.__set_front_pointer_to_zero();
-		rvalue_p.__set_back_pointer_to_zero();
+		m_back_ptr += m_size;
+
+		rvalue_p.pop_all();
 	}
 
 	fqueue& operator=(std::initializer_list<value_type>&& initializer_list_p) noexcept
@@ -153,7 +170,7 @@ public:
 
 	constexpr fqueue& operator=(const fqueue& other_p) noexcept
 	{
-		if (other_p.is_empty())
+		if (this == &other_p)
 		{
 			return *this;
 		}
@@ -165,7 +182,7 @@ public:
 
 	constexpr fqueue& operator=(fqueue&& rvalue_p) noexcept
 	{
-		if (rvalue_p.is_empty())
+		if (this == &rvalue_p)
 		{
 			return *this;
 		}
@@ -176,44 +193,67 @@ public:
 	}
 
 	template <typename... Arguments>
-	constexpr void push(Arguments&&... value_p) noexcept
+	constexpr void emplace(Arguments&&... value_p) noexcept
 	{
+		FE_ASSERT(m_size < Capacity);
+
+		++m_back_ptr;
+		++m_size;
+
 		if (m_back_ptr >= m_begin_ptr + Capacity)
 		{
-			__set_back_pointer_to_zero();
-			FE_NEGATIVE_ASSERT(m_back_ptr >= m_front_ptr, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
+			__reset_back_pointer();
 		}
 
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
-			new(m_back_ptr) T( std::forward<Arguments&&>(value_p)... );
+			new(m_back_ptr) T(std::forward<Arguments&&>(value_p)...);
 		}
 		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
 		{
 			*m_back_ptr = T(std::forward<Arguments&&>(value_p)...);
 		}
-		
+	}
+
+
+	constexpr void push(const value_type& value_p) noexcept
+	{
+		FE_ASSERT(m_size < Capacity);
+
 		++m_back_ptr;
 		++m_size;
+
+		if (m_back_ptr >= m_begin_ptr + Capacity)
+		{
+			__reset_back_pointer();
+		}
+
+		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
+		{
+			new(m_back_ptr) T(value_p);
+		}
+		else if constexpr (Traits::is_trivial == TypeTriviality::_Trivial)
+		{
+			std::memcpy(m_back_ptr, &value_p, sizeof(T));
+		}
 	}
 
 	constexpr value_type pop() noexcept
 	{
-		if ((m_begin_ptr + Capacity) == m_front_ptr)
-		{
-			m_front_ptr = m_begin_ptr;
-			FE_NEGATIVE_ASSERT(is_empty() == true, "${%s@0}: Exceeded the queue index boundary", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_AccessViolation));
-		}
+		FE_ASSERT(m_size > 0);
 
 		T l_return_value_buffer = std::move(*m_front_ptr);
-
 		if constexpr (Traits::is_trivial == TypeTriviality::_NotTrivial)
 		{
 			m_front_ptr->~T();
 		}
-
-		++m_front_ptr;
 		--m_size;
+		++m_front_ptr;
+
+		if ((m_begin_ptr + Capacity) == m_front_ptr)
+		{
+			m_front_ptr = m_begin_ptr;
+		}
 		return l_return_value_buffer;
 	}
 
@@ -225,17 +265,18 @@ public:
 			{
 				if (m_back_ptr >= m_front_ptr)
 				{
-					Traits::destruct(m_front_ptr, m_back_ptr);
+					Traits::destruct(m_front_ptr, m_back_ptr + 1);
 				}
 				else
 				{
-					Traits::destruct(m_begin_ptr, m_back_ptr);
+					Traits::destruct(m_begin_ptr, m_back_ptr + 1);
 					Traits::destruct(m_front_ptr, m_begin_ptr + Capacity);
 				}
 			}
 
-			__set_front_pointer_to_zero();
-			__set_back_pointer_to_zero();
+			__reset_front_pointer();
+			__reset_back_pointer();
+			__jump_back_pointer(-1);
 			m_size = 0;
 		}
 	}
@@ -247,7 +288,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reference back() const noexcept
 	{
-		return *(m_back_ptr - 1);
+		return *m_back_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr reference front() noexcept
@@ -257,7 +298,7 @@ public:
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr reference back() noexcept
 	{
-		return *(m_back_ptr - 1);
+		return *m_back_ptr;
 	}
 
 	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr boolean is_empty() const noexcept
@@ -285,40 +326,11 @@ public:
 		return Capacity;
 	}
 
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cbegin() const noexcept
-	{
-		return m_front_ptr;
-	}
-
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_iterator cend() const noexcept
-	{
-		return m_front_ptr + Capacity;
-	}
-
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crbegin() const noexcept
-	{
-		return (m_front_ptr + Capacity) - 1;
-	}
-
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ constexpr const_reverse_iterator crend() const noexcept
-	{
-		return m_front_ptr - 1;
-	}
-
 	_FE_FORCE_INLINE_ constexpr void swap(fqueue& in_out_other_p) noexcept
 	{
 		std::swap(*this, in_out_other_p);
 	}
 
-	_FE_NODISCARD_ constexpr boolean operator==(fqueue& other_p) const noexcept
-	{
-		return FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
-	}
-
-	_FE_NODISCARD_ constexpr boolean operator!=(fqueue& other_p) const noexcept
-	{
-		return !FE::memcmp(cbegin(), cend(), other_p.cbegin(), other_p.cend());
-	}
 
 protected:
 	_FE_FORCE_INLINE_ constexpr void __jump_front_pointer(difference_type ptrdiff_p) noexcept
@@ -326,7 +338,7 @@ protected:
 		m_front_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ constexpr void __set_front_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ constexpr void __reset_front_pointer() noexcept
 	{
 		m_front_ptr = m_begin_ptr;
 	}
@@ -336,7 +348,7 @@ protected:
 		m_back_ptr += ptrdiff_p;
 	}
 
-	_FE_FORCE_INLINE_ constexpr void __set_back_pointer_to_zero() noexcept
+	_FE_FORCE_INLINE_ constexpr void __reset_back_pointer() noexcept
 	{
 		m_back_ptr = m_begin_ptr;
 	}
@@ -347,7 +359,7 @@ END_NAMESPACE
 
 namespace xtl
 {
-	template<class T, FE::size Capacity, class Traits>
+	template<class T, FE::size Capacity, class Traits = FE::internal::memory_traits<T>>
 	using fqueue = FE::fqueue<T, Capacity, Traits>;
 }
 
