@@ -58,6 +58,7 @@ limitations under the License.
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
+#include <windows.h>
 #define FE_DEBUG_BREAK() _CrtDbgBreak()
 #else
 #define FE_DEBUG_BREAK()
@@ -217,7 +218,9 @@ The FE_EXIT_IF macro logs a fatal error message and terminates the program with 
 { \
 	if(expression) _FE_UNLIKELY_ \
 	{ \
-		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		const char* l_msg = ::FE::log::buffered_string_formatter({ __VA_ARGS__ }); \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(l_msg, __FILE__, __FUNCSIG__, __LINE__); \
+		MessageBoxA(nullptr, l_msg, "Program Termination", MB_OK | MB_ICONWARNING | MB_SETFOREGROUND); \
 		::std::exit(static_cast<::FE::int32>(error_code)); \
 	} \
 }
