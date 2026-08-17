@@ -17,6 +17,7 @@ limitations under the License.
 */
 #include <FE/miscellaneous/suppress_warnings.hxx>
 #include <FE/definitions.hxx>
+#include <FE/miscellaneous/private/macro_restrictions.hxx>
 
 // std
 #include <atomic>
