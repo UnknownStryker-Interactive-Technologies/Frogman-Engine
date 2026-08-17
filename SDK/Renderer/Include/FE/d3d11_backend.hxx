@@ -18,6 +18,8 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/fqueue.hxx>
 
+#include <FE/framework/smart_ptr.hxx>
+
 #include <FE/constant_buffer.hxx>
 
 #include <absl/container/flat_hash_map.h>
@@ -36,7 +38,7 @@ namespace wrl
     using com_ptr = Microsoft::WRL::ComPtr<T>;
 }
 
-CLASS_FORWARD_DECLARATION(FE, renderer);
+CLASS_FORWARD_DECLARATION(FE, window);
 
 
 
@@ -53,7 +55,7 @@ public:
 	using device_context = ID3D11DeviceContext4;
 
 private:
-    class FE::renderer* const m_frontend;
+    FE::smart_ptr<FE::window, FE::RefType::_Observer> m_window;
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
     wrl::com_ptr<ID3D11Debug> m_debug;
 #endif
@@ -93,7 +95,7 @@ private:
     cache_map<ID3D11InputLayout> m_input_layout_cache;
 
 public:
-    d3d11_backend(class FE::renderer* const frontend_p) noexcept;
+    d3d11_backend(FE::smart_ptr<FE::window, FE::RefType::_Observer> window_p) noexcept;
 	~d3d11_backend() noexcept;
 
 

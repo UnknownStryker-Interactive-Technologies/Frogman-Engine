@@ -15,15 +15,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-
-#include <FE/blacklist_evaluator.hxx>
 #include <FE/clock.hxx>
 #include <FE/random.hxx>
+
+#include <FE/blacklist_evaluator.hxx>
 #include <FE/engine.hpp>
 #include <FE/image.hpp>
 #include <FE/video_player.hpp>
 
-#include <FE/framework/game_processor.hxx>
+#include <FE/processors.hxx>
+#include <FE/window.hxx>
 
 #include <atomic>
 
@@ -46,153 +47,149 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-renderer::renderer(const window_config& window_config_p) noexcept
-	:	m_window(),
-		m_primary_monitor(),
-		m_monitors(),
-		m_monitor_count(1),
-		m_video_mode(),
-		m_window_config(window_config_p),
-		m_backend(),
-		m_render_delta_milliseconds(),
+renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> processors_p, FE::smart_ptr<FE::window, FE::RefType::_Observer> window_p) noexcept
+	:	m_backend(window_p),
+		m_renderer_clock(),
 		m_delta_milliseconds(0.0),
-		m_renderer_thread(),
+
+		m_processors(processors_p),
+		m_window(window_p),
 		m_should_exit(false),
-		m_pending_resolution_change(),
 
-		m_saved_window_x(0),
-		m_saved_window_y(0),
-		m_saved_window_width(0),
-		m_saved_window_height(0)
+		m_shader_headers(),
+		m_shaders(framework::framework_base::get_framework().get_large_memory_resource()),
+		m_shader_root_directory(engine::get_engine().get_game_root_directory())
 {
-	FE_EXIT_IF(glfwInit() == GLFW_FALSE, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window initialization failed.");
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // We do not want to create an OpenGL context
-	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE); // the D3D has its own buffering system
-	glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE); // Make window visible upon creation
-	
-	m_monitors = glfwGetMonitors(&m_monitor_count);
-	FE_EXIT_IF(m_monitors == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: Could not detect monitors; the GLFW Monitors retrieval failed.");
+	m_shader_root_directory += FE_TEXT(\\Assets\\Shaders);
 
-	m_primary_monitor = m_monitors[0];
-	FE_EXIT_IF(m_primary_monitor == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: Could not detect a monitor; the GLFW Primary Monitor retrieval failed.");
+	std::ifstream l_froggy(engine::get_engine().get_froggy_path().c_str(), std::ios::binary);
+	FE::ifstream_guard l_froggy_file_stream(l_froggy);
+	FE_ASSERT(l_froggy.is_open() == true, "Failed to open froggy file at path: %s", engine::get_engine().get_froggy_path().c_str());
 
-	m_video_mode = glfwGetVideoMode(m_primary_monitor);
-	FE_EXIT_IF(m_video_mode == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_InitializationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Video Mode retrieval failed.");
-	glfwWindowHint(GLFW_RED_BITS, m_video_mode->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, m_video_mode->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, m_video_mode->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, m_video_mode->refreshRate);
-	glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE); // Disable automatic content scaling based on monitor DPI
-
-
-	if (m_window_config._is_fullscreen == true)
+	boost::json::object l_froggy_json = boost::json::parse(l_froggy).get_object();
 	{
-		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); // Make window always on top
-		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // Disable window decorations (title bar, borders, etc.)
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // Do not allow window resizing
-		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE); // Start window maximized
+		m_shader_headers.reserve(1024); // reserve some arbitrary amount of headers to avoid too many reallocations; this value can be changed later if needed.
+		FE_ASSERT(l_froggy_json["ShaderHeaders"].is_array() == true);
 
-		m_window = glfwCreateWindow(m_video_mode->width, m_video_mode->height, m_window_config._title.c_str(), m_primary_monitor, nullptr);
-		// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
-	else
-	{
-		glfwWindowHint(GLFW_FLOATING, GLFW_FALSE); // Make window always not on top
-		glfwWindowHint(GLFW_DECORATED, GLFW_TRUE); // Enable window decorations (title bar, borders, etc.)
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Allow window resizing
-		glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE); // Start window not maximized
-
-		m_window = glfwCreateWindow(m_video_mode->width, m_video_mode->height, m_window_config._title.c_str(), nullptr, nullptr);
-	}
-
-
-	FE_EXIT_IF(m_window == nullptr, FE::ErrorCode::_FatalRendererError_5XX_GLFW_WindowCreationFailure, "Frogman Engine Renderer Initialization Failure: The GLFW Window creation failed.");
-	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE); // Enable sticky keys input mode; the value remains until retrieved.
-	
-	if (m_window_config._icon_images.empty() == false)
-	{
-		glfwSetWindowIcon(m_window, (int)m_window_config._icon_images.size(), m_window_config._icon_images.data());
-
-		for (GLFWimage& image : m_window_config._icon_images)
+		FE::directory_string l_path(framework::framework_base::get_framework().get_large_memory_resource());
+		for (auto& element : l_froggy_json["ShaderHeaders"].get_array())
 		{
-			if (image.pixels == nullptr)
-			{
-				continue;
-			}
+			FE_ASSERT(element.is_string() == true);
+			auto l_tmp = element.get_string();
+			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
-			stbi_image_free(image.pixels);
-			image.pixels = nullptr;
+			auto l_pos = l_path.rfind(FE_TEXT(\\));
+			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
+
+			l_path.replace(l_path.begin(), l_path.begin() + l_pos, m_shader_root_directory);
+
+			std::fstream l_file(l_path.c_str(), std::ios::binary | std::ios::in);
+			FE::fstream_guard l_file_stream(l_file);
+
+			l_file.seekg(0, std::ios::end);
+			std::streamsize l_size = l_file.tellg();
+			l_file.seekg(0, std::ios::beg);
+
+			auto& l_shader_header = m_shader_headers[l_path];
+			l_shader_header._header_buffer = std::pmr::string(framework::framework_base::get_framework().get_large_memory_resource());
+			l_shader_header._header_buffer.resize(l_size);
+
+			l_file.read(l_shader_header._header_buffer.data(), l_size);
+
+			l_shader_header._included_hlslis = std::pmr::vector<FE::internal::renderer::hlsli*>(framework::framework_base::get_framework().get_large_memory_resource());
 		}
 	}
 
-	// glfwMakeContextCurrent(m_window);
-	m_backend = std::make_unique<FE::internal::renderer::backend>(this);
-
-	glfwSetWindowCloseCallback(m_window, &__on_window_close);
-	glfwSetFramebufferSizeCallback(m_window, &__on_window_resize);
-	
-	glfwSetKeyCallback(m_window, &FE::engine::key_callback);
-	glfwSetMouseButtonCallback(m_window, &FE::engine::mouse_button_callback);
-	glfwSetCursorPosCallback(m_window, &FE::engine::cursor_position_callback);
-	glfwSetScrollCallback(m_window, &FE::engine::scroll_callback);
-}
-
-renderer::~renderer() noexcept
-{
-	glfwDestroyWindow(m_window);
-	glfwTerminate();
-}
-
-
-void renderer::execute() noexcept
-{
-	m_renderer_thread = std::thread(__renderer_main, nullptr);
-}
-
-void renderer::terminate() noexcept
-{
-	m_renderer_thread.join();
-}
-
-void renderer::render_frame() noexcept
-{
-	resolution l_pending_resolution = m_pending_resolution_change.exchange({}, std::memory_order_acq_rel);
-	if ((l_pending_resolution._width > 0) && (l_pending_resolution._height > 0))
 	{
-		m_backend->resize_swap_chain_buffers(l_pending_resolution._width, l_pending_resolution._height);
+		m_shaders.reserve(1024); // reserve some arbitrary amount of shaders to avoid too many reallocations; this value can be changed later if needed.
+		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
+		for (auto& shader : l_froggy_json["Shaders"].get_array())
+		{
+			m_shaders.emplace_back();
+			m_shaders.back()._defines = std::pmr::vector<FE::internal::renderer::shader_define>(framework::framework_base::get_framework().get_large_memory_resource());
+			m_shaders.back()._permutation_blacklist = std::pmr::vector<std::pmr::string>(framework::framework_base::get_framework().get_large_memory_resource());
+			m_shaders.back()._macro_combinations = std::pmr::vector<std::pmr::vector<FE::internal::renderer::shader::macro>>(framework::framework_base::get_framework().get_large_memory_resource());
+			m_shaders.back()._main_function = std::pmr::string(framework::framework_base::get_framework().get_large_memory_resource());
+			m_shaders.back()._source_path = std::pmr::wstring(framework::framework_base::get_framework().get_large_memory_resource());
+
+			auto& l_shader = shader.get_object();
+			FE_ASSERT(l_shader["Defines"].is_array() == true);
+			for (auto& define : l_shader["Defines"].get_array())
+			{
+				for (auto& [identifier, value_range] : define.get_object())
+				{
+					m_shaders.back()._defines.emplace_back();
+					m_shaders.back()._defines.back()._identifier = std::pmr::string(identifier, framework::framework_base::get_framework().get_large_memory_resource());
+					FE_ASSERT(value_range.is_array() == true);
+					FE_ASSERT(value_range.get_array().size() == 2);
+					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);
+					FE_ASSERT(value_range.get_array().at(1).is_int64() == true);
+					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
+					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
+					FE_ASSERT(m_shaders.back()._defines.back()._value_range._first <= m_shaders.back()._defines.back()._value_range._second);
+					m_shaders.back()._defines.back()._current_value = m_shaders.back()._defines.back()._value_range._first; // set current value to the minimum value in the range by default
+				}
+			}
+
+			for (auto& blacklist : l_shader["PermutationBlacklist"].get_array())
+			{
+				FE_ASSERT(blacklist.is_string() == true);
+				m_shaders.back()._permutation_blacklist.push_back(std::pmr::string(blacklist.get_string().c_str(), framework::framework_base::get_framework().get_large_memory_resource()));
+			}
+
+			FE_ASSERT(l_shader["MainFunction"].is_string() == true);
+			m_shaders.back()._main_function = l_shader["MainFunction"].get_string();
+
+			FE_ASSERT(l_shader["Source"].is_string() == true);
+			auto l_tmp = l_shader["Source"].get_string();
+			m_shaders.back()._source_path = std::pmr::wstring(l_tmp.begin(), l_tmp.end(), framework::framework_base::get_framework().get_large_memory_resource());
+
+			auto l_pos = m_shaders.back()._source_path.rfind(L"\\");
+			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
+
+			m_shaders.back()._source_path.replace(m_shaders.back()._source_path.begin(),
+													m_shaders.back()._source_path.begin() + l_pos,
+
+													std::pmr::wstring(m_shader_root_directory.begin(), m_shader_root_directory.end())
+			);
+
+
+			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
+			{
+			STRING_CASE(FE::internal::renderer::SM5_vertex_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_VertexShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM5_pixel_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_PixelShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM5_geometry_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_GeometryShader;
+				break;
+
+				STRING_CASE(FE::internal::renderer::SM5_hull_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_HullShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM5_domain_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_DomainShader;
+				break;
+
+			STRING_CASE(FE::internal::renderer::SM5_compute_shader_target) :
+				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_ComputeShader;
+				break;
+
+			_FE_NODEFAULT_;
+			}
+		}
 	}
-
-	m_render_delta_milliseconds.start_clock();
-
-	m_backend->begin_frame();
-
-	m_backend->end_frame();
-
-	m_render_delta_milliseconds.end_clock();
-	m_delta_milliseconds = m_render_delta_milliseconds.get_delta_milliseconds();
 }
 
 
-void FE::renderer::__on_window_close(GLFWwindow* window_p) noexcept
+void FE::renderer::__main(class FE::world&) noexcept
 {
-	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_should_exit.store(true, std::memory_order_release);
-	FE::engine::get_engine().terminate_all_processors();
-	glfwSetWindowShouldClose(window_p, GLFW_TRUE);
-}
-
-void renderer::__on_window_resize(_FE_MAYBE_UNUSED_ GLFWwindow* const window_p, FE::int32 new_width_p, FE::int32 new_height_p) noexcept
-{
-	if ((new_width_p <= 0) || (new_height_p <= 0))
-	{
-		return; // Ignore minimize events
-	}
-
-	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store( { ._width = (FE::uint32)new_width_p, ._height = (FE::uint32)new_height_p },
-																			std::memory_order_release);
-}
-
-void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
-{
+	/*
 	auto& l_engine = FE::engine::get_engine();
 	auto& l_renderer = l_engine.get_renderer(FE::engine::auth{});
 	auto& l_shader_headers = l_engine.get_shader_headers(FE::engine::auth{});
@@ -396,56 +393,7 @@ void FE::renderer::__renderer_main(class FE::component_base* const) noexcept
 	{
 		l_renderer.render_frame();
 	}
+	*/
 }
-
-
-void renderer::toggle_borderless_fullscreen() noexcept
-{
-	if (m_window_config._is_fullscreen == false)
-	{
-		// Save windowed-mode state
-		glfwGetWindowPos(m_window, &m_saved_window_x, &m_saved_window_y);
-		glfwGetWindowSize(m_window, &m_saved_window_width, &m_saved_window_height);
-
-
-		// Position to cover the target monitor
-		int l_monitor_x = 0;
-		int l_monitor_y = 0;
-		glfwGetMonitorPos(m_primary_monitor, &l_monitor_x, &l_monitor_y);
-		
-
-		glfwSetWindowAttrib(m_window, GLFW_FLOATING, GLFW_TRUE);
-		glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_FALSE);
-		glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);
-		glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_TRUE);
-		
-		FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store({._width = (FE::uint32)m_video_mode->width, ._height = (FE::uint32)m_video_mode->height},
-																				std::memory_order_release);
-		
-		glfwSetWindowMonitor(m_window, nullptr,
-			l_monitor_x, l_monitor_y,
-			m_video_mode->width, m_video_mode->height,
-			m_video_mode->refreshRate);
-
-		m_window_config._is_fullscreen = true;
-		return;
-	}
-
-	glfwSetWindowAttrib(m_window, GLFW_FLOATING, GLFW_FALSE);
-	glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_TRUE);
-	glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_TRUE);
-	glfwSetWindowAttrib(m_window, GLFW_MAXIMIZED, GLFW_FALSE);
-
-	FE::engine::get_engine().get_renderer(FE::engine::auth{}).m_pending_resolution_change.store(	{ ._width = (FE::uint32)m_saved_window_width, ._height = (FE::uint32)m_saved_window_height },
-																			std::memory_order_release);
-
-	glfwSetWindowMonitor(m_window, nullptr,
-		m_saved_window_x, m_saved_window_y,
-		m_saved_window_width, m_saved_window_height,
-		m_video_mode->refreshRate);
-
-	m_window_config._is_fullscreen = false;
-}
-
 
 END_NAMESPACE
