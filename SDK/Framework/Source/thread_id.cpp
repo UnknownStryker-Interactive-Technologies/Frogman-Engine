@@ -46,7 +46,7 @@ namespace internal::thread_id
 		{
 			if (s_thread_ids.try_pop(m_thread_id) == false)
 			{
-				FE_ASSERT(s_next_thread_id.load() < FE::max_value<var::int32>);
+				FE_ASSERT(s_next_thread_id.load() < (var::int32)FE::max_value<var::int32>);
 				m_thread_id = s_next_thread_id++;
 			}
 		}

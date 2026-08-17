@@ -658,7 +658,7 @@ public:
 };
 
 
-class component_base;
+class world;
 /*
 The FE::task_base class is an abstract base class designed for defining tasks that can be executed with both C and C++ style function calls
 providing a virtual function interface to check for null function pointers.
@@ -678,7 +678,7 @@ public:
 	// Checks if the function pointer is nullptr.
     virtual boolean is_null(void) const noexcept = 0;
 
-    using system = void(*)(class FE::component_base* const);
+    using system = void(*)(class FE::world&);
 	virtual system try_get_as_system() noexcept = 0;
 };
 

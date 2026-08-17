@@ -1,5 +1,5 @@
-﻿#ifndef _FROGMAN_ENGINE_MODE_HPP_
-#define _FROGMAN_ENGINE_MODE_HPP_
+#ifndef _FROGMAN_ENGINE_ENTITY_HPP_
+#define _FROGMAN_ENGINE_ENTITY_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
@@ -16,30 +16,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/framework/ECS.hxx>
-#include <FE/controller.hpp>
+#include <entt/entt.hpp>
 
 
 
 
 BEGIN_NAMESPACE(FE)
 
+class world;
 
-class mode : FE::archetype_base
+namespace internal
 {
-	using base_type = FE::archetype_base;
+    enum struct entity : var::uint64 {};
+}
 
-	FE::controller m_controller;
+class entity final
+{
+	friend class world;
+
+    internal::entity m_handle;
 
 public:
-	mode(framework::ECS& host_p, ControllerType type_p = FE::ControllerType::_KeyboardAndMouse) noexcept;
-	virtual ~mode() noexcept override;
+    entity() noexcept;
+    explicit entity(internal::entity handle_p) noexcept;
+	entity& operator=(internal::entity handle_p) noexcept;
 
-public:
-	_FE_FORCE_INLINE_ const FE::controller& get_controller() const noexcept { return m_controller; }
-	_FE_FORCE_INLINE_ FE::controller& get_controller() noexcept { return m_controller; }
+	~entity() noexcept = default;
+
+    entity(const entity& other_p) noexcept;
+    entity& operator=(const entity& other_p) noexcept;
+
+    entity(entity&& other_p) noexcept;
+    entity& operator=(entity&& other_p) noexcept;
+
+    FE::boolean operator==(const entity& other_p) const noexcept;
+    explicit operator bool() const noexcept;
 };
-
 
 END_NAMESPACE
 #endif

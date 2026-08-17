@@ -17,7 +17,7 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/engine.hpp>
+#include <FE/framework/framework.hxx>
 
 
 
@@ -25,10 +25,8 @@ limitations under the License.
 BEGIN_NAMESPACE(FE)
 
 
-_FE_FORCE_INLINE_ static std::pmr::memory_resource* get_thread_local_memory_resource() noexcept
-{
-	return FE::engine::get_engine().get_memory_resource();
-}
+std::pmr::memory_resource* get_large_thread_local_memory_resource() noexcept;
+std::pmr::memory_resource* get_thread_local_memory_resource() noexcept;
 
 
 END_NAMESPACE

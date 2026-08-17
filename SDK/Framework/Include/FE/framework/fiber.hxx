@@ -21,8 +21,6 @@ limitations under the License.
 #include <FE/memory.hxx>
 #include <FE/fqueue.hxx>
 
-#include <FE/framework/ECS.hxx>
-
 #include <atomic>
 
 #include <concurrent_priority_queue.h>
@@ -149,10 +147,14 @@ extern "C"
 
 namespace FE
 {
+	// temp decl
+	class world;
+	using system = void(*)(FE::world&);
+
 	struct task
 	{
 		FE::system _system;
-		FE::component_base* _component;
+		FE::world* _world;
 		TaskPriority _task_type;
 	};
 
@@ -214,7 +216,7 @@ namespace FE
 	class fiber_scheduler final
 	{
 		FE::fqueue<FE::fiber, 8> m_fiber_pool;
-		FE::fqueue<FE::fiber, 8> m_active_fibers[7];
+		FE::fqueue<FE::fiber, 8> m_active_fibers[7]; // The size of TaskPriority slots == 7
 		var::size m_fibers;
 		std::atomic_bool m_is_locked;
 		concurrency::concurrent_priority_queue<task, priority_comparator> m_task_queue;

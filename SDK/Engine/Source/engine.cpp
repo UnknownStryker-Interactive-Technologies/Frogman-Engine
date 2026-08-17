@@ -17,17 +17,12 @@ limitations under the License.
 
 #include <FE/algorithm/string.hxx>
 
-#include <FE/framework/ECS.hxx>
-#include <FE/framework/processors.hxx>
+#include <FE/processors.hxx>
 #include <FE/framework/reflection.hxx>
 
-#include <FE/framework/game_processor.hxx>
 #include <FE/pool/memory_resource.hxx>
 
 #include <FE/app.hpp>
-
-#include <FE/input_device.hpp>
-#include <FE/mode.hpp>
 
 // #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h> // for loading icons
@@ -95,21 +90,23 @@ FE::ASCII* FE::engine_program_options::view_recompile_shaders_title() const noex
 
 
 FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
-	:	FE::framework::framework_base(std::move(options_p)),
+	:	base(std::move(options_p)),
 		m_runtime_path(framework_base::get_large_memory_resource()),
 		m_game_root_directory(framework_base::get_large_memory_resource()),
-		m_shader_root_directory(framework_base::get_large_memory_resource()),
 		m_froggy_path(framework_base::get_large_memory_resource()),
 		m_froggy(framework_base::get_large_memory_resource()),
 
 		m_engine_info(),
 		m_project_config(),
-		m_shaders(framework_base::get_large_memory_resource()),
 
-		m_game_instance(),
-
-		m_game_processor(),
-		m_renderer()
+		m_processors(),
+		m_renderer(),
+		m_window(),
+		m_game(),
+		m_worlds(framework_base::get_large_memory_resource()),
+		m_current_world(),
+		m_should_tick(false),
+		m_runtime_clock()
 {
 	m_runtime_path.reserve(_MAX_PATH_LENGTH_);
 	FE::get_directory_of_current_executable(m_runtime_path.data(), (FE::uint32)m_runtime_path.capacity());
@@ -135,9 +132,6 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 	m_froggy_path += l_project_name;
 	m_froggy_path += FE_TEXT(.froggy);
 
-	m_shader_root_directory = m_game_root_directory;
-	m_shader_root_directory += FE_TEXT(\\Assets\\Shaders);
-
 	m_project_config._window_config._should_enable_vsync = get_program_options().is_vsync_enabled();
 	m_project_config._window_config._is_fullscreen = get_program_options().is_fullscreen_enabled();
 }
@@ -148,7 +142,7 @@ FE::engine::~engine() noexcept
 
 void FE::engine::terminate_all_processors() noexcept
 {
-	m_game_processor->terminate();
+	m_should_tick.store(true, std::memory_order_release);
 	m_processors->terminate();
 }
 
@@ -161,39 +155,281 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	__load_reflection_data();
 	__read_froggy();
 
-	m_ecs = FE::make_unique<framework::ECS>(framework_base::get_large_memory_resource(), m_project_config._max_engine_component_type_count_hint);
-
-	m_game_instance = FE::make_owner<FE::game>(framework_base::get_large_memory_resource(), *m_ecs);
-
-	m_game_instance->create_world(m_project_config._path_lookup_table._entry_world_path);
-
-	m_processors = FE::make_unique<framework::processors>(framework_base::get_large_memory_resource(),
-		count_async_processors(),
+	m_processors = FE::make_owner<FE::processors>(framework_base::get_large_memory_resource(),
+		count_processors(),
 		m_project_config._fibers_per_thread,
 		m_project_config._fiber_stack_size);
 
-	m_game_processor = FE::make_owner<FE::framework::game_processor>(framework_base::get_large_memory_resource(),
-		*m_game_instance->get_current_world(),
-		m_project_config._fiber_stack_size);
+	m_window = FE::make_owner<FE::window>(framework_base::get_large_memory_resource(), m_project_config._window_config);
 
-	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_large_memory_resource(), m_project_config._window_config);
+	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_large_memory_resource(), m_processors, m_window);
+
+	m_game = FE::make_owner<FE::game>(framework_base::get_large_memory_resource());
 	return 0;
 }
 
 FE::int32 FE::engine::run()
 {
+	// schedule renderer::__main()
+	FE::task l_renderer_main = {};
+	l_renderer_main._system = &FE::renderer::__main;
+	l_renderer_main._task_type = TaskPriority::_Critical;
+	l_renderer_main._world = nullptr;
+	m_processors->schedule_task(l_renderer_main);
 	m_processors->execute();
-	m_renderer->execute();
-	m_game_processor->execute();
+
+	__game_main();
+
 	return 0;
 }
 
 FE::int32 FE::engine::shutdown()
 {
-	m_game_processor->terminate();
-	m_renderer->terminate();
 	m_processors->terminate();
 	return 0;
+}
+
+
+void FE::engine::__game_main() noexcept
+{
+	FE::world::create_world(0);
+	FE::world::enter_world(0);
+
+	auto l_current_world = m_current_world;
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EngineInitialization))
+	{
+		sys(*l_current_world);
+	}
+	
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceInitialization))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldInitialization))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityInitialization))
+	{
+		sys(*l_current_world);
+	}
+
+
+
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceBegin))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldBegin))
+	{
+		sys(*l_current_world);
+	}
+
+
+
+
+	FE::clock l_delta_clock = {};
+	FE::clock l_physics_delta_clock = {};
+	l_physics_delta_clock.start_clock();
+	var::uint64 l_frame_counter = 0;
+	while (m_should_tick.load(std::memory_order_acquire))
+	{
+		l_delta_clock.start_clock();
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreGameInstanceTick))
+		{
+			sys(*l_current_world);
+		}
+		
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostGameInstanceTick))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreWorldTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostWorldTick))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreEntityTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EntityTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostEntityTick))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		l_physics_delta_clock.end_clock();
+		if (l_physics_delta_clock.get_delta_milliseconds() >= l_current_world->fixed_physics_delta_milliseconds())
+		{
+			l_physics_delta_clock.start_clock();
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PrePhysics))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_StartPhysics))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_Physics))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EndPhysics))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostPhysics))
+			{
+				sys(*l_current_world);
+			}
+		}
+
+
+
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostUpdateWork))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreRenderQueueCommit))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostRenderQueueCommit))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		if (l_current_world != m_current_world)
+		{
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldEnd))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityDeinitialization))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDeinitialization))
+			{
+				sys(*l_current_world);
+			}
+
+
+			l_current_world = m_current_world;
+
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldInitialization))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityInitialization))
+			{
+				sys(*l_current_world);
+			}
+
+			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldBegin))
+			{
+				sys(*l_current_world);
+			}
+		}
+		l_delta_clock.end_clock();
+		FE::float64 l_delta = l_delta_clock.get_delta_milliseconds();
+		l_current_world->__set_delta_time(FE::world::auth{}, l_delta);
+
+		if (l_delta >= 1000.0)
+		{
+			l_frame_counter = 0;
+		}
+		++l_frame_counter;
+	}
+
+
+
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldEnd))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceEnd))
+	{
+		sys(*l_current_world);
+	}
+
+
+
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityDeinitialization))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDeinitialization))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceDeinitialization))
+	{
+		sys(*l_current_world);
+	}
+
+	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EngineDeinitialization))
+	{
+		sys(*l_current_world);
+	}
 }
 
 
@@ -233,37 +469,37 @@ void FE::engine::__read_froggy() noexcept
 			m_project_config._path_lookup_table._world_paths.push_back(FE::directory_string(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource()));
 		}
 
-		if (l_project_config["CompressionMethod"].is_null() == false)
-		{
-			FE_ASSERT(l_froggy_json["CompressionMethod"].is_string() == true);
-			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_froggy_json["CompressionMethod"].get_string().data());
-			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve compression method from reflection metadata.");
-			m_project_config._compression_method = l_ptr->try_get_as_system();
-		}
+		//if (l_project_config["CompressionMethod"].is_null() == false)
+		//{
+		//	FE_ASSERT(l_froggy_json["CompressionMethod"].is_string() == true);
+		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_froggy_json["CompressionMethod"].get_string().data());
+		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve compression method from reflection metadata.");
+		//	//m_project_config._compression_method = l_ptr->try_get_as_system();
+		//}
 
-		if (l_project_config["DecompressionMethod"].is_null() == false)
-		{
-			FE_ASSERT(l_project_config["DecompressionMethod"].is_string() == true);
-			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecompressionMethod"].get_string().data());
-			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decompression method from reflection metadata.");
-			m_project_config._decompression_method = l_ptr->try_get_as_system();
-		}
+		//if (l_project_config["DecompressionMethod"].is_null() == false)
+		//{
+		//	FE_ASSERT(l_project_config["DecompressionMethod"].is_string() == true);
+		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecompressionMethod"].get_string().data());
+		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decompression method from reflection metadata.");
+		//	//m_project_config._decompression_method = l_ptr->try_get_as_system();
+		//}
 
-		if (l_project_config["EncryptionMethod"].is_null() == false)
-		{
-			FE_ASSERT(l_project_config["EncryptionMethod"].is_string() == true);
-			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["EncryptionMethod"].get_string().data());
-			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve encryption method from reflection metadata.");
-			m_project_config._encryption_method = l_ptr->try_get_as_system();
-		}
+		//if (l_project_config["EncryptionMethod"].is_null() == false)
+		//{
+		//	FE_ASSERT(l_project_config["EncryptionMethod"].is_string() == true);
+		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["EncryptionMethod"].get_string().data());
+		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve encryption method from reflection metadata.");
+		//	//m_project_config._encryption_method = l_ptr->try_get_as_system();
+		//}
 
-		if (l_project_config["DecryptionMethod"].is_null() == false)
-		{
-			FE_ASSERT(l_project_config["DecryptionMethod"].is_string() == true);
-			FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecryptionMethod"].get_string().data());
-			FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decryption method from reflection metadata.");
-			m_project_config._decryption_method = l_ptr->try_get_as_system();
-		}
+		//if (l_project_config["DecryptionMethod"].is_null() == false)
+		//{
+		//	FE_ASSERT(l_project_config["DecryptionMethod"].is_string() == true);
+		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecryptionMethod"].get_string().data());
+		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decryption method from reflection metadata.");
+		//	//m_project_config._decryption_method = l_ptr->try_get_as_system();
+		//}
 
 		*const_cast<var::uint64*>(&(m_project_config._max_engine_component_type_count_hint)) = l_project_config["MaxEngineComponentTypeCountHint"].get_int64();
 		FE_ASSERT(m_project_config._max_engine_component_type_count_hint > 0);
@@ -360,841 +596,4 @@ void FE::engine::__read_froggy() noexcept
 		FE_ASSERT(l_window_config["ShaderCompileSplashImageDurationInSeconds"].is_int64() == true);
 		m_project_config._window_config._splash_duration_in_seconds = (var::uint32)l_window_config["ShaderCompileSplashImageDurationInSeconds"].as_int64();
 	}
-
-	{
-		m_shader_headers.reserve(1024); // reserve some arbitrary amount of headers to avoid too many reallocations; this value can be changed later if needed.
-		FE_ASSERT(l_froggy_json["ShaderHeaders"].is_array() == true);
-
-		FE::directory_string l_path(framework_base::get_large_memory_resource());
-		for (auto& element : l_froggy_json["ShaderHeaders"].get_array())
-		{
-			FE_ASSERT(element.is_string() == true);
-			auto l_tmp = element.get_string();
-			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
-
-			auto l_pos = l_path.rfind(FE_TEXT(\\));
-			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
-
-			l_path.replace(l_path.begin(), l_path.begin() + l_pos, m_shader_root_directory);
-
-			std::fstream l_file(l_path.c_str(), std::ios::binary | std::ios::in);
-			FE::fstream_guard l_file_stream(l_file);
-
-			l_file.seekg(0, std::ios::end);
-			std::streamsize l_size = l_file.tellg();
-			l_file.seekg(0, std::ios::beg);
-
-			auto& l_shader_header = m_shader_headers[l_path];
-			l_shader_header._header_buffer = std::pmr::string(framework_base::get_large_memory_resource());
-			l_shader_header._header_buffer.resize(l_size);
-
-			l_file.read(l_shader_header._header_buffer.data(), l_size);
-
-			l_shader_header._included_hlslis = std::pmr::vector<FE::internal::renderer::hlsli*>(framework_base::get_large_memory_resource());
-		}
-	}
-
-	{
-		m_shaders.reserve(1024); // reserve some arbitrary amount of shaders to avoid too many reallocations; this value can be changed later if needed.
-		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
-		for (auto& shader : l_froggy_json["Shaders"].get_array())
-		{
-			m_shaders.emplace_back();
-			m_shaders.back()._defines = std::pmr::vector<FE::internal::renderer::shader_define>(framework_base::get_large_memory_resource());
-			m_shaders.back()._permutation_blacklist = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
-			m_shaders.back()._macro_combinations = std::pmr::vector<std::pmr::vector<FE::internal::renderer::shader::macro>>(framework_base::get_large_memory_resource());
-			m_shaders.back()._main_function = std::pmr::string(framework_base::get_large_memory_resource());
-			m_shaders.back()._source_path = std::pmr::wstring(framework_base::get_large_memory_resource());
-
-			auto& l_shader = shader.get_object();
-			FE_ASSERT(l_shader["Defines"].is_array() == true);
-			for (auto& define : l_shader["Defines"].get_array())
-			{
-				for (auto& [identifier, value_range] : define.get_object())
-				{
-					m_shaders.back()._defines.emplace_back();
-					m_shaders.back()._defines.back()._identifier = std::pmr::string(identifier, framework_base::get_large_memory_resource());
-					FE_ASSERT(value_range.is_array() == true);
-					FE_ASSERT(value_range.get_array().size() == 2);
-					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);
-					FE_ASSERT(value_range.get_array().at(1).is_int64() == true);
-					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
-					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
-					FE_ASSERT(m_shaders.back()._defines.back()._value_range._first <= m_shaders.back()._defines.back()._value_range._second);
-					m_shaders.back()._defines.back()._current_value = m_shaders.back()._defines.back()._value_range._first; // set current value to the minimum value in the range by default
-				}
-			}
-
-			for (auto& blacklist : l_shader["PermutationBlacklist"].get_array())
-			{
-				FE_ASSERT(blacklist.is_string() == true);
-				m_shaders.back()._permutation_blacklist.push_back(std::pmr::string(blacklist.get_string().c_str(), framework_base::get_large_memory_resource()));
-			}
-
-			FE_ASSERT(l_shader["MainFunction"].is_string() == true);
-			m_shaders.back()._main_function = l_shader["MainFunction"].get_string();
-
-			FE_ASSERT(l_shader["Source"].is_string() == true);
-			auto l_tmp = l_shader["Source"].get_string();
-			m_shaders.back()._source_path = std::pmr::wstring(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource());
-
-			auto l_pos = m_shaders.back()._source_path.rfind(L"\\");
-			FE_ASSERT(l_pos != std::pmr::string::npos, "Failed to find last occurrence of '\\' in shader header path.");
-
-			m_shaders.back()._source_path.replace(	m_shaders.back()._source_path.begin(), 
-													m_shaders.back()._source_path.begin() + l_pos, 
-
-													std::pmr::wstring(	m_shader_root_directory.begin(), m_shader_root_directory.end() )
-			);
-
-
-			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
-			{
-			STRING_CASE(FE::internal::renderer::SM5_vertex_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_VertexShader;	
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM5_pixel_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_PixelShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM5_geometry_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_GeometryShader;
-				break;
-
-				STRING_CASE(FE::internal::renderer::SM5_hull_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_HullShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM5_domain_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_DomainShader;
-				break;
-
-			STRING_CASE(FE::internal::renderer::SM5_compute_shader_target) :
-				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_ComputeShader;
-				break;
-
-			_FE_NODEFAULT_;
-			}
-		}
-	}
-}
-
-
-void FE::engine::key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 scancode_p, FE::int32 action_p, FE::int32 mods_p) noexcept
-{
-	static FE::input_device::keyboard& l_keyboard = get_game_instance().get_current_world()->get_mode().get_controller().get_keyboard();
-	FE::input_device::KeyState l_current_key_state = static_cast<FE::input_device::KeyState>(action_p);
-	l_keyboard._keyboard_state._current_mode = static_cast<FE::input_device::KeyMode>(mods_p);
-
-	switch (static_cast<FE::input_device::Key>(key_p))
-	{
-	case FE::input_device::Key::_Space:
-		l_keyboard._keyboard_state._key_space = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_space(FE::input_device::Key::_Space, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Apostrophe:
-		l_keyboard._keyboard_state._key_apostrophe = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_apostrophe(FE::input_device::Key::_Apostrophe, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Comma:
-		l_keyboard._keyboard_state._key_comma = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_comma(FE::input_device::Key::_Comma, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Minus:
-		l_keyboard._keyboard_state._key_minus = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_minus(FE::input_device::Key::_Minus, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Period:
-		l_keyboard._keyboard_state._key_period = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_period(FE::input_device::Key::_Period, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Slash:
-		l_keyboard._keyboard_state._key_slash = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_slash(FE::input_device::Key::_Slash, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_0:
-		l_keyboard._keyboard_state._key_0 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_0(FE::input_device::Key::_0, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_1:
-		l_keyboard._keyboard_state._key_1 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_1(FE::input_device::Key::_1, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_2:
-		l_keyboard._keyboard_state._key_2 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_2(FE::input_device::Key::_2, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_3:
-		l_keyboard._keyboard_state._key_3 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_3(FE::input_device::Key::_3, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_4:
-		l_keyboard._keyboard_state._key_4 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_4(FE::input_device::Key::_4, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_5:
-		l_keyboard._keyboard_state._key_5 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_5(FE::input_device::Key::_5, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_6:
-		l_keyboard._keyboard_state._key_6 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_6(FE::input_device::Key::_6, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_7:
-		l_keyboard._keyboard_state._key_7 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_7(FE::input_device::Key::_7, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_8:
-		l_keyboard._keyboard_state._key_8 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_8(FE::input_device::Key::_8, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_9:
-		l_keyboard._keyboard_state._key_9 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_9(FE::input_device::Key::_9, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Semicolon:
-		l_keyboard._keyboard_state._key_semicolon = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_semicolon(FE::input_device::Key::_Semicolon, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Equal:
-		l_keyboard._keyboard_state._key_equal = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_equal(FE::input_device::Key::_Equal, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_A:
-		l_keyboard._keyboard_state._key_a = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_a(FE::input_device::Key::_A, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_B:
-		l_keyboard._keyboard_state._key_b = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_b(FE::input_device::Key::_B, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_C:
-		l_keyboard._keyboard_state._key_c = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_c(FE::input_device::Key::_C, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_D:
-		l_keyboard._keyboard_state._key_d = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_d(FE::input_device::Key::_D, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_E:
-		l_keyboard._keyboard_state._key_e = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_e(FE::input_device::Key::_E, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F:
-		l_keyboard._keyboard_state._key_f = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f(FE::input_device::Key::_F, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_G:
-		l_keyboard._keyboard_state._key_g = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_g(FE::input_device::Key::_G, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_H:
-		l_keyboard._keyboard_state._key_h = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_h(FE::input_device::Key::_H, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_I:
-		l_keyboard._keyboard_state._key_i = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_i(FE::input_device::Key::_I, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_J:
-		l_keyboard._keyboard_state._key_j = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_j(FE::input_device::Key::_J, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_K:
-		l_keyboard._keyboard_state._key_k = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_k(FE::input_device::Key::_K, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_L:
-		l_keyboard._keyboard_state._key_l = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_l(FE::input_device::Key::_L, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_M:
-		l_keyboard._keyboard_state._key_m = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_m(FE::input_device::Key::_M, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_N:
-		l_keyboard._keyboard_state._key_n = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_n(FE::input_device::Key::_N, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_O:
-		l_keyboard._keyboard_state._key_o = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_o(FE::input_device::Key::_O, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_P:
-		l_keyboard._keyboard_state._key_p = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_p(FE::input_device::Key::_P, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Q:
-		l_keyboard._keyboard_state._key_q = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_q(FE::input_device::Key::_Q, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_R:
-		l_keyboard._keyboard_state._key_r = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_r(FE::input_device::Key::_R, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_S:
-		l_keyboard._keyboard_state._key_s = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_s(FE::input_device::Key::_S, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_T:
-		l_keyboard._keyboard_state._key_t = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_t(FE::input_device::Key::_T, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_U:
-		l_keyboard._keyboard_state._key_u = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_u(FE::input_device::Key::_U, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_V:
-		l_keyboard._keyboard_state._key_v = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_v(FE::input_device::Key::_V, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_W:
-		l_keyboard._keyboard_state._key_w = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_w(FE::input_device::Key::_W, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_X:
-		l_keyboard._keyboard_state._key_x = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_x(FE::input_device::Key::_X, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Y:
-		l_keyboard._keyboard_state._key_y = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_y(FE::input_device::Key::_Y, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Z:
-		l_keyboard._keyboard_state._key_z = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_z(FE::input_device::Key::_Z, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_LeftBracket:
-		l_keyboard._keyboard_state._key_left_bracket = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left_bracket(FE::input_device::Key::_LeftBracket, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Backslash:
-		l_keyboard._keyboard_state._key_backslash = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_backslash(FE::input_device::Key::_Backslash, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_RightBracket:
-		l_keyboard._keyboard_state._key_right_bracket = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right_bracket(FE::input_device::Key::_RightBracket, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_GraveAccent:
-		l_keyboard._keyboard_state._key_grave_accent = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_grave_accent(FE::input_device::Key::_GraveAccent, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_World1:
-		l_keyboard._keyboard_state._key_world_1 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_world_1(FE::input_device::Key::_World1, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_World2:
-		l_keyboard._keyboard_state._key_world_2 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_world_2(FE::input_device::Key::_World2, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Escape:
-		l_keyboard._keyboard_state._key_escape = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_escape(FE::input_device::Key::_Escape, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Enter:
-		static_assert(sizeof(l_keyboard._keyboard_state._current_mode) == 1); // not a bit
-		if ( (l_keyboard._keyboard_state._current_mode == FE::input_device::KeyMode::_Alt) && 
-			 (l_current_key_state == FE::input_device::KeyState::_Pressed)
-			)
-		{
-			// toggle fullscreen when ALT + ENTER is pressed
-			FE::engine::get_engine().m_renderer->toggle_borderless_fullscreen();
-			break;
-		}
-
-		l_keyboard._keyboard_state._key_enter = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_enter(FE::input_device::Key::_Enter, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Tab:
-		l_keyboard._keyboard_state._key_tab = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_tab(FE::input_device::Key::_Tab, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Backspace:
-		l_keyboard._keyboard_state._key_backspace = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_backspace(FE::input_device::Key::_Backspace, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Insert:
-		l_keyboard._keyboard_state._key_insert = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_insert(FE::input_device::Key::_Insert, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Delete:
-		l_keyboard._keyboard_state._key_delete = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_delete(FE::input_device::Key::_Delete, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Right:
-		l_keyboard._keyboard_state._key_right = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right(FE::input_device::Key::_Right, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Left:
-		l_keyboard._keyboard_state._key_left = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left(FE::input_device::Key::_Left, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Down:
-		l_keyboard._keyboard_state._key_down = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_down(FE::input_device::Key::_Down, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Up:
-		l_keyboard._keyboard_state._key_up = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_up(FE::input_device::Key::_Up, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_PageUp:
-		l_keyboard._keyboard_state._key_page_up = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_page_up(FE::input_device::Key::_PageUp, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PageDown:
-		l_keyboard._keyboard_state._key_page_down = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_page_down(FE::input_device::Key::_PageDown, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Home:
-		l_keyboard._keyboard_state._key_home = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_home(FE::input_device::Key::_Home, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_End:
-		l_keyboard._keyboard_state._key_end = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_end(FE::input_device::Key::_End, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_CapsLock:
-		l_keyboard._keyboard_state._key_caps_lock = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_caps_lock(FE::input_device::Key::_CapsLock, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_ScrollLock:
-		l_keyboard._keyboard_state._key_scroll_lock = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_scroll_lock(FE::input_device::Key::_ScrollLock, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_NumLock:
-		l_keyboard._keyboard_state._key_num_lock = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_num_lock(FE::input_device::Key::_NumLock, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_PrintScreen:
-		l_keyboard._keyboard_state._key_print_screen = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_print_screen(FE::input_device::Key::_PrintScreen, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pause:
-		l_keyboard._keyboard_state._key_pause = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pause(FE::input_device::Key::_Pause, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_F1:
-		l_keyboard._keyboard_state._key_f1 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f1(FE::input_device::Key::_F1, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F2:
-		l_keyboard._keyboard_state._key_f2 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f2(FE::input_device::Key::_F2, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F3:
-		l_keyboard._keyboard_state._key_f3 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f3(FE::input_device::Key::_F3, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F4:
-		l_keyboard._keyboard_state._key_f4 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f4(FE::input_device::Key::_F4, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F5:
-		l_keyboard._keyboard_state._key_f5 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f5(FE::input_device::Key::_F5, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F6:
-		l_keyboard._keyboard_state._key_f6 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f6(FE::input_device::Key::_F6, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F7:
-		l_keyboard._keyboard_state._key_f7 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f7(FE::input_device::Key::_F7, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F8:
-		l_keyboard._keyboard_state._key_f8 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f8(FE::input_device::Key::_F8, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F9:
-		l_keyboard._keyboard_state._key_f9 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f9(FE::input_device::Key::_F9, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F10:
-		l_keyboard._keyboard_state._key_f10 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f10(FE::input_device::Key::_F10, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F11:
-		l_keyboard._keyboard_state._key_f11 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f11(FE::input_device::Key::_F11, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F12:
-		l_keyboard._keyboard_state._key_f12 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f12(FE::input_device::Key::_F12, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F13:
-		l_keyboard._keyboard_state._key_f13 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f13(FE::input_device::Key::_F13, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F14:
-		l_keyboard._keyboard_state._key_f14 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f14(FE::input_device::Key::_F14, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F15:
-		l_keyboard._keyboard_state._key_f15 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f15(FE::input_device::Key::_F15, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F16:
-		l_keyboard._keyboard_state._key_f16 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f16(FE::input_device::Key::_F16, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F17:
-		l_keyboard._keyboard_state._key_f17 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f17(FE::input_device::Key::_F17, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F18:
-		l_keyboard._keyboard_state._key_f18 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f18(FE::input_device::Key::_F18, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F19:
-		l_keyboard._keyboard_state._key_f19 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f19(FE::input_device::Key::_F19, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F20:
-		l_keyboard._keyboard_state._key_f20 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f20(FE::input_device::Key::_F20, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F21:
-		l_keyboard._keyboard_state._key_f21 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f21(FE::input_device::Key::_F21, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F22:
-		l_keyboard._keyboard_state._key_f22 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f22(FE::input_device::Key::_F22, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F23:
-		l_keyboard._keyboard_state._key_f23 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f23(FE::input_device::Key::_F23, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F24:
-		l_keyboard._keyboard_state._key_f24 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f24(FE::input_device::Key::_F24, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_F25:
-		l_keyboard._keyboard_state._key_f25 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_f25(FE::input_device::Key::_F25, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Pad0:
-		l_keyboard._keyboard_state._key_pad_0 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_0(FE::input_device::Key::_Pad0, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad1:
-		l_keyboard._keyboard_state._key_pad_1 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_1(FE::input_device::Key::_Pad1, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad2:
-		l_keyboard._keyboard_state._key_pad_2 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_2(FE::input_device::Key::_Pad2, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad3:
-		l_keyboard._keyboard_state._key_pad_3 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_3(FE::input_device::Key::_Pad3, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad4:
-		l_keyboard._keyboard_state._key_pad_4 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_4(FE::input_device::Key::_Pad4, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad5:
-		l_keyboard._keyboard_state._key_pad_5 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_5(FE::input_device::Key::_Pad5, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad6:
-		l_keyboard._keyboard_state._key_pad_6 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_6(FE::input_device::Key::_Pad6, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad7:
-		l_keyboard._keyboard_state._key_pad_7 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_7(FE::input_device::Key::_Pad7, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad8:
-		l_keyboard._keyboard_state._key_pad_8 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_8(FE::input_device::Key::_Pad8, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_Pad9:
-		l_keyboard._keyboard_state._key_pad_9 = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_9(FE::input_device::Key::_Pad9, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_PadDecimal:
-		l_keyboard._keyboard_state._key_pad_decimal = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_decimal(FE::input_device::Key::_PadDecimal, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadDivide:
-		l_keyboard._keyboard_state._key_pad_divide = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_divide(FE::input_device::Key::_PadDivide, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadMultiply:
-		l_keyboard._keyboard_state._key_pad_multiply = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_multiply(FE::input_device::Key::_PadMultiply, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadSubtract:
-		l_keyboard._keyboard_state._key_pad_subtract = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_subtract(FE::input_device::Key::_PadSubtract, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadAdd:
-		l_keyboard._keyboard_state._key_pad_add = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_add(FE::input_device::Key::_PadAdd, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadEnter:
-		l_keyboard._keyboard_state._key_pad_enter = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_enter(FE::input_device::Key::_PadEnter, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_PadEqual:
-		l_keyboard._keyboard_state._key_pad_equal = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_pad_equal(FE::input_device::Key::_PadEqual, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_LeftShift:
-		l_keyboard._keyboard_state._key_left_shift = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left_shift(FE::input_device::Key::_LeftShift, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_LeftControl:
-		l_keyboard._keyboard_state._key_left_control = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left_control(FE::input_device::Key::_LeftControl, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_LeftAlt:
-		l_keyboard._keyboard_state._key_left_alt = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left_alt(FE::input_device::Key::_LeftAlt, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_LeftSuper:
-		l_keyboard._keyboard_state._key_left_super = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_left_super(FE::input_device::Key::_LeftSuper, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_RightShift:
-		l_keyboard._keyboard_state._key_right_shift = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right_shift(FE::input_device::Key::_RightShift, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_RightControl:
-		l_keyboard._keyboard_state._key_right_control = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right_control(FE::input_device::Key::_RightControl, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_RightAlt:
-		l_keyboard._keyboard_state._key_right_alt = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right_alt(FE::input_device::Key::_RightAlt, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	case FE::input_device::Key::_RightSuper:
-		l_keyboard._keyboard_state._key_right_super = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_right_super(FE::input_device::Key::_RightSuper, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-
-	case FE::input_device::Key::_Menu:
-		l_keyboard._keyboard_state._key_menu = l_current_key_state;
-		l_keyboard._keyboard_callbacks._key_menu(FE::input_device::Key::_Menu, l_current_key_state, l_keyboard._keyboard_state._current_mode, scancode_p);
-		break;
-
-	default:
-		break;
-	}
-
-	(window_p);
-}
-
-void FE::engine::mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p, FE::int32 action_p, FE::int32 mods_p) noexcept
-{
-	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
-
-	FE::input_device::ButtonState l_current_button_state = static_cast<FE::input_device::ButtonState>(action_p);
-	l_mouse._mouse_state._current_mode = static_cast<FE::input_device::KeyMode>(mods_p);
-
-	switch (static_cast<FE::input_device::Button>(button_p))
-	{
-	case FE::input_device::Button::_Left:
-		l_mouse._mouse_state._button_left = l_current_button_state;
-		l_mouse._mouse_callbacks._button_left(FE::input_device::Button::_Left, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_Right:
-		l_mouse._mouse_state._button_right = l_current_button_state;
-		l_mouse._mouse_callbacks._button_right(FE::input_device::Button::_Right, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_Middle:
-		l_mouse._mouse_state._button_middle = l_current_button_state;
-		l_mouse._mouse_callbacks._button_middle(FE::input_device::Button::_Middle, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_4th:
-		l_mouse._mouse_state._button_4th = l_current_button_state;
-		l_mouse._mouse_callbacks._button_4th(FE::input_device::Button::_4th, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_5th:
-		l_mouse._mouse_state._button_5th = l_current_button_state;
-		l_mouse._mouse_callbacks._button_5th(FE::input_device::Button::_5th, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_6th:
-		l_mouse._mouse_state._button_6th = l_current_button_state;
-		l_mouse._mouse_callbacks._button_6th(FE::input_device::Button::_6th, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_7th:
-		l_mouse._mouse_state._button_7th = l_current_button_state;
-		l_mouse._mouse_callbacks._button_7th(FE::input_device::Button::_7th, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	case FE::input_device::Button::_8th:
-		l_mouse._mouse_state._button_8th = l_current_button_state;
-		l_mouse._mouse_callbacks._button_8th(FE::input_device::Button::_8th, l_current_button_state, l_mouse._mouse_state._current_mode);
-		break;
-
-	default:
-		break;
-	}
-
-	(window_p);
-}
-
-void FE::engine::cursor_position_callback(GLFWwindow* const window_p, double x_p, double y_p) noexcept
-{
-	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
-	l_mouse._mouse_state._cursor_coordinate_x = x_p;
-	l_mouse._mouse_state._cursor_coordinate_y = y_p;
-
-	l_mouse._mouse_callbacks._cursor_position_callback(x_p, y_p);
-	(window_p);
-}
-
-void FE::engine::scroll_callback(GLFWwindow* const window_p, double x_offset_p, double y_offset_p) noexcept
-{
-	static FE::input_device::mouse& l_mouse = get_game_instance().get_current_world()->get_mode().get_controller().get_mouse();
-	l_mouse._mouse_state._cursor_coordinate_x = x_offset_p;
-	l_mouse._mouse_state._cursor_coordinate_y = y_offset_p;
-
-	l_mouse._mouse_callbacks._scroll_callback(x_offset_p, y_offset_p);
-	(window_p);
 }

@@ -1,0 +1,60 @@
+#include <FE/entity.hpp>
+/*
+Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
+
+Licensed under the Frogman Engine License (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+
+FE::entity::entity() noexcept
+    : m_handle(entt::null)
+{
+}
+FE::entity::entity(internal::entity handle_p) noexcept
+    : m_handle(handle_p)
+{
+}
+FE::entity& FE::entity::operator=(internal::entity handle_p) noexcept
+{
+	m_handle = handle_p;
+	return *this;
+}
+
+FE::entity::entity(const entity& other_p) noexcept
+    : m_handle(other_p.m_handle)
+{
+}
+FE::entity& FE::entity::operator=(const entity& other_p) noexcept
+{
+    m_handle = other_p.m_handle;
+    return *this;
+}
+
+FE::entity::entity(entity&& other_p) noexcept
+    : m_handle(other_p.m_handle)
+{
+}
+FE::entity& FE::entity::operator=(entity&& other_p) noexcept
+{
+    m_handle = other_p.m_handle;
+    return *this;
+}
+
+FE::boolean FE::entity::operator==(const entity& other_p) const noexcept
+{
+	return m_handle == other_p.m_handle;
+}
+FE::entity::operator bool() const noexcept 
+{ 
+    return m_handle != entt::null; 
+}

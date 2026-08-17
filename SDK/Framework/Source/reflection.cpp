@@ -57,6 +57,27 @@ FE::task_base* method_registry::retrieve(const std::string_view& key_p) noexcept
 	return nullptr;
 }
 
+void method_registry::associate_system(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p, system system_function_p) noexcept
+{
+	FE_ASSERT(static_cast<var::uint16>(syscall_phase_p) < FE::syscall_phase_count, "Static assertion failure: 'syscall_phase_p' is out of range.");
+
+	std::lock_guard<lock_type> l_lock(m_lock);
+
+	if (m_system_table.find(world_tag_p) == m_system_table.end())
+	{
+		typename system_table::mapped_type l_world_system_table;
+		for (typename system_table::mapped_type::value_type& vec : l_world_system_table)
+		{
+			vec = typename system_table::mapped_type::value_type(m_pool);
+			vec.reserve(256);
+		}
+		m_system_table[world_tag_p] = std::move(l_world_system_table);
+	}
+
+	static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
+	m_system_table[world_tag_p][(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
+}
+
 
 
 

@@ -35,7 +35,6 @@ limitations under the License.
 #include <FE/framework/thread_id.hxx>
 
 
-CLASS_FORWARD_DECLARATION(FE::framework, ECS);
 CLASS_FORWARD_DECLARATION(FE::framework, processors);
 int main(FE::int32 argc_p, FE::ASCII** argv_p);
 
@@ -82,9 +81,6 @@ protected:
 	reflection::property_registry m_property_reflection;
 	reflection::enum_registry m_enum_reflection;
 
-	::FE::unique_ptr<class ECS> m_ecs;
-	::FE::unique_ptr<class processors> m_processors;
-
 public:
 	framework_base(std::unique_ptr<program_option> options_p) noexcept;
 	virtual ~framework_base() noexcept;
@@ -107,7 +103,6 @@ public:
 	reflection::property_registry& get_property_reflection() noexcept;
 	reflection::enum_registry& get_enum_reflection() noexcept;
 
-	class framework::ECS& get_ecs() noexcept;
 	class framework::processors& get_processors() noexcept;
 
 protected:

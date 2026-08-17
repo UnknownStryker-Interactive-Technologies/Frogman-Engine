@@ -23,8 +23,6 @@ limitations under the License.
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hxx>
 
-#include <FE/framework/processors.hxx>
-
 // boost
 #include <boost/stacktrace.hpp>
 
@@ -35,12 +33,10 @@ limitations under the License.
 #include <string>
 
 #ifdef _FE_ON_WINDOWS_X86_64_
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shellapi.h>
 #include <ntsecapi.h>
 #pragma comment(lib, "advapi32.lib")
-#undef WIN32_LEAN_AND_MEAN
 #endif
 
 
@@ -299,9 +295,7 @@ framework_base::framework_base(std::unique_ptr<program_option> options_p) noexce
 						),
 		m_method_reflection(81920, get_large_memory_resource()), 
 		m_property_reflection(81920, get_large_memory_resource()),
-		m_enum_reflection(get_large_memory_resource(), 81920),
-		m_ecs(),
-		m_processors()
+		m_enum_reflection(get_large_memory_resource(), 81920)
 {
 	std::locale::global(m_current_system_locale);
 	s_TLGPMP_deleter = m_memory;
@@ -373,22 +367,11 @@ reflection::enum_registry& framework_base::get_enum_reflection() noexcept
 	return m_enum_reflection;
 }
 
-framework::ECS& framework_base::get_ecs() noexcept
-{
-	return *m_ecs;
-}
-
-framework::processors& framework_base::get_processors() noexcept
-{
-	return *m_processors;
-}
-
 
 
 
 _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal_p)
 {
-#ifdef _RELWITHDEBINFO_
 	boost::stacktrace::stacktrace l_stack_trace_dumps;
 
 	std::ofstream l_release_build_crash_report;
@@ -406,8 +389,6 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal
 		l_release_build_crash_report << "\n-------------------------------------------------- END OF STACK TRACE RECORD --------------------------------------------------\n";
 
 	}
-#endif
-	//FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::framework::framework_base::s_framework->shutdown(); FE::framework::framework_base::s_framework->__shutdown_main());
 	std::exit(signal_p);
 }
 

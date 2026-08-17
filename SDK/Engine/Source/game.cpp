@@ -1,26 +1,127 @@
-﻿#include <FE/game.hpp>
-#include <FE/engine.hpp>
+﻿#include <FE/game.hxx>
+/*
+Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
+
+Licensed under the Frogman Engine License (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+#include <FE/memory.hpp>
 
 
 
 
-FE::game::game(FE::framework::ECS& engine_ecs_p) noexcept
-	:	base_type(engine_ecs_p),
-		m_world_list( typename world_list::allocator_type{ FE::framework::framework_base::get_framework().get_memory_resource() } ),
-		m_current_world()
-{}
-
-FE::smart_ptr<FE::world, FE::RefType::_Observer> FE::game::create_world(const FE::directory_string& path_to_world_file_p) noexcept
+FE::game::game() noexcept
+	: m_current_input_contexts(FE::get_large_thread_local_memory_resource())
 {
-	(path_to_world_file_p);
-	area_of_operation l_area_of_operation; // build from world file.
-	//l_area_of_operation._target_gdk_version = 
-	// FE_ASSERT( FE::engine::get_engine().get_engine_info()._version == l_area_of_operation._target_gdk_version );
-	// area_of_operation._tag = hash(...);
-	// area_of_operation._gravity = ...;
-	l_area_of_operation._component_type_count_hint = FE::engine::get_engine().get_project_config()._max_engine_component_type_count_hint;
+}
 
-	auto l_result = m_world_list.emplace(l_area_of_operation._tag, FE::make_owner<world>(FE::framework::framework_base::get_framework().get_memory_resource(), l_area_of_operation));
-	m_current_world = l_result.first->second;
-	return m_current_world;
+FE::game::~game() noexcept
+{
+}
+
+
+FE::input::context& FE::game::register_input_context(FE::input::context_id id_p) noexcept
+{
+	return m_input_contexts[id_p];
+}
+
+FE::input::context* FE::game::find_input_context(FE::input::context_id id_p) noexcept
+{
+	auto l_iterator = m_input_contexts.find(id_p);
+
+	if (l_iterator == m_input_contexts.end())
+	{
+		return nullptr;
+	}
+	return &(l_iterator->second);
+}
+
+FE::boolean FE::game::is_input_context_registered(FE::input::context_id id_p) const noexcept
+{
+	return m_input_contexts.find(id_p) != m_input_contexts.end();
+}
+
+void FE::game::push_input_context(FE::input::context_id id_p) noexcept
+{
+	auto l_iterator = m_input_contexts.find(id_p);
+
+	if (l_iterator == m_input_contexts.end())
+	{
+		return;
+	}
+
+	// The real release of anything held right now would land on the new top of the stack,
+	// so every layer that received the press has to be closed out first.
+	for (auto l_context : m_current_input_contexts)
+	{
+		l_context->second.flush_pressed_keys();
+	}
+
+	// front() is the top of the stack.
+	m_current_input_contexts.insert(m_current_input_contexts.begin(), l_iterator);
+}
+
+void FE::game::pop_input_context() noexcept
+{
+	if (m_current_input_contexts.empty() == true)
+	{
+		return;
+	}
+
+	for (auto l_context : m_current_input_contexts)
+	{
+		l_context->second.flush_pressed_keys();
+	}
+	m_current_input_contexts.erase(m_current_input_contexts.begin());
+}
+
+void FE::game::pop_input_context(FE::input::context_id id_p) noexcept
+{
+	for (auto l_iterator = m_current_input_contexts.begin(); l_iterator != m_current_input_contexts.end(); ++l_iterator)
+	{
+		if ((*l_iterator)->first == id_p)
+		{
+			for (auto l_context : m_current_input_contexts)
+			{
+				l_context->second.flush_pressed_keys();
+			}
+			m_current_input_contexts.erase(l_iterator);
+			return;
+		}
+	}
+}
+
+void FE::game::clear_input_contexts() noexcept
+{
+	if (m_current_input_contexts.empty() == true)
+	{
+		return;
+	}
+
+	for (auto l_context : m_current_input_contexts)
+	{
+		l_context->second.flush_pressed_keys();
+	}
+	m_current_input_contexts.clear();
+}
+
+FE::boolean FE::game::is_input_context_active(FE::input::context_id id_p) const noexcept
+{
+	for (auto l_iterator : m_current_input_contexts)
+	{
+		if (l_iterator->first == id_p)
+		{
+			return true;
+		}
+	}
+	return false;
 }

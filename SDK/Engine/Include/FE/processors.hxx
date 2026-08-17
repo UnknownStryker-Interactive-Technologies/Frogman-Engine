@@ -1,5 +1,5 @@
-﻿#ifndef _FE_FRAMEWORK_PROCESSORS_HXX_
-#define _FE_FRAMEWORK_PROCESSORS_HXX_
+﻿#ifndef _FE_PROCESSORS_HXX_
+#define _FE_PROCESSORS_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
@@ -29,8 +29,9 @@ CLASS_FORWARD_DECLARATION(FE, mutex)
 CLASS_FORWARD_DECLARATION(FE, shared_mutex)
 
 
-// TODO: implement fiber based future and promise!
-BEGIN_NAMESPACE(FE::framework)
+
+
+BEGIN_NAMESPACE(FE)
 
 
 class processors final

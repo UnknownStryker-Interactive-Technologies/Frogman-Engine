@@ -510,6 +510,16 @@ public:
         return m_ptr.load(std::memory_order_acquire)->_observer_count.load(std::memory_order_acquire);
 	}
 
+    FE::boolean operator!=(const smart_ptr& other_p) const noexcept
+    {
+        return m_ptr.load(std::memory_order_acquire) != other_p.m_ptr.load(std::memory_order_acquire);
+    }
+
+    FE::boolean operator==(const smart_ptr& other_p) const noexcept
+    {
+        return m_ptr.load(std::memory_order_acquire) == other_p.m_ptr.load(std::memory_order_acquire);
+    }
+
 private:
     void __destruct_and_deallocate_all(control_block_type* const control_block_p) noexcept
     {

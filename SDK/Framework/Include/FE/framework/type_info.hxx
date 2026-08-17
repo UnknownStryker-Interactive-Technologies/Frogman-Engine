@@ -37,16 +37,11 @@ limitations under the License.
 
 // windows
 #ifdef _FE_ON_WINDOWS_X86_64_
-#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#undef WIN32_LEAN_AND_MEAN
 #include <DbgHelp.h>
 #endif
 
 
-
-
-CLASS_FORWARD_DECLARATION(FE, component_base);
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
@@ -63,7 +58,6 @@ namespace internal::type_info
         string_type _base_typename;
         std::size_t _hashed_name = 0;
 		std::size_t _hashed_base_name = 0;
-		var::uint64 _component_type_id = 0;
     };
 }
 
@@ -76,7 +70,6 @@ class type_info
 
     thread_local static std::shared_ptr<std::pmr::monotonic_buffer_resource> tl_s_resource;
     thread_local static table_type tl_s_type_information;
-    static std::atomic_uint64_t s_type_id_counter;
 
     internal::type_info::metadata m_info;
 
@@ -112,12 +105,6 @@ private:
 			m_info._hashed_base_name = l_hasher.result();
         }
 
-        if constexpr (std::is_base_of_v<FE::component_base, T> == true)
-        {
-            ++s_type_id_counter;
-            m_info._component_type_id = s_type_id_counter;
-        }
-
         type_info::tl_s_type_information[m_info._typename] = m_info;
     }
 
@@ -140,12 +127,6 @@ public:
     _FE_FORCE_INLINE_ std::size_t base_hash_code() const noexcept
     {
 		return m_info._hashed_base_name;
-    }
-
-    _FE_FORCE_INLINE_ var::uint64 component_typeid() const noexcept
-    {
-        FE_ASSERT(m_info._component_type_id > 0, "Assertion failed: the current type is not a valid component type.");
-		return m_info._component_type_id;
     }
 
     static FE::ASCII* get_base_name_of(const std::string_view& this_type_name_p) noexcept

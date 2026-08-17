@@ -496,7 +496,7 @@
 	
 
 			sub rsp, 40 ; Shadow space (4 * 8 bytes) for the CALL instruction below: 
-			mov rcx, r13 ; l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._component;
+			mov rcx, r13 ; l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._world;
 			call r12 ; stack must be aligned to 16 bytes before the CALL instruction.
 			add rsp, 40 ; Clean up shadow space after the CALL
 

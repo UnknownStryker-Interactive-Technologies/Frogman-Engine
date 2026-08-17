@@ -17,7 +17,6 @@ limitations under the License.
 
 #include <FE/framework/thread_id.hxx>
 
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 
@@ -118,7 +117,7 @@ FE::fiber_scheduler::fiber_scheduler() noexcept
 void _FE_CDECL_ FE::fiber_scheduler::create_fiber(FE::size stack_size_p) noexcept
 {
 	++m_fibers;
-	m_fiber_pool.push(stack_size_p);
+	m_fiber_pool.emplace(stack_size_p);
 }
 
 void _FE_CDECL_ FE::fiber_scheduler::schedule_task(const task& task_p) noexcept
@@ -137,7 +136,7 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 
 	FE::fiber l_to_switch = m_fiber_pool.pop(); // get a fiber from the pool to run the task.
 	l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system; // smuggle the system function pointer into r12; the fiber entry point will call this function pointer to execute the task.
-	l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._component; // smuggle the component pointer into r13; the fiber entry point will pass this as an argument to the system function when calling it.
+	l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._world; // smuggle the component pointer into r13; the fiber entry point will pass this as an argument to the system function when calling it.
 	l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
 	l_to_switch.m_impl->_task_type = l_to_execute._task_type;
 
@@ -156,12 +155,12 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 			FE::fiber l_to_recycle = active_fiber_queue.pop();
 			l_to_recycle.m_impl->_context_ptr->_rsp = (var::byte*)l_to_recycle.m_impl->_context_ptr; // reset the rsp
 			l_to_recycle.m_impl->_task_type = TaskPriority::_None; // reset the task type to the default value.
-			m_fiber_pool.push( std::move(l_to_recycle) );
+			m_fiber_pool.emplace( std::move(l_to_recycle) );
 		}
 	}
 	l_to_switch.m_impl->_context_ptr->_rsp = (var::byte*)l_to_switch.m_impl->_context_ptr; // reset the rsp
 	l_to_switch.m_impl->_task_type = TaskPriority::_None; // reset the task type to the default value.
-	m_fiber_pool.push( std::move(l_to_switch) ); // reclaim it.
+	m_fiber_pool.emplace( std::move(l_to_switch) ); // reclaim it.
 	tl_s_current_fiber = nullptr;
 	return _FE_SUCCEEDED_;
 }
@@ -223,17 +222,17 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			if (tl_s_current_fiber->_task_type == TaskPriority::_None) // flag for fibers that are not currently running any tasks; they can be immediately recycled back to the pool without being pushed to the active queue.
 			{
 				l_from->_context_ptr->_rsp = (var::byte*)l_from->_context_ptr; // reset the rsp
-				m_fiber_pool.push(std::move(l_from_fiber));
+				m_fiber_pool.emplace(std::move(l_from_fiber));
 			}
 			else
 			{
-				m_active_fibers[l_from->_task_type].push(std::move(l_from_fiber));
+				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
 			FE::fiber l_to_switch = m_fiber_pool.pop(); // get a fiber from the pool to run the task.
 			l_to_switch.m_impl->_task_type = l_to_execute._task_type;
 			l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system;
-			l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._component; // smuggle the component pointer into r12; the fiber entry point will pass this as an argument to the system function when calling it.
+			l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._world; // smuggle the component pointer into r12; the fiber entry point will pass this as an argument to the system function when calling it.
 			l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
 
 			tl_s_current_fiber = l_to_switch.m_impl;
@@ -254,11 +253,11 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			if (tl_s_current_fiber->_task_type == TaskPriority::_None) // flag for fibers that are not running any task; they should be returned to the pool instead of being put back to the active fiber list.
 			{
 				l_from->_context_ptr->_rsp = (var::byte*)l_from->_context_ptr; // reset the rsp
-				m_fiber_pool.push(std::move(l_from_fiber));
+				m_fiber_pool.emplace(std::move(l_from_fiber));
 			}
 			else
 			{
-				m_active_fibers[l_from->_task_type].push(std::move(l_from_fiber));
+				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
 			tl_s_current_fiber = l_to_switch.m_impl;

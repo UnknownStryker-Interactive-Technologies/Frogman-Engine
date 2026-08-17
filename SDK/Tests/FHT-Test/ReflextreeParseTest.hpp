@@ -27,20 +27,20 @@ limitations under the License.
 // SECTION 0: FE_SYSTEM
 // ============================================================================
 
-FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
-void system(FE::component_base* const comptr_p) noexcept
+FE_SYSTEM(_EngineInitialization, WorldTagEnumType)
+void system(class FE::world& world) noexcept
 {
 	// System implementation
 }
 
-FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
-void           system2(FE::component_base* const comptr_p) noexcept;
+FE_SYSTEM(_EngineInitialization, WorldTagEnumType)
+void           system2(FE::world& comptr_p) noexcept;
 
-FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
-void system3(FE::component_base* const comptr_p);
+FE_SYSTEM(_EngineInitialization, WorldTagEnumType)
+void system3(FE::world& comptr_p);
 
-FE_SYSTEM(_EngineInitialization, TargetComponentType, WorldTagEnumType)
-void system4(FE::component_base* const comptr_p)
+FE_SYSTEM(_EngineInitialization, WorldTagEnumType)
+void system4(FE::world& comptr_p)
 {
 
 }

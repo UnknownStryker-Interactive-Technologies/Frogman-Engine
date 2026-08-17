@@ -57,14 +57,26 @@ limitations under the License.
 
 
 
+using world_tag_t = ::var::uint16;
+
+#ifdef FE_WORLD_TAG
+#error FE_WORLDS is a reserved Frogman Engine macro keyword.
+#else
+#define FE_WORLD_TAG \
+enum struct FEWorldTag : world_tag_t
+#endif
+
 #ifdef FE_SYSTEM
 #error FE_SYSTEM is a reserved Frogman Engine macro keyword.
 #else
-#define FE_SYSTEM(SysCallPhase, TargetComponentType, WorldTagEnumType) /* This macro is an indicator for the Frogman Engine Header Tool. Incorrectly placing the arguments will fail the generated code compilation. */ \
-static_assert(::std::is_same_v<decltype(SysCallPhase), enum struct ::FE::SystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
-static_assert(::std::is_base_of_v<class ::FE::component_base, TargetComponentType>, "Frogman Engine C++: the TargetComponentType must be derived from FE::component_base."); \
-static_assert(::std::is_enum_v< decltype(WorldTagEnumType) >, "Frogman Engine C++: the WorldTagEnumType is not a valid enum value");
+// This macro is an indicator for the Frogman Engine Header Tool.
+// Incorrectly placing the arguments will fail the generated code compilation.
+#define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
+static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::SystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
+static_assert(::std::is_enum_v<::std::remove_cv_t<decltype(WorldTagEnum)>>, "Frogman Engine C++: the WorldTagEnum is not an enum value."); \
+static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
 #endif
+
 
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
@@ -72,40 +84,58 @@ CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 namespace FE
 {
 	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
-	enum SystemCallPhase : var::uint32
+	enum SystemCallPhase : var::uint16
 	{
 		_EngineInitialization = 0,
-		_GameInitialization = 1,
+		_GameInstanceInitialization = 1,
 		_WorldInitialization = 2,
 		_WorldDefaultEntityInitialization = 3,
 
-		_GameBegin = 4,
+
+		_GameInstanceBegin = 4,
 		_WorldBegin = 5,
-		_EntitySetUp = 6,
-		_EntityControllerSetUp = 7,
+//		_EntityBegin = 6,
 
-		_GameTick = 8,
-		_WorldTick = 9,
-		_EntityTick = 10,
-		_EntityControllerTick = 11,
-		_PrePhysics = 12,
-		_StartPhysics = 13,
-		_Physics = 14,
-		_EndPhysics = 15,
-		_PostPhysics = 16,
-		_PostEntityTick = 17,
 
-		//_NewlySpawnedEntities = 18,
-		_PreRender = 18,
-		_PostRender = 19,
+		_PreGameInstanceTick = 7,
+		_GameInstanceTick = 8,
+		_PostGameInstanceTick = 9,
 
-		_EntityCleanUp = 20,
-		_WorldCleanUp = 21,
-		_GameCleanUp = 22,
-		_EngineCleanUp = 23
+		_PreWorldTick = 10,
+		_WorldTick = 11,
+		_PostWorldTick = 12,
+
+		_PreEntityTick = 13,
+		_EntityTick = 14,
+		_PostEntityTick = 15,
+
+		_PrePhysics = 16,
+		_StartPhysics = 17,
+		_Physics = 18,
+		_EndPhysics = 19,
+		_PostPhysics = 20,
+
+		_PostUpdateWork = 21,
+
+
+		_PreRenderQueueCommit = 22,
+		_PostRenderQueueCommit = 23,
+
+
+//		_EntityEnd = 24,
+		_WorldEnd = 25,
+		_GameInstanceEnd = 26,
+
+
+		_WorldDefaultEntityDeinitialization = 27,
+		_WorldDeinitialization = 28,
+		_GameInstanceDeinitialization = 29,
+		_EngineDeinitialization = 30
 	};
 
-	constexpr static var::uint64 syscall_phase_count = 24;
+	constexpr static var::uint64 syscall_phase_count = 31;
+
+	class world;
 }
 
 
@@ -115,8 +145,6 @@ BEGIN_NAMESPACE(FE::framework::reflection)
 class method_registry
 {
 	friend class ::FE::framework::framework_base;
-public:
-	using alignment_type = FE::align_8bytes;
 
 private:
 	using lock_type = boost::shared_mutex;
@@ -125,30 +153,16 @@ private:
 		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::cache_aligned_allocator<std::pmr::string>>;
 
-	using world_tag_t = var::uint64;
-	using component_typeid_t = var::size;
-	using system_t = void(*)(class ::FE::component_base* const);
+	using world_tag_t = var::uint16;
+	using system = void(*)(class ::FE::world&);
 
 	using system_table = absl::node_hash_map<	world_tag_t,
-												std::array<absl::node_hash_map<component_typeid_t, std::pmr::vector<system_t>,
-																				absl::lts_20260107::DefaultHashContainerHash<component_typeid_t>,
-																				absl::lts_20260107::DefaultHashContainerEq<component_typeid_t>,
-																				FE::polymorphic_allocator< std::pair<const component_typeid_t, std::pmr::vector<system_t>> >
-																				>,
-															syscall_phase_count
-															>,
-		absl::lts_20260107::DefaultHashContainerHash<world_tag_t>,
-		absl::lts_20260107::DefaultHashContainerEq<world_tag_t>,
-		FE::polymorphic_allocator<std::pair<const world_tag_t,
-											std::array<absl::node_hash_map<component_typeid_t, std::pmr::vector<system_t>,
-																			absl::lts_20260107::DefaultHashContainerHash<component_typeid_t>,
-																			absl::lts_20260107::DefaultHashContainerEq<component_typeid_t>,
-																			FE::polymorphic_allocator< std::pair<const component_typeid_t, std::pmr::vector<system_t>> >
-																			>,
-														syscall_phase_count
-														>
-											>
-									>
+												std::array<std::pmr::vector<system>, syscall_phase_count>,
+
+												absl::DefaultHashContainerHash<world_tag_t>,
+												absl::DefaultHashContainerEq<world_tag_t>,
+
+												std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, syscall_phase_count>>>
 	>;
 
 	lock_type m_lock;
@@ -197,38 +211,12 @@ public:
 	// This method may return a nullptr.
 	FE::task_base* retrieve(const std::string_view& key_p) noexcept;
 
-	template<class TargetComponent>
-	void associate_system(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p, system_t system_function_p) noexcept
-	{
-		static_assert(std::is_base_of_v<::FE::component_base, TargetComponent>, "Static assertion failure: 'TargetComponent' must be derived from 'FE::component_base'.");
-		FE_ASSERT(static_cast<var::uint32>(syscall_phase_p) < FE::syscall_phase_count, "Static assertion failure: 'syscall_phase_p' is out of range.");
-		
-		std::lock_guard<lock_type> l_lock(m_lock);
-
-		if (m_system_table.find(world_tag_p) == m_system_table.end())
-		{
-			static typename system_table::mapped_type l_world_system_table;
-			for (typename system_table::mapped_type::value_type& vec : l_world_system_table)
-			{
-				vec = typename system_table::mapped_type::value_type(m_pool);
-				vec.reserve(256);
-			}
-			m_system_table[world_tag_p] = std::move(l_world_system_table);
-		}
-
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint32));
-
-		if ( m_system_table[world_tag_p][(FE::uint32)syscall_phase_p].find( FE::framework::reflection::type_id<TargetComponent>().hash_code() ) == m_system_table[world_tag_p][(FE::uint32)syscall_phase_p].end() )
-		{
-			m_system_table[world_tag_p][(FE::uint32)syscall_phase_p][ FE::framework::reflection::type_id<TargetComponent>().hash_code() ] = typename system_table::mapped_type::value_type::mapped_type(m_pool);
-		}
-		m_system_table[world_tag_p][(FE::uint32)syscall_phase_p][ FE::framework::reflection::type_id<TargetComponent>().hash_code() ].emplace_back(system_function_p);
-	}
+	void associate_system(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p, system system_function_p) noexcept;
 
 	_FE_FORCE_INLINE_ typename system_table::mapped_type::value_type& get_systems(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p) noexcept
 	{
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint32));
-		return m_system_table[world_tag_p][(FE::uint32)syscall_phase_p];
+		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
+		return m_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
 	}
 };
 
@@ -971,12 +959,12 @@ private:
 	absl::flat_hash_map< std::string_view, std::array<var::byte, field_max_size>,
 		absl::lts_20260107::DefaultHashContainerHash<std::string_view>,
 		absl::lts_20260107::DefaultHashContainerEq<std::string_view>,
-		FE::polymorphic_allocator<std::pair<const std::string_view, std::array<var::byte, field_max_size>>>> m_string_to_value_map;
+		std::pmr::polymorphic_allocator<std::pair<const std::string_view, std::array<var::byte, field_max_size>>>> m_string_to_value_map;
 
 	absl::flat_hash_map<std::array<var::byte, field_max_size>, std::string_view, 
 						absl::lts_20260107::DefaultHashContainerHash<std::array<var::byte, field_max_size>>,
 						absl::lts_20260107::DefaultHashContainerEq<std::array<var::byte, field_max_size>>,
-						FE::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
+						std::pmr::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
 						> m_value_to_string_map;
 
 public:
@@ -1175,7 +1163,7 @@ The FE_PROPERTY macro defines a class for property reflection that registers a s
 ensuring it is only registered once during the application's execution.
 */
 #define FE_PROPERTY(property_name)  \
-class property_metadata_##property_name : public ::FE::internal::ECS::gc_metadata_base \
+class property_metadata_##property_name \
 { \
 public: \
 	_FE_FORCE_INLINE_ property_metadata_##property_name(auto* this_p) noexcept \
@@ -1184,10 +1172,6 @@ public: \
                                                 .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(this_p->property_name)> \
                                                  ( *this_p, this_p->property_name, #property_name ) \
 		); \
-		if constexpr (::std::is_base_of_v< ::FE::component_base, ::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>> >) \
-		{ \
-			::FE::internal::ECS::gc_metadata_base::add_watch<decltype(this_p->property_name)>(this_p, this_p->property_name); \
-		} \
 	} \
 }; \
 _FE_NO_UNIQUE_ADDRESS_ property_metadata_##property_name property_name##_property_meta = this; \

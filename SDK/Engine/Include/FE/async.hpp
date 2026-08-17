@@ -16,24 +16,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/framework/processors.hxx>
+#include <FE/processors.hxx>
 #include <FE/engine.hpp>
 
 
 
 
-BEGIN_NAMESPACE(FE::async)
+BEGIN_NAMESPACE(FE)
 
 
-_FE_FORCE_INLINE_ static void schedule_task(const FE::task& task_p) noexcept
+class async
 {
-	FE::engine::get_engine().get_processors().schedule_task(task_p);
-}
+public:
+	_FE_FORCE_INLINE_ static void schedule_task(const FE::task& task_p) noexcept
+	{
+		FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_task(task_p);
+	}
 
-_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
-{
-	return FE::engine::get_engine().count_async_processors();
-}
+	_FE_FORCE_INLINE_ static FE::int32 get_async_processor_count() noexcept
+	{
+		return FE::engine::get_engine().count_processors();
+	}
+
+	async() = delete;
+	~async() = delete;
+};
 
 
 END_NAMESPACE
