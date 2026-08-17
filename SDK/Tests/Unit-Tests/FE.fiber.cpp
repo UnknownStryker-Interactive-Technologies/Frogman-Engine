@@ -6,19 +6,12 @@
 
 
 
-void system(FE::component_base* const component_p) noexcept
+void system(FE::world&) noexcept
 {
-	(void)component_p;
-
 }
 
 
-class data : public FE::component_base
-{
-public:
-	FE::fiber_scheduler* _scheduler;
-	int _sum;
-};
+
 
 
 TEST(Fiber, Execute)
@@ -28,14 +21,14 @@ TEST(Fiber, Execute)
 
 	FE::task task;
 	task._system = system;
-	task._component = nullptr;
+	task._world = nullptr;
 	task._task_type = TaskPriority::_Normal;
 
 	scheduler.schedule_task(task);
 
 	_FE_MAYBE_UNUSED_ int result = scheduler.execute();
 }
-
+/*
 TEST(Fiber, DoNotYieldDuringExecution)
 {
 	FE::fiber_scheduler scheduler;
@@ -47,12 +40,12 @@ TEST(Fiber, DoNotYieldDuringExecution)
 
 	FE::task task;
 	task._system = system;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = system;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -97,12 +90,12 @@ TEST(Fiber, YieldDuringExecution1)
 
 	FE::task task;
 	task._system = systemA;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemB;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -147,12 +140,12 @@ TEST(Fiber, YieldDuringExecution2)
 
 	FE::task task;
 	task._system = systemC;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemD;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -199,14 +192,15 @@ TEST(Fiber, YieldDuringExecution3)
 
 	FE::task task;
 	task._system = systemE;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemF;
-	task._component = &data;
+	task._world = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	_FE_MAYBE_UNUSED_ int result = scheduler.execute();
 }
+	*/

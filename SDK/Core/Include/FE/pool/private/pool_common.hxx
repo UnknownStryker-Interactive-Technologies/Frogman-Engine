@@ -33,7 +33,6 @@ limitations under the License.
 
 
 #ifdef _FE_ON_WINDOWS_X86_64_
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <memoryapi.h> // to use VirtualAlloc and VirtualFree
 #endif

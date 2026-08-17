@@ -18,10 +18,8 @@ limitations under the License.
 
 
 #ifdef _FE_ON_WINDOWS_X86_64_
-    #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
     #include <psapi.h>
-    #undef WIN32_LEAN_AND_MEAN
 #elif defined(_FE_ON_LINUX_X86_64_)
     #include <sys/types.h>
     #include <sys/sysinfo.h>

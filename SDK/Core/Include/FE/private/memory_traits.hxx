@@ -28,7 +28,7 @@ BEGIN_NAMESPACE(FE::internal)
 
 template<typename T, Address DestAddressAlignment = Address::_NotAligned, Address SourceAddressAlignment = Address::_NotAligned, TypeTriviality IsTrivial = static_cast<TypeTriviality>(FE::is_trivial<T>::value)>
 class memory_traits;
-
+// Do not use this for newly created data structures. 
 template<typename T, Address DestAddressAlignment, Address SourceAddressAlignment>
 class memory_traits<T, DestAddressAlignment, SourceAddressAlignment, TypeTriviality::_Trivial> final
 {

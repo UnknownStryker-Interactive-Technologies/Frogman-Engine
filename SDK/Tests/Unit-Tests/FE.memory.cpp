@@ -1,7 +1,6 @@
 ﻿#include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
-#include <FE/framework/ECS.hxx>
 #include <FE/framework/smart_ptr.hxx>
 #include <memory_resource>
 
