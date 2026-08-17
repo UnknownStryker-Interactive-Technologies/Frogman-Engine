@@ -318,7 +318,7 @@ namespace internal::pool
     {
     public:
         constexpr static FE::size fixed_block_size_in_bytes = Alignment::size;
-        constexpr static FE::int32 page_size_in_bytes = 2 * FE::one_MiB;
+        constexpr static FE::int32 page_size_in_bytes = (2 * FE::one_MiB) - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
         constexpr static FE::size possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
@@ -329,7 +329,7 @@ namespace internal::pool
         static_assert(sizeof(m_page) < FE::max_value<FE::int32>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
 
     public:
-        FE::fstack<block_pointer, possible_address_count> _free_blocks;
+        std::unique_ptr<FE::fstack<block_pointer, possible_address_count>> _free_blocks;
         var::byte* const _begin;
         var::byte* _page_iterator;
         var::byte* const _end;
@@ -344,8 +344,12 @@ namespace internal::pool
                 _usage_in_bytes(0),
                 _availability(PageGroup::_AvailablePages)
         {
+			_free_blocks = std::make_unique<FE::fstack<block_pointer, possible_address_count>>();
+
+
 #ifdef _ENABLE_ASSERT_
-            std::memset(m_double_free_tracker, 0, possible_address_count);
+            m_double_free_tracker = std::make_unique<var::boolean[]>(possible_address_count);
+            std::memset(m_double_free_tracker.get(), 0, possible_address_count);
 #endif
         }
         ~chunk() noexcept = default;
@@ -357,7 +361,7 @@ namespace internal::pool
 
 #ifdef _ENABLE_ASSERT_
     private:
-        var::boolean m_double_free_tracker[possible_address_count];
+        std::unique_ptr<var::boolean[]> m_double_free_tracker;
 
     public:
         void check_double_allocation(FE::byte* const address_p) noexcept
@@ -376,7 +380,7 @@ namespace internal::pool
 #endif
         _FE_FORCE_INLINE_ boolean is_out_of_memory() const noexcept
         {
-            return (_free_blocks.is_empty() == true) && (_page_iterator >= _end);
+            return (_free_blocks->is_empty() == true) && (_page_iterator >= _end);
         }
 
         _FE_FORCE_INLINE_ FE::int32 get_usage_as_percentile() const noexcept
@@ -395,6 +399,7 @@ namespace large
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
         using chunk_type = internal::pool::chunk<PoolType::_BlockLargePage, Alignment>;
+        static_assert(sizeof(chunk_type) <= (2 * FE::one_MiB), "Static assertion failed: chunk must fit within a single 2 MiB-sized memory page.");
         using block_pointer = typename chunk_type::block_pointer;
 
     public:
@@ -489,9 +494,9 @@ namespace large
             }
 
             void* l_allocation_result = nullptr;
-            if (m_available_pages.front()._free_blocks.is_empty() == false)
+            if (m_available_pages.front()._free_blocks->is_empty() == false)
             {
-                l_allocation_result = m_available_pages.front()._begin + m_available_pages.front()._free_blocks.pop();
+                l_allocation_result = m_available_pages.front()._begin + m_available_pages.front()._free_blocks->pop();
             }
             else
             {
@@ -530,7 +535,7 @@ namespace large
             {
                 pointer_p->~U();
             }
-            l_page_base->_free_blocks.push(static_cast<FE::int32>(l_to_be_freed - l_page_base->_begin));
+            l_page_base->_free_blocks->push(static_cast<FE::int32>(l_to_be_freed - l_page_base->_begin));
             l_page_base->_usage_in_bytes -= fixed_block_size_in_bytes;
             FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.block_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
 
