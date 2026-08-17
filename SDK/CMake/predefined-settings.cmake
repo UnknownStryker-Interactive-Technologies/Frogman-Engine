@@ -64,9 +64,15 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64
 	# /Gv: Enable calling convention vectorcall
 	# /GR: Enable RTTI
 	# /dynamicdeopt: as it reads; dynamic deoptimization for debugging release build binaries.
+	# /utf-8: literally the UTF-8.
+    # /wd4100: Disables the warning C4100—unreferenced formal parameter.
+	# /w44062: Enables the warning C4062—enumerator in switch is not handled and there is no default label.
+	# /w44826: Enables the warning C4826—conversion is sign-extended.
+	# /w44389: Enables the warning C4389—signed/unsigned mismatch in '==' or '!='.
+	# /w44388: Enables the warning C4388—signed/unsigned mismatch in a relational operator ('<', '>', ...).
 
 	# Common Compile Options. The ABSL prevents compile when /Gv is enabled.
-	ADD_COMPILE_OPTIONS("$<$<COMPILE_LANGUAGE:C,CXX>:/D_HAS_EXCEPTIONS=0;/DNOMINMAX;/D_V143_=1;/std:c17;/Zc:__cplusplus;/WX;/W4;/GF;/Gy;/Oi;/GR;/utf-8;/MP>") # /utf-8 /Gv
+	ADD_COMPILE_OPTIONS("$<$<COMPILE_LANGUAGE:C,CXX>:/DWIN32_LEAN_AND_MEAN;/D_HAS_EXCEPTIONS=0;/DNOMINMAX;/D_V143_=1;/std:c17;/Zc:__cplusplus;/WX;/W4;/GF;/Gy;/Oi;/GR;/utf-8;/MP;/wd4100;/w44062;/w44826>") #
 
 	ADD_COMPILE_OPTIONS("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:DEBUG>>:/D_DEBUG_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
 	ADD_COMPILE_OPTIONS("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,$<CONFIG:RELWITHDEBINFO>>:/D_RELWITHDEBINFO_;/D_ENABLE_ASSERT_;/D_ENABLE_NEGATIVE_ASSERT_;/D_ENABLE_EXIT_;/D_ENABLE_LOG_;/D_ENABLE_LOG_IF_>")
