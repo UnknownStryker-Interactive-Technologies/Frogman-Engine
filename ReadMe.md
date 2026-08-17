@@ -20,9 +20,13 @@ If you prefer installing and setting up the engine with just a few clicks, those
 
 https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 
-## C++ standard version: 
-C++ 20 or the latest.  
-All project settings can be adjusted by modifying CMakeLists.txt.
+## Project Requirements: 
+- MSVC C++ 20  
+- CMake 4.2.0  
+- SSE, SSE2, AVX, and AVX2 Support  
+- Windows SDK 10.0.17134.0 or later (for the engine runtime)
+- Windows 11 AMD64 System
+- AVX512F and AVX512BW (optional)
 
 ## The current development status.
 | Platform     | Architecture  | Status           |
