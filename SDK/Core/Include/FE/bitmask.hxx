@@ -18,6 +18,8 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
 
+#include <boost/hash2/xxhash.hpp>
+
 
 
 
@@ -27,7 +29,7 @@ BEGIN_NAMESPACE(FE)
 class bitmask // this is a dynamic bit set designed to be used as archetype ids; expects faster performance than std::vector<bool>
 {
 public:
-	using allocator_type = FE::polymorphic_allocator<var::byte>;
+	using allocator_type = std::pmr::polymorphic_allocator<var::byte>;
 
 private:
 	allocator_type m_allocator;
@@ -36,14 +38,14 @@ private:
 	var::uint64 m_64bit_buffer;
 
 public:
-	constexpr bitmask() noexcept
+	bitmask() noexcept
 		:	m_allocator(),
 			m_bitmask(nullptr),
 			m_capacity_in_bits(64),
 			m_64bit_buffer(0)
 	{}
 
-	constexpr bitmask(FE::uint64 value_p) noexcept
+	bitmask(FE::uint64 value_p) noexcept
 		:	m_allocator(),
 			m_bitmask(nullptr),
 			m_capacity_in_bits(64),
@@ -126,7 +128,7 @@ public:
 		{
 			m_allocator.deallocate(m_bitmask, __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
 		}
-		m_allocator = other_p.m_allocator;
+		//m_allocator = other_p.m_allocator;
 
 		m_bitmask = other_p.m_bitmask;
 		other_p.m_bitmask = nullptr;
@@ -354,7 +356,7 @@ public:
 		return *this;
 	}
 
-	constexpr bitmask operator~() noexcept
+	bitmask operator~() noexcept
 	{
 		bitmask l_bitmask = *this;
 		if (l_bitmask.__large_bitset_engaged())

@@ -30,9 +30,8 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-
 // eXceptionless assertive doubly linked list
-template <typename T, class Allocator = FE::polymorphic_allocator<T>>
+template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>>
 class list 
 {
 	static_assert(std::is_same_v<T, typename Allocator::value_type>, "Static assertion failed: list<T, Allocator>" " requires that Allocator's value_type match " "T");
@@ -637,7 +636,7 @@ public: // Member functions
 		}
 
 		// transfer the ownership
-		m_allocator = other_p.m_allocator;
+		//m_allocator = other_p.m_allocator;
 		m_front = other_p.m_front;
 		m_back = other_p.m_back;
 		m_size = other_p.m_size;
@@ -1125,7 +1124,7 @@ public: // Member functions
 
 	_FE_FORCE_INLINE_ void swap(list& other_p) noexcept
 	{
-		std::swap(m_allocator, other_p.m_allocator);
+		//std::swap(m_allocator, other_p.m_allocator);
 		std::swap(m_front, other_p.m_front);
 		std::swap(m_back, other_p.m_back);
 		std::swap(m_size, other_p.m_size);
@@ -1349,7 +1348,8 @@ END_NAMESPACE
 // eXeceptionless Template Library
 namespace xtl
 {
-	template <typename T, class Allocator = FE::polymorphic_allocator<T>>
+	// eXceptionless assertive doubly linked list
+	template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>>
 	using list = FE::list<T, Allocator>;
 }
 

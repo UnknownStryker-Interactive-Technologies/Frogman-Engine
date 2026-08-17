@@ -127,7 +127,6 @@ limitations under the License.
 
 
 #ifdef _FE_ON_WINDOWS_X86_64_
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <sysinfoapi.h> // to use GetSystemInfo
 #endif
@@ -1557,121 +1556,6 @@ public:
 		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
 		FE_ALIGNED_FREE(ptr_p);
 	}
-};
-
-
-template <typename T>
-class polymorphic_allocator
-{
-	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because polymorphic_allocator<const T> is ill-formed.");
-	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements, because of [polymorphic_allocator.requirements].");
-	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements, because of [polymorphic_allocator.requirements].");
-
-	template <typename>
-	friend class polymorphic_allocator;
-
-public:
-	using value_type = T;
-	using size_type = var::size;
-	using difference_type = var::ptrdiff;
-	using propagate_on_container_move_assignment = std::true_type;
-
-private:
-	std::pmr::memory_resource* m_resource;
-
-public:
-	constexpr polymorphic_allocator() noexcept
-		: m_resource(std::pmr::get_default_resource())
-	{
-	}
-
-	polymorphic_allocator(std::pmr::memory_resource* const resource_p) noexcept
-		: m_resource(resource_p)
-	{
-		FE_ASSERT(resource_p != nullptr, "Assertion failed: cannot initialize the polymorphic_allocator with null resource.");
-	}
-
-
-	constexpr ~polymorphic_allocator() noexcept = default;
-
-
-	constexpr polymorphic_allocator(const polymorphic_allocator& other_p) noexcept
-		: m_resource(other_p.m_resource)
-	{
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot initialize the polymorphic_allocator with null resource.");
-	}
-
-	template <typename U>
-	constexpr polymorphic_allocator(const polymorphic_allocator<U>& that_p) noexcept
-		: m_resource(that_p.m_resource)
-	{
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot initialize the polymorphic_allocator with null resource.");
-	}
-
-
-	constexpr polymorphic_allocator(polymorphic_allocator&& other_p) noexcept
-		: m_resource(other_p.m_resource)
-	{
-		other_p.m_resource = std::pmr::get_default_resource();
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot initialize the polymorphic_allocator with null resource.");
-	}
-
-	template <typename U>
-	constexpr polymorphic_allocator(polymorphic_allocator<U>&& that_p) noexcept
-		: m_resource(that_p.m_resource)
-	{
-		that_p.m_resource = std::pmr::get_default_resource();
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot initialize the polymorphic_allocator with null resource.");
-	}
-
-
-	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(const polymorphic_allocator& other_p) noexcept
-	{
-		m_resource = other_p.m_resource;
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
-		return *this;
-	}
-
-	template <typename U>
-	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(const polymorphic_allocator<U>& that_p) noexcept
-	{
-		m_resource = that_p.m_resource;
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
-		return *this;
-	}
-
-
-	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(polymorphic_allocator&& other_p) noexcept
-	{
-		m_resource = other_p.m_resource;
-		other_p.m_resource = std::pmr::get_default_resource();
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
-		return *this;
-	}
-
-	template <typename U>
-	_FE_FORCE_INLINE_ constexpr polymorphic_allocator& operator=(polymorphic_allocator<U>&& that_p) noexcept
-	{
-		m_resource = that_p.m_resource;
-		that_p.m_resource = std::pmr::get_default_resource();
-		FE_ASSERT(m_resource != nullptr, "Assertion failed: cannot assign the polymorphic_allocator with null resource.");
-		return *this;
-	}
-
-
-	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
-	{
-		static_assert(sizeof(value_type) > 0, "Static assertion failed: value_type must be complete before calling allocate.");
-		return static_cast<T*>(m_resource->allocate(sizeof(T) * count_p, alignof(T)));
-	}
-
-	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, const size_t count_p) noexcept
-	{
-		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
-		m_resource->deallocate(ptr_p, sizeof(T) * count_p, alignof(T));
-	}
-
-	_FE_NODISCARD_ _FE_FORCE_INLINE_ std::pmr::memory_resource* resource() const noexcept { return m_resource; }
 };
 
 
