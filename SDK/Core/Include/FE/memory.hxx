@@ -124,6 +124,7 @@ limitations under the License.
 
 #include <FE/prerequisites.hxx>
 #include <FE/algorithm/math.hxx>
+#include <FE/pair.hxx>
 
 
 #ifdef _FE_ON_WINDOWS_X86_64_
@@ -1372,29 +1373,6 @@ namespace internal
 			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
 		}
 	};
-
-
-	template<typename T>
-	class pmr_deleter<T[]>
-	{
-		std::pmr::memory_resource* m_allocator;
-	public:
-		_FE_FORCE_INLINE_ pmr_deleter() noexcept = default;
-		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p) noexcept
-			: m_allocator(((memory_resource_p == nullptr) ? std::pmr::get_default_resource() : memory_resource_p))
-		{
-		}
-
-		_FE_FORCE_INLINE_ void operator()(T* ptr_p) noexcept
-		{
-			if (ptr_p == nullptr)
-			{
-				return;
-			}
-
-			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
-		}
-	};
 }
 
 template <typename T>
@@ -1409,48 +1387,188 @@ _FE_FORCE_INLINE_ unique_ptr<T> _FE_VECTOR_CALL_ make_unique(::std::pmr::memory_
 }
 
 
+namespace internal
+{
+	class vpage_cache
+	{
+	public:
+		FE::pair<void*, var::uint64> _table[500] = {};
+		var::uint64 _size = 0;
+
+		~vpage_cache()
+		{
+			for (var::uint64 i = 0; i < _size; ++i)
+			{
+				const auto& l_entry = _table[i];
+				if (l_entry._first == nullptr)
+				{
+					continue;
+				}
+
+				VirtualFree(l_entry._first, 0, MEM_RELEASE);
+			}
+		}
+	};
+}
+
 template <typename T>
 class page_aligned_allocator
 {
 	static_assert(std::is_const_v<T> == false, "Static assertion failed: the C++ standard forbids containers of const elements, because page_aligned_allocator<const T> is ill-formed.");
 	static_assert(std::is_function_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for function elements.");
 	static_assert(std::is_reference_v<T> == false, "Static assertion failed: the C++ standard forbids allocators for reference elements.");
-	static_assert(sizeof(T) >= (4 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
+	//static_assert(sizeof(T) >= (4 * FE::one_KiB), "Static assertion failed: page_aligned_allocator can only be used for types with size greater than or equal to 4 KiB.");
 
 	template <typename>
 	friend class page_aligned_allocator;
+
+	std::shared_ptr<internal::vpage_cache> m_vpage_cache;
 
 public:
 	using value_type = T;
 	using size_type = var::size;
 	using difference_type = var::ptrdiff;
+	using propagate_on_container_copy_assignment = std::true_type;
 	using propagate_on_container_move_assignment = std::true_type;
+	using propagate_on_container_swap = std::true_type;
 
 public:
-	constexpr page_aligned_allocator() noexcept = default;
-	constexpr ~page_aligned_allocator() noexcept = default;
+	constexpr page_aligned_allocator() noexcept
+		:	m_vpage_cache(std::make_shared<internal::vpage_cache>())
+	{
+	}
+	~page_aligned_allocator() noexcept = default;
 
-	constexpr page_aligned_allocator(const page_aligned_allocator&) noexcept {}
-	constexpr page_aligned_allocator(page_aligned_allocator&&) noexcept {}
-
-	template <typename U>
-	constexpr page_aligned_allocator(const page_aligned_allocator<U>&) noexcept {}
-
-	template <typename U>
-	constexpr page_aligned_allocator(page_aligned_allocator<U>&&) noexcept {}
-
-	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(const page_aligned_allocator&) noexcept { return *this; }
-	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(page_aligned_allocator&&) noexcept { return *this; }
-
-	template <typename U>
-	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(const page_aligned_allocator<U>&) noexcept { return *this; }
+	constexpr page_aligned_allocator(const page_aligned_allocator& other_p) noexcept
+		:	m_vpage_cache(other_p.m_vpage_cache)
+	{
+	}
+	constexpr page_aligned_allocator(page_aligned_allocator&& other_p) noexcept
+		: m_vpage_cache(other_p.m_vpage_cache)
+	{
+	}
 
 	template <typename U>
-	_FE_FORCE_INLINE_ constexpr page_aligned_allocator& operator=(page_aligned_allocator<U>&&) noexcept { return *this; }
+	constexpr page_aligned_allocator(const page_aligned_allocator<U>& other_p) noexcept
+		: m_vpage_cache(other_p.m_vpage_cache)
+	{
+	}
 
-	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
+	template <typename U>
+	constexpr page_aligned_allocator(page_aligned_allocator<U>&& other_p) noexcept
+		: m_vpage_cache(other_p.m_vpage_cache)
+	{
+	}
+
+	constexpr page_aligned_allocator& operator=(const page_aligned_allocator& other_p) noexcept
+	{
+		m_vpage_cache = other_p.m_vpage_cache;
+		return *this; 
+	}
+	constexpr page_aligned_allocator& operator=(page_aligned_allocator&& other_p) noexcept
+	{
+		m_vpage_cache = other_p.m_vpage_cache;
+		return *this;
+	}
+
+	template <typename U>
+	constexpr page_aligned_allocator& operator=(const page_aligned_allocator<U>& other_p) noexcept
+	{
+		m_vpage_cache = other_p.m_vpage_cache;
+		return *this;
+	}
+
+	template <typename U>
+	constexpr page_aligned_allocator& operator=(page_aligned_allocator<U>&& other_p) noexcept
+	{
+		m_vpage_cache = other_p.m_vpage_cache;
+		return *this;
+	}
+
+
+	_FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
 	{
 		FE_ASSERT(count_p > 0, "Assertion Failure: ${%s@0} cannot be zero.", TO_STRING(count_p));
+
+		var::size l_bytes = __align_to_page_boundary(count_p);
+
+		FE::pair<void*, var::uint64>* l_begin = (FE::pair<void*, var::uint64>*)m_vpage_cache->_table;
+		FE::pair<void*, var::uint64>* l_end = (FE::pair<void*, var::uint64>*)m_vpage_cache->_table + m_vpage_cache->_size;
+
+		auto l_predicate =
+			[=](const FE::pair<void*, var::uint64>& value_p)
+			{
+				var::size l_150_per = (l_bytes + __FE_DIVIDE_BY_2(l_bytes));
+				return (l_bytes <= value_p._second) && (l_150_per > value_p._second);
+			};
+
+		FE::pair<void*, var::uint64>* l_slot = std::find_if(l_begin, l_end, l_predicate);
+		if (l_slot != l_end)
+		{
+			_FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
+			FE_ASSERT(l_slot->_first != nullptr, "Assertion Failed: VirtualAlloc page allocation has failed due to the error code ${%d@0}.", &l_errcode);
+
+			void* l_page = l_slot->_first;
+			--(m_vpage_cache->_size);
+			*l_slot = m_vpage_cache->_table[m_vpage_cache->_size]; // swap and pop
+			return (T*)l_page;
+		}
+
+
+		void* l_result = nullptr;
+		if (l_bytes >= FE::system_large_page_size)
+		{
+			l_result = VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE | MEM_LARGE_PAGES, PAGE_READWRITE);
+		}
+
+		if (l_result == nullptr)
+		{
+			l_result = VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+		}
+
+		_FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
+		FE_EXIT_IF(l_result == nullptr, l_errcode, "Assertion Failed: VirtualAlloc page allocation has failed due to the error code ${%d@0}.", &l_errcode);
+		return (T*)l_result;
+	}
+
+	constexpr void deallocate(T* const ptr_p, const size_t count_p) noexcept
+	{
+		FE_ASSERT(ptr_p != nullptr, "Static assertion failed: nullptr detected.");
+
+		var::size l_bytes = __align_to_page_boundary(count_p);
+#ifdef _ENABLE_ASSERT_
+		{
+			FE::pair<void*, var::uint64>* l_begin = (FE::pair<void*, var::uint64>*)m_vpage_cache->_table;
+			FE::pair<void*, var::uint64>* l_end = (FE::pair<void*, var::uint64>*)m_vpage_cache->_table + m_vpage_cache->_size;
+
+			auto l_predicate =
+				[=](const FE::pair<void*, var::uint64>& value_p)
+				{
+					return value_p._first == (void*)ptr_p;
+				};
+
+			FE_ASSERT(std::find_if(l_begin, l_end, l_predicate) == l_end,
+				"Assertion failed: double free detected. The pointer already resides in the cache.");
+		}
+#endif
+		if (m_vpage_cache->_size < sizeof(m_vpage_cache->_table) / sizeof(FE::pair<void*, var::uint64>))
+		{
+			m_vpage_cache->_table[m_vpage_cache->_size]._first = ptr_p;
+			m_vpage_cache->_table[m_vpage_cache->_size]._second = l_bytes;
+			++(m_vpage_cache->_size);
+			return;
+		}
+
+
+		VirtualFree(ptr_p, 0, MEM_RELEASE);
+	}
+
+	template <typename U>
+	constexpr bool operator==(const page_aligned_allocator<U>& other_p) const noexcept { return m_vpage_cache == other_p.m_vpage_cache; }
+
+private:
+	var::size __align_to_page_boundary(FE::size count_p) noexcept
+	{
 		FE::size l_actual_size = sizeof(T) * count_p;
 
 		var::size l_multiplier = l_actual_size / FE::system_page_size;
@@ -1463,27 +1581,8 @@ public:
 			l_multiplier = l_actual_size / FE::system_large_page_size;
 			l_multiplier += ((l_actual_size % FE::system_large_page_size) != 0);
 			l_bytes = FE::system_large_page_size * l_multiplier;
-
-			void* l_result = VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE | MEM_LARGE_PAGES, PAGE_READWRITE);
-
-			if (l_result == nullptr)
-			{
-				l_result = (T*)VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-			}
-#ifdef _ENABLE_ASSERT_
-			_FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
-			FE_ASSERT(l_result != nullptr, "Assertion Failed: VirtualAlloc large page allocation has failed due to the error code ${%d@0}.", &l_errcode);
-#endif
-			return (T*)l_result;
 		}
-
-		return (T*)VirtualAlloc(nullptr, l_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	}
-
-	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, _FE_MAYBE_UNUSED_ const size_t count_p) noexcept
-	{
-		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
-		VirtualFree(ptr_p, 0, MEM_RELEASE);
+		return l_bytes;
 	}
 };
 
@@ -1521,41 +1620,31 @@ public:
 	using value_type = T;
 	using size_type = var::size;
 	using difference_type = var::ptrdiff;
+	using propagate_on_container_copy_assignment = std::true_type;
 	using propagate_on_container_move_assignment = std::true_type;
 
 public:
 	constexpr cache_aligned_allocator() noexcept = default;
 	constexpr ~cache_aligned_allocator() noexcept = default;
 
-	constexpr cache_aligned_allocator(const cache_aligned_allocator&) noexcept {}
-	constexpr cache_aligned_allocator(cache_aligned_allocator&&) noexcept {}
-
 	template <typename U>
 	constexpr cache_aligned_allocator(const cache_aligned_allocator<U>&) noexcept {}
 
-	template <typename U>
-	constexpr cache_aligned_allocator(cache_aligned_allocator<U>&&) noexcept {}
 
-	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(const cache_aligned_allocator&) noexcept { return *this; }
-	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(cache_aligned_allocator&&) noexcept { return *this; }
-
-	template <typename U>
-	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(const cache_aligned_allocator<U>&) noexcept { return *this; }
-
-	template <typename U>
-	_FE_FORCE_INLINE_ constexpr cache_aligned_allocator& operator=(cache_aligned_allocator<U>&&) noexcept { return *this; }
-
-	_FE_FORCE_INLINE_ _FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
+	_FE_NODISCARD_ constexpr T* allocate(FE::size count_p) noexcept
 	{
 		static_assert(sizeof(value_type) > 0, "Static assertion failed: value_type must be complete before calling allocate.");
 		return static_cast<T*>(FE_ALIGNED_ALLOC(sizeof(T) * count_p, FE::CPU_L1_cache_line::size));
 	}
 
-	_FE_FORCE_INLINE_ constexpr void deallocate(T* const ptr_p, _FE_MAYBE_UNUSED_ const size_t count_p) noexcept
+	constexpr void deallocate(T* const ptr_p, _FE_MAYBE_UNUSED_ const size_t count_p) noexcept
 	{
 		FE_ASSERT(ptr_p != nullptr || count_p == 0, "Static assertion failed: null pointer cannot point to a block of non-zero size.");
 		FE_ALIGNED_FREE(ptr_p);
 	}
+
+	template <typename U>
+	constexpr bool operator==(const cache_aligned_allocator<U>&) const noexcept { return true; }
 };
 
 
