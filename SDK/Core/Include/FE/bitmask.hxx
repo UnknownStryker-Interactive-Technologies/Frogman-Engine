@@ -32,6 +32,8 @@ public:
 	using allocator_type = std::pmr::polymorphic_allocator<var::byte>;
 
 private:
+	using alloc_traits = std::allocator_traits<allocator_type>;
+
 	allocator_type m_allocator;
 	var::byte* m_bitmask;
 	var::size m_capacity_in_bits;
@@ -128,7 +130,11 @@ public:
 		{
 			m_allocator.deallocate(m_bitmask, __calculate_size_of_bits_in_bytes(m_capacity_in_bits));
 		}
-		//m_allocator = other_p.m_allocator;
+
+		//if constexpr (alloc_traits::propagate_on_container_copy_assignment::value == true)
+		//{
+		//	m_allocator = other_p.m_allocator;
+		//}
 
 		m_bitmask = other_p.m_bitmask;
 		other_p.m_bitmask = nullptr;

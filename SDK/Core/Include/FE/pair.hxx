@@ -32,18 +32,18 @@ public:
 	using first_type = First;
 	using second_type = Second;
 
-	First _first;
-	Second _second;
+	_FE_NO_UNIQUE_ADDRESS_ First _first;
+	_FE_NO_UNIQUE_ADDRESS_ Second _second;
 
-	_FE_CONSTEXPR17_ pair() noexcept = default;
-	_FE_CONSTEXPR17_ pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
-	_FE_CONSTEXPR17_ pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
-	_FE_CONSTEXPR17_ ~pair() noexcept = default;
+	pair() noexcept = default;
+	pair(const First& first_p, const Second& second_p) noexcept : _first(first_p), _second(second_p) {};
+	pair(First&& first_p, Second&& second_p) noexcept : _first(std::forward<First&&>(first_p)), _second(std::forward<Second&&>(second_p)) {};
+	~pair() noexcept = default;
 
-	_FE_CONSTEXPR17_ pair(const pair&) noexcept = default;
-	_FE_CONSTEXPR17_ pair(pair&&) noexcept = default;
+	pair(const pair&) noexcept = default;
+	pair(pair&&) noexcept = default;
 
-	_FE_CONSTEXPR17_ pair& operator=(const pair& other_p) noexcept
+	pair& operator=(const pair& other_p) noexcept
 	{
 		_first = other_p._first;
 		_second = other_p._second;
@@ -51,7 +51,7 @@ public:
 		return *this;
 	}
 
-	_FE_CONSTEXPR17_ pair& operator=(pair&& rvalue_p) noexcept
+	pair& operator=(pair&& rvalue_p) noexcept
 	{
 		_first = std::move(rvalue_p._first);
 		_second = std::move(rvalue_p._second);
@@ -59,59 +59,6 @@ public:
 		return *this;
 	}
 };
-
-
-#ifdef _FE_HAS_CXX20_
-template<typename First, typename Second>
-class compressed_pair final
-{
-public:
-	using first_type = First;
-	using second_type = Second;
-
-private:
-	_FE_NO_UNIQUE_ADDRESS_ First m_first;
-	_FE_NO_UNIQUE_ADDRESS_ Second m_second;
-
-public:
-	_FE_FORCE_INLINE_ First& get_first() noexcept { return m_first; }
-	_FE_FORCE_INLINE_ Second& get_second() noexcept { return m_second; }
-
-};
-#else
-template<typename First, typename Second, boolean IsFirstEmpty = std::is_empty<First>::value, boolean IsSecondEmpty = std::is_empty<Second>::value>
-class compressed_pair {};
-
-template<typename First, typename Second>
-class compressed_pair<First, Second, true, false> : private First
-{
-public:
-	using first_type = First;
-	using second_type = Second;
-
-private:
-	Second m_second;
-
-public:
-	_FE_FORCE_INLINE_ First& get_first() noexcept { return *this; }
-	_FE_FORCE_INLINE_ Second& get_second() noexcept { return m_second; }
-};
-
-template<typename First, typename Second>
-class compressed_pair<First, Second, false, true> : private Second
-{
-public:
-	using first_type = First;
-	using second_type = Second;
-
-private:
-	First m_first;
-
-public:
-	_FE_FORCE_INLINE_ First& get_first() noexcept { return m_first; }
-	_FE_FORCE_INLINE_ Second& get_second() noexcept { return *this; }
-};
-#endif
 
 
 END_NAMESPACE

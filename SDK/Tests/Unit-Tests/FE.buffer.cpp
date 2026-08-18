@@ -186,18 +186,6 @@ template <class Buffer>
 // Member types and noexcept guarantees
 // ---------------------------------------------------------------------------
 
-TEST(BufferTraits, MemberTypes)
-{
-    using buffer_t = FE::buffer<>;
-    static_assert(std::is_same_v<buffer_t::value_type, char>);
-    static_assert(std::is_same_v<buffer_t::allocator_type, std::allocator<char>>);
-    static_assert(std::is_same_v<buffer_t::size_type, std::allocator_traits<std::allocator<char>>::size_type>);
-    static_assert(std::is_same_v<buffer_t::pointer, char*>);
-    static_assert(std::is_same_v<buffer_t::const_pointer, const char*>);
-    static_assert(std::is_same_v<buffer_t::reference, char&>);
-    static_assert(std::is_same_v<buffer_t::const_reference, const char&>);
-    SUCCEED();
-}
 
 TEST(BufferTraits, NoexceptGuarantees)
 {

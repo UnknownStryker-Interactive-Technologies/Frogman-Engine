@@ -462,6 +462,8 @@ public:
 	using const_reverse_iterator = list_iterator_wrapper<FE::const_reverse_iterator<list_iterator>>;
 
 private:
+	using alloc_traits = std::allocator_traits<allocator_type>;
+
 	_FE_NO_UNIQUE_ADDRESS_ mutable allocator_type m_allocator;
 	node* m_front;
 	node* m_back;
@@ -636,7 +638,11 @@ public: // Member functions
 		}
 
 		// transfer the ownership
-		//m_allocator = other_p.m_allocator;
+		if constexpr (alloc_traits::propagate_on_container_copy_assignment::value == true)
+		{
+			m_allocator = other_p.m_allocator;
+		}
+
 		m_front = other_p.m_front;
 		m_back = other_p.m_back;
 		m_size = other_p.m_size;

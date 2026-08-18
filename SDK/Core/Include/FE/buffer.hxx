@@ -16,6 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include<memory_resource>
 #include <concepts>
 #include <cstring>
 #include <memory>
@@ -29,27 +30,27 @@ BEGIN_NAMESPACE(FE)
 
 
 
-template <class Allocator = std::allocator<char>>
+template <class Allocator = std::pmr::polymorphic_allocator<char>>
 class buffer
 {
 public:
     using value_type      = char;
     using allocator_type  = Allocator;
-    using size_type       = typename std::allocator_traits<Allocator>::size_type;
-    using difference_type = typename std::allocator_traits<Allocator>::difference_type;
+    using size_type       = typename std::allocator_traits<allocator_type>::size_type;
+    using difference_type = typename std::allocator_traits<allocator_type>::difference_type;
     using reference       = value_type&;
     using const_reference = const value_type&;
-    using pointer         = typename std::allocator_traits<Allocator>::pointer;
-    using const_pointer   = typename std::allocator_traits<Allocator>::const_pointer;
+    using pointer         = typename std::allocator_traits<allocator_type>::pointer;
+    using const_pointer   = typename std::allocator_traits<allocator_type>::const_pointer;
 
-	static_assert(std::is_same_v<value_type, typename Allocator::value_type>, "Allocator must be for char type");
+	static_assert(std::is_same_v<value_type, typename allocator_type::value_type>, "Allocator must be for char type");
 
 private:
-    using alloc_traits = std::allocator_traits<Allocator>;
+    using alloc_traits = std::allocator_traits<allocator_type>;
 
     pointer m_data;
     size_type m_size;
-    _FE_NO_UNIQUE_ADDRESS_ Allocator m_alloc;
+    _FE_NO_UNIQUE_ADDRESS_ allocator_type m_alloc;
 
 public:
     buffer() noexcept
