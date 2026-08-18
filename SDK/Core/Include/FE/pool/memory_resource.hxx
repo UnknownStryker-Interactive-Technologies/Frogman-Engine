@@ -43,16 +43,13 @@ namespace internal
 		_ZMMWordAllocator,
 		_DZMMWordAllocator,
 		_ScalableAllocator,
-		_AlignedMalloc
+		_VirtualAlloc
 	};
-
-	AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t bytes_p) noexcept;
 }
 
 
 /*
-The FE::memory_resource is a class template provides a memory resource that utilizes a bunch of pool allocators for efficient memory management
-inheriting from std::pmr::memory_resource.
+The Frogman Engine Runtime Memory Resource; do not assume allocation granularity.
 */
 class memory_resource : public std::pmr::memory_resource
 {
@@ -69,6 +66,8 @@ private:
 	zmmword_pool_type m_zmmword_block_pool;
 	dzmmword_pool_type m_dzmmword_block_pool;
 	scalable_pool_type m_scalable_pool;
+
+	page_aligned_allocator<std::byte> m_fallback_allocator;
 
 public:
 	memory_resource() noexcept = default;
@@ -90,6 +89,9 @@ protected:
 
 namespace large
 {
+	/*
+	The Frogman Engine Runtime Large Memory Resource; do not assume allocation granularity.
+	*/
 	class memory_resource : public std::pmr::memory_resource
 	{
 	public:
@@ -105,6 +107,8 @@ namespace large
 		zmmword_pool_type m_zmmword_block_pool;
 		dzmmword_pool_type m_dzmmword_block_pool;
 		scalable_pool_type m_scalable_pool;
+
+		page_aligned_allocator<std::byte> m_fallback_allocator;
 
 	public:
 		memory_resource() noexcept = default;

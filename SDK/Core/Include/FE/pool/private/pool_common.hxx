@@ -48,7 +48,8 @@ enum struct PoolType : uint8
     _Block = 0,
     _Scalable = 1,
     _BlockLargePage = 2,
-    _ScalableLargePage = 3
+    _ScalableLargePage = 3,
+	_SuperLargeArea = 4
 };
 
 enum struct PageGroup : uint8
