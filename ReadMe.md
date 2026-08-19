@@ -1,7 +1,6 @@
 [![License](https://img.shields.io/badge/License-Frogman_Engine-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-x86_64-white.svg)](PLATFORM)
-[![SIMD](https://img.shields.io/badge/SIMD-AVX-blue.svg)](PLATFORM)
-[![SIMD](https://img.shields.io/badge/SIMD-AVX512F-red.svg)](PLATFORM)
+[![Platform](https://img.shields.io/badge/Platform-AMD64-red.svg)](PLATFORM)
+[![SIMD](https://img.shields.io/badge/SIMD-AVX/AVX2-blue.svg)](PLATFORM)
 
 # Frogman-Engine™
 **LICENSE**: https://github.com/UnknownStryker-Interactive-Technologies/Frogman-Engine-License/blob/release/LICENSE.md
@@ -26,7 +25,6 @@ https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 - SSE, SSE2, AVX, and AVX2 Support  
 - Windows SDK 10.0.17134.0 or later (for the engine runtime)
 - Windows 11 AMD64 System
-- AVX512F and AVX512BW (optional)
 
 ## The current development status.
 | Platform     | Architecture  | Status           |

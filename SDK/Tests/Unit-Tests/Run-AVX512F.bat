@@ -1,1 +1,0 @@
-.\Test-App\AVX512F\Release\FE_UNIT_TEST.exe --skip-gtests --benchmark_repetitions=15 --benchmark_out=baseline.json --benchmark_out_format=json
