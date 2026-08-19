@@ -1,5 +1,5 @@
-﻿#ifndef _FE_CORE_SCALABLE_POOL_HXX_
-#define _FE_CORE_SCALABLE_POOL_HXX_
+﻿#ifndef _FE_CORE_PRIVATE_SCALABLE_POOL_HXX_
+#define _FE_CORE_PRIVATE_SCALABLE_POOL_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/pool/private/pool_common.hxx>
+#include <FE/private/pool_common.hxx>
 #include <FE/iterator.hxx>
 
 
@@ -31,6 +31,7 @@ namespace internal::pool
     class chunk<PoolType::_Scalable, Alignment>
     {
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
+        static_assert(Alignment::size == 32 || Alignment::size == 64);
 
     public:
         using free_list_iterator = block_info*;
@@ -39,7 +40,7 @@ namespace internal::pool
         constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
         // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
         constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
-        constexpr static FE::int32 integrity_validator = (page_size_in_bytes / Alignment::size);
+        constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
 
     private:
         var::byte m_page[page_size_in_bytes];
@@ -74,9 +75,9 @@ namespace internal::pool
             m_page_end = _page_iterator + page_size_in_bytes;
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator * sizeof(var::int32), FE::CPU_L1_cache_line::size);
+            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator_size * sizeof(var::int32), FE::CPU_L1_cache_line::size);
 			FE_EXIT_IF(m_double_free_tracker == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_AllocationFailure, "Fatal Error: Unable to FE_ALIGNED_ALLOC double-free tracker for a scalable_allocator.");
-			std::memset(m_double_free_tracker, 0, integrity_validator * sizeof(var::int32));
+			std::memset(m_double_free_tracker, 0, integrity_validator_size * sizeof(var::int32));
 #endif
         }
 
@@ -395,6 +396,7 @@ public:
     template<typename U>
     U* _FE_VECTOR_CALL_ allocate(FE::size size_p) noexcept
     {
+        static_assert(FE::is_trivial_v<U> == true, "Static Assertion Failed: The T must be a trivial type.");
         static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
         FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
         FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
@@ -499,14 +501,6 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         l_page_list_iterator->check_double_allocation(l_memblock_info);
 #endif
-        if constexpr (FE::is_trivial_v<U> == false)
-        {
-            U* const l_end = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()) + size_p;
-            for (U* it = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()); it != l_end; ++it)
-            {
-                new(it) U();
-            }
-        }
 
         FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%i16@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
         l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
@@ -589,6 +583,7 @@ public:
     template <typename T> 
     void _FE_VECTOR_CALL_ deallocate(T* pointer_p, FE::size count_p) noexcept
     {
+        static_assert(FE::is_trivial_v<T> == true, "Static Assertion Failed: The T must be a trivial type.");
         FE_ASSERT(pointer_p != nullptr, "Critical Error in FE.Core.scalable_allocator: Unable to deallocate() a nullptr.");
         FE_ASSERT(count_p > 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(count_p));
         FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_allocator instance.", pointer_p, &Alignment::size);
@@ -606,14 +601,6 @@ public:
         FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
         l_page_base->check_double_free(l_block_to_free);
 #endif
-        if constexpr (FE::is_trivial<T>::value == false)
-        {
-            for (var::uint64 i = 0; i < count_p; ++i)
-            {
-                pointer_p->~T();
-                ++pointer_p;
-            }
-        }
         l_page_base->add_to_the_free_list(l_block_to_free);
         l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
         FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
@@ -878,10 +865,6 @@ private:
 };
 
 
-template<class Alignment = FE::SIMD_auto_alignment>
-using scalable_allocator = pool<PoolType::_Scalable, Alignment>;
-
-
 
 
 namespace internal::large::pool
@@ -898,7 +881,7 @@ namespace internal::large::pool
         constexpr static FE::int32 page_size_in_bytes = (2 * FE::one_MiB) - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
         // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
         constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
-        constexpr static FE::int32 integrity_validator = (page_size_in_bytes / Alignment::size);
+        constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
 
     private:
         var::byte m_page[page_size_in_bytes];
@@ -936,9 +919,9 @@ namespace internal::large::pool
             
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator * sizeof(var::int32), FE::CPU_L1_cache_line::size);
+            m_double_free_tracker = (var::int32*)FE_ALIGNED_ALLOC(integrity_validator_size * sizeof(var::int32), FE::CPU_L1_cache_line::size);
             FE_EXIT_IF(m_double_free_tracker == nullptr, FE::ErrorCode::_FatalMemoryError_1XX_AllocationFailure, "Fatal Error: Unable to FE_ALIGNED_ALLOC double-free tracker for a scalable_allocator.");
-            std::memset(m_double_free_tracker, 0, integrity_validator * sizeof(var::int32));
+            std::memset(m_double_free_tracker, 0, integrity_validator_size * sizeof(var::int32));
 #endif
         }
 
@@ -1160,6 +1143,7 @@ namespace large
     class pool<PoolType::_ScalableLargePage, Alignment>
     {
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
+        static_assert(Alignment::size == 32 || Alignment::size == 64);
 
         using chunk_type = internal::pool::chunk<PoolType::_ScalableLargePage, Alignment>;
         static_assert(sizeof(chunk_type) <= (2 * FE::one_MiB), "Static assertion failed: chunk must fit within a single 2 MiB-sized memory page.");
@@ -1267,6 +1251,7 @@ namespace large
         template<typename U>
         U* _FE_VECTOR_CALL_ allocate(FE::size size_p) noexcept
         {
+            static_assert(FE::is_trivial_v<U> == true, "Static Assertion Failed: The T must be a trivial type.");
             static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
             FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
             FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
@@ -1371,14 +1356,6 @@ namespace large
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             l_page_list_iterator->check_double_allocation(l_memblock_info);
 #endif
-            if constexpr (FE::is_trivial_v<U> == false)
-            {
-                U* const l_end = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()) + size_p;
-                for (U* it = reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page()); it != l_end; ++it)
-                {
-                    new(it) U();
-                }
-            }
 
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
             l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
@@ -1461,6 +1438,7 @@ namespace large
         template <typename T>
         void _FE_VECTOR_CALL_ deallocate(T* pointer_p, FE::size count_p) noexcept
         {
+            static_assert(FE::is_trivial_v<T> == true, "Static Assertion Failed: The T must be a trivial type.");
             FE_ASSERT(pointer_p != nullptr, "Critical Error in FE.Core.scalable_allocator: Unable to deallocate() a nullptr.");
             FE_ASSERT(count_p > 0, "${%s@0}: ${%s@1} was 0", TO_STRING(FE::ErrorCode::_FatalMemoryError_1XX_InvalidSize), TO_STRING(count_p));
             FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_allocator instance.", pointer_p, &Alignment::size);
@@ -1478,14 +1456,6 @@ namespace large
             FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
             l_page_base->check_double_free(l_block_to_free);
 #endif
-            if constexpr (FE::is_trivial<T>::value == false)
-            {
-                for (var::uint64 i = 0; i < count_p; ++i)
-                {
-                    pointer_p->~T();
-                    ++pointer_p;
-                }
-            }
             l_page_base->add_to_the_free_list(l_block_to_free);
             l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
             FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
@@ -1750,10 +1720,6 @@ namespace large
             page_p->reset_dirty_flag(); // Reset the dirty flag.
         }
     };
-
-
-    template<class Alignment = FE::SIMD_auto_alignment>
-    using scalable_allocator = pool<PoolType::_ScalableLargePage, Alignment>;
 }
 END_NAMESPACE
 #endif

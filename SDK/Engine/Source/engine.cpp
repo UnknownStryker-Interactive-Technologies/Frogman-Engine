@@ -20,7 +20,7 @@ limitations under the License.
 #include <FE/processors.hxx>
 #include <FE/framework/reflection.hxx>
 
-#include <FE/pool/memory_resource.hxx>
+#include <FE/memory_resource.hxx>
 
 #include <FE/app.hpp>
 

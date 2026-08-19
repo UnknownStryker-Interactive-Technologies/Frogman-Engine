@@ -17,8 +17,9 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/pool/block_pool.hxx>
-#include <FE/pool/scalable_pool.hxx>
+#include <FE/block_pool.hxx>
+#include <FE/private/scalable_pool.hxx>
+#include <FE/private/arena.hxx>
 
 #include <memory_resource>
 
@@ -58,7 +59,7 @@ public:
 	using ymmword_pool_type = FE::block_allocator<ymmword_size, FE::align_32bytes>;
 	using zmmword_pool_type = FE::block_allocator<zmmword_size, FE::align_64bytes>;
 	using dzmmword_pool_type = FE::block_allocator<dzmmword_size, FE::align_128bytes>;
-	using scalable_pool_type = FE::scalable_allocator<FE::SIMD_auto_alignment>;
+	using scalable_pool_type = pool<PoolType::_Scalable, FE::SIMD_auto_alignment>;
 
 private:
 	xmmword_pool_type m_xmmword_block_pool;
@@ -99,7 +100,8 @@ namespace large
 		using ymmword_pool_type = FE::large::block_allocator<ymmword_size, FE::align_32bytes>;
 		using zmmword_pool_type = FE::large::block_allocator<zmmword_size, FE::align_64bytes>;
 		using dzmmword_pool_type = FE::large::block_allocator<dzmmword_size, FE::align_128bytes>;
-		using scalable_pool_type = FE::large::scalable_allocator<FE::SIMD_auto_alignment>;
+		using scalable_pool_type = pool<PoolType::_ScalableLargePage, FE::SIMD_auto_alignment>;
+		using super_large_area_type = pool<PoolType::_SuperLargeArea, FE::SIMD_auto_alignment>;
 
 	private:
 		xmmword_pool_type m_xmmword_block_pool;
@@ -107,6 +109,8 @@ namespace large
 		zmmword_pool_type m_zmmword_block_pool;
 		dzmmword_pool_type m_dzmmword_block_pool;
 		scalable_pool_type m_scalable_pool;
+
+		super_large_area_type m_super_large_area;
 
 		page_aligned_allocator<std::byte> m_fallback_allocator;
 

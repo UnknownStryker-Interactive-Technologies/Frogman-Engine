@@ -29,7 +29,7 @@ Notes:
 #include <FE/stack.hxx>
 #include <FE/queue.hxx>
 
-#include<FE/pool/memory_resource.hxx>
+#include<FE/memory_resource.hxx>
 
 #include <FE/concurrent_vector.hxx>
 

@@ -1,4 +1,5 @@
 /*
+* Test Generated Claude, and reviewed by Joey Lee
  * FE::stack<T, Allocator> Google Test
  *
  * main() 은 사용자가 통제하므로 이 파일에는 main() 이 없습니다.

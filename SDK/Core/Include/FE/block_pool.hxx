@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <FE/pool/private/pool_common.hxx>
+#include <FE/private/pool_common.hxx>
 #include <FE/fstack.hxx>
 
 

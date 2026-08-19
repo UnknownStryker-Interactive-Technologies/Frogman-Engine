@@ -1,4 +1,4 @@
-﻿#include <FE/pool/memory_resource.hxx>
+﻿#include <FE/memory_resource.hxx>
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
@@ -223,6 +223,8 @@ namespace FE::large
 		m_dzmmword_block_pool(std::move(other_p.m_dzmmword_block_pool)),
 		m_scalable_pool(std::move(other_p.m_scalable_pool)),
 
+		m_super_large_area(std::move(other_p.m_super_large_area)),
+
 		m_fallback_allocator(std::move(other_p.m_fallback_allocator))
 	{
 	}
@@ -234,6 +236,8 @@ namespace FE::large
 		m_zmmword_block_pool = std::move(other_p.m_zmmword_block_pool);
 		m_dzmmword_block_pool = std::move(other_p.m_dzmmword_block_pool);
 		m_scalable_pool = std::move(other_p.m_scalable_pool);
+
+		m_super_large_area = std::move(other_p.m_super_large_area);
 
 		m_fallback_allocator = std::move(other_p.m_fallback_allocator);
 		return *this;
@@ -259,7 +263,15 @@ namespace FE::large
 			return m_scalable_pool.allocate<std::byte>(bytes_p);
 
 		case internal::AllocatorType::_VirtualAlloc:
-			_FE_FALLTHROUGH_;
+		{
+			std::byte* l_result = m_super_large_area.allocate<std::byte>(bytes_p);
+			if (l_result == nullptr)
+			{
+				l_result = m_fallback_allocator.allocate(bytes_p);
+			}
+			return l_result;
+		}
+
 		default:
 			return m_fallback_allocator.allocate(bytes_p);
 		}
@@ -291,7 +303,15 @@ namespace FE::large
 			return;
 
 		case internal::AllocatorType::_VirtualAlloc:
-			_FE_FALLTHROUGH_;
+		{
+			FE::boolean l_was_successful = m_super_large_area.deallocate(static_cast<std::byte*>(ptr_p), bytes_p);
+			if (l_was_successful == false)
+			{
+				m_fallback_allocator.deallocate(static_cast<std::byte*>(ptr_p), bytes_p);
+			}
+			return;
+		}
+
 		default:
 			m_fallback_allocator.deallocate(static_cast<std::byte*>(ptr_p), bytes_p);
 			return;

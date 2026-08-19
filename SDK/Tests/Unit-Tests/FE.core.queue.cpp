@@ -1,5 +1,6 @@
 // =====================================================================================
-//  FE::queue - Google Test & Google Benchmark
+//  Test Generated Claude, and reviewed by Joey Lee
+//	FE::queue - Google Test & Google Benchmark
 //
 //  main() 은 사용자가 통제하므로 이 파일에는 main() 이 없습니다.
 //
@@ -886,20 +887,15 @@ void BM_steady_state_push_pop(benchmark::State& state_p)
 // 매크로 인자에 콤마가 들어가지 않도록 별칭을 쓴다.
 using fe_int_queue = FE::queue<std::int32_t>;
 using std_int_queue = std::queue<std::int32_t>;
-using std_pmr_int_queue = std::queue<std::int32_t, std::pmr::deque<std::int32_t>>;
 
 BENCHMARK_TEMPLATE(BM_push, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 BENCHMARK_TEMPLATE(BM_push, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_push, std_pmr_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 
 BENCHMARK_TEMPLATE(BM_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 BENCHMARK_TEMPLATE(BM_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_pop, std_pmr_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 
 BENCHMARK_TEMPLATE(BM_push_then_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 BENCHMARK_TEMPLATE(BM_push_then_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_push_then_pop, std_pmr_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 
 BENCHMARK_TEMPLATE(BM_steady_state_push_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
 BENCHMARK_TEMPLATE(BM_steady_state_push_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_steady_state_push_pop, std_pmr_int_queue)->RangeMultiplier(8)->Range(64, 65536);
