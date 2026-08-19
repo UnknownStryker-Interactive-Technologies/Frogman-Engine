@@ -401,7 +401,7 @@ public:
         FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
         FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
         FE_ASSERT((l_queried_allocation_in_bytes % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the requested allocation size '${%i32@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_in_bytes, &Alignment::size);
-        FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
+        FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d@0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
         FE_ASSERT(m_pages_with_100_capacity.end() == nullptr, "Assertion failed: FE::list::end must return an iterator equivalent to a null pointer.");
 
 		typename pool_type::iterator l_page_list_iterator;
@@ -1258,7 +1258,7 @@ namespace large
             FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
             FE_ASSERT(l_queried_allocation_in_bytes > 128, "Critical Error in FE.Core.scalable_allocator: the requested allocation size is too small.");
             FE_ASSERT((l_queried_allocation_in_bytes % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the requested allocation size '${%d@0}' is not properly aligned by ${%lu@1}.", &l_queried_allocation_in_bytes, &Alignment::size);
-            FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
+            FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p)) <= page_capacity, "Fatal Error: Unable to allocate ${%d@0} bytes of memory that exceeds the pool chunk's capacity.", &size_p);
             FE_ASSERT(m_pages_with_100_capacity.end() == nullptr, "Assertion failed: FE::list::end must return an iterator equivalent to a null pointer.");
 
 
