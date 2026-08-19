@@ -58,7 +58,7 @@ FE::internal::AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t byte
 			return FE::internal::AllocatorType::_DZMMWordAllocator;
 
 		default:
-			if (bytes_p > FE::system_page_size)
+			if (bytes_p > 64 * FE::one_KiB) // Windows allocation granularity is 64 KiB. The page granularity of the scalable pool is also 64 KiB. Therefore, if the allocation size is greater than 64 KiB, we will use VirtualAlloc to allocate memory directly from the OS.
 			{
 				return FE::internal::AllocatorType::_VirtualAlloc;
 			}
