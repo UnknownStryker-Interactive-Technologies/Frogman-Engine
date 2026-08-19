@@ -318,7 +318,10 @@ namespace internal::pool
     {
     public:
         constexpr static FE::size fixed_block_size_in_bytes = Alignment::size;
-        constexpr static FE::int32 page_size_in_bytes = (2 * FE::one_MiB) - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
+
+        constexpr static FE::int32 page_granularity_in_bytes = (2 * FE::one_MiB);
+        constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
+
         constexpr static FE::size possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
@@ -405,6 +408,7 @@ namespace large
     public:
         constexpr static FE::int32 fixed_block_size_in_bytes = Alignment::size;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
+		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
 
         using alignment_type = Alignment;
 
@@ -526,7 +530,7 @@ namespace large
             var::byte* l_to_be_freed = reinterpret_cast<var::byte*>(pointer_p);
 
             // use a pointer arithmetic to find which page the pointer belongs to.
-            chunk_type* l_page_base = reinterpret_cast<chunk_type*>(reinterpret_cast<FE::uintptr>(l_to_be_freed) - (reinterpret_cast<FE::uintptr>(l_to_be_freed) % page_capacity));
+            chunk_type* l_page_base = reinterpret_cast<chunk_type*>(reinterpret_cast<FE::uintptr>(l_to_be_freed) - (reinterpret_cast<FE::uintptr>(l_to_be_freed) % page_granularity_in_bytes));
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), FE::ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Fatal Error: the pointer '${%p@0}' does not belong to this block_allocator instance located at '${%p@1}'.", pointer_p, this);
             l_page_base->check_double_free(l_to_be_freed);

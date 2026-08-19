@@ -36,7 +36,8 @@ namespace internal::super_large::pool
         using free_list_iterator = large::block_info*;
         using free_list_element = large::block_info;
 
-        constexpr static FE::int32 page_size_in_bytes = FE::one_GiB - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
+        constexpr static FE::int32 page_granularity_in_bytes = FE::one_GiB;
+        constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
         // Allocation request sizes are always greater than 2MiB. page_size_in_bytes / Alignment::size is theoretically true, but practically, it barely uses 1% of its original capacity.
 		constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 1000) * 1;
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
@@ -226,6 +227,7 @@ namespace super_large
         using free_list_element = typename chunk_type::free_list_element;
 
     public:
+		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
         using alignment_type = Alignment;
 

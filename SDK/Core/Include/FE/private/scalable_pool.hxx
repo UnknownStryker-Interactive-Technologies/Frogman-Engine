@@ -878,7 +878,8 @@ namespace internal::large::pool
         using free_list_iterator = large::block_info*;
         using free_list_element = large::block_info;
 
-        constexpr static FE::int32 page_size_in_bytes = (2 * FE::one_MiB) - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
+		constexpr static FE::int32 page_granularity_in_bytes = (2 * FE::one_MiB);
+        constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
         // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
         constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
@@ -1152,6 +1153,7 @@ namespace large
 		using free_list_element = typename chunk_type::free_list_element;
 
     public:
+		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
         using alignment_type = Alignment;
 
@@ -1444,7 +1446,7 @@ namespace large
             FE_ASSERT((reinterpret_cast<FE::uintptr>(pointer_p) % Alignment::size) == 0, "Critical Error in FE.Core.scalable_allocator: the pointer value '${%p@0}' is not properly aligned by ${%lu@1}. It might not belong to this scalable_allocator instance.", pointer_p, &Alignment::size);
 
             // use a pointer arithmetic to find which page the pointer belongs to.
-            chunk_type* l_page_base = reinterpret_cast<chunk_type*>((FE::uintptr)pointer_p - (((FE::uintptr)(pointer_p)) % page_capacity));
+            chunk_type* l_page_base = reinterpret_cast<chunk_type*>((FE::uintptr)pointer_p - (((FE::uintptr)(pointer_p)) % page_granularity_in_bytes));
 
             free_list_element l_block_to_free;
             l_block_to_free._address = static_cast<var::int32>((var::byte*)pointer_p - l_page_base->get_page());
