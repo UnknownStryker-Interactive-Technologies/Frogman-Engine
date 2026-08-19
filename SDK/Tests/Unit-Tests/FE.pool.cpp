@@ -290,12 +290,12 @@ BENCHMARK(FE_LTLGPMP_extreme_fixed_sized_test)->Iterations(30000);
 // Random size allocation and deallocation benchmark for default C++ operators
 void aligned_malloc_aligned_free_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::vector<std::byte> l_vector;
-	benchmark::DoNotOptimize(l_vector);
-	benchmark::ClobberMemory();
-
 	for (auto _ : state_p)
 	{
+		std::vector<std::byte> l_vector;
+		benchmark::DoNotOptimize(l_vector);
+		benchmark::ClobberMemory();
+
 		FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 		l_vector.resize(l_random_size);
 	}
@@ -305,12 +305,12 @@ BENCHMARK(aligned_malloc_aligned_free_random_size_test)->Iterations(10000);
 
 void FE_TLGPMP_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::pmr::vector<std::byte> l_vector(FE::framework::framework_base::get_framework().get_memory_resource());
-	benchmark::DoNotOptimize(l_vector);
-	benchmark::ClobberMemory();
-
 	for (auto _ : state_p)
 	{
+		std::pmr::vector<std::byte> l_vector(FE::framework::framework_base::get_framework().get_memory_resource());
+		benchmark::DoNotOptimize(l_vector);
+		benchmark::ClobberMemory();
+
 		FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 		l_vector.resize(l_random_size);
 	}
@@ -319,12 +319,12 @@ BENCHMARK(FE_TLGPMP_random_size_test)->Iterations(10000);
 
 void FE_LTLGPMP_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::pmr::vector<std::byte> l_vector(FE::framework::framework_base::get_framework().get_large_memory_resource());
-	benchmark::DoNotOptimize(l_vector);
-	benchmark::ClobberMemory();
-
 	for (auto _ : state_p)
 	{
+		std::pmr::vector<std::byte> l_vector(FE::framework::framework_base::get_framework().get_large_memory_resource());
+		benchmark::DoNotOptimize(l_vector);
+		benchmark::ClobberMemory();
+
 		FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 		l_vector.resize(l_random_size);
 	}
@@ -334,15 +334,15 @@ BENCHMARK(FE_LTLGPMP_random_size_test)->Iterations(10000);
 // Random size allocation and deallocation benchmark for boost::pool_allocator
 void boost_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::vector<std::byte, 
-		boost::pool_allocator<std::byte, 
-		boost::default_user_allocator_new_delete, 
-		boost::details::pool::null_mutex>> l_vector;
-	benchmark::DoNotOptimize(l_vector);
-	benchmark::ClobberMemory();
-
 	for (auto _ : state_p)
 	{
+		std::vector<std::byte,
+			boost::pool_allocator<std::byte,
+			boost::default_user_allocator_new_delete,
+			boost::details::pool::null_mutex>> l_vector;
+		benchmark::DoNotOptimize(l_vector);
+		benchmark::ClobberMemory();
+
 		FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 		l_vector.resize(l_random_size);
 	}
@@ -352,12 +352,12 @@ BENCHMARK(boost_pool_allocator_random_size_test)->Iterations(10000);
 // Random size allocation and deallocation benchmark for boost::fast_pool_allocator
 void boost_fast_pool_allocator_random_size_test(benchmark::State& state_p) noexcept
 {
-	std::vector<std::byte, boost::fast_pool_allocator<std::byte>> l_vector;
-	benchmark::DoNotOptimize(l_vector);
-	benchmark::ClobberMemory();
-
 	for (auto _ : state_p)
 	{
+		std::vector<std::byte, boost::fast_pool_allocator<std::byte>> l_vector;
+		benchmark::DoNotOptimize(l_vector);
+		benchmark::ClobberMemory();
+
 		FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 		l_vector.resize(l_random_size);
 	}
@@ -382,7 +382,7 @@ void aligned_malloc_aligned_free_random_size_accumulation_test(benchmark::State&
 			FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 			std::vector<std::byte> l_temp_vector;
 			l_temp_vector.resize(l_random_size);
-			l_vector.emplace_back(l_temp_vector);
+			l_vector.emplace_back( std::move(l_temp_vector) );
 		}
 
 		for (int i = 0; i < state_p.max_iterations; ++i)
@@ -395,7 +395,7 @@ BENCHMARK(aligned_malloc_aligned_free_random_size_accumulation_test)->Iterations
 
 void FE_TLGPMP_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::pmr::vector< std::pmr::vector<std::byte> > l_vector;
+	std::pmr::vector< std::pmr::vector<std::byte> > l_vector(FE::framework::framework_base::get_framework().get_memory_resource());
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
 	benchmark::ClobberMemory();
@@ -407,7 +407,7 @@ void FE_TLGPMP_random_size_accumulation_test(benchmark::State& state_p) noexcept
 			FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 			std::pmr::vector<std::byte> l_temp_vector(FE::framework::framework_base::get_framework().get_memory_resource());
 			l_temp_vector.resize(l_random_size);
-			l_vector.emplace_back(l_temp_vector);
+			l_vector.emplace_back( std::move(l_temp_vector) );
 		}
 
 		for (int i = 0; i < state_p.max_iterations; ++i)
@@ -420,7 +420,7 @@ BENCHMARK(FE_TLGPMP_random_size_accumulation_test)->Iterations(1000);
 
 void FE_LTLGPMP_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::pmr::vector< std::pmr::vector<std::byte> > l_vector;
+	std::pmr::vector< std::pmr::vector<std::byte> > l_vector(FE::framework::framework_base::get_framework().get_large_memory_resource());
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
 	benchmark::ClobberMemory();
@@ -432,7 +432,7 @@ void FE_LTLGPMP_random_size_accumulation_test(benchmark::State& state_p) noexcep
 			FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 			std::pmr::vector<std::byte> l_temp_vector(FE::framework::framework_base::get_framework().get_large_memory_resource());
 			l_temp_vector.resize(l_random_size);
-			l_vector.emplace_back(l_temp_vector);
+			l_vector.emplace_back( std::move(l_temp_vector) );
 		}
 
 		for (int i = 0; i < state_p.max_iterations; ++i)
@@ -447,10 +447,21 @@ BENCHMARK(FE_LTLGPMP_random_size_accumulation_test)->Iterations(1000);
 // Random size allocation and deallocation benchmark for boost::pool_allocator
 void boost_pool_allocator_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::vector< std::vector<std::byte, 
-		boost::pool_allocator<std::byte, 
-		boost::default_user_allocator_new_delete, 
-		boost::details::pool::null_mutex>> > l_vector;
+	std::vector< 
+		std::vector<std::byte, 
+					boost::pool_allocator<	std::byte, 
+											boost::default_user_allocator_new_delete, 
+											boost::details::pool::null_mutex>
+		>,
+
+		boost::pool_allocator<	std::vector<std::byte,
+											boost::pool_allocator<	std::byte,
+																	boost::default_user_allocator_new_delete,
+																	boost::details::pool::null_mutex>
+								>,
+								boost::default_user_allocator_new_delete,
+								boost::details::pool::null_mutex>
+		> l_vector;
 
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
@@ -467,7 +478,7 @@ void boost_pool_allocator_random_size_accumulation_test(benchmark::State& state_
 				boost::details::pool::null_mutex>> l_temp_vector;
 
 			l_temp_vector.resize(l_random_size);
-			l_vector.emplace_back(l_temp_vector);
+			l_vector.emplace_back( std::move(l_temp_vector) );
 		}
 
 		for (int i = 0; i < state_p.max_iterations; ++i)
@@ -481,7 +492,10 @@ BENCHMARK(boost_pool_allocator_random_size_accumulation_test)->Iterations(1000);
 // Random size allocation and deallocation benchmark for boost::fast_pool_allocator
 void boost_fast_pool_allocator_random_size_accumulation_test(benchmark::State& state_p) noexcept
 {
-	std::vector< std::vector<std::byte, boost::fast_pool_allocator<std::byte>> > l_vector; // the code does not compile with the boost pool's null_mutex
+	std::vector< 
+		std::vector<std::byte, boost::fast_pool_allocator<std::byte>>, 
+		boost::fast_pool_allocator< std::vector< std::byte, boost::fast_pool_allocator<std::byte> > >
+	> l_vector; // the code does not compile with the boost pool's null_mutex
 	benchmark::DoNotOptimize(l_vector);
 	l_vector.reserve(state_p.max_iterations);
 	benchmark::ClobberMemory();
@@ -493,7 +507,7 @@ void boost_fast_pool_allocator_random_size_accumulation_test(benchmark::State& s
 			FE::int32 l_random_size = (rand() % (FE::system_large_page_size * 2));
 			std::vector<std::byte, boost::fast_pool_allocator<std::byte>> l_temp_vector;
 			l_temp_vector.resize(l_random_size);
-			l_vector.push_back(l_temp_vector);
+			l_vector.emplace_back( std::move(l_temp_vector) );
 		}
 
 		for (int i = 0; i < state_p.max_iterations; ++i)
