@@ -1,0 +1,54 @@
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Horizontal bar charts: blue solid bars are mean, orange hatched bars are median, across four allocator benchmark events</h2>
+<div style="display:flex;gap:16px;margin:4px 0 10px;font-size:12px;color:var(--text-secondary);align-items:center;">
+<span style="display:flex;align-items:center;gap:5px;"><span style="width:18px;height:12px;border-radius:2px;background:#2a78d6;"></span>mean</span>
+<span style="display:flex;align-items:center;gap:5px;"><svg width="18" height="12" aria-hidden="true"><rect x="0" y="0" width="18" height="12" rx="2" fill="#eb6834"/><line x1="2" y1="12" x2="12" y2="0" stroke="#7a2e10" stroke-width="1.8"/><line x1="9" y1="12" x2="18" y2="1" stroke="#7a2e10" stroke-width="1.8"/></svg>median (hatched)</span>
+</div>
+<div style="position:relative;width:100%;height:355px;"><canvas id="c1" role="img" aria-label="Fixed-size per-call in nanoseconds: object_pool 2.7, boost pool 6.2, fast_pool 26.8, malloc 25.6, TLGPMP 8.0, LTLGPMP 7.9">object_pool 2.7ns, boost::pool 6.2ns, fast_pool 26.8ns, malloc 25.6ns, TLGPMP 8.0ns, LTLGPMP 7.9ns</canvas></div>
+<div style="position:relative;width:100%;height:355px;margin-top:18px;"><canvas id="c2" role="img" aria-label="Fixed-size accumulation in microseconds per 1000 ops, log scale: object_pool 95, boost pool 3.2, fast_pool 12.8, malloc 12.9, TLGPMP 4.0, LTLGPMP 4.0">object_pool 95µs, boost::pool 3.2µs, fast_pool 12.8µs, malloc 12.9µs, TLGPMP 4.0µs, LTLGPMP 4.0µs</canvas></div>
+<div style="position:relative;width:100%;height:305px;margin-top:18px;"><canvas id="c3" role="img" aria-label="Random-size per-call in nanoseconds, log scale: boost pool 4252, fast_pool 2056, malloc 165, TLGPMP 84, LTLGPMP 81">boost::pool 4252ns, fast_pool 2056ns, malloc 165ns, TLGPMP 84ns, LTLGPMP 81ns</canvas></div>
+<div style="position:relative;width:100%;height:305px;margin-top:18px;"><canvas id="c4" role="img" aria-label="Random-size accumulation in milliseconds per 1000 ops, log scale: boost pool 2.46, fast_pool 68.2, malloc 1.85 median 1.51, TLGPMP 4.30, LTLGPMP 3.19">boost::pool 2.46ms, fast_pool 68.2ms, malloc 1.85ms (median 1.51), TLGPMP 4.30ms, LTLGPMP 3.19ms</canvas></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script>
+Chart.register(ChartDataLabels);
+const MEAN = '#2a78d6', MED = '#eb6834', MEDLINE = '#7a2e10';
+function medPat(){
+  const c=document.createElement('canvas'); c.width=10; c.height=10;
+  const x=c.getContext('2d');
+  x.fillStyle=MED; x.fillRect(0,0,10,10);
+  x.strokeStyle=MEDLINE; x.lineWidth=1.8; x.lineCap='square';
+  x.beginPath(); x.moveTo(-3,13); x.lineTo(13,-3); x.moveTo(-3,7); x.lineTo(7,-3); x.moveTo(3,13); x.lineTo(13,3); x.stroke();
+  return x.createPattern(c,'repeat');
+}
+function fmt(v){ return v>=100 ? Math.round(v).toLocaleString() : Number(v.toPrecision(3)); }
+function mk(id, title, labels, means, medians, unit, log){
+  new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{ labels:labels, datasets:[
+      { label:'mean', data:means, backgroundColor:MEAN, barThickness:15, borderRadius:3, borderSkipped:'start',
+        datalabels:{ display:true, anchor:'end', align:'end', offset:3, clip:false, color:'#898781', font:{size:11,weight:'500'}, formatter:fmt } },
+      { label:'median', data:medians, backgroundColor:medPat(), barThickness:15, borderRadius:3, borderSkipped:'start',
+        datalabels:{ display:(c)=>Math.abs(medians[c.dataIndex]-means[c.dataIndex])/means[c.dataIndex]>0.02, anchor:'end', align:'end', offset:3, clip:false, color:'#898781', font:{size:11}, formatter:fmt } }
+    ]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, layout:{padding:{right:48}},
+      plugins:{ legend:{display:false},
+        title:{display:true, text:title, align:'start', color:'#898781', font:{size:13, weight:'400'}},
+        tooltip:{callbacks:{label:(c)=>c.dataset.label+': '+fmt(c.parsed.x)+unit}} },
+      scales:{
+        x:{ type: log?'logarithmic':'linear', ticks:{color:'#898781', font:{size:11}}, grid:{color:'rgba(137,135,129,0.18)'} },
+        y:{ ticks:{color:'#898781', font:{size:12, weight:'500'}}, grid:{display:false} } } }
+  });
+}
+mk('c1','Fixed-size per-call (ns, lower is better)',
+  ['object_pool','boost::pool','fast_pool','malloc','TLGPMP','LTLGPMP'],
+  [2.67,6.15,26.79,25.55,7.95,7.89], [2.63,6.13,26.06,25.63,7.93,7.85], 'ns', false);
+mk('c2','Fixed-size accumulation (µs per 1000 ops, log)',
+  ['object_pool','boost::pool','fast_pool','malloc','TLGPMP','LTLGPMP'],
+  [95.00,3.23,12.84,12.93,3.95,4.02], [94.92,3.23,12.84,12.91,3.96,4.02], 'µs', true);
+mk('c3','Random-size per-call (ns, log)',
+  ['boost::pool','fast_pool','malloc','TLGPMP','LTLGPMP'],
+  [4251.6,2056.0,164.9,84.1,80.5], [4250.1,2053.7,163.8,84.0,80.3], 'ns', true);
+mk('c4','Random-size accumulation (ms per 1000 ops, log)',
+  ['boost::pool','fast_pool','malloc','TLGPMP','LTLGPMP'],
+  [2.46,68.16,1.85,4.30,3.19], [2.46,69.75,1.51,4.30,3.19], 'ms', true);
+</script>
