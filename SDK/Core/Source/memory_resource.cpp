@@ -70,6 +70,21 @@ FE::internal::AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t byte
 
 
 
+FE::memory_resource::memory_resource() noexcept
+	:	m_xmmword_block_pool(),
+		m_ymmword_block_pool(),
+		m_zmmword_block_pool(),
+		m_dzmmword_block_pool(),
+		m_scalable_pool(),
+
+		m_fallback_allocator()
+{
+}
+
+FE::memory_resource::~memory_resource() noexcept
+{
+}
+
 FE::memory_resource::memory_resource(FE::memory_resource&& other_p) noexcept
 	:	m_xmmword_block_pool( std::move(other_p.m_xmmword_block_pool) ),
 		m_ymmword_block_pool( std::move(other_p.m_ymmword_block_pool) ),
@@ -214,6 +229,23 @@ namespace FE::large
 				return FE::internal::AllocatorType::_ScalableAllocator;
 			}
 		}
+	}
+
+	memory_resource::memory_resource() noexcept
+		:	m_xmmword_block_pool(),
+			m_ymmword_block_pool(),
+			m_zmmword_block_pool(),
+			m_dzmmword_block_pool(),
+			m_scalable_pool(),
+
+			m_super_large_area(),
+
+			m_fallback_allocator()
+	{
+	}
+
+	memory_resource::~memory_resource() noexcept
+	{
 	}
 
 	memory_resource::memory_resource(memory_resource&& other_p) noexcept

@@ -71,8 +71,8 @@ private:
 	page_aligned_allocator<std::byte> m_fallback_allocator;
 
 public:
-	memory_resource() noexcept = default;
-	virtual ~memory_resource() noexcept override = default;
+	memory_resource() noexcept;
+	virtual ~memory_resource() noexcept override;
 
 	memory_resource(memory_resource&& other_p) noexcept;
 	memory_resource& operator=(memory_resource&& other_p) noexcept;
@@ -115,8 +115,8 @@ namespace large
 		page_aligned_allocator<std::byte> m_fallback_allocator;
 
 	public:
-		memory_resource() noexcept = default;
-		virtual ~memory_resource() noexcept override = default;
+		memory_resource() noexcept;
+		virtual ~memory_resource() noexcept override;
 
 		memory_resource(memory_resource&& other_p) noexcept;
 		memory_resource& operator=(memory_resource&& other_p) noexcept;
