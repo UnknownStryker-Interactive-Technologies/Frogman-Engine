@@ -257,11 +257,15 @@ namespace super_large
 
             if (m_page == nullptr)
             {
+                _FE_MAYBE_UNUSED_ DWORD l_errcode = GetLastError();
+                FE_LOG(FE::log::Severity::_Warning, "1GiB page allocation failed due to ${%d@0}.", &l_errcode);
                 m_did_1GiB_page_allocation_fail = true;
                 return;
             }
 
             new(m_page) chunk_type(); // Placement new to construct the chunk in the allocated memory.
+
+            FE_LOG(FE::log::Severity::_Info, "1GiB page allocation was successful");
         }
 
         ~pool() noexcept

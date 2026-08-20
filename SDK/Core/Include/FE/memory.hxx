@@ -1331,20 +1331,6 @@ _FE_FORCE_INLINE_ var::float64 convert_bytes_to_gigabytes(uint64 bytes_p) noexce
 }
 
 
-/*
-The operator new function allocates a specified number of bytes of memory
-aligned to the size of the CPU's L1 cache line.
-*/
-_FE_NODISCARD_ void* _FE_CDECL_ ::operator new(size_t bytes_p);
-_FE_NODISCARD_ void* _FE_CDECL_ ::operator new[](size_t bytes_p);
-
-void _FE_CDECL_ ::operator delete(void* ptr_p) noexcept;
-void _FE_CDECL_ ::operator delete[](void* ptr_p) noexcept;
-
-void _FE_CDECL_ ::operator delete(void* ptr_p, size_t size_p) noexcept;
-void _FE_CDECL_ ::operator delete[](void* ptr_p, size_t size_p) noexcept;
-
-
 namespace internal
 {
 	template<typename T>
