@@ -25,8 +25,6 @@ limitations under the License.
 #include <FE/input_contexts.hxx>
 #include <FE/video_player.hpp>
 
-#include <FE/game_processor.hxx>
-
 #include <atomic>
 
 #include <imgui.h>
