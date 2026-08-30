@@ -22,6 +22,8 @@ limitations under the License.
 #include <FE/game.hxx>
 #include <FE/entity.hpp>
 
+#include <absl/container/flat_hash_map.h>
+
 
 
 
@@ -45,15 +47,24 @@ public:
 
 private:
     using registry = entt::basic_registry<internal::entity, std::pmr::polymorphic_allocator<internal::entity>>;
+	using system = void(*)(class ::FE::world&);
 
     registry m_registry;
     world_tag_t m_world_tag;
 	var::float64 m_delta_time;
-	FE::queue<void(*)(class ::FE::world&), std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>> m_deferred_ecs_syscall_queue;
+	FE::queue<system> m_deferred_ecs_syscall_queue;
+
+	absl::flat_hash_map<std::pmr::string, FE::entity, 
+        absl::DefaultHashContainerHash<std::pmr::string>, 
+        absl::DefaultHashContainerEq<std::pmr::string>, 
+        std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, FE::entity>>> m_tagged_entities;
 
 public:
     world(world_tag_t world_tag_p) noexcept;
     ~world() noexcept;
+
+    world(world&& other_p) noexcept;
+    world& operator=(world&& other_p) noexcept;
 
     world(const world&) = delete;
     world& operator=(const world&) = delete;
@@ -65,55 +76,71 @@ public:
 	void __set_delta_time(const auth&, FE::float64 delta_time_p) noexcept;
     registry& __get_registry(const auth&) noexcept;
 
-    FE::entity spawn_entity();
+    FE::entity spawn_entity(FE::ASCII* const tag_p = NULL);
+    std::optional<FE::entity> find_entity(FE::ASCII* const tag_p) const noexcept;
     void despawn_entity(FE::entity entity_p);
-    bool is_valid(FE::entity entity_p) const noexcept;
+    FE::boolean is_valid(FE::entity entity_p) const noexcept;
 
     template <typename T, typename... Arguments>
     T& add_component(FE::entity entity_p, Arguments&&... arguments_p) noexcept
     {
-
+        FE_ASSERT( m_registry.all_of<T>( entity_p.get_raw(FE::entity::auth{}) ) == false, "Component of type T already exists on the entity.");
+        return m_registry.emplace(entity_p.get_raw(FE::entity::auth{}), std::forward<Arguments>(arguments_p)...);
     }
 
     template <typename T>
     T& get_component(FE::entity entity_p) noexcept
     {
-
+        FE_ASSERT(m_registry.all_of<T>(entity_p.get_raw(FE::entity::auth{})) == true, "The component type is not found on the entity.");
+        return m_registry.get<T>(entity_p.get_raw(FE::entity::auth{}));
     }
-    template <typename... T>
+    template <typename... ComponentTypes>
     auto get_components(FE::entity entity_p) noexcept
     {
-
+        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{})) == true, "The listed component types are not found on the entity.");
+        return m_registry.get<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{}));
     }
-    template <typename... T>
-    auto get_components() noexcept
-    {
 
+    template <typename... ComponentTypes>
+    auto get_components_view() noexcept
+    {
+		return m_registry.view<ComponentTypes...>();
     }
 
     template <typename T>
     void remove_component(FE::entity entity_p) noexcept
     {
-
+        FE_ASSERT(m_registry.all_of<T>(entity_p.get_raw(FE::entity::auth{})) == true, "The component type is not found on the entity.");
+		m_registry.remove<T>(entity_p.get_raw(FE::entity::auth{}));
     }
-    template <typename... T>
+    template <typename... ComponentTypes>
     void remove_components(FE::entity entity_p) noexcept
     {
-
+        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{})) == true, "The listed component types are not found on the entity.");
+		m_registry.remove<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{}));
     }
 
     template <typename T>  
     FE::boolean has_component(FE::entity entity_p) const noexcept
     {
-
+        return m_registry.all_of<T>( entity_p.get_raw(FE::entity::auth{}) );
     }
-    template <typename... T>
+    template <typename... ComponentTypes>
     FE::boolean has_components(FE::entity entity_p) const noexcept
     {
-
+        return m_registry.all_of<ComponentTypes...>( entity_p.get_raw(FE::entity::auth{}) );
     }
 
-	world_tag_t get_world_tag() const noexcept;
+	_FE_FORCE_INLINE_ world_tag_t get_world_tag() const noexcept { return m_world_tag; }
+
+    //template <typename... ComponentTypes>
+    //std::pmr::string serialize_entity(FE::entity entity_p) const noexcept
+    //{
+    //}
+    //template <typename... ComponentTypes>
+    //FE::entity deserialize_entity(const std::pmr::string& serialized_entity_p) noexcept
+    //{
+    //}
 
     static void create_world(world_tag_t world_tag_p) noexcept;
 	static void enter_world(world_tag_t world_tag_p) noexcept;

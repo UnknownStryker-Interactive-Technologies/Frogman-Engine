@@ -8,12 +8,34 @@
 FE::world::world(world_tag_t world_tag_p) noexcept
 	: m_registry(std::pmr::polymorphic_allocator<entt::entity>{FE::get_large_thread_local_memory_resource()}),
 	  m_world_tag(world_tag_p),
-	  m_deferred_ecs_syscall_queue(std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>{FE::get_large_thread_local_memory_resource()})
+	  m_delta_time(),
+	  m_deferred_ecs_syscall_queue(std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>{FE::get_large_thread_local_memory_resource()}),
+	  m_tagged_entities(std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, FE::entity>>{FE::get_large_thread_local_memory_resource()})
 {
 }
 
 FE::world::~world() noexcept
 {
+}
+
+
+FE::world::world(world&& other_p) noexcept
+	: m_registry(std::move(other_p.m_registry)),
+	  m_world_tag(std::exchange(other_p.m_world_tag, world_tag_t{})),
+	  m_delta_time(std::exchange(other_p.m_delta_time, FE::float64{})),
+	  m_deferred_ecs_syscall_queue(std::move(other_p.m_deferred_ecs_syscall_queue)),
+	  m_tagged_entities(std::move(other_p.m_tagged_entities))
+{
+}
+
+FE::world& FE::world::operator=(world&& other_p) noexcept
+{
+	m_registry = std::move(other_p.m_registry);
+	m_world_tag = std::exchange(other_p.m_world_tag, world_tag_t{});
+	m_delta_time = std::exchange(other_p.m_delta_time, FE::float64{});
+	m_deferred_ecs_syscall_queue = std::move(other_p.m_deferred_ecs_syscall_queue);
+	m_tagged_entities = std::move(other_p.m_tagged_entities);
+	return *this;
 }
 
 
@@ -28,24 +50,40 @@ FE::world::registry& FE::world::__get_registry(const auth&) noexcept
 }
 
 
-FE::entity FE::world::spawn_entity()
+FE::entity FE::world::spawn_entity(FE::ASCII* const tag_p)
 {
-	return FE::entity();
+	if (tag_p == NULL)
+	{
+		return FE::entity{ m_registry.create() };
+	}
+
+	auto l_entity_handle = m_registry.create();
+	FE::entity l_entity{ l_entity_handle };
+	m_tagged_entities.emplace(tag_p, l_entity);
+	return l_entity;
+}
+
+std::optional<FE::entity> FE::world::find_entity(FE::ASCII* const tag_p) const noexcept
+{
+	auto l_it = m_tagged_entities.find(tag_p);
+	if (l_it != m_tagged_entities.end())
+	{
+		return l_it->second;
+	}
+
+	return std::nullopt;
 }
 
 void FE::world::despawn_entity(FE::entity entity_p)
 {
+	auto l_entity_handle = entity_p.get_raw(FE::entity::auth{});
+	FE_EXIT_IF(is_valid(entity_p) == false, FE::ErrorCode::_FatalGameError_1XXX_AttemptingToDoubleDeleteEntity, "FE::world::despawn_entity(FE::entity entity_p) - Entity '${%u64@0}' is not valid in world '${%u16@1}'.", &l_entity_handle, &m_world_tag);
+	m_registry.destroy(l_entity_handle);
 }
 
-bool FE::world::is_valid(FE::entity entity_p) const noexcept
+FE::boolean FE::world::is_valid(FE::entity entity_p) const noexcept
 {
-	return false;
-}
-
-
-world_tag_t FE::world::get_world_tag() const noexcept
-{
-	return m_world_tag;
+	return m_registry.valid(entity_p.get_raw(FE::entity::auth{}));
 }
 
 
