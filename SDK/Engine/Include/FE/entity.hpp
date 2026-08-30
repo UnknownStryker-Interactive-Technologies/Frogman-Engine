@@ -37,6 +37,17 @@ class entity final
     internal::entity m_handle;
 
 public:
+    class auth
+    {
+        friend class FE::world;
+
+        constexpr auth() noexcept {};
+        constexpr ~auth() noexcept {};
+
+        constexpr auth(auth&&) noexcept {};
+        constexpr auth(const auth&) noexcept {};
+    };
+
     entity() noexcept;
     explicit entity(internal::entity handle_p) noexcept;
 	entity& operator=(internal::entity handle_p) noexcept;
@@ -51,6 +62,8 @@ public:
 
     FE::boolean operator==(const entity& other_p) const noexcept;
     explicit operator bool() const noexcept;
+
+    inline internal::entity get_raw(const auth&) const noexcept { return m_handle; }
 };
 
 END_NAMESPACE
