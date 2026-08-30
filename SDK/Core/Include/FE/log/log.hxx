@@ -59,7 +59,7 @@ limitations under the License.
 #ifdef _MSC_VER
 #include <crtdbg.h>
 #include <windows.h>
-#define FE_DEBUG_BREAK() _CrtDbgBreak()
+#define FE_DEBUG_BREAK() __debugbreak()
 #else
 #define FE_DEBUG_BREAK()
 #endif
@@ -149,7 +149,9 @@ logging a formatted message along with the file name and line number.
 { \
 	if(expression) _FE_UNLIKELY_ \
 	{ \
-		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		const char* l_msg = ::FE::log::buffered_string_formatter({ __VA_ARGS__ }); \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(l_msg, __FILE__, __FUNCSIG__, __LINE__); \
+		MessageBoxA(nullptr, l_msg, "Frogman Engine Negative Assertion Failure", MB_OK | MB_ICONWARNING | MB_SETFOREGROUND); \
 		FE_DEBUG_BREAK(); \
 		::std::abort(); \
 	} \
@@ -182,7 +184,9 @@ FE_ASSERT is a macro that checks a given expression and logs a fatal error messa
 { \
 	if(!(expression)) _FE_UNLIKELY_ \
 	{ \
-		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(::FE::log::buffered_string_formatter({ __VA_ARGS__ }), __FILE__, __FUNCSIG__, __LINE__); \
+		const char* l_msg = ::FE::log::buffered_string_formatter({ __VA_ARGS__ }); \
+		::FE::log::logger_base::get_fatal_error_logger<::FE::log::fatal_error_logger_base>().do_log(l_msg, __FILE__, __FUNCSIG__, __LINE__); \
+		MessageBoxA(nullptr, l_msg, "Frogman Engine Assertion Failure", MB_OK | MB_ICONWARNING | MB_SETFOREGROUND); \
 		FE_DEBUG_BREAK(); \
 		::std::abort(); \
 	} \
@@ -319,7 +323,9 @@ namespace FE
 		_FatalRendererError_5XX_RendererBackendMakeWindowAssociationFailure = 528,
 		_FatalRendererError_5XX_RendererBackendFrameBufferRetrievalFailure = 529,
 		_FatalRendererError_5XX_RendererBackendRasterizerStateCreationFailure = 530,
-		_FatalRendererError_5XX_RendererBackendFrameBufferResizeFailure = 531
+		_FatalRendererError_5XX_RendererBackendFrameBufferResizeFailure = 531,
+
+		_FatalGameError_1XXX_AttemptingToDoubleDeleteEntity = 1000
 	};
 }
 #endif
