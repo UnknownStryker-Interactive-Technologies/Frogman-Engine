@@ -39,18 +39,18 @@ FE::world& FE::world::operator=(world&& other_p) noexcept
 }
 
 
-void FE::world::__set_delta_time(const FE::world::auth&, FE::float64 delta_time_p) noexcept
+void FE::world::set_delta_time(const FE::world::auth&, FE::float64 delta_time_p) noexcept
 {
 	m_delta_time = delta_time_p;
 }
 
-FE::world::registry& FE::world::__get_registry(const auth&) noexcept
+FE::world::registry& FE::world::get_registry(const auth&) noexcept
 {
 	return m_registry;
 }
 
 
-FE::entity FE::world::spawn_entity(FE::ASCII* const tag_p)
+FE::entity FE::world::spawn_entity(FE::ASCII* const tag_p) noexcept
 {
 	if (tag_p == NULL)
 	{
@@ -74,16 +74,16 @@ std::optional<FE::entity> FE::world::find_entity(FE::ASCII* const tag_p) const n
 	return std::nullopt;
 }
 
-void FE::world::despawn_entity(FE::entity entity_p)
+void FE::world::despawn_entity(FE::entity entity_p) noexcept
 {
-	auto l_entity_handle = entity_p.get_raw(FE::entity::auth{});
+	auto l_entity_handle = entity_p;
 	FE_EXIT_IF(is_valid(entity_p) == false, FE::ErrorCode::_FatalGameError_1XXX_AttemptingToDoubleDeleteEntity, "FE::world::despawn_entity(FE::entity entity_p) - Entity '${%u64@0}' is not valid in world '${%u16@1}'.", &l_entity_handle, &m_world_tag);
 	m_registry.destroy(l_entity_handle);
 }
 
 FE::boolean FE::world::is_valid(FE::entity entity_p) const noexcept
 {
-	return m_registry.valid(entity_p.get_raw(FE::entity::auth{}));
+	return m_registry.valid(entity_p);
 }
 
 

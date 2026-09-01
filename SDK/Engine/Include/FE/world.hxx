@@ -46,7 +46,7 @@ public:
     };
 
 private:
-    using registry = entt::basic_registry<internal::entity, std::pmr::polymorphic_allocator<internal::entity>>;
+    using registry = entt::basic_registry<FE::entity, std::pmr::polymorphic_allocator<FE::entity>>;
 	using system = void(*)(class ::FE::world&);
 
     registry m_registry;
@@ -73,32 +73,32 @@ public:
     _FE_FORCE_INLINE_ FE::float64 delta_milliseconds() const noexcept { return m_delta_time; }
 	constexpr FE::float64 fixed_physics_delta_milliseconds() const noexcept { return 1000.0 / 60.0; }
 
-	void __set_delta_time(const auth&, FE::float64 delta_time_p) noexcept;
-    registry& __get_registry(const auth&) noexcept;
+	void set_delta_time(const auth&, FE::float64 delta_time_p) noexcept;
+    registry& get_registry(const auth&) noexcept;
 
-    FE::entity spawn_entity(FE::ASCII* const tag_p = NULL);
+    FE::entity spawn_entity(FE::ASCII* const tag_p = NULL) noexcept;
     std::optional<FE::entity> find_entity(FE::ASCII* const tag_p) const noexcept;
-    void despawn_entity(FE::entity entity_p);
+    void despawn_entity(FE::entity entity_p) noexcept;
     FE::boolean is_valid(FE::entity entity_p) const noexcept;
 
     template <typename T, typename... Arguments>
     T& add_component(FE::entity entity_p, Arguments&&... arguments_p) noexcept
     {
-        FE_ASSERT( m_registry.all_of<T>( entity_p.get_raw(FE::entity::auth{}) ) == false, "Component of type T already exists on the entity.");
-        return m_registry.emplace(entity_p.get_raw(FE::entity::auth{}), std::forward<Arguments>(arguments_p)...);
+        FE_ASSERT( m_registry.all_of<T>( entity_p ) == false, "Component of type T already exists on the entity.");
+        return m_registry.emplace(entity_p, std::forward<Arguments>(arguments_p)...);
     }
 
     template <typename T>
     T& get_component(FE::entity entity_p) noexcept
     {
-        FE_ASSERT(m_registry.all_of<T>(entity_p.get_raw(FE::entity::auth{})) == true, "The component type is not found on the entity.");
-        return m_registry.get<T>(entity_p.get_raw(FE::entity::auth{}));
+        FE_ASSERT(m_registry.all_of<T>(entity_p) == true, "The component type is not found on the entity.");
+        return m_registry.get<T>(entity_p);
     }
     template <typename... ComponentTypes>
     auto get_components(FE::entity entity_p) noexcept
     {
-        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{})) == true, "The listed component types are not found on the entity.");
-        return m_registry.get<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{}));
+        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p) == true, "The listed component types are not found on the entity.");
+        return m_registry.get<ComponentTypes...>(entity_p);
     }
 
     template <typename... ComponentTypes>
@@ -110,25 +110,25 @@ public:
     template <typename T>
     void remove_component(FE::entity entity_p) noexcept
     {
-        FE_ASSERT(m_registry.all_of<T>(entity_p.get_raw(FE::entity::auth{})) == true, "The component type is not found on the entity.");
-		m_registry.remove<T>(entity_p.get_raw(FE::entity::auth{}));
+        FE_ASSERT(m_registry.all_of<T>(entity_p) == true, "The component type is not found on the entity.");
+		m_registry.remove<T>(entity_p);
     }
     template <typename... ComponentTypes>
     void remove_components(FE::entity entity_p) noexcept
     {
-        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{})) == true, "The listed component types are not found on the entity.");
-		m_registry.remove<ComponentTypes...>(entity_p.get_raw(FE::entity::auth{}));
+        FE_ASSERT(m_registry.all_of<ComponentTypes...>(entity_p) == true, "The listed component types are not found on the entity.");
+		m_registry.remove<ComponentTypes...>(entity_p);
     }
 
     template <typename T>  
     FE::boolean has_component(FE::entity entity_p) const noexcept
     {
-        return m_registry.all_of<T>( entity_p.get_raw(FE::entity::auth{}) );
+        return m_registry.all_of<T>( entity_p );
     }
     template <typename... ComponentTypes>
     FE::boolean has_components(FE::entity entity_p) const noexcept
     {
-        return m_registry.all_of<ComponentTypes...>( entity_p.get_raw(FE::entity::auth{}) );
+        return m_registry.all_of<ComponentTypes...>( entity_p );
     }
 
 	_FE_FORCE_INLINE_ world_tag_t get_world_tag() const noexcept { return m_world_tag; }

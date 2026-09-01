@@ -23,47 +23,8 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-class world;
-
-namespace internal
+enum struct entity : var::uint64 
 {
-    enum struct entity : var::uint64 {};
-}
-
-class entity final
-{
-	friend class world;
-
-    internal::entity m_handle;
-
-public:
-    class auth
-    {
-        friend class FE::world;
-
-        constexpr auth() noexcept {};
-        constexpr ~auth() noexcept {};
-
-        constexpr auth(auth&&) noexcept {};
-        constexpr auth(const auth&) noexcept {};
-    };
-
-    entity() noexcept;
-    explicit entity(internal::entity handle_p) noexcept;
-	entity& operator=(internal::entity handle_p) noexcept;
-
-	~entity() noexcept = default;
-
-    entity(const entity& other_p) noexcept;
-    entity& operator=(const entity& other_p) noexcept;
-
-    entity(entity&& other_p) noexcept;
-    entity& operator=(entity&& other_p) noexcept;
-
-    FE::boolean operator==(const entity& other_p) const noexcept;
-    explicit operator bool() const noexcept;
-
-    inline internal::entity get_raw(const auth&) const noexcept { return m_handle; }
 };
 
 END_NAMESPACE

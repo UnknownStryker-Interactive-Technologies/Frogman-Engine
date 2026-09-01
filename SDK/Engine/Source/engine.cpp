@@ -386,7 +386,7 @@ void FE::engine::__game_main() noexcept
 		}
 		l_delta_clock.end_clock();
 		FE::float64 l_delta = l_delta_clock.get_delta_milliseconds();
-		l_current_world->__set_delta_time(FE::world::auth{}, l_delta);
+		l_current_world->set_delta_time(FE::world::auth{}, l_delta);
 
 		if (l_delta >= 1000.0)
 		{
