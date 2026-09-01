@@ -1,6 +1,6 @@
 ﻿#ifndef _FE_CORE_CONCURRENT_VECTOR_HXX_
 #define _FE_CORE_CONCURRENT_VECTOR_HXX_
-/* https://oneapi-spec.uxlfoundation.org/specifications/oneapi/v1.3-rev-1/elements/onetbb/source/containers/concurrent_vector_cls
+/*
 Copyright 2025 by UNKNOWN STRYKER (Hojin Lee / Joey)
 
 Licensed under the Frogman Engine License (the "License");
@@ -29,9 +29,9 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
-// concurrent_vector is a contiguous, eXceptionless assertive dynamic array.
+// concurrent_array is a contiguous, eXceptionless assertive dynamic array.
 template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>, class SharedMutex = std::shared_mutex>
-class concurrent_vector // TODO: allocate array chunks instead of locking the whole array when resizing; try remove the length modifier lock.
+class concurrent_array
 {
 public:
     using allocator_type = Allocator;
@@ -49,7 +49,6 @@ public:
 private:
     static constexpr size_t default_size = 16;
 
-private:
     std::atomic<pointer> m_active;
     std::atomic<pointer> m_reserved;
     std::atomic<size_type> m_size;
@@ -58,31 +57,37 @@ private:
     Allocator m_allocator;
 
 public:
-    // Constructors and destructors are concurrently unsafe.
-    constexpr concurrent_vector() noexcept
-        : m_active(), m_reserved(),
-        m_size(), m_capacity(),
-        m_length_modifier_lock(),
-        m_allocator()
+    // Constructors and destructors are concurrentcy-unsafe.
+    constexpr concurrent_array() noexcept
+        : m_active(), 
+          m_reserved(),
+          m_size(), 
+          m_capacity(),
+          m_length_modifier_lock(),
+          m_allocator()
     {
         __allocate_default_sized_raw_on_construction();
     }
 
-    constexpr concurrent_vector(const allocator_type& allocator_p) noexcept
-        : m_active(), m_reserved(),
-        m_size(), m_capacity(),
-        m_length_modifier_lock(),
-        m_allocator(allocator_p)
+    constexpr concurrent_array(const allocator_type& allocator_p) noexcept
+        : m_active(), 
+          m_reserved(),
+          m_size(), 
+          m_capacity(),
+          m_length_modifier_lock(),
+          m_allocator(allocator_p)
     {
         __allocate_default_sized_raw_on_construction();
     }
 
-    concurrent_vector(std::initializer_list<value_type> init_p,
+    concurrent_array(std::initializer_list<value_type> init_p,
         const allocator_type& allocator_p = allocator_type()) noexcept
-        : m_active(), m_reserved(),
-        m_size(), m_capacity(),
-        m_length_modifier_lock(),
-        m_allocator(allocator_p)
+        : m_active(), 
+          m_reserved(),
+          m_size(), 
+          m_capacity(),
+          m_length_modifier_lock(),
+          m_allocator(allocator_p)
     {
         if (init_p.size() == 0)
         {
@@ -93,7 +98,7 @@ public:
         __move_construct_from_initializer_list(init_p);
     }
 
-    ~concurrent_vector()
+    ~concurrent_array()
     {
         pointer l_begin = m_active.load(std::memory_order_acquire);
         pointer l_end = l_begin + size();
@@ -106,8 +111,8 @@ public:
         m_allocator.deallocate(l_begin, m_capacity.load(std::memory_order_acquire));
     }
 
-private: // Concurrently unsafe methods
-    inline constexpr void __allocate_default_sized_raw_on_construction() noexcept
+private: // Concurrency-unsafe methods
+    constexpr void __allocate_default_sized_raw_on_construction() noexcept
     {
         m_active.store(m_allocator.allocate(default_size), std::memory_order_relaxed);
         FE_ASSERT(m_active.load(std::memory_order_relaxed) != nullptr);
@@ -116,7 +121,7 @@ private: // Concurrently unsafe methods
         FE_ASSERT(m_capacity.load(std::memory_order_relaxed) == default_size);
     }
 
-    inline void __move_construct_from_initializer_list(std::initializer_list<value_type>& init_p) noexcept
+    void __move_construct_from_initializer_list(std::initializer_list<value_type>& init_p) noexcept
     {
         FE_ASSERT(init_p.size() <= m_capacity.load(std::memory_order_relaxed));
 
@@ -132,31 +137,93 @@ private: // Concurrently unsafe methods
         }
     }
 
-public: // Concurrency-unsafe methods; use the length modifier lock.
-    /*
-        concurrent_vector( concurrent_vector&& other_p ) noexcept
-        {
+	void __move_construct_from_other(concurrent_array& other_p) noexcept
+	{
+		FE_ASSERT(other_p.size() <= m_capacity.load(std::memory_order_relaxed));
 
-        }
-        concurrent_vector& operator=( concurrent_vector&& other_p ) noexcept
+		pointer l_other_array_it = other_p.m_active.load(std::memory_order_relaxed);
+		pointer l_other_array_end = l_other_array_it + other_p.size();
+
+		pointer l_current_array_it = m_active.load(std::memory_order_relaxed);
+		while (l_other_array_it < l_other_array_end)
+		{
+			new(l_current_array_it) T(std::move(*l_other_array_it));
+			++l_other_array_it;
+			++l_current_array_it;
+		}
+	}
+
+public: // Concurrency-unsafe methods
+    concurrent_array( concurrent_array&& other_p ) noexcept
+        : m_active(other_p.m_active.exchange(nullptr, std::memory_order_acq_rel)),
+          m_reserved(other_p.m_reserved.exchange(nullptr, std::memory_order_acq_rel)),
+
+          m_size(other_p.m_size.exchange(0, std::memory_order_acq_rel)),
+          m_capacity(other_p.m_capacity.exchange(0, std::memory_order_acq_rel)),
+
+          m_length_modifier_lock(),
+          m_allocator(std::move(other_p.m_allocator))
+    {
+    }
+    concurrent_array& operator=( concurrent_array&& other_p ) noexcept
+    {
+        __tear_down(m_active.exchange(other_p.m_active.exchange(nullptr, std::memory_order_acq_rel), std::memory_order_acq_rel),
+                    m_size.exchange(other_p.m_size.exchange(0, std::memory_order_acq_rel), std::memory_order_acq_rel),
+                    m_capacity.exchange(other_p.m_capacity.exchange(0, std::memory_order_acq_rel), std::memory_order_acq_rel)
+        );
+
+        return *this;
+    }
+
+    concurrent_array( const concurrent_array& other_p ) noexcept
+        : m_active(),
+          m_reserved(),
+          m_size(),
+          m_capacity(),
+          m_length_modifier_lock(),
+          m_allocator(other_p.m_allocator)
+    {
+        if (other_p.size() == 0)
         {
-            return *this;
+            __allocate_default_sized_raw_on_construction();
+            return;
+        }
+        try_reserve(other_p.size());
+        __move_construct_from_other(other_p);
+    }
+    concurrent_array& operator=( const concurrent_array& other_p ) noexcept
+    {
+        if (other_p.size() == 0)
+        {
+            return;
         }
 
-        concurrent_vector( const concurrent_vector& other_p ) noexcept
-        {
+        __tear_down(m_active.exchange(nullptr, std::memory_order_acq_rel),
+                    m_size.exchange(0, std::memory_order_acq_rel),
+                    m_capacity.exchange(0, std::memory_order_acq_rel)
+        );
 
-        }
-        concurrent_vector& operator=( const concurrent_vector& other_p ) noexcept
+        try_reserve(other_p.size());
+        __move_construct_from_initializer_list(other_p);
+        return *this;
+    }
+
+    concurrent_array& operator=( std::initializer_list<value_type> init_p ) noexcept
+    {
+        if (init_p.size() == 0)
         {
-            return *this;
+            return;
         }
 
-        concurrent_vector& operator=( std::initializer_list<value_type> init_p ) noexcept
-        {
-            return *this;
-        }
-        */
+		__tear_down(m_active.exchange(nullptr, std::memory_order_acq_rel), 
+                    m_size.exchange(0, std::memory_order_acq_rel), 
+                    m_capacity.exchange(0, std::memory_order_acq_rel)
+        );
+
+        try_reserve(init_p.size());
+        __move_construct_from_initializer_list(init_p);
+        return *this;
+    }
 
 public:
     inline void read_at(size_type index_p, reference out_dest_p) noexcept
@@ -346,7 +413,11 @@ private:
 
     inline void __tear_down(pointer target_p, size_type target_size_p, size_type target_capacity_p) noexcept
     {
-        //assert(target_p != nullptr);
+        if (target_p == nullptr)
+        {
+            return;
+        }
+
         //assert(target_size_p <= target_capacity_p);
         target_size_p = std::min(target_size_p, target_capacity_p);
         for (size_type i = 0; i < target_size_p; ++i)
@@ -355,26 +426,6 @@ private:
         }
         m_allocator.deallocate(target_p, target_capacity_p);
     }
-
-public: /* use the length modifier lock.
-    bool try_resize( size_type new_size_p ) noexcept
-    {
-    }
-
-    bool try_resize( size_type new_size_p, const value_type& value_p ) noexcept
-    {
-    }
-
-    void shrink_to_fit() noexcept
-    {
-
-    }
-
-    void clear() noexcept
-    {
-
-    }
-    */
 
 public:
     inline size_type size() const noexcept
@@ -423,12 +474,26 @@ public:
 };
 
 
+// concurrent_vector is an eXceptionless assertive atomic forward list of array chunks.
+template <typename T, class Allocator = std::pmr::polymorphic_allocator<T>>
+class concurrent_vector
+{
+};
+
+
 END_NAMESPACE
 
+
+// eXceptionless Template Library
 namespace xtl
 {
     template <typename T, class Allocator, class SharedMutex>
-	using concurrent_vector = FE::concurrent_vector<T, Allocator, SharedMutex>;
+	using concurrent_array = FE::concurrent_array<T, Allocator, SharedMutex>;
+
+    template <typename T, class Allocator>
+    using concurrent_vector = FE::concurrent_vector<T, Allocator>;
+
 }
+
 
 #endif
