@@ -228,7 +228,7 @@ namespace FE
 		~fiber_scheduler() noexcept = default;
 
 		// not thread-safe.
-		void _FE_CDECL_ create_fiber(FE::size stack_size_p = FE::system_page_allocation_granularity) noexcept;
+		void _FE_CDECL_ create_fiber(FE::size stack_size_p = (2 * FE::system_large_page_size) - FE::system_page_size) noexcept;
 
 		void _FE_CDECL_ schedule_task(const task& task_p) noexcept;
 
