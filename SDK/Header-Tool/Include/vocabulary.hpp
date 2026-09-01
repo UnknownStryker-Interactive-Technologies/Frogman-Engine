@@ -34,7 +34,7 @@ enum struct Vocabulary : FE::uint32
 	_CommentBody,
 
 	_BeginNamespace, _EndNamespace,
-	_Namespace, _NamespaceConcatenator,
+	_Namespace, _NamespaceConcatenator, _NamespaceIdentifier,
 
 	_Template, _BeginTemplateArgs, _Typename, _TemplateArg, _EndTemplateArgs,
 	_TemplateBody,
@@ -63,6 +63,8 @@ enum struct Vocabulary : FE::uint32
 	_Noexcept,
 	_Constexpr, _Consteval, _Constinit,
 
+	_Inline, _ForceInline, _FrogmanEngineForceInline,
+
 	_LeftParen, _RightParen,
 	_LeftBracket, _RightBracket,
 	_LeftCurlyBracket, _RightCurlyBracket,
@@ -78,7 +80,7 @@ enum struct Vocabulary : FE::uint32
 	_FrogmanEngineStaticMethodReflectionMacro,
 	_FrogmanEngineMethodReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
-	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgTargetComponentType, _FrogmanEngineSystemArgWorldTagEnumType,
+	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgWorldTagEnum,
 
 	_PreprocessorDirective, _PreprocessorNextLine,
 	_Preprocessor,
@@ -90,6 +92,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{"//", Vocabulary::_LineComment},
 	{"/*", Vocabulary::_CommentBegin}, {"*/", Vocabulary::_CommentEnd},
 
+	{ "namespace", Vocabulary::_Namespace },
 	{ "BEGIN_NAMESPACE", Vocabulary::_BeginNamespace }, { "END_NAMESPACE", Vocabulary::_EndNamespace },
 	{ "::", Vocabulary::_NamespaceConcatenator },
 
@@ -103,6 +106,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 
 	{ "noexcept", Vocabulary::_Noexcept },
 	{ "constexpr", Vocabulary::_Constexpr }, { "consteval", Vocabulary::_Consteval }, { "constinit", Vocabulary::_Constinit },
+	{ "inline", Vocabulary::_Inline }, { "__forceinline", Vocabulary::_ForceInline }, { "_FE_FORCE_INLINE_", Vocabulary::_FrogmanEngineForceInline },
 
 	{ "static_assert", Vocabulary::_StaticAssert },
 

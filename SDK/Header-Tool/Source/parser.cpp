@@ -60,22 +60,6 @@ namespace FHT::parser
 		{
 			switch (iterator->_vocabulary)
 			{
-			case Vocabulary::_FrogmanEngineClassReflectionMacro:
-				l_context_stack.push_back(Context::_Class);
-				while (iterator->_vocabulary != Vocabulary::_RightParen)
-				{
-					++iterator;
-				}
-				break;
-
-			case Vocabulary::_FrogmanEngineStructReflectionMacro:
-				l_context_stack.push_back(Context::_Struct);
-				while (iterator->_vocabulary != Vocabulary::_RightParen)
-				{
-					++iterator;
-				}
-				break;
-
 			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
 				l_context_stack.push_back(Context::_EnumStruct);
 				while (iterator->_vocabulary != Vocabulary::_RightParen)
@@ -96,19 +80,15 @@ namespace FHT::parser
 				break;
 
 			case Vocabulary::_Class:
-				if (l_context_stack.back() == Context::_Class)
-				{
-					l_root._classes.emplace_back(build_class_node(u8"::", iterator, token_list_p.end()));
-					l_context_stack.pop_back();
-				}
+				l_context_stack.push_back(Context::_Class);
+				l_root._classes.emplace_back(build_class_node(u8"::", iterator, token_list_p.end()));
+				l_context_stack.pop_back();
 				break;
 
 			case Vocabulary::_Struct:
-				if (l_context_stack.back() == Context::_Struct)
-				{
-					l_root._structs.emplace_back(build_struct_node(u8"::", iterator, token_list_p.end()));
-					l_context_stack.pop_back();
-				}
+				l_context_stack.push_back(Context::_Struct);
+				l_root._structs.emplace_back(build_struct_node(u8"::", iterator, token_list_p.end()));
+				l_context_stack.pop_back();
 				break;
 
 			case Vocabulary::_EnumStruct:
@@ -205,22 +185,6 @@ namespace FHT::parser
 				return l_node;
 
 
-			case Vocabulary::_FrogmanEngineClassReflectionMacro:
-				context_stack_p.push_back(Context::_Class);
-				while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
-				{
-					++out_token_iterator_p;
-				}
-				break;
-
-			case Vocabulary::_FrogmanEngineStructReflectionMacro:
-				context_stack_p.push_back(Context::_Struct);
-				while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
-				{
-					++out_token_iterator_p;
-				}
-				break;
-
 			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
 				context_stack_p.push_back(Context::_EnumStruct);
 				while (out_token_iterator_p->_vocabulary != Vocabulary::_RightParen)
@@ -230,6 +194,10 @@ namespace FHT::parser
 				break;
 
 			case Vocabulary::_FrogmanEngineSystemMacro:
+				if (context_stack_p.back() == Context::_Class || context_stack_p.back() == Context::_Struct)
+				{
+					break; // skip the system macro if it is inside a class or struct.
+				}
 				l_node._system_fptrs.emplace_back(build_ecs_system_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
 				break;
 
@@ -241,19 +209,15 @@ namespace FHT::parser
 				break;
 
 			case Vocabulary::_Class:
-				if (context_stack_p.back() == Context::_Class)
-				{
-					l_node._classes.emplace_back(build_class_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
-					context_stack_p.pop_back();
-				}
+				context_stack_p.push_back(Context::_Class);
+				l_node._classes.emplace_back(build_class_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				context_stack_p.pop_back();
 				break;
 
 			case Vocabulary::_Struct:
-				if (context_stack_p.back() == Context::_Struct)
-				{
-					l_node._structs.emplace_back(build_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
-					context_stack_p.pop_back();
-				}
+				context_stack_p.push_back(Context::_Struct);
+				l_node._structs.emplace_back(build_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				context_stack_p.pop_back();
 				break;
 
 			case Vocabulary::_EnumStruct:
@@ -321,11 +285,6 @@ namespace FHT::parser
 			{
 				l_node._base_class_name.assign(l_node._this_class_name.c_str() + (l_class_extension + 1));
 				l_node._this_class_name.erase(l_class_extension, l_node._this_class_name.length() - l_class_extension);
-				l_node._class_type = ClassType::_ChildOfCppClass;
-			}
-			else
-			{
-				l_node._class_type = ClassType::_None;
 			}
 		}
 
@@ -373,16 +332,6 @@ namespace FHT::parser
 
 		}
 		l_node._this_class_name.insert(0, parent_namespace_p);
-
-		
-		if (l_node._base_class_name.find(u8"archetype_base") != std::string::npos)
-		{
-			l_node._class_type = ClassType::_ChildOfComponentBase;
-		}
-		else if (l_node._base_class_name.find(u8"component_base") != std::string::npos)
-		{
-			l_node._class_type = ClassType::_ChildOfComponentBase;
-		}
 
 
 		std::pmr::vector<Vocabulary> l_stack{ framework::get_framework().get_memory_resource() };
@@ -645,13 +594,8 @@ namespace FHT::parser
 				++out_token_iterator_p;
 				break;
 
-			case Vocabulary::_FrogmanEngineSystemArgTargetComponentType:
-				l_node._target_component_type = out_token_iterator_p->_code;
-				++out_token_iterator_p;
-				break;
-
-			case Vocabulary::_FrogmanEngineSystemArgWorldTagEnumType:
-				l_node._world_tag_enum_type = out_token_iterator_p->_code;
+			case Vocabulary::_FrogmanEngineSystemArgWorldTagEnum:
+				l_node._world_tag_enum = out_token_iterator_p->_code;
 				++out_token_iterator_p;
 				break;
 
@@ -660,9 +604,14 @@ namespace FHT::parser
 				break;
 			}
 		}
-ExitLoop:
-		THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_code.starts_with(u8"void") == false, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::component_base* const).");
-		THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::component_base* const).");
+	ExitLoop:
+		while (out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl)
+		{
+			++out_token_iterator_p;
+		}
+
+		THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_code.starts_with(u8"void") == false, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::world&).");
+		THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::world&).");
 		l_node._sysname = out_token_iterator_p->_code;
 
 		constexpr auto l_void_keyword = u8"void";
@@ -670,7 +619,7 @@ ExitLoop:
 		FE_ASSERT(l_void_pos != identifier::npos);
 		l_node._sysname.erase(0, l_void_pos + FE::algorithm::string::length(l_void_keyword));
 
-		THROW_CPP_SYNTAX_ERROR(FE::algorithm::string::space_insensitive_contains(l_node._sysname.c_str(), l_node._sysname.length(), u8"component_base*const") == false, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::component_base* const).");
+		THROW_CPP_SYNTAX_ERROR(FE::algorithm::string::space_insensitive_contains(l_node._sysname.c_str(), l_node._sysname.length(), u8"world&") == false, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::world&).");
 
 		for (auto i = 0; i < l_node._sysname.length(); ++i)
 		{
@@ -683,7 +632,7 @@ ExitLoop:
 		}
 
 		auto l_end_of_fn_name_pos = l_node._sysname.find('(');
-		THROW_CPP_SYNTAX_ERROR(l_end_of_fn_name_pos == identifier::npos, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::component_base* const).");
+		THROW_CPP_SYNTAX_ERROR(l_end_of_fn_name_pos == identifier::npos, "Frogman Engine C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::world&).");
 
 		l_node._sysname.erase(l_end_of_fn_name_pos, l_node._sysname.length() - l_end_of_fn_name_pos);
 		l_node._sysname.insert(0, parent_namespace_p);

@@ -765,6 +765,9 @@ namespace FHT::tokenizer
 					out_token_p._code.assign(code_iterator_p, l_rng->_begin);
 				}
 				break;
+
+			default:
+				break;
 			}
 			break;
 		}
@@ -930,6 +933,7 @@ namespace FHT::tokenizer
 			out_token_p._code = *code_iterator_p;
 			break;
 
+
 		case '.':
 			_FE_FALLTHROUGH_;
 		case '+':
@@ -957,7 +961,30 @@ namespace FHT::tokenizer
 			out_token_p._code = *code_iterator_p;
 			break;
 
-		default:
+
+		case 'p':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,6 }, u8"public")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Public;
+				out_token_p._code = u8"public";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,7 }, u8"private")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Private;
+				out_token_p._code = u8"private";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,9 }, u8"protected")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Protected;
+				out_token_p._code = u8"protected";
+			}
+			break;
+
+
+		case ':':
 			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,2 }, u8"::")
 				!= std::nullopt)
 			{
@@ -969,6 +996,84 @@ namespace FHT::tokenizer
 				out_token_p._vocabulary = Vocabulary::_Colon;
 				out_token_p._code = *code_iterator_p;
 			}
+			break;
+
+
+		case 'i':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,6 }, u8"inline")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Inline;
+				out_token_p._code = u8"inline";
+			}
+			break;
+
+
+		case '_':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,13 }, u8"__forceinline")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_ForceInline;
+				out_token_p._code = u8"__forceinline";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,17 }, u8"_FE_FORCE_INLINE_")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_FrogmanEngineForceInline;
+				out_token_p._code = u8"_FE_FORCE_INLINE_";
+			}
+		break;
+
+
+		case 's':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,6 }, u8"static")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Static;
+				out_token_p._code = u8"static";
+			}
+			break;
+
+
+		case 'v':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,4 }, u8"volatile")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Volatile;
+				out_token_p._code = u8"volatile";
+			}
+			break;
+
+
+		case 'c':
+			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,4 }, u8"const")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Const;
+				out_token_p._code = u8"const";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,7 }, u8"constexpr")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Constexpr;
+				out_token_p._code = u8"constexpr";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,6 }, u8"consteval")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Consteval;
+				out_token_p._code = u8"consteval";
+			}
+			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,6 }, u8"constinit")
+				!= std::nullopt)
+			{
+				out_token_p._vocabulary = Vocabulary::_Constinit;
+				out_token_p._code = u8"constinit";
+			}
+			break;
+
+
+		default:
 			break;
 		}
 	}
@@ -1005,6 +1110,10 @@ namespace FHT::tokenizer
 					}
 					return;
 				}
+				break;
+
+			default:
+				break;
 			}
 			
 		}
@@ -1014,27 +1123,21 @@ namespace FHT::tokenizer
 		{
 			thread_local static var::int32 tl_s_arg_index = 0;
 			auto l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ',');
-			out_token_p._code.assign(code_iterator_p, l_comma->_begin);
 
 			switch (tl_s_arg_index)
 			{
 			case 0:
 				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
+				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
 				++tl_s_arg_index;
 				return;
 
 			case 1:
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
-				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgTargetComponentType;
-				++tl_s_arg_index;
-				return;
-
-			case 2:
 				l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
 				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
-				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnumType;
+				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnum;
 				++tl_s_arg_index;
 				return;
 
@@ -1297,7 +1400,8 @@ namespace FHT::tokenizer
 		}
 
 
-		if (FE::algorithm::string::space_insensitive_contains(out_token_p._code.c_str(), out_token_p._code.length(), u8"namespace") == false)
+		if (FE::algorithm::string::space_insensitive_contains(out_token_p._code.c_str(), out_token_p._code.length(), u8"namespace") == false
+			&& context_stack_p.back() != Context::_Namespace)
 		{
 			out_token_p._code.clear();
 			return; // not a namespace.
@@ -1314,14 +1418,37 @@ namespace FHT::tokenizer
 		}
 
 
+		while (out_token_p._code.front() <= ' ')
+		{
+			out_token_p._code.erase(0, 1);
+		}
+
+		if (out_token_p._code.starts_with(u8"namespace"))
+		{
+			out_token_p._code.resize(9);
+			out_token_p._vocabulary = Vocabulary::_Namespace;
+			context_stack_p.push_back(Context::_Namespace);
+			return;
+		}
+
+
+		while (out_token_p._code.front() <= ' ')
+		{
+			out_token_p._code.erase(0, 1);
+		}
 		// copy until '{'
 		while (*code_iterator_p != '{')
 		{
 			out_token_p._code += *code_iterator_p;
 			++code_iterator_p;
 		}
+		while (out_token_p._code.back() <= ' ')
+		{
+			out_token_p._code.pop_back();
+		}
 
-		out_token_p._vocabulary = Vocabulary::_Namespace;
+		out_token_p._vocabulary = Vocabulary::_NamespaceIdentifier;
+		context_stack_p.pop_back();
 	}
 
 	void tokenize_class_struct_enum_forward_decl_and_using_namespace(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p)

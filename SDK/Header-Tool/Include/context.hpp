@@ -40,6 +40,8 @@ namespace FHT
 		_Struct,
 		_EnumStruct,
 
+		_Namespace,
+
 		_EnumStructFieldInitialValue,
 
 		_FrogmanEngineSystemMacro

@@ -33,21 +33,17 @@ namespace FHT::reflexcode_generator
 	{
 		struct system_info
 		{
-			std::pmr::wstring _world_tag_enum_type;
 			std::pmr::wstring _system_name;
-			std::pmr::wstring _system_target;
 			std::pmr::wstring _system_call_phase;
+			std::pmr::wstring _world_tag_enum;
 		};
 
 		directory_t _header_file_path;
-		std::pmr::vector<std::pmr::wstring> _archetype_base_children;
-		std::pmr::vector<std::pmr::wstring> _component_base_children;
-		//std::pmr::vector<std::pmr::wstring> _system_base_children; 
 		std::pmr::vector<std::pmr::wstring> _class_and_structs;
 		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
 		std::pmr::vector<system_info> _system_fptrs;
 	};
-	using metadata_set_t = FE::concurrent_vector<metadata>;
+	using metadata_set_t = FE::concurrent_array<metadata>;
 
 	_FE_NODISCARD_ metadata generate_metadata(const header_file_root& tree_p) noexcept;
 	void output_namespace_metadata_recursive(metadata& out_return_p, const namespace_node& node_p) noexcept;

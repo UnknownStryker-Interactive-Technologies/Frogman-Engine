@@ -28,22 +28,11 @@ limitations under the License.
 
 
 
-enum struct ClassType : FE::int32
-{
-	_None = 0,
-	_ChildOfArchetypeBase = 1,
-	_ChildOfComponentBase = 2,
-	//_ChildOfSystemBase = 3,
-	_ChildOfCppClass = 4
-};
-
-
 using identifier = std::pmr::basic_string<var::UTF8>;
 
 
 struct class_node
 {
-	ClassType _class_type = ClassType::_None;
 	var::boolean _has_pure_virtual = false;
 	identifier _this_class_name;
 	identifier _base_class_name;
@@ -65,8 +54,7 @@ struct enum_struct_node
 struct system_node
 {
 	identifier _syscall_phase;
-	identifier _target_component_type;
-	identifier _world_tag_enum_type;
+	identifier _world_tag_enum;
 
 	identifier _sysname;
 };
