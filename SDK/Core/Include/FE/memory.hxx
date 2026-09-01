@@ -193,6 +193,7 @@ _FE_MAYBE_UNUSED_ constexpr uint8 qword_size = 8;
 
 _FE_MAYBE_UNUSED_ extern FE::uint64 system_page_size;
 _FE_MAYBE_UNUSED_ extern FE::uint64 system_large_page_size;
+_FE_MAYBE_UNUSED_ extern FE::uint64 system_page_allocation_granularity;
 
 
 // The FE::is_power_of_two function is a constexpr function that checks if a given size_t value is a power of two by using a bitwise operation.

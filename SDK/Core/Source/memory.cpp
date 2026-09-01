@@ -41,6 +41,12 @@ _FE_MAYBE_UNUSED_ FE::uint64 FE::system_large_page_size = []() -> FE::uint64
 		GetSystemInfo(&l_sysinfo);
 		return (GetLargePageMinimum() == 0) ? l_sysinfo.dwPageSize : GetLargePageMinimum();
 	}();
+_FE_MAYBE_UNUSED_ FE::uint64 FE::system_page_allocation_granularity = []() -> FE::uint64
+	{
+		SYSTEM_INFO l_sysinfo;
+		GetSystemInfo(&l_sysinfo);
+		return l_sysinfo.dwAllocationGranularity;
+	}();
 
 
 void* FE::cache_aligned_resource::do_allocate(std::size_t bytes_p, _FE_MAYBE_UNUSED_ std::size_t alignment_p) noexcept
