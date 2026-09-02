@@ -16,7 +16,7 @@
 class ConcurrentVectorTest : public ::testing::Test 
 {
 protected:
-   FE::concurrent_vector<std::string, std::allocator<std::string>> vec;
+   FE::concurrent_array<std::string, std::allocator<std::string>> vec;
 };
 
 // Test the default constructor
@@ -30,7 +30,7 @@ TEST_F(ConcurrentVectorTest, DefaultConstructor)
 TEST_F(ConcurrentVectorTest, AllocatorConstructor) 
 {
     std::allocator<std::string> alloc;
-    FE::concurrent_vector<std::string, std::allocator<std::string>> vec_with_alloc(alloc);
+    FE::concurrent_array<std::string, std::allocator<std::string>> vec_with_alloc(alloc);
     EXPECT_EQ(vec_with_alloc.size(), 0);
     EXPECT_TRUE(vec_with_alloc.is_empty());
 }

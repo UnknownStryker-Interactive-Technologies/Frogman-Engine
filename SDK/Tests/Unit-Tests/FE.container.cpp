@@ -1427,15 +1427,15 @@ namespace
 }
 
 
-static void fe_concurrent_vector_push_back(benchmark::State& state)
+static void fe_concurrent_array_push_back(benchmark::State& state)
 {
-	FE::concurrent_vector<TestObject> l_vector;
+	FE::concurrent_array<TestObject> l_vector;
 	for (auto _ : state)
 	{
 		l_vector.push_back(TestObject{ 42, 3.14, "Test" });
 	}
 }
-BENCHMARK(fe_concurrent_vector_push_back)->Iterations(50000);
+BENCHMARK(fe_concurrent_array_push_back)->Iterations(50000);
 
 
 static void std_vector_push_back(benchmark::State& state)
@@ -1463,10 +1463,10 @@ BENCHMARK(ppl_concurrent_vector_push_back)->Iterations(50000);
 
 
 static constexpr FE::uint32 thread_count = 64;
-void fe_concurrent_vector_concurrent_push_back(benchmark::State& state)
+void fe_concurrent_array_concurrent_push_back(benchmark::State& state)
 {
 	tf::Taskflow l_tasks;
-	FE::concurrent_vector<TestObject> l_vector;
+	FE::concurrent_array<TestObject> l_vector;
 
 	for (var::uint32 i = 0; i < thread_count; ++i)
 	{
@@ -1484,7 +1484,7 @@ void fe_concurrent_vector_concurrent_push_back(benchmark::State& state)
 		l_executor.run(l_tasks);
 	}
 }
-BENCHMARK(fe_concurrent_vector_concurrent_push_back)->Iterations(10);
+BENCHMARK(fe_concurrent_array_concurrent_push_back)->Iterations(10);
 
 
 static void std_vector_concurrent_push_back(benchmark::State& state)
