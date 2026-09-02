@@ -191,7 +191,7 @@ bool __try_enable_large_pages(FE::ASCII*& error_message_p) noexcept
 
 
 program_option::program_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept 
-	: m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() >> 1 },
+	: m_max_concurrency{ "-max-concurrency=", std::thread::hardware_concurrency() },
 	  m_enable_large_pages{ "-enable-large-pages", false }
 {
 	SYSTEM_INFO l_info; GetSystemInfo(&l_info);
@@ -216,9 +216,9 @@ program_option::program_option(FE::int32 argc_p, FE::ASCII** argv_p) noexcept
 					continue;
 				}
 				
-				if (l_uint_info._value >= 64)
+				if (l_uint_info._value >= 128)
 				{
-					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to 64.\nThe value given to the option will be overridden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
+					FE_LOG(FE::log::Severity::_Warning, "Warning, the option '${%s@0}${%u@1}' has no effect. The number of thread must be less than or equal to 128.\nThe value given to the option will be overridden with the default value '6'.", m_max_concurrency._first, &l_uint_info._value);
 					m_max_concurrency._second = 6;
 					continue;
 				}
