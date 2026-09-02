@@ -174,7 +174,7 @@ namespace internal::pool
             FE_ASSERT(m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
 			std::pop_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::less_than{});
 			--(m_free_list_size);
-            m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
+            m_largest_free_fragment_size_in_bytes = (m_free_list_size > 0) ? m_free_list[0]._size_in_bytes : 0;
             
             // Try allocation.
             if (m_free_list[m_free_list_size]._size_in_bytes >= requested_bytes_p)
@@ -301,9 +301,11 @@ class pool<PoolType::_Scalable, Alignment>
 	using free_list_element = typename chunk_type::free_list_element;
 
 public:
+    using alignment_type = Alignment;
+
     constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
-	using alignment_type = Alignment;
-    
+    constexpr static FE::int32 minimum_block_size = ((128 / Alignment::size) + 1) * Alignment::size;
+
 private:
     using pool_type = FE::list<chunk_type, FE::page_aligned_allocator<chunk_type>>;
 	using page_iterator = typename pool_type::iterator;
@@ -407,111 +409,193 @@ public:
 
 		typename pool_type::iterator l_page_list_iterator;
         internal::pool::PageListClass l_required_page_class = internal::pool::__select_page_list_by_capacity(l_queried_allocation_in_bytes);
-        do
+
+        switch (l_required_page_class)
         {
-            switch (l_required_page_class)
+        case internal::pool::PageListClass::_6_25_PercentRemaining:
+            l_page_list_iterator = m_pages_with_6_25_capacity.begin();
+            if (l_page_list_iterator != m_pages_with_6_25_capacity.end())
             {
-            case internal::pool::PageListClass::_6_25_PercentRemaining:
-                l_page_list_iterator = m_pages_with_6_25_capacity.begin();
-                if (l_page_list_iterator != m_pages_with_6_25_capacity.end())
-                {
-                    break;
-                }
-                else
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                    _FE_FALLTHROUGH_;
-                }
-
-            case internal::pool::PageListClass::_12_5_Percent:
-                l_page_list_iterator = m_pages_with_12_5_capacity.begin();
-                if (l_page_list_iterator != m_pages_with_12_5_capacity.end())
-                {
-                    break;
-                }
-                else
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                    _FE_FALLTHROUGH_;
-                }
-
-            case internal::pool::PageListClass::_25_Percent:
-                l_page_list_iterator = m_pages_with_25_capacity.begin();
-                if (l_page_list_iterator != m_pages_with_25_capacity.end())
-                {
-                    break;
-                }
-                else
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-					_FE_FALLTHROUGH_;
-                }
-
-            case internal::pool::PageListClass::_50_Percent:
-                l_page_list_iterator = m_pages_with_50_capacity.begin();
-                if (l_page_list_iterator != m_pages_with_50_capacity.end())
-                {
-                    break;
-                }
-                else
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-					_FE_FALLTHROUGH_;
-                }
-
-            case internal::pool::PageListClass::_75_Percent:
-                l_page_list_iterator = m_pages_with_75_capacity.begin();
-                if (l_page_list_iterator != m_pages_with_75_capacity.end())
-                {
-                    break;
-                }
-                else
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                    _FE_FALLTHROUGH_;
-                }
-
-            case internal::pool::PageListClass::_100_Percent:
-                l_page_list_iterator = m_pages_with_100_capacity.begin();
-                if (l_page_list_iterator == m_pages_with_100_capacity.end())
-                {
-                    create_new_page_at_front();
-                    l_page_list_iterator = m_pages_with_100_capacity.begin();
-                }
-                break;
-
-            case internal::pool::PageListClass::_Unavailable:
-                return nullptr;
-
-                _FE_NODEFAULT_;
-            }
-            // fix it
-            if (l_page_list_iterator->get_largest_free_fragment_size() <= l_queried_allocation_in_bytes)
-            {
-                if (l_required_page_class != internal::pool::PageListClass::_100_Percent)
-                {
-                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                    continue;
-                }
-                l_page_list_iterator = m_pages_with_100_capacity.end();
                 break;
             }
-        } 
-        while (l_page_list_iterator == m_pages_with_100_capacity.end());
+            l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+            _FE_FALLTHROUGH_;
 
+        case internal::pool::PageListClass::_12_5_Percent:
+            l_page_list_iterator = m_pages_with_12_5_capacity.begin();
+            if (l_page_list_iterator != m_pages_with_12_5_capacity.end())
+            {
+                break;
+            }
+            l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+            _FE_FALLTHROUGH_;
 
-        free_list_element l_memblock_info{};
-        var::boolean l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
-        while (l_was_allocation_successful == false)
-        {
-            ++l_page_list_iterator;
+        case internal::pool::PageListClass::_25_Percent:
+            l_page_list_iterator = m_pages_with_25_capacity.begin();
+            if (l_page_list_iterator != m_pages_with_25_capacity.end())
+            {
+                break;
+            }
+            l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+            _FE_FALLTHROUGH_;
+
+        case internal::pool::PageListClass::_50_Percent:
+            l_page_list_iterator = m_pages_with_50_capacity.begin();
+            if (l_page_list_iterator != m_pages_with_50_capacity.end())
+            {
+                break;
+            }
+            l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+            _FE_FALLTHROUGH_;
+
+        case internal::pool::PageListClass::_75_Percent:
+            l_page_list_iterator = m_pages_with_75_capacity.begin();
+            if (l_page_list_iterator != m_pages_with_75_capacity.end())
+            {
+                break;
+            }
+            l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+            _FE_FALLTHROUGH_;
+
+        case internal::pool::PageListClass::_100_Percent:
+            l_page_list_iterator = m_pages_with_100_capacity.begin();
             if (l_page_list_iterator == m_pages_with_100_capacity.end())
             {
                 create_new_page_at_front();
                 l_page_list_iterator = m_pages_with_100_capacity.begin();
             }
-            l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
+            break;
+
+        case internal::pool::PageListClass::_Unavailable:
+            return nullptr;
+
+            _FE_NODEFAULT_;
         }
+
+        while (l_page_list_iterator->get_largest_free_fragment_size() < l_queried_allocation_in_bytes)
+        {
+            ++l_page_list_iterator;
+
+            if (l_page_list_iterator != m_pages_with_100_capacity.end()) // end is equivalent to nullptr for FE::list.
+            {
+                continue;
+            }
+
+            if (l_required_page_class != internal::pool::PageListClass::_100_Percent) // is it the last page size class?
+            {
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                switch (l_required_page_class)
+                {
+                case internal::pool::PageListClass::_6_25_PercentRemaining:
+                    l_page_list_iterator = m_pages_with_6_25_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_6_25_capacity.end())
+					{
+                        continue; // move to the next page size class
+					}
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    _FE_FALLTHROUGH_;
+
+                case internal::pool::PageListClass::_12_5_Percent:
+                    l_page_list_iterator = m_pages_with_12_5_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_12_5_capacity.end())
+                    {
+                        continue; // move to the next page size class
+                    }
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    _FE_FALLTHROUGH_;
+
+                case internal::pool::PageListClass::_25_Percent:
+                    l_page_list_iterator = m_pages_with_25_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_25_capacity.end())
+                    {
+                        continue; // move to the next page size class
+                    }
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    _FE_FALLTHROUGH_;
+
+                case internal::pool::PageListClass::_50_Percent:
+                    l_page_list_iterator = m_pages_with_50_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_50_capacity.end())
+                    {
+                        continue; // move to the next page size class
+                    }
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    _FE_FALLTHROUGH_;
+
+                case internal::pool::PageListClass::_75_Percent:
+                    l_page_list_iterator = m_pages_with_75_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_75_capacity.end())
+                    {
+                        continue; // move to the next page size class
+                    }
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    _FE_FALLTHROUGH_;
+
+                case internal::pool::PageListClass::_100_Percent:
+                    l_page_list_iterator = m_pages_with_100_capacity.begin();
+					if (l_page_list_iterator != m_pages_with_100_capacity.end())
+                    {
+                        continue; // move to the next page size class
+                    }
+                    _FE_FALLTHROUGH_;
+
+                default:
+                    break;
+                }
+            }
+
+            // if it is the last page size class, we need to create a new page.
+            create_new_page_at_front();
+            l_page_list_iterator = m_pages_with_100_capacity.begin();
+            break; // escape the loop.
+        }
+
+
+
+
+        pool_type* l_previous_page_list = nullptr;
+        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
+
+        switch (l_previous_class) // class before allocation
+        {
+        case internal::pool::PageListClass::_6_25_PercentRemaining:
+            l_previous_page_list = &m_pages_with_6_25_capacity;
+            break;
+
+        case internal::pool::PageListClass::_12_5_Percent:
+            l_previous_page_list = &m_pages_with_12_5_capacity;
+            break;
+
+        case internal::pool::PageListClass::_25_Percent:
+            l_previous_page_list = &m_pages_with_25_capacity;
+            break;
+
+        case internal::pool::PageListClass::_50_Percent:
+            l_previous_page_list = &m_pages_with_50_capacity;
+            break;
+
+        case internal::pool::PageListClass::_75_Percent:
+            l_previous_page_list = &m_pages_with_75_capacity;
+            break;
+
+        case internal::pool::PageListClass::_100_Percent:
+            l_previous_page_list = &m_pages_with_100_capacity;
+            break;
+
+        case internal::pool::PageListClass::_Unavailable:
+            l_previous_page_list = &m_unavailable_pages;
+            break;
+        }
+        FE_ASSERT(l_previous_page_list != nullptr, "Assertion Failure: The previous page list cannot be null.");
+
+
+
+
+        free_list_element l_memblock_info{};
+        _FE_MAYBE_UNUSED_ var::boolean l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
+		FE_ASSERT(l_was_allocation_successful == true, "Critical Error in FE.Core.scalable_allocator: Unable to allocate ${%d@0} bytes of memory from the page.", &l_queried_allocation_in_bytes);
+
+
 
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
@@ -522,39 +606,7 @@ public:
         l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
 
 
-		pool_type* l_previous_page_list = nullptr;
-        internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
-        switch (l_previous_class) // class before allocation
-        {
-        case internal::pool::PageListClass::_6_25_PercentRemaining:
-			l_previous_page_list = &m_pages_with_6_25_capacity;
-            break;
 
-        case internal::pool::PageListClass::_12_5_Percent:
-			l_previous_page_list = &m_pages_with_12_5_capacity;
-            break;
-
-        case internal::pool::PageListClass::_25_Percent:
-			l_previous_page_list = &m_pages_with_25_capacity;
-            break;
-
-        case internal::pool::PageListClass::_50_Percent:
-			l_previous_page_list = &m_pages_with_50_capacity;
-            break;
-
-        case internal::pool::PageListClass::_75_Percent:
-			l_previous_page_list = &m_pages_with_75_capacity;
-            break;
-
-		case internal::pool::PageListClass::_100_Percent:
-            l_previous_page_list = &m_pages_with_100_capacity;
-			break;
-
-        case internal::pool::PageListClass::_Unavailable:
-            l_previous_page_list = &m_unavailable_pages;
-            break;
-        }
-		FE_ASSERT(l_previous_page_list != nullptr, "Assertion Failure: The previous page list cannot be null.");
 
         internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
 		if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
@@ -585,11 +637,16 @@ public:
                 m_pages_with_75_capacity.splice( FE::iterator_cast<typename pool_type::const_iterator>(m_pages_with_75_capacity.rbegin()), *l_previous_page_list, FE::iterator_cast<typename pool_type::const_iterator>(l_page_list_iterator));
                 break;
 
+			case internal::pool::PageListClass::_100_Percent:
+				m_pages_with_100_capacity.splice(FE::iterator_cast<typename pool_type::const_iterator>(m_pages_with_100_capacity.rbegin()), *l_previous_page_list, FE::iterator_cast<typename pool_type::const_iterator>(l_page_list_iterator));
+				break;
+
             default:
                 break;
             }
         }
         
+
         return reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page());
     }
 
@@ -611,20 +668,7 @@ public:
         FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(count_p)) <= page_capacity, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
 
 
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-        FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
-        l_page_base->check_double_free(l_block_to_free);
-#endif
-        l_page_base->add_to_the_free_list(l_block_to_free);
-        l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
-        FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
-        if (l_page_base->_usage_in_bytes == 0) _FE_UNLIKELY_
-        {
-            l_page_base->set_free_list_size(0);
-            l_page_base->set_page_unheapified();
-            l_page_base->_page_iterator = l_page_base->get_page();
-            l_page_base->reset_dirty_flag();
-        }
+
 
         pool_type* l_previous_page_list = nullptr;
         internal::pool::PageListClass l_previous_class = internal::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
@@ -654,17 +698,37 @@ public:
             l_previous_page_list = &m_pages_with_75_capacity;
             break;
 
-		case internal::pool::PageListClass::_100_Percent:
-			l_previous_page_list = &m_pages_with_100_capacity;
-			break;
+        case internal::pool::PageListClass::_100_Percent:
+            l_previous_page_list = &m_pages_with_100_capacity;
+            break;
 
-        _FE_NODEFAULT_;
+            _FE_NODEFAULT_;
         }
+
+
+
+
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+        FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
+        l_page_base->check_double_free(l_block_to_free);
+#endif
+        l_page_base->add_to_the_free_list(l_block_to_free); // free it.
+        l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
+        
+        FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
+        if (l_page_base->_usage_in_bytes == 0)
+        {
+            l_page_base->set_free_list_size(0);
+            l_page_base->set_page_unheapified();
+            l_page_base->_page_iterator = l_page_base->get_page();
+            l_page_base->reset_dirty_flag();
+        }
+
+
 
 
         // After deallocation, the page might have more remaining capacity and thus change its class. Move it to the corresponding list if it has changed its class.
         typename pool_type::const_iterator l_page_list_iterator = FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base);
-
 
         internal::pool::PageListClass l_new_class = internal::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
         if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
@@ -703,7 +767,6 @@ public:
                 return;
             }
         }
-
     }
 
 
@@ -783,7 +846,7 @@ private:
             page_p->_page_iterator += bytes_p;
 
             // The requested allocation size overflows the page capacity.
-            if (page_p->_page_iterator > page_p->get_page_end())
+            if ((page_p->get_page_end() - page_p->_page_iterator) < minimum_block_size)
             {
                 page_p->_page_iterator -= bytes_p; // Allocation failed, unwind the stack to cancel the allocation.
                 out_result_p._address = static_cast<var::int32>(-1);
@@ -977,7 +1040,10 @@ namespace internal::large::pool
         FE::int32 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
 
-        FE::int32 get_largest_free_fragment_size() const noexcept { return m_largest_free_fragment_size_in_bytes; }
+        FE::int32 get_largest_free_fragment_size() const noexcept
+        {
+            return (m_is_page_heapified == true) ? m_largest_free_fragment_size_in_bytes : static_cast<FE::int32>(m_page_end - _page_iterator);
+        }
 		void set_largest_free_fragment_size(FE::int32 size_p) noexcept { m_largest_free_fragment_size_in_bytes = size_p; }
 
         FE::int32 get_free_list_size() const noexcept { return m_free_list_size; }
@@ -1033,7 +1099,7 @@ namespace internal::large::pool
             FE_ASSERT(m_is_page_heapified == true, "Assertion Failure: The page is not binary heapified.");
             std::pop_heap(static_cast<free_list_iterator>(m_free_list), static_cast<free_list_iterator>(m_free_list) + m_free_list_size, internal::pool::large::less_than{});
             --(m_free_list_size);
-            m_largest_free_fragment_size_in_bytes = m_free_list[0]._size_in_bytes;
+            m_largest_free_fragment_size_in_bytes = (m_free_list_size > 0) ? m_free_list[0]._size_in_bytes : 0;
 
             // Try allocation.
             if (m_free_list[m_free_list_size]._size_in_bytes >= requested_bytes_p)
@@ -1164,9 +1230,11 @@ namespace large
 		using free_list_element = typename chunk_type::free_list_element;
 
     public:
+        using alignment_type = Alignment;
+
 		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
-        using alignment_type = Alignment;
+        constexpr static FE::int32 minimum_block_size = ((128 / Alignment::size) + 1) * Alignment::size;
 
     private:
         using pool_type = FE::list<chunk_type, FE::page_aligned_allocator<chunk_type>>;
@@ -1275,108 +1343,154 @@ namespace large
 
             typename pool_type::iterator l_page_list_iterator;
             internal::pool::PageListClass l_required_page_class = internal::large::pool::__select_page_list_by_capacity(l_queried_allocation_in_bytes);
-            do
+
+            switch (l_required_page_class)
             {
-                switch (l_required_page_class)
+            case internal::pool::PageListClass::_6_25_PercentRemaining:
+                l_page_list_iterator = m_pages_with_6_25_capacity.begin();
+                if (l_page_list_iterator != m_pages_with_6_25_capacity.end())
                 {
-                case internal::pool::PageListClass::_6_25_PercentRemaining:
-                    l_page_list_iterator = m_pages_with_6_25_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_6_25_capacity.end())
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        continue;
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_12_5_Percent:
-                    l_page_list_iterator = m_pages_with_12_5_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_12_5_capacity.end())
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        continue;
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_25_Percent:
-                    l_page_list_iterator = m_pages_with_25_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_25_capacity.end())
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        continue;
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_50_Percent:
-                    l_page_list_iterator = m_pages_with_50_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_50_capacity.end())
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        continue;
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_75_Percent:
-                    l_page_list_iterator = m_pages_with_75_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_75_capacity.end())
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        continue;
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_100_Percent:
-                    l_page_list_iterator = m_pages_with_100_capacity.begin();
-                    if (l_page_list_iterator == m_pages_with_100_capacity.end())
-                    {
-                        create_new_page_at_front();
-                        l_page_list_iterator = m_pages_with_100_capacity.begin();
-                    }
-                    break;
-
-                case internal::pool::PageListClass::_Unavailable:
-                    return nullptr;
-
-                    _FE_NODEFAULT_;
-                }
-
-                if (l_page_list_iterator->get_largest_free_fragment_size() <= l_queried_allocation_in_bytes)
-                {
-                    if (l_required_page_class != internal::pool::PageListClass::_100_Percent)
-                    {
-                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
-                        l_page_list_iterator = m_pages_with_100_capacity.end();
-                        continue;
-                    }
                     break;
                 }
-            } while (l_page_list_iterator == m_pages_with_100_capacity.end());
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                _FE_FALLTHROUGH_;
 
+            case internal::pool::PageListClass::_12_5_Percent:
+                l_page_list_iterator = m_pages_with_12_5_capacity.begin();
+                if (l_page_list_iterator != m_pages_with_12_5_capacity.end())
+                {
+                    break;
+                }
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                _FE_FALLTHROUGH_;
 
-            free_list_element l_memblock_info{};
-            var::boolean l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
-            while (l_was_allocation_successful == false)
-            {
-                ++l_page_list_iterator;
+            case internal::pool::PageListClass::_25_Percent:
+                l_page_list_iterator = m_pages_with_25_capacity.begin();
+                if (l_page_list_iterator != m_pages_with_25_capacity.end())
+                {
+                    break;
+                }
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                _FE_FALLTHROUGH_;
+
+            case internal::pool::PageListClass::_50_Percent:
+                l_page_list_iterator = m_pages_with_50_capacity.begin();
+                if (l_page_list_iterator != m_pages_with_50_capacity.end())
+                {
+                    break;
+                }
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                _FE_FALLTHROUGH_;
+
+            case internal::pool::PageListClass::_75_Percent:
+                l_page_list_iterator = m_pages_with_75_capacity.begin();
+                if (l_page_list_iterator != m_pages_with_75_capacity.end())
+                {
+                    break;
+                }
+                l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                _FE_FALLTHROUGH_;
+
+            case internal::pool::PageListClass::_100_Percent:
+                l_page_list_iterator = m_pages_with_100_capacity.begin();
                 if (l_page_list_iterator == m_pages_with_100_capacity.end())
                 {
                     create_new_page_at_front();
                     l_page_list_iterator = m_pages_with_100_capacity.begin();
                 }
-                l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
+                break;
+
+            case internal::pool::PageListClass::_Unavailable:
+                return nullptr;
+
+                _FE_NODEFAULT_;
+            }
+
+            while (l_page_list_iterator->get_largest_free_fragment_size() < l_queried_allocation_in_bytes)
+            {
+                ++l_page_list_iterator;
+
+                if (l_page_list_iterator != m_pages_with_100_capacity.end()) // end is equivalent to nullptr for FE::list.
+                {
+                    continue;
+                }
+
+                if (l_required_page_class != internal::pool::PageListClass::_100_Percent) // is it the last page size class?
+                {
+                    l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                    switch (l_required_page_class)
+                    {
+                    case internal::pool::PageListClass::_6_25_PercentRemaining:
+                        l_page_list_iterator = m_pages_with_6_25_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_6_25_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                        _FE_FALLTHROUGH_;
+
+                    case internal::pool::PageListClass::_12_5_Percent:
+                        l_page_list_iterator = m_pages_with_12_5_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_12_5_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                        _FE_FALLTHROUGH_;
+
+                    case internal::pool::PageListClass::_25_Percent:
+                        l_page_list_iterator = m_pages_with_25_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_25_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                        _FE_FALLTHROUGH_;
+
+                    case internal::pool::PageListClass::_50_Percent:
+                        l_page_list_iterator = m_pages_with_50_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_50_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                        _FE_FALLTHROUGH_;
+
+                    case internal::pool::PageListClass::_75_Percent:
+                        l_page_list_iterator = m_pages_with_75_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_75_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        l_required_page_class = static_cast<internal::pool::PageListClass>((int)l_required_page_class + 1);
+                        _FE_FALLTHROUGH_;
+
+                    case internal::pool::PageListClass::_100_Percent:
+                        l_page_list_iterator = m_pages_with_100_capacity.begin();
+                        if (l_page_list_iterator != m_pages_with_100_capacity.end())
+                        {
+                            continue; // move to the next page size class
+                        }
+                        _FE_FALLTHROUGH_;
+
+                    default:
+                        break;
+                    }
+                }
+
+                // if it is the last page size class, we need to create a new page.
+                create_new_page_at_front();
+                l_page_list_iterator = m_pages_with_100_capacity.begin();
+                break; // escape the loop.
             }
 
 
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            l_page_list_iterator->check_double_allocation(l_memblock_info);
-#endif
-
-            FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
-            l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
 
 
-            pool_type* l_previous_page_list = nullptr;
+            pool_type* l_previous_page_list = nullptr; // page size class before allocation
             internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
-            switch (l_previous_class) // class before allocation
+           
+            switch (l_previous_class)
             {
             case internal::pool::PageListClass::_6_25_PercentRemaining:
                 l_previous_page_list = &m_pages_with_6_25_capacity;
@@ -1408,6 +1522,22 @@ namespace large
             }
             FE_ASSERT(l_previous_page_list != nullptr, "Assertion Failure: The previous page list cannot be null.");
 
+            free_list_element l_memblock_info{};
+            _FE_MAYBE_UNUSED_ var::boolean l_was_allocation_successful = __try_allocation_from_page(l_page_list_iterator, l_memblock_info, l_queried_allocation_in_bytes);
+            FE_ASSERT(l_was_allocation_successful == true, "Critical Error in FE.Core.scalable_allocator: Unable to allocate ${%d@0} bytes of memory from the page.", &l_queried_allocation_in_bytes);
+
+
+
+
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+            l_page_list_iterator->check_double_allocation(l_memblock_info);
+#endif
+            FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + l_page_list_iterator->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
+            l_page_list_iterator->_usage_in_bytes += l_memblock_info._size_in_bytes;
+
+
+            
+
             internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_list_iterator->get_largest_free_fragment_size());
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
             {
@@ -1437,10 +1567,15 @@ namespace large
                     m_pages_with_75_capacity.splice(FE::iterator_cast<typename pool_type::const_iterator>(m_pages_with_75_capacity.rbegin()), *l_previous_page_list, FE::iterator_cast<typename pool_type::const_iterator>(l_page_list_iterator));
                     break;
 
+				case internal::pool::PageListClass::_100_Percent:
+					m_pages_with_100_capacity.splice(FE::iterator_cast<typename pool_type::const_iterator>(m_pages_with_100_capacity.rbegin()), *l_previous_page_list, FE::iterator_cast<typename pool_type::const_iterator>(l_page_list_iterator));
+					break;
+
                 default:
                     break;
                 }
             }
+
 
             return reinterpret_cast<U*>(l_memblock_info._address + l_page_list_iterator->get_page());
         }
@@ -1463,20 +1598,7 @@ namespace large
             FE_ASSERT((FE::calculate_aligned_memory_size_in_bytes<T, Alignment>(count_p)) <= page_capacity, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
 
 
-#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
-            FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
-            l_page_base->check_double_free(l_block_to_free);
-#endif
-            l_page_base->add_to_the_free_list(l_block_to_free);
-            l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
-            FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
-            if (l_page_base->_usage_in_bytes == 0) _FE_UNLIKELY_
-            {
-				l_page_base->set_free_list_size(0);
-			    l_page_base->set_page_unheapified();
-			    l_page_base->_page_iterator = l_page_base->get_page();
-                l_page_base->reset_dirty_flag();
-            }
+
 
             pool_type* l_previous_page_list = nullptr;
             internal::pool::PageListClass l_previous_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
@@ -1514,9 +1636,29 @@ namespace large
             }
 
 
+
+
+#if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
+            FE_EXIT_IF(m_page_validation_table.find(l_page_base) == m_page_validation_table.end(), ErrorCode::_FatalMemoryError_1XX_FalseDeallocation, "Critical Error in FE.Core.scalable_allocator: the pointer '${%p@0}' does not belong to this scalable_allocator instance located at '${%p@1}'.", pointer_p, this);
+            l_page_base->check_double_free(l_block_to_free);
+#endif
+            l_page_base->add_to_the_free_list(l_block_to_free);
+            l_page_base->_usage_in_bytes -= l_block_to_free._size_in_bytes;
+
+            FE_ASSERT(l_page_base->_usage_in_bytes >= 0, "Critical Error in FE.Core.scalable_allocator: the internal usage counter has gone negative. Memory corruption might have occurred.");
+            if (l_page_base->_usage_in_bytes == 0)
+            {
+				l_page_base->set_free_list_size(0);
+			    l_page_base->set_page_unheapified();
+			    l_page_base->_page_iterator = l_page_base->get_page();
+                l_page_base->reset_dirty_flag();
+            }
+
+
+
+
             // After deallocation, the page might have more remaining capacity and thus change its class. Move it to the corresponding list if it has changed its class.
             typename pool_type::const_iterator l_page_list_iterator = FE::iterator_cast<typename pool_type::const_iterator>((typename pool_type::const_iterator::wrapped_iterator_type::pointer)l_page_base);
-
 
             internal::pool::PageListClass l_new_class = internal::large::pool::__select_page_list_by_capacity(l_page_base->get_largest_free_fragment_size());
             if (l_new_class != l_previous_class) // if the page has changed its class after allocation, move it to the corresponding list.
@@ -1555,7 +1697,6 @@ namespace large
                     return;
                 }
             }
-
         }
 
 
@@ -1637,7 +1778,7 @@ namespace large
                 page_p->_page_iterator += bytes_p;
 
                 // The requested allocation size overflows the page capacity.
-                if (page_p->_page_iterator > page_p->get_page_end())
+                if ((page_p->get_page_end() - page_p->_page_iterator) < minimum_block_size)
                 {
                     page_p->_page_iterator -= bytes_p; // Allocation failed, unwind the stack to cancel the allocation.
                     out_result_p._address = static_cast<var::int32>(-1);
