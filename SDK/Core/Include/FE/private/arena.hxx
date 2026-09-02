@@ -54,7 +54,6 @@ namespace internal::super_large::pool
 
     public:
         var::int32 _usage_in_bytes;
-        var::int32 _remaining_capacity_in_bytes;
         var::byte* _page_iterator;
 
     public:
@@ -64,8 +63,7 @@ namespace internal::super_large::pool
             m_free_list_size(0),
             m_is_page_heapified(false),
             m_has_free_list_been_updated_since_defragmentation(false),
-            _usage_in_bytes(0),
-            _remaining_capacity_in_bytes(page_size_in_bytes)
+            _usage_in_bytes(0)
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
             , m_double_free_tracker()
@@ -122,9 +120,6 @@ namespace internal::super_large::pool
         var::byte* get_page() noexcept { return m_page; }
         FE::int32 get_page_size() const noexcept { return page_size_in_bytes; }
         var::byte* get_page_end() noexcept { return m_page_end; }
-
-        FE::int32 get_largest_free_fragment_size() const noexcept { return m_largest_free_fragment_size_in_bytes; }
-        void set_largest_free_fragment_size(FE::int32 size_p) noexcept { m_largest_free_fragment_size_in_bytes = size_p; }
 
         FE::int32 get_free_list_size() const noexcept { return m_free_list_size; }
         void set_free_list_size(FE::int32 size_p) noexcept { m_free_list_size = size_p; }
@@ -226,7 +221,6 @@ namespace super_large
         using free_list_element = typename chunk_type::free_list_element;
 
     public:
-		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
         using alignment_type = Alignment;
 
@@ -354,7 +348,6 @@ namespace super_large
             FE_ASSERT((reinterpret_cast<FE::uintptr>(l_memblock_info._address + m_page->get_page()) % Alignment::size) == 0, "FE.Core.scalable_allocator has failed to allocate an address: the pointer value '${%d@0}' is not properly aligned by ${%lu@1}.", &l_memblock_info._address, &Alignment::size);
             m_page->_usage_in_bytes += l_memblock_info._size_in_bytes;
 
-            m_page->_remaining_capacity_in_bytes -= l_memblock_info._size_in_bytes;
             return reinterpret_cast<U*>(l_memblock_info._address + m_page->get_page());
         }
 
@@ -401,8 +394,6 @@ namespace super_large
                 m_page->_page_iterator = m_page->get_page();
                 m_page->reset_dirty_flag();
             }
-            m_page->_remaining_capacity_in_bytes += l_block_to_free._size_in_bytes;
-
             return true;
         }
 
@@ -531,7 +522,6 @@ namespace super_large
 
             // Heapify the free list. Time complexity: O(3n)
             std::make_heap(page_p->get_free_list(), l_end, internal::pool::large::less_than{});
-            page_p->set_largest_free_fragment_size(page_p->get_free_list()[0]._size_in_bytes);
 
             page_p->set_page_heapified(); // Switch the allocation strategy to binary search.
             page_p->reset_dirty_flag(); // Reset the dirty flag.

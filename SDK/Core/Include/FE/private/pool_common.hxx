@@ -162,7 +162,7 @@ namespace internal::pool
         var::byte m_page[InBytes];
     };
 
-    enum struct PageListClass : FE::int8
+    enum PageListClass
     {
         _Unavailable = -1, // 0B
         _6_25_PercentRemaining = 0, // 256B
@@ -176,11 +176,10 @@ namespace internal::pool
     _FE_FORCE_INLINE_ void __enable_large_pages() noexcept
     {
         HANDLE l_token;
-        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &l_token))
-        {
-            FE_EXIT_IF(true, FE::ErrorCode::_FatalWinAPI_Error_4XX_OpenProcessTokenFailure, "Frogman Engine Runtime Error: Failed to enable large pages.");
-            return;
-        }
+        FE_EXIT_IF( !OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &l_token), 
+                    FE::ErrorCode::_FatalWinAPI_Error_4XX_OpenProcessTokenFailure, 
+                    "Frogman Engine Runtime Error: Failed to enable large pages."
+        );
 
         TOKEN_PRIVILEGES l_tp;
         LookupPrivilegeValue(NULL, SE_LOCK_MEMORY_NAME, &l_tp.Privileges[0].Luid);
