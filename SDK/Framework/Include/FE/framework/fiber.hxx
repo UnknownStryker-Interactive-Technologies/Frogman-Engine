@@ -216,7 +216,7 @@ namespace FE
 	class fiber_scheduler final
 	{
 		FE::fqueue<FE::fiber, 8> m_fiber_pool;
-		FE::fqueue<FE::fiber, 8> m_active_fibers[7]; // The size of TaskPriority slots == 7
+		FE::fqueue<FE::fiber, 8> m_active_fibers[8]; // The size of TaskPriority slots == 7
 		var::size m_fibers;
 		std::atomic_bool m_is_locked;
 		concurrency::concurrent_priority_queue<task, priority_comparator> m_task_queue;
@@ -228,7 +228,7 @@ namespace FE
 		~fiber_scheduler() noexcept = default;
 
 		// not thread-safe.
-		void _FE_CDECL_ create_fiber(FE::size stack_size_p = (2 * FE::system_large_page_size) - FE::system_page_size) noexcept;
+		void _FE_CDECL_ create_fiber(FE::size stack_size_p = FE::system_large_page_size) noexcept;
 
 		void _FE_CDECL_ schedule_task(const task& task_p) noexcept;
 
