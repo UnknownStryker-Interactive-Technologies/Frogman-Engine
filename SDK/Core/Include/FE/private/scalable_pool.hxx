@@ -38,8 +38,8 @@ namespace internal::pool
         using free_list_element = block_info;
 
         constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
-        // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
-        constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
+
+        constexpr static FE::int32 possible_address_count = (page_size_in_bytes / Alignment::size);
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
 
     private:
@@ -880,8 +880,8 @@ namespace internal::large::pool
 
 		constexpr static FE::int32 page_granularity_in_bytes = (2 * FE::one_MiB);
         constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
-        // Allocation request sizes are always greater than 128. page_size_in_bytes / Alignment::size is theoretically true, but practically, it does not even use the half of its capacity.
-        constexpr static FE::int32 possible_address_count = ((page_size_in_bytes / Alignment::size) / 10) * 4;
+
+        constexpr static FE::int32 possible_address_count = (page_size_in_bytes / Alignment::size);
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
 
     private:
