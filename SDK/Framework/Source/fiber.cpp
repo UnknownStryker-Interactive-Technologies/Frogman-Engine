@@ -29,19 +29,18 @@ extern "C" void _FE_CDECL_ __join_fiber(struct fiber_impl* const thread_p, size_
 
 void _FE_CDECL_ __create_fiber(fiber_impl* const out_fiber_p, size_t stack_size_p) noexcept
 {
-	FE_ASSERT(out_fiber_p != nullptr);
-	FE_ASSERT(stack_size_p >= FE::system_page_size);
+	FE_ASSERT(out_fiber_p != nullptr, "Fiber implementation pointer is null.");
+	FE_ASSERT(stack_size_p >= FE::system_page_allocation_granularity, "Frogman Engine Fiber Stack Size Must Be Larger Than System Page Allocation Granularity.");
 
 	{
-		stack_size_p = FE::calculate_aligned_memory_size_in_bytes<var::byte, FE::page_alignment>(stack_size_p) + FE::system_page_size;
-		
+		stack_size_p = FE::calculate_aligned_memory_size_in_bytes<var::byte, FE::page_alignment>(stack_size_p);
 		out_fiber_p->_absolute_begin_of_stack = VirtualAlloc(nullptr, stack_size_p, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-		FE_ASSERT(out_fiber_p->_absolute_begin_of_stack != nullptr);
+		FE_ASSERT(out_fiber_p->_absolute_begin_of_stack != nullptr, "Failed to allocate fiber stack.");
 
 		{
 			DWORD l_previous_protection_mask;
 			_FE_MAYBE_UNUSED_ auto l_result = VirtualProtect(out_fiber_p->_absolute_begin_of_stack, FE::system_page_size, PAGE_READWRITE | PAGE_GUARD, &l_previous_protection_mask);
-			FE_ASSERT(l_result != 0);
+			FE_ASSERT(l_result != 0, "Failed to set fiber stack protection.");
 		}
 
 		out_fiber_p->_stack_base = (var::byte*)out_fiber_p->_absolute_begin_of_stack + stack_size_p;
@@ -226,6 +225,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			}
 			else
 			{
+				FE_ASSERT(m_active_fibers->size() >= l_from->_task_type);
 				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
@@ -257,6 +257,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			}
 			else
 			{
+				FE_ASSERT(m_active_fibers->size() >= l_from->_task_type);
 				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
@@ -368,6 +369,7 @@ FE::fiber& _FE_CDECL_ FE::fiber::operator=(FE::fiber&& other_p) noexcept
 
 
 thread_local std::pmr::monotonic_buffer_resource FE::fiber::tl_s_fiber_pool;
+
 thread_local fiber_impl* FE::fiber_scheduler::tl_s_current_fiber = nullptr;
 thread_local FE::fiber_scheduler* FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr;
 
