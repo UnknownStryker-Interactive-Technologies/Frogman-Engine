@@ -20,6 +20,7 @@ limitations under the License.
 #include <FE/list.hxx>
 #include <FE/memory.hxx>
 #include <FE/type_traits.hxx>
+#include <FE/thread_id.hxx>
 
 // third-party
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)

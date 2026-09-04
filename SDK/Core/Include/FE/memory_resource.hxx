@@ -18,10 +18,12 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
 #include <FE/block_pool.hxx>
-#include <FE/private/scalable_pool.hxx>
 #include <FE/private/arena.hxx>
+#include <FE/private/scalable_pool.hxx>
 
 #include <memory_resource>
+#pragma warning(push)
+#pragma warning(disable: 4324) // structure was padded due to alignment specifier
 
 
 
@@ -46,13 +48,14 @@ namespace internal
 		_ScalableAllocator,
 		_VirtualAlloc
 	};
+	AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t bytes_p) noexcept;
 }
 
 
 /*
 The Frogman Engine Runtime Memory Resource; do not assume allocation granularity.
 */
-class memory_resource : public std::pmr::memory_resource
+class alignas(FE::CPU_L1_cache_line::size) memory_resource : public std::pmr::memory_resource
 {
 public:
 	using xmmword_pool_type = FE::block_allocator<xmmword_size, FE::align_16bytes>;
@@ -60,6 +63,13 @@ public:
 	using zmmword_pool_type = FE::block_allocator<zmmword_size, FE::align_64bytes>;
 	using dzmmword_pool_type = FE::block_allocator<dzmmword_size, FE::align_128bytes>;
 	using scalable_pool_type = pool<PoolType::_Scalable, FE::SIMD_auto_alignment>;
+
+	static_assert(xmmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
+	static_assert(ymmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
+	static_assert(zmmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
+	static_assert(dzmmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
+	static_assert(scalable_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
+	constexpr static FE::int32 page_granularity_in_bytes = scalable_pool_type::page_granularity_in_bytes;
 
 private:
 	xmmword_pool_type m_xmmword_block_pool;
@@ -90,10 +100,14 @@ protected:
 
 namespace large
 {
+	namespace internal
+	{
+		FE::internal::AllocatorType _FE_VECTOR_CALL_ __select_allocator(std::size_t bytes_p) noexcept;
+	}
 	/*
 	The Frogman Engine Runtime Large Memory Resource; do not assume allocation granularity.
 	*/
-	class memory_resource : public std::pmr::memory_resource
+	class alignas(FE::CPU_L1_cache_line::size) memory_resource : public std::pmr::memory_resource
 	{
 	public:
 		using xmmword_pool_type = FE::large::block_allocator<xmmword_size, FE::align_16bytes>;
@@ -101,7 +115,16 @@ namespace large
 		using zmmword_pool_type = FE::large::block_allocator<zmmword_size, FE::align_64bytes>;
 		using dzmmword_pool_type = FE::large::block_allocator<dzmmword_size, FE::align_128bytes>;
 		using scalable_pool_type = pool<PoolType::_ScalableLargePage, FE::SIMD_auto_alignment>;
-		using super_large_area_type = pool<PoolType::_SuperLargeArea, FE::SIMD_auto_alignment>;
+		//using super_large_area_type = pool<PoolType::_SuperLargeArea, FE::SIMD_auto_alignment>;
+
+		static_assert(xmmword_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+		static_assert(ymmword_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+		static_assert(zmmword_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+		static_assert(dzmmword_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+		static_assert(scalable_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+		//static_assert(super_large_area_type::page_granularity_in_bytes == 1 * FE::one_GiB);
+		constexpr static FE::int32 page_granularity_in_bytes = scalable_pool_type::page_granularity_in_bytes;
+		//constexpr static FE::int32 super_large_page_granularity_in_bytes = super_large_area_type::page_granularity_in_bytes;
 
 	private:
 		xmmword_pool_type m_xmmword_block_pool;
@@ -110,7 +133,7 @@ namespace large
 		dzmmword_pool_type m_dzmmword_block_pool;
 		scalable_pool_type m_scalable_pool;
 
-		super_large_area_type m_super_large_area;
+		//super_large_area_type m_super_large_area;
 
 		page_aligned_allocator<std::byte> m_fallback_allocator;
 
@@ -134,4 +157,5 @@ namespace large
 
 
 END_NAMESPACE
+#pragma warning(pop)
 #endif

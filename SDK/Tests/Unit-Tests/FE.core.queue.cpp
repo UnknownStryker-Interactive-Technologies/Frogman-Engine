@@ -888,14 +888,14 @@ void BM_steady_state_push_pop(benchmark::State& state_p)
 using fe_int_queue = FE::queue<std::int32_t>;
 using std_int_queue = std::queue<std::int32_t>;
 
-BENCHMARK_TEMPLATE(BM_push, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_push, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
+BENCHMARK_TEMPLATE(BM_push, fe_int_queue);
+BENCHMARK_TEMPLATE(BM_push, std_int_queue);
 
-BENCHMARK_TEMPLATE(BM_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
+BENCHMARK_TEMPLATE(BM_pop, fe_int_queue);
+BENCHMARK_TEMPLATE(BM_pop, std_int_queue);
 
-BENCHMARK_TEMPLATE(BM_push_then_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_push_then_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
+BENCHMARK_TEMPLATE(BM_push_then_pop, fe_int_queue);
+BENCHMARK_TEMPLATE(BM_push_then_pop, std_int_queue);
 
-BENCHMARK_TEMPLATE(BM_steady_state_push_pop, fe_int_queue)->RangeMultiplier(8)->Range(64, 65536);
-BENCHMARK_TEMPLATE(BM_steady_state_push_pop, std_int_queue)->RangeMultiplier(8)->Range(64, 65536);
+BENCHMARK_TEMPLATE(BM_steady_state_push_pop, fe_int_queue);
+BENCHMARK_TEMPLATE(BM_steady_state_push_pop, std_int_queue);

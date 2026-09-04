@@ -1,1 +1,1 @@
-.\Test-App\AVX-SSE\Release\FE_UNIT_TEST.exe --skip-gtests --benchmark_repetitions=15 --benchmark_out=baseline.json --benchmark_out_format=json -enable-large-pages -max-concurrency=16
+.\Test-App\AVX-SSE\Release\FE_UNIT_TEST.exe --skip-gtests --benchmark_repetitions=10 --benchmark_out=baseline.json --benchmark_out_format=json -enable-large-pages

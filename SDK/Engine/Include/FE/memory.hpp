@@ -17,7 +17,6 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
-#include <FE/framework/framework.hxx>
 
 
 
@@ -27,6 +26,7 @@ BEGIN_NAMESPACE(FE)
 
 std::pmr::memory_resource* get_large_thread_local_memory_resource() noexcept;
 std::pmr::memory_resource* get_thread_local_memory_resource() noexcept;
+std::pmr::memory_resource* get_concurrent_memory_resource() noexcept;
 
 
 END_NAMESPACE

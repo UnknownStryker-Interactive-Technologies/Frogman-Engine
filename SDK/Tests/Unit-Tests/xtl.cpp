@@ -497,9 +497,7 @@ static void fuzztest_list_count_value_constructor(benchmark::State& state)
         benchmark::DoNotOptimize(l);
     }
 }
-BENCHMARK(fuzztest_list_count_value_constructor)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(fuzztest_list_count_value_constructor);
 
 static void fuzztest__list_range_constructor(benchmark::State& state)
 {
@@ -521,9 +519,7 @@ static void fuzztest__list_range_constructor(benchmark::State& state)
         benchmark::DoNotOptimize(l);
     }
 }
-BENCHMARK(fuzztest__list_range_constructor)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(fuzztest__list_range_constructor);
 
 static void fuzztest__list_copy_constructor(benchmark::State& state)
 {
@@ -546,9 +542,7 @@ static void fuzztest__list_copy_constructor(benchmark::State& state)
         benchmark::DoNotOptimize(copy);
     }
 }
-BENCHMARK(fuzztest__list_copy_constructor)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(fuzztest__list_copy_constructor);
 
 static void fuzztest_list_move_constructor(benchmark::State& state)
 {
@@ -573,9 +567,7 @@ static void fuzztest_list_move_constructor(benchmark::State& state)
         benchmark::DoNotOptimize(moved);
     }
 }
-BENCHMARK(fuzztest_list_move_constructor)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(fuzztest_list_move_constructor);
 
 
 
@@ -603,9 +595,7 @@ static void std_list_emplace_front(benchmark::State& state)
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK(std_list_emplace_front)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(std_list_emplace_front);
 
 static void frogman_list_emplace_front(benchmark::State& state)
 {
@@ -630,9 +620,7 @@ static void frogman_list_emplace_front(benchmark::State& state)
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK(frogman_list_emplace_front)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(frogman_list_emplace_front);
 
 static void std_list_emplace_back(benchmark::State& state)
 {
@@ -657,9 +645,7 @@ static void std_list_emplace_back(benchmark::State& state)
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK(std_list_emplace_back)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(std_list_emplace_back);
 
 static void frogman_list_emplace_back(benchmark::State& state)
 {
@@ -684,6 +670,4 @@ static void frogman_list_emplace_back(benchmark::State& state)
         benchmark::ClobberMemory();
     }
 }
-BENCHMARK(frogman_list_emplace_back)
-    ->RangeMultiplier(10)
-    ->Range(1, 10000);
+BENCHMARK(frogman_list_emplace_back);

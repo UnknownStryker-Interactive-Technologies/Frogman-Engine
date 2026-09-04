@@ -37,6 +37,7 @@ namespace internal::super_large::pool
         using free_list_element = large::block_info;
 
         constexpr static FE::int32 page_granularity_in_bytes = FE::one_GiB;
+        static_assert(page_granularity_in_bytes == FE::one_GiB);
         constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
 		constexpr static FE::int32 possible_address_count = (page_size_in_bytes / Alignment::size);
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
@@ -49,6 +50,7 @@ namespace internal::super_large::pool
         var::byte* m_page_end;
         var::boolean m_is_page_heapified;
         var::boolean m_has_free_list_been_updated_since_defragmentation;
+        var::uint16 m_thread_id;
 
         static_assert(sizeof(m_page) < FE::max_value<FE::int32>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
 
@@ -63,6 +65,7 @@ namespace internal::super_large::pool
             m_free_list_size(0),
             m_is_page_heapified(false),
             m_has_free_list_been_updated_since_defragmentation(false),
+            m_thread_id(get_current_thread_id()),
             _usage_in_bytes(0)
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
@@ -127,6 +130,8 @@ namespace internal::super_large::pool
         FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
         FE::boolean has_free_list_been_updated_since_defragmentation() const noexcept { return m_has_free_list_been_updated_since_defragmentation; }
         void reset_dirty_flag() noexcept { m_has_free_list_been_updated_since_defragmentation = false; }
+
+        var::uint16 get_thread_id() const noexcept { return m_thread_id; }
 
         void set_page_heapified() noexcept { m_is_page_heapified = true; }
         void set_page_unheapified() noexcept { m_is_page_heapified = false; }
@@ -217,10 +222,13 @@ namespace super_large
         using chunk_type = internal::pool::chunk<PoolType::_SuperLargeArea, Alignment>;
         static_assert(sizeof(chunk_type) <= FE::one_GiB, "Static assertion failed: chunk must fit within a single 1 GiB-sized memory page.");
 
+        static_assert(chunk_type::page_granularity_in_bytes == FE::one_GiB);
+
         using free_list_iterator = typename chunk_type::free_list_iterator;
         using free_list_element = typename chunk_type::free_list_element;
 
     public:
+        constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
         using alignment_type = Alignment;
 

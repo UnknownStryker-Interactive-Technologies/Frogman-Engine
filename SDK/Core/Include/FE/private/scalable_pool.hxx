@@ -38,7 +38,7 @@ namespace internal::pool
         using free_list_element = block_info;
 
         constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
-
+        static_assert(page_size_in_bytes == 64 * FE::one_KiB);
         constexpr static FE::int32 possible_address_count = (page_size_in_bytes / Alignment::size);
         constexpr static FE::int32 integrity_validator_size = (page_size_in_bytes / Alignment::size);
 
@@ -50,6 +50,7 @@ namespace internal::pool
         var::byte* m_page_end;
         var::boolean m_is_page_heapified;
 		var::boolean m_has_free_list_been_updated_since_defragmentation;
+        var::uint16 m_thread_id;
 
         static_assert(sizeof(m_page) < FE::max_value<FE::int32>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
 
@@ -63,6 +64,7 @@ namespace internal::pool
                 m_free_list_size(0),
                 m_is_page_heapified(false),
 			    m_has_free_list_been_updated_since_defragmentation(false),
+                m_thread_id(get_current_thread_id()),
                 _usage_in_bytes(0)
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
@@ -127,6 +129,8 @@ namespace internal::pool
         FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
 		FE::boolean has_free_list_been_updated_since_defragmentation() const noexcept { return m_has_free_list_been_updated_since_defragmentation; }
 		void reset_dirty_flag() noexcept { m_has_free_list_been_updated_since_defragmentation = false; }
+
+        var::uint16 get_thread_id() const noexcept { return m_thread_id; }
 
         void set_page_heapified() noexcept { m_is_page_heapified = true; }
         void set_page_unheapified() noexcept { m_is_page_heapified = false; }
@@ -296,13 +300,18 @@ class pool<PoolType::_Scalable, Alignment>
 {
     static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
+public:
     using chunk_type = internal::pool::chunk<PoolType::_Scalable, Alignment>;
+    static_assert(chunk_type::page_size_in_bytes == 64 * FE::one_KiB);
+
+private:
     using free_list_iterator = typename chunk_type::free_list_iterator;
 	using free_list_element = typename chunk_type::free_list_element;
 
 public:
     using alignment_type = Alignment;
 
+    constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_size_in_bytes;
     constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
     constexpr static FE::int32 minimum_block_size = ((128 / Alignment::size) + 1) * Alignment::size;
 
@@ -341,8 +350,6 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_page_validation_table.reserve(512);
 #endif
-        create_new_page_at_front();
-        create_new_page_at_front();
     }
 
      ~pool() noexcept  = default;
@@ -399,6 +406,11 @@ public:
     template<typename U>
     U* _FE_VECTOR_CALL_ allocate(FE::size size_p) noexcept
     {
+        if (m_pages_with_100_capacity.is_empty() == true) _FE_UNLIKELY_
+        {
+            create_new_page_at_front();
+        }
+
         static_assert(FE::is_trivial_v<U> == true, "Static Assertion Failed: The T must be a trivial type.");
         static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
         FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);
@@ -955,6 +967,7 @@ namespace internal::large::pool
         using free_list_element = large::block_info;
 
 		constexpr static FE::int32 page_granularity_in_bytes = (2 * FE::one_MiB);
+        static_assert(page_granularity_in_bytes == 2 * FE::one_MiB);
         constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
 
         constexpr static FE::int32 possible_address_count = (page_size_in_bytes / Alignment::size);
@@ -968,6 +981,7 @@ namespace internal::large::pool
         var::byte* m_page_end;
         var::boolean m_is_page_heapified;
         var::boolean m_has_free_list_been_updated_since_defragmentation;
+        var::uint16 m_thread_id;
 
         static_assert(sizeof(m_page) < FE::max_value<FE::int32>, "Static assertion failed: sizeof(m_page) is exceeds the maximum allowed size.");
 
@@ -982,6 +996,7 @@ namespace internal::large::pool
                 m_free_list_size(0),
                 m_is_page_heapified(false),
 			    m_has_free_list_been_updated_since_defragmentation(false),
+                m_thread_id(get_current_thread_id()),
                 _usage_in_bytes(0)
 
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
@@ -1052,6 +1067,8 @@ namespace internal::large::pool
         FE::boolean is_page_heapified() const noexcept { return m_is_page_heapified; }
         FE::boolean has_free_list_been_updated_since_defragmentation() const noexcept { return m_has_free_list_been_updated_since_defragmentation; }
         void reset_dirty_flag() noexcept { m_has_free_list_been_updated_since_defragmentation = false; }
+
+        var::uint16 get_thread_id() const noexcept { return m_thread_id; }
 
         void set_page_heapified() noexcept { m_is_page_heapified = true; }
         void set_page_unheapified() noexcept { m_is_page_heapified = false; }
@@ -1223,16 +1240,19 @@ namespace large
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
         static_assert(Alignment::size == 32 || Alignment::size == 64);
 
+    public:
         using chunk_type = internal::pool::chunk<PoolType::_ScalableLargePage, Alignment>;
         static_assert(sizeof(chunk_type) <= (2 * FE::one_MiB), "Static assertion failed: chunk must fit within a single 2 MiB-sized memory page.");
+        static_assert(chunk_type::page_granularity_in_bytes == 2 * FE::one_MiB);
 
+    private:
         using free_list_iterator = typename chunk_type::free_list_iterator;
 		using free_list_element = typename chunk_type::free_list_element;
 
     public:
         using alignment_type = Alignment;
 
-		constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
+        constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_granularity_in_bytes;
         constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
         constexpr static FE::int32 minimum_block_size = ((128 / Alignment::size) + 1) * Alignment::size;
 
@@ -1270,9 +1290,6 @@ namespace large
             m_page_validation_table.reserve(512);
 #endif
             FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::internal::pool::__enable_large_pages(););
-
-            create_new_page_at_front();
-            create_new_page_at_front();
         }
 
          ~pool() noexcept = default;
@@ -1332,6 +1349,11 @@ namespace large
         template<typename U>
         U* _FE_VECTOR_CALL_ allocate(FE::size size_p) noexcept
         {
+            if (m_pages_with_100_capacity.is_empty() == true) _FE_UNLIKELY_
+            {
+                create_new_page_at_front();
+            }
+
             static_assert(FE::is_trivial_v<U> == true, "Static Assertion Failed: The T must be a trivial type.");
             static_assert(std::is_array_v<U> == false, "Static Assertion Failed: The T must not be an array[] type.");
             FE::int32 l_queried_allocation_in_bytes = (FE::int32)FE::calculate_aligned_memory_size_in_bytes<U, Alignment>(size_p);

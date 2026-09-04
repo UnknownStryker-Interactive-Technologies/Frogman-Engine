@@ -15,7 +15,7 @@ limitations under the License.
 */
 #include <FE/framework/fiber.hxx>
 
-#include <FE/framework/thread_id.hxx>
+#include <FE/thread_id.hxx>
 
 #include <windows.h>
 
@@ -57,7 +57,7 @@ void _FE_CDECL_ __create_fiber(fiber_impl* const out_fiber_p, size_t stack_size_
 		static_assert(sizeof(fiber_context) % 16 == 0);
 
 		out_fiber_p->_context_ptr->_rsp = (var::byte*)l_fiber_page_ptr;
-		out_fiber_p->_host_thread_id = FE::framework::get_current_thread_id();
+		out_fiber_p->_host_thread_id = FE::get_current_thread_id();
 	}
 	{
 		//mxcsr& l_mxcsr = out_fiber_p->_context_ptr->_mxcsr;
@@ -392,6 +392,6 @@ FE::thread_context::thread_context() noexcept
 	static_assert(sizeof(fiber_context) % 16 == 0);
 
 	_thread_context._context_ptr->_rsp = (var::byte*)l_fiber_page_ptr;
-	_thread_context._host_thread_id = FE::framework::get_current_thread_id();
+	_thread_context._host_thread_id = FE::get_current_thread_id();
 }
 

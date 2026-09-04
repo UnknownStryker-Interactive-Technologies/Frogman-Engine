@@ -22,6 +22,7 @@ limitations under the License.
 #include <FE/do_once.hxx>
 #include <FE/fstream_guard.hxx>
 #include <FE/log/logger.hxx>
+#include <FE/memory_resource.hxx>
 
 // boost
 #include <boost/stacktrace.hpp>
@@ -265,7 +266,7 @@ FE::ASCII* program_option::view_max_concurrency_option_title() const noexcept
 	return m_max_concurrency._first;
 }
 
-::FE::boolean program_option::is_large_pages_enabled() const noexcept
+::FE::boolean program_option::is_large_page_enabled() const noexcept
 {
 	return m_enable_large_pages._second;
 }
@@ -283,23 +284,25 @@ static RestartOrNot s_restart_or_not = RestartOrNot::_NoOperation;
 
 
 
-static std::pmr::memory_resource* s_TLGPMP_deleter = nullptr;
-static std::pmr::memory_resource* s_LTLGPMP_deleter = nullptr;
+static FE::memory_resource* s_TLM_deleter = nullptr;
+static FE::large::memory_resource* s_LTLM_deleter = nullptr;
+static FE::concurrent_memory_resource* s_CM_deleter = nullptr;
 framework_base::framework_base(std::unique_ptr<program_option> options_p) noexcept
 	:	m_program_options(std::move(options_p)),
 		m_current_system_locale(std::setlocale(LC_ALL, "")), 
-	m_memory( new FE::memory_resource[m_program_options->get_max_concurrency()]{} ), // the new operator is overloaded to return CPU cache line size aligned memory.
-	m_memory_large_pages(	(m_program_options->is_large_pages_enabled() == true) ? 
-								(std::pmr::memory_resource*)new FE::large::memory_resource[m_program_options->get_max_concurrency()]{} 
-							:	(std::pmr::memory_resource*)new FE::memory_resource[m_program_options->get_max_concurrency()]{} 
+		m_memory( new FE::memory_resource[m_program_options->get_max_concurrency()]{} ), // the new operator is overloaded to return CPU cache line size aligned memory.
+		m_memory_large_pages(	(m_program_options->is_large_page_enabled() == true) ? 
+								new FE::large::memory_resource[m_program_options->get_max_concurrency()]{} 
+							:	m_memory
 						),
+		m_concurrent_memory(m_program_options->is_large_page_enabled(), m_program_options->get_max_concurrency()),
 		m_method_reflection(81920, get_large_memory_resource()), 
 		m_property_reflection(81920, get_large_memory_resource()),
 		m_enum_reflection(get_large_memory_resource(), 81920)
 {
 	std::locale::global(m_current_system_locale);
-	s_TLGPMP_deleter = m_memory;
-	s_LTLGPMP_deleter = m_memory_large_pages;
+	s_TLM_deleter = (FE::memory_resource*)m_memory;
+	s_LTLM_deleter = (FE::large::memory_resource*)((m_program_options->is_large_page_enabled() == true) ? m_memory_large_pages : nullptr);
 }
 
 framework_base::~framework_base() noexcept
@@ -347,9 +350,14 @@ std::pmr::memory_resource* framework_base::get_memory_resource() noexcept
 std::pmr::memory_resource* framework_base::get_large_memory_resource() noexcept
 {
 	// compute once
-	static FE::size l_size_of_page_element = (m_program_options->is_large_pages_enabled() == true) ? sizeof(FE::large::memory_resource) : sizeof(FE::memory_resource);
+	static FE::size l_s_size_of_page_element = (m_program_options->is_large_page_enabled() == true) ? sizeof(FE::large::memory_resource) : sizeof(FE::memory_resource);
 
-	return (std::pmr::memory_resource*)( ((var::byte*)m_memory_large_pages) + (l_size_of_page_element * get_current_thread_id()) );
+	return (std::pmr::memory_resource*)( ((var::byte*)m_memory_large_pages) + (l_s_size_of_page_element * get_current_thread_id()) );
+}
+
+std::pmr::memory_resource* framework_base::get_concurrent_memory_resource() noexcept
+{
+	return &m_concurrent_memory;
 }
 
 reflection::method_registry& framework_base::get_method_reflection() noexcept
@@ -431,8 +439,8 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 		{
 			std::cerr << "\nAn error from FE.Framework: failed to set up an app.\n";
 			delete FE::framework::s_framework;
-			delete[] FE::framework::s_TLGPMP_deleter;
-			delete[] FE::framework::s_LTLGPMP_deleter;
+			delete[] FE::framework::s_TLM_deleter;
+			delete[] FE::framework::s_LTLM_deleter;
 			return l_exit_code;
 		}
 
@@ -442,8 +450,8 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 		{
 			std::cerr << "\nAn error from FE.Framework: there was an error during the runtime.\n";
 			delete FE::framework::s_framework;
-			delete[] FE::framework::s_TLGPMP_deleter;
-			delete[] FE::framework::s_LTLGPMP_deleter;
+			delete[] FE::framework::s_TLM_deleter;
+			delete[] FE::framework::s_LTLM_deleter;
 			return l_exit_code;
 		}
 
@@ -453,14 +461,14 @@ int main(FE::int32 argc_p, FE::ASCII** argv_p)
 		{
 			std::cerr << "\nAn error from FE.Framework: unsuccessfully cleaned up an app.\n";
 			delete FE::framework::s_framework;
-			delete[] FE::framework::s_TLGPMP_deleter;
-			delete[] FE::framework::s_LTLGPMP_deleter;
+			delete[] FE::framework::s_TLM_deleter;
+			delete[] FE::framework::s_LTLM_deleter;
 			return l_exit_code;
 		}
 
 		delete FE::framework::s_framework;
-		delete[] FE::framework::s_TLGPMP_deleter;
-		delete[] FE::framework::s_LTLGPMP_deleter;
+		delete[] FE::framework::s_TLM_deleter;
+		delete[] FE::framework::s_LTLM_deleter;
 	}
 	while (FE::framework::s_restart_or_not == FE::framework::RestartOrNot::_HasToRestart);
 

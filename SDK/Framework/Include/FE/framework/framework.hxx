@@ -16,7 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/concurrent_memory_resource.hxx>
 #include <FE/pair.hxx>
+#include <FE/thread_id.hxx>
 
 #include <memory>
 
@@ -32,7 +34,6 @@ limitations under the License.
 
 
 #include <FE/framework/reflection.hxx>
-#include <FE/framework/thread_id.hxx>
 
 
 CLASS_FORWARD_DECLARATION(FE::framework, processors);
@@ -61,7 +62,7 @@ public:
 
 	::FE::uint32 get_max_concurrency() const noexcept;
 	::FE::ASCII* view_max_concurrency_option_title() const noexcept;
-	::FE::boolean is_large_pages_enabled() const noexcept;
+	::FE::boolean is_large_page_enabled() const noexcept;
 	::FE::ASCII* view_large_pages_option_title() const noexcept;
 };
 
@@ -74,8 +75,9 @@ protected:
 	std::unique_ptr<program_option> m_program_options;
 	std::locale m_current_system_locale;
 
-	std::pmr::memory_resource* m_memory; // TLGPMP: Thread-Local General-Purpose Memory Pool
-	std::pmr::memory_resource* m_memory_large_pages; // LTLGPMP: Large Thread-Local General-Purpose Memory Pool
+	std::pmr::memory_resource* m_memory; // TLM: Thread-Local Memory
+	std::pmr::memory_resource* m_memory_large_pages; // LTLM: Large Thread-Local Memory
+	FE::concurrent_memory_resource m_concurrent_memory; // CM: Concurrent Memory
 
 	reflection::method_registry m_method_reflection;
 	reflection::property_registry m_property_reflection;
@@ -98,6 +100,7 @@ public:
 public:
 	std::pmr::memory_resource* get_memory_resource() noexcept;
 	std::pmr::memory_resource* get_large_memory_resource() noexcept;
+	std::pmr::memory_resource* get_concurrent_memory_resource() noexcept;
 
 	reflection::method_registry& get_method_reflection() noexcept;
 	reflection::property_registry& get_property_reflection() noexcept;

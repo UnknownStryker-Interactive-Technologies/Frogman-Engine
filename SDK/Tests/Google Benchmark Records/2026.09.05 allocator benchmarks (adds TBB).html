@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frogman Engine allocator benchmarks</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root{
+    --bg:#ffffff; --text:#1b1b1f; --text-secondary:#585863; --text-muted:#8b8b96;
+    --grid:rgba(20,20,30,.09); --rule:rgba(20,20,30,.12); --accent:#6250d6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#181820; --text:#e9e9ef; --text-secondary:#a6a6b4; --text-muted:#7a7a88;
+           --grid:rgba(255,255,255,.10); --rule:rgba(255,255,255,.14); --accent:#9085e9; }
+  }
+  html[data-mode="light"]{
+    --bg:#ffffff; --text:#1b1b1f; --text-secondary:#585863; --text-muted:#8b8b96;
+    --grid:rgba(20,20,30,.09); --rule:rgba(20,20,30,.12); --accent:#6250d6;
+  }
+  html[data-mode="dark"]{
+    --bg:#181820; --text:#e9e9ef; --text-secondary:#a6a6b4; --text-muted:#7a7a88;
+    --grid:rgba(255,255,255,.10); --rule:rgba(255,255,255,.14); --accent:#9085e9;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:14px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:28px 22px 44px}
+  h1{font-size:19px; font-weight:600; letter-spacing:-.01em; margin:0 0 6px}
+  .runmeta{font-size:12.5px; color:var(--text-secondary); margin:0 0 20px}
+  .runmeta code{font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px}
+  .legend{
+    display:flex; flex-wrap:wrap; gap:9px 20px; align-items:center;
+    padding:12px 14px; border:1px solid var(--rule); border-radius:6px; margin-bottom:10px;
+  }
+  .legend .it{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text)}
+  .sw{width:15px; height:11px; flex:none}
+  .sw.mean{background:var(--accent)}
+  .sw.median{background:rgba(98,80,214,.22);
+             background:color-mix(in srgb, var(--accent) 22%, transparent);
+             border:2px solid var(--accent)}
+  .whiskmark{width:15px; height:12px; flex:none}
+  .note{font-size:12px; color:var(--text-secondary); margin:0 0 26px}
+  .panel{margin-bottom:26px}
+  .scroll{overflow-x:auto}
+  .box{position:relative}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Frogman Engine allocator benchmarks</h1>
+  <p class="runmeta">
+    2026-09-05, DESKTOP-TQQKCLQ, 32 CPUs, release build
+    <code>v0.0.0.2026.08.02prc-1-g7ec6721f-dirty</code>.
+    10 repetitions per benchmark. Lower is better.
+  </p>
+
+  <div class="legend">
+    <span class="it"><span class="sw mean"></span>mean</span>
+    <span class="it"><span class="sw median"></span>median</span>
+    <span class="it">
+      <svg class="whiskmark" viewBox="0 0 15 12" aria-hidden="true">
+        <path d="M2 2 H13 M7.5 2 V10 M2 10 H13" fill="none"
+              stroke="var(--text-secondary)" stroke-width="1.25"/>
+      </svg>
+      &plusmn;1 stddev on the mean bar
+    </span>
+  </div>
+  <p class="note">
+    The <strong>cv</strong> row under each axis is the coefficient of variation across the
+    10 repetitions, in percent. Read it together with the whisker: at this log scale a
+    sub-1&percnt; spread is narrower than a pixel.
+  </p>
+
+  <div id="panels"></div>
+</div>
+
+<script>
+const PANELS = [{"group": "extreme_fixed_sized_test", "labels": ["new_delete", "tbb scalable", "std::pmr pool", "FE_TLGPM", "FE_LTLGPM"], "mean": [19.05933335365262, 9.973000051104464, 8.479000025545249, 6.685333379815954, 6.627000014608106], "median": [19.04666678456124, 9.653333472670054, 7.183333461095269, 6.6700000994994, 6.621666761930101], "sd": [0.1501834947479846, 1.0897054017068577, 2.8357201388824236, 0.04959595893399572, 0.03539718189263232], "cv": [0.788, 10.9266, 33.444, 0.7419, 0.5341], "title": "Extreme fixed-size, single thread (30,000 iters)"}, {"group": "extreme_fixed_sized_accumulation_test", "labels": ["new_delete", "tbb scalable", "std::pmr pool", "FE_TLGPM", "FE_LTLGPM"], "mean": [11274.809999304125, 5552.870000974508, 3674.8499995155726, 3796.329997567228, 3812.5900020531853], "median": [11279.499998636311, 5560.749999858672, 3669.399997306755, 3793.7999950372614, 3815.949999989243], "sd": [40.82462313728204, 32.2367992243734, 31.696521529596396, 29.070071392131762, 26.826745234309403], "cv": [0.3621, 0.5805, 0.8625, 0.7657, 0.7036], "title": "Extreme fixed-size accumulation, single thread (1,000 iters)"}, {"group": "random_size_test", "labels": ["new_delete", "tbb scalable", "FE_TLGPM", "FE_LTLGPM"], "mean": [96.57900001911914, 36.021999912918545, 27.969000075245276, 17.30400006636046], "median": [95.54499993100764, 34.46499977144413, 27.52999971562531, 15.870000424911268], "sd": [6.302502848014788, 4.802943060273316, 1.0668483564659705, 4.216309916198648], "cv": [6.5257, 13.3334, 3.8144, 24.3661], "title": "Random size, single thread (10,000 iters)"}, {"group": "random_size_accumulation_test", "labels": ["new_delete", "tbb scalable", "FE_TLGPM", "FE_LTLGPM"], "mean": [1224786.580000364, 81901.72999966309, 67133.69000135572, 32308.60000039683], "median": [1186107.350000384, 81628.6500012211, 67013.05000387947, 32353.40000173892], "sd": [137928.5864090447, 954.1583687892855, 409.1392045677262, 168.23572164258263], "cv": [11.2614, 1.165, 0.6094, 0.5207], "title": "Random size accumulation, single thread (1,000 iters)"}, {"group": "extreme_fixed_sized_concurrent_test", "labels": ["new_delete @1t", "new_delete @2t", "new_delete @4t", "new_delete @8t", "new_delete @16t", "new_delete @32t", "tbb scalable @1t", "tbb scalable @2t", "tbb scalable @4t", "tbb scalable @8t", "tbb scalable @16t", "tbb scalable @32t", "std::pmr sync pool @1t", "std::pmr sync pool @2t", "std::pmr sync pool @4t", "std::pmr sync pool @8t", "std::pmr sync pool @16t", "std::pmr sync pool @32t", "FE_CMR @1t", "FE_CMR @2t", "FE_CMR @4t", "FE_CMR @8t", "FE_CMR @16t", "FE_CMR @32t"], "mean": [21.633666668397687, 27.616166638229817, 25.63266669312725, 26.950708340033696, 35.72314583228338, 51.133364585590854, 9.942666656570509, 10.052999981174557, 10.805500005517386, 13.684749995566865, 14.88706250256655, 25.45477082852206, 30.75033331697341, 60.075666672977, 156.588999992285, 452.18062498558237, 5103.935958327384, 20227.7408437529, 13.343000052069936, 16.81133332264532, 15.381500015791971, 16.782500015324334, 23.06127081283194, 38.210583335664225], "median": [20.136666595741794, 20.250833282868065, 21.39416665158933, 26.88125000531727, 33.98874999523589, 47.21635415686857, 9.909999910936069, 10.03666663261053, 10.178749986759309, 12.72979163028746, 14.733020831651325, 24.92484373609235, 26.916666562707785, 58.59750005280754, 156.0691666782077, 439.6489583389969, 5107.647291667186, 20295.70234374205, 12.801666768306557, 15.42416660716602, 14.563749967540693, 17.297916671547377, 20.186249965566578, 38.29000000147668], "sd": [3.3260544503913025, 22.330658066510004, 11.587744067400493, 3.153020005298329, 4.783398296981115, 8.536592773956828, 0.09286656990417033, 0.09128977726083579, 1.3338053254061442, 2.6116852495546694, 2.8973840169980214, 1.75958141909885, 7.841310748840266, 4.068421717428901, 8.762287771213797, 43.35041612741378, 226.3311877346332, 525.762846021768, 1.4425752038384796, 4.684405159412952, 2.9644755188382272, 2.369202657568217, 7.882898559292675, 4.021384272203311], "cv": [15.3744, 80.8608, 45.2069, 11.6992, 13.3902, 16.6948, 0.934, 0.9081, 12.3438, 19.0846, 19.4624, 6.9126, 25.4999, 6.7722, 5.5957, 9.587, 4.4344, 2.5992, 10.8115, 27.8646, 19.273, 14.1171, 34.1824, 10.5243], "title": "Extreme fixed-size, concurrent (30,000 iters per thread)"}, {"group": "extreme_fixed_sized_accumulation_concurrent_test", "labels": ["new_delete @1t", "new_delete @2t", "new_delete @4t", "new_delete @8t", "new_delete @16t", "new_delete @32t", "tbb scalable @1t", "tbb scalable @2t", "tbb scalable @4t", "tbb scalable @8t", "tbb scalable @16t", "tbb scalable @32t", "std::pmr sync pool @1t", "std::pmr sync pool @2t", "std::pmr sync pool @4t", "std::pmr sync pool @8t", "std::pmr sync pool @16t", "std::pmr sync pool @32t", "FE_CMR @1t", "FE_CMR @2t", "FE_CMR @4t", "FE_CMR @8t", "FE_CMR @16t", "FE_CMR @32t"], "mean": [11157.05999764032, 12832.534999688507, 14376.837500094553, 17298.986250170856, 50598.90124985032, 109674.1075000409, 5779.080000502291, 5693.6250013677645, 6002.505000105885, 6102.68249984074, 6895.701874873341, 13156.13968740763, 13331.359999574488, 32664.090000253054, 85598.01249903104, 263958.85874999297, 4507634.714999767, 19119909.503437337, 7126.459999562941, 7006.024999282092, 7167.567499709548, 7469.450000098732, 7859.431875203882, 15490.338749873446], "median": [11157.049993926194, 12751.399999615385, 14287.262500147335, 17306.756250036415, 49188.971873945775, 109511.00312536256, 5789.80000136653, 5699.7750034497585, 5984.287501632934, 6130.262500391836, 6764.928124994185, 13097.932812570436, 13324.700001248857, 32817.549999890616, 85793.11250014143, 261294.14999968503, 4501024.950000556, 19039876.11250011, 7161.4500011492055, 6976.274999033194, 7154.737500059127, 7564.831249965209, 7647.403124792618, 15479.268749686526], "sd": [23.98838622196718, 333.17391231902513, 278.090397357198, 182.18742811855313, 2188.455566903768, 730.2524632605621, 65.92972398605075, 50.041400704420134, 176.09384068889796, 148.01312458680152, 390.27599784742426, 161.32144091690307, 51.17093584888519, 936.0443592257745, 2080.575028814372, 9649.256917510556, 369713.1459813524, 452832.75639340037, 162.74744080635182, 248.31688783283502, 296.6028541381691, 310.50331522850786, 433.65865861834646, 310.44175070393015], "cv": [0.215, 2.5963, 1.9343, 1.0532, 4.3251, 0.6658, 1.1408, 0.8789, 2.9337, 2.4254, 5.6597, 1.2262, 0.3838, 2.8657, 2.4306, 3.6556, 8.2019, 2.3684, 2.2837, 3.5443, 4.1381, 4.157, 5.5177, 2.0041], "title": "Extreme fixed-size accumulation, concurrent (1,000 iters per thread)"}, {"group": "random_size_concurrent_test", "labels": ["new_delete @1t", "new_delete @2t", "new_delete @4t", "new_delete @8t", "new_delete @16t", "new_delete @32t", "tbb scalable @1t", "tbb scalable @2t", "tbb scalable @4t", "tbb scalable @8t", "tbb scalable @16t", "tbb scalable @32t", "std::pmr sync pool @1t", "std::pmr sync pool @2t", "std::pmr sync pool @4t", "std::pmr sync pool @8t", "std::pmr sync pool @16t", "std::pmr sync pool @32t", "FE_CMR @1t", "FE_CMR @2t", "FE_CMR @4t", "FE_CMR @8t", "FE_CMR @16t", "FE_CMR @32t"], "mean": [100.27799995441458, 243.9045001665363, 663.6312499904308, 2550.0840000313474, 11386.641624985714, 36371.27409376717, 36.80800000438467, 49.96000006940449, 70.84949997079094, 149.7603749885457, 370.7940625145057, 602.6640937284357, 31.610000078217134, 67.83499997254695, 169.02424997169874, 488.8523750105378, 6480.922687487691, 31607.10712499395, 34.17600004468114, 66.72399998933543, 100.99025003000862, 126.15400002687238, 435.1266874346038, 761.7213125013224], "median": [92.92499998991843, 229.89750032138545, 667.3400000181573, 2544.4868749673333, 11167.00906254664, 37682.85687502839, 35.50500005076174, 45.49750010482967, 67.16250009048963, 141.88812497195613, 366.5353124915782, 601.8301561880435, 31.170000147540122, 71.264999860432, 170.51999993782374, 465.8181249851623, 6609.0624999105785, 31191.436093740776, 33.03000012238044, 66.70000002486631, 102.16750015388243, 119.01625007340044, 439.6974999281156, 747.7551562033113], "sd": [20.875551660601477, 32.526616280458065, 46.83297893853044, 294.94623785289275, 880.2219011904284, 6801.299261939008, 2.894396046519201, 6.860840253026512, 10.800300466773052, 22.906542576586613, 15.741828440139557, 10.644780694224114, 1.425217222189801, 7.391005712324853, 9.50490595144915, 56.99788084652927, 722.1319246343955, 1255.6986611233976, 6.299335421355576, 7.783423214671439, 16.803319080141485, 27.013344457208497, 39.860961642929496, 56.14607909638221], "cv": [20.8177, 13.3358, 7.0571, 11.5661, 7.7303, 18.6996, 7.8635, 13.7327, 15.244, 15.2955, 4.2454, 1.7663, 4.5088, 10.8956, 5.6234, 11.6595, 11.1424, 3.9728, 18.432, 11.6651, 16.6386, 21.413, 9.1608, 7.3709], "title": "Random size, concurrent (10,000 iters per thread)"}, {"group": "random_size_accumulation_concurrent_test", "labels": ["new_delete @1t", "new_delete @2t", "new_delete @4t", "new_delete @8t", "new_delete @16t", "new_delete @32t", "tbb scalable @1t", "tbb scalable @2t", "tbb scalable @4t", "tbb scalable @8t", "tbb scalable @16t", "tbb scalable @32t", "std::pmr sync pool @1t", "std::pmr sync pool @2t", "std::pmr sync pool @4t", "std::pmr sync pool @8t", "std::pmr sync pool @16t", "std::pmr sync pool @32t", "FE_CMR @1t", "FE_CMR @2t", "FE_CMR @4t", "FE_CMR @8t", "FE_CMR @16t", "FE_CMR @32t"], "mean": [1265312.3099989898, 3506413.7450001, 8124393.155000145, 19994661.07874978, 81703329.59187505, 257154265.55812517, 83892.7499993588, 144781.1999991245, 220457.59249958792, 380119.2762505707, 1274273.796249736, 1883496.4815624743, 45536.96999937529, 101750.15500062729, 234566.09999921062, 708629.1312505638, 8289369.668125028, 43392265.60781265, 40969.06999911881, 42183.56999954268, 49280.014999203566, 70421.07749985007, 156929.84562488168, 310542.3990621148], "median": [1276209.1999975382, 3489627.5499977493, 8144128.137499137, 20056450.54999968, 80828132.57500039, 256843573.3078127, 83416.94999762694, 143969.27499910817, 220458.38749818358, 379277.1687512868, 1272325.0156236645, 1883683.0046875547, 45269.85000120476, 101634.07500112955, 234878.68749816698, 708871.0250004624, 8153968.4937502, 44351807.34531286, 40869.79999920004, 41925.12499867007, 49351.57499949128, 68521.66250064329, 154460.59374926335, 309184.41406151943], "sd": [46241.838266355204, 74214.59788968135, 64630.06889634684, 252865.98372987245, 3866691.250002953, 1803530.4125175602, 1644.880521805949, 3820.0274877446973, 1378.1883819763893, 2995.4793969164484, 16129.510152035058, 8095.008444170783, 812.8020380853837, 1542.6924916781124, 3824.391571359789, 50276.15376420076, 517795.62092989543, 1815845.9857271654, 301.17531563316595, 860.4168124891573, 484.1556345666657, 6901.056945963307, 7280.069304120026, 6656.916281491771], "cv": [3.6546, 2.1165, 0.7955, 1.2647, 4.7326, 0.7013, 1.9607, 2.6385, 0.6251, 0.788, 1.2658, 0.4298, 1.7849, 1.5162, 1.6304, 7.0948, 6.2465, 4.1847, 0.7351, 2.0397, 0.9825, 9.7997, 4.6391, 2.1436], "title": "Random size accumulation, concurrent (1,000 iters per thread)"}];
+
+const root = document.documentElement;
+const isDark = () => (root.dataset.mode || '') === 'dark'
+  || (!root.dataset.mode && matchMedia('(prefers-color-scheme: dark)').matches);
+
+const cssv = n => getComputedStyle(root).getPropertyValue(n).trim();
+
+// ---- plugins ------------------------------------------------------------
+const whisk = {id:'whisk', afterDatasetsDraw(ch, a, o){
+  if(!o || !o.sd) return;
+  const y = ch.scales.y, x = ch.ctx;
+  x.save(); x.strokeStyle = o.stroke; x.lineWidth = 1.25;
+  const m = ch.getDatasetMeta(0);
+  if(!m.hidden){
+    m.data.forEach((bar, i) => {
+      const v = ch.data.datasets[0].data[i], s = o.sd[i];
+      if(!s) return;
+      const hi = y.getPixelForValue(v + s);
+      const lo = y.getPixelForValue(Math.max(v - s, y.min));
+      const cx = bar.x, w = Math.min(bar.width * 0.55, 7);
+      x.beginPath();
+      x.moveTo(cx, hi); x.lineTo(cx, lo);
+      x.moveTo(cx - w, hi); x.lineTo(cx + w, hi);
+      x.moveTo(cx - w, lo); x.lineTo(cx + w, lo);
+      x.stroke();
+    });
+  }
+  x.restore();
+}};
+
+const cvlab = {id:'cvlab', afterDraw(ch, a, o){
+  if(!o || !o.cv) return;
+  const x = ch.ctx, xs = ch.scales.x, ca = ch.chartArea;
+  const y1 = ch.height - 30;
+  x.save();
+  x.font = '11px ui-sans-serif, system-ui, sans-serif';
+  x.textAlign = 'right'; x.fillStyle = o.muted;
+  x.fillText('cv', ca.left - 8, y1);
+  x.textAlign = 'center'; x.fillStyle = o.tone;
+  o.cv.forEach((v, i) => x.fillText(v.toFixed(2) + '%', xs.getPixelForValue(i), y1));
+  x.restore();
+}};
+
+// ---- build --------------------------------------------------------------
+const host = document.getElementById('panels');
+const boxes = PANELS.map((p, i) => {
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+  const scroll = document.createElement('div');
+  scroll.className = 'scroll';
+  const box = document.createElement('div');
+  box.className = 'box';
+  box.style.height = (i === 0 ? 330 : 320) + 'px';
+  box.style.minWidth = Math.max(560, p.labels.length * 47) + 'px';
+  const cv = document.createElement('canvas');
+  box.appendChild(cv); scroll.appendChild(box); panel.appendChild(scroll);
+  host.appendChild(panel);
+  return cv;
+});
+
+const fmt = v => v >= 1000 ? v.toLocaleString('en-US', {maximumFractionDigits:0})
+                           : v.toFixed(v >= 100 ? 1 : 3);
+
+let charts = [];
+
+function build(){
+  const dark = isDark();
+  const TONE = dark ? '#9085e9' : '#6250d6';
+  const FILL = dark ? 'rgba(144,133,233,.22)' : 'rgba(98,80,214,.22)';
+  const SEC = cssv('--text-secondary');
+  const MUT = cssv('--text-muted');
+  const GRID = cssv('--grid');
+  const TXT = cssv('--text');
+
+  charts = PANELS.map((p, i) => new Chart(boxes[i], {
+    type: 'bar',
+    data: {
+      labels: p.labels,
+      datasets: [
+        {label:'mean', data:p.mean, backgroundColor:TONE, borderWidth:0,
+         categoryPercentage:0.7, barPercentage:0.92, maxBarThickness:15},
+        {label:'median', data:p.median, backgroundColor:FILL, borderColor:TONE, borderWidth:2, borderSkipped:false,
+         categoryPercentage:0.7, barPercentage:0.92, maxBarThickness:15}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:false,
+      layout:{padding:{bottom:38}},
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:false},
+        title:{display:true, text:p.title, align:'start', color:TXT,
+               font:{size:14, weight:'500'}, padding:{top:0, bottom:12}},
+        tooltip:{
+          callbacks:{
+            label: c => c.dataset.label + ': ' + fmt(c.parsed.y) + ' ns',
+            afterBody: items => {
+              const i = items[0].dataIndex;
+              return ['stddev: ' + fmt(p.sd[i]) + ' ns', 'cv: ' + p.cv[i].toFixed(2) + '%'];
+            }
+          }
+        },
+        whisk:{sd:p.sd, stroke:SEC},
+        cvlab:{cv:p.cv, tone:TONE, muted:MUT}
+      },
+      scales:{
+        y:{
+          type:'logarithmic',
+          title:{display:true, text:'real_time (ns per iteration, log)', color:SEC, font:{size:12}},
+          ticks:{color:SEC, font:{size:11}},
+          grid:{color:GRID, drawTicks:false},
+          border:{display:false}
+        },
+        x:{
+          ticks:{autoSkip:false, maxRotation:38, minRotation:38, color:SEC, font:{size:11}},
+          grid:{display:false},
+          border:{color:GRID}
+        }
+      }
+    },
+    plugins:[whisk, cvlab]
+  }));
+}
+
+function rebuild(){ charts.forEach(c => c.destroy()); build(); }
+
+build();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rebuild);
+new MutationObserver(rebuild).observe(root, {attributes:true, attributeFilter:['data-mode']});
+</script>
+</body>
+</html>

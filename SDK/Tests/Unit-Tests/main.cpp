@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 #include <benchmark/benchmark.h>
 
+#include "register_concurrent_benchmarks.h"
 
 /* Linux tip:
 ls: lists all folders in the current working directory
@@ -25,6 +26,8 @@ public:
 
 	virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override
 	{
+		register_concurrent_benchmarks();
+
 		var::int32 l_argc = argc_p;
 		testing::InitGoogleTest(&l_argc, (var::ASCII**)argv_p);
 		if (argv_p == nullptr)

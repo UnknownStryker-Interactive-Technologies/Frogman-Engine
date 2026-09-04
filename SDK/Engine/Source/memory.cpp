@@ -1,4 +1,5 @@
 #include <FE/memory.hpp>
+#include <FE/framework/framework.hxx>
 
 
 
@@ -11,4 +12,9 @@ std::pmr::memory_resource* FE::get_large_thread_local_memory_resource() noexcept
 std::pmr::memory_resource* FE::get_thread_local_memory_resource() noexcept
 {
 	return FE::framework::framework_base::get_framework().get_memory_resource();
+}
+
+std::pmr::memory_resource* FE::get_concurrent_memory_resource() noexcept
+{
+	return FE::framework::framework_base::get_framework().get_concurrent_memory_resource();
 }

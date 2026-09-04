@@ -33,6 +33,7 @@ namespace internal::pool
     public:
         constexpr static FE::int32 fixed_block_size_in_bytes = Alignment::size;
         constexpr static FE::int32 page_size_in_bytes = 64 * FE::one_KiB;
+        static_assert(page_size_in_bytes == 64 * FE::one_KiB);
         constexpr static FE::int32 possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
         static_assert(possible_address_count > 1, "Static assertion failed: possible_address_count is less than 1.");
 
@@ -48,6 +49,7 @@ namespace internal::pool
         var::byte* _page_iterator;
         var::byte* const _end;
         var::int32 _usage_in_bytes;
+        var::uint16 _thread_id;
 		PageGroup _availability;
 
     public:
@@ -56,6 +58,7 @@ namespace internal::pool
                 _page_iterator(_begin),
 			    _end(_page_iterator + page_size_in_bytes),
 			    _usage_in_bytes(0),
+                _thread_id(get_current_thread_id()),
 			    _availability(PageGroup::_AvailablePages)
         {
 #ifdef _ENABLE_ASSERT_
@@ -97,6 +100,8 @@ namespace internal::pool
         {
             return static_cast<FE::int32>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
         }
+
+        var::uint16 get_thread_id() const noexcept { return _thread_id; }
     };
 }
 
@@ -108,10 +113,15 @@ class pool<PoolType::_Block, Alignment>
 {
     static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
+public:
     using chunk_type = internal::pool::chunk<PoolType::_Block, Alignment>;
+    static_assert(chunk_type::page_size_in_bytes == 64 * FE::one_KiB);
+
+private:
     using block_pointer = typename chunk_type::block_pointer;
 
 public:
+    constexpr static FE::int32 page_granularity_in_bytes = chunk_type::page_size_in_bytes;
     constexpr static FE::int32 fixed_block_size_in_bytes = Alignment::size;
     constexpr static FE::int32 page_capacity = chunk_type::page_size_in_bytes;
 
@@ -140,9 +150,6 @@ public:
 #if defined(_DEBUG_) || defined(_RELWITHDEBINFO_)
         m_page_validation_table.reserve(1024);
 #endif
-
-        create_new_page_at_front();
-        create_new_page_at_front();
     }
 
      ~pool() noexcept
@@ -186,6 +193,11 @@ public:
     template<typename U>
     U* _FE_VECTOR_CALL_ allocate() noexcept
     {
+		if (m_available_pages.is_empty() == true) _FE_UNLIKELY_
+		{
+            create_new_page_at_front();
+        }
+
         static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
         static_assert(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
 		FE_ASSERT(m_available_pages.is_empty() == false, "Critical Error in FE.Core.block_allocator: No available pages to allocate from. This should never happen because the constructor always creates a page.");
@@ -320,6 +332,7 @@ namespace internal::pool
         constexpr static FE::size fixed_block_size_in_bytes = Alignment::size;
 
         constexpr static FE::int32 page_granularity_in_bytes = (2 * FE::one_MiB);
+        static_assert(page_granularity_in_bytes == 2 * FE::one_MiB);
         constexpr static FE::int32 page_size_in_bytes = page_granularity_in_bytes - FE::CPU_L1_cache_line::size; // To avoid using an extra large page
 
         constexpr static FE::size possible_address_count = page_size_in_bytes / fixed_block_size_in_bytes;
@@ -337,6 +350,7 @@ namespace internal::pool
         var::byte* _page_iterator;
         var::byte* const _end;
         var::int32 _usage_in_bytes;
+        var::uint16 _thread_id;
         PageGroup _availability;
 
     public:
@@ -345,6 +359,7 @@ namespace internal::pool
                 _page_iterator(_begin),
                 _end(_page_iterator + page_size_in_bytes),
                 _usage_in_bytes(0),
+                _thread_id(get_current_thread_id()),
                 _availability(PageGroup::_AvailablePages)
         {
 			_free_blocks = std::make_unique<FE::fstack<block_pointer, possible_address_count>>();
@@ -390,6 +405,8 @@ namespace internal::pool
         {
             return static_cast<FE::int32>(((FE::float32)_usage_in_bytes / (FE::float32)page_size_in_bytes) * 100.0f);
         }
+
+        FE::uint16 get_thread_id() const noexcept { return _thread_id; }
     };
 }
 
@@ -401,8 +418,12 @@ namespace large
     {
         static_assert(FE::is_power_of_two(Alignment::size) == true, "Static Assertion Failure: Alignment::size must be a power of two.");
 
+    public:
         using chunk_type = internal::pool::chunk<PoolType::_BlockLargePage, Alignment>;
         static_assert(sizeof(chunk_type) <= (2 * FE::one_MiB), "Static assertion failed: chunk must fit within a single 2 MiB-sized memory page.");
+        static_assert(chunk_type::page_granularity_in_bytes == 2 * FE::one_MiB);
+
+    private:
         using block_pointer = typename chunk_type::block_pointer;
 
     public:
@@ -434,9 +455,6 @@ namespace large
             m_page_validation_table.reserve(512);
 #endif
             FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE::internal::pool::__enable_large_pages(););
-
-            create_new_page_at_front();
-            create_new_page_at_front();
         }
 
          ~pool() noexcept
@@ -482,6 +500,11 @@ namespace large
         template<typename U>
         U* _FE_VECTOR_CALL_ allocate() noexcept
         {
+            if (m_available_pages.is_empty() == true) _FE_UNLIKELY_
+            {
+                create_new_page_at_front();
+            }
+
             static_assert(sizeof(U) <= fixed_block_size_in_bytes, "Static assertion failed: sizeof(U) must not be greater than fixed_block_size_in_bytes.");
             static_assert(Alignment::size == fixed_block_size_in_bytes, "Static assertion failed: incorrect Alignment::size detected.");
             FE_ASSERT(m_available_pages.is_empty() == false, "Critical Error in FE.Core.block_allocator: No available pages to allocate from. This should never happen because the constructor always creates a page.");
