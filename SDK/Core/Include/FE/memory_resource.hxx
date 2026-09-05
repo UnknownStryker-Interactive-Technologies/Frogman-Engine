@@ -62,7 +62,7 @@ public:
 	using ymmword_pool_type = FE::block_allocator<ymmword_size, FE::align_32bytes>;
 	using zmmword_pool_type = FE::block_allocator<zmmword_size, FE::align_64bytes>;
 	using dzmmword_pool_type = FE::block_allocator<dzmmword_size, FE::align_128bytes>;
-	using scalable_pool_type = pool<PoolType::_Scalable, FE::SIMD_auto_alignment>;
+	using scalable_pool_type = pool<PoolType::_Scalable, FE::CPU_L1_cache_line>;
 
 	static_assert(xmmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
 	static_assert(ymmword_pool_type::page_granularity_in_bytes == 64 * FE::one_KiB);
@@ -114,7 +114,7 @@ namespace large
 		using ymmword_pool_type = FE::large::block_allocator<ymmword_size, FE::align_32bytes>;
 		using zmmword_pool_type = FE::large::block_allocator<zmmword_size, FE::align_64bytes>;
 		using dzmmword_pool_type = FE::large::block_allocator<dzmmword_size, FE::align_128bytes>;
-		using scalable_pool_type = pool<PoolType::_ScalableLargePage, FE::SIMD_auto_alignment>;
+		using scalable_pool_type = pool<PoolType::_ScalableLargePage, FE::CPU_L1_cache_line>;
 		//using super_large_area_type = pool<PoolType::_SuperLargeArea, FE::SIMD_auto_alignment>;
 
 		static_assert(xmmword_pool_type::page_granularity_in_bytes == 2 * FE::one_MiB);
