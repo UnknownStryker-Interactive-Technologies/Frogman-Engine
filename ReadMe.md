@@ -83,6 +83,9 @@ https://github.com/google/benchmark/releases/tag/v1.9.1
 
 # Benchmarks
 ### Memory Allocator Benchmarks
+- **LTLGPM**: **Large Thread Local General Purpose Memory**  
+- **TLGPM**: **Thread Local General Purpose Memory**  
+- **CMR**: **Concurrent Memory Resource**  
 <img width="2480" height="6050" alt="20256 09 05 allocator benchmarks_dark" src="https://github.com/user-attachments/assets/55f22ada-b7db-489d-9b95-9f59f28224b7" />
 
 
