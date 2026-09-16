@@ -97,17 +97,21 @@ namespace FHT::parser
 					}
 					continue;
 
-					
-				case Vocabulary::_AssignmentOperator:
-					while (iterator->_vocabulary != Vocabulary::_Semicolon)
-					{
-						++iterator;
-					}
-					continue;
-
 
 				default:
+					if (iterator->_vocabulary == Vocabulary::_Namespace)
+					{
+						for (auto it = iterator; it->_vocabulary != Vocabulary::_LeftCurlyBracket; ++it)
+						{
+							if (it->_vocabulary == Vocabulary::_AssignmentOperator)
+							{
+								goto Exit;
+							}
+						}
+					}
 					break;
+				Exit:
+					continue;
 				}
 				l_root._namespaces.emplace_back(build_namespace_node_recursive(u8"::", iterator, token_list_p.end(), l_context_stack));
 				break;
@@ -250,16 +254,20 @@ namespace FHT::parser
 					continue;
 
 
-				case Vocabulary::_AssignmentOperator:
-					while (out_token_iterator_p->_vocabulary != Vocabulary::_Semicolon)
-					{
-						++out_token_iterator_p;
-					}
-					continue;
-
-
 				default:
+					if (out_token_iterator_p->_vocabulary == Vocabulary::_Namespace)
+					{
+						for (auto it = out_token_iterator_p; it->_vocabulary != Vocabulary::_LeftCurlyBracket; ++it)
+						{
+							if (it->_vocabulary == Vocabulary::_AssignmentOperator)
+							{
+								goto Exit;
+							}
+						}
+					}
 					break;
+				Exit:
+					continue;
 				}
 				l_node._nested_namespaces.emplace_back(build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p, context_stack_p));
 				break;

@@ -180,18 +180,19 @@ FE::int32 header_tool::run()
 					//std::cout << "\n";
 				}
 			);
-
-			// Now, run it.
-			l_executor.run(l_taskflow).wait();
-			// The number of threads can be scaled via the '-max-concurrency=n' option.
-
-			if (0 != l_exit_code)
-			{
-				return l_exit_code;
-			}
-
-			FHT::reflexcode_generator::generate_reflexcode(m_metadata_set);
 		}
+
+
+		// Now, run it.
+		l_executor.run(l_taskflow).wait();
+		// The number of threads can be scaled via the '-max-concurrency=n' option.
+
+		if (0 != l_exit_code)
+		{
+			return l_exit_code;
+		}
+
+		FHT::reflexcode_generator::generate_reflexcode(m_metadata_set);
 	}
 
 	return l_exit_code; // CMake or the current build system has to abort the compliation if the exit code is -1.
