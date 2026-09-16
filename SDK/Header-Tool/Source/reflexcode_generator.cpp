@@ -36,10 +36,10 @@ namespace FHT::reflexcode_generator
 		metadata l_metadata =
 		{
 			._header_file_path = std::pmr::wstring(tree_p._path_to_the_header_file.data(), framework::get_framework().get_memory_resource()),
-			._classes = std::pmr::vector<metadata::class_info>(::framework::get_framework().get_memory_resource()),
-			._structs = std::pmr::vector<metadata::struct_info>(::framework::get_framework().get_memory_resource()),
-			._enum_structs = std::pmr::vector< std::pmr::vector<std::pmr::wstring> >(::framework::get_framework().get_memory_resource()),
-			._system_fptrs = std::pmr::vector<metadata::system_info>(::framework::get_framework().get_memory_resource())
+			._classes = std::pmr::unordered_map<std::pmr::wstring, metadata::class_info>(::framework::get_framework().get_memory_resource()),
+			._structs = std::pmr::unordered_map<std::pmr::wstring, metadata::struct_info>(::framework::get_framework().get_memory_resource()),
+			._enum_structs = std::pmr::unordered_map<std::pmr::wstring,  std::pmr::vector<std::pmr::wstring> >(::framework::get_framework().get_memory_resource()),
+			._system_fptrs = std::pmr::unordered_map<std::pmr::wstring, metadata::system_info>(::framework::get_framework().get_memory_resource())
 		};
 	
 		for (const std::optional<class_node>& node : tree_p._classes)
@@ -131,20 +131,20 @@ namespace FHT::reflexcode_generator
 			typename metadata::system_info l_system_node
 			{
 				std::pmr::wstring(framework::get_framework().get_memory_resource()), 
-				std::pmr::wstring(framework::get_framework().get_memory_resource()),
 				std::pmr::wstring(framework::get_framework().get_memory_resource())
 			};
+			std::pmr::wstring l_identifier(framework::get_framework().get_memory_resource());
+			l_identifier.resize(c_style_system_function->_sysname.length());
+			std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
+
 
 			l_system_node._world_tag_enum.resize(c_style_system_function->_world_tag_enum.length());
 			std::mbstowcs(l_system_node._world_tag_enum.data(), reinterpret_cast<const char*>(c_style_system_function->_world_tag_enum.data()), c_style_system_function->_world_tag_enum.length());
 
-			l_system_node._system_name.resize(c_style_system_function->_sysname.length());
-			std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
-
 			l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
 			std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
 
-			l_metadata._system_fptrs.push_back(std::move(l_system_node));
+			l_metadata._system_fptrs[std::move(l_identifier)] = std::move(l_system_node);
 		}
 
 		return l_metadata;
@@ -242,19 +242,20 @@ namespace FHT::reflexcode_generator
 			{
 				std::pmr::wstring(framework::get_framework().get_memory_resource()), 
 				std::pmr::wstring(framework::get_framework().get_memory_resource()),
-				std::pmr::wstring(framework::get_framework().get_memory_resource()), 
 			};
+
+			std::pmr::wstring l_identifier(framework::get_framework().get_memory_resource());
+			l_identifier.resize(c_style_system_function->_sysname.length());
+			std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
+
 
 			l_system_node._world_tag_enum.resize(c_style_system_function->_world_tag_enum.length());
 			std::mbstowcs(l_system_node._world_tag_enum.data(), reinterpret_cast<const char*>(c_style_system_function->_world_tag_enum.data()), c_style_system_function->_world_tag_enum.length());
 
-			l_system_node._system_name.resize(c_style_system_function->_sysname.length());
-			std::mbstowcs(l_system_node._system_name.data(), reinterpret_cast<const char*>(c_style_system_function->_sysname.data()), c_style_system_function->_sysname.length());
-
 			l_system_node._system_call_phase.resize(c_style_system_function->_syscall_phase.length());
 			std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(c_style_system_function->_syscall_phase.data()), c_style_system_function->_syscall_phase.length());
 
-			out_return_p._system_fptrs.push_back(std::move(l_system_node));
+			out_return_p._system_fptrs[std::move(l_identifier)] = std::move(l_system_node);
 		}
 	}
 
@@ -266,11 +267,10 @@ namespace FHT::reflexcode_generator
 
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._this_class_name.data()), node_p._this_class_name.length());
 
-		out_return_p._classes.emplace_back();
-		out_return_p._classes.back()._identifier = std::move(l_identifier);
-		out_return_p._classes.back()._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
-		out_return_p._classes.back()._has_constructor_variants = node_p._has_constructor_variants;
-		out_return_p._classes.back()._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
+		auto& l_value = out_return_p._classes[std::move(l_identifier)];
+		l_value._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
+		l_value._has_constructor_variants = node_p._has_constructor_variants;
+		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
 	}
 
 
@@ -281,11 +281,10 @@ namespace FHT::reflexcode_generator
 
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._identifier.data()), node_p._identifier.length());
 
-		out_return_p._structs.emplace_back();
-		out_return_p._structs.back()._identifier = std::move(l_identifier);
-		out_return_p._structs.back()._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
-		out_return_p._structs.back()._has_constructor_variants = node_p._has_constructor_variants;
-		out_return_p._structs.back()._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
+		auto& l_value = out_return_p._structs[std::move(l_identifier)];
+		l_value._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
+		l_value._has_constructor_variants = node_p._has_constructor_variants;
+		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
 	}
 
 	void output_enum_struct_metadata(metadata& out_return_p, const enum_struct_node& node_p) noexcept
@@ -295,8 +294,7 @@ namespace FHT::reflexcode_generator
 
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._target_enum_struct_name.data()), node_p._target_enum_struct_name.length());
 
-		out_return_p._enum_structs.emplace_back(std::pmr::vector<std::pmr::wstring>{ framework::get_framework().get_memory_resource() });
-		out_return_p._enum_structs.back().push_back(std::move(l_identifier));
+		auto& l_value = out_return_p._enum_structs[l_identifier] = std::pmr::vector<std::pmr::wstring>{ framework::get_framework().get_memory_resource() };
 
 		for (const identifier& enum_value : node_p._enum_struct_fields)
 		{
@@ -305,7 +303,7 @@ namespace FHT::reflexcode_generator
 
 			std::mbstowcs(l_enum_value.data(), reinterpret_cast<const char*>(enum_value.data()), enum_value.length());
 			l_enum_value = l_enum_value.c_str();
-			out_return_p._enum_structs.back().push_back(std::move(l_enum_value));
+			l_value.push_back(std::move(l_enum_value));
 		}
 	}
 
@@ -318,7 +316,7 @@ namespace FHT::reflexcode_generator
 		l_generated_code.reserve(1 * FE::one_MiB);
 
 		l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.hxx> \n#include <FE/framework.hxx> \n";
-		l_generated_code += L"#include <memory>\n\n";
+		l_generated_code += L"#include <memory>\n#include <utility>\n\n";
 		for (const metadata& header_file : metadata_set_p) // #include <> statements gereration
 		{
 			l_generated_code += L"#include <";
@@ -328,122 +326,140 @@ namespace FHT::reflexcode_generator
 
 		l_generated_code += L"\n\n\n\n";
 
+		l_generated_code += L"template <typename T, typename... Args>\n";
+		l_generated_code += L"T* construct(T* location_p, Args&&... args_p)\n";
+		l_generated_code += L"{\n";
+		l_generated_code += L"    new(location_p) T( ::std::forward<Args>(args_p)... );\n";
+		l_generated_code += L"    return location_p;\n";
+		l_generated_code += L"}\n";
+
+		l_generated_code += L"\n\n";
+
+		l_generated_code += L"template <typename T>\n";
+		l_generated_code += L"void destruct(T* ptr_p)\n";
+		l_generated_code += L"{\n";
+		l_generated_code += L"    if (ptr_p == nullptr) return;\n";
+		l_generated_code += L"    ptr_p->~T();\n";
+		l_generated_code += L"}\n";
+
+		l_generated_code += L"\n\n\n\n";
+
 		l_generated_code += L"void load_reflection_data()\n{\n"; // The void load_reflection_data() implementation generation
 
 		for (const metadata& header_file : metadata_set_p)
 		{
-			for (const typename metadata::system_info& system_node : header_file._system_fptrs) // C-style system functions reflection
+			for (auto& [identifier, system_node] : header_file._system_fptrs) // C-style system functions reflection
 			{
 				l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system(";
 				l_generated_code += system_node._world_tag_enum;
 				l_generated_code += L", ";
 				l_generated_code += system_node._system_call_phase;
 				l_generated_code += L", &";
-				l_generated_code += system_node._system_name;
+				l_generated_code += identifier;
 				l_generated_code += L");\n";
 			}
 
 			
 			constexpr FE::wchar* l_class_and_structs_reflection_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<";
-			for (const metadata::class_info& class_info : header_file._classes) // classes reflection
+			for (auto& [identifier, class_info] : header_file._classes) // classes reflection
 			{
 #pragma warning(push)
 #pragma warning(disable: 4244)
 				if (class_info._has_explicit_default_public_constructor == false && class_info._has_constructor_variants)
 				{
-					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(class_info._identifier.begin(), class_info._identifier.end(), framework::get_framework().get_memory_resource());
+					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2512; no appropriate default constructor available for ${%s@0}. FHT will not output the Reflexcode for this class.", l_log_buffer.c_str());
 					continue;
 				}
 
 				if (class_info._is_destructor_deleted_or_not_public)
 				{
-					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(class_info._identifier.begin(), class_info._identifier.end(), framework::get_framework().get_memory_resource());
+					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2248/C2280; destructor is deleted or is not defined as public in ${%s@0}. FHT will not output the Reflexcode for this class.", l_log_buffer.c_str());
 					continue;
 				}
 #pragma warning(pop)
 				l_generated_code += l_class_and_structs_reflection_frame;
-				l_generated_code += class_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*(";
-				l_generated_code += class_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*)> >(\"construct ";
-				l_generated_code += class_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"\", ";
-				l_generated_code += L"&::std::construct_at<";
-				l_generated_code += class_info._identifier;
+				l_generated_code += L"&::construct<";
+				l_generated_code += identifier;
 				l_generated_code += L">);\n";
 
 				l_generated_code += l_class_and_structs_reflection_frame;
 				l_generated_code += L"void(";
-				l_generated_code += class_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*)> >(\"destruct ";
-				l_generated_code += class_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"\", ";
-				l_generated_code += L"&::std::destroy_at<";
-				l_generated_code += class_info._identifier;
+				l_generated_code += L"&::destruct<";
+				l_generated_code += identifier;
 				l_generated_code += L">);\n";
 			}
 
 
-			for (const metadata::struct_info& struct_info : header_file._structs) // structs reflection
+
+			for (auto& [identifier, struct_info] : header_file._structs) // structs reflection
 			{
 #pragma warning(push)
 #pragma warning(disable: 4244)
 				if (struct_info._has_constructor_variants && struct_info._has_explicit_default_public_constructor == false)
 				{
-					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(struct_info._identifier.begin(), struct_info._identifier.end(), framework::get_framework().get_memory_resource());
+					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2512; no appropriate default constructor available for ${%s@0}. FHT will not output the Reflexcode for this struct.", l_log_buffer.c_str());
 					continue;
 				}
 
 				if (struct_info._is_destructor_deleted_or_not_public)
 				{
-					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(struct_info._identifier.begin(), struct_info._identifier.end(), framework::get_framework().get_memory_resource());
+					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2248/C2280; destructor is deleted or is not defined as public in ${%s@0}. FHT will not output the Reflexcode for this struct.", l_log_buffer.c_str());
 					continue;
 				}
 #pragma warning(pop)
 				l_generated_code += l_class_and_structs_reflection_frame;
-				l_generated_code += struct_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*(";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*)> >(\"construct ";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"\", ";
-				l_generated_code += L"&::std::construct_at<";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += L"&::construct<";
+				l_generated_code += identifier;
 				l_generated_code += L">);\n";
 
 				l_generated_code += l_class_and_structs_reflection_frame;
 				l_generated_code += L"void(";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"*)> >(\"destruct ";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += identifier;
 				l_generated_code += L"\", ";
-				l_generated_code += L"&::std::destroy_at<";
-				l_generated_code += struct_info._identifier;
+				l_generated_code += L"&::destruct<";
+				l_generated_code += identifier;
 				l_generated_code += L">);\n";
 			}
 
 
 			constexpr FE::wchar* l_enum_reflexpr_frame = L"\n    ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ";
-			for (const std::pmr::vector<std::pmr::wstring>& enum_struct : header_file._enum_structs) // Enum structs reflection
+			for (auto& [identifier, enum_struct] : header_file._enum_structs) // Enum structs reflection
 			{
-				if (enum_struct.size() == 1) _FE_UNLIKELY_
+				if (enum_struct.empty())
 				{
 					continue;
 				}
 
 				// The first element of the enum_struct vector is the name of the enum struct, and the rest are the enum values.
-				const std::pmr::wstring& identifier = enum_struct.front();
 				l_generated_code += l_enum_reflexpr_frame;
 				l_generated_code += identifier;
 				l_generated_code += L" >(\"";
 				l_generated_code += identifier;
 				l_generated_code += L"\",\n    {\n";
 
-				for (auto it = std::next(enum_struct.begin(), 1); it < enum_struct.end(); ++it)
+				for (auto it = enum_struct.begin(); it < enum_struct.end(); ++it)
 				{
 					l_generated_code += L"        { ";
 					l_generated_code += identifier;

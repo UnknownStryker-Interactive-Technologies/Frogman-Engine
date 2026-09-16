@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 
 
@@ -33,15 +34,12 @@ namespace FHT::reflexcode_generator
 	{
 		struct system_info
 		{
-			std::pmr::wstring _system_name;
 			std::pmr::wstring _system_call_phase;
 			std::pmr::wstring _world_tag_enum;
 		};
 
 		struct class_info
 		{
-			std::pmr::wstring _identifier;
-
 			var::boolean _has_explicit_default_public_constructor = false;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
@@ -49,18 +47,16 @@ namespace FHT::reflexcode_generator
 
 		struct struct_info
 		{
-			std::pmr::wstring _identifier;
-
 			var::boolean _has_explicit_default_public_constructor = false;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
 		};
 
 		directory_t _header_file_path;
-		std::pmr::vector<class_info> _classes;
-		std::pmr::vector<struct_info> _structs;
-		std::pmr::vector< std::pmr::vector<std::pmr::wstring> > _enum_structs;
-		std::pmr::vector<system_info> _system_fptrs;
+		std::pmr::unordered_map<std::pmr::wstring, class_info> _classes;
+		std::pmr::unordered_map<std::pmr::wstring, struct_info> _structs;
+		std::pmr::unordered_map<std::pmr::wstring, std::pmr::vector<std::pmr::wstring> > _enum_structs;
+		std::pmr::unordered_map<std::pmr::wstring, system_info> _system_fptrs;
 	};
 	using metadata_set_t = FE::concurrent_array<metadata>;
 

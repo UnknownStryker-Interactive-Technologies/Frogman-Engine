@@ -66,10 +66,7 @@ namespace FHT::tokenizer
 
 
 			token l_token = tokenize_identifiable(iterator, l_context_stack);
-			if (l_token._code.size() == 0)
-			{
-				continue;
-			}
+
 
 			if (l_context_stack.back() == FHT::Context::_Template)
 			{
@@ -350,11 +347,11 @@ namespace FHT::tokenizer
 			return l_token;
 		}
 
-		tokenize_class_struct_enum_forward_decl_and_using_namespace(l_token, code_iterator_p, context_stack_p);
-		if (l_token._vocabulary != Vocabulary::_Undefined)
-		{
-			return l_token; // return if the text is a forward declaration.
-		}
+		//tokenize_class_struct_enum_forward_decl_and_using_namespace(l_token, code_iterator_p, context_stack_p);
+		//if (l_token._vocabulary != Vocabulary::_Undefined)
+		//{
+		//	return l_token; // return if the text is a forward declaration.
+		//}
 
 		tokenize_template_body(l_token, code_iterator_p, context_stack_p);
 		if (l_token._vocabulary != Vocabulary::_Undefined)
@@ -364,83 +361,94 @@ namespace FHT::tokenizer
 
 
 		l_token._code.reserve(100);
-		while (*code_iterator_p != '{')
-		{
-			if (*code_iterator_p == ';')
-			{
-				l_token._vocabulary = Vocabulary::_AnyDecl;
-				return l_token;
-			}
-			l_token._code += *code_iterator_p;
-			++code_iterator_p;
-		}
 
 
-		file_buffer_t l_brace_stack(framework::get_framework().get_memory_resource());
+		var::int64 l_scope_level = 0;
 		token l_tmp = { ._code{ framework::get_framework().get_memory_resource()} };
 		do
 		{
 			switch (*code_iterator_p)
 			{
-			case '(':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					l_brace_stack.push_back('(');
-				}
-				break;
-
-			case ')':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					if (l_brace_stack.back() == '(')
-					{
-						l_brace_stack.pop_back();
-					}
-				}
-				break;
-
-
 			case '{':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					l_brace_stack.push_back('{');
-				}
+				++l_scope_level;
 				break;
 
 			case '}':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
+				--l_scope_level;
+
+				switch (context_stack_p.back())
 				{
-					if (l_brace_stack.back() == '{')
+				case FHT::Context::_StructBody:
+					while (context_stack_p.back() != FHT::Context::_StructIdentifier)
 					{
-						l_brace_stack.pop_back();
-					}
-
-					switch (context_stack_p.back())
-					{
-					case FHT::Context::_AnyDecl:
-						_FE_FALLTHROUGH_;
-					case FHT::Context::_Class:
 						context_stack_p.pop_back();
-						break;
-
-					default:
-						break;
 					}
+					context_stack_p.pop_back();
+					break;
+
+				case FHT::Context::_ClassBody:
+					while (context_stack_p.back() != FHT::Context::_ClassIdentifier)
+					{
+						context_stack_p.pop_back();
+					}
+					context_stack_p.pop_back();
+					break;
+
+				case FHT::Context::_EnumStructBody:
+					while (context_stack_p.back() != FHT::Context::_EnumStruct)
+					{
+						context_stack_p.pop_back();
+					}
+					context_stack_p.pop_back();
+					break;
+
+				default:
+					break;
 				}
 				break;
 
+
 			default:
+				tokenize_comment(l_tmp, code_iterator_p, context_stack_p);
+				if (l_tmp._vocabulary == Vocabulary::_LineComment)
+				{
+					l_token._code += l_tmp._code;
+					code_iterator_p += l_tmp._code.length();
+					l_tmp._vocabulary = Vocabulary::_Undefined;
+					break;
+				}
+
+				while (context_stack_p.back() == FHT::Context::_CommentBlock)
+				{
+					l_token._code += l_tmp._code;
+					code_iterator_p += l_tmp._code.length();
+					tokenize_comment(l_tmp, code_iterator_p, context_stack_p);
+				}
+
+				tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+				while (l_tmp._vocabulary == Vocabulary::_StringLiteral
+					|| l_tmp._vocabulary == Vocabulary::_CharLiteral)
+				{
+					l_token._code += *code_iterator_p;
+					++code_iterator_p;
+					l_tmp._vocabulary = Vocabulary::_Undefined;
+					tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+				}
 				break;
 			}
+
+			if (l_scope_level <= 0 && (*code_iterator_p == ';' || *code_iterator_p == '}' || *code_iterator_p == '\0'))
+			{
+				l_token._code += *code_iterator_p;
+				++code_iterator_p;
+				l_token._vocabulary = Vocabulary::_AnyDecl;
+				return l_token;
+			}
+
 			l_token._code += *code_iterator_p;
 			++code_iterator_p;
-			THROW_CPP_SYNTAX_ERROR(*code_iterator_p == '\0', "C++ Code Syntax Error C1075: missing '}' in class declaration, or found an explicit null terminator \0");
 		} 
-		while (l_brace_stack.size() > 0);
+		while (true);
 		l_token._vocabulary = Vocabulary::_AnyDecl;
 
 		return l_token; 
@@ -607,6 +615,10 @@ namespace FHT::tokenizer
 		{
 			if (is_a_valid_letter_for_identifiers(*code_iterator_p) == false)
 			{
+				if (l_token._code.length() == 0)
+				{
+					break;
+				}
 				l_token._vocabulary = Vocabulary::_Identifier;
 				return l_token;
 			}
@@ -617,63 +629,60 @@ namespace FHT::tokenizer
 
 
 
-		file_buffer_t l_brace_stack(framework::get_framework().get_memory_resource());
+		var::int64 l_scope_level = 0;
 		token l_tmp = { ._code{ framework::get_framework().get_memory_resource()} };
 		do
 		{
 			switch (*code_iterator_p)
 			{
-			case '(':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					l_brace_stack.push_back('(');
-				}
-				break;
-
-			case ')':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					if (l_brace_stack.back() == '(')
-					{
-						l_brace_stack.pop_back();
-					}
-				}
-				break;
-
-
 			case '{':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					l_brace_stack.push_back('{');
-				}
+				++l_scope_level;
 				break;
 
 			case '}':
-				if ((l_tmp._vocabulary != Vocabulary::_CharLiteral)
-					&& (l_tmp._vocabulary != Vocabulary::_StringLiteral))
-				{
-					if (l_brace_stack.back() == '{')
-					{
-						l_brace_stack.pop_back();
-					}
-				}
-				break;
+				--l_scope_level;
 
-
-			case '\0':
-				return l_token;
 
 			default:
+				tokenize_comment(l_tmp, code_iterator_p, context_stack_p);
+				if (l_tmp._vocabulary == Vocabulary::_LineComment)
+				{
+					l_token._code += l_tmp._code;
+					code_iterator_p += l_tmp._code.length();
+					break;
+				}
+
+				while (context_stack_p.back() == FHT::Context::_CommentBlock)
+				{
+					l_token._code += l_tmp._code;
+					code_iterator_p += l_tmp._code.length();
+					tokenize_comment(l_tmp, code_iterator_p, context_stack_p);
+				}
+
+				tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+				while (l_tmp._vocabulary == Vocabulary::_StringLiteral
+					|| l_tmp._vocabulary == Vocabulary::_CharLiteral)
+				{
+					l_token._code += *code_iterator_p;
+					++code_iterator_p;
+					l_tmp._vocabulary = Vocabulary::_Undefined;
+					tokenize_string_literal(l_tmp, code_iterator_p, context_stack_p);
+				}
 				break;
 			}
+
+			if (l_scope_level <= 0 && (*code_iterator_p == ';' || *code_iterator_p == '}' || *code_iterator_p == '\0'))
+			{
+				l_token._code += *code_iterator_p;
+				++code_iterator_p;
+				l_token._vocabulary = Vocabulary::_AnyDecl;
+				return l_token;
+			}
+
 			l_token._code += *code_iterator_p;
 			++code_iterator_p;
-			THROW_CPP_SYNTAX_ERROR(*code_iterator_p == '\0', "C++ Code Syntax Error C1075: missing '}' in class declaration, or found an explicit null terminator \0");
-		} while (l_brace_stack.size() > 0);
-		l_token._code += *code_iterator_p;
+		}
+		while (true);
 		l_token._vocabulary = Vocabulary::_AnyDecl;
 
 		return l_token;
@@ -1103,6 +1112,21 @@ namespace FHT::tokenizer
 
 				if (l_keyword_end_pos == 0)
 				{
+					while (*code_iterator_p <= ' ')
+					{
+						++code_iterator_p;
+					}
+
+					if (*code_iterator_p == u8'>')
+					{
+						while (context_stack_p.back() != FHT::Context::_Template)
+						{
+							context_stack_p.pop_back();
+						}
+						context_stack_p.pop_back();
+						out_token_p._code = *code_iterator_p;
+						out_token_p._vocabulary = Vocabulary::_EndTemplateArgs;
+					}
 					return;
 				}
 
@@ -1168,11 +1192,10 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
 
-				if (out_token_p._code.starts_with(u8"template"))
+				if (out_token_p._code == u8"template")
 				{
 					out_token_p._vocabulary = Vocabulary::_Template;
 					context_stack_p.emplace_back(FHT::Context::_Template);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"template"));
 					return;
 				}
 
@@ -1191,7 +1214,7 @@ namespace FHT::tokenizer
 		case '{':
 			switch (context_stack_p.back())
 			{
-			case FHT::Context::_AnyDecl:
+			case FHT::Context::_StructBody:
 				_FE_FALLTHROUGH_;
 			case FHT::Context::_ClassBody:
 				return;
@@ -1214,11 +1237,16 @@ namespace FHT::tokenizer
 		case '}':
 			switch (context_stack_p.back())
 			{
-			case FHT::Context::_AnyDecl:
+			case FHT::Context::_StructBody:
+				while (context_stack_p.back() != FHT::Context::_StructIdentifier)
+				{
+					context_stack_p.pop_back();
+				}
+				context_stack_p.pop_back();
 				break;
 
 			case FHT::Context::_ClassBody:
-				while (context_stack_p.back() != FHT::Context::_Class)
+				while (context_stack_p.back() != FHT::Context::_ClassIdentifier)
 				{
 					context_stack_p.pop_back();
 				}
@@ -1247,9 +1275,14 @@ namespace FHT::tokenizer
 			break;
 
 		case ')':
-			if (context_stack_p.back() == FHT::Context::_BeginNamespace)
+			switch (context_stack_p.back())
 			{
+			case FHT::Context::_BeginNamespace:
 				context_stack_p.pop_back();
+				break;
+
+			default:
+				break;
 			}
 			out_token_p._vocabulary = Vocabulary::_RightParen;
 			out_token_p._code = *code_iterator_p;
@@ -1286,12 +1319,16 @@ namespace FHT::tokenizer
 		case ';':
 			switch (context_stack_p.back())
 			{
-			case FHT::Context::_AnyDecl:
+			case FHT::Context::_StructBody:
+				while (context_stack_p.back() != FHT::Context::_StructIdentifier)
+				{
+					context_stack_p.pop_back();
+				}
 				context_stack_p.pop_back();
 				break;
 
 			case FHT::Context::_ClassBody:
-				while (context_stack_p.back() != FHT::Context::_Class)
+				while (context_stack_p.back() != FHT::Context::_ClassIdentifier)
 				{
 					context_stack_p.pop_back();
 				}
@@ -1313,6 +1350,7 @@ namespace FHT::tokenizer
 			out_token_p._code = *code_iterator_p;
 			break;
 
+
 		case ',':
 			THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_ClassExtension, "Frogman C++ does not allow multiple inheritance.");
 			out_token_p._vocabulary = Vocabulary::_Comma;
@@ -1330,6 +1368,8 @@ namespace FHT::tokenizer
 
 
 		case '.':
+			_FE_FALLTHROUGH_;
+		case '?':
 			_FE_FALLTHROUGH_;
 		case '+':
 			_FE_FALLTHROUGH_;
@@ -1349,9 +1389,22 @@ namespace FHT::tokenizer
 			_FE_FALLTHROUGH_;
 		case '!':
 			_FE_FALLTHROUGH_;
-		case '<':
-			_FE_FALLTHROUGH_;
 		case '>':
+			out_token_p._vocabulary = Vocabulary::_Operator;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '<':
+			switch (context_stack_p.back())
+			{
+			case FHT::Context::_ClassBody:
+				_FE_FALLTHROUGH_;
+			case FHT::Context::_StructBody:
+				return;
+
+			default:
+				break;
+			}
 			out_token_p._vocabulary = Vocabulary::_Operator;
 			out_token_p._code = *code_iterator_p;
 			break;
@@ -1363,190 +1416,331 @@ namespace FHT::tokenizer
 
 
 		case 'a':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"alignas") }, u8"alignas")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Alignas;
-				out_token_p._code = u8"alignas";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"alignas")
+				{
+					out_token_p._vocabulary = Vocabulary::_Alignas;
+
+					code_iterator_p += l_keyword_end_pos;
+					while (*code_iterator_p != ')')
+					{
+						out_token_p._code += *code_iterator_p;
+						++code_iterator_p;
+					}
+
+					out_token_p._code += *code_iterator_p;
+					++code_iterator_p;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
+
 		case 'c':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"constexpr") }, u8"constexpr")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Constexpr;
-				out_token_p._code = u8"constexpr";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"consteval") }, u8"consteval")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Consteval;
-				out_token_p._code = u8"consteval";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"constinit") }, u8"constinit")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Constinit;
-				out_token_p._code = u8"constinit";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"const") }, u8"const")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Const;
-				out_token_p._code = u8"const";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"constexpr"):
+					out_token_p._vocabulary = Vocabulary::_Constexpr;
+					break;
+
+				STRING_CASE(u8"consteval"):
+					out_token_p._vocabulary = Vocabulary::_Consteval;
+					break;
+
+				STRING_CASE(u8"constinit"):
+					out_token_p._vocabulary = Vocabulary::_Constinit;
+					break;
+
+				STRING_CASE(u8"const"):
+					out_token_p._vocabulary = Vocabulary::_Const;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
 			break;
 
 
 		case 'e':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"extern") }, u8"extern")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Extern;
-				out_token_p._code = u8"extern";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"extern")
+				{
+					out_token_p._vocabulary = Vocabulary::_Extern;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'f':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"friend") }, u8"friend")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Friend;
-				out_token_p._code = u8"friend";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"final") }, u8"final")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Final;
-				out_token_p._code = u8"final";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"friend") :
+					out_token_p._vocabulary = Vocabulary::_Friend;
+					break;
+
+				STRING_CASE(u8"final") :
+					out_token_p._vocabulary = Vocabulary::_Final;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
 			break;
 
 
 		case 'i':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"inline") }, u8"inline")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Inline;
-				out_token_p._code = u8"inline";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"inline")
+				{
+					out_token_p._vocabulary = Vocabulary::_Inline;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'm':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"mutable") }, u8"mutable")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Mutable;
-				out_token_p._code = u8"mutable";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"mutable")
+				{
+					out_token_p._vocabulary = Vocabulary::_Mutable;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'n':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"noexcept") }, u8"noexcept")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Noexcept;
-				out_token_p._code = u8"noexcept";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"noexcept")
+				{
+					out_token_p._vocabulary = Vocabulary::_Noexcept;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'o':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"override") }, u8"override")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Override;
-				out_token_p._code = u8"override";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"override")
+				{
+					out_token_p._vocabulary = Vocabulary::_Override;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'p':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"public") }, u8"public")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Public;
-				out_token_p._code = u8"public";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"private") }, u8"private")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Private;
-				out_token_p._code = u8"private";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"protected") }, u8"protected")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Protected;
-				out_token_p._code = u8"protected";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"public") :
+					out_token_p._vocabulary = Vocabulary::_Public;
+					break;
+
+				STRING_CASE(u8"private") :
+					out_token_p._vocabulary = Vocabulary::_Private;
+					break;
+
+				STRING_CASE(u8"protected") :
+					out_token_p._vocabulary = Vocabulary::_Protected;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
 			break;
 
 
 		case 's':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"static") }, u8"static")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Static;
-				out_token_p._code = u8"static";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"static") :
+					out_token_p._vocabulary = Vocabulary::_Static;
+					break;
+
+				STRING_CASE(u8"static_assert") :
+					out_token_p._vocabulary = Vocabulary::_StaticAssert;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"static_assert") }, u8"static_assert")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_StaticAssert;
-				out_token_p._code = u8"static_assert";
-			}
-			break;
+		break;
 
 
 		case 't':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"this") }, u8"this")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_This;
-				out_token_p._code = u8"this";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"thread_local") }, u8"thread_local")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_ThreadLocal;
-				out_token_p._code = u8"thread_local";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"typedef") }, u8"typedef")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Typedef;
-				out_token_p._code = u8"typedef";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{	
+				STRING_CASE(u8"this") :
+					out_token_p._vocabulary = Vocabulary::_This;
+					break;
+
+				STRING_CASE(u8"thread_local") :
+					out_token_p._vocabulary = Vocabulary::_ThreadLocal;
+					break;
+
+				STRING_CASE(u8"typedef") :
+					out_token_p._vocabulary = Vocabulary::_Typedef;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
 			break;
 
 
 		case 'u':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"using") }, u8"using")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Using;
-				out_token_p._code = u8"using";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				if (out_token_p._code == u8"using")
+				{
+					out_token_p._vocabulary = Vocabulary::_Using;
+					code_iterator_p += l_keyword_end_pos;
+					while (*code_iterator_p != ';')
+					{
+						out_token_p._code += *code_iterator_p;
+						++code_iterator_p;
+					}
+
+					out_token_p._code += *code_iterator_p;
+					++code_iterator_p;
+					break;
+				}
+				out_token_p._code.clear();
 			}
 			break;
 
 
 		case 'v':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"volatile") }, u8"volatile")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_Volatile;
-				out_token_p._code = u8"volatile";
-			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"virtual") }, u8"virtual")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_Virtual;
-				out_token_p._code = u8"virtual";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"volatile") :
+					out_token_p._vocabulary = Vocabulary::_Volatile;
+					break;
+
+				STRING_CASE(u8"virtual") :
+					out_token_p._vocabulary = Vocabulary::_Virtual;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
 			break;
 
@@ -1581,19 +1775,30 @@ namespace FHT::tokenizer
 
 
 		case '_':
-			if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"__forceinline") }, u8"__forceinline")
-				!= std::nullopt)
 			{
-				out_token_p._vocabulary = Vocabulary::_ForceInline;
-				out_token_p._code = u8"__forceinline";
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"__forceinline") :
+					out_token_p._vocabulary = Vocabulary::_ForceInline;
+					break;
+
+				STRING_CASE(u8"_FE_FORCE_INLINE_") :
+					out_token_p._vocabulary = Vocabulary::_FrogmanEngineForceInline;
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
 			}
-			else if (FE::algorithm::string::find_the_first_within_range<var::UTF8>(code_iterator_p, FE::algorithm::string::range{ 0,FE::algorithm::string::compiletime::length(u8"_FE_FORCE_INLINE_") }, u8"_FE_FORCE_INLINE_")
-				!= std::nullopt)
-			{
-				out_token_p._vocabulary = Vocabulary::_FrogmanEngineForceInline;
-				out_token_p._code = u8"_FE_FORCE_INLINE_";
-			}
-		break;
+			break;
 
 
 		default:
@@ -1746,7 +1951,7 @@ namespace FHT::tokenizer
 			_FE_FALLTHROUGH_;
 		case FHT::Context::_StructIdentifier:
 			_FE_FALLTHROUGH_;
-		case FHT::Context::_Class:
+		case FHT::Context::_ClassIdentifier:
 			_FE_FALLTHROUGH_;
 		case FHT::Context::_Template:
 			return;
@@ -1773,28 +1978,26 @@ namespace FHT::tokenizer
 				out_token_p._code.assign(code_iterator_p, l_namespace_keyword_end_pos);
 
 
-				if (out_token_p._code.starts_with(u8"END_NAMESPACE"))
+				if (out_token_p._code == u8"END_NAMESPACE")
 				{
 					out_token_p._vocabulary = Vocabulary::_EndNamespace;
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"END_NAMESPACE"));
 					return;
 				}
 
-				if (out_token_p._code.starts_with(u8"BEGIN_NAMESPACE"))
+				if (out_token_p._code == u8"BEGIN_NAMESPACE")
 				{
 					out_token_p._vocabulary = Vocabulary::_BeginNamespace;
 					context_stack_p.emplace_back(FHT::Context::_BeginNamespace);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"BEGIN_NAMESPACE"));
 					return;
 				}
 
-				if (out_token_p._code.starts_with(u8"namespace"))
+				if (out_token_p._code == u8"namespace")
 				{
 					out_token_p._vocabulary = Vocabulary::_Namespace;
 					context_stack_p.emplace_back(FHT::Context::_Namespace);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"namespace"));
 					return;
 				}
+				out_token_p._code.clear();
 			}
 			break;
 		}
@@ -1819,11 +2022,10 @@ namespace FHT::tokenizer
 				out_token_p._code.assign(code_iterator_p, l_struct_keyword_end_pos);
 
 
-				if (out_token_p._code.starts_with(u8"struct"))
+				if (out_token_p._code == u8"struct")
 				{
 					out_token_p._vocabulary = Vocabulary::_StructKeywordOfEnumStruct;
 					context_stack_p.emplace_back(FHT::Context::_EnumStructIdentifier);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"struct"));
 					return;
 				}
 
@@ -1854,10 +2056,18 @@ namespace FHT::tokenizer
 
 		case FHT::Context::_EnumStructExtension:
 			{
-				auto l_result = FE::algorithm::string::find_the_first(code_iterator_p, u8'{');
-				THROW_CPP_SYNTAX_ERROR(l_result == std::nullopt, "Frogman C++ Syntax Error: the enum struct body is missing.");
+				auto l_enum_struct_body_begin_pos = FE::algorithm::string::find_the_first(code_iterator_p, u8'{');
+				auto l_semicolon_pos = FE::algorithm::string::find_the_first(code_iterator_p, u8';');
 
-				out_token_p._code.assign(code_iterator_p, l_result->_begin);
+				if (l_enum_struct_body_begin_pos->_begin < l_semicolon_pos->_begin)
+				{
+					out_token_p._code.assign(code_iterator_p, l_enum_struct_body_begin_pos->_begin);
+				}
+				else
+				{
+					out_token_p._code.assign(code_iterator_p, l_semicolon_pos->_begin);
+				}
+
 				out_token_p._vocabulary = Vocabulary::_EnumStructExtension;
 
 				while (out_token_p._code.length() > 0)
@@ -1972,7 +2182,7 @@ namespace FHT::tokenizer
 
 		case FHT::Context::_StructIdentifier:
 			_FE_FALLTHROUGH_;
-		case FHT::Context::_Class:
+		case FHT::Context::_ClassIdentifier:
 			_FE_FALLTHROUGH_;
 		case FHT::Context::_Template:
 			return;
@@ -1998,11 +2208,10 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code.assign(code_iterator_p, l_enum_keyword_end_pos);
 
-				if (out_token_p._code.starts_with(u8"enum"))
+				if (out_token_p._code == u8"enum")
 				{
 					out_token_p._vocabulary = Vocabulary::_EnumStruct;
 					context_stack_p.emplace_back(FHT::Context::_EnumStruct);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"enum"));
 					return;
 				}
 
@@ -2042,14 +2251,29 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code.assign(code_iterator_p, l_identifier_end_pos);
 				out_token_p._vocabulary = Vocabulary::_StructIdentifier;
-				context_stack_p.pop_back();
-				context_stack_p.push_back(FHT::Context::_AnyDecl);
+				context_stack_p.push_back(FHT::Context::_StructBody);
+
+
+
+
+				code_iterator_p += l_identifier_end_pos;
+				while (*code_iterator_p <= ' ')
+				{
+					++code_iterator_p;
+				}
+
+				var::uint64 l_base_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_base_end_pos;
+				}
+				THROW_CPP_SYNTAX_ERROR(l_base_end_pos != 0, "structs cannot be polymorphic in Frogman C++.");
 				return;
 			}
 			break;
 
 
-		case FHT::Context::_Class:
+		case FHT::Context::_ClassIdentifier:
 			_FE_FALLTHROUGH_;
 		case FHT::Context::_Template:
 			return;
@@ -2075,11 +2299,10 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code.assign(code_iterator_p, l_struct_keyword_end_pos);
 
-				if (out_token_p._code.starts_with(u8"struct"))
+				if (out_token_p._code == u8"struct")
 				{
 					out_token_p._vocabulary = Vocabulary::_Struct;
 					context_stack_p.emplace_back(FHT::Context::_StructIdentifier);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"struct"));
 					return;
 				}
 
@@ -2105,7 +2328,7 @@ namespace FHT::tokenizer
 	{
 		switch (context_stack_p.back())
 		{
-		case FHT::Context::_Class:
+		case FHT::Context::_ClassIdentifier:
 			{
 				while (*code_iterator_p <= ' ')
 				{
@@ -2168,11 +2391,10 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code.assign(code_iterator_p, l_struct_keyword_end_pos);
 
-				if (out_token_p._code.starts_with(u8"class"))
+				if (out_token_p._code == u8"class")
 				{
 					out_token_p._vocabulary = Vocabulary::_Class;
-					context_stack_p.emplace_back(FHT::Context::_Class);
-					out_token_p._code.resize(FE::algorithm::string::compiletime::length(u8"class"));
+					context_stack_p.emplace_back(FHT::Context::_ClassIdentifier);
 					return;
 				}
 
@@ -2222,7 +2444,7 @@ namespace FHT::tokenizer
 			out_token_p._vocabulary = Vocabulary::_TemplateBody;
 			out_token_p._code.reserve(100);
 
-			while (*code_iterator_p != '{')
+			while (*code_iterator_p != '{' && *code_iterator_p != ';')
 			{
 				out_token_p._code += *code_iterator_p;
 				++code_iterator_p;

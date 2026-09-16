@@ -40,8 +40,8 @@ namespace FHT
 
 		_EnumStruct, _EnumStructIdentifier, _EnumStructExtension, _EnumStructBody,
 		_EnumStructFieldValue,
-		_StructIdentifier,
-		_Class, _ClassExtension, _ClassBody,
+		_StructIdentifier, _StructBody,
+		_ClassIdentifier, _ClassExtension, _ClassBody,
 		_AnyDecl,
 
 		_ProbablyAttribute, _Attribute,
