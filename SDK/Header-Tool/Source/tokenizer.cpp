@@ -1541,6 +1541,10 @@ namespace FHT::tokenizer
 					out_token_p._vocabulary = Vocabulary::_Const;
 					break;
 
+				STRING_CASE(u8"concept") :
+					THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error: Frogman Engine supports C++20 but 'concept' is unsupported.");
+					break;
+
 				default:
 					out_token_p._code.clear();
 					break;
@@ -1702,6 +1706,29 @@ namespace FHT::tokenizer
 			break;
 
 
+		case 'r':
+			{
+				var::uint64 l_keyword_end_pos = 0;
+				for (auto it = code_iterator_p; is_a_valid_letter_for_identifiers(*it); ++it)
+				{
+					++l_keyword_end_pos;
+				}
+				out_token_p._code.assign(code_iterator_p, l_keyword_end_pos);
+
+				STRING_SWITCH(out_token_p._code.c_str())
+				{
+				STRING_CASE(u8"requires") :
+					THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error: Frogman Engine supports C++20 but 'requires' is unsupported.");
+					break;
+
+				default:
+					out_token_p._code.clear();
+					break;
+				}
+			}
+			break;
+
+
 		case 's':
 			{
 				var::uint64 l_keyword_end_pos = 0;
@@ -1781,6 +1808,11 @@ namespace FHT::tokenizer
 
 					out_token_p._code += *code_iterator_p;
 					++code_iterator_p;
+
+					if (context_stack_p.back() == FHT::Context::_Template)
+					{
+						context_stack_p.pop_back();
+					}
 					break;
 				}
 				out_token_p._code.clear();

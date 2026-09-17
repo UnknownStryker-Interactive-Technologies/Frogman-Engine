@@ -37,8 +37,8 @@ struct alias_struct_template_ok3
 	T _v;
 };
 class alias_after_ok3 {};
-template <typename T>
-concept alias_concept_ok4 = requires(T t_p) { t_p.size(); };
+//template <typename T>
+//concept alias_concept_ok4 = requires(T t_p) { t_p.size(); };
 class alias_after_ok4 {};
 template <typename T>
 using alias_type_ok5a = std::vector<T>;
