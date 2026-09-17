@@ -875,6 +875,11 @@ namespace FHT::tokenizer
 
 		case 'R':
 			{
+				if (context_stack_p.back() == FHT::Context::_RawTextLiteral)
+				{
+					break;
+				}
+
 				auto l_quote = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
 				auto l_line_end = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\n');
 
@@ -885,7 +890,7 @@ namespace FHT::tokenizer
 				}
 
 
-				if (!(l_quote->_begin < l_line_end->_begin)) // doesn't the first " comes before \n in the current line?
+				if (!(l_quote->_begin < l_line_end->_begin)) // doesn't the first " come before \n in the current line?
 				{
 					break;
 				}
@@ -1358,9 +1363,18 @@ namespace FHT::tokenizer
 			break;
 
 		case '=':
-			if (context_stack_p.back() == FHT::Context::_EnumStructBody)
+			switch (context_stack_p.back())
 			{
+			case  FHT::Context::_EnumStructBody:
 				context_stack_p.push_back(FHT::Context::_EnumStructFieldValue);
+				break;
+
+			case FHT::Context::_Namespace:
+				context_stack_p.pop_back();
+				break;
+
+			default:
+				break;
 			}
 			out_token_p._vocabulary = Vocabulary::_AssignmentOperator;
 			out_token_p._code = *code_iterator_p;

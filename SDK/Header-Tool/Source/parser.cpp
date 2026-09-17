@@ -57,12 +57,13 @@ namespace FHT::parser
 
 		context_stack_t l_context_stack{ 1, FHT::Context::_Global, framework::get_framework().get_memory_resource() };
 
-		for (auto iterator = token_list_p.begin(); iterator != token_list_p.end(); ++iterator)
+		for (auto iterator = token_list_p.begin(); iterator != token_list_p.end();)
 		{
 			switch (iterator->_vocabulary)
 			{
 			case Vocabulary::_FrogmanEngineSystemMacro:
 				l_root._system_fptrs.emplace_back(build_ecs_system_node(u8"::", iterator, token_list_p.end()));
+				++iterator;
 				break;
 
 
@@ -105,6 +106,7 @@ namespace FHT::parser
 						{
 							if (it->_vocabulary == Vocabulary::_AssignmentOperator)
 							{
+								iterator = it;
 								goto Exit;
 							}
 						}
@@ -114,28 +116,33 @@ namespace FHT::parser
 					continue;
 				}
 				l_root._namespaces.emplace_back(build_namespace_node_recursive(u8"::", iterator, token_list_p.end(), l_context_stack));
+				++iterator;
 				break;
 
 			case Vocabulary::_FrogmanEngineClassReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_ClassIdentifier:
 				l_root._classes.emplace_back(build_class_node(u8"::", iterator, token_list_p.end()));
+				++iterator;
 				break;
 
 			case Vocabulary::_FrogmanEngineStructReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_StructIdentifier:
 				l_root._structs.emplace_back(build_struct_node(u8"::", iterator, token_list_p.end()));
+				++iterator;
 				break;
 
 			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_EnumStructIdentifier:
 				l_root._enum_structs.emplace_back(build_enum_struct_node(u8"::", iterator, token_list_p.end()));
+				++iterator;
 				break;
 
 
 			default:
+				++iterator;
 				break;
 			}
 		}
@@ -219,6 +226,7 @@ namespace FHT::parser
 					break; // skip the system macro if it is inside a class or struct.
 				}
 				l_node._system_fptrs.emplace_back(build_ecs_system_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				++out_token_iterator_p;
 				break;
 
 
@@ -261,6 +269,7 @@ namespace FHT::parser
 						{
 							if (it->_vocabulary == Vocabulary::_AssignmentOperator)
 							{
+								out_token_iterator_p = it;
 								goto Exit;
 							}
 						}
@@ -270,24 +279,28 @@ namespace FHT::parser
 					continue;
 				}
 				l_node._nested_namespaces.emplace_back(build_namespace_node_recursive(l_node._target_namespace_name, out_token_iterator_p, end_p, context_stack_p));
+				++out_token_iterator_p;
 				break;
 
 			case Vocabulary::_FrogmanEngineClassReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_ClassIdentifier:
 				l_node._classes.emplace_back(build_class_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				++out_token_iterator_p;
 				break;
 
 			case Vocabulary::_FrogmanEngineStructReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_StructIdentifier:
 				l_node._structs.emplace_back(build_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				++out_token_iterator_p;
 				break;
 
 			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
 				_FE_FALLTHROUGH_;
 			case Vocabulary::_EnumStructIdentifier:
 				l_node._enum_structs.emplace_back(build_enum_struct_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				++out_token_iterator_p;
 				break;
 
 
@@ -570,12 +583,16 @@ namespace FHT::parser
 
 
 		AccessModifierScope l_current_access_modifier_scope = AccessModifierScope::_Public;
-		var::boolean l_is_current_func_virtual = false;
 		var::boolean l_is_probably_destructor = false;
 		for (const auto& token : l_tokens)
 		{
 			switch (token._vocabulary)
 			{
+			case Vocabulary::_Virtual:
+				THROW_CPP_SYNTAX_ERROR(true, "structs cannot be polymorphic; virtual function declaration is not allowed inside a struct in Frogman C++.");
+				break;
+
+
 			case Vocabulary::_Private:
 				l_current_access_modifier_scope = AccessModifierScope::_Private;
 				break;
@@ -605,9 +622,6 @@ namespace FHT::parser
 				FHT::tokenizer::purge_string_literals_and_backslashes(l_func_tokens); // removes the \, characters, and strings.
 				FHT::tokenizer::purge_template(l_func_tokens); // removes the template declarations.
 				std::erase_if(l_func_tokens, [](const auto& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
-
-
-				THROW_CPP_SYNTAX_ERROR(l_is_current_func_virtual, "the virtual function declaration is not allowed inside a struct in Frogman C++.");
 
 
 				identifier l_function{ framework::get_framework().get_memory_resource() };
