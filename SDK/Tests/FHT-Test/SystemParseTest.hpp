@@ -1,4 +1,7 @@
-﻿FE_WORLD_TAG
+﻿/*//*/
+
+
+FE_WORLD_TAG
 {
 	Boot = 0,
 	MainMenu = 1,

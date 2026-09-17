@@ -744,6 +744,11 @@ namespace FHT::tokenizer
 
 
 			case Vocabulary::_LineComment:
+				if (context_stack_p.back() == FHT::Context::_CommentBlock)
+				{
+					goto MarkAsComment;
+				}
+
 				if (FE::algorithm::string::compare_ranged((FE::ASCII*)code_iterator_p, FE::algorithm::string::range{ 0, tl_s_key_buffer.length() },
 					tl_s_key_buffer.c_str(), FE::algorithm::string::range{ 0, tl_s_key_buffer.length() }) == true)
 				{
@@ -1049,7 +1054,7 @@ namespace FHT::tokenizer
 				{
 					auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
 
-					THROW_CPP_SYNTAX_ERROR(l_rng == std::nullopt, "FHT C++ Code Syntax Error C2001: the string literal is incomplete.")
+					THROW_CPP_SYNTAX_ERROR(l_rng == std::nullopt, "Frogman C++ Error C2001: the string literal is incomplete.")
 					out_token_p._code.assign(code_iterator_p, l_rng->_begin);
 				}
 				break;
@@ -1066,7 +1071,7 @@ namespace FHT::tokenizer
 		auto l_start = code_iterator_p;
 		while (*l_start != '\"')
 		{
-			THROW_CPP_SYNTAX_ERROR(*l_start == '\0', "C++ code syntax Error C2001: the raw text literal delimiter is incomplete.");
+			THROW_CPP_SYNTAX_ERROR(*l_start == '\0', "Frogman C++ Error C2001: the raw text literal delimiter is incomplete.");
 			++l_start;
 		}
 		++l_start; // skip "
@@ -1074,7 +1079,7 @@ namespace FHT::tokenizer
 		auto l_end = l_start;
 		while (*l_end != '(')
 		{
-			THROW_CPP_SYNTAX_ERROR(*l_end == '\0', "C++ code syntax Error C2001: the raw text literal delimiter is incomplete.");
+			THROW_CPP_SYNTAX_ERROR(*l_end == '\0', "Frogman C++ Error C2001 : the raw text literal delimiter is incomplete.");
 			++l_end;
 		}
 
@@ -1219,10 +1224,26 @@ namespace FHT::tokenizer
 		case '{':
 			switch (context_stack_p.back())
 			{
+			case FHT::Context::_StructIdentifier:
+				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C4094: untagged 'struct' declared no symbols.")
+				return;
+			case FHT::Context::_ClassIdentifier:
+				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C4094: untagged 'class' declared no symbols.")
+				return;
+			case FHT::Context::_EnumStructIdentifier:
+				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C4094: untagged 'enum struct' declared no symbols.")
+				return;
+
+			case FHT::Context::_EnumStruct:
+				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error: 'enum' or 'enum class' is unsupported; please use 'enum struct' instead.");
+				return;
+
+
 			case FHT::Context::_StructBody:
 				_FE_FALLTHROUGH_;
 			case FHT::Context::_ClassBody:
 				return;
+
 
 			case FHT::Context::_ClassExtension:
 				context_stack_p.pop_back();
@@ -1357,7 +1378,7 @@ namespace FHT::tokenizer
 
 
 		case ',':
-			THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_ClassExtension, "Frogman C++ does not allow multiple inheritance.");
+			THROW_CPP_SYNTAX_ERROR(context_stack_p.back() == FHT::Context::_ClassExtension, "Frogman C++ Error: multiple inheritance is not allowed in Frogman C++.");
 			out_token_p._vocabulary = Vocabulary::_Comma;
 			out_token_p._code = *code_iterator_p;
 			break;
@@ -1781,6 +1802,18 @@ namespace FHT::tokenizer
 					context_stack_p.push_back(FHT::Context::_ClassExtension);
 					break;
 
+
+				case FHT::Context::_StructBody:
+					THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C2059: structs cannot be polymorphic.");
+					break;
+
+				case FHT::Context::_StructIdentifier:
+					THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C4094: untagged 'struct' declared no symbols.")
+					return;
+				case FHT::Context::_ClassIdentifier:
+					THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C4094: untagged 'class' declared no symbols.")
+					return;
+
 				default:
 					break;
 				} 
@@ -1887,7 +1920,7 @@ namespace FHT::tokenizer
 			switch (tl_s_arg_index)
 			{
 			case 0:
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
 				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
 				++tl_s_arg_index;
@@ -1895,7 +1928,7 @@ namespace FHT::tokenizer
 
 			case 1:
 				l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "FHT C++ Error: the FE_SYSTEM macro is ill-formed.");
+				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
 				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
 				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnum;
 				++tl_s_arg_index;
@@ -2281,7 +2314,7 @@ namespace FHT::tokenizer
 				{
 					++l_base_end_pos;
 				}
-				THROW_CPP_SYNTAX_ERROR(l_base_end_pos != 0, "structs cannot be polymorphic in Frogman C++.");
+				THROW_CPP_SYNTAX_ERROR(l_base_end_pos != 0, "Frogman C++ Error C2059: structs cannot be polymorphic in Frogman C++.");
 				return;
 			}
 			break;
@@ -2511,7 +2544,7 @@ namespace FHT::tokenizer
 				}
 				out_token_p._code += *code_iterator_p;
 				++code_iterator_p;
-				THROW_CPP_SYNTAX_ERROR(*code_iterator_p == '\0', "C++ Code Syntax Error C1075: missing '}' in class declaration, or found an explicit null terminator \0");
+				THROW_CPP_SYNTAX_ERROR(*code_iterator_p == '\0', "Frogman C++ Error C1075: missing '}' in class declaration, or found an explicit null terminator \0");
 			} while (l_brace_stack.size() > 0);
 			context_stack_p.pop_back(); // pop the template context.
 			return;
