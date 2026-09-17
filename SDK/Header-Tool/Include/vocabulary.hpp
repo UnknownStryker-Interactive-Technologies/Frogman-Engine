@@ -52,7 +52,7 @@ enum struct Vocabulary : FE::uint16
 
 	_TextLiteralPrefix,
 	_StringLiteral, _CharLiteral, _NumberValue,
-	_Operator, _AssignmentOperator, _BitwiseNot,
+	_Operator, _AssignmentOperator, _Asterisk, _BitwiseNot,
 
 	_Virtual, _Override, _Final, _This,
 

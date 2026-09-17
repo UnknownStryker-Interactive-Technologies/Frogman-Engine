@@ -25,11 +25,9 @@ FILE(GLOB_RECURSE SOURCE_FILES "${FE_CMAKE_CURRENT_LIST_DIR}/../Source/*.cpp")
 
 # You can use the FHT to check the presence of a copyright notice in your header files; the FHT will abort the build if the copyright notice is missing.
 # -fno-reflection-helper: disables the generation of reflection helper code.
-# -fno-copyright-notice: disables the copyright notice check.
-# -max-concurrency=8: sets the maximum number of concurrent threads to 8 for processing the files.
-# -path-to-copyright-notice=PATH: specifies the path to the copyright notice file to be used for checking.
 # -fno-op: does not perform any operation.
-# -fno-write: does not write any output files.
+# -max-concurrency=N: sets the maximum number of concurrent threads to N for processing the files.
+# -path-to-copyright-notice=PATH: specifies the path to the copyright notice file to be used for checking.
 RUN_FROGMAN_HEADER_TOOL( ${HEADER_FILES} )
 
 SET_SHADERS() # GLOB_RECURSE All shader files in the Assets/Shaders folder and add them to the .froggy file

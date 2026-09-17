@@ -1445,8 +1445,6 @@ namespace FHT::tokenizer
 			_FE_FALLTHROUGH_;
 		case '-':
 			_FE_FALLTHROUGH_;
-		case '*':
-			_FE_FALLTHROUGH_;
 		case '/':
 			_FE_FALLTHROUGH_;
 		case '%':
@@ -1481,6 +1479,11 @@ namespace FHT::tokenizer
 
 		case '~':
 			out_token_p._vocabulary = Vocabulary::_BitwiseNot;
+			out_token_p._code = *code_iterator_p;
+			break;
+
+		case '*':
+			out_token_p._vocabulary = Vocabulary::_Asterisk;
 			out_token_p._code = *code_iterator_p;
 			break;
 

@@ -591,11 +591,20 @@ namespace FHT::parser
 		{
 			switch (token._vocabulary)
 			{
+			case Vocabulary::_BitwiseNot:
+				l_is_probably_destructor = true;
+				break;
+
+
+			//case Vocabulary::_Const:
+			//	break;
+
+
 			case Vocabulary::_Virtual:
 				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error C2059: structs cannot be polymorphic; virtual function declaration is not allowed inside a struct in Frogman C++.");
 				break;
 
-
+			
 			case Vocabulary::_Private:
 				l_current_access_modifier_scope = AccessModifierScope::_Private;
 				break;
@@ -609,9 +618,8 @@ namespace FHT::parser
 				break;
 
 
-			case Vocabulary::_BitwiseNot:
-				l_is_probably_destructor = true;
-				break;
+			//case Vocabulary::_Semicolon:
+			//	break;
 
 
 			case Vocabulary::_AnyDecl:
@@ -630,13 +638,36 @@ namespace FHT::parser
 				identifier l_function{ framework::get_framework().get_memory_resource() };
 				for (const auto& func_token : l_func_tokens)
 				{
-					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_Colon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
+					switch (func_token._vocabulary)
 					{
+					//case Vocabulary::_AssignmentOperator:
+					//	break;
+
+					//case Vocabulary::_Asterisk:
+					//	break;
+
+					//case Vocabulary::_Const:
+					//	break;
+
+
+					case Vocabulary::_LeftCurlyBracket:
+						_FE_FALLTHROUGH_;
+					case Vocabulary::_RightCurlyBracket:
+						THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error: structs cannot have function definitions and the initialization expression such as 'T _field{}'.");
 						break;
-					}
+
+
+					case Vocabulary::_Semicolon:
+						goto Exit;
+
+
+					default:
+						break;
+					} 
 					l_function += func_token._code;
 					l_function += u8' ';
 				}
+			Exit:
 
 				if (l_is_probably_destructor && FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), l_default_constructor.c_str()))
 				{
