@@ -1084,13 +1084,16 @@ constexpr FE::boolean space_insensitive_contains(const CharT* const str_p, const
         if (*l_str_iter == *l_target_substr)
         {
             ++l_target_substr;
-        }
-        else
-        {
-            l_target_substr = target_substr_p;
+            ++l_str_iter;
+            continue;
         }
 
         ++l_str_iter;
+        
+        if (*l_str_iter != *l_target_substr)
+        {
+            l_target_substr = target_substr_p;
+        }
     }
 
     if (*l_target_substr == (CharT)'\0')
