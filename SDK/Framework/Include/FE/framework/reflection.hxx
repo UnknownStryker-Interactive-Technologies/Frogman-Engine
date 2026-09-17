@@ -388,7 +388,7 @@ public:
 		std::lock_guard<lock_type> l_lock(m_lock);
 		std::pmr::string l_host_class_instance_typename(reflection::type_id<C>().name(), m_pool);
 		auto l_iterator = m_property_registry.find(l_host_class_instance_typename);
-		if (FE_UNLIKELY(l_iterator == m_property_registry.end())) _FE_UNLIKELY_
+		if (l_iterator == m_property_registry.end()) _FE_UNLIKELY_
 		{
 			auto l_result = m_property_registry.emplace(l_host_class_instance_typename, class_property_list(m_pool));
 			FE_NEGATIVE_ASSERT(l_result.second == false, "Failed to emplace() while executing property_registry::register_property().");
