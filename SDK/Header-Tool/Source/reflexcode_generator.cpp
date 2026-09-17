@@ -268,7 +268,7 @@ namespace FHT::reflexcode_generator
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._this_class_name.data()), node_p._this_class_name.length());
 
 		auto& l_value = out_return_p._classes[std::move(l_identifier)];
-		l_value._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
+		l_value._default_constructor_state = node_p._default_constructor_state;
 		l_value._has_constructor_variants = node_p._has_constructor_variants;
 		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
 	}
@@ -282,7 +282,7 @@ namespace FHT::reflexcode_generator
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._identifier.data()), node_p._identifier.length());
 
 		auto& l_value = out_return_p._structs[std::move(l_identifier)];
-		l_value._has_explicit_default_public_constructor = node_p._has_explicit_default_public_constructor;
+		l_value._default_constructor_state = node_p._default_constructor_state;
 		l_value._has_constructor_variants = node_p._has_constructor_variants;
 		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
 	}
@@ -365,7 +365,8 @@ namespace FHT::reflexcode_generator
 			{
 #pragma warning(push)
 #pragma warning(disable: 4244)
-				if (class_info._has_explicit_default_public_constructor == false && class_info._has_constructor_variants)
+				if (class_info._default_constructor_state == DefaultConstructorState::_DeletedOrNotPublic ||
+					class_info._default_constructor_state == DefaultConstructorState::_ExplicitPublic && class_info._has_constructor_variants)
 				{
 					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2512; no appropriate default constructor available for ${%s@0}. FHT will not output the Reflexcode for this class.", l_log_buffer.c_str());
@@ -407,7 +408,8 @@ namespace FHT::reflexcode_generator
 			{
 #pragma warning(push)
 #pragma warning(disable: 4244)
-				if (struct_info._has_constructor_variants && struct_info._has_explicit_default_public_constructor == false)
+				if (struct_info._default_constructor_state == DefaultConstructorState::_DeletedOrNotPublic ||
+					struct_info._default_constructor_state == DefaultConstructorState::_ExplicitPublic && struct_info._has_constructor_variants)
 				{
 					_FE_MAYBE_UNUSED_ std::pmr::string l_log_buffer(identifier.begin(), identifier.end(), framework::get_framework().get_memory_resource());
 					FE_LOG(FE::log::Severity::_Warning, "Warning C2512; no appropriate default constructor available for ${%s@0}. FHT will not output the Reflexcode for this struct.", l_log_buffer.c_str());

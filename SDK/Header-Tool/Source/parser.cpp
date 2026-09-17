@@ -447,6 +447,10 @@ namespace FHT::parser
 							}
 							break;
 
+						case Vocabulary::_RightCurlyBracket:
+							l_node._has_pure_virtual = false;
+							goto EscapeLoopA;
+
 						default:
 							if (func_token->_code == u8"0")
 							{
@@ -465,7 +469,7 @@ namespace FHT::parser
 				identifier l_function{ framework::get_framework().get_memory_resource() };
 				for (const auto& func_token : l_func_tokens)
 				{
-					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
+					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_Colon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
 					{
 						break;
 					}
@@ -490,11 +494,11 @@ namespace FHT::parser
 				{
 					if (FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), u8"=delete"))
 					{
-						l_node._has_explicit_default_public_constructor = false;
+						l_node._default_constructor_state = DefaultConstructorState::_DeletedOrNotPublic;
 					}
 					else
 					{
-						l_node._has_explicit_default_public_constructor = l_current_access_modifier_scope == AccessModifierScope::_Public;
+						l_node._default_constructor_state = l_current_access_modifier_scope == AccessModifierScope::_Public ? DefaultConstructorState::_ExplicitPublic : DefaultConstructorState::_DeletedOrNotPublic;
 					}
 					break;
 				}
@@ -627,7 +631,7 @@ namespace FHT::parser
 				identifier l_function{ framework::get_framework().get_memory_resource() };
 				for (const auto& func_token : l_func_tokens)
 				{
-					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
+					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_Colon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
 					{
 						break;
 					}
@@ -652,11 +656,11 @@ namespace FHT::parser
 				{
 					if (FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), u8"=delete"))
 					{
-						l_node._has_explicit_default_public_constructor = false;
+						l_node._default_constructor_state = DefaultConstructorState::_DeletedOrNotPublic;
 					}
 					else
 					{
-						l_node._has_explicit_default_public_constructor = l_current_access_modifier_scope == AccessModifierScope::_Public;
+						l_node._default_constructor_state = l_current_access_modifier_scope == AccessModifierScope::_Public ? DefaultConstructorState::_ExplicitPublic : DefaultConstructorState::_DeletedOrNotPublic;
 					}
 					break;
 				}

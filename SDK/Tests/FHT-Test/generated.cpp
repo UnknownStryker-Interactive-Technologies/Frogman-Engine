@@ -29,4 +29,10 @@ void destruct(T* ptr_p)
 
 void load_reflection_data()
 {
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::S17a*(::S17a*)> >("construct ::S17a", &::construct<::S17a>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::S17a*)> >("destruct ::S17a", &::destruct<::S17a>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::S17b*(::S17b*)> >("construct ::S17b", &::construct<::S17b>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::S17b*)> >("destruct ::S17b", &::destruct<::S17b>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<::S17c*(::S17c*)> >("construct ::S17c", &::construct<::S17c>);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<void(::S17c*)> >("destruct ::S17c", &::destruct<::S17c>);
 }

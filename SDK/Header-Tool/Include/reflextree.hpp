@@ -29,7 +29,12 @@ limitations under the License.
 
 
 using identifier = std::pmr::basic_string<var::UTF8>;
-
+enum struct DefaultConstructorState
+{
+	_ImplicitPublic = 0,
+	_ExplicitPublic,
+	_DeletedOrNotPublic,
+};
 
 struct class_node
 {
@@ -37,7 +42,7 @@ struct class_node
 	var::boolean _has_marker = false;
 	var::boolean _has_pure_virtual = false;
 
-	var::boolean _has_explicit_default_public_constructor = false;
+	DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 	var::boolean _has_constructor_variants = false;
 	var::boolean _is_destructor_deleted_or_not_public = false;
 
@@ -50,7 +55,7 @@ struct struct_node
 	var::boolean _is_forward_decl = false;
 	var::boolean _has_marker = false;
 
-	var::boolean _has_explicit_default_public_constructor = false;
+	DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 	var::boolean _has_constructor_variants = false;
 	var::boolean _is_destructor_deleted_or_not_public = false;
 
