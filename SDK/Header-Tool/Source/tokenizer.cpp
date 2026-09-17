@@ -53,13 +53,17 @@ namespace FHT::tokenizer
 		std::pmr::list<token> l_list{ framework::get_framework().get_memory_resource() };
 
 		auto l_end = file_p.c_str() + file_p.size();
-		var::uint32 l_token_number = 1;
+		var::uint32 l_token_line_number = 1;
 
 		FE_LOG_IF(path_p.empty(), FE::log::Severity::_Info, "The header file path is empty, transitioning to scope lexer mode.");
 		for (FE::UTF8* iterator = path_p.empty() ? file_p.c_str() : FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 		{
 			if (*iterator <= ' ')
 			{
+				if (*iterator == u8'\n')
+				{
+					++l_token_line_number;
+				}
 				++iterator;
 				continue;
 			}
@@ -82,9 +86,12 @@ namespace FHT::tokenizer
 			}
 
 			l_token._header_file_path = path_p.c_str();
-			l_token._token_line_number = l_token_number;
+			l_token._token_line_number = l_token_line_number;
 			if (l_token._vocabulary != Vocabulary::_Undefined)
 			{
+				auto l_line_count = FE::algorithm::string::count_chars(l_token._code.c_str(), u8'\n');
+				THROW_CPP_SYNTAX_ERROR((var::uint64)l_token_line_number + l_line_count._match_count > FE::uint32_max, "Frogman Header Tool Error: C++ header file line number exceeds 2^32.");
+				l_token_line_number += (var::uint32)l_line_count._match_count;
 				iterator += l_token._code.size(); // move to the next.
 				l_list.push_back(std::move(l_token)); // push_back the defined vocab.
 
@@ -95,10 +102,10 @@ namespace FHT::tokenizer
 						l_token._vocabulary = Vocabulary::_LineEnd;
 						l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
 						l_token._header_file_path = path_p.c_str();
-						l_token._token_line_number = l_token_number;
+						l_token._token_line_number = l_token_line_number;
 
 						l_list.push_back(std::move(l_token));
-						++l_token_number; // Increment the line number.
+						++l_token_line_number; // Increment the line number.
 						++iterator; // move to the next.
 					}
 				}
@@ -108,28 +115,32 @@ namespace FHT::tokenizer
 
 			l_token = tokenize_unidentifiable(iterator, l_context_stack);
 			l_token._header_file_path = path_p.c_str();
-			l_token._token_line_number = l_token_number;
+			l_token._token_line_number = l_token_line_number;
 			iterator += l_token._code.size(); // move to the next.
 			l_list.push_back(std::move(l_token));
 
 			if (iterator < l_end) _FE_LIKELY_
 			{
+				auto l_line_count = FE::algorithm::string::count_chars(l_token._code.c_str(), u8'\n');
+				THROW_CPP_SYNTAX_ERROR((var::uint64)l_token_line_number + l_line_count._match_count > FE::uint32_max, "Frogman Header Tool Error: C++ header file line number exceeds 2^32.");
+				l_token_line_number += (var::uint32)l_line_count._match_count;
+
 				if (*iterator == '\n')
 				{
 					l_token._vocabulary = Vocabulary::_LineEnd;
 					l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
 					l_token._header_file_path = path_p.c_str();
-					l_token._token_line_number = l_token_number;
+					l_token._token_line_number = l_token_line_number;
 
 					l_list.push_back(std::move(l_token));
-					++l_token_number; // Increment the line number.
+					++l_token_line_number; // Increment the line number.
 					++iterator; // move to the next.
 				}
 			}
 			continue;
 		}
 
-		l_list.emplace_back(Vocabulary::_EndOfCode, FE::null, l_token_number, u8"\0");
+		l_list.emplace_back(Vocabulary::_EndOfCode, FE::null, l_token_line_number, L"", u8"");
 		return l_list;
 	}
 
@@ -485,11 +496,15 @@ namespace FHT::tokenizer
 		std::pmr::list<token> l_list{ framework::get_framework().get_memory_resource() };
 
 		auto l_end = file_p.c_str() + file_p.size();
-		var::uint32 l_token_number = 1;
+		var::uint32 l_token_line_number = 1;
 		for (FE::UTF8* iterator = file_p.c_str(); iterator < l_end;)
 		{
 			if (*iterator <= ' ')
 			{
+				if (*iterator == u8'\n')
+				{
+					++l_token_line_number;
+				}
 				++iterator;
 				continue;
 			}
@@ -509,9 +524,13 @@ namespace FHT::tokenizer
 				l_end = file_p.c_str() + file_p.size();
 			}
 
-			l_token._token_line_number = l_token_number;
+			l_token._token_line_number = l_token_line_number;
 			if (l_token._vocabulary != Vocabulary::_Undefined)
 			{
+				auto l_line_count = FE::algorithm::string::count_chars(l_token._code.c_str(), u8'\n');
+				THROW_CPP_SYNTAX_ERROR((var::uint64)l_token_line_number + l_line_count._match_count > FE::uint32_max, "Frogman Header Tool Error: C++ header file line number exceeds 2^32.");
+				l_token_line_number += (var::uint32)l_line_count._match_count;
+
 				iterator += l_token._code.size(); // move to the next.
 				l_list.push_back(std::move(l_token)); // push_back the defined vocab.
 
@@ -521,10 +540,10 @@ namespace FHT::tokenizer
 					{
 						l_token._vocabulary = Vocabulary::_LineEnd;
 						l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
-						l_token._token_line_number = l_token_number;
+						l_token._token_line_number = l_token_line_number;
 
 						l_list.push_back(std::move(l_token));
-						++l_token_number; // Increment the line number.
+						++l_token_line_number; // Increment the line number.
 						++iterator; // move to the next.
 					}
 				}
@@ -533,27 +552,31 @@ namespace FHT::tokenizer
 
 
 			l_token = tokenize_unidentifiable_any_decl(iterator, l_context_stack);
-			l_token._token_line_number = l_token_number;
+			l_token._token_line_number = l_token_line_number;
 			iterator += l_token._code.size(); // move to the next.
 			l_list.push_back(std::move(l_token));
 
 			if (iterator < l_end) _FE_LIKELY_
 			{
+				auto l_line_count = FE::algorithm::string::count_chars(l_token._code.c_str(), u8'\n');
+				THROW_CPP_SYNTAX_ERROR((var::uint64)l_token_line_number + l_line_count._match_count > FE::uint32_max, "Frogman Header Tool Error: C++ header file line number exceeds 2^32.");
+				l_token_line_number += (var::uint32)l_line_count._match_count;
+
 				if (*iterator == '\n')
 				{
 					l_token._vocabulary = Vocabulary::_LineEnd;
 					l_token._code = file_buffer_t(1, *iterator, framework::get_framework().get_memory_resource());
-					l_token._token_line_number = l_token_number;
+					l_token._token_line_number = l_token_line_number;
 
 					l_list.push_back(std::move(l_token));
-					++l_token_number; // Increment the line number.
+					++l_token_line_number; // Increment the line number.
 					++iterator; // move to the next.
 				}
 			}
 			continue;
 		}
 
-		l_list.emplace_back(Vocabulary::_EndOfCode, FE::null, l_token_number, u8"\0");
+		l_list.emplace_back(Vocabulary::_EndOfCode, FE::null, l_token_line_number, L"", u8"\0");
 		return l_list;
 	}
 
@@ -785,7 +808,18 @@ namespace FHT::tokenizer
 
 			if (l_rng != std::nullopt) _FE_LIKELY_
 			{
-				out_token_p._code.assign(code_iterator_p, l_rng->_begin);
+				var::int64 l_spaces = 0;
+				if (l_rng->_begin == 0)
+				{
+					while (*code_iterator_p <= ' ')
+					{
+						++l_spaces;
+						++code_iterator_p;
+					}
+					l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\n');
+				}
+
+				out_token_p._code.assign(code_iterator_p - l_spaces, l_rng->_begin + l_spaces);
 			}
 			else
 			{
@@ -981,9 +1015,10 @@ namespace FHT::tokenizer
 			switch (context_stack_p.back())
 			{
 			case FHT::Context::_StringLiteral:
-				if (code_iterator_p[-1] != '\\')
+				if (code_iterator_p[-1] != '\\' ||
+					FE::algorithm::string::compare_ranged(code_iterator_p - 2, { 0,2 }, u8"\\\\", { 0, FE::algorithm::string::compiletime::length(u8"\\\\") }) == true)
 				{
-					context_stack_p.pop_back(); // is accessible when "".
+					context_stack_p.pop_back();
 				}
 				break;
 
@@ -1004,12 +1039,16 @@ namespace FHT::tokenizer
 						break;
 					}
 				}
-
-				if (code_iterator_p[-1] == ')') // does not have any delimiters; is the previous character ')'?
+				else if (code_iterator_p[-1] == ')') // does not have any delimiters; is the previous character ')'?
 				{
 					context_stack_p.pop_back(); // is accessible when R"()"
 					break;
 				}
+				break;
+
+			case FHT::Context::_CharLiteral:
+				out_token_p._vocabulary = Vocabulary::_CharLiteral;
+				out_token_p._code = *code_iterator_p;
 				break;
 
 			default:
@@ -1025,7 +1064,8 @@ namespace FHT::tokenizer
 		case '\'':
 			if (context_stack_p.back() == FHT::Context::_CharLiteral)
 			{
-				if (code_iterator_p[-1] != '\\') // is accessible when '' or '\''.
+				if (code_iterator_p[-1] != '\\' ||
+					FE::algorithm::string::compare_ranged(code_iterator_p - 2, { 0,2 }, u8"\\\\", { 0, FE::algorithm::string::compiletime::length(u8"\\\\") }) == true) // is accessible when '' or '\''.
 				{
 					context_stack_p.pop_back();
 				}
@@ -1051,12 +1091,7 @@ namespace FHT::tokenizer
 				_FE_FALLTHROUGH_;
 			case FHT::Context::_RawTextLiteral:
 				out_token_p._vocabulary = Vocabulary::_StringLiteral;
-				{
-					auto l_rng = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
-
-					THROW_CPP_SYNTAX_ERROR(l_rng == std::nullopt, "Frogman C++ Error C2001: the string literal is incomplete.")
-					out_token_p._code.assign(code_iterator_p, l_rng->_begin);
-				}
+				out_token_p._code += *code_iterator_p;
 				break;
 
 			default:
