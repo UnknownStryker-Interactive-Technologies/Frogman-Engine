@@ -274,6 +274,11 @@ namespace FHT::reflexcode_generator
 		l_value._default_constructor_state = node_p._default_constructor_state;
 		l_value._has_constructor_variants = node_p._has_constructor_variants;
 		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
+
+
+		l_identifier.resize(node_p._base_class_name.length());
+		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._base_class_name.data()), node_p._base_class_name.length());
+		l_value._base_class_name = std::move(l_identifier);
 	}
 
 
@@ -489,7 +494,7 @@ namespace FHT::reflexcode_generator
 		l_path_to_generated.resize(l_path_length + 1);
 		std::mbstowcs(l_path_to_generated.data(), ::header_tool::get_program_options().get_path_to_project(), l_path_length);
 		l_path_to_generated = l_path_to_generated.c_str();
-		l_path_to_generated += L"\\generated.cpp";
+		l_path_to_generated += L"/generated.cpp";
 
 		std::wofstream l_generated_file;
 		FE::wofstream_guard l_generated_file_guard(l_generated_file);
@@ -526,6 +531,66 @@ namespace FHT::reflexcode_generator
 						l_header_identifier_pos = header_file._header_file_path.rfind(L'/');
 					}
 					FE_EXIT_IF(l_header_identifier_pos == std::pmr::wstring::npos && l_header_identifier_pos + 1 <= header_file._header_file_path.length(), FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
+					
+					
+
+
+					std::wofstream l_generated_h;
+					FE::wofstream_guard l_generated_file_guard(l_generated_h);
+#pragma warning(push)
+#pragma warning(disable: 4244)
+					std::pmr::wstring l_generated_header_path(l_path_to_generated_h.begin(), l_path_to_generated_h.end());
+#pragma warning(pop)
+					if (std::filesystem::exists(l_generated_header_path) == false)
+					{
+						std::filesystem::create_directory(l_generated_header_path);
+					}
+					l_generated_header_path += L"\\";
+					std::pmr::wstring l_header_file_identifier = header_file._header_file_path.substr(l_header_identifier_pos + 1);
+					l_generated_header_path.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
+					l_generated_header_path += L".generated.h";
+
+					l_generated_h.open(l_generated_header_path);
+					FE_EXIT_IF(l_generated_h.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
+
+
+
+
+					std::ifstream l_target_hpp_ifstream;
+					FE::ifstream_guard l_target_hpp_ifstream_guard(l_target_hpp_ifstream);
+					l_target_hpp_ifstream.open(header_file._header_file_path);
+					FE_EXIT_IF(l_target_hpp_ifstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
+
+					l_target_hpp_ifstream.seekg(0, std::ios::end);
+					std::streamoff l_size = l_target_hpp_ifstream.tellg();
+					l_target_hpp_ifstream.seekg(0, std::ios::beg);
+
+					std::pmr::string l_target_header;
+					l_target_header.resize(l_size);
+					l_target_hpp_ifstream.read(l_target_header.data(), l_target_header.length());
+#pragma warning(push)
+#pragma warning(disable: 4244)
+					std::pmr::string l_generated_header_include("#include \"");
+					l_generated_header_include.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
+					l_generated_header_include += ".generated.h";
+#pragma warning(pop)
+					var::boolean l_has_inserted_include = false;
+					if (l_target_header.find(l_generated_header_include) == std::pmr::string::npos)
+					{
+						l_generated_header_include += "\"\n";
+						l_target_header.insert(sizeof(FHT::file_io::UTF8_BOM), l_generated_header_include);
+						l_has_inserted_include = true;
+					}
+
+					std::ofstream l_target_hpp_ofstream;
+					FE::ofstream_guard l_target_hpp_ofstream_guard(l_target_hpp_ofstream);
+					l_target_hpp_ofstream.open(header_file._header_file_path);
+					FE_EXIT_IF(l_target_hpp_ofstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
+					l_target_hpp_ofstream.write(l_target_header.data(), l_target_header.length());
+					
+
+
+
 					std::pmr::wstring l_generated_header_guard_macro = L"_";
 					l_generated_header_guard_macro += header_file._header_file_path.substr(l_header_identifier_pos + 1);
 					for (auto it = l_generated_header_guard_macro.begin(); it != l_generated_header_guard_macro.end(); ++it)
@@ -579,34 +644,26 @@ namespace FHT::reflexcode_generator
 						{
 							continue;
 						}
-						l_generated_header += L"#define _FE_REFLECTION_TYPE_IDENTIFIER_HASH_GENERATED_BY_FHT_";
-						l_generated_header += L" ";
-						l_hasher.update(reinterpret_cast<const unsigned char*>(identifier.data()), identifier.length() * sizeof(FE::wchar));
-						std::pmr::wstring l_hash_string;
-						FE::uint64 l_hash_value = l_hasher.result();
-						l_hash_string.resize(FE::algorithm::utility::count_uint_digit_length(l_hash_value));
-						FE::algorithm::utility::uint_to_string(l_hash_string.data(), l_hash_string.size(), l_hash_value);
-						l_generated_header += l_hash_string;
-						l_generated_header += L"\n";
-
-
-						l_hash_string.insert(0, L"_");
-						l_hash_string.push_back(L'_');
-
 
 						std::pmr::wstring l_line_number_string;
-						FE::uint32 l_line_number = class_info._fht_generated_line_number.value() + 1; // + 1 because the #include <generated.h> line is added to the original header file, so the line number of the class/struct is shifted by +1.
+						FE::uint32 l_line_number = class_info._fht_generated_line_number.value() + (l_has_inserted_include ? 1 : 0); // + 1 because the #include <generated.h> line is added to the original header file, so the line number of the class/struct is shifted by +1.
 						l_line_number_string.resize(FE::algorithm::utility::count_uint_digit_length(l_line_number));
 						FE::algorithm::utility::uint_to_string(l_line_number_string.data(), l_line_number_string.size(), l_line_number);
+						l_line_number_string.push_back(L'_');
 
 
 						l_generated_header += L"#define ";
 						l_generated_header += l_path_hash_string;
 						l_generated_header += l_line_number_string;
-						l_generated_header += l_hash_string;
 						l_generated_header += L" ";
 						// Contents Here!
-						l_generated_header += L"FE_ENABLE_SERIALIZATION()\n";
+						l_generated_header += L"FE_ENABLE_SERIALIZATION();";
+						if (class_info._base_class_name.empty() == false)
+						{
+							l_generated_header += L"\\\nFE_CLASS_HAS_A_BASE(";
+							l_generated_header += class_info._base_class_name;
+							l_generated_header += L");\n";
+						}
 
 						l_generated_header += L"\n";
 					}
@@ -618,31 +675,17 @@ namespace FHT::reflexcode_generator
 						{
 							continue;
 						}
-						l_generated_header += L"#define _FE_REFLECTION_TYPE_IDENTIFIER_HASH_GENERATED_BY_FHT_";
-						l_generated_header += L" ";
-						l_hasher.update(reinterpret_cast<const unsigned char*>(identifier.data()), identifier.length() * sizeof(FE::wchar));
-						std::pmr::wstring l_hash_string;
-						FE::uint64 l_hash_value = l_hasher.result();
-						l_hash_string.resize(FE::algorithm::utility::count_uint_digit_length(l_hash_value));
-						FE::algorithm::utility::uint_to_string(l_hash_string.data(), l_hash_string.size(), l_hash_value);
-						l_generated_header += l_hash_string;
-						l_generated_header += L"\n";
-
-
-						l_hash_string.insert(0, L"_");
-						l_hash_string.push_back(L'_');
-
 
 						std::pmr::wstring l_line_number_string;
-						FE::uint32 l_line_number = struct_info._fht_generated_line_number.value() + 1; // + 1 because the #include <generated.h> line is added to the original header file, so the line number of the class/struct is shifted by +1.
+						FE::uint32 l_line_number = struct_info._fht_generated_line_number.value() + (l_has_inserted_include ? 1 : 0); // + 1 because the #include <generated.h> line is added to the original header file, so the line number of the class/struct is shifted by +1.
 						l_line_number_string.resize(FE::algorithm::utility::count_uint_digit_length(l_line_number));
 						FE::algorithm::utility::uint_to_string(l_line_number_string.data(), l_line_number_string.size(), l_line_number);
+						l_line_number_string.push_back(L'_');
 
 
 						l_generated_header += L"#define ";
 						l_generated_header += l_path_hash_string;
 						l_generated_header += l_line_number_string;
-						l_generated_header += l_hash_string;
 						l_generated_header += L" ";
 						// Contents Here!
 						l_generated_header += L"FE_ENABLE_SERIALIZATION()\n";
@@ -654,60 +697,7 @@ namespace FHT::reflexcode_generator
 					l_generated_header += L"#endif";
 
 
-
-
-					std::wofstream l_generated_h;
-					FE::wofstream_guard l_generated_file_guard(l_generated_h);
-#pragma warning(push)
-#pragma warning(disable: 4244)
-					std::pmr::wstring l_generated_header_path(l_path_to_generated_h.begin(), l_path_to_generated_h.end());
-#pragma warning(pop)
-					if (std::filesystem::exists(l_generated_header_path) == false)
-					{
-						std::filesystem::create_directory(l_generated_header_path);
-					}
-					l_generated_header_path += L"\\";
-					std::pmr::wstring l_header_file_identifier = header_file._header_file_path.substr(l_header_identifier_pos + 1);
-					l_generated_header_path.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
-					l_generated_header_path += L".generated.h";
-
-					l_generated_h.open(l_generated_header_path);
-					FE_EXIT_IF(l_generated_h.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
-
 					l_generated_h << l_generated_header;
-
-
-
-
-					std::ifstream l_target_hpp_ifstream;
-					FE::ifstream_guard l_target_hpp_ifstream_guard(l_target_hpp_ifstream);
-					l_target_hpp_ifstream.open(header_file._header_file_path);
-					FE_EXIT_IF(l_target_hpp_ifstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
-
-					l_target_hpp_ifstream.seekg(0, std::ios::end);
-					std::streamoff l_size = l_target_hpp_ifstream.tellg();
-					l_target_hpp_ifstream.seekg(0, std::ios::beg);
-
-					std::pmr::string l_target_header;
-					l_target_header.resize(l_size);
-					l_target_hpp_ifstream.read(l_target_header.data(), l_target_header.length());
-#pragma warning(push)
-#pragma warning(disable: 4244)
-					std::pmr::string l_generated_header_include("#include \"");
-					l_generated_header_include.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
-					l_generated_header_include += ".generated.h";
-#pragma warning(pop)
-					if (l_target_header.find(l_generated_header_include) == std::pmr::string::npos)
-					{
-						l_generated_header_include += "\"\n";
-						l_target_header.insert(sizeof(FHT::file_io::UTF8_BOM), l_generated_header_include);
-					}
-
-					std::ofstream l_target_hpp_ofstream;
-					FE::ofstream_guard l_target_hpp_ofstream_guard(l_target_hpp_ofstream);
-					l_target_hpp_ofstream.open(header_file._header_file_path);
-					FE_EXIT_IF(l_target_hpp_ofstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
-					l_target_hpp_ofstream.write(l_target_header.data(), l_target_header.length());
 				}
 			);
 		}

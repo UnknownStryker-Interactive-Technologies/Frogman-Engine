@@ -353,6 +353,40 @@ namespace FHT::parser
 
 		while (out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl)
 		{
+			if (out_token_iterator_p->_vocabulary == Vocabulary::_Colon)
+			{
+				++out_token_iterator_p;
+				break;
+			}
+			++out_token_iterator_p;
+		}
+
+		while (out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl)
+		{
+			switch (out_token_iterator_p->_vocabulary)
+			{
+			case Vocabulary::_Virtual:
+				THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_vocabulary == Vocabulary::_Virtual, "Frogman C++ Error: virtual class inheritance is not allowed in Frogman C++.");
+				continue;
+			case Vocabulary::_Private:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Protected:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Public:
+				_FE_FALLTHROUGH_;
+
+			case Vocabulary::_LeftBracket:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Attribute:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_RightBracket:
+				++out_token_iterator_p;
+				continue;
+
+			default:
+				break;
+			}
+			l_node._base_class_name += out_token_iterator_p->_code;
 			++out_token_iterator_p;
 		}
 
@@ -368,12 +402,17 @@ namespace FHT::parser
 
 		for (auto& token : l_tokens)
 		{
-			if (token._vocabulary == Vocabulary::_LeftCurlyBracket)
+			switch (token._vocabulary)
 			{
+			case Vocabulary::_LeftCurlyBracket:
+				goto Exit;
+
+			default:
 				break;
 			}
 			l_default_constructor += token._code;
 		}
+		Exit:
 		l_node._this_class_name += l_default_constructor;
 		file_buffer_t l_constructor_variant = { l_default_constructor, framework::get_framework().get_memory_resource() };
 
@@ -397,6 +436,11 @@ namespace FHT::parser
 		{
 			switch (token._vocabulary)
 			{
+			case Vocabulary::_BitwiseNot:
+				l_is_probably_destructor = true;
+				break;
+
+
 			case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
 				l_node._fht_generated_line_number = out_token_iterator_p->_token_line_number + (token._token_line_number - 1);
 				break;
@@ -417,10 +461,6 @@ namespace FHT::parser
 
 			case Vocabulary::_Virtual:
 				l_is_current_func_virtual = true;
-				break;
-
-			case Vocabulary::_BitwiseNot:
-				l_is_probably_destructor = true;
 				break;
 
 
@@ -480,7 +520,7 @@ namespace FHT::parser
 					case Vocabulary::_Semicolon:
 						_FE_FALLTHROUGH_;
 					case Vocabulary::_LeftCurlyBracket:
-						goto Exit;
+						goto Exit2;
 
 					default:
 						break;
@@ -488,7 +528,7 @@ namespace FHT::parser
 					l_function += func_token._code;
 					l_function += u8' ';
 				}
-			Exit:
+			Exit2:
 				if (l_is_probably_destructor && FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), l_default_constructor.c_str()))
 				{
 					if (FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), u8"=delete"))

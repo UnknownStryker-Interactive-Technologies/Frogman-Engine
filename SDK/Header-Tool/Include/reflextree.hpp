@@ -48,6 +48,7 @@ struct class_node
 	var::boolean _is_destructor_deleted_or_not_public = false;
 
 	identifier _this_class_name;
+	identifier _base_class_name;
 };
 
 

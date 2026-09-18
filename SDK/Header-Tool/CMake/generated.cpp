@@ -29,6 +29,7 @@ void destruct(T* ptr_p)
 
 void load_reflection_data()
 {
+
     ::FE::framework::framework_base::get_framework().get_enum_reflection().register_enum_struct< ::FrogmanEngineHeaderToolError >("::FrogmanEngineHeaderToolError",
     {
         { ::FrogmanEngineHeaderToolError::_EmptyHeaderFile, "_EmptyHeaderFile" },

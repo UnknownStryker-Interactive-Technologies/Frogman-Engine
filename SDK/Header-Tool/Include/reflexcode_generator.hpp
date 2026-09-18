@@ -44,6 +44,8 @@ namespace FHT::reflexcode_generator
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
 			std::optional<var::uint32> _fht_generated_line_number;
+
+			std::pmr::wstring _base_class_name;
 		};
 
 		struct struct_info

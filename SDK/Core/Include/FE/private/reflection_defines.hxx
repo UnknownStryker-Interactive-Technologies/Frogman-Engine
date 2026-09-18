@@ -53,9 +53,9 @@ limitations under the License.
 #ifdef FHT_GENERATED
 #error FHT_GENERATED is a reserved Frogman Engine macro keyword.
 #else
-#define FHT_GENERATED_MACRO_IDENTIFIER(FilePathHash, LineNumber, TypeIdentifierHash) _##FilePathHash##_##LineNumber##_##TypeIdentifierHash##_
-#define FHT_GENERATED_IMPL(FilePathHash, LineNumber, TypeIdentifierHash) FHT_GENERATED_MACRO_IDENTIFIER(FilePathHash, LineNumber, TypeIdentifierHash)
-#define FHT_GENERATED() FHT_GENERATED_IMPL(_FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_, __LINE__, _FE_REFLECTION_TYPE_IDENTIFIER_HASH_GENERATED_BY_FHT_)
+#define FHT_GENERATED_MACRO_IDENTIFIER(FilePathHash, LineNumber) _##FilePathHash##_##LineNumber##_
+#define FHT_GENERATED_IMPL(FilePathHash, LineNumber) FHT_GENERATED_MACRO_IDENTIFIER(FilePathHash, LineNumber)
+#define FHT_GENERATED() FHT_GENERATED_IMPL(_FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_, __LINE__)
 #endif
 
 //FHT_GENERATED();
