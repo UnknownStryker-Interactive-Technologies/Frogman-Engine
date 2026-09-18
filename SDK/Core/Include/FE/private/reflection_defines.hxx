@@ -43,10 +43,10 @@ limitations under the License.
     using base_type = base_class; 
 #endif
 
-#ifdef ENABLE_SERIALIZATION
-#error ENABLE_SERIALIZATION is a reserved Frogman Engine macro keyword.
+#ifdef FE_ENABLE_SERIALIZATION
+#error FE_ENABLE_SERIALIZATION is a reserved Frogman Engine macro keyword.
 #else
-#define ENABLE_SERIALIZATION() using IsSerializable = decltype(true); // This is an indicator for the FE runtime reflection.
+#define FE_ENABLE_SERIALIZATION() using IsSerializable = decltype(true); // This is an indicator for the FE runtime reflection.
 #endif
 
 
@@ -58,5 +58,5 @@ limitations under the License.
 #define FHT_GENERATED() FHT_GENERATED_IMPL(_FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_, __LINE__, _FE_REFLECTION_TYPE_IDENTIFIER_HASH_GENERATED_BY_FHT_)
 #endif
 
-
+//FHT_GENERATED();
 #endif

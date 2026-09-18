@@ -898,6 +898,35 @@ namespace FHT::tokenizer
 	}
 
 
+	_FE_NODISCARD_ FE::boolean is_escaped(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	{
+		var::int64 l_backslash_count = 0;
+		for (auto it = code_iterator_p; *it == '\\'; --it)
+		{
+			++l_backslash_count;
+		}
+		return l_backslash_count % 2 == 1;
+	}
+
+	_FE_NODISCARD_ FE::boolean is_numeric_literal(typename file_buffer_t::const_pointer code_iterator_p) noexcept
+	{
+		while (*code_iterator_p == '\'')
+		{
+			--code_iterator_p;
+		}
+
+		if (*code_iterator_p == '.' ||
+			(*code_iterator_p >= 'a' && *code_iterator_p <= 'z') ||
+			(*code_iterator_p >= 'A' && *code_iterator_p <= 'Z') ||
+			(*code_iterator_p >= '0' && *code_iterator_p <= '9')
+			)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	void tokenize_string_literal(token& out_token_p, typename file_buffer_t::const_pointer code_iterator_p, FHT::context_stack_t& context_stack_p)
 	{
 		thread_local static file_buffer_t tl_s_delimiter;
@@ -914,9 +943,25 @@ namespace FHT::tokenizer
 
 		case 'R':
 			{
-				if (context_stack_p.back() == FHT::Context::_RawTextLiteral)
+				switch (context_stack_p.back())
 				{
+				case FHT::Context::_RawTextLiteral:
+					_FE_FALLTHROUGH_;
+				case FHT::Context::_TextLiteralPrefix:
+					_FE_FALLTHROUGH_;
+				case FHT::Context::_StringLiteral:
+					_FE_FALLTHROUGH_;
+				case FHT::Context::_CharLiteral:
+					return;
+
+				default:
 					break;
+				}
+
+
+				while (*code_iterator_p <= ' ')
+				{
+					++code_iterator_p;
 				}
 
 				auto l_quote = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\"');
@@ -931,7 +976,17 @@ namespace FHT::tokenizer
 
 				if (!(l_quote->_begin < l_line_end->_begin)) // doesn't the first " come before \n in the current line?
 				{
-					break;
+					l_quote = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, '\'');
+
+					if (l_quote == std::nullopt) // NAh!
+					{
+						return;
+					}
+
+					if (!(l_quote->_begin < l_line_end->_begin))
+					{
+						break;
+					}
 				}
 
 
@@ -948,10 +1003,21 @@ namespace FHT::tokenizer
 				case 1:
 					out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
 
-					if (out_token_p._code.back() == 'R') // is R
+					switch (out_token_p._code.back()) // is R
 					{
+					case 'R':
 						context_stack_p.push_back(FHT::Context::_RawTextLiteral);
 						extract_raw_text_delimiter_from_the_left_quote(tl_s_delimiter, code_iterator_p);
+						return;
+
+					case 'L':
+						_FE_FALLTHROUGH_;
+					case 'u':
+						_FE_FALLTHROUGH_;
+					case 'U':
+						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						context_stack_p.push_back(FHT::Context::_TextLiteralPrefix);
+						tl_s_delimiter.clear();
 						return;
 					}
 					tl_s_delimiter.clear();
@@ -962,6 +1028,7 @@ namespace FHT::tokenizer
 					if (out_token_p._code.back() == '8') // is u8
 					{
 						out_token_p._vocabulary = Vocabulary::_TextLiteralPrefix;
+						context_stack_p.push_back(FHT::Context::_TextLiteralPrefix);
 						tl_s_delimiter.clear();
 						return;
 					}
@@ -1015,10 +1082,13 @@ namespace FHT::tokenizer
 			switch (context_stack_p.back())
 			{
 			case FHT::Context::_StringLiteral:
-				if (code_iterator_p[-1] != '\\' ||
-					FE::algorithm::string::compare_ranged(code_iterator_p - 2, { 0,2 }, u8"\\\\", { 0, FE::algorithm::string::compiletime::length(u8"\\\\") }) == true)
+				if (is_escaped(code_iterator_p-1) == false)
 				{
 					context_stack_p.pop_back();
+					if (context_stack_p.back() == FHT::Context::_TextLiteralPrefix)
+					{
+						context_stack_p.pop_back();
+					}
 				}
 				break;
 
@@ -1064,14 +1134,21 @@ namespace FHT::tokenizer
 		case '\'':
 			if (context_stack_p.back() == FHT::Context::_CharLiteral)
 			{
-				if (code_iterator_p[-1] != '\\' ||
-					FE::algorithm::string::compare_ranged(code_iterator_p - 2, { 0,2 }, u8"\\\\", { 0, FE::algorithm::string::compiletime::length(u8"\\\\") }) == true) // is accessible when '' or '\''.
+				if (is_escaped(code_iterator_p - 1) == false) // is accessible when '' or '\''.
 				{
 					context_stack_p.pop_back();
+					if (context_stack_p.back() == FHT::Context::_TextLiteralPrefix)
+					{
+						context_stack_p.pop_back();
+					}
 				}
 			}
-			else if (context_stack_p.back() != FHT::Context::_RawTextLiteral)
+			else if (context_stack_p.back() != FHT::Context::_RawTextLiteral && context_stack_p.back() != FHT::Context::_StringLiteral)
 			{
+				if (is_numeric_literal(code_iterator_p - 1) && context_stack_p.back() != FHT::Context::_TextLiteralPrefix)
+				{
+					break;
+				}
 				context_stack_p.emplace_back(FHT::Context::_CharLiteral);
 			}
 			out_token_p._vocabulary = Vocabulary::_CharLiteral;
@@ -1955,6 +2032,9 @@ namespace FHT::tokenizer
 			case Vocabulary::_FrogmanEngineEnumStructReflectionMacro:
 				_FE_FALLTHROUGH_;
 
+			case Vocabulary::_FrogmanEngineEnableSerialization:
+				_FE_FALLTHROUGH_;
+
 			case Vocabulary::_FrogmanEngineSystemMacro:
 				if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, tl_s_key_buffer.length(), tl_s_key_buffer.c_str()))
 				{
@@ -1975,10 +2055,10 @@ namespace FHT::tokenizer
 			
 		}
 
-		if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, FE::algorithm::string::compiletime::length("ENABLE_SERIALIZATION"), "ENABLE_SERIALIZATION"))
+		if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, FE::algorithm::string::compiletime::length("FHT_GENERATED"), "FHT_GENERATED"))
 		{
 			out_token_p._vocabulary = Vocabulary::_FrogmanEngineEnableSerialization;
-			out_token_p._code = u8"ENABLE_SERIALIZATION";
+			out_token_p._code = u8"FHT_GENERATED";
 			return;
 		}
 

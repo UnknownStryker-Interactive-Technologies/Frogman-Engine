@@ -59,7 +59,7 @@ BEGIN_NAMESPACE(Nested)
 
 class/* try filter me */ GlobalRenderableComponent/* try filter me */:/* try filter me */public/* try filter me */GlobalComponentBase/* try filter me */
 {/* try filter me */
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:/* try filter me */
 	GlobalRenderableComponent();
 	virtual ~GlobalRenderableComponent() override;
@@ -79,7 +79,7 @@ private/* try filter me */:
 }/* try filter me */;
 
 class/* try filter me */EnemyEntity/* try filter me */:/* try filter me */public/* try filter me */EntityBase/* try filter me */{/* try filter me */
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	EnemyEntity();
 	virtual ~EnemyEntity() override;
@@ -101,7 +101,7 @@ class/* try filter me */
 	/* try filter me */ :/* try filter me */
 	/* try filter me */public/* try filter me */
 	/* try filter me */EntityBase/* try filter me */{
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	PlayerEntity();
 	~PlayerEntity() override;
@@ -119,7 +119,7 @@ private:
 //	/* try filter me */,/* try filter me */
 //	/* try filter me */public/* try filter me */IRenderable/* try filter me */
 //	/* try filter me */ {/* try filter me */
-//	ENABLE_SERIALIZATION();
+//	FE_ENABLE_SERIALIZATION();
 //public:
 //	UpdatableRenderable();
 //	~UpdatableRenderable() override;
@@ -134,7 +134,7 @@ private:
 class   /* try filter me */     /* try filter me */          RenderSystem /* try filter me */  :/* try filter me */
 	/* try filter me */	public     /* try filter me */        IGameSystem /* try filter me */
 	/* try filter me */ {/* try filter me */
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	RenderSystem();
 	~RenderSystem() override;

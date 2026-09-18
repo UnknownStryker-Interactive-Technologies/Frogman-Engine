@@ -43,6 +43,7 @@ namespace FHT::reflexcode_generator
 			DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
+			var::boolean _has_marker_fht_generated = false;
 		};
 
 		struct struct_info
@@ -50,6 +51,7 @@ namespace FHT::reflexcode_generator
 			DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
+			var::boolean _has_marker_fht_generated = false;
 		};
 
 		directory_t _header_file_path;

@@ -29,7 +29,7 @@ namespace FHT
 		_CommentBlock,
 		_Preprocessor,
 
-		_RawTextLiteral,
+		_RawTextLiteral, _TextLiteralPrefix,
 		_StringLiteral,
 		_CharLiteral,
 		

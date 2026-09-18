@@ -63,11 +63,14 @@ namespace FHT::preprocessor
 		STRING_CASE(u8"FE_SYSTEM"):
 			_FE_FALLTHROUGH_;
 
-
-		STRING_CASE(u8"END_NAMESPACE") :
+		STRING_CASE(u8"FE_ENABLE_SERIALIZATION") :
 			_FE_FALLTHROUGH_;
 
-		STRING_CASE(u8"ENABLE_SERIALIZATION"):
+		STRING_CASE(u8"FHT_GENERATED"):
+			_FE_FALLTHROUGH_;
+
+
+		STRING_CASE(u8"END_NAMESPACE") :
 			out_token_p._code.clear();
 			return; // Frogman Engine markers cannot be overriden
 		}

@@ -17,7 +17,7 @@
 template<typename T>
 class generic_base
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 private:
 	FE_PROPERTY(m_value);
@@ -38,7 +38,7 @@ public:
 class child_of_generic_base : public generic_base<int>
 {
 	FE_CLASS_HAS_A_BASE(generic_base<int>);
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 private:
 	FE_PROPERTY(m_child_value);
@@ -58,7 +58,7 @@ public:
 
 struct plain_old_data
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	FE_PROPERTY(_a);
 	var::int32 _a;
@@ -72,7 +72,7 @@ struct plain_old_data
 
 struct pod_with_array
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	FE_PROPERTY(_a);
 	var::int32 _a;
@@ -90,7 +90,7 @@ struct pod_with_array
 
 struct object_with_string
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	FE_PROPERTY(_a);
 	std::string _a;
@@ -98,7 +98,7 @@ struct object_with_string
 
 struct object_with_vector
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	FE_PROPERTY(_a);
 	std::vector<std::string> _a;
@@ -110,7 +110,7 @@ struct object_with_vector
 class object : public object_with_vector
 {
 	FE_CLASS_HAS_A_BASE(object_with_vector);
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	
 	FE_PROPERTY(m_text);
 	std::string m_text;

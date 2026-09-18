@@ -89,7 +89,7 @@ enum struct Vocabulary : FE::uint16
 	_FrogmanEngineStructReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
 	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgWorldTagEnum,
-	_FrogmanEngineEnableSerialization,
+	_FrogmanEngineEnableSerialization, _FrogmanHeaderToolGeneratedReflectionMacro,
 
 	_PreprocessorDirective, _PreprocessorNextLine,
 	_Preprocessor,
@@ -122,6 +122,7 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "static_assert", Vocabulary::_StaticAssert },
 
 	{ "FE_CLASS_HAS_A_BASE", Vocabulary::_FrogmanEngineBaseClassReflectionMacro },
+	{ "FE_ENABLE_SERIALIZATION", Vocabulary::_FrogmanEngineEnableSerialization },
 
 	{ "FE_PROPERTY", Vocabulary::_FrogmanEnginePropertyReflectionMacro },
 	{ "FE_STATIC_METHOD", Vocabulary::_FrogmanEngineStaticMethodReflectionMacro },

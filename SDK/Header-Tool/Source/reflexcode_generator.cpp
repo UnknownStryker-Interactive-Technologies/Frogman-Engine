@@ -310,10 +310,10 @@ namespace FHT::reflexcode_generator
 
 
 
-	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept
+	void __generate_generated_cpp_file(const metadata_set_t& metadata_set_p) noexcept
 	{
 		std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
-		l_generated_code.reserve(1 * FE::one_MiB);
+		l_generated_code.reserve(4 * FE::one_MiB);
 
 		l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n#include <FE/framework/reflection/private/load_reflection_data.hxx> \n#include <FE/framework.hxx> \n";
 		l_generated_code += L"#include <memory>\n#include <utility>\n\n";
@@ -359,7 +359,7 @@ namespace FHT::reflexcode_generator
 				l_generated_code += L");\n";
 			}
 
-			
+
 			constexpr FE::wchar* l_class_and_structs_reflection_frame = L"    ::FE::framework::framework_base::get_framework().get_method_reflection().register_task< ::FE::c_style_task<";
 			for (auto& [identifier, class_info] : header_file._classes) // classes reflection
 			{
@@ -492,5 +492,29 @@ namespace FHT::reflexcode_generator
 		FE_EXIT_IF(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 		l_generated_file << l_generated_code;
 		l_generated_file.close();
+	}
+
+	//void __generate_generated_h_file(const metadata_set_t& metadata_set_p) noexcept
+	//{
+	//	std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
+	//	l_generated_code.reserve(1 * FE::one_MiB);
+
+	//	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n";
+	//	l_generated_code += L"#include <FE/framework/reflection/private/load_reflection_data.hxx>\n";
+	//	l_generated_code += L"#include <FE/private/reflection_defines.hxx>\n";
+	//	l_generated_code += L"#include <FE/framework.hxx>\n";
+	//	l_generated_code += L"#include <FE/engine.hpp>\n";
+	//	l_generated_code += L"#include <FE/prerequisites.hxx>\n\n\n\n";
+
+	//	for (const metadata& header_file : metadata_set_p) // #include <> statements gereration
+	//	{
+
+	//	}
+	//}
+
+	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept
+	{
+		__generate_generated_cpp_file(metadata_set_p);
+
 	}
 }

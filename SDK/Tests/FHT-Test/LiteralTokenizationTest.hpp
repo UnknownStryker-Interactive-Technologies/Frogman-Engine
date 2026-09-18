@@ -16,8 +16,18 @@
 //                           ::lit_member_l7b ::lit_ns_l7::lit_member_l7c
 //   register_enum_struct: ::lit_hidden_kind_l2 with _A;
 //   associate_system: none
-#include <FE/prerequisites.hxx>
-#include <cstdint>
+enum struct kindZ1
+{
+	_A = 1'000,
+	_B
+};
+
+inline FE::ASCII* g_holololol = "\\\"";
+inline auto g_lol8 = u8'8';
+inline auto g_lol16 = u'u';
+inline auto g_lol32 = U'U';
+inline auto g_lol32 = L'L';
+inline constexpr var::int64 g_lollol = 1'000000;
 
 
 // ==== C. Controls that already work and must keep working ====

@@ -165,7 +165,7 @@ enum struct _NODISCARD_ _MAYBE_UNUSED_ GlobalEntityType4 : uint16_t
 FE_STRUCT();
 struct/* try filter me */GlobalTransform2D/* try filter me */
 {/* try filter me */
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _x;
 	float _y;
 	float _rotation;
@@ -178,7 +178,7 @@ struct/* try filter me */GlobalTransform2D/* try filter me */
 struct/* try filter me */
 	/* try filter me */GlobalVelocity/* try filter me */
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _vx;
 	float _vy;
 
@@ -195,7 +195,7 @@ struct/* try filter me */
 
 struct GlobalRigidBody
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _mass;
 	float _friction;
 
@@ -211,7 +211,7 @@ struct GlobalRigidBody
 FE_CLASS();
 class/* try filter me */GlobalGameObject/* try filter me */
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject(float vx_p, float vy_p);
 	~GlobalGameObject() = delete;
@@ -229,7 +229,7 @@ private:
 class/* try filter me */
 	/* try filter me */GlobalGameObject2/* try filter me */
 {/* try filter me */
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	GlobalGameObject2();
 	~GlobalGameObject2();
@@ -245,7 +245,7 @@ private:
 
 class [/* try filter me */[/* try filter me */maybe_unused/* try filter me */]/* try filter me */] GlobalGameObject3
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject3();
 	~GlobalGameObject3();
@@ -261,7 +261,7 @@ private:
 
 class GlobalGameObject4
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject4();
 	~GlobalGameObject4();
@@ -277,7 +277,7 @@ private:
 
 class _MAYBE_UNUSED_ GlobalGameObject5
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject5();
 	~GlobalGameObject5();
@@ -293,7 +293,7 @@ private:
 
 class _MAYBE_UNUSED_ GlobalGameObject6
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject6();
 	~GlobalGameObject6();
@@ -309,7 +309,7 @@ private:
 
 class [[maybe_unused]] GlobalGameObject7
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalGameObject7();
 	~GlobalGameObject7();
@@ -329,7 +329,7 @@ private:
 // Global class with FE macro - with multiple access specifiers
 class GlobalComponentBase
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 protected:
 	bool _enabled;
 	uint64_t _component_id;
@@ -352,7 +352,7 @@ private:
 // Global class with FE macro - virtual inheritance
 class GlobalRenderableComponent : public GlobalComponentBase
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalRenderableComponent();
 	virtual ~GlobalRenderableComponent() override;
@@ -374,7 +374,7 @@ private:
 // Global class with FE macro - final keyword
 class GlobalSingletonManager final
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	GlobalSingletonManager(const GlobalSingletonManager&) = delete;
 	GlobalSingletonManager& operator=(const GlobalSingletonManager&) = delete;
@@ -453,7 +453,7 @@ enum struct ReservedEnum
 // Struct with FE macro - simple POD
 struct Position
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _x;
 	float _y;
 };
@@ -461,14 +461,14 @@ struct Position
 // Struct with FE macro - multiple fields on same line
 struct Bounds
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _left, _top, _right, _bottom;
 };
 
 // Struct with FE macro - with constructor
 struct Size
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _width;
 	float _height;
 
@@ -479,7 +479,7 @@ struct Size
 // Struct with FE macro - with various method types
 struct Transform
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _x;
 	float _y;
 	float _rotation;
@@ -520,7 +520,7 @@ struct Transform
 // Struct with FE macro - with inheritance (single)
 struct AnimatedTransform
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	float _animation_speed;
 	float _current_frame;
 
@@ -533,7 +533,7 @@ struct AnimatedTransform
 // Struct with FE macro - with static members
 struct GameConfig
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	static const uint32_t MAX_PLAYERS = 4;
 	static const float DEFAULT_TIMESTEP;
 	static constexpr uint64_t FRAME_BUFFER_SIZE = 8192;
@@ -550,7 +550,7 @@ struct GameConfig
 // Struct with FE macro - with bitfields
 struct EntityFlags
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	uint32_t _is_visible : 1;
 	uint32_t _is_collidable : 1;
 	uint32_t _is_kinematic : 1;
@@ -561,7 +561,7 @@ struct EntityFlags
 // Class with FE macro - simple with private members only
 class Component
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 private:
 	uint32_t _id;
 	float _priority;
@@ -570,7 +570,7 @@ private:
 // Class with FE macro - with public section
 class SpriteComponent
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	SpriteComponent();
 	~SpriteComponent();
@@ -585,7 +585,7 @@ private:
 // Class with FE macro - with all access specifiers
 class PhysicsComponent
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	PhysicsComponent();
 	~PhysicsComponent();
@@ -605,7 +605,7 @@ private:
 // Class with FE macro - with virtual methods
 class EntityBase
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	EntityBase() {}
 	virtual ~EntityBase() {}
@@ -624,7 +624,7 @@ private:
 // Class with FE macro - derived with override
 class EnemyEntity : public EntityBase
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	EnemyEntity();
 	virtual ~EnemyEntity() override;
@@ -643,7 +643,7 @@ private:
 // Class with FE macro - final class
 class PlayerEntity final : public EntityBase
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	PlayerEntity();
 	~PlayerEntity() override;
@@ -657,7 +657,7 @@ private:
 // Class with FE macro - with deleted methods
 class NonCopyableEntity
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	NonCopyableEntity();
 	~NonCopyableEntity();
@@ -674,7 +674,7 @@ private:
 // Class with FE macro - with static methods and members
 class EntityFactory
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	static void initialize();
 	static EntityBase* create_entity(int type_id_p);
@@ -694,7 +694,7 @@ private:
 // Class with FE macro - with multiple inheritance
 class IUpdatable
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	virtual ~IUpdatable();
 	virtual void update(float delta_p) = 0;
@@ -705,7 +705,7 @@ protected:
 
 class IRenderable
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	virtual ~IRenderable();
 	virtual void render() = 0;
@@ -716,7 +716,7 @@ protected:
 
 //class UpdatableRenderable : public IUpdatable, public IRenderable
 //{
-//	ENABLE_SERIALIZATION();
+//	FE_ENABLE_SERIALIZATION();
 //public:
 //	UpdatableRenderable();
 //	~UpdatableRenderable() override;
@@ -732,7 +732,7 @@ protected:
 
 class IGameSystem
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	virtual ~IGameSystem() = default;
 
@@ -753,7 +753,7 @@ union att
 // Class with FE macro - implementing interface
 class RenderSystem : public IGameSystem
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	RenderSystem();
 	~RenderSystem() override;
@@ -794,14 +794,14 @@ enum struct NestedInputType
 
 struct NestedInput
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	int _device_id;
 	float _value;
 };
 
 class NestedInputManager
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	NestedInputManager();
 	~NestedInputManager();
@@ -825,14 +825,14 @@ enum struct DeepActionType
 
 struct DeepAction
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	DeepActionType _type;
 	float _intensity;
 };
 
 class DeepActionHandler
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	void handle_action(const DeepAction& action_p);
 };
@@ -851,11 +851,11 @@ BEGIN_NAMESPACE(FE::Test::EdgeCases)
 // Struct with FE macro - nested structs
 struct OuterData
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 
 	struct InnerData
 	{
-		ENABLE_SERIALIZATION();
+		FE_ENABLE_SERIALIZATION();
 		int _value;
 	};
 
@@ -866,11 +866,11 @@ struct OuterData
 // Class with FE macro - nested classes
 class OuterSystem
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	class InnerSystem
 	{
-		ENABLE_SERIALIZATION();
+		FE_ENABLE_SERIALIZATION();
 	public:
 		InnerSystem();
 		void process();
@@ -912,7 +912,7 @@ enum struct CharacterEnum : char
 // Struct with FE macro - array members
 struct ArrayContainer
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	int _simple_array[10];
 	float _matrix[4][4];
 	uint32_t _constant_buffer[64];
@@ -921,7 +921,7 @@ struct ArrayContainer
 // Class with FE macro - complex pointer types
 class PointerManager
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 public:
 	void process_data(int* ptr_p);
 	void process_multi(int** ptr_ptr_p);
@@ -939,7 +939,7 @@ private:
 // Struct with FE macro - function pointers
 struct CallbackContainer
 {
-	ENABLE_SERIALIZATION();
+	FE_ENABLE_SERIALIZATION();
 	void (*_on_update)();
 	int (*_on_event)(int, float);
 	void (*_callback_array[8])(int);
