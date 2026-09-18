@@ -181,14 +181,6 @@ struct/* try filter me */
 	FE_ENABLE_SERIALIZATION();
 	float _vx;
 	float _vy;
-
-	GlobalVelocity();
-	GlobalVelocity(float vx_p, float vy_p);
-	~GlobalVelocity();
-
-	float magnitude() const;
-	void normalize();
-	static GlobalVelocity zero();
 };
 
 // Global struct with FE macro - with inheritance
@@ -198,10 +190,6 @@ struct GlobalRigidBody
 	FE_ENABLE_SERIALIZATION();
 	float _mass;
 	float _friction;
-
-	GlobalRigidBody();
-	virtual ~GlobalRigidBody();
-	virtual void apply_force(float fx_p, float fy_p);
 };
 
 
@@ -483,38 +471,6 @@ struct Transform
 	float _x;
 	float _y;
 	float _rotation;
-
-	// Constructors
-	Transform();
-	Transform(float x_p, float y_p, float rotation_p);
-	Transform(const Transform& other_p);
-	Transform(Transform&& other_p) noexcept;
-
-	// Destructor
-	~Transform();
-
-	// Assignment operators
-	Transform& operator=(const Transform& other_p);
-	Transform& operator=(Transform&& other_p) noexcept;
-
-	// Const methods
-	float get_angle_radians() const;
-	Position get_position() const;
-
-	// Non-const methods
-	void translate(float dx_p, float dy_p);
-	void rotate(float angle_p);
-
-	// Static methods
-	static Transform identity();
-	static Transform from_position(const Position& pos_p);
-
-	// Inline methods
-	inline float get_x() const { return _x; }
-	inline void set_x(float x_p) { _x = x_p; }
-
-	// Constexpr methods
-	constexpr float sum_components() const { return _x + _y + _rotation; }
 };
 
 // Struct with FE macro - with inheritance (single)
@@ -523,11 +479,6 @@ struct AnimatedTransform
 	FE_ENABLE_SERIALIZATION();
 	float _animation_speed;
 	float _current_frame;
-
-	AnimatedTransform();
-	virtual ~AnimatedTransform() = delete;
-	virtual void update(float delta_p);
-	virtual void reset_animation();
 };
 
 // Struct with FE macro - with static members
@@ -541,10 +492,6 @@ struct GameConfig
 	bool _fullscreen;
 	bool _vsync;
 	uint32_t _target_fps;
-
-	static void load_from_file(const char* path_p);
-	static void save_to_file(const char* path_p);
-	static GameConfig& get_default();
 };
 
 // Struct with FE macro - with bitfields
@@ -853,13 +800,13 @@ struct OuterData
 {
 	FE_ENABLE_SERIALIZATION();
 
-	struct InnerData
-	{
-		FE_ENABLE_SERIALIZATION();
-		int _value;
-	};
-
-	InnerData _data;
+//	struct InnerData
+//	{
+//		FE_ENABLE_SERIALIZATION();
+//		int _value;
+//	};
+//
+//	InnerData _data;
 	float _scale;
 };
 

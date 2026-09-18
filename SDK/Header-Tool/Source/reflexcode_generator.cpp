@@ -268,6 +268,7 @@ namespace FHT::reflexcode_generator
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._this_class_name.data()), node_p._this_class_name.length());
 
 		auto& l_value = out_return_p._classes[std::move(l_identifier)];
+		l_value._is_marker_fht_generated_defined = node_p._is_marker_fht_generated_defined;
 		l_value._default_constructor_state = node_p._default_constructor_state;
 		l_value._has_constructor_variants = node_p._has_constructor_variants;
 		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
@@ -282,6 +283,7 @@ namespace FHT::reflexcode_generator
 		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._identifier.data()), node_p._identifier.length());
 
 		auto& l_value = out_return_p._structs[std::move(l_identifier)];
+		l_value._is_marker_fht_generated_defined = node_p._is_marker_fht_generated_defined;
 		l_value._default_constructor_state = node_p._default_constructor_state;
 		l_value._has_constructor_variants = node_p._has_constructor_variants;
 		l_value._is_destructor_deleted_or_not_public = node_p._is_destructor_deleted_or_not_public;
@@ -488,29 +490,51 @@ namespace FHT::reflexcode_generator
 		l_path_to_generated += L"\\generated.cpp";
 
 		std::wofstream l_generated_file;
+		FE::wofstream_guard l_generated_file_guard(l_generated_file);
 		l_generated_file.open(l_path_to_generated);
 		FE_EXIT_IF(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 		l_generated_file << l_generated_code;
-		l_generated_file.close();
 	}
 
-	//void __generate_generated_h_file(const metadata_set_t& metadata_set_p) noexcept
-	//{
-	//	std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
-	//	l_generated_code.reserve(1 * FE::one_MiB);
+	void __generate_generated_h_file(const metadata_set_t& metadata_set_p) noexcept
+	{
+		std::pmr::wstring l_generated_code(framework::get_framework().get_memory_resource());
+		l_generated_code.reserve(1 * FE::one_MiB);
 
-	//	l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n";
-	//	l_generated_code += L"#include <FE/framework/reflection/private/load_reflection_data.hxx>\n";
-	//	l_generated_code += L"#include <FE/private/reflection_defines.hxx>\n";
-	//	l_generated_code += L"#include <FE/framework.hxx>\n";
-	//	l_generated_code += L"#include <FE/engine.hpp>\n";
-	//	l_generated_code += L"#include <FE/prerequisites.hxx>\n\n\n\n";
+		l_generated_code += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved. \n";
+		l_generated_code += L"#include <FE/framework/reflection/private/load_reflection_data.hxx>\n";
+		l_generated_code += L"#include <FE/private/reflection_defines.hxx>\n";
+		l_generated_code += L"#include <FE/framework.hxx>\n";
+		l_generated_code += L"#include <FE/engine.hpp>\n";
+		l_generated_code += L"#include <FE/prerequisites.hxx>\n\n\n\n";
 
-	//	for (const metadata& header_file : metadata_set_p) // #include <> statements gereration
-	//	{
 
-	//	}
-	//}
+		tf::Taskflow l_taskflow;
+		tf::Executor l_executor(header_tool::get_program_options().get_max_concurrency() - 1); // exclude the main thread.
+
+		std::pmr::wstring l_path_to_generated(framework::get_framework().get_memory_resource());
+		FE::size l_path_length = FE::algorithm::string::length(::header_tool::get_program_options().get_path_to_project());
+		FE_EXIT_IF(l_path_length == 0, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: the directory value for -path-to-project= is not given or specified to this header tool program. \nThe string length of the path to the desired folder to create the generated.cpp file is ZERO.");
+
+		l_path_to_generated.resize(l_path_length + 1);
+		std::mbstowcs(l_path_to_generated.data(), ::header_tool::get_program_options().get_path_to_project(), l_path_length);
+		l_path_to_generated = l_path_to_generated.c_str();
+		l_path_to_generated += L"\\generated-includes";
+
+		for (const metadata& header_file : metadata_set_p) // #include <> statements gereration
+		{
+			l_taskflow.emplace
+			(
+				[&header_file]
+				{
+					std::wofstream l_generated_h;
+					FE::wofstream_guard l_generated_file_guard(l_generated_h);
+				}
+			);
+		}
+		// Now, run it.
+		l_executor.run(l_taskflow).wait();
+	}
 
 	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept
 	{

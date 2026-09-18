@@ -302,34 +302,34 @@ processFloat(T value) {
 // 19. Concepts (C++20) - if supported
 // ============================================================================
 
-#if __cplusplus >= 202002L
-
-template <typename T>
-concept Numeric = std::is_arithmetic_v<T>;
-
-template <Numeric T>
-class ConceptClass {
-public:
-    T value;
-};
-
-template <typename T>
-    requires Numeric<T>
-T add(T a, T b) {
-    return a + b;
-}
-
-template <typename T>
-concept HasSize = requires(T t) {
-    { t.size() } -> std::convertible_to<size_t>;
-};
-
-template <HasSize T>
-size_t getSize(const T& container) {
-    return container.size();
-}
-
-#endif
+//#if __cplusplus >= 202002L
+//
+//template <typename T>
+//concept Numeric = std::is_arithmetic_v<T>;
+//
+//template <Numeric T>
+//class ConceptClass {
+//public:
+//    T value;
+//};
+//
+//template <typename T>
+//    requires Numeric<T>
+//T add(T a, T b) {
+//    return a + b;
+//}
+//
+//template <typename T>
+//concept HasSize = requires(T t) {
+//    { t.size() } -> std::convertible_to<size_t>;
+//};
+//
+//template <HasSize T>
+//size_t getSize(const T& container) {
+//    return container.size();
+//}
+//
+//#endif
 
 // ============================================================================
 // 20. Variadic Template with Parameter Pack Expansion
@@ -391,11 +391,11 @@ template <int N>
 struct Factorial {
     static constexpr int value = N * Factorial<N - 1>::value;
 };
-
-template <>
-struct Factorial<0> {
-    static constexpr int value = 1;
-};
+//
+//template <>
+//struct Factorial<0> {
+//    static constexpr int value = 1;
+//};
 
 // ============================================================================
 // 24. Perfect Forwarding

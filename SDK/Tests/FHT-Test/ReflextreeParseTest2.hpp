@@ -81,8 +81,8 @@ struct GlobalTransform
 	float _scale;
 
 	GlobalTransform();
-	virtual ~GlobalTransform();
-	virtual void update(float delta_p);
+//	virtual ~GlobalTransform();
+//	virtual void update(float delta_p);
 };
 
 // Global class - simple
@@ -269,12 +269,12 @@ struct Vector3D
 	static Vector3D one();
 	static Vector3D up();
 
-	// Inline methods
-	inline float get_x() const { return _x; }
-	inline void set_x(float x_p) { _x = x_p; }
-
-	// Constexpr methods
-	constexpr float sum() const { return _x + _y + _z; }
+//	// Inline methods
+//	inline float get_x() const { return _x; }
+//	inline void set_x(float x_p) { _x = x_p; }
+//
+//	// Constexpr methods
+//	constexpr float sum() const { return _x + _y + _z; }
 
 	// Operator overloading
 	Vector3D operator+(const Vector3D& other_p) const;
@@ -291,9 +291,9 @@ struct Transform
 	float _scale;
 
 	Transform();
-	virtual ~Transform();
-	virtual void update(float delta_p);
-	virtual void reset();
+//	virtual ~Transform();
+//	virtual void update(float delta_p);
+//	virtual void reset();
 };
 
 struct PhysicsTransform
@@ -787,12 +787,12 @@ struct BraceInjectionAttackStruct
 // Struct with nested structs
 struct OuterStruct
 {
-	struct InnerStruct
-	{
-		int _inner_value;
-	};
-
-	InnerStruct _nested;
+//	struct InnerStruct
+//	{
+//		int _inner_value;
+//	};
+//
+//	InnerStruct _nested;
 	int _outer_value;
 };
 

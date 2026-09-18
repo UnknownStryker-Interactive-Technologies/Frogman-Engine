@@ -55,7 +55,7 @@ namespace FHT::tokenizer
 		auto l_end = file_p.c_str() + file_p.size();
 		var::uint32 l_token_line_number = 1;
 
-		FE_LOG_IF(path_p.empty(), FE::log::Severity::_Info, "The header file path is empty, transitioning to scope lexer mode.");
+		//FE_LOG_IF(path_p.empty(), FE::log::Severity::_Info, "The header file path is empty, transitioning to scope lexer mode.");
 		for (FE::UTF8* iterator = path_p.empty() ? file_p.c_str() : FE::algorithm::string::skip_BOM(file_p.c_str()); iterator < l_end;)
 		{
 			if (*iterator <= ' ')

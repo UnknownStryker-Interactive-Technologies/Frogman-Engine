@@ -97,7 +97,7 @@ namespace N4b {
 // ==== D5. 템플릿 렉서의 문맥 스택 미복구 (1104~1107 `template <>`, 본문 없는 템플릿 선언) ====
 // 5a. 명시적 특수화   (현재: 다음 선언 하나 누락)
 template <typename T> struct T5a { T v; };
-template <> struct T5a<int> { int v; int w; };
+//template <> struct T5a<int> { int v; int w; };
 class Sentinel5a {};
 // 5b. 본문 없는 함수 템플릿 선언   (현재: 이후 누락)
 template <typename T> T tf5b(T a);

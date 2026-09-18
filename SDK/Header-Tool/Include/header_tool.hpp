@@ -74,6 +74,7 @@ public:
 		
 public:
 	_FE_FORCE_INLINE_ static const ::program_options& get_program_options() noexcept { return static_cast<const ::program_options&>( get_framework().get_program_options() ); }
+	_FE_FORCE_INLINE_ static const std::pmr::vector<file_buffer_t>& get_mapped_header_files() noexcept { return ((header_tool&)get_framework()).m_mapped_header_files; }
 };
 
 

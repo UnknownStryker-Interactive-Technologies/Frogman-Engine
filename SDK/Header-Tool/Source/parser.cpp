@@ -397,6 +397,11 @@ namespace FHT::parser
 		{
 			switch (token._vocabulary)
 			{
+			case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
+				l_node._is_marker_fht_generated_defined = true;
+				break;
+
+
 			case Vocabulary::_Private:
 				l_current_access_modifier_scope = AccessModifierScope::_Private;
 				break;
@@ -596,8 +601,9 @@ namespace FHT::parser
 				break;
 
 
-			//case Vocabulary::_Const:
-			//	break;
+				case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
+				l_node._is_marker_fht_generated_defined = true;
+				break;
 
 
 			case Vocabulary::_Virtual:

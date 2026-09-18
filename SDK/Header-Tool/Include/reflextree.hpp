@@ -41,6 +41,7 @@ struct class_node
 	var::boolean _is_forward_decl = false;
 	var::boolean _has_marker = false;
 	var::boolean _has_pure_virtual = false;
+	var::boolean _is_marker_fht_generated_defined = false;
 
 	DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 	var::boolean _has_constructor_variants = false;
@@ -54,6 +55,7 @@ struct struct_node
 {
 	var::boolean _is_forward_decl = false;
 	var::boolean _has_marker = false;
+	var::boolean _is_marker_fht_generated_defined = false;
 
 	DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 	var::boolean _has_constructor_variants = false;
