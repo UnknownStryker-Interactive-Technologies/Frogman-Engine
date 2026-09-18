@@ -1,4 +1,4 @@
-#ifndef ENTT_SIGNAL_SIGH_HPP
+﻿#ifndef ENTT_SIGNAL_SIGH_HPP
 #define ENTT_SIGNAL_SIGH_HPP
 
 #include "../stl/cstddef.hpp"

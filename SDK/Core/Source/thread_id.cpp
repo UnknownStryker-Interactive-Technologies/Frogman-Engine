@@ -20,9 +20,6 @@ limitations under the License.
 // std::mutex, std::lock_guard
 #include <mutex>
 
-// boost::thread
-#include <boost/thread.hpp>
-
 // Microsoft Parallel Patterns Library
 #include <concurrent_queue.h>
 

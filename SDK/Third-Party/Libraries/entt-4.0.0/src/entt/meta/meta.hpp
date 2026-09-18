@@ -1,4 +1,4 @@
-#ifndef ENTT_META_META_HPP
+﻿#ifndef ENTT_META_META_HPP
 #define ENTT_META_META_HPP
 
 #include "../config/config.h"

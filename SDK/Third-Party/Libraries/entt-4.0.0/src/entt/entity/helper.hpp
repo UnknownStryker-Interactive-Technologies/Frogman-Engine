@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_HELPER_HPP
+﻿#ifndef ENTT_ENTITY_HELPER_HPP
 #define ENTT_ENTITY_HELPER_HPP
 
 #include "../core/fwd.hpp"

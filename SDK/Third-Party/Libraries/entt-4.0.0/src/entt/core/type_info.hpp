@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_TYPE_INFO_HPP
+﻿#ifndef ENTT_CORE_TYPE_INFO_HPP
 #define ENTT_CORE_TYPE_INFO_HPP
 
 #include <compare>

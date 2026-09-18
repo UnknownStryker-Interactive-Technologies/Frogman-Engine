@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_SSTREAM_HPP
+﻿#ifndef ENTT_STL_SSTREAM_HPP
 #define ENTT_STL_SSTREAM_HPP
 
 /*! @cond ENTT_INTERNAL */

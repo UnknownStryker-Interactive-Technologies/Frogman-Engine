@@ -1,4 +1,4 @@
-#ifndef ENTT_SIGNAL_DELEGATE_HPP
+﻿#ifndef ENTT_SIGNAL_DELEGATE_HPP
 #define ENTT_SIGNAL_DELEGATE_HPP
 
 #include "../config/config.h"

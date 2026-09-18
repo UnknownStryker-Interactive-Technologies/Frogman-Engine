@@ -1,4 +1,4 @@
-#ifndef ENTT_PROCESS_FWD_HPP
+﻿#ifndef ENTT_PROCESS_FWD_HPP
 #define ENTT_PROCESS_FWD_HPP
 
 #include "../stl/cstdint.hpp"

@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_MEMORY_HPP
+﻿#ifndef ENTT_STL_MEMORY_HPP
 #define ENTT_STL_MEMORY_HPP
 
 /*! @cond ENTT_INTERNAL */

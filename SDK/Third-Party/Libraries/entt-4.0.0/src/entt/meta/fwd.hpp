@@ -1,4 +1,4 @@
-#ifndef ENTT_META_FWD_HPP
+﻿#ifndef ENTT_META_FWD_HPP
 #define ENTT_META_FWD_HPP
 
 #include "../stl/cstddef.hpp"

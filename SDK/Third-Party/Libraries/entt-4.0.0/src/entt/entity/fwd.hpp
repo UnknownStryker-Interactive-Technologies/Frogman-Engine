@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_FWD_HPP
+﻿#ifndef ENTT_ENTITY_FWD_HPP
 #define ENTT_ENTITY_FWD_HPP
 
 #include "../config/config.h"

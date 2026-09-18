@@ -1,4 +1,4 @@
-#ifndef ENTT_META_POLICY_HPP
+﻿#ifndef ENTT_META_POLICY_HPP
 #define ENTT_META_POLICY_HPP
 
 #include "../stl/type_traits.hpp"

@@ -1,4 +1,4 @@
-#ifndef ENTT_META_CTX_HPP
+﻿#ifndef ENTT_META_CTX_HPP
 #define ENTT_META_CTX_HPP
 
 #include "../container/dense_map.hpp"

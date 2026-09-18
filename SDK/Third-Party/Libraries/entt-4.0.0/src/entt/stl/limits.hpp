@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_LIMITS_HPP
+﻿#ifndef ENTT_STL_LIMITS_HPP
 #define ENTT_STL_LIMITS_HPP
 
 /*! @cond ENTT_INTERNAL */

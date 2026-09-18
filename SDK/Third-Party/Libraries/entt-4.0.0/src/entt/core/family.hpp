@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_FAMILY_HPP
+﻿#ifndef ENTT_CORE_FAMILY_HPP
 #define ENTT_CORE_FAMILY_HPP
 
 #include "../config/config.h"

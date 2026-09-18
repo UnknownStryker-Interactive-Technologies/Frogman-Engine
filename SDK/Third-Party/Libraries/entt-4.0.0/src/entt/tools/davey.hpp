@@ -1,4 +1,4 @@
-#ifndef ENTT_TOOLS_DAVEY_HPP
+﻿#ifndef ENTT_TOOLS_DAVEY_HPP
 #define ENTT_TOOLS_DAVEY_HPP
 
 #include "../config/config.h"

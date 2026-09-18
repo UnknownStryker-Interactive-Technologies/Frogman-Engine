@@ -1,4 +1,4 @@
-#ifndef ENTT_META_TYPE_TRAITS_HPP
+﻿#ifndef ENTT_META_TYPE_TRAITS_HPP
 #define ENTT_META_TYPE_TRAITS_HPP
 
 #include "../stl/type_traits.hpp"

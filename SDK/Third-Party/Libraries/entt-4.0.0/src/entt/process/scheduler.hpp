@@ -1,4 +1,4 @@
-#ifndef ENTT_PROCESS_SCHEDULER_HPP
+﻿#ifndef ENTT_PROCESS_SCHEDULER_HPP
 #define ENTT_PROCESS_SCHEDULER_HPP
 
 #include "../config/config.h"

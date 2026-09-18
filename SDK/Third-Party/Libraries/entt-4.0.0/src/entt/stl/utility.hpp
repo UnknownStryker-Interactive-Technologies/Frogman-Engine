@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_UTILITY_HPP
+﻿#ifndef ENTT_STL_UTILITY_HPP
 #define ENTT_STL_UTILITY_HPP
 
 /*! @cond ENTT_INTERNAL */

@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_BIT_HPP
+﻿#ifndef ENTT_CORE_BIT_HPP
 #define ENTT_CORE_BIT_HPP
 
 #include "../config/config.h"

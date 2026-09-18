@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_ATOMIC_HPP
+﻿#ifndef ENTT_STL_ATOMIC_HPP
 #define ENTT_STL_ATOMIC_HPP
 
 /*! @cond ENTT_INTERNAL */

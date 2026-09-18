@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_ITERATOR_HPP
+﻿#ifndef ENTT_CORE_ITERATOR_HPP
 #define ENTT_CORE_ITERATOR_HPP
 
 #include "../stl/concepts.hpp"

@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_ARRAY_HPP
+﻿#ifndef ENTT_STL_ARRAY_HPP
 #define ENTT_STL_ARRAY_HPP
 
 /*! @cond ENTT_INTERNAL */

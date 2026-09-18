@@ -1,4 +1,4 @@
-#ifndef ENTT_RESOURCE_RESOURCE_HPP
+﻿#ifndef ENTT_RESOURCE_RESOURCE_HPP
 #define ENTT_RESOURCE_RESOURCE_HPP
 
 #include <compare>

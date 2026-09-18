@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_IOS_HPP
+﻿#ifndef ENTT_STL_IOS_HPP
 #define ENTT_STL_IOS_HPP
 
 /*! @cond ENTT_INTERNAL */

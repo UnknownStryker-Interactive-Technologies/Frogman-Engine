@@ -1,4 +1,4 @@
-#ifndef _FE_RENDERER_WINDOW_HXX_
+﻿#ifndef _FE_RENDERER_WINDOW_HXX_
 #define _FE_RENDERER_WINDOW_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.

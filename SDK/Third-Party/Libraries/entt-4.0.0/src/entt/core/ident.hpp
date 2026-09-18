@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_IDENT_HPP
+﻿#ifndef ENTT_CORE_IDENT_HPP
 #define ENTT_CORE_IDENT_HPP
 
 #include "../stl/cstddef.hpp"

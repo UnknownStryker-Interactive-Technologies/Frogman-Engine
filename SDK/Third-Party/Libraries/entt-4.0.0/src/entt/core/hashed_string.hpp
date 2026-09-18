@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_HASHED_STRING_HPP
+﻿#ifndef ENTT_CORE_HASHED_STRING_HPP
 #define ENTT_CORE_HASHED_STRING_HPP
 
 #include "../stl/cstddef.hpp"

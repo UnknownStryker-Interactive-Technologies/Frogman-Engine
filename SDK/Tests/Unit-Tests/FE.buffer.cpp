@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Test Generated Claude, and reviewed by Joey Lee
 * 
 Google Test suite for FE::buffer<Allocator>.

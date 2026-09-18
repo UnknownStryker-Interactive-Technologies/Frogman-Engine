@@ -1,4 +1,4 @@
-#ifndef ENTT_CONFIG_CONFIG_H
+﻿#ifndef ENTT_CONFIG_CONFIG_H
 #define ENTT_CONFIG_CONFIG_H
 
 #if __has_include(<entt/ext/config.h>)

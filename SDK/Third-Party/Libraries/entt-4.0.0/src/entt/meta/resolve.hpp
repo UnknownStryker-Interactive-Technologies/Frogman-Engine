@@ -1,4 +1,4 @@
-#ifndef ENTT_META_RESOLVE_HPP
+﻿#ifndef ENTT_META_RESOLVE_HPP
 #define ENTT_META_RESOLVE_HPP
 
 #include "../core/type_info.hpp"

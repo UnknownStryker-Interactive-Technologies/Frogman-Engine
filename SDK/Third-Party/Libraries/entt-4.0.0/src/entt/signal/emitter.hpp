@@ -1,4 +1,4 @@
-#ifndef ENTT_SIGNAL_EMITTER_HPP
+﻿#ifndef ENTT_SIGNAL_EMITTER_HPP
 #define ENTT_SIGNAL_EMITTER_HPP
 
 #include "../container/dense_map.hpp"

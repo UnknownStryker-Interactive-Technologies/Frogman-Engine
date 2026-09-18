@@ -1,4 +1,4 @@
-#ifndef ENTT_RESOURCE_LOADER_HPP
+﻿#ifndef ENTT_RESOURCE_LOADER_HPP
 #define ENTT_RESOURCE_LOADER_HPP
 
 #include "../stl/memory.hpp"

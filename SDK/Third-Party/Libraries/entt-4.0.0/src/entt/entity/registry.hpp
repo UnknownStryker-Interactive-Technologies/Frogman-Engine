@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_REGISTRY_HPP
+﻿#ifndef ENTT_ENTITY_REGISTRY_HPP
 #define ENTT_ENTITY_REGISTRY_HPP
 
 #include <compare>

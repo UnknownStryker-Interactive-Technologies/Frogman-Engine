@@ -1,4 +1,4 @@
-#ifndef ENTT_META_UTILITY_HPP
+﻿#ifndef ENTT_META_UTILITY_HPP
 #define ENTT_META_UTILITY_HPP
 
 #include "../core/type_traits.hpp"

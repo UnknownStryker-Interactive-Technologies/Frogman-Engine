@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_CONCEPTS_HPP
+﻿#ifndef ENTT_CORE_CONCEPTS_HPP
 #define ENTT_CORE_CONCEPTS_HPP
 
 #include "../stl/type_traits.hpp"

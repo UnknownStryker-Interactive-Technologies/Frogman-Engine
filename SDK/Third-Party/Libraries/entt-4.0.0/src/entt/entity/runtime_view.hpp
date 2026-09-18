@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_RUNTIME_VIEW_HPP
+﻿#ifndef ENTT_ENTITY_RUNTIME_VIEW_HPP
 #define ENTT_ENTITY_RUNTIME_VIEW_HPP
 
 #include "../stl/algorithm.hpp"

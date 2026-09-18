@@ -1,4 +1,4 @@
-#ifndef ENTT_META_RANGE_HPP
+﻿#ifndef ENTT_META_RANGE_HPP
 #define ENTT_META_RANGE_HPP
 
 #include <compare>

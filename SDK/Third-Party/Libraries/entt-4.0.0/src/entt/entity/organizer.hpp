@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_ORGANIZER_HPP
+﻿#ifndef ENTT_ENTITY_ORGANIZER_HPP
 #define ENTT_ENTITY_ORGANIZER_HPP
 
 #include "../core/type_info.hpp"

@@ -1,4 +1,4 @@
-#ifndef _FE_CORE_STACK_HXX_
+﻿#ifndef _FE_CORE_STACK_HXX_
 #define _FE_CORE_STACK_HXX_
 /*
 Copyright 2025 by UNKNOWN STRYKER (Hojin Lee / Joey)

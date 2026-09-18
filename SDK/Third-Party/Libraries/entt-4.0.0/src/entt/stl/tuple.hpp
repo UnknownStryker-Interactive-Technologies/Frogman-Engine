@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_TUPLE_HPP
+﻿#ifndef ENTT_STL_TUPLE_HPP
 #define ENTT_STL_TUPLE_HPP
 
 /*! @cond ENTT_INTERNAL */

@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_SPARSE_SET_HPP
+﻿#ifndef ENTT_ENTITY_SPARSE_SET_HPP
 #define ENTT_ENTITY_SPARSE_SET_HPP
 
 #include <compare>

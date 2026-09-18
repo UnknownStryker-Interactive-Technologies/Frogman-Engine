@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_CSTDDEF_HPP
+﻿#ifndef ENTT_STL_CSTDDEF_HPP
 #define ENTT_STL_CSTDDEF_HPP
 
 /*! @cond ENTT_INTERNAL */

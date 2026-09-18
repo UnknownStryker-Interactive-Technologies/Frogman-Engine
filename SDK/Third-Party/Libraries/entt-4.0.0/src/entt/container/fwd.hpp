@@ -1,4 +1,4 @@
-#ifndef ENTT_CONTAINER_FWD_HPP
+﻿#ifndef ENTT_CONTAINER_FWD_HPP
 #define ENTT_CONTAINER_FWD_HPP
 
 #include "../stl/functional.hpp"

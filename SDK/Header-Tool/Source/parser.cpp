@@ -398,7 +398,7 @@ namespace FHT::parser
 			switch (token._vocabulary)
 			{
 			case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
-				l_node._is_marker_fht_generated_defined = true;
+				l_node._fht_generated_line_number = out_token_iterator_p->_token_line_number + (token._token_line_number - 1);
 				break;
 
 
@@ -473,14 +473,22 @@ namespace FHT::parser
 				identifier l_function{ framework::get_framework().get_memory_resource() };
 				for (const auto& func_token : l_func_tokens)
 				{
-					if (func_token._vocabulary == Vocabulary::_Semicolon || func_token._vocabulary == Vocabulary::_Colon || func_token._vocabulary == Vocabulary::_LeftCurlyBracket)
+					switch (func_token._vocabulary)
 					{
+					case Vocabulary::_Colon:
+						_FE_FALLTHROUGH_;
+					case Vocabulary::_Semicolon:
+						_FE_FALLTHROUGH_;
+					case Vocabulary::_LeftCurlyBracket:
+						goto Exit;
+
+					default:
 						break;
 					}
 					l_function += func_token._code;
 					l_function += u8' ';
 				}
-
+			Exit:
 				if (l_is_probably_destructor && FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), l_default_constructor.c_str()))
 				{
 					if (FE::algorithm::string::space_insensitive_contains(l_function.c_str(), l_function.length(), u8"=delete"))
@@ -596,13 +604,13 @@ namespace FHT::parser
 		{
 			switch (token._vocabulary)
 			{
-			case Vocabulary::_BitwiseNot:
-				l_is_probably_destructor = true;
+			case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
+				l_node._fht_generated_line_number = out_token_iterator_p->_token_line_number + (token._token_line_number - 1);
 				break;
 
 
-				case Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro:
-				l_node._is_marker_fht_generated_defined = true;
+			case Vocabulary::_BitwiseNot:
+				l_is_probably_destructor = true;
 				break;
 
 
@@ -646,26 +654,14 @@ namespace FHT::parser
 				{
 					switch (func_token._vocabulary)
 					{
-					//case Vocabulary::_AssignmentOperator:
-					//	break;
-
-					//case Vocabulary::_Asterisk:
-					//	break;
-
-					//case Vocabulary::_Const:
-					//	break;
-
-
 					case Vocabulary::_LeftCurlyBracket:
 						_FE_FALLTHROUGH_;
 					case Vocabulary::_RightCurlyBracket:
 						THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Error: structs cannot have function definitions and the initialization expression such as 'T _field{}'.");
 						break;
 
-
 					case Vocabulary::_Semicolon:
 						goto Exit;
-
 
 					default:
 						break;

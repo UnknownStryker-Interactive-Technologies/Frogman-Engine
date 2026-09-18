@@ -1,4 +1,4 @@
-#ifndef ENTT_META_ADL_POINTER_HPP
+﻿#ifndef ENTT_META_ADL_POINTER_HPP
 #define ENTT_META_ADL_POINTER_HPP
 
 namespace entt {

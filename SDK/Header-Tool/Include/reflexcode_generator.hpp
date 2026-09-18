@@ -43,7 +43,7 @@ namespace FHT::reflexcode_generator
 			DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
-			var::boolean _is_marker_fht_generated_defined = false;
+			std::optional<var::uint32> _fht_generated_line_number;
 		};
 
 		struct struct_info
@@ -51,7 +51,7 @@ namespace FHT::reflexcode_generator
 			DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
 			var::boolean _has_constructor_variants = false;
 			var::boolean _is_destructor_deleted_or_not_public = false;
-			var::boolean _is_marker_fht_generated_defined = false;
+			std::optional<var::uint32> _fht_generated_line_number;
 		};
 
 		directory_t _header_file_path;

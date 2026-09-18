@@ -1,4 +1,4 @@
-#ifndef ENTT_CONFIG_MACRO_H
+﻿#ifndef ENTT_CONFIG_MACRO_H
 #define ENTT_CONFIG_MACRO_H
 
 // NOLINTBEGIN(cppcoreguidelines-macro-usage)

@@ -1,4 +1,4 @@
-#ifndef _FE_CORE_PRIVATE_ARENA_HXX_
+﻿#ifndef _FE_CORE_PRIVATE_ARENA_HXX_
 #define _FE_CORE_PRIVATE_ARENA_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.

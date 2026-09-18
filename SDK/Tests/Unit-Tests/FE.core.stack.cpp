@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Test Generated Claude, and reviewed by Joey Lee
  * FE::stack<T, Allocator> Google Test
  *

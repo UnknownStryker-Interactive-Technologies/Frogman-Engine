@@ -1,4 +1,4 @@
-#ifndef ENTT_GRAPH_FLOW_HPP
+﻿#ifndef ENTT_GRAPH_FLOW_HPP
 #define ENTT_GRAPH_FLOW_HPP
 
 #include "../config/config.h"

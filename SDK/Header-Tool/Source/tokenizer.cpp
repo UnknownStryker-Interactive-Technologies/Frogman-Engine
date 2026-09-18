@@ -24,21 +24,6 @@ limitations under the License.
 
 namespace FHT::tokenizer
 {
-	FE::boolean is_a_valid_letter_for_identifiers(FE::UTF8 char_p) noexcept
-	{
-		if (char_p == '_' ||
-			(char_p >= 'a' && char_p <= 'z') ||
-			(char_p >= 'A' && char_p <= 'Z') ||
-			(char_p >= '0' && char_p <= '9')
-			)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
 	_FE_NODISCARD_ std::pmr::list<token> tokenize_header(file_buffer_t& file_p, const directory_t& path_p)
 	{
 		if (file_p.empty() == true)
@@ -2057,7 +2042,7 @@ namespace FHT::tokenizer
 
 		if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, FE::algorithm::string::compiletime::length("FHT_GENERATED"), "FHT_GENERATED"))
 		{
-			out_token_p._vocabulary = Vocabulary::_FrogmanEngineEnableSerialization;
+			out_token_p._vocabulary = Vocabulary::_FrogmanHeaderToolGeneratedReflectionMacro;
 			out_token_p._code = u8"FHT_GENERATED";
 			return;
 		}

@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_HANDLE_HPP
+﻿#ifndef ENTT_ENTITY_HANDLE_HPP
 #define ENTT_ENTITY_HANDLE_HPP
 
 #include "../config/config.h"

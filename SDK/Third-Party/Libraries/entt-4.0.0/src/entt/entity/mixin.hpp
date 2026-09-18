@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_MIXIN_HPP
+﻿#ifndef ENTT_ENTITY_MIXIN_HPP
 #define ENTT_ENTITY_MIXIN_HPP
 
 #include "../config/config.h"

@@ -16,13 +16,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
+#include <FE/shared_lock_guard.hpp>
 
 #include <atomic>
 #include <limits>
 #include <mutex>
 #include <shared_mutex>
-
-#include <boost/thread/shared_lock_guard.hpp>
 
 
 
@@ -228,13 +227,13 @@ public: // Concurrency-unsafe methods
 public:
     inline void read_at(size_type index_p, reference out_dest_p) noexcept
     {
-        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
+        FE::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         out_dest_p = *(m_active.load(std::memory_order_acquire) + index_p);
     }
 
     inline void write_at(size_type index_p, const_reference value_p) noexcept
     {
-        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
+        FE::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         *(m_active.load(std::memory_order_acquire) + index_p) = value_p;
     }
 
@@ -261,7 +260,7 @@ public:
 public:
     size_type try_push_back(const value_type& value_p) noexcept
     {
-        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
+        FE::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
         size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*
@@ -302,7 +301,7 @@ public:
     template <typename... Args>
     size_type try_emplace_back(Args&&... args_p) noexcept
     {
-        boost::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
+        FE::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
         size_type l_current_capacity = m_capacity.load(std::memory_order_acquire);
         /*

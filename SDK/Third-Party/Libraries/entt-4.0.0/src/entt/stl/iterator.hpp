@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_ITERATOR_HPP
+﻿#ifndef ENTT_STL_ITERATOR_HPP
 #define ENTT_STL_ITERATOR_HPP
 
 /*! @cond ENTT_INTERNAL */

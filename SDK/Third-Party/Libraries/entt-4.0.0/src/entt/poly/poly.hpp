@@ -1,4 +1,4 @@
-#ifndef ENTT_POLY_POLY_HPP
+﻿#ifndef ENTT_POLY_POLY_HPP
 #define ENTT_POLY_POLY_HPP
 
 #include "../core/any.hpp"

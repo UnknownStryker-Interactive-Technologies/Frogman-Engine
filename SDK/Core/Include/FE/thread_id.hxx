@@ -32,9 +32,6 @@ limitations under the License.
 
 #include <taskflow.hpp>
 
-// boost::function
-#include <boost/function.hpp>
-
 #include <FE/synchronized_access.hxx>
 
 

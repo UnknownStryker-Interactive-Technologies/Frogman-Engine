@@ -1,4 +1,4 @@
-#ifndef ENTT_CONFIG_VERSION_H
+﻿#ifndef ENTT_CONFIG_VERSION_H
 #define ENTT_CONFIG_VERSION_H
 
 #include "macro.h"

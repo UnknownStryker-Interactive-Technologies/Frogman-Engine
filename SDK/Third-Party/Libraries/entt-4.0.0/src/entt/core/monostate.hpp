@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_MONOSTATE_HPP
+﻿#ifndef ENTT_CORE_MONOSTATE_HPP
 #define ENTT_CORE_MONOSTATE_HPP
 
 #include "../config/config.h"

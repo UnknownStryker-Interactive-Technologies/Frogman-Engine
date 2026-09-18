@@ -1,4 +1,4 @@
-#ifndef ENTT_CONTAINER_DENSE_SET_HPP
+﻿#ifndef ENTT_CONTAINER_DENSE_SET_HPP
 #define ENTT_CONTAINER_DENSE_SET_HPP
 
 #include <compare>

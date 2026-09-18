@@ -1,4 +1,4 @@
-#ifndef _FE_CORE_REFLECTION_DEFINES_HXX_
+﻿#ifndef _FE_CORE_REFLECTION_DEFINES_HXX_
 #define _FE_CORE_REFLECTION_DEFINES_HXX_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.

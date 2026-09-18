@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_RANGES_HPP
+﻿#ifndef ENTT_ENTITY_RANGES_HPP
 #define ENTT_ENTITY_RANGES_HPP
 
 #include <version>

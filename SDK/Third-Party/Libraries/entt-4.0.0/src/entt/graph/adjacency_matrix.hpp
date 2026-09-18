@@ -1,4 +1,4 @@
-#ifndef ENTT_GRAPH_ADJACENCY_MATRIX_HPP
+﻿#ifndef ENTT_GRAPH_ADJACENCY_MATRIX_HPP
 #define ENTT_GRAPH_ADJACENCY_MATRIX_HPP
 
 #include "../config/config.h"

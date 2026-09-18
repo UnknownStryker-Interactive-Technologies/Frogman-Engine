@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_RANGES_HPP
+﻿#ifndef ENTT_CORE_RANGES_HPP
 #define ENTT_CORE_RANGES_HPP
 
 #include <version>

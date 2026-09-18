@@ -31,7 +31,6 @@ limitations under the License.
 
 // boost
 #include <boost/hash2/xxhash.hpp>
-#include <boost/thread/shared_lock_guard.hpp>
 
 #include <absl/container/flat_hash_map.h>
 

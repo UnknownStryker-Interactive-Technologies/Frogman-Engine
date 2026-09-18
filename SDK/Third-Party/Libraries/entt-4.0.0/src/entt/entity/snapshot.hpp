@@ -1,4 +1,4 @@
-#ifndef ENTT_ENTITY_SNAPSHOT_HPP
+﻿#ifndef ENTT_ENTITY_SNAPSHOT_HPP
 #define ENTT_ENTITY_SNAPSHOT_HPP
 
 #include "../config/config.h"

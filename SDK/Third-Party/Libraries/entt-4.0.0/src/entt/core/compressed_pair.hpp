@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_COMPRESSED_PAIR_HPP
+﻿#ifndef ENTT_CORE_COMPRESSED_PAIR_HPP
 #define ENTT_CORE_COMPRESSED_PAIR_HPP
 
 #include "../stl/concepts.hpp"

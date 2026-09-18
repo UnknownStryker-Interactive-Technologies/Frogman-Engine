@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_VECTOR_HPP
+﻿#ifndef ENTT_STL_VECTOR_HPP
 #define ENTT_STL_VECTOR_HPP
 
 /*! @cond ENTT_INTERNAL */

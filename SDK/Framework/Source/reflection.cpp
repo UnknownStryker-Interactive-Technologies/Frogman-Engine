@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/reflection.hxx>
+#include <FE/shared_lock_guard.hpp>
 
 
 
@@ -32,7 +33,7 @@ method_registry::method_registry(FE::size map_capacity_p, std::pmr::memory_resou
 FE::boolean method_registry::check_presence(const std::string_view& key_p) noexcept
 {
 	typename internal_map_type::key_type l_key(key_p, m_pool);
-	boost::shared_lock_guard<lock_type> l_lock(m_lock);
+	FE::shared_lock_guard<lock_type> l_lock(m_lock);
 	for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 	{
 		if (it->first == key_p)
@@ -46,7 +47,7 @@ FE::boolean method_registry::check_presence(const std::string_view& key_p) noexc
 FE::task_base* method_registry::retrieve(const std::string_view& key_p) noexcept
 {
 	typename internal_map_type::key_type l_key(key_p, m_pool);
-	boost::shared_lock_guard<lock_type> l_lock(m_lock);
+	FE::shared_lock_guard<lock_type> l_lock(m_lock);
 	for (auto it = m_method_registry.find(l_key); it != m_method_registry.end(); ++it)
 	{
 		if (it->first == key_p)

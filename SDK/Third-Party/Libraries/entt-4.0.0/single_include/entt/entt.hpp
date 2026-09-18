@@ -1,4 +1,4 @@
-/*! @brief `EnTT` default namespace. */
+﻿/*! @brief `EnTT` default namespace. */
 namespace entt {}
 
 /*! @brief Custom `EnTT` namespace for the standard template library. */

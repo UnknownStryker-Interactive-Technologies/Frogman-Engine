@@ -1,4 +1,4 @@
-#ifndef ENTT_GRAPH_FWD_HPP
+﻿#ifndef ENTT_GRAPH_FWD_HPP
 #define ENTT_GRAPH_FWD_HPP
 
 #include "../core/fwd.hpp"

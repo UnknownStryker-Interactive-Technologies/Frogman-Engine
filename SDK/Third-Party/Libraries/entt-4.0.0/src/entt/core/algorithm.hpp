@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_ALGORITHM_HPP
+﻿#ifndef ENTT_CORE_ALGORITHM_HPP
 #define ENTT_CORE_ALGORITHM_HPP
 
 #include "../stl/algorithm.hpp"

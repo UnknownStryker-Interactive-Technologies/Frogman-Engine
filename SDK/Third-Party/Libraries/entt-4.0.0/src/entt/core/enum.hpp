@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_ENUM_HPP
+﻿#ifndef ENTT_CORE_ENUM_HPP
 #define ENTT_CORE_ENUM_HPP
 
 #include "../stl/concepts.hpp"

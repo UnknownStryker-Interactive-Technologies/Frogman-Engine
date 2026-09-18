@@ -1,4 +1,4 @@
-#ifndef ENTT_GRAPH_DOT_HPP
+﻿#ifndef ENTT_GRAPH_DOT_HPP
 #define ENTT_GRAPH_DOT_HPP
 
 #include "../stl/concepts.hpp"

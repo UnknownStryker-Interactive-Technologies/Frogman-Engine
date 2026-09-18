@@ -1,4 +1,4 @@
-#ifndef ENTT_PROCESS_PROCESS_HPP
+﻿#ifndef ENTT_PROCESS_PROCESS_HPP
 #define ENTT_PROCESS_PROCESS_HPP
 
 #include "../core/compressed_pair.hpp"

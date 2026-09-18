@@ -1,4 +1,4 @@
-#ifndef _FROGMAN_ENGINE_ENTITY_HPP_
+﻿#ifndef _FROGMAN_ENGINE_ENTITY_HPP_
 #define _FROGMAN_ENGINE_ENTITY_HPP_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.

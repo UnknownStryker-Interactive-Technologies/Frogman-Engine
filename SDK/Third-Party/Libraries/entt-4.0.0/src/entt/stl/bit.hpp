@@ -1,4 +1,4 @@
-#ifndef ENTT_STL_BIT_HPP
+﻿#ifndef ENTT_STL_BIT_HPP
 #define ENTT_STL_BIT_HPP
 
 /*! @cond ENTT_INTERNAL */

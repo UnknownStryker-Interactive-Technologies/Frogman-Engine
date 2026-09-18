@@ -45,10 +45,6 @@ limitations under the License.
 // Boost.Json is used to prevent deserializing binaries with wrong offsets and sizes. This let us use the property identifiers as the keys mapped to the binary sequence fragments.
 #include <boost/json.hpp>
 
-// boost::shared_lock_guard
-#include <boost/thread/shared_mutex.hpp>
-#include <boost/thread/shared_lock_guard.hpp>
-
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
 
@@ -147,7 +143,7 @@ class method_registry
 	friend class ::FE::framework::framework_base;
 
 private:
-	using lock_type = boost::shared_mutex;
+	using lock_type = std::shared_mutex;
 	using internal_map_type = absl::flat_hash_map<std::pmr::string, FE::task_base*,
 		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
 		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,

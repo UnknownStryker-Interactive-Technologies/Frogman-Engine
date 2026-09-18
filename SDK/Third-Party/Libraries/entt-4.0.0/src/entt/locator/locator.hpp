@@ -1,4 +1,4 @@
-#ifndef ENTT_LOCATOR_LOCATOR_HPP
+﻿#ifndef ENTT_LOCATOR_LOCATOR_HPP
 #define ENTT_LOCATOR_LOCATOR_HPP
 
 #include "../config/config.h"

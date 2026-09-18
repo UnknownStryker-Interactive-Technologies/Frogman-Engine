@@ -1,4 +1,4 @@
-// IWYU pragma: always_keep
+﻿// IWYU pragma: always_keep
 
 #ifndef ENTT_META_CONTAINER_HPP
 #define ENTT_META_CONTAINER_HPP

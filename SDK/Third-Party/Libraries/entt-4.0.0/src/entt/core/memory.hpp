@@ -1,4 +1,4 @@
-#ifndef ENTT_CORE_MEMORY_HPP
+﻿#ifndef ENTT_CORE_MEMORY_HPP
 #define ENTT_CORE_MEMORY_HPP
 
 #include "../config/config.h"
