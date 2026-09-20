@@ -498,7 +498,7 @@ namespace FHT::reflexcode_generator
 
 		std::wofstream l_generated_file;
 		FE::wofstream_guard l_generated_file_guard(l_generated_file);
-		l_generated_file.open(l_path_to_generated);
+		l_generated_file.open(l_path_to_generated, std::ios::binary);
 		FE_EXIT_IF(l_generated_file.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the generated.cpp file.");
 		l_generated_file << l_generated_code;
 	}
@@ -550,7 +550,7 @@ namespace FHT::reflexcode_generator
 					l_generated_header_path.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
 					l_generated_header_path += L".generated.h";
 
-					l_generated_h.open(l_generated_header_path);
+					l_generated_h.open(l_generated_header_path, std::ios::binary);
 					FE_EXIT_IF(l_generated_h.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
 
 
@@ -558,7 +558,7 @@ namespace FHT::reflexcode_generator
 
 					std::ifstream l_target_hpp_ifstream;
 					FE::ifstream_guard l_target_hpp_ifstream_guard(l_target_hpp_ifstream);
-					l_target_hpp_ifstream.open(header_file._header_file_path);
+					l_target_hpp_ifstream.open(header_file._header_file_path, std::ios::binary);
 					FE_EXIT_IF(l_target_hpp_ifstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
 
 					l_target_hpp_ifstream.seekg(0, std::ios::end);
@@ -584,7 +584,7 @@ namespace FHT::reflexcode_generator
 
 					std::ofstream l_target_hpp_ofstream;
 					FE::ofstream_guard l_target_hpp_ofstream_guard(l_target_hpp_ofstream);
-					l_target_hpp_ofstream.open(header_file._header_file_path);
+					l_target_hpp_ofstream.open(header_file._header_file_path, std::ios::binary);
 					FE_EXIT_IF(l_target_hpp_ofstream.is_open() == false, FrogmanEngineHeaderToolError::_FatalCmdInputError_InvalidPathToCMakeProject, "Frogman Engine Header Tool: failed to generate the header file.");
 					l_target_hpp_ofstream.write(l_target_header.data(), l_target_header.length());
 					

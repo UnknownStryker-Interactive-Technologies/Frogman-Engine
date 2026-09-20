@@ -32,7 +32,7 @@ namespace FHT::file_io
 	FE::boolean is_file_encoded_with_UTF8_BOM(FE::wchar* directory_p) noexcept
 	{
 		std::basic_ifstream<var::ASCII> l_BOM_validator;
-		l_BOM_validator.open(directory_p);
+		l_BOM_validator.open(directory_p, std::ios::binary);
 
 		if (l_BOM_validator.is_open() == false)
 		{
@@ -119,7 +119,7 @@ namespace FHT::file_io
 
 			std::basic_ifstream<var::UTF8> l_file_handler;
 			l_file_handler.imbue(framework::get_framework().get_current_system_locale());
-			l_file_handler.open(path_to_file.c_str());
+			l_file_handler.open(path_to_file.c_str(), std::ios::binary);
 
 			if (l_file_handler.is_open() == false)
 			{
@@ -153,7 +153,7 @@ namespace FHT::file_io
 				std::basic_ifstream<var::UTF8> l_file_handler;
 				l_file_handler.imbue(framework::get_framework().get_current_system_locale());
 
-				l_file_handler.open(::header_tool::get_program_options().get_path_to_copyright_notice());
+				l_file_handler.open(::header_tool::get_program_options().get_path_to_copyright_notice(), std::ios::binary);
 				//FE_EXIT_IF(l_file_handler.is_open() == false, FrogmanEngineHeaderToolError::_InputError_NoCopyRightNoticeIsGiven, "Frogman Engine Header Tool ERROR: the program option '${%s@0}' is not defined but no license text file is given. The given path is '${%s@1}'", m_header_tool_options.view_fno_copyright_notice_option_title(), m_header_tool_options.get_path_to_copyright_notice());
 
 				file_buffer_t l_copyright_notice(std::istreambuf_iterator<var::UTF8>(l_file_handler), std::istreambuf_iterator<var::UTF8>(), ::framework::get_framework().get_memory_resource());
