@@ -189,7 +189,7 @@ namespace Installer.Script
 
             Script.Job boostDownloadJob = new Script.Job
             {
-                DisplayedMessage = $"Downloading and building the Boost version {Boost.Version} ...",
+                DisplayedMessage = $"Downloading the Boost Libraries version {Boost.Version} ...",
                 Run = (Script.JobParameters parameters) => DownloadBoost(parameters)
             }; jobs.Enqueue(boostDownloadJob);
 
