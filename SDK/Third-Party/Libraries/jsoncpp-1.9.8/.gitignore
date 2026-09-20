@@ -1,3 +1,4 @@
+Solution_X64_AVX/
 /build/
 /build-*/
 *.pyc
