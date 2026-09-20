@@ -2,43 +2,37 @@
   "EngineInfo" : 
   {
     "InstallationPath" : "C:\\Users\\leeho\\Documents\\GitHub\\Frogman-Engine",
-    "Version" : "v0.0.0.2026.05.01prc"
+    "Version" : "the-latest-chaos"
   },
-  "ProjectConfig" : 
-  {
-    "CompressionMethod" : null,
-    "DecompressionMethod" : null,
-    "DecryptionMethod" : null,
-    "EncryptionMethod" : null,
-    "FiberStackSize" : 1048576,
-    "FibersPerThread" : 3,
-    "FramesPerReachabilityAnalysis" : 60,
-    "GCIterationsPerFrame" : 30,
-    "GlobalResourceLookUpTable" : 
-    {
-      "EntryWorldPath" : "Assets\\Map.ao",
-      "WorldPaths" : []
+  "ProjectConfig": {
+    "GlobalResourceLookUpTable": {
+      "WorldPaths": []
     },
-    "MaxEngineArchetypeCountHint" : 1024,
-    "MaxEngineComponentTypeCountHint" : 1024,
-    "WindowConfig" : 
-    {
-      "IconPaths" : [ "Assets\\Icon\\runtime icon.png" ],
-      "RandomPlayIntroVideoPaths" : 
-      [
+    "CompressionMethod": null,
+    "DecompressionMethod": null,
+    "EncryptionMethod": null,
+    "DecryptionMethod": null,
+    "GCIterationsPerFrame": 30,
+    "FramesPerReachabilityAnalysis": 60,
+    "FiberStackSize": 1048576,
+    "FibersPerThread": 3,
+    "WindowConfig": {
+      "Title": "Integration Test",
+      "IconPaths": [
+        "Assets\\Icon\\runtime icon.png"
+      ],
+      "RandomPlayIntroVideoPaths": [
         "Assets\\Video\\runtime splash video 1.mp4",
         "Assets\\Video\\runtime splash video 2.mp4"
       ],
-      "SequentialPlayIntroVideoPaths" : [],
-      "ShaderCompileSplashImageDurationInSeconds" : 5,
-      "ShaderCompileSplashImagePaths" : 
-      [
+      "SequentialPlayIntroVideoPaths": [],
+      "ShaderCompileSplashImagePaths": [
         "Assets\\Splash\\Shader Compile Splash.png",
         "Assets\\Splash\\Shader Compile Splash 2.png",
         "Assets\\Splash\\Shader Compile Splash 3.png"
       ],
-      "SwapChainBufferCount" : 3,
-      "Title" : "Integration Test"
+      "ShaderCompileSplashImageDurationInSeconds": 5,
+      "SwapChainBufferCount": 3
     }
   },
   "ProjectInfo" : 

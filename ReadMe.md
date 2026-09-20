@@ -33,14 +33,17 @@ https://github.com/user-attachments/assets/1bf9b5c9-dbbc-405d-8df5-5e0538f4d89c
 | Android      | ARM64         | Pending          |
 
 ## This project leverages:
-- abseil 20260107.1  
-https://github.com/abseil/abseil-cpp/releases/tag/20260107.1
+- Abseil 20260107.1  
+https://github.com/abseil/abseil-cpp/releases/tag/20260107.1  
 
-- Boost Libraries 1.91.0  
+- Boost Hash 2 - from Boost Libraries 1.91.0  
 https://github.com/boostorg/boost/releases/tag/boost-1.91.0  
 
 - City Hash  
 https://github.com/google/cityhash  
+
+- Cpptrace 1.0.4  
+https://github.com/jeremy-rifkin/cpptrace/releases
 
 - Dear ImGUI 1.91.6  
 https://github.com/ocornut/imgui/releases  
@@ -49,27 +52,30 @@ https://github.com/ocornut/imgui/releases
 https://github.com/mackron/dr_libs/tree/master?tab=readme-ov-file  
 
 - EnTT 4.0.0  
-https://github.com/skypjack/entt
+https://github.com/skypjack/entt  
 
 - GLFW 3.4  
 https://www.glfw.org/download.html  
 
 - GLM 1.0.3  
-https://github.com/g-truc/glm/releases
+https://github.com/g-truc/glm/releases  
 
 - HAT Trie 0.7.1  
 https://github.com/Tessil/hat-trie  
 
-- lz4 1.10.0  
+- Jsoncpp 1.9.8  
+https://github.com/open-source-parsers/jsoncpp/releases  
+
+- Lz4 1.10.0  
 https://github.com/lz4/lz4/releases/tag/v1.10.0  
 
-- stb image  
+- Stb image  
 https://github.com/nothings/stb  
 
 - Task Flow 4.0.0  
 https://github.com/taskflow/taskflow/releases  
 
-- ufbx 0.22.0  
+- Ufbx 0.22.0  
 https://github.com/ufbx/ufbx  
 
 - Google Test 1.16.0  

@@ -34,6 +34,7 @@ limitations under the License.
 #include <filesystem>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <memory_resource>
 #include <mutex>
 #include <optional>
@@ -43,7 +44,7 @@ limitations under the License.
 #include <vector>
 
 // Boost.Json is used to prevent deserializing binaries with wrong offsets and sizes. This let us use the property identifiers as the keys mapped to the binary sequence fragments.
-#include <boost/json.hpp>
+#include <json/json.h>
 
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/node_hash_map.h>
@@ -396,8 +397,8 @@ public:
 		{
 			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
 			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(boost::json::object&, const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const boost::json::value&, void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(Json::Value&, const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
+			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const Json::Value&, void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
 
 			if constexpr (FE::has_value_type<T>::value == true)
 			{
@@ -469,24 +470,20 @@ public:
 		}
 
 
-		boost::json::value l_frogman_object = {}; // .fo
-		boost::json::object& l_fo_root = l_frogman_object.emplace_object();
+		Json::Value l_frogman_object(Json::objectValue); // .fo
+		Json::Value& l_fo_root = l_frogman_object;
 		
-		l_fo_root.emplace("version", version_p);
-		l_fo_root.emplace("typename", l_typename);
+		l_fo_root["version"] = version_p;
+		l_fo_root["typename"] = Json::Value(l_typename.data(), l_typename.data() + l_typename.size());
 
 		__serialize_mutually_recursive<T>(l_fo_root, object_p);
 	
-		boost::json::serializer l_serializer;
-		l_serializer.reset(&l_frogman_object);
+		Json::StreamWriterBuilder l_serializer;
+		l_serializer["indentation"] = "";
+		l_serializer["emitUTF8"] = true; // Keep the property byte sequences intact instead of re-encoding them as unicode escapes.
 
-		char l_buffer[one_KiB];
-		std::string_view l_view;
-		while (l_serializer.done() == false)
-		{
-			l_view = l_serializer.read(l_buffer);
-			out_ret_buffer_p.append(l_buffer, l_view.size());
-		}
+		const Json::String l_view = Json::writeString(l_serializer, l_frogman_object);
+		out_ret_buffer_p.append(l_view.data(), l_view.size());
 	}
 
 
@@ -522,22 +519,19 @@ public:
 		}
 
 
-		boost::json::parse_options l_parse_options = 
-		{
-			.max_depth = FE::max_value<size_t>,
-			.allow_comments = false,
-			.allow_trailing_commas = false,
-			.allow_invalid_utf8 = true,
-			.allow_invalid_utf16 = true,
-			.allow_infinity_and_nan = false
-		};
+		Json::CharReaderBuilder l_parse_options;
+		l_parse_options["allowComments"] = false;
+		l_parse_options["allowTrailingCommas"] = false;
+		l_parse_options["allowSpecialFloats"] = false;
+		const std::unique_ptr<Json::CharReader> l_parser(l_parse_options.newCharReader());
 
-		std::error_code l_parse_error = {};
-		boost::json::value l_frogman_object = boost::json::parse(data_p, l_parse_error, {}, l_parse_options); // .fo 
-		FE_ASSERT(l_parse_error.value() == 0, "Assertion failure: the serialization file is ill-formed or unsupported.");
+		Json::String l_parse_error;
+		Json::Value l_frogman_object; // .fo 
+		l_parser->parse(data_p.data(), data_p.data() + data_p.size(), &l_frogman_object, &l_parse_error);
+		FE_ASSERT(l_parse_error.empty() == true, "Assertion failure: the serialization file is ill-formed or unsupported.");
 
-		FE_EXIT_IF(l_frogman_object.at("version").as_string() != version_p, FE::ErrorCode::_FatalSerializationError_3XX_FileVersionMismatch, "Assertion failure: the serialization file version is not supported.");
-		FE_EXIT_IF(l_frogman_object.at("typename").as_string() != l_typename, FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
+		FE_EXIT_IF(l_frogman_object["version"].asString() != version_p, FE::ErrorCode::_FatalSerializationError_3XX_FileVersionMismatch, "Assertion failure: the serialization file version is not supported.");
+		FE_EXIT_IF(l_frogman_object["typename"].asString() != l_typename.c_str(), FE::ErrorCode::_FatalSerializationError_3XX_TypeMismatch, "Unable to deserialize an instance with a different class name.");
 
 		__deserialize_mutually_recursive<T>(l_frogman_object, out_object_p);
 	}
@@ -561,7 +555,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_serialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(boost::json::object&, const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__serialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(Json::Value&, const void*)> >(__get_serialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__serialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -576,7 +570,7 @@ private:
 	template <class InnerContainer>
 	_FE_FORCE_INLINE_ void __push_multidimensional_container_deserialization_task_recursive() noexcept
 	{
-		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const boost::json::value&, void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
+		framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const Json::Value&, void*)> >(__get_deserialization_task_name(reflection::type_id<InnerContainer>().name()), &property_registry::__deserialize_by_foreach_mutually_recursive<InnerContainer>);
 
 		if constexpr (FE::has_value_type<InnerContainer>::value == true)
 		{
@@ -633,7 +627,7 @@ private:
 	void __push_parent_class_layers_by_typename_string_recursive(const std::string_view& typename_p) noexcept;
 
 	template<typename T>
-	void __serialize_mutually_recursive(boost::json::object& out_ret_buffer_p, const T& object_p) noexcept
+	void __serialize_mutually_recursive(Json::Value& out_ret_buffer_p, const T& object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
@@ -653,7 +647,7 @@ private:
 				m_key_buffer += "::";
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
-				out_ret_buffer_p.emplace(m_key_buffer, m_buffer);
+				out_ret_buffer_p[m_key_buffer.c_str()] = Json::Value(m_buffer.data(), m_buffer.data() + m_buffer.size());
 				
 				// Look for the next registered property of the class.
 				++(__get_the_top_class_property_list_iterator());
@@ -681,7 +675,7 @@ private:
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_serialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is serializable with foreach?
 				{
-					FE::arguments<boost::json::object&, const void*> l_task_args; // Any containers with begin() and end() can be serialized and deserialized.
+					FE::arguments<Json::Value&, const void*> l_task_args; // Any containers with begin() and end() can be serialized and deserialized.
 					l_task_args._first = out_ret_buffer_p;
 					l_task_args._second = reinterpret_cast<FE::byte*>(&object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_task_args); // The pointed task knows what to do with the arguments type casting.
@@ -717,7 +711,7 @@ private:
 	}
 
 	template<typename T>
-	void __deserialize_mutually_recursive(const boost::json::value& frogman_object_p, T& out_object_p) noexcept
+	void __deserialize_mutually_recursive(const Json::Value& frogman_object_p, T& out_object_p) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
 		while (m_class_layer.empty() == false)
@@ -733,7 +727,8 @@ private:
 				m_key_buffer += "::";
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
-				m_buffer = frogman_object_p.at(m_key_buffer).as_string();
+				FE_ASSERT(frogman_object_p.isMember(m_key_buffer.c_str()) == true, "Assertion failure: the serialization file does not contain the property: %s", m_key_buffer.c_str());
+				m_buffer = frogman_object_p[m_key_buffer.c_str()].asString();
 				::memcpy(	reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), 
 							m_buffer.c_str(),
 							m_buffer.size()
@@ -765,7 +760,7 @@ private:
 				FE::task_base* const l_foreach_task = framework_base::get_framework().get_method_reflection().retrieve(__get_deserialization_task_name(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._typename)); // Load method pointer.
 				if (l_foreach_task != nullptr) // is deserializable with foreach?
 				{
-					FE::arguments<const boost::json::value&, void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
+					FE::arguments<const Json::Value&, void*> l_pointer_to_container; // Any containers with begin() and end() can be serialized and deserialized.
 					l_pointer_to_container._first = frogman_object_p;
 					l_pointer_to_container._second = reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()));
 					(*l_foreach_task)(this, nullptr, &l_pointer_to_container); // The pointed task object_base knows what to do with the arguments type casting.
@@ -801,7 +796,7 @@ private:
 	}
 
 	template<class Container>
-	void __serialize_by_foreach_mutually_recursive(boost::json::object& out_ret_buffer_p, const void* const data_p) noexcept
+	void __serialize_by_foreach_mutually_recursive(Json::Value& out_ret_buffer_p, const void* const data_p) noexcept
 	{
 		FE_ASSERT(data_p != nullptr, "Aborting the serialization process: the pointer to the container is nullptr.");
 		static_assert(FE::is_serializable_v<Container>, "The container is unable to be serialized: the container type is not supported and not compatible to this system.");
@@ -823,7 +818,7 @@ private:
 				m_key_buffer += "::";
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
-				out_ret_buffer_p.emplace(m_key_buffer, m_buffer);
+				out_ret_buffer_p[m_key_buffer.c_str()] = Json::Value(m_buffer.data(), m_buffer.data() + m_buffer.size());
 				return;
 			}
 
@@ -839,13 +834,13 @@ private:
 			}
 
 
-			boost::json::array& l_json_array = out_ret_buffer_p[m_key_buffer].emplace_array();
+			Json::Value& l_json_array = (out_ret_buffer_p[m_key_buffer.c_str()] = Json::Value(Json::arrayValue));
 			for (auto& element : *l_container)
 			{
 				if constexpr ((FE::is_serializable_primitive_v<typename Container::value_type> == false)
 					&& (FE::has_value_type_v<typename Container::value_type> == true)) // is a nested container
 				{
-					__serialize_by_foreach_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), &element);
+					__serialize_by_foreach_mutually_recursive<typename Container::value_type>(l_json_array.append(Json::Value(Json::objectValue)), &element);
 				}
 				else // Non-trivial Containers of Non-trivial Data
 				{
@@ -860,7 +855,7 @@ private:
 					__push_parent_class_layers_recursive<typename Container::value_type>();
 
 
-					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.emplace_back(boost::json::object{}).as_object(), element);
+					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.append(Json::Value(Json::objectValue)), element);
 				}
 			}
 		}
@@ -869,7 +864,7 @@ private:
 	std::string_view __get_serialization_task_name(const std::string_view& property_typename_p) noexcept;
 
 	template<class Container>
-	void __deserialize_by_foreach_mutually_recursive(const boost::json::value& frogman_object_p, void* const data_p) noexcept
+	void __deserialize_by_foreach_mutually_recursive(const Json::Value& frogman_object_p, void* const data_p) noexcept
 	{
 		FE_ASSERT(data_p != nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
 		static_assert(FE::is_serializable_v<Container>, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
@@ -887,7 +882,8 @@ private:
 				m_key_buffer += "::";
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
-				const boost::json::string& l_data_stream = frogman_object_p.at(m_key_buffer).as_string();
+				FE_ASSERT(frogman_object_p.isMember(m_key_buffer.c_str()) == true, "Assertion failure: the serialization file does not contain the property: %s", m_key_buffer.c_str());
+				const Json::String l_data_stream = frogman_object_p[m_key_buffer.c_str()].asString();
 				l_container->resize(l_data_stream.size() / sizeof(typename Container::value_type));
 				::memcpy(l_container->data(), l_data_stream.data(), l_data_stream.size());
 				return;
@@ -905,7 +901,8 @@ private:
 			}
 
 
-			const boost::json::array& l_json_array = frogman_object_p.at(m_key_buffer).as_array();
+			FE_ASSERT(frogman_object_p.isMember(m_key_buffer.c_str()) == true, "Assertion failure: the serialization file does not contain the property: %s", m_key_buffer.c_str());
+			const Json::Value& l_json_array = frogman_object_p[m_key_buffer.c_str()];
 			l_container->resize(l_json_array.size());
 			auto l_container_it = l_container->begin();
 			for (const auto& element : l_json_array)

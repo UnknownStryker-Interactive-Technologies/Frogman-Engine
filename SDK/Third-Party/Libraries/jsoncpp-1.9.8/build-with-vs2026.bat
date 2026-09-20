@@ -1,0 +1,1 @@
+./build.bat "Visual Studio 18 2026" "v145"

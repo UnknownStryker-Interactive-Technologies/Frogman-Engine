@@ -24,8 +24,8 @@ limitations under the License.
 #include <FE/log/logger.hxx>
 #include <FE/memory_resource.hxx>
 
-// boost
-#include <boost/stacktrace.hpp>
+#include <cpptrace/cpptrace.hpp>
+
 
 // std
 #include <csignal>
@@ -380,7 +380,8 @@ reflection::enum_registry& framework_base::get_enum_reflection() noexcept
 
 _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal_p)
 {
-	boost::stacktrace::stacktrace l_stack_trace_dumps;
+#ifndef _RELEASE_
+	cpptrace::v1::stacktrace l_stack_trace_dumps = cpptrace::generate_trace();
 
 	std::ofstream l_release_build_crash_report;
 	{
@@ -392,11 +393,12 @@ _FE_NORETURN_ void framework_base::__abnormal_shutdown_with_exit_code(int signal
 		l_release_build_crash_report << "Compilation Date: " << " " << __DATE__ << " - " << __TIME__ << "\n\n";
 		l_release_build_crash_report << "\n-------------------------------------------------- BEGIN STACK TRACE RECORD --------------------------------------------------\n\n";
 
-		l_release_build_crash_report << boost::stacktrace::to_string(l_stack_trace_dumps).data() << '\n';
+		l_release_build_crash_report << l_stack_trace_dumps.to_string() << '\n';
 
 		l_release_build_crash_report << "\n-------------------------------------------------- END OF STACK TRACE RECORD --------------------------------------------------\n";
 
 	}
+#endif
 	std::exit(signal_p);
 }
 

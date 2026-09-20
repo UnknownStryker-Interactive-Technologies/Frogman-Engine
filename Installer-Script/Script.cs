@@ -28,10 +28,14 @@ namespace Installer.Script
     }
     static class Boost
     {
-        public static readonly string Version = "1.91.0";
-        public static readonly string Url = "https://archives.boost.io/release/1.91.0/source/boost_1_91_0.zip";
-        public static readonly string DebugBuildB2Options = "architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug";
-        public static readonly string ReleaseBuildB2Options = "architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release";
+        public static readonly string Version = "1.92.0";
+        public static readonly string Url = "https://archives.boost.io/release/1.92.0/source/boost_1_92_0.zip";
+        // public static readonly string DebugBuildB2Options = "architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=debug";
+        // public static readonly string ReleaseBuildB2Options = "architecture=x86 address-model=64 link=static runtime-link=static threading=multi variant=release";
+    }
+    static class Cpptrace
+    {
+        public static readonly string Version = "1.0.4";
     }
     static class Glfw
     {
@@ -46,6 +50,10 @@ namespace Installer.Script
     static class ImGui
     {
         public static readonly string Version = "1.91.6";
+    }
+    static class JsonCpp
+    {
+        public static readonly string Version = "1.9.8";
     }
     static class FrogmanEngine
     {
@@ -179,57 +187,72 @@ namespace Installer.Script
             }; jobs.Enqueue(abslBuildJob);
 
 
-            Script.Job boostB2BuildJob = new Script.Job
+            Script.Job boostDownloadJob = new Script.Job
             {
                 DisplayedMessage = $"Downloading and building the Boost version {Boost.Version} ...",
-                Run = (Script.JobParameters parameters) => DownloadAndBuildBoostB2(parameters)
-            }; jobs.Enqueue(boostB2BuildJob);
+                Run = (Script.JobParameters parameters) => DownloadBoost(parameters)
+            }; jobs.Enqueue(boostDownloadJob);
 
-            Script.Job boostDebugBuildJob = new Script.Job
+
+            Script.Job cpptraceBuildJob = new Script.Job
             {
-                DisplayedMessage = $"Building debug version of the Boost libraries with {Boost.DebugBuildB2Options} ...",
+                DisplayedMessage = $"Building the Cpptrace version {Cpptrace.Version} ...",
                 Run = (Script.JobParameters parameters) =>
                 {
-                    process.StartInfo.FileName = "b2.exe";
-                    process.StartInfo.Arguments = Boost.DebugBuildB2Options;
-                    process.StartInfo.Arguments += " ";
-                    switch (parameters.VisualStudioVersion)
-                    {
-                        case VisualStudioVersion.VisualStudio2022:
-                            process.StartInfo.Arguments += "toolset=msvc-14.3";
-                            break;
-
-                        case VisualStudioVersion.VisualStudio2026:
-                            process.StartInfo.Arguments += "toolset=msvc-14.5";
-                            break;
-                    }
+                    process.StartInfo.Arguments = String.Empty;
+                    process.StartInfo.FileName = parameters.BuildBatchFileName;
+                    string cpptracePath = System.IO.Path.Combine(thirdPartyFolderPath,
+                                          $"cpptrace-{Cpptrace.Version}");
+                    Directory.SetCurrentDirectory(cpptracePath);
                     process.Start();
                     process.WaitForExit();
                 }
-            }; jobs.Enqueue(boostDebugBuildJob);
+            }; jobs.Enqueue(cpptraceBuildJob);
+            //Script.Job boostDebugBuildJob = new Script.Job
+            //{
+            //    DisplayedMessage = $"Building debug version of the Boost libraries with {Boost.DebugBuildB2Options} ...",
+            //    Run = (Script.JobParameters parameters) =>
+            //    {
+            //        process.StartInfo.FileName = "b2.exe";
+            //        process.StartInfo.Arguments = Boost.DebugBuildB2Options;
+            //        process.StartInfo.Arguments += " ";
+            //        switch (parameters.VisualStudioVersion)
+            //        {
+            //            case VisualStudioVersion.VisualStudio2022:
+            //                process.StartInfo.Arguments += "toolset=msvc-14.3";
+            //                break;
 
-            Script.Job boostReleaseBuildJob = new Script.Job
-            {
-                DisplayedMessage = $"Building release version of the Boost libraries with {Boost.ReleaseBuildB2Options} ...",
-                Run = (Script.JobParameters parameters) =>
-                {
-                    process.StartInfo.FileName = "b2.exe";
-                    process.StartInfo.Arguments = Boost.ReleaseBuildB2Options;
-                    process.StartInfo.Arguments += " ";
-                    switch (parameters.VisualStudioVersion)
-                    {
-                        case VisualStudioVersion.VisualStudio2022:
-                            process.StartInfo.Arguments += "toolset=msvc-14.3";
-                            break;
+            //            case VisualStudioVersion.VisualStudio2026:
+            //                process.StartInfo.Arguments += "toolset=msvc-14.5";
+            //                break;
+            //        }
+            //        process.Start();
+            //        process.WaitForExit();
+            //    }
+            //}; jobs.Enqueue(boostDebugBuildJob);
 
-                        case VisualStudioVersion.VisualStudio2026:
-                            process.StartInfo.Arguments += "toolset=msvc-14.5";
-                            break;
-                    }
-                    process.Start();
-                    process.WaitForExit();
-                }
-            }; jobs.Enqueue(boostReleaseBuildJob);
+            //Script.Job boostReleaseBuildJob = new Script.Job
+            //{
+            //    DisplayedMessage = $"Building release version of the Boost libraries with {Boost.ReleaseBuildB2Options} ...",
+            //    Run = (Script.JobParameters parameters) =>
+            //    {
+            //        process.StartInfo.FileName = "b2.exe";
+            //        process.StartInfo.Arguments = Boost.ReleaseBuildB2Options;
+            //        process.StartInfo.Arguments += " ";
+            //        switch (parameters.VisualStudioVersion)
+            //        {
+            //            case VisualStudioVersion.VisualStudio2022:
+            //                process.StartInfo.Arguments += "toolset=msvc-14.3";
+            //                break;
+
+            //            case VisualStudioVersion.VisualStudio2026:
+            //                process.StartInfo.Arguments += "toolset=msvc-14.5";
+            //                break;
+            //        }
+            //        process.Start();
+            //        process.WaitForExit();
+            //    }
+            //}; jobs.Enqueue(boostReleaseBuildJob);
 
 
             Script.Job imGuiBuildJob = new Script.Job
@@ -247,6 +270,22 @@ namespace Installer.Script
                     process.WaitForExit();
                 }
             }; jobs.Enqueue(imGuiBuildJob);
+
+
+            Script.Job jsonCppBuildJob = new Script.Job
+            {
+                DisplayedMessage = $"Building the JsonCpp version {JsonCpp.Version} ...",
+                Run = (Script.JobParameters parameters) =>
+                {
+                    process.StartInfo.Arguments = String.Empty;
+                    process.StartInfo.FileName = parameters.BuildBatchFileName;
+                    string jsonCppPath = System.IO.Path.Combine(thirdPartyFolderPath,
+                                          $"jsoncpp-{JsonCpp.Version}");
+                    Directory.SetCurrentDirectory(jsonCppPath);
+                    process.Start();
+                    process.WaitForExit();
+                }
+            }; jobs.Enqueue(jsonCppBuildJob);
 
 
             Script.Job glfwBuildJob = new Script.Job
@@ -283,7 +322,7 @@ namespace Installer.Script
             }; jobs.Enqueue(lz4BuildJob);
         }
 
-        private void DownloadAndBuildBoostB2(JobParameters parameters)
+        private void DownloadBoost(JobParameters parameters)
         {
             string boostFolderName = $"boost-{Boost.Version}";
             string boostZipFileName = boostFolderName + ".zip";
@@ -302,18 +341,18 @@ namespace Installer.Script
                 Directory.Move(underscored, boostFolderPath);
             }
 
-            Directory.SetCurrentDirectory(boostFolderPath);
-            Process process = new Process();
-            process.StartInfo = new ProcessStartInfo
-            {
-                FileName = "bootstrap.bat",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            process.Start();
-            EnqueueMessage(process.StandardOutput.ReadToEnd());
-            process.WaitForExit();
+            //Directory.SetCurrentDirectory(boostFolderPath);
+            //Process process = new Process();
+            //process.StartInfo = new ProcessStartInfo
+            //{
+            //    FileName = "bootstrap.bat",
+            //    RedirectStandardOutput = true,
+            //    UseShellExecute = false,
+            //    CreateNoWindow = true
+            //};
+            //process.Start();
+            //EnqueueMessage(process.StandardOutput.ReadToEnd());
+            //process.WaitForExit();
         }
     }
 }

@@ -17,8 +17,7 @@ limitations under the License.
 #include <FE/algorithm/string.hxx>
 #include <FE/clock.hxx>
 
-// boost
-#include <boost/stacktrace.hpp>
+#include <cpptrace/cpptrace.hpp>
 
 // std
 #include <csignal>
@@ -64,9 +63,9 @@ void fatal_error_logger_base::do_log(ASCII* const message_p, ASCII* const file_n
 
     std::cerr << m_log_buffer.data() << "\n\n\n\n\n";
 
+    cpptrace::v1::stacktrace l_stack_trace_dumps = cpptrace::generate_trace();
 
-    boost::stacktrace::stacktrace l_stack_trace_dumps;
-    std::string l_stack_trace_dumps_string = boost::stacktrace::to_string(l_stack_trace_dumps);
+    std::string l_stack_trace_dumps_string = l_stack_trace_dumps.to_string();
 
 
     std::cerr << "\n-------------------------------------------------- BEGIN STACK TRACE RECORD --------------------------------------------------\n\n";

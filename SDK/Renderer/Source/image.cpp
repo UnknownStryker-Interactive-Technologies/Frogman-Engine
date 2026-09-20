@@ -17,6 +17,8 @@ limitations under the License.
 
 #include <FE/algorithm/string.hxx>
 
+#include <FE/framework/framework.hxx>
+
 #include <stb_image.h>
 
 
@@ -103,13 +105,19 @@ bool FE::image::read_image_from_disk(FE::directory_char_t* const path_p) noexcep
         m_pixels = nullptr;
 	}
 
-	std::pmr::string l_path_str;
-    l_path_str.resize(FE::algorithm::string::length(path_p));
+    std::pmr::string l_path_str(framework::framework_base::get_framework().get_large_memory_resource());
 #ifdef _FE_ON_WINDOWS_X86_64_
-	WideCharToMultiByte(CP_UTF8, 0, 
-                        path_p, -1,
-                        l_path_str.data(), (int)l_path_str.length(), 
-                        nullptr, nullptr);
+    const int l_path_length = (int)FE::algorithm::string::length(path_p);
+    const int l_utf8_length = WideCharToMultiByte(CP_UTF8, 0, path_p, l_path_length, nullptr, 0, nullptr, nullptr);
+    FE_ASSERT(l_utf8_length > 0, "Failed to convert the image path to UTF-8.");
+    l_path_str.resize(l_utf8_length);
+    WideCharToMultiByte(CP_UTF8, 0,
+        path_p, l_path_length,
+        l_path_str.data(), l_utf8_length,
+        nullptr, nullptr
+    );
+#else
+    l_path_str = path_p;
 #endif
 
     m_pixels = stbi_load(l_path_str.c_str(), &m_width, &m_height, nullptr, 4/*RGBA*/);

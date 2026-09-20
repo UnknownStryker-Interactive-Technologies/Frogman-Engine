@@ -66,16 +66,17 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 	FE::ifstream_guard l_froggy_file_stream(l_froggy);
 	FE_ASSERT(l_froggy.is_open() == true, "Failed to open froggy file at path: %s", engine::get_engine().get_froggy_path().c_str());
 
-	boost::json::object l_froggy_json = boost::json::parse(l_froggy).get_object();
+	Json::Value l_froggy_json;
+	l_froggy >> l_froggy_json;
 	{
 		m_shader_headers.reserve(1024); // reserve some arbitrary amount of headers to avoid too many reallocations; this value can be changed later if needed.
-		FE_ASSERT(l_froggy_json["ShaderHeaders"].is_array() == true);
+		FE_ASSERT(l_froggy_json["ShaderHeaders"].isArray() == true);
 
 		FE::directory_string l_path(framework::framework_base::get_framework().get_large_memory_resource());
-		for (auto& element : l_froggy_json["ShaderHeaders"].get_array())
+		for (auto& element : l_froggy_json["ShaderHeaders"])
 		{
-			FE_ASSERT(element.is_string() == true);
-			auto l_tmp = element.get_string();
+			FE_ASSERT(element.isString() == true);
+			const Json::String l_tmp = element.asString();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
 			auto l_pos = l_path.rfind(FE_TEXT(\\));
@@ -102,8 +103,8 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 
 	{
 		m_shaders.reserve(1024); // reserve some arbitrary amount of shaders to avoid too many reallocations; this value can be changed later if needed.
-		FE_ASSERT(l_froggy_json["Shaders"].is_array() == true);
-		for (auto& shader : l_froggy_json["Shaders"].get_array())
+		FE_ASSERT(l_froggy_json["Shaders"].isArray() == true);
+		for (auto& shader : l_froggy_json["Shaders"])
 		{
 			m_shaders.emplace_back();
 			m_shaders.back()._defines = std::pmr::vector<FE::internal::renderer::shader_define>(framework::framework_base::get_framework().get_large_memory_resource());
@@ -112,36 +113,38 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 			m_shaders.back()._main_function = std::pmr::string(framework::framework_base::get_framework().get_large_memory_resource());
 			m_shaders.back()._source_path = std::pmr::wstring(framework::framework_base::get_framework().get_large_memory_resource());
 
-			auto& l_shader = shader.get_object();
-			FE_ASSERT(l_shader["Defines"].is_array() == true);
-			for (auto& define : l_shader["Defines"].get_array())
+			auto& l_shader = shader;
+			FE_ASSERT(l_shader["Defines"].isArray() == true);
+			for (auto& define : l_shader["Defines"])
 			{
-				for (auto& [identifier, value_range] : define.get_object())
+				for (auto define_it = define.begin(); define_it != define.end(); ++define_it)
 				{
+					const Json::String identifier = define_it.name();
+					const Json::Value& value_range = *define_it;
 					m_shaders.back()._defines.emplace_back();
-					m_shaders.back()._defines.back()._identifier = std::pmr::string(identifier, framework::framework_base::get_framework().get_large_memory_resource());
-					FE_ASSERT(value_range.is_array() == true);
-					FE_ASSERT(value_range.get_array().size() == 2);
-					FE_ASSERT(value_range.get_array().at(0).is_int64() == true);
-					FE_ASSERT(value_range.get_array().at(1).is_int64() == true);
-					m_shaders.back()._defines.back()._value_range._first = value_range.get_array().at(0).get_int64();
-					m_shaders.back()._defines.back()._value_range._second = value_range.get_array().at(1).get_int64();
+					m_shaders.back()._defines.back()._identifier = std::pmr::string(identifier.c_str(), framework::framework_base::get_framework().get_large_memory_resource());
+					FE_ASSERT(value_range.isArray() == true);
+					FE_ASSERT(value_range.size() == 2);
+					FE_ASSERT(value_range[0u].isInt64() == true);
+					FE_ASSERT(value_range[1u].isInt64() == true);
+					m_shaders.back()._defines.back()._value_range._first = value_range[0u].asInt64();
+					m_shaders.back()._defines.back()._value_range._second = value_range[1u].asInt64();
 					FE_ASSERT(m_shaders.back()._defines.back()._value_range._first <= m_shaders.back()._defines.back()._value_range._second);
 					m_shaders.back()._defines.back()._current_value = m_shaders.back()._defines.back()._value_range._first; // set current value to the minimum value in the range by default
 				}
 			}
 
-			for (auto& blacklist : l_shader["PermutationBlacklist"].get_array())
+			for (auto& blacklist : l_shader["PermutationBlacklist"])
 			{
-				FE_ASSERT(blacklist.is_string() == true);
-				m_shaders.back()._permutation_blacklist.push_back(std::pmr::string(blacklist.get_string().c_str(), framework::framework_base::get_framework().get_large_memory_resource()));
+				FE_ASSERT(blacklist.isString() == true);
+				m_shaders.back()._permutation_blacklist.push_back(std::pmr::string(blacklist.asCString(), framework::framework_base::get_framework().get_large_memory_resource()));
 			}
 
-			FE_ASSERT(l_shader["MainFunction"].is_string() == true);
-			m_shaders.back()._main_function = l_shader["MainFunction"].get_string();
+			FE_ASSERT(l_shader["MainFunction"].isString() == true);
+			m_shaders.back()._main_function = l_shader["MainFunction"].asCString();
 
-			FE_ASSERT(l_shader["Source"].is_string() == true);
-			auto l_tmp = l_shader["Source"].get_string();
+			FE_ASSERT(l_shader["Source"].isString() == true);
+			const Json::String l_tmp = l_shader["Source"].asString();
 			m_shaders.back()._source_path = std::pmr::wstring(l_tmp.begin(), l_tmp.end(), framework::framework_base::get_framework().get_large_memory_resource());
 
 			auto l_pos = m_shaders.back()._source_path.rfind(L"\\");
@@ -154,7 +157,7 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 			);
 
 
-			STRING_SWITCH(l_shader["ShaderTarget"].get_string().c_str())
+			STRING_SWITCH(l_shader["ShaderTarget"].asCString())
 			{
 			STRING_CASE(FE::internal::renderer::SM5_vertex_shader_target) :
 				m_shaders.back()._shader_target = FE::internal::renderer::ShaderTarget::_SM5_VertexShader;
@@ -184,6 +187,11 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 			}
 		}
 	}
+}
+
+FE::renderer::~renderer() noexcept
+{
+
 }
 
 

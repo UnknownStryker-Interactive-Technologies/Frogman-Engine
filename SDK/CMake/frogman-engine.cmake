@@ -33,7 +33,8 @@ FILE(GLOB_RECURSE FE_AUDIO_SOURCES "${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Source/
 
 
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1)
-INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.92.0)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/cpptrace-1.0.4/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/dr_libs)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/entt-4.0.0/single_include) 
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/entt-4.0.0/src)
@@ -42,8 +43,8 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glm-1.0
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/hat-trie-0.7.1/include)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/backends)
+INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/jsoncpp-1.9.8/include) 
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/lib)
-# INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/simdjson-4.2.1/include) # Removed SIMDJSON include to avoid the MSVC C++ compiler bug: https://developercommunity.visualstudio.com/t/The-MSVC-C-v143-compiler-is-unable-to-/10994292
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/stb)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/taskflow-4.0.0/taskflow)
 INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Audio/Include)
@@ -55,184 +56,86 @@ INCLUDE_DIRECTORIES(${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Include)
 
 
 
-IF (CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+IF (CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")    
 
-    IF (${CMAKE_VS_PLATFORM_TOOLSET} STREQUAL "v143")
-
-        SET(BOOST_JSON 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc143-mt-s-x64-1_91.lib>
-        )
-
-        SET(BOOST_STACKTRACE 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc143-mt-s-x64-1_91.lib>
-        )
-
-        SET(BOOST_CONTAINER 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc143-mt-s-x64-1_91.lib>
-        )
-        
-
-    ELSEIF (${CMAKE_VS_PLATFORM_TOOLSET} STREQUAL "v145")
-    
-        SET(BOOST_JSON 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_json-vc145-mt-s-x64-1_91.lib>
-        )
-
-        SET(BOOST_STACKTRACE 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc145-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_windbg-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_stacktrace_noop-vc145-mt-s-x64-1_91.lib>
-        )
-
-        SET(BOOST_CONTAINER 
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-sgd-x64-1_91.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/boost-1.91.0/stage/lib/libboost_container-vc145-mt-s-x64-1_91.lib>
-        )
-
-    ENDIF()
-
-    
-    ADD_COMPILE_DEFINITIONS(GLM_FORCE_DEPTH_ZERO_TO_ONE)
     SET(RENDERER_BACKEND d3d11.lib dxgi.lib d3dcompiler.lib dxguid.lib uuid.lib version.lib )
 
+    FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/*.lib")
+    FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/*.lib")
+    FILE(GLOB ABSL_RELEASE          "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/Release/*.lib")
+    FILE(GLOB ABSL_RELWITHDEBINFO   "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/*.lib")
+    SET(ABSL_LIBRARIES
+        $<$<CONFIG:DEBUG>:			${ABSL_DEBUG}>
+        $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
+        $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
+        $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
+    )
 
-    IF(SIMD STREQUAL AVX512F)
-        FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/Debug/*.lib")
-        FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/MinSizeRel/*.lib")
-        FILE(GLOB ABSL_RELEASE          "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/Release/*.lib")
-        FILE(GLOB ABSL_RELWITHDEBINFO   "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/*.lib")
-        SET(ABSL_LIBRARIES
-            $<$<CONFIG:DEBUG>:			${ABSL_DEBUG}>
-            $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
-            $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
-            $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
-        )
+    ADD_COMPILE_DEFINITIONS(CPPTRACE_STATIC_DEFINE) 
+    SET(CPPTRACE 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/cpptrace-1.0.4/Binaries/Debug/cpptrace.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/cpptrace-1.0.4/Binaries/RelWithDebInfo/cpptrace.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/cpptrace-1.0.4/Binaries/Release/cpptrace.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/cpptrace-1.0.4/Binaries/MinSizeRel/cpptrace.lib>
+    )
 
-        SET(GLFW
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX512F/Debug/glfw3.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/glfw3.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX512F/Release/glfw3.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX512F/MinSizeRel/glfw3.lib>
-        )
+    ADD_COMPILE_DEFINITIONS(GLM_FORCE_DEPTH_ZERO_TO_ONE)
+    SET(GLFW
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/glfw3.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/glfw3.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Release/glfw3.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/glfw3.lib>
+    )
 
-        SET(IMGUI
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/Debug/ImGUI-1.91.6.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/ImGUI-1.91.6.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/Release/ImGUI-1.91.6.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX512F/MinSizeRel/ImGUI-1.91.6.lib>
-        )
+    SET(IMGUI
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Debug/ImGUI-1.91.6.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/ImGUI-1.91.6.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Release/ImGUI-1.91.6.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/ImGUI-1.91.6.lib>
+    )
 
-        SET(LZ4
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/Debug/lz4.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/lz4.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/Release/lz4.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX512F/MinSizeRel/lz4.lib>
-        )
+    SET(JSON_CPP 
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/jsoncpp-1.9.8/Binaries/lib/Debug/jsoncpp.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/jsoncpp-1.9.8/Binaries/lib/RelWithDebInfo/jsoncpp.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/jsoncpp-1.9.8/Binaries/lib/Release/jsoncpp.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/jsoncpp-1.9.8/Binaries/lib/MinSizeRel/jsoncpp.lib>
+    )
 
-        SET(FE_CORE
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/Debug/FE.Core.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Core.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/Release/FE.Core.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Core.lib>
-        )
+    SET(LZ4
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVAVX-SSE2X512F/Debug/lz4.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/lz4.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/Release/lz4.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/lz4.lib>
+    )
 
-        SET(FE_FRAMEWORK
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX512F/Debug/FE.Framework.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Framework.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX512F/Release/FE.Framework.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Framework.lib>
-        )
+    SET(FE_CORE
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Core.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Core.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Core.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Core.lib>
+    )
 
-        SET(FE_RENDERER
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX512F/Debug/FE.Renderer.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Renderer.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX512F/Release/FE.Renderer.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Renderer.lib>
-        )
+    SET(FE_FRAMEWORK
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Framework.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Framework.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Framework.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Framework.lib>
+    )
 
-        SET(FE_ENGINE
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/Debug/FE.Engine.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/RelWithDebInfo/FE.Engine.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/Release/FE.Engine.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX512F/MinSizeRel/FE.Engine.lib>
-        )
+    SET(FE_RENDERER
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Renderer.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Renderer.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Renderer.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Renderer.lib>
+    )
 
-    ELSE()
-        FILE(GLOB ABSL_DEBUG            "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/Debug/*.lib")
-        FILE(GLOB ABSL_MINSIZEREL       "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/*.lib")
-        FILE(GLOB ABSL_RELEASE          "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/Release/*.lib")
-        FILE(GLOB ABSL_RELWITHDEBINFO   "${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/abseil-cpp-20260107.1/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/*.lib")
-        SET(ABSL_LIBRARIES
-            $<$<CONFIG:DEBUG>:			${ABSL_DEBUG}>
-            $<$<CONFIG:RELWITHDEBINFO>: ${ABSL_RELWITHDEBINFO}>
-            $<$<CONFIG:RELEASE>:		${ABSL_RELEASE}>
-            $<$<CONFIG:MINSIZEREL>:		${ABSL_MINSIZEREL}>
-        )
+    SET(FE_ENGINE
+        $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Engine.lib>
+        $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Engine.lib>
+        $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Engine.lib>
+        $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Engine.lib>
+    )
 
-        SET(GLFW
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Debug/glfw3.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/glfw3.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/Release/glfw3.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/glfw-3.4/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/glfw3.lib>
-        )
-
-        SET(IMGUI
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Debug/ImGUI-1.91.6.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/ImGUI-1.91.6.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/Release/ImGUI-1.91.6.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/imgui-1.91.6/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/ImGUI-1.91.6.lib>
-        )
-
-        SET(LZ4
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVAVX-SSE2X512F/Debug/lz4.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/lz4.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/Release/lz4.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Third-Party/Libraries/lz4-1.10.0/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/lz4.lib>
-        )
-
-        SET(FE_CORE
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Core.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Core.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Core.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Core/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Core.lib>
-        )
-
-        SET(FE_FRAMEWORK
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Framework.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Framework.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Framework.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Framework/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Framework.lib>
-        )
-
-        SET(FE_RENDERER
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Renderer.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Renderer.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Renderer.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Renderer/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Renderer.lib>
-        )
-
-        SET(FE_ENGINE
-            $<$<CONFIG:DEBUG>:			${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/Debug/FE.Engine.lib>
-            $<$<CONFIG:RELWITHDEBINFO>: ${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/RelWithDebInfo/FE.Engine.lib>
-            $<$<CONFIG:RELEASE>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/Release/FE.Engine.lib>
-            $<$<CONFIG:MINSIZEREL>:		${FROGMAN_ENGINE_CMAKE_DIR}/../Engine/Binaries/X86-64/Windows/AVX-SSE2/MinSizeRel/FE.Engine.lib>
-        )
-    ENDIF()
 
 ENDIF()
 
@@ -508,5 +411,5 @@ FUNCTION(SET_SHADERS)
 ENDFUNCTION()
 
 
-SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${BOOST_JSON} ${BOOST_CONTAINER} ${BOOST_STACKTRACE} ${FE_CORE} ${FE_FRAMEWORK} )
+SET(FROGMAN_FRAMEWORK_SDK ${ABSL_LIBRARIES} ${CPPTRACE} ${JSON_CPP} ${FE_CORE} ${FE_FRAMEWORK} )
 SET(FROGMAN_ENGINE_SDK ${FROGMAN_FRAMEWORK_SDK} ${FE_ENGINE} ${FE_RENDERER} ${RENDERER_BACKEND} ${GLFW} ${IMGUI} )

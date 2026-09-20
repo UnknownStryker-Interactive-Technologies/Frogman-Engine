@@ -175,8 +175,8 @@ FE::int32 FE::engine::run()
 	l_renderer_main._system = &FE::renderer::__main;
 	l_renderer_main._task_type = TaskPriority::_Critical;
 	l_renderer_main._world = nullptr;
-	m_processors->schedule_task(l_renderer_main);
 	m_processors->execute();
+	m_processors->schedule_task(l_renderer_main);
 
 	__game_main();
 
@@ -439,106 +439,71 @@ void FE::engine::__read_froggy() noexcept
 	FE::ifstream_guard l_froggy_file_stream(l_froggy);
 	FE_ASSERT(l_froggy.is_open() == true, "Failed to open froggy file at path: %s", m_froggy_path.c_str());
 
-	boost::json::object l_froggy_json = boost::json::parse(l_froggy).get_object();
+	Json::Value l_froggy_json;
+	l_froggy >> l_froggy_json;
 	{
-		FE_ASSERT(l_froggy_json["EngineInfo"].is_object() == true);
-		auto l_engine_info = l_froggy_json["EngineInfo"].get_object();
+		FE_ASSERT(l_froggy_json["EngineInfo"].isObject() == true);
+		auto& l_engine_info = l_froggy_json["EngineInfo"];
 
-		FE_ASSERT(l_engine_info["Version"].is_string() == true);
-		m_engine_info._version = std::pmr::string(l_engine_info["Version"].get_string().c_str(), framework_base::get_large_memory_resource());
+		FE_ASSERT(l_engine_info["Version"].isString() == true);
+		m_engine_info._version = std::pmr::string(l_engine_info["Version"].asCString(), framework_base::get_large_memory_resource());
 	}
 
 	{
-		FE_ASSERT(l_froggy_json["ProjectConfig"].is_object() == true);
-		auto l_project_config = l_froggy_json["ProjectConfig"].get_object();
+		FE_ASSERT(l_froggy_json["ProjectConfig"].isObject() == true);
+		auto& l_project_config = l_froggy_json["ProjectConfig"];
 
-		FE_ASSERT(l_project_config["GlobalResourceLookUpTable"].is_object() == true);
-		auto l_resource_lut = l_project_config["GlobalResourceLookUpTable"].get_object();
-		
-		if (l_resource_lut["EntryWorldPath"].is_null() == false)
-		{
-			FE_ASSERT(l_resource_lut["EntryWorldPath"].is_string() == true);
-			auto l_tmp = l_resource_lut["EntryWorldPath"].get_string();
-			m_project_config._path_lookup_table._entry_world_path = FE::directory_string(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource());
-		}
+		FE_ASSERT(l_project_config["GlobalResourceLookUpTable"].isObject() == true);
+		auto& l_resource_lut = l_project_config["GlobalResourceLookUpTable"];
 
-		for (auto& element : l_resource_lut["WorldPaths"].get_array())
+		for (auto& element : l_resource_lut["WorldPaths"])
 		{
-			FE_ASSERT(element.is_string() == true);
-			auto l_tmp = element.get_string();
+			FE_ASSERT(element.isString() == true);
+			const Json::String l_tmp = element.asString();
 			m_project_config._path_lookup_table._world_paths.push_back(FE::directory_string(l_tmp.begin(), l_tmp.end(), framework_base::get_large_memory_resource()));
 		}
 
-		//if (l_project_config["CompressionMethod"].is_null() == false)
-		//{
-		//	FE_ASSERT(l_froggy_json["CompressionMethod"].is_string() == true);
-		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_froggy_json["CompressionMethod"].get_string().data());
-		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve compression method from reflection metadata.");
-		//	//m_project_config._compression_method = l_ptr->try_get_as_system();
-		//}
-
-		//if (l_project_config["DecompressionMethod"].is_null() == false)
-		//{
-		//	FE_ASSERT(l_project_config["DecompressionMethod"].is_string() == true);
-		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecompressionMethod"].get_string().data());
-		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decompression method from reflection metadata.");
-		//	//m_project_config._decompression_method = l_ptr->try_get_as_system();
-		//}
-
-		//if (l_project_config["EncryptionMethod"].is_null() == false)
-		//{
-		//	FE_ASSERT(l_project_config["EncryptionMethod"].is_string() == true);
-		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["EncryptionMethod"].get_string().data());
-		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve encryption method from reflection metadata.");
-		//	//m_project_config._encryption_method = l_ptr->try_get_as_system();
-		//}
-
-		//if (l_project_config["DecryptionMethod"].is_null() == false)
-		//{
-		//	FE_ASSERT(l_project_config["DecryptionMethod"].is_string() == true);
-		//	FE::task_base* l_ptr = framework_base::get_method_reflection().retrieve(l_project_config["DecryptionMethod"].get_string().data());
-		//	FE_ASSERT(l_ptr != nullptr, "Failed to retrieve decryption method from reflection metadata.");
-		//	//m_project_config._decryption_method = l_ptr->try_get_as_system();
-		//}
-
-		*const_cast<var::uint64*>(&(m_project_config._max_engine_component_type_count_hint)) = l_project_config["MaxEngineComponentTypeCountHint"].get_int64();
-		FE_ASSERT(m_project_config._max_engine_component_type_count_hint > 0);
-
-		*const_cast<var::uint32*>(&(m_project_config._gc_batch_count)) = static_cast<FE::uint32>(l_project_config["GCIterationsPerFrame"].get_int64());
+		*const_cast<var::uint32*>(&(m_project_config._gc_batch_count)) = static_cast<FE::uint32>(l_project_config["GCIterationsPerFrame"].asInt64());
 		FE_ASSERT(m_project_config._gc_batch_count > 0);
 
-		*const_cast<var::uint32*>(&(m_project_config._frames_per_reachability_analysis)) = static_cast<FE::uint32>(l_project_config["FramesPerReachabilityAnalysis"].get_int64());
+		*const_cast<var::uint32*>(&(m_project_config._frames_per_reachability_analysis)) = static_cast<FE::uint32>(l_project_config["FramesPerReachabilityAnalysis"].asInt64());
 		FE_ASSERT(m_project_config._frames_per_reachability_analysis > 0);
 
-		*const_cast<var::uint64*>(&(m_project_config._fiber_stack_size)) = l_project_config["FiberStackSize"].get_int64();
+		*const_cast<var::uint64*>(&(m_project_config._fiber_stack_size)) = l_project_config["FiberStackSize"].asInt64();
 		FE_ASSERT(m_project_config._fiber_stack_size > 1 * FE::one_KiB);
 
-		*const_cast<var::uint16*>(&(m_project_config._fibers_per_thread)) = static_cast<FE::uint16>(l_project_config["FibersPerThread"].get_int64());
+		*const_cast<var::uint16*>(&(m_project_config._fibers_per_thread)) = static_cast<FE::uint16>(l_project_config["FibersPerThread"].asInt64());
 		FE_ASSERT(m_project_config._fibers_per_thread > 0);
 
-		FE_ASSERT(l_project_config["WindowConfig"].is_object() == true);
-		auto l_window_config = l_project_config["WindowConfig"].get_object();
+		FE_ASSERT(l_project_config["WindowConfig"].isObject() == true);
+		auto& l_window_config = l_project_config["WindowConfig"];
 
-		if (l_window_config["Title"].is_null() == false)
+		if (l_window_config["Title"].isNull() == false)
 		{
-			FE_ASSERT(l_window_config["Title"].is_string() == true);
-			m_project_config._window_config._title = std::pmr::string(l_window_config["Title"].get_string().data(), framework_base::get_large_memory_resource());
+			FE_ASSERT(l_window_config["Title"].isString() == true);
+			m_project_config._window_config._title = std::pmr::string(l_window_config["Title"].asCString(), framework_base::get_large_memory_resource());
 		}
 
 
 		m_project_config._window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
-		for (auto& element : l_window_config["IconPaths"].get_array())
+		for (auto& element : l_window_config["IconPaths"])
 		{
-			FE_ASSERT(element.is_string() == true);
-			m_project_config._window_config._icon_paths.push_back(std::pmr::string{ element.get_string().data(), framework_base::get_large_memory_resource() });
+			FE_ASSERT(element.isString() == true);
+			m_project_config._window_config._icon_paths.push_back(std::pmr::string{ element.asCString(), framework_base::get_large_memory_resource() });
 			
-			std::pmr::string l_path;
-			l_path.resize(m_game_root_directory.length());
+			std::pmr::string l_path(framework::framework_base::get_framework().get_large_memory_resource());
 #ifdef _FE_ON_WINDOWS_X86_64_
-			WideCharToMultiByte(CP_UTF8, 0, 
-								m_game_root_directory.c_str(), (int)m_game_root_directory.length(), 
-								l_path.data(), (int)l_path.length(),
-								nullptr, nullptr);
+			const int l_path_length = (int)FE::algorithm::string::length(m_game_root_directory.c_str());
+			const int l_utf8_length = WideCharToMultiByte(CP_UTF8, 0, m_game_root_directory.c_str(), l_path_length, nullptr, 0, nullptr, nullptr);
+			FE_ASSERT(l_utf8_length > 0, "Failed to convert the image path to UTF-8.");
+			l_path.resize(l_utf8_length);
+			WideCharToMultiByte(CP_UTF8, 0,
+				m_game_root_directory.c_str(), l_path_length,
+				l_path.data(), l_utf8_length,
+				nullptr, nullptr
+			);
+#else
+			l_path_str = m_game_root_directory;
 #endif
 			l_path += "\\";
 			l_path += m_project_config._window_config._icon_paths.back();
@@ -551,49 +516,49 @@ void FE::engine::__read_froggy() noexcept
 
 		m_project_config._window_config._random_play_video_intro_paths = std::pmr::vector<FE::directory_string>(framework_base::get_large_memory_resource());
 		FE::directory_string l_path(framework_base::get_large_memory_resource());
-		for (auto& element : l_window_config["RandomPlayIntroVideoPaths"].get_array())
+		for (auto& element : l_window_config["RandomPlayIntroVideoPaths"])
 		{
-			FE_ASSERT(element.is_string() == true);
+			FE_ASSERT(element.isString() == true);
 			l_path = m_game_root_directory;
 			l_path += FE_TEXT(\\);
-			auto l_tmp = element.get_string();
+			const Json::String l_tmp = element.asString();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._random_play_video_intro_paths.push_back(std::move(l_path));
 		}
 
 
 		m_project_config._window_config._sequential_play_video_intro_paths = std::pmr::vector<FE::directory_string>(framework_base::get_large_memory_resource());
-		for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"].get_array())
+		for (auto& element : l_window_config["SequentialPlayIntroVideoPaths"])
 		{
-			FE_ASSERT(element.is_string() == true);
+			FE_ASSERT(element.isString() == true);
 
 			l_path = m_game_root_directory;
 			l_path += FE_TEXT(\\);
-			auto l_tmp = element.get_string();
+			const Json::String l_tmp = element.asString();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 			m_project_config._window_config._sequential_play_video_intro_paths.push_back(std::move(l_path));
 		}
 
 
-		*const_cast<var::uint8*>(&(m_project_config._window_config._swap_chain_buffer_count)) = static_cast<FE::uint8>(l_window_config["SwapChainBufferCount"].get_int64());
+		*const_cast<var::uint8*>(&(m_project_config._window_config._swap_chain_buffer_count)) = static_cast<FE::uint8>(l_window_config["SwapChainBufferCount"].asInt64());
 		FE_ASSERT(m_project_config._window_config._swap_chain_buffer_count > 0);
 
 
 		m_project_config._window_config._shader_compile_splash_images = std::pmr::vector<FE::image>(framework_base::get_large_memory_resource());
-		for (auto& element : l_window_config["ShaderCompileSplashImagePaths"].get_array())
+		for (auto& element : l_window_config["ShaderCompileSplashImagePaths"])
 		{
-			FE_ASSERT(element.is_string() == true);
+			FE_ASSERT(element.isString() == true);
 
 			l_path = m_game_root_directory;
 			l_path += FE_TEXT(\\);
-			auto l_tmp = element.get_string();
+			const Json::String l_tmp = element.asString();
 			l_path += FE::directory_string(l_tmp.begin(), l_tmp.end());
 
 			m_project_config._window_config._shader_compile_splash_images.emplace_back();
 			m_project_config._window_config._shader_compile_splash_images.back().read_image_from_disk(l_path.c_str());
 		}
 
-		FE_ASSERT(l_window_config["ShaderCompileSplashImageDurationInSeconds"].is_int64() == true);
-		m_project_config._window_config._splash_duration_in_seconds = (var::uint32)l_window_config["ShaderCompileSplashImageDurationInSeconds"].as_int64();
+		FE_ASSERT(l_window_config["ShaderCompileSplashImageDurationInSeconds"].isInt64() == true);
+		m_project_config._window_config._splash_duration_in_seconds = (var::uint32)l_window_config["ShaderCompileSplashImageDurationInSeconds"].asInt64();
 	}
 }
