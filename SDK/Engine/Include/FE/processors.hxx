@@ -55,7 +55,7 @@ public:
 	void schedule_task(const task& task_p) noexcept;
 
 	// Not thread-safe; must not be called concurrently.
-	void execute() noexcept;
+	void activate() noexcept;
 
 	// Thread-safe. Calling it from any thread will signal the fiber scheduler to terminate as soon as possible.
 	void terminate() noexcept;

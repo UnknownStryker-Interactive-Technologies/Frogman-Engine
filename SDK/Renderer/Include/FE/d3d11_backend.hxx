@@ -100,7 +100,7 @@ public:
 
 
     _FE_FORCE_INLINE_ device* get_device() const noexcept { return m_device.Get(); }
-    _FE_FORCE_INLINE_ device_context* get_context() const noexcept { return m_context.Get(); }
+    _FE_FORCE_INLINE_ device_context* get_device_context() const noexcept { return m_context.Get(); }
     _FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_adapter_desc; }
 
 

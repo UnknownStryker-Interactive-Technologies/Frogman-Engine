@@ -16,30 +16,15 @@ limitations under the License.
 */
 #include <FE/prerequisites.hxx>
 #include <FE/clock.hxx>
-#include <FE/random.hxx>
 
-#include <FE/blacklist_evaluator.hxx>
 #include <FE/engine.hpp>
-#include <FE/image.hpp>
-#include <FE/video_player.hpp>
 
 #include <FE/processors.hxx>
 #include <FE/window.hxx>
 
 #include <atomic>
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_dx11.h>
-
 #include <taskflow.hpp>
-
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h> // for loading icons & images
 
 
 
@@ -54,7 +39,6 @@ renderer::renderer(FE::smart_ptr<FE::processors, FE::RefType::_Observer> process
 
 		m_processors(processors_p),
 		m_window(window_p),
-		m_should_exit(false),
 
 		m_shader_headers(),
 		m_shaders(framework::framework_base::get_framework().get_large_memory_resource()),
@@ -197,211 +181,13 @@ FE::renderer::~renderer() noexcept
 
 void FE::renderer::__main(class FE::world&) noexcept
 {
-	/*
 	auto& l_engine = FE::engine::get_engine();
-	auto& l_renderer = l_engine.get_renderer(FE::engine::auth{});
-	auto& l_shader_headers = l_engine.get_shader_headers(FE::engine::auth{});
-	auto& l_shaders = l_engine.get_shaders(FE::engine::auth{});
 
-
-	if (l_renderer.m_window_config._is_fullscreen == true)
+	while (l_engine.should_tick())
 	{
-		l_renderer.toggle_borderless_fullscreen();
+
 	}
-
-	tf::Executor l_executor;
-	tf::Taskflow l_taskflow; // Evaluate Permutation Blacklist
-	for (var::int32 n = 0; n < l_shaders.size(); ++n)
-	{
-		l_taskflow.emplace
-		(
-			[&l_shaders, n]()
-			{
-				FE::internal::__filter_shader_macro_combinations(l_shaders[n]);
-			}
-		);
-	}
-
-	concurrency::concurrent_unordered_map<FE::directory_string, std::pmr::list<FE::internal::renderer::hlsl_token>> l_token_lists;
-	for (auto it = l_shader_headers.begin(); it != l_shader_headers.end(); ++it)
-	{
-		l_taskflow.emplace
-		(
-			[it, &l_token_lists]()
-			{
-				try
-				{
-					auto l_list = FE::internal::renderer::__tokenize_hlsl(it->second._header_buffer);
-					l_token_lists[it->first] = std::move(l_list);
-				}
-				catch (_FE_MAYBE_UNUSED_ const FE::internal::renderer::HlslTokenizerError& err)
-				{
-					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", it->first.c_str(), &err);
-					return;
-				}
-			}
-		);
-	}
-
-	for (var::int32 n = 0; n < l_shaders.size(); ++n)
-	{
-		l_taskflow.emplace
-		(
-			[&l_engine, &l_shaders, &l_token_lists, n]()
-			{
-				std::fstream l_file_stream(l_shaders[n]._source_path.c_str(), std::ios::in | std::ios::binary);
-				FE::fstream_guard l_file_guard(l_file_stream);
-
-				std::pmr::string l_buffer(l_engine.get_large_memory_resource());
-				l_file_stream.seekg(0, std::ios::end);
-				l_buffer.resize(l_file_stream.tellg());
-				l_file_stream.seekg(0, std::ios::beg);
-
-				l_file_stream.read(l_buffer.data(), l_buffer.size());
-
-				try
-				{
-					auto l_list = FE::internal::renderer::__tokenize_hlsl(l_buffer);
-					l_token_lists[l_shaders[n]._source_path] = std::move(l_list);
-				}
-				catch (_FE_MAYBE_UNUSED_ const FE::internal::renderer::HlslTokenizerError& err)
-				{
-					FE_LOG(FE::log::Severity::_Warning, "Failed to tokenize the HLSL shader header file at ${%s@0}; skipping this file.\nError code: ${%d@1}", l_shaders[n]._source_path.c_str(), &err);
-					return;
-				}
-			}
-		);
-	}
-
-	{
-		auto l_future = l_executor.run(l_taskflow); // run all queued tasks
-
-		HWND l_hwnd = glfwGetWin32Window(l_renderer.m_window); 	// --- intro videos (MF owns the HWND's swap chain in this scope) -------
-		FE::video_player l_intro(l_hwnd);
-
-		const auto& l_random_list = l_engine.get_project_config()._window_config._random_play_video_intro_paths;
-		const auto& l_sequential_list = l_engine.get_project_config()._window_config._sequential_play_video_intro_paths;
-
-		if (l_random_list.empty() == false)
-		{
-			FE::random_integer<var::uint64> l_rng;
-			FE::uint64 l_idx = l_rng.ranged_random_integer(0, l_random_list.size() - 1);
-			l_intro.play(l_random_list[l_idx].c_str());
-		}
-
-		for (const auto& l_path : l_sequential_list)
-		{
-			l_intro.play(l_path.c_str());
-		}
-
-		l_future.wait();
-		l_taskflow.clear();
-	}	// l_intro destructs → MF::Shutdown → HWND free for the D3D backend
-
-	FE::internal::renderer::__build_and_traverse_include_dependency_graph(l_token_lists, l_shader_headers, l_shaders);
-
-	{
-		var::uint64 l_total_permutations = 0;
-		std::atomic_uint64_t l_permutations_compiled = 0;
-
-		for (var::int32 n = 0; n < l_shaders.size(); ++n)
-		{
-			l_total_permutations += l_shaders[n]._macro_combinations.size();
-
-			l_taskflow.emplace
-			(
-				[&l_engine, &l_shaders, &l_permutations_compiled, n]()
-				{
-					l_shaders[n].compile(l_engine.get_program_options().is_recompile_shaders_enabled());
-					l_permutations_compiled.fetch_add(	l_shaders[n]._permutations.size(),
-														std::memory_order_acq_rel
-														);
-				}
-			);
-		}
-
-		l_executor.run(l_taskflow);
-		
-		for (FE::image& image : l_engine.get_project_config(FE::engine::auth{})._window_config._shader_compile_splash_images)
-		{
-			image.load_to_renderer(l_renderer.m_backend->get_device());
-		}
-		
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGui_ImplGlfw_InitForOther(l_renderer.m_window, false);
-		ImGui_ImplDX11_Init(l_renderer.m_backend->get_device(), l_renderer.m_backend->get_context());
-
-		FE::clock l_shader_compile_splash_duration;
-		auto l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.cbegin();
-
-		l_shader_compile_splash_duration.start_clock();
-		while (l_total_permutations > l_permutations_compiled.load(std::memory_order_acquire))
-		{
-			l_renderer.m_backend->begin_frame();
-
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplGlfw_NewFrame();  
-			ImGui::NewFrame();
-
-			l_shader_compile_splash_duration.end_clock();
-
-			FE::uint32 l_duration_seconds = (FE::uint32)(l_shader_compile_splash_duration.get_delta_milliseconds() / 1000.0);
-			if (l_duration_seconds >= l_engine.get_project_config()._window_config._splash_duration_in_seconds)
-			{
-				++l_splash_iterator;
-				if (l_splash_iterator == l_engine.get_project_config()._window_config._shader_compile_splash_images.cend())
-				{
-					l_splash_iterator = l_engine.get_project_config()._window_config._shader_compile_splash_images.cbegin();
-				}
-				l_shader_compile_splash_duration.start_clock();
-			}
-
-			const FE::image& l_image = *l_splash_iterator;
-			ImGuiIO& l_io = ImGui::GetIO();
-
-			ImGui::SetNextWindowPos(ImVec2(0, 0));
-			ImGui::SetNextWindowSize(l_io.DisplaySize);
-			ImGui::Begin
-			(
-				"##shader_compile_splash", nullptr,
-				ImGuiWindowFlags_NoBackground |
-				ImGuiWindowFlags_NoDecoration
-			);
-
-			ImGui::Image(l_image.shader_resource_view(), l_io.DisplaySize);
-
-			FE::float32 l_progress = (FE::float32)l_permutations_compiled.load(std::memory_order_acquire) / (FE::float32)l_total_permutations;
-
-			ImVec2 l_window_size = ImGui::GetWindowSize();
-			constexpr FE::float32 l_corner_padding = 50.0f;
-			ImVec2 l_UI_pos{ l_corner_padding, l_window_size.y - l_corner_padding };
-			ImGui::SetCursorPos(l_UI_pos);
-
-			constexpr FE::float32 l_bar_thickness = 25.0f;
-			ImVec2 l_bar_size{ l_window_size.x - (l_corner_padding*2), l_bar_thickness };
-			ImGui::ProgressBar(l_progress, l_bar_size);
-
-			ImGui::End();
-			ImGui::Render();
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-			l_renderer.m_backend->end_frame();
-		}
-
-		l_renderer.register_shaders(l_shaders);
-
-		ImGui_ImplDX11_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
-
-
-	while (l_renderer.m_should_exit.load(std::memory_order_acquire) == false) 	
-	{
-		l_renderer.render_frame();
-	}
-	*/
 }
+
 
 END_NAMESPACE

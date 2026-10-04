@@ -64,7 +64,7 @@ void processors::schedule_task(const task& task_p) noexcept
 
 
 // not thread-safe.
-void processors::execute() noexcept
+void processors::activate() noexcept
 {
 	if (m_threads != nullptr)
 	{
@@ -85,7 +85,7 @@ void processors::execute() noexcept
 				{
 					const int l_result = m_scheduler[t].execute();
 
-					if (l_result == _FE_FAILED_) // no tasks to execute, put the thread to sleep for a while to avoid busy-waiting.
+					if (l_result == _FE_FAILED_) // no tasks to activate, put the thread to sleep for a while to avoid busy-waiting.
 					{
 						std::mutex l_anesthetic;
 						std::unique_lock<std::mutex> l_lock(l_anesthetic);

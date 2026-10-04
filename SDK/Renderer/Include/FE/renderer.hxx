@@ -23,7 +23,6 @@ limitations under the License.
 #include <FE/shader.hxx>
 
 #pragma warning(disable: 4005)
-#include <GLFW/glfw3.h>
 #include <FE/d3d11_backend.hxx>
 
 
@@ -37,7 +36,7 @@ class world;
 
 class renderer
 {
-	friend FE::internal::renderer::backend;
+	friend internal::renderer::backend;
 	struct resolution
 	{
 		var::uint32 _width;
@@ -46,6 +45,8 @@ class renderer
 
 public:
 	using gpu_info = internal::renderer::backend::gpu_info;
+	using device = internal::renderer::backend::device;
+	using device_context = internal::renderer::backend::device_context;
 	using shader_header_list = absl::flat_hash_map<FE::directory_string, ::FE::internal::renderer::hlsli>;
 	using shader_list = std::pmr::vector<::FE::internal::renderer::shader>;
 
@@ -56,7 +57,6 @@ private:
 
 	FE::smart_ptr<class FE::processors, FE::RefType::_Observer> m_processors;
 	FE::smart_ptr<class FE::window, FE::RefType::_Observer> m_window;
-	std::atomic_bool m_should_exit;
 
 	shader_header_list m_shader_headers;
 	shader_list m_shaders;
@@ -69,6 +69,8 @@ public:
 
 
 	_FE_FORCE_INLINE_ const gpu_info& get_gpu_info() const noexcept { return m_backend.get_gpu_info(); }
+	_FE_FORCE_INLINE_ device* get_backend_device() noexcept { return m_backend.get_device(); }
+	_FE_FORCE_INLINE_ device_context* get_backend_device_context() noexcept { return m_backend.get_device_context(); }
 
 	_FE_FORCE_INLINE_ shader_header_list& get_shader_headers() noexcept { return m_shader_headers; }
 	_FE_FORCE_INLINE_ shader_list& get_shaders() noexcept { return m_shaders; }

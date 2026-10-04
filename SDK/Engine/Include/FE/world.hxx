@@ -85,7 +85,7 @@ public:
     T& add_component(FE::entity entity_p, Arguments&&... arguments_p) noexcept
     {
         FE_ASSERT( m_registry.all_of<T>( entity_p ) == false, "Component of type T already exists on the entity.");
-        return m_registry.emplace(entity_p, std::forward<Arguments>(arguments_p)...);
+        return m_registry.emplace<T>(entity_p, std::forward<Arguments>(arguments_p)...);
     }
 
     template <typename T>

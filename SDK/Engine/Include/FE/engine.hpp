@@ -52,7 +52,6 @@ struct engine_info // fields are immutable after window creation; modifying thes
 
 struct path_lut // fields are immutable after window creation; modifying these values will not affect any.
 {
-    FE::directory_string _entry_world_path;
     std::pmr::vector<FE::directory_string> _world_paths;
 };
 
@@ -65,11 +64,8 @@ struct project_config // fields are immutable after window creation; modifying t
  //   FE::system _decompression_method = nullptr;
 	//FE::system _encryption_method = nullptr;
  //   FE::system _decryption_method = nullptr;
-    FE::uint64 _max_engine_component_type_count_hint = 1024;
-	FE::uint32 _gc_batch_count = 30;
-    FE::uint32 _frames_per_reachability_analysis = 60;
-	FE::uint64 _fiber_stack_size = FE::one_MiB;
-    FE::uint16 _fibers_per_thread = 3;
+	FE::uint32 _fiber_stack_size = 4 * FE::one_MiB;
+    FE::uint16 _fibers_per_thread = 4;
 
 	FE::window_config _window_config;
 };
