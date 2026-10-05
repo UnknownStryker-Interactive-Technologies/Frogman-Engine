@@ -4,6 +4,7 @@
 #include <memory>
 #include <utility>
 
+#include <C:/Users/leeho/OneDrive/문서/GitHub/Frogman-Engine/SDK/Tests/Integration Tests/IntegrationTest/CMake/../Include/pong.h>
 
 
 
@@ -28,4 +29,5 @@ void destruct(T* ptr_p)
 
 void load_reflection_data()
 {
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system(FEWorldTag::_PongWorld, FE::SystemCallPhase::_EngineInitialization, &::hello_world);
 }
