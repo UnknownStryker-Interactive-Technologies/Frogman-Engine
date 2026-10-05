@@ -60,7 +60,7 @@ using world_tag_t = ::var::uint16;
 #error FE_WORLDS is a reserved Frogman Engine macro keyword.
 #else
 #define FE_WORLD_TAG \
-enum struct FEWorldTag : world_tag_t
+enum FEWorldTag : world_tag_t
 #endif
 
 #ifdef FE_SYSTEM

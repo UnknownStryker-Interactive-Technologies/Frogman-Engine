@@ -154,13 +154,16 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
         ENDIF()
     ENDFOREACH()
 
+    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
+
+        FILE(GENERATE
+            OUTPUT "${CMAKE_CURRENT_LIST_DIR}/generated-cmake/${CMAKE_PROJECT_NAME}-run-FHT.cmake"
+            CONTENT [=[
     SET(RETURN_VALUE_FROM_TOOL)
     SET(TOOL_STDOUT)
     SET(TOOL_STDERR)
         
     MESSAGE("========== Frogman Engine Header Tool ==========")
-
-    IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x64")
 
         # Print paths for debugging
         SET(PATH_TO_HEADER_TOOL ${FROGMAN_ENGINE_CMAKE_DIR}/../Header-Tool/Binaries/RelWithDebInfo/FE.HeaderTool.exe)
@@ -189,9 +192,6 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
             OUTPUT_VARIABLE TOOL_STDOUT
             ERROR_VARIABLE TOOL_STDERR
         )
-        INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/generated-includes)
-
-    ENDIF()
 
     MESSAGE("${TOOL_STDOUT}")
     MESSAGE("${TOOL_STDERR}")
@@ -206,6 +206,23 @@ FUNCTION(RUN_FROGMAN_HEADER_TOOL)
     ENDIF()
 
     MESSAGE("========== Frogman Engine Header Tool Successfully Processed the Target Header Files ==========")
+
+]=]
+        )
+
+        ADD_CUSTOM_TARGET("${CMAKE_PROJECT_NAME}_FHT" ALL
+            COMMAND "${CMAKE_COMMAND}"
+                "-DFROGMAN_ENGINE_CMAKE_DIR=${FROGMAN_ENGINE_CMAKE_DIR}"
+                "-DHEADER_TOOL_PROGRAM_OPTIONS=${HEADER_TOOL_PROGRAM_OPTIONS}"
+                "-DHEADER_FILES_PATHS=${HEADER_FILES_PATHS}"
+                -P "${CMAKE_CURRENT_LIST_DIR}/generated-cmake/${CMAKE_PROJECT_NAME}-run-FHT.cmake"
+            BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/generated.cpp"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            VERBATIM
+        )
+        INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/generated-includes)
+
+    ENDIF()
 
 ENDFUNCTION()
 
