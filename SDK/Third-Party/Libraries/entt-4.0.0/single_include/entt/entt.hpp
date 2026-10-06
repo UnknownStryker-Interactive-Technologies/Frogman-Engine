@@ -48139,7 +48139,15 @@ class basic_registry {
                 return static_cast<storage_type &>(*it->second);
             }
 
-            typename pool_container_type::mapped_type cpool = stl::allocate_shared<storage_type>(get_allocator(), get_allocator());
+            typename pool_container_type::mapped_type cpool;
+            if constexpr (stl::is_same_v<Allocator, std::pmr::polymorphic_allocator<Entity>>)
+            {
+                cpool = stl::allocate_shared<storage_type>(get_allocator());
+            }
+            else
+            {
+                cpool = stl::allocate_shared<storage_type>(get_allocator(), get_allocator());
+            }
             pools.emplace(id, cpool);
             cpool->bind(*this);
 
