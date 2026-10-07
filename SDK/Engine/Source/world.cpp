@@ -6,11 +6,11 @@
 
 
 FE::world::world(world_tag_t world_tag_p) noexcept
-	: m_registry(std::pmr::polymorphic_allocator<entt::entity>{FE::get_large_thread_local_memory_resource()}),
+	: m_registry(FE::get_concurrent_memory_resource()),
 	  m_world_tag(world_tag_p),
 	  m_delta_time(),
-	  m_deferred_ecs_syscall_queue(std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>{FE::get_large_thread_local_memory_resource()}),
-	  m_tagged_entities(std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, FE::entity>>{FE::get_large_thread_local_memory_resource()})
+	  m_deferred_ecs_syscall_queue(std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>{FE::get_concurrent_memory_resource()}),
+	  m_tagged_entities(std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, FE::entity>>{FE::get_concurrent_memory_resource()})
 {
 }
 
@@ -90,7 +90,7 @@ FE::boolean FE::world::is_valid(FE::entity entity_p) const noexcept
 void FE::world::create_world(world_tag_t world_tag_p) noexcept
 {
 	auto& l_world_list = FE::engine::get_engine().get_worlds(FE::engine::auth{});
-	l_world_list.emplace(world_tag_p, FE::make_owner<FE::world>(FE::engine::get_engine().get_large_memory_resource(), world_tag_p));
+	l_world_list.emplace(world_tag_p, FE::make_owner<FE::world>(FE::get_concurrent_memory_resource(), world_tag_p));
 }
 
 void FE::world::enter_world(world_tag_t world_tag_p) noexcept
