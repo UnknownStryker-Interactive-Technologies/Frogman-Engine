@@ -398,22 +398,22 @@ void FE::engine::__game_main() noexcept
 
 	auto l_current_world = m_current_world;
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EngineInitialization))
+	for (auto sys : m_method_reflection.get_global_systems(_EngineInitialization))
 	{
 		sys(*l_current_world);
 	}
 	
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceInitialization))
+	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceInitialization))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldInitialization))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityInitialization))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 	{
 		sys(*l_current_world);
 	}
@@ -421,12 +421,12 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceBegin))
+	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceBegin))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldBegin))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 	{
 		sys(*l_current_world);
 	}
@@ -443,35 +443,17 @@ void FE::engine::__game_main() noexcept
 		l_delta_clock.start_clock();
 		glfwPollEvents();
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreGameInstanceTick))
+		for (auto sys : m_method_reflection.get_global_systems(_PreGameInstanceTick))
 		{
 			sys(*l_current_world);
 		}
 		
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceTick))
+		for (auto sys : m_method_reflection.get_global_systems(_GameInstanceTick))
 		{
 			sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostGameInstanceTick))
-		{
-			sys(*l_current_world);
-		}
-
-
-
-
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreWorldTick))
-		{
-			sys(*l_current_world);
-		}
-
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldTick))
-		{
-			sys(*l_current_world);
-		}
-
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostWorldTick))
+		for (auto sys : m_method_reflection.get_global_systems(_PostGameInstanceTick))
 		{
 			sys(*l_current_world);
 		}
@@ -479,17 +461,35 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreEntityTick))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreWorldTick))
 		{
 			sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EntityTick))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldTick))
 		{
 			sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostEntityTick))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostWorldTick))
+		{
+			sys(*l_current_world);
+		}
+
+
+
+
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreEntityTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EntityTick))
+		{
+			sys(*l_current_world);
+		}
+
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostEntityTick))
 		{
 			sys(*l_current_world);
 		}
@@ -501,27 +501,27 @@ void FE::engine::__game_main() noexcept
 		if (l_physics_delta_clock.get_delta_milliseconds() >= l_current_world->fixed_physics_delta_milliseconds())
 		{
 			l_physics_delta_clock.start_clock();
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PrePhysics))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PrePhysics))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_StartPhysics))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _StartPhysics))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_Physics))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _Physics))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EndPhysics))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EndPhysics))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostPhysics))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostPhysics))
 			{
 				sys(*l_current_world);
 			}
@@ -530,7 +530,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostUpdateWork))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostUpdateWork))
 		{
 			sys(*l_current_world);
 		}
@@ -538,12 +538,12 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PreRenderQueueCommit))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreRenderQueueCommit))
 		{
 			sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_PostRenderQueueCommit))
+		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostRenderQueueCommit))
 		{
 			sys(*l_current_world);
 		}
@@ -553,17 +553,17 @@ void FE::engine::__game_main() noexcept
 
 		if (l_current_world != m_current_world)
 		{
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldEnd))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityDeinitialization))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDeinitialization))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 			{
 				sys(*l_current_world);
 			}
@@ -572,17 +572,17 @@ void FE::engine::__game_main() noexcept
 			l_current_world = m_current_world;
 
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldInitialization))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityInitialization))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 			{
 				sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldBegin))
+			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 			{
 				sys(*l_current_world);
 			}
@@ -601,12 +601,12 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldEnd))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceEnd))
+	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceEnd))
 	{
 		sys(*l_current_world);
 	}
@@ -614,22 +614,22 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDefaultEntityDeinitialization))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_WorldDeinitialization))
+	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_GameInstanceDeinitialization))
+	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceDeinitialization))
 	{
 		sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_systems(l_current_world->get_world_tag(), FE::SystemCallPhase::_EngineDeinitialization))
+	for (auto sys : m_method_reflection.get_global_systems(_EngineDeinitialization))
 	{
 		sys(*l_current_world);
 	}

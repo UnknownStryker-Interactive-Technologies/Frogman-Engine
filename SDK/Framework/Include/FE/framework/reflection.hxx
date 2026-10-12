@@ -69,8 +69,7 @@ enum FEWorldTag : world_tag_t
 // This macro is an indicator for the Frogman Engine Header Tool.
 // Incorrectly placing the arguments will fail the generated code compilation.
 #define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
-static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::SystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
-static_assert(::std::is_enum_v<::std::remove_cv_t<decltype(WorldTagEnum)>>, "Frogman Engine C++: the WorldTagEnum is not an enum value."); \
+static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
 static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
 #endif
 
@@ -81,56 +80,69 @@ CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 namespace FE
 {
 	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
-	enum SystemCallPhase : var::uint16
+	enum WorldSystemCallPhase : var::uint16
+	{
+		_WorldInitialization = 0,
+		_WorldDefaultEntityInitialization = 1,
+
+
+		_WorldBegin = 2,
+
+
+		_PreWorldTick = 3,
+		_WorldTick = 4,
+		_PostWorldTick = 5,
+
+
+		_PreEntityTick = 6,
+		_EntityTick = 7,
+		_PostEntityTick = 8,
+
+
+		_PrePhysics = 9,
+		_StartPhysics = 10,
+		_Physics = 11,
+		_EndPhysics = 12,
+		_PostPhysics = 13,
+
+
+		_PostUpdateWork = 14,
+
+
+		_PreRenderQueueCommit = 15,
+		_PostRenderQueueCommit = 16,
+
+
+		_WorldEnd = 17,
+
+
+		_WorldDefaultEntityDeinitialization = 18,
+		_WorldDeinitialization = 19,
+	};
+	constexpr static var::uint64 world_syscall_phase_count = 20;
+
+	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
+	enum GlobalSystemCallPhase : var::uint16
 	{
 		_EngineInitialization = 0,
 		_GameInstanceInitialization = 1,
-		_WorldInitialization = 2,
-		_WorldDefaultEntityInitialization = 3,
 
 
-		_GameInstanceBegin = 4,
-		_WorldBegin = 5,
-//		_EntityBegin = 6,
+		_GameInstanceBegin = 2,
 
 
-		_PreGameInstanceTick = 7,
-		_GameInstanceTick = 8,
-		_PostGameInstanceTick = 9,
-
-		_PreWorldTick = 10,
-		_WorldTick = 11,
-		_PostWorldTick = 12,
-
-		_PreEntityTick = 13,
-		_EntityTick = 14,
-		_PostEntityTick = 15,
-
-		_PrePhysics = 16,
-		_StartPhysics = 17,
-		_Physics = 18,
-		_EndPhysics = 19,
-		_PostPhysics = 20,
-
-		_PostUpdateWork = 21,
+		_PreGameInstanceTick = 3,
+		_GameInstanceTick = 4,
+		_PostGameInstanceTick = 5,
 
 
-		_PreRenderQueueCommit = 22,
-		_PostRenderQueueCommit = 23,
+		_GameInstanceEnd = 6,
 
 
-//		_EntityEnd = 24,
-		_WorldEnd = 25,
-		_GameInstanceEnd = 26,
-
-
-		_WorldDefaultEntityDeinitialization = 27,
-		_WorldDeinitialization = 28,
-		_GameInstanceDeinitialization = 29,
-		_EngineDeinitialization = 30
+		_GameInstanceDeinitialization = 7,
+		_EngineDeinitialization = 8
 	};
-
-	constexpr static var::uint64 syscall_phase_count = 31;
+	constexpr static var::uint64 global_syscall_phase_count = 9;
 
 	class world;
 }
@@ -153,19 +165,22 @@ private:
 	using world_tag_t = var::uint16;
 	using system = void(*)(class ::FE::world&);
 
-	using system_table = absl::node_hash_map<	world_tag_t,
-												std::array<std::pmr::vector<system>, syscall_phase_count>,
+	using world_system_table = absl::node_hash_map<	world_tag_t,
+												std::array<std::pmr::vector<system>, world_syscall_phase_count>,
 
 												absl::DefaultHashContainerHash<world_tag_t>,
 												absl::DefaultHashContainerEq<world_tag_t>,
 
-												std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, syscall_phase_count>>>
+												std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, world_syscall_phase_count>>>
 	>;
+
+	using global_system_table = std::array<std::pmr::vector<system>, world_syscall_phase_count>;
 
 	lock_type m_lock;
 	std::pmr::memory_resource* m_pool;
 	internal_map_type m_method_registry;
-	system_table m_system_table;
+	world_system_table m_world_system_table;
+	global_system_table m_global_system_table;
 
 public:
 	method_registry(FE::size map_capacity_p, std::pmr::memory_resource* pool_p = std::pmr::get_default_resource()) noexcept;
@@ -208,12 +223,45 @@ public:
 	// This method may return a nullptr.
 	FE::task_base* retrieve(const std::string_view& key_p) noexcept;
 
-	void associate_system(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p, system system_function_p) noexcept;
+	void associate_system(world_tag_t world_tag_p, auto syscall_phase_p, system system_function_p) noexcept
+	{
+		static_assert(::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
+		FE_ASSERT(static_cast<var::uint16>(syscall_phase_p) < FE::world_syscall_phase_count, "Static assertion failure: 'syscall_phase_p' is out of range.");
 
-	_FE_FORCE_INLINE_ typename system_table::mapped_type::value_type& get_systems(world_tag_t world_tag_p, SystemCallPhase syscall_phase_p) noexcept
+		std::lock_guard<lock_type> l_lock(m_lock);
+
+		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
+		if constexpr (::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>)
+		{
+			m_global_system_table[(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
+		}
+		else
+		{
+			if (m_world_system_table.find(world_tag_p) == m_world_system_table.end())
+			{
+				typename world_system_table::mapped_type l_world_system_table;
+				for (typename world_system_table::mapped_type::value_type& vec : l_world_system_table)
+				{
+					vec = typename world_system_table::mapped_type::value_type(m_pool);
+					vec.reserve(512);
+				}
+				m_world_system_table[world_tag_p] = std::move(l_world_system_table);
+			}
+
+			m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
+		}
+	}
+
+	_FE_FORCE_INLINE_ typename world_system_table::mapped_type::value_type& get_world_systems(world_tag_t world_tag_p, WorldSystemCallPhase syscall_phase_p) noexcept
 	{
 		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
-		return m_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
+		return m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
+	}
+
+	_FE_FORCE_INLINE_ typename global_system_table::value_type& get_global_systems(GlobalSystemCallPhase syscall_phase_p) noexcept
+	{
+		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
+		return m_global_system_table[(FE::uint16)syscall_phase_p];
 	}
 };
 
