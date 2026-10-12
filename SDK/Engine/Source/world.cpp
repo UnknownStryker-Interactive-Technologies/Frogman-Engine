@@ -66,7 +66,7 @@ FE::entity FE::world::spawn_entity(FE::ASCII* const tag_p) noexcept
 std::optional<FE::entity> FE::world::find_entity(FE::ASCII* const tag_p) const noexcept
 {
 	auto l_it = m_tagged_entities.find(tag_p);
-	if (l_it != m_tagged_entities.end())
+	if ( (l_it != m_tagged_entities.end()) && (m_registry.valid(l_it->second) == true) )
 	{
 		return l_it->second;
 	}
