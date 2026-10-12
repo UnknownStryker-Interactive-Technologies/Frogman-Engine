@@ -10,7 +10,7 @@ FE::world::world(world_tag_t world_tag_p) noexcept
 	  m_world_tag(world_tag_p),
 	  m_delta_time(),
 	  m_deferred_ecs_syscall_queue(std::pmr::polymorphic_allocator<void(*)(class ::FE::world&)>{FE::get_concurrent_memory_resource()}),
-	  m_tagged_entities(std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, FE::entity>>{FE::get_concurrent_memory_resource()})
+	  m_tagged_entities(std::pmr::polymorphic_allocator<std::pair<const std::string_view, FE::entity>>{FE::get_concurrent_memory_resource()})
 {
 }
 
@@ -50,20 +50,28 @@ FE::world::registry& FE::world::get_registry(const auth&) noexcept
 }
 
 
-FE::entity FE::world::spawn_entity(FE::ASCII* const tag_p) noexcept
+FE::entity FE::world::spawn_entity(const std::string_view& tag_p) noexcept
 {
-	if (tag_p == NULL)
+	if (tag_p.empty())
 	{
 		return FE::entity{ m_registry.create() };
 	}
 
 	auto l_entity_handle = m_registry.create();
 	FE::entity l_entity{ l_entity_handle };
-	m_tagged_entities.emplace(tag_p, l_entity);
+
+	auto l_result = m_tagged_entities.find(tag_p);
+	if (l_result == m_tagged_entities.end())
+	{
+		m_tagged_entities.emplace(tag_p, l_entity);
+		return l_entity;
+	}
+
+	m_tagged_entities[tag_p] = l_entity;
 	return l_entity;
 }
 
-std::optional<FE::entity> FE::world::find_entity(FE::ASCII* const tag_p) const noexcept
+std::optional<FE::entity> FE::world::find_entity(const std::string_view& tag_p) const noexcept
 {
 	auto l_it = m_tagged_entities.find(tag_p);
 	if ( (l_it != m_tagged_entities.end()) && (m_registry.valid(l_it->second) == true) )

@@ -113,10 +113,10 @@ private:
 	var::float64 m_delta_time;
 	queue<system> m_deferred_ecs_syscall_queue;
 
-	absl::flat_hash_map<std::pmr::string, entity, 
-        absl::DefaultHashContainerHash<std::pmr::string>, 
-        absl::DefaultHashContainerEq<std::pmr::string>, 
-        std::pmr::polymorphic_allocator<std::pair<const std::pmr::string, entity>>> m_tagged_entities;
+	absl::flat_hash_map<std::string_view, entity, 
+        absl::DefaultHashContainerHash<std::string_view>,
+        absl::DefaultHashContainerEq<std::string_view>,
+        std::pmr::polymorphic_allocator<std::pair<const std::string_view, entity>>> m_tagged_entities;
 
 public:
     world(world_tag_t world_tag_p) noexcept;
@@ -135,8 +135,8 @@ public:
 	void set_delta_time(const auth&, float64 delta_time_p) noexcept;
     registry& get_registry(const auth&) noexcept;
 
-    entity spawn_entity(ASCII* const tag_p = NULL) noexcept;
-    std::optional<entity> find_entity(ASCII* const tag_p) const noexcept;
+    entity spawn_entity(const std::string_view& tag_p = std::string_view{}) noexcept;
+    std::optional<entity> find_entity(const std::string_view& tag_p) const noexcept;
     void despawn_entity(entity entity_p) noexcept;
     boolean is_valid(entity entity_p) const noexcept;
 
