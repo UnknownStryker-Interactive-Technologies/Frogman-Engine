@@ -298,8 +298,8 @@ public:
         return l_idx;
     }
 
-    template <typename... Args>
-    size_type try_emplace_back(Args&&... args_p) noexcept
+    template <typename... Arguments>
+    size_type try_emplace_back(Arguments&&... args_p) noexcept
     {
         FE::shared_lock_guard<SharedMutex> l_lock(m_length_modifier_lock);
         size_type l_idx = m_size.fetch_add(1, std::memory_order_acq_rel);
@@ -335,7 +335,7 @@ public:
         //assert(l_idx != m_capacity);
 
         // Commit the transaction.
-        new (m_active.load(std::memory_order_acquire) + l_idx) T(std::forward<Args>(args_p)...);
+        new (m_active.load(std::memory_order_acquire) + l_idx) T(std::forward<Arguments>(args_p)...);
         return l_idx;
     }
 
@@ -382,16 +382,16 @@ public:
         return l_idx;
     }
 
-    template <typename... Args>
-    size_type emplace_back(Args&&... args_p) noexcept
+    template <typename... Arguments>
+    size_type emplace_back(Arguments&&... args_p) noexcept
     {
-        size_type l_idx = try_emplace_back(std::forward<Args>(args_p)...);
+        size_type l_idx = try_emplace_back(std::forward<Arguments>(args_p)...);
         while (l_idx == std::numeric_limits<size_type>::max())
         {
             size_type l_new_capacity = m_capacity.load(std::memory_order_acquire);
             l_new_capacity += (l_new_capacity >> 1);
             try_reserve(l_new_capacity);
-            l_idx = try_emplace_back(std::forward<Args>(args_p)...);
+            l_idx = try_emplace_back(std::forward<Arguments>(args_p)...);
         }
         return l_idx;
     }

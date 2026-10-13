@@ -308,7 +308,7 @@ template <typename T>
 using function_return_t = typename function_traits<T>::return_type;
 
 template <typename T, std::size_t N>
-using function_arg_t = typename function_traits<T>::template argument<N>::type;
+using function_argument_t = typename function_traits<T>::template argument<N>::type;
 
 template <typename T>
 constexpr std::size_t function_arity_v = function_traits<T>::arity;
