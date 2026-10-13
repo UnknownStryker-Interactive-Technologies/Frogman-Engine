@@ -82,7 +82,7 @@ class list
 				m_next(nullptr),
 				_value( std::forward<Arguments>(arguments_p)... )
 		{
-			//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
+			//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Arguments.");
 			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
@@ -879,7 +879,7 @@ public: // Member functions
 	template <typename... Arguments>
 	constexpr iterator emplace(const_iterator pos_p, Arguments&&... arguments_p) noexcept
 	{
-		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
+		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Arguments.");
 
 		if (pos_p == cend())
 		{
@@ -1011,7 +1011,7 @@ public: // Member functions
 	template <typename... Arguments>
 	constexpr reference emplace_back(Arguments&&... arguments_p) noexcept
 	{
-		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
+		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Arguments.");
 
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
@@ -1058,7 +1058,7 @@ public: // Member functions
 	template <typename... Arguments>
 	constexpr reference emplace_front(Arguments&&... arguments_p) noexcept
 	{
-		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Args.");
+		//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Arguments.");
 
 		if (m_front == nullptr)
 		{
