@@ -23,6 +23,7 @@ limitations under the License.
 #include <array>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <type_traits>
 #include <vector>
 
@@ -280,6 +281,37 @@ struct is_function
 
 template<typename T>
 _FE_MAYBE_UNUSED_ constexpr inline bool is_function_v = is_function<T>::value;
+
+
+
+
+template <typename T>
+struct function_traits;
+
+template <typename R, typename... Arguments>
+struct function_traits<R(*)(Arguments...)> 
+{
+	using return_type = R;
+	using argument_tuple = std::tuple<Arguments...>;
+
+	static constexpr std::size_t arity = sizeof...(Arguments);
+
+	template <std::size_t N>
+	struct argument 
+	{
+		static_assert(N < arity, "Argument index out of range");
+		using type = typename std::tuple_element<N, argument_tuple>::type;
+	};
+};
+
+template <typename T>
+using function_return_t = typename function_traits<T>::return_type;
+
+template <typename T, std::size_t N>
+using function_arg_t = typename function_traits<T>::template argument<N>::type;
+
+template <typename T>
+constexpr std::size_t function_arity_v = function_traits<T>::arity;
 
 
 
