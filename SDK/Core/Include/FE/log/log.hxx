@@ -47,6 +47,7 @@ limitations under the License.
 #include <FE/log/logger.hxx>
 #include <FE/log/format_string.hxx>
 #include <FE/definitions.hxx>
+#include <FE/private/reflection_defines.hxx>
 
 // std
 #include <cassert>

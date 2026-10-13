@@ -17,5 +17,5 @@ limitations under the License.
 */
 #include <FE/types.hxx>
 #include <FE/log/log.hxx>
-
+#include <FE/private/reflection_defines.hxx>
 #endif
