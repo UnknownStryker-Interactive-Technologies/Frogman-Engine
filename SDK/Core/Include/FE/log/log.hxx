@@ -47,7 +47,6 @@ limitations under the License.
 #include <FE/log/logger.hxx>
 #include <FE/log/format_string.hxx>
 #include <FE/definitions.hxx>
-#include <FE/private/reflection_defines.hxx>
 
 // std
 #include <cassert>
@@ -238,7 +237,6 @@ The FE_EXIT_IF macro logs a fatal error message and terminates the program with 
 
 namespace FE
 {
-	FE_ENUM_STRUCT();
 	enum struct ErrorCode : FE::int32
 	{
 		_None = 0,
