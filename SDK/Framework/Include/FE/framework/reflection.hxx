@@ -54,98 +54,9 @@ limitations under the License.
 
 
 
-using world_tag_t = ::var::uint16;
-
-#ifdef FE_WORLD_TAG
-#error FE_WORLDS is a reserved Frogman Engine macro keyword.
-#else
-#define FE_WORLD_TAG \
-enum FEWorldTag : world_tag_t
-#endif
-
-#ifdef FE_SYSTEM
-#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
-#else
-// This macro is an indicator for the Frogman Engine Header Tool.
-// Incorrectly placing the arguments will fail the generated code compilation.
-#define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
-static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
-static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
-#endif
-
-
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
 
-namespace FE
-{
-	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
-	enum WorldSystemCallPhase : var::uint16
-	{
-		_WorldInitialization = 0,
-		_WorldDefaultEntityInitialization = 1,
-
-
-		_WorldBegin = 2,
-
-
-		_PreWorldTick = 3,
-		_WorldTick = 4,
-		_PostWorldTick = 5,
-
-
-		_PreEntityTick = 6,
-		_EntityTick = 7,
-		_PostEntityTick = 8,
-
-
-		_PrePhysics = 9,
-		_StartPhysics = 10,
-		_Physics = 11,
-		_EndPhysics = 12,
-		_PostPhysics = 13,
-
-
-		_PostUpdateWork = 14,
-
-
-		_PreRenderQueueCommit = 15,
-		_PostRenderQueueCommit = 16,
-
-
-		_WorldEnd = 17,
-
-
-		_WorldDefaultEntityDeinitialization = 18,
-		_WorldDeinitialization = 19,
-	};
-	constexpr static var::uint64 world_syscall_phase_count = 20;
-
-	// The numerical values of this enum must not be changed, as they are used for indexing arrays; the engine make system calls in the order of the values! Do not change if unnecessary.
-	enum GlobalSystemCallPhase : var::uint16
-	{
-		_EngineInitialization = 0,
-		_GameInstanceInitialization = 1,
-
-
-		_GameInstanceBegin = 2,
-
-
-		_PreGameInstanceTick = 3,
-		_GameInstanceTick = 4,
-		_PostGameInstanceTick = 5,
-
-
-		_GameInstanceEnd = 6,
-
-
-		_GameInstanceDeinitialization = 7,
-		_EngineDeinitialization = 8
-	};
-	constexpr static var::uint64 global_syscall_phase_count = 9;
-
-	class world;
-}
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
