@@ -13,7 +13,7 @@ FE_WORLD_TAG
 	_PongWorld
 };
 
-FE_SYSTEM(FE::SystemCallPhase::_EngineInitialization, FEWorldTag::_PongWorld);
+FE_SYSTEM(FE::GlobalSystemCallPhase::_EngineInitialization, FEWorldTag::_PongWorld);
 void hello_world(FE::world& world_p)
 {
 	FE_LOG(FE::log::Severity::_Info, "Hello, World!");
