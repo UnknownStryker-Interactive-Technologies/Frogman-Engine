@@ -36,6 +36,9 @@ namespace FHT::reflexcode_generator
 		{
 			std::pmr::wstring _system_call_phase;
 			std::pmr::wstring _world_tag_enum;
+
+			std::pmr::vector<std::pmr::wstring> _runs_after;
+			std::pmr::vector<std::pmr::wstring> _runs_before;
 		};
 
 		struct class_info
@@ -69,6 +72,7 @@ namespace FHT::reflexcode_generator
 	void output_class_metadata(metadata& out_return_p, const class_node& node_p) noexcept;
 	void output_struct_metadata(metadata& out_return_p, const struct_node& node_p) noexcept;
 	void output_enum_struct_metadata(metadata& out_return_p, const enum_struct_node& node_p) noexcept;
+	void output_system_metadata(metadata& out_return_p, const system_node& node_p) noexcept;
 
 	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept;
 } 

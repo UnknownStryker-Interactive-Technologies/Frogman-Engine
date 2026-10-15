@@ -41,6 +41,8 @@ void load_reflection_data()
         { ::FrogmanEngineHeaderToolError::_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM, "_Fatal_InputError_TargetFileNotEncodedWithUTF8_BOM" },
         { ::FrogmanEngineHeaderToolError::_InputError_IncorrectCppSyntax, "_InputError_IncorrectCppSyntax" },
         { ::FrogmanEngineHeaderToolError::_InputError_ParsingFailure, "_InputError_ParsingFailure" },
-        { ::FrogmanEngineHeaderToolError::_InputError_TokenizationFailure, "_InputError_TokenizationFailure" }
+        { ::FrogmanEngineHeaderToolError::_InputError_TokenizationFailure, "_InputError_TokenizationFailure" },
+        { ::FrogmanEngineHeaderToolError::_InputError_WorldTagMismatch, "_InputError_WorldTagMismatch" },
+        { ::FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch, "_InputError_SyscallPhaseMismatch" }
     });
 }

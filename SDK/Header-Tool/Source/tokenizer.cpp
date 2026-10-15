@@ -2046,6 +2046,18 @@ namespace FHT::tokenizer
 			out_token_p._code = u8"FHT_GENERATED";
 			return;
 		}
+		else if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, FE::algorithm::string::compiletime::length("RUNS_AFTER"), "RUNS_AFTER"))
+		{
+			out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemContractRunsAfter;
+			out_token_p._code = u8"RUNS_AFTER";
+			return;
+		}
+		else if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, FE::algorithm::string::compiletime::length("RUNS_BEFORE"), "RUNS_BEFORE"))
+		{
+			out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemContractRunsBefore;
+			out_token_p._code = u8"RUNS_BEFORE";
+			return;
+		}
 
 		if (context_stack_p.back() == FHT::Context::_FrogmanEngineSystemMacro)
 		{

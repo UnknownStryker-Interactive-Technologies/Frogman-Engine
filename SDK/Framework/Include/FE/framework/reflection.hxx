@@ -137,10 +137,6 @@ public:
 	void associate_system(world_tag_t world_tag_p, auto syscall_phase_p, system system_function_p) noexcept
 	{
 		static_assert(::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
-		FE_ASSERT(static_cast<var::uint16>(syscall_phase_p) < FE::world_syscall_phase_count, "Static assertion failure: 'syscall_phase_p' is out of range.");
-
-		std::lock_guard<lock_type> l_lock(m_lock);
-
 		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
 		if constexpr (::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>)
 		{
@@ -160,6 +156,24 @@ public:
 			}
 
 			m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
+		}
+	}
+
+	struct system_dependency
+	{
+		system _current_system;
+		std::pmr::vector<system> _runs_before;
+		std::pmr::vector<system> _runs_after;
+	};
+	void sort_systems_topologically(world_tag_t world_tag_p, auto syscall_phase_p, std::initializer_list<system_dependency> ilist_p) noexcept
+	{
+		static_assert(::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
+		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
+		auto& l_systems = (::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>) ? m_global_system_table[(FE::uint16)syscall_phase_p] : m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
+	
+		for (system_dependency& dependency : ilist_p)
+		{
+
 		}
 	}
 

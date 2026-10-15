@@ -800,7 +800,14 @@ namespace FHT::parser
 
 	_FE_NODISCARD_ system_node build_ecs_system_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
 	{
-		system_node l_node;
+		system_node l_node = 
+		{
+			identifier(framework::get_framework().get_memory_resource()),  
+			identifier(framework::get_framework().get_memory_resource()),
+			identifier(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<identifier>(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<identifier>(framework::get_framework().get_memory_resource())
+		};
 		while (out_token_iterator_p != end_p)
 		{
 			switch (out_token_iterator_p->_vocabulary)
@@ -866,8 +873,95 @@ namespace FHT::parser
 		auto l_end_of_fn_name_pos = l_node._sysname.find('(');
 		THROW_CPP_SYNTAX_ERROR(l_end_of_fn_name_pos == identifier::npos, "Frogman C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(::FE::world&).");
 
+		file_buffer_t l_decl_attr = { l_node._sysname.c_str() + l_end_of_fn_name_pos, framework::get_framework().get_memory_resource()};
+
 		l_node._sysname.erase(l_end_of_fn_name_pos, l_node._sysname.length() - l_end_of_fn_name_pos);
 		l_node._sysname.insert(0, parent_namespace_p);
+
+
+		auto l_it = l_decl_attr.begin();
+		var::uint64 l_paren_level = 0;
+		do
+		{
+			THROW_CPP_SYNTAX_ERROR(l_it == l_decl_attr.end(), "Frogman C++ Reflection Syntax Error: ')' is missing.");
+
+			switch (*l_it)
+			{
+			case '(':
+				++l_paren_level;
+				++l_it;
+				continue;
+
+			case ')':
+				--l_paren_level;
+				++l_it;
+				continue;
+
+			default:
+				++l_it;
+				continue;
+			}
+		}
+		while (l_paren_level > 0);
+		l_decl_attr = l_it.operator->();
+
+		std::pmr::list<token> l_tokens = FHT::tokenizer::tokenize_any_decl(l_decl_attr);
+
+		FHT::tokenizer::purge_comments(l_tokens);// removes /**/ and // comments.
+		FHT::tokenizer::purge_preprocessor(l_tokens);// removes the # preprocessor directives and its contents.
+		FHT::tokenizer::purge_string_literals_and_backslashes(l_tokens); // removes the \, characters, and strings.
+		std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
+
+		for (auto it = l_tokens.begin(); it != l_tokens.end();)
+		{
+			switch (it->_vocabulary)
+			{
+			case Vocabulary::_FrogmanEngineSystemContractRunsAfter:
+				while (it->_vocabulary != Vocabulary::_LeftParen)
+				{
+					++it;
+				}
+				++it;
+				l_node._runs_after.push_back(identifier(framework::get_framework().get_memory_resource()));
+				if (it->_vocabulary != Vocabulary::_NamespaceConcatenator)
+				{
+					l_node._runs_after.back() = parent_namespace_p;
+				}
+
+				while (it->_vocabulary != Vocabulary::_RightParen)
+				{
+					l_node._runs_after.back() += it->_code;
+					++it;
+				}
+				continue;
+
+
+			case Vocabulary::_FrogmanEngineSystemContractRunsBefore:
+				while (it->_vocabulary != Vocabulary::_LeftParen)
+				{
+					++it;
+				}
+				++it;
+				l_node._runs_before.push_back(identifier(framework::get_framework().get_memory_resource()));
+				if (it->_vocabulary != Vocabulary::_NamespaceConcatenator)
+				{
+					l_node._runs_before.back() = parent_namespace_p;
+				}
+
+				while (it->_vocabulary != Vocabulary::_RightParen)
+				{
+					l_node._runs_before.back() += it->_code;
+					++it;
+				}
+				continue;
+
+
+			default:
+				++it;
+				continue;
+			}
+		}
+
 		return l_node;
 	}
 }

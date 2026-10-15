@@ -1,4 +1,4 @@
-﻿/*//*/
+﻿#include "SystemParseTest.hpp.generated.h"
 
 
 FE_WORLD_TAG
@@ -13,6 +13,79 @@ FE_WORLD_TAG
 
 namespace Game
 {
+	// Cyclic Dependency Test: ( RUNS_BEFORE / RUNS_AFTER ) Test
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void cycle_a(::FE::world& world_p) noexcept(false)
+		RUNS_BEFORE(cycle_b)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void cycle_b(::FE::world& world_p) noexcept(false)
+		RUNS_BEFORE(cycle_a)
+	{
+	}
+
+
+	// Frogman Engine ECS Contract: ( RUNS_BEFORE / RUNS_AFTER ) Test
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void refresh_transform_cache(::FE::world& world_p) noexcept(false)
+		RUNS_BEFORE(rebuild_spatial_hash)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void rebuild_spatial_hash(::FE::world& world_p) noexcept(false)
+		RUNS_BEFORE(finalize_pre_entity_tick)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void prepare_animation_inputs(::FE::world& world_p) noexcept(false)
+		RUNS_AFTER(refresh_transform_cache)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void finalize_pre_entity_tick(::FE::world& world_p) noexcept(false)
+		RUNS_AFTER(prepare_animation_inputs)
+	{
+	}
+
+
+	// Frogman Engine ECS Multiple Contract: ( RUNS_BEFORE / RUNS_AFTER ) Test
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void system_a(::FE::world& world_p) noexcept
+		RUNS_BEFORE(system_c)
+		RUNS_BEFORE(system_d)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void system_b(::FE::world& world_p) noexcept
+		RUNS_BEFORE(system_c)
+		RUNS_BEFORE(system_d)
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void system_c(::FE::world& world_p) noexcept
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void system_d(::FE::world& world_p) noexcept
+	{
+	}
+
+	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
+	void system_e(::FE::world& world_p) noexcept
+		RUNS_AFTER(system_a)
+		RUNS_AFTER(system_b)
+	{
+	}
+
+
 	// ------------------------------------------------------------------ 초기화 (0 ~ 3)
 
 	FE_SYSTEM(FE::_EngineInitialization, FEWorldTag::Boot);

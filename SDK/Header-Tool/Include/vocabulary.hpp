@@ -90,6 +90,7 @@ enum struct Vocabulary : FE::uint16
 	_FrogmanEngineEnumStructReflectionMacro,
 	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgWorldTagEnum,
 	_FrogmanEngineEnableSerialization, _FrogmanHeaderToolGeneratedReflectionMacro,
+	_FrogmanEngineSystemContractRunsAfter, _FrogmanEngineSystemContractRunsBefore,
 
 	_PreprocessorDirective, _PreprocessorNextLine,
 	_Preprocessor,

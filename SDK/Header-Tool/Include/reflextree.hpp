@@ -81,6 +81,8 @@ struct system_node
 	identifier _world_tag_enum;
 
 	identifier _sysname;
+	std::pmr::vector<identifier> _runs_after;
+	std::pmr::vector<identifier> _runs_before;
 };
 
 struct namespace_node
