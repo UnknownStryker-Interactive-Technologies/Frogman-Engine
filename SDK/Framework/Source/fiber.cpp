@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/framework/fiber.hxx>
-
+#include <FE/framework/framework.hxx>
 #include <FE/thread_id.hxx>
 
 #include <windows.h>
@@ -107,7 +107,7 @@ FE::fiber_scheduler::fiber_scheduler() noexcept
 		m_active_fibers(),
 		m_fibers(0),
 		m_is_locked(false),
-		m_task_queue(),
+		m_task_queue(framework::framework_base::get_framework().get_concurrent_memory_resource()),
 		m_thread_context(std::make_unique<thread_context>())
 {
 }

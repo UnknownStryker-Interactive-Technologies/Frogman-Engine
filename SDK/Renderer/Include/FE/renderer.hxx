@@ -83,7 +83,7 @@ public:
 	}
 
 
-	static void __main(class FE::world&) noexcept;
+	static void __main(void*) noexcept;
 };
 
 

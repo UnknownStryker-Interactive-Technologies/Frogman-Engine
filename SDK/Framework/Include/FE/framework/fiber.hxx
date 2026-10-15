@@ -149,7 +149,7 @@ namespace FE
 {
 	// temp decl
 	class world;
-	using system = void(*)(FE::world&);
+	using system = void(*)(void*);
 
 	struct task
 	{
@@ -157,6 +157,7 @@ namespace FE
 		FE::world* _world;
 		TaskPriority _task_type;
 	};
+	static_assert(FE::is_trivial_v<task>, "Static Assertion Failure: the task struct must be a trivial type.");
 
 	class priority_comparator
 	{
@@ -219,7 +220,7 @@ namespace FE
 		FE::fqueue<FE::fiber, 8> m_active_fibers[8]; // The size of TaskPriority slots == 7
 		var::size m_fibers;
 		std::atomic_bool m_is_locked;
-		concurrency::concurrent_priority_queue<task, priority_comparator> m_task_queue;
+		concurrency::concurrent_priority_queue<task, priority_comparator, std::pmr::polymorphic_allocator<task>> m_task_queue;
 
 		std::unique_ptr<thread_context> m_thread_context;
 
