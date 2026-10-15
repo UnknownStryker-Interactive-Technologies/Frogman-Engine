@@ -113,7 +113,17 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 		m_worlds(framework_base::get_large_memory_resource()),
 		m_current_world(),
 		m_should_tick(true),
-		m_runtime_clock()
+		m_runtime_clock(),
+
+		m_deferred_engine_initialization_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_game_instance_initialization_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_game_instance_begin_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_pre_game_instance_tick_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_game_instance_tick_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_post_game_instance_tick_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_game_instance_end_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_game_instance_deinitialization_cmd_queue(FE::get_concurrent_memory_resource()),
+		m_deferred_engine_deinitialization_cmd_queue(FE::get_concurrent_memory_resource())
 {
 	m_runtime_path.reserve(_MAX_PATH_LENGTH_);
 	FE::get_directory_of_current_executable(m_runtime_path.data(), (FE::uint32)m_runtime_path.capacity());
@@ -151,6 +161,41 @@ void FE::engine::terminate_all_processors() noexcept
 {
 	m_should_tick.store(false, std::memory_order_release);
 	m_processors->terminate();
+}
+
+
+void FE::engine::enqueue_global_command(global_system system_p, GlobalSystemCallPhase phase_p) noexcept
+{
+	switch (phase_p)
+	{
+	case GlobalSystemCallPhase::_EngineInitialization:
+		m_deferred_engine_initialization_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_GameInstanceInitialization:
+		m_deferred_game_instance_initialization_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_GameInstanceBegin:
+		m_deferred_game_instance_begin_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_PreGameInstanceTick:
+		m_deferred_pre_game_instance_tick_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_GameInstanceTick:
+		m_deferred_game_instance_tick_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_PostGameInstanceTick:
+		m_deferred_post_game_instance_tick_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_GameInstanceEnd:
+		m_deferred_game_instance_end_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_GameInstanceDeinitialization:
+		m_deferred_game_instance_deinitialization_cmd_queue.push(system_p);
+		break;
+	case GlobalSystemCallPhase::_EngineDeinitialization:
+		m_deferred_engine_deinitialization_cmd_queue.push(system_p);
+		break;
+	}
 }
 
 
@@ -372,7 +417,7 @@ FE::int32 FE::engine::run()
 	FE::task l_renderer_main = {};
 	l_renderer_main._system = &FE::renderer::__main;
 	l_renderer_main._task_type = TaskPriority::_Critical;
-	l_renderer_main._world = nullptr;
+	l_renderer_main._argument = nullptr;
 
 	m_processors->activate();
 
@@ -393,29 +438,46 @@ FE::int32 FE::engine::shutdown()
 
 void FE::engine::__game_main() noexcept
 {
-	FE::world::create_world(0);
-	FE::world::enter_world(0);
-
-	auto l_current_world = m_current_world;
-
 	for (auto sys : m_method_reflection.get_global_systems(_EngineInitialization))
 	{
-		sys(*l_current_world);
+		sys();
 	}
-	
+	for (global_system l_deferred_sys{}; m_deferred_engine_initialization_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
+	}
+
 	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceInitialization))
 	{
-		sys(*l_current_world);
+		sys();
 	}
+	for (global_system l_deferred_sys{}; m_deferred_game_instance_initialization_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
+	}
+
+
+	FE::world::create_world(0);
+	FE::world::enter_world(0);
+	auto l_current_world = m_current_world;
+
 
 	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
 	{
 		sys(*l_current_world);
 	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_initialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
+	}
 
 	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 	{
 		sys(*l_current_world);
+	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_default_entity_initialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
 	}
 
 
@@ -423,12 +485,20 @@ void FE::engine::__game_main() noexcept
 
 	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceBegin))
 	{
-		sys(*l_current_world);
+		sys();
+	}
+	for (global_system l_deferred_sys{}; m_deferred_game_instance_begin_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
 	}
 
 	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 	{
 		sys(*l_current_world);
+	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_begin_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
 	}
 
 
@@ -445,17 +515,29 @@ void FE::engine::__game_main() noexcept
 
 		for (auto sys : m_method_reflection.get_global_systems(_PreGameInstanceTick))
 		{
-			sys(*l_current_world);
+			sys();
 		}
-		
+		for (global_system l_deferred_sys{}; m_deferred_pre_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys();
+		}
+
 		for (auto sys : m_method_reflection.get_global_systems(_GameInstanceTick))
 		{
-			sys(*l_current_world);
+			sys();
+		}
+		for (global_system l_deferred_sys{}; m_deferred_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys();
 		}
 
 		for (auto sys : m_method_reflection.get_global_systems(_PostGameInstanceTick))
 		{
-			sys(*l_current_world);
+			sys();
+		}
+		for (global_system l_deferred_sys{}; m_deferred_post_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys();
 		}
 
 
@@ -465,15 +547,27 @@ void FE::engine::__game_main() noexcept
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_pre_world_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldTick))
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_world_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostWorldTick))
 		{
 			sys(*l_current_world);
+		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_post_world_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
 		}
 
 
@@ -483,15 +577,27 @@ void FE::engine::__game_main() noexcept
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_pre_entity_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EntityTick))
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_entity_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostEntityTick))
 		{
 			sys(*l_current_world);
+		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_post_entity_tick_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
 		}
 
 
@@ -505,25 +611,45 @@ void FE::engine::__game_main() noexcept
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_pre_physics_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _StartPhysics))
 			{
 				sys(*l_current_world);
+			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_start_physics_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
 			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _Physics))
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_physics_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EndPhysics))
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_end_physics_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostPhysics))
 			{
 				sys(*l_current_world);
+			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_post_physics_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
 			}
 		}
 
@@ -534,6 +660,10 @@ void FE::engine::__game_main() noexcept
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_post_update_work_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 
 
@@ -542,10 +672,18 @@ void FE::engine::__game_main() noexcept
 		{
 			sys(*l_current_world);
 		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_pre_render_queue_commit_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
+		}
 
 		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostRenderQueueCommit))
 		{
 			sys(*l_current_world);
+		}
+		for (system l_deferred_sys{}; l_current_world->get_deferred_post_render_queue_commit_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+		{
+			l_deferred_sys(*l_current_world);
 		}
 
 
@@ -557,15 +695,27 @@ void FE::engine::__game_main() noexcept
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_end_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_default_entity_deinitialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 			{
 				sys(*l_current_world);
+			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_deinitialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
 			}
 
 
@@ -576,15 +726,27 @@ void FE::engine::__game_main() noexcept
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_initialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 			{
 				sys(*l_current_world);
 			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_default_entity_initialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
+			}
 
 			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 			{
 				sys(*l_current_world);
+			}
+			for (system l_deferred_sys{}; l_current_world->get_deferred_world_begin_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+			{
+				l_deferred_sys(*l_current_world);
 			}
 		}
 		l_delta_clock.end_clock();
@@ -605,10 +767,18 @@ void FE::engine::__game_main() noexcept
 	{
 		sys(*l_current_world);
 	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_end_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
+	}
 
 	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceEnd))
 	{
-		sys(*l_current_world);
+		sys();
+	}
+	for (global_system l_deferred_sys{}; m_deferred_game_instance_end_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
 	}
 
 
@@ -618,20 +788,36 @@ void FE::engine::__game_main() noexcept
 	{
 		sys(*l_current_world);
 	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_default_entity_deinitialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
+	}
 
 	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 	{
 		sys(*l_current_world);
 	}
+	for (system l_deferred_sys{}; l_current_world->get_deferred_world_deinitialization_cmd_queue(FE::world::auth{}).try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys(*l_current_world);
+	}
 
 	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceDeinitialization))
 	{
-		sys(*l_current_world);
+		sys();
+	}
+	for (global_system l_deferred_sys{}; m_deferred_game_instance_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
 	}
 
 	for (auto sys : m_method_reflection.get_global_systems(_EngineDeinitialization))
 	{
-		sys(*l_current_world);
+		sys();
+	}
+	for (global_system l_deferred_sys{}; m_deferred_engine_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
+	{
+		l_deferred_sys();
 	}
 }
 

@@ -85,6 +85,15 @@ struct system_node
 	std::pmr::vector<identifier> _runs_before;
 };
 
+struct global_system_node
+{
+	identifier _syscall_phase;
+
+	identifier _sysname;
+	std::pmr::vector<identifier> _runs_after;
+	std::pmr::vector<identifier> _runs_before;
+};
+
 struct namespace_node
 {
 	identifier _target_namespace_name;
@@ -92,7 +101,8 @@ struct namespace_node
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
 	std::pmr::vector<enum_struct_node> _enum_structs;
-	std::pmr::vector<system_node> _system_fptrs;
+	std::pmr::vector<system_node> _systems;
+	std::pmr::vector<global_system_node> _global_systems;
 };
 
 
@@ -103,7 +113,8 @@ struct header_file_root
 	std::pmr::vector<class_node> _classes;
 	std::pmr::vector<struct_node> _structs;
 	std::pmr::vector<enum_struct_node> _enum_structs;
-	std::pmr::vector<system_node> _system_fptrs;
+	std::pmr::vector<system_node> _systems;
+	std::pmr::vector<global_system_node> _global_systems;
 };
 
 

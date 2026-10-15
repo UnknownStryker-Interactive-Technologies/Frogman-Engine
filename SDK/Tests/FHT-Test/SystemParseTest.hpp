@@ -88,14 +88,14 @@ namespace Game
 
 	// ------------------------------------------------------------------ 초기화 (0 ~ 3)
 
-	FE_SYSTEM(FE::_EngineInitialization, FEWorldTag::Boot);
-	inline void boot_memory_arenas(::FE::world& world_p) noexcept
+	FE_GLOBAL_SYSTEM(FE::_EngineInitialization);
+	inline void boot_memory_arenas() noexcept
 	{
 
 	}
 
-	FE_SYSTEM(FE::_GameInstanceInitialization, FEWorldTag::Boot);
-	inline void load_player_profile(::FE::world& world_p)
+	FE_GLOBAL_SYSTEM(FE::_GameInstanceInitialization);
+	inline void load_player_profile()
 	{
 
 	}
@@ -115,8 +115,8 @@ namespace Game
 
 	// ------------------------------------------------------------------ 시작 (4, 5)
 
-	FE_SYSTEM(FE::_GameInstanceBegin, FEWorldTag::MainMenu);
-	void play_intro_cinematic(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_GameInstanceBegin);
+	void play_intro_cinematic();
 
 	FE_SYSTEM(FE::_WorldBegin, FEWorldTag::MainMenu);
 	void fade_in_title_ui(::FE::world& world_p);
@@ -128,14 +128,14 @@ namespace Game
 
 	// ------------------------------------------------------------------ 게임 인스턴스 틱 (7 ~ 9)
 
-	FE_SYSTEM(FE::_PreGameInstanceTick, FEWorldTag::OverWorld);
-	void poll_input_devices(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_PreGameInstanceTick);
+	void poll_input_devices();
 
-	FE_SYSTEM(FE::_GameInstanceTick, FEWorldTag::OverWorld);
-	void advance_save_timer(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_GameInstanceTick);
+	void advance_save_timer();
 
-	FE_SYSTEM(FE::_PostGameInstanceTick, FEWorldTag::OverWorld);
-	void flush_input_edge_flags(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_PostGameInstanceTick);
+	void flush_input_edge_flags();
 
 
 	// ------------------------------------------------------------------ 월드 틱 (10 ~ 12)
@@ -159,15 +159,8 @@ namespace Game
 
 	// ------------------------------------------------------------------ 엔티티 틱 (13 ~ 15)
 
-		// 같은 phase + 같은 world 에 함수 두 개 — 등록 순서/충돌 처리 확인용.
-	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
-	void refresh_transform_cache(::FE::world& world_p);
-
-	FE_SYSTEM(FE::_PreEntityTick, FEWorldTag::OverWorld);
-	void rebuild_spatial_hash(::FE::world& world_p);
-
 	// 한정 이름 형태로도 넘겨본다.
-	FE_SYSTEM(FE::SystemCallPhase::_EntityTick, FEWorldTag::OverWorld);
+	FE_SYSTEM(FE::WorldSystemCallPhase::_EntityTick, FEWorldTag::OverWorld);
 	void run_behaviour_trees(::FE::world& world_p);
 
 	FE_SYSTEM(FE::_PostEntityTick, FEWorldTag::OverWorld);
@@ -182,7 +175,7 @@ namespace Game
 	FE_SYSTEM(FE::_StartPhysics, FEWorldTag::BattleArena);
 	void begin_broadphase(::FE::world& world_p);
 
-	// cv 한정 상수를 SysCallPhase 로 전달.
+	// cv 한정 상수를 WorldSystemCallPhase 로 전달.
 	FE_SYSTEM(g_physics_phase, FEWorldTag::BattleArena);
 	void integrate_rigid_bodies(::FE::world& world_p);
 
@@ -210,8 +203,8 @@ namespace Game
 	FE_SYSTEM(FE::_WorldEnd, FEWorldTag::BattleArena);
 	void tally_battle_results(::FE::world& world_p);
 
-	FE_SYSTEM(FE::_GameInstanceEnd, FEWorldTag::MainMenu);
-	void write_session_log(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_GameInstanceEnd);
+	void write_session_log();
 
 	FE_SYSTEM(FE::_WorldDefaultEntityDeinitialization, FEWorldTag::OverWorld);
 	void destroy_persistent_actors(::FE::world& world_p);
@@ -219,11 +212,11 @@ namespace Game
 	FE_SYSTEM(FE::_WorldDeinitialization, FEWorldTag::OverWorld);
 	void release_navmesh(::FE::world& world_p);
 
-	FE_SYSTEM(FE::_GameInstanceDeinitialization, FEWorldTag::Boot);
-	void save_player_profile(::FE::world& world_p);
-		
-	FE_SYSTEM(FE::_EngineDeinitialization, FEWorldTag::Boot);
-	void teardown_memory_arenas(::FE::world& world_p);
+	FE_GLOBAL_SYSTEM(FE::_GameInstanceDeinitialization);
+	void save_player_profile();
+
+	FE_GLOBAL_SYSTEM(FE::_EngineDeinitialization);
+	void teardown_memory_arenas();
 
 
 	// ------------------------------------------------------------------ static 멤버 함수 형태

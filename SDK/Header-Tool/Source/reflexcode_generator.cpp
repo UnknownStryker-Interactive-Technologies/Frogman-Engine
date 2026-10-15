@@ -41,7 +41,8 @@ namespace FHT::reflexcode_generator
 			._classes = std::pmr::unordered_map<std::pmr::wstring, metadata::class_info>(::framework::get_framework().get_memory_resource()),
 			._structs = std::pmr::unordered_map<std::pmr::wstring, metadata::struct_info>(::framework::get_framework().get_memory_resource()),
 			._enum_structs = std::pmr::unordered_map<std::pmr::wstring,  std::pmr::vector<std::pmr::wstring> >(::framework::get_framework().get_memory_resource()),
-			._system_fptrs = std::pmr::unordered_map<std::pmr::wstring, metadata::system_info>(::framework::get_framework().get_memory_resource())
+			._systems = std::pmr::unordered_map<std::pmr::wstring, metadata::system_info>(::framework::get_framework().get_memory_resource()),
+			._global_systems = std::pmr::unordered_map<std::pmr::wstring, metadata::global_system_info>(::framework::get_framework().get_memory_resource())
 		};
 	
 		for (const std::optional<class_node>& node : tree_p._classes)
@@ -119,13 +120,22 @@ namespace FHT::reflexcode_generator
 			output_namespace_metadata_recursive(l_metadata, *node);
 		}
 
-		for (const std::optional<system_node>& c_style_system_function : tree_p._system_fptrs)
+		for (const std::optional<system_node>& c_style_system_function : tree_p._systems)
 		{
 			if (c_style_system_function == std::nullopt)
 			{
 				continue;
 			}
 			output_system_metadata(l_metadata, *c_style_system_function);
+		}
+
+		for (const std::optional<global_system_node>& global_system_function : tree_p._global_systems)
+		{
+			if (global_system_function == std::nullopt)
+			{
+				continue;
+			}
+			output_global_system_metadata(l_metadata, *global_system_function);
 		}
 
 		return l_metadata;
@@ -209,13 +219,22 @@ namespace FHT::reflexcode_generator
 			output_namespace_metadata_recursive(out_return_p, *node);
 		}
 
-		for (const std::optional<system_node>& c_style_system_function : node_p._system_fptrs)
+		for (const std::optional<system_node>& c_style_system_function : node_p._systems)
 		{
 			if (c_style_system_function == std::nullopt)
 			{
 				continue;
 			}
 			output_system_metadata(out_return_p, *c_style_system_function);
+		}
+
+		for (const std::optional<global_system_node>& global_system_function : node_p._global_systems)
+		{
+			if (global_system_function == std::nullopt)
+			{
+				continue;
+			}
+			output_global_system_metadata(out_return_p, *global_system_function);
 		}
 	}
 
@@ -316,7 +335,48 @@ namespace FHT::reflexcode_generator
 			l_system_node._runs_after.push_back(std::move(l_runs_after));
 		}
 
-		out_return_p._system_fptrs[std::move(l_identifier)] = std::move(l_system_node);
+		out_return_p._systems[std::move(l_identifier)] = std::move(l_system_node);
+	}
+
+	void output_global_system_metadata(metadata& out_return_p, const global_system_node& node_p) noexcept
+	{
+		typename metadata::global_system_info l_system_node
+		{
+			std::pmr::wstring(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<std::pmr::wstring>(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<std::pmr::wstring>(framework::get_framework().get_memory_resource())
+		};
+
+		std::pmr::wstring l_identifier(framework::get_framework().get_memory_resource());
+		l_identifier.resize(node_p._sysname.length());
+		std::mbstowcs(l_identifier.data(), reinterpret_cast<const char*>(node_p._sysname.data()), node_p._sysname.length());
+
+
+		l_system_node._system_call_phase.resize(node_p._syscall_phase.length());
+		std::mbstowcs(l_system_node._system_call_phase.data(), reinterpret_cast<const char*>(node_p._syscall_phase.data()), node_p._syscall_phase.length());
+
+
+		for (const identifier& runs_before : node_p._runs_before)
+		{
+			std::pmr::wstring l_runs_before(framework::get_framework().get_memory_resource());
+			l_runs_before.resize(runs_before.length());
+
+			std::mbstowcs(l_runs_before.data(), reinterpret_cast<const char*>(runs_before.data()), runs_before.length());
+
+			l_system_node._runs_before.push_back(std::move(l_runs_before));
+		}
+
+		for (const identifier& runs_after : node_p._runs_after)
+		{
+			std::pmr::wstring l_runs_after(framework::get_framework().get_memory_resource());
+			l_runs_after.resize(runs_after.length());
+
+			std::mbstowcs(l_runs_after.data(), reinterpret_cast<const char*>(runs_after.data()), runs_after.length());
+
+			l_system_node._runs_after.push_back(std::move(l_runs_after));
+		}
+
+		out_return_p._global_systems[std::move(l_identifier)] = std::move(l_system_node);
 	}
 
 
@@ -369,7 +429,7 @@ namespace FHT::reflexcode_generator
 			};
 			std::pmr::unordered_map<std::wstring_view, std::pmr::unordered_map<std::wstring_view, std::pmr::vector<system_dependency>>> l_dependency_graph(framework::get_framework().get_memory_resource());
 
-			for (auto& [identifier, system_node] : header_file._system_fptrs) // C-style system functions reflection
+			for (auto& [identifier, system_node] : header_file._systems) // C-style system functions reflection
 			{
 				l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system(";
 				l_generated_code += system_node._world_tag_enum;
@@ -383,14 +443,14 @@ namespace FHT::reflexcode_generator
 				{
 					FE_EXIT_IF
 					(
-						header_file._system_fptrs.find(identifier)->second._world_tag_enum != header_file._system_fptrs.find(runs_before)->second._world_tag_enum,
+						header_file._systems.find(identifier)->second._world_tag_enum != header_file._systems.find(runs_before)->second._world_tag_enum,
 						FrogmanEngineHeaderToolError::_InputError_WorldTagMismatch,
 						L"Frogman Engine Header Tool: world tag mismatch detected in the dependency link."
 					);
 
 					FE_EXIT_IF
 					(
-						header_file._system_fptrs.find(identifier)->second._system_call_phase != header_file._system_fptrs.find(runs_before)->second._system_call_phase,
+						header_file._systems.find(identifier)->second._system_call_phase != header_file._systems.find(runs_before)->second._system_call_phase,
 						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
 						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
 					);
@@ -400,14 +460,14 @@ namespace FHT::reflexcode_generator
 				{
 					FE_EXIT_IF
 					(
-						header_file._system_fptrs.find(runs_after)->second._world_tag_enum != header_file._system_fptrs.find(identifier)->second._world_tag_enum,
+						header_file._systems.find(runs_after)->second._world_tag_enum != header_file._systems.find(identifier)->second._world_tag_enum,
 						FrogmanEngineHeaderToolError::_InputError_WorldTagMismatch,
 						L"Frogman Engine Header Tool: world tag mismatch detected in the dependency link."
 					);
 
 					FE_EXIT_IF
 					(
-						header_file._system_fptrs.find(runs_after)->second._system_call_phase != header_file._system_fptrs.find(identifier)->second._system_call_phase,
+						header_file._systems.find(runs_after)->second._system_call_phase != header_file._systems.find(identifier)->second._system_call_phase,
 						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
 						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
 					);
@@ -421,14 +481,56 @@ namespace FHT::reflexcode_generator
 				);			
 			}
 
+			for (auto& [identifier, system_node] : header_file._global_systems) // C-style system functions reflection
+			{
+				l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_global_system(";
+				l_generated_code += system_node._system_call_phase;
+				l_generated_code += L", &";
+				l_generated_code += identifier;
+				l_generated_code += L");\n";
+
+				for (auto& runs_before : system_node._runs_before)
+				{
+					FE_EXIT_IF
+					(
+						header_file._systems.find(identifier)->second._system_call_phase != header_file._systems.find(runs_before)->second._system_call_phase,
+						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
+						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
+					);
+				}
+
+				for (auto& runs_after : system_node._runs_after)
+				{
+					FE_EXIT_IF
+					(
+						header_file._systems.find(runs_after)->second._system_call_phase != header_file._systems.find(identifier)->second._system_call_phase,
+						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
+						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
+					);
+				}
+
+				l_dependency_graph[L"::"][system_node._system_call_phase].emplace_back
+				(
+					identifier,
+					std::pmr::vector<directory_t>(system_node._runs_before, framework::get_framework().get_memory_resource()),
+					std::pmr::vector<directory_t>(system_node._runs_after, framework::get_framework().get_memory_resource())
+				);
+			}
+
 			for (auto& [world_tag, syscall_phases] : l_dependency_graph) // C-style system functions reflection
 			{
 				for (auto& [syscall_phase, syslist] : syscall_phases)
 				{
-					l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().sort_systems_topologically(";
-					l_generated_code += world_tag;
-					l_generated_code += L", ";
-
+					if (world_tag == L"::")
+					{
+						l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().sort_global_systems_topologically(";
+					}
+					else
+					{
+						l_generated_code += L"    ::FE::framework::framework_base::get_framework().get_method_reflection().sort_systems_topologically(";
+						l_generated_code += world_tag;
+						l_generated_code += L", ";
+					}
 					l_generated_code += syscall_phase;
 					l_generated_code += L",\n";
 
@@ -436,6 +538,11 @@ namespace FHT::reflexcode_generator
 
 					for (auto& sys : syslist)
 					{
+						if (sys._runs_before.size() == 0 && sys._runs_after.size() == 0)
+						{
+							continue;
+						}
+
 						l_generated_code += L"\n";
 						l_generated_code += L"            {\n";
 						l_generated_code += L"                ._current_system = ";

@@ -135,7 +135,7 @@ int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 
 	FE::fiber l_to_switch = m_fiber_pool.pop(); // get a fiber from the pool to run the task.
 	l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system; // smuggle the system function pointer into r12; the fiber entry point will call this function pointer to execute the task.
-	l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._world; // smuggle the component pointer into r13; the fiber entry point will pass this as an argument to the system function when calling it.
+	l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._argument; // smuggle the component pointer into r13; the fiber entry point will pass this as an argument to the system function when calling it.
 	l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
 	l_to_switch.m_impl->_task_type = l_to_execute._task_type;
 
@@ -232,7 +232,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			FE::fiber l_to_switch = m_fiber_pool.pop(); // get a fiber from the pool to run the task.
 			l_to_switch.m_impl->_task_type = l_to_execute._task_type;
 			l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system;
-			l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._world; // smuggle the component pointer into r12; the fiber entry point will pass this as an argument to the system function when calling it.
+			l_to_switch.m_impl->_context_ptr->_r13 = (var::uint64)l_to_execute._argument; // smuggle the component pointer into r12; the fiber entry point will pass this as an argument to the system function when calling it.
 			l_to_switch.m_impl->_context_ptr->_r14 = (var::uint64)this; // capture 'this' pointer for later use in the assembly.
 
 			tl_s_current_fiber = l_to_switch.m_impl;
@@ -395,3 +395,40 @@ FE::thread_context::thread_context() noexcept
 	_thread_context._host_thread_id = FE::get_current_thread_id();
 }
 
+
+FE::fiber_task::fiber_task(task task_p, FE::smart_ptr<std::pmr::vector<task>, FE::RefType::_Observer> tasks_p) noexcept
+	:	m_task(task_p),
+		m_tasks(tasks_p)
+{
+}
+
+void FE::fiber_task::runs_after(fiber_task& task_p) noexcept
+{
+}
+
+void FE::fiber_task::runs_before(fiber_task& task_p) noexcept
+{
+}
+
+
+FE::fiber_flow::fiber_flow() noexcept
+	: m_tasks(FE::make_owner<std::pmr::vector<task>>(framework::framework_base::get_framework().get_concurrent_memory_resource()))
+{
+}
+
+FE::fiber_flow::fiber_flow(fiber_flow&& other_p) noexcept
+	: m_tasks(std::move(other_p.m_tasks))
+{
+}
+
+FE::fiber_flow& FE::fiber_flow::operator=(fiber_flow&& other_p) noexcept
+{
+	m_tasks = std::move(other_p.m_tasks);
+	return *this;
+}
+
+FE::fiber_task FE::fiber_flow::emplace(const task& task_p) noexcept
+{
+	m_tasks->emplace_back(task_p);
+	return FE::fiber_task(task_p, m_tasks);
+}

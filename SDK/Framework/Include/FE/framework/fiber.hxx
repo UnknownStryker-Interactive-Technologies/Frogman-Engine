@@ -149,11 +149,11 @@ namespace FE
 {
 	// temp decl
 	class world;
-	using system = void(*)(void*);
+	using task_interface = void(*)(void*);
 
 	struct task
 	{
-		FE::system _system;
+		FE::task_interface _system;
 		FE::world* _world;
 		TaskPriority _task_type;
 	};

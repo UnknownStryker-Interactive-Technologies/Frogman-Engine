@@ -45,14 +45,15 @@ namespace FHT::parser
 			._classes{		framework::get_framework().get_memory_resource()},
 			._structs{		framework::get_framework().get_memory_resource()},
 			._enum_structs{	framework::get_framework().get_memory_resource()},
-			._system_fptrs{	framework::get_framework().get_memory_resource()}
+			._systems{		framework::get_framework().get_memory_resource()},
+			._global_systems{framework::get_framework().get_memory_resource()}
 		};
 
 		l_root._namespaces.reserve(l_total_nums._namespaces);
 		l_root._classes.reserve(l_total_nums._classes);
 		l_root._structs.reserve(l_total_nums._structs);
 		l_root._enum_structs.reserve(l_total_nums._enum_structs);
-		l_root._system_fptrs.reserve(l_total_nums._systems);
+		l_root._systems.reserve(l_total_nums._systems);
 
 
 		context_stack_t l_context_stack{ 1, FHT::Context::_Global, framework::get_framework().get_memory_resource() };
@@ -62,7 +63,12 @@ namespace FHT::parser
 			switch (iterator->_vocabulary)
 			{
 			case Vocabulary::_FrogmanEngineSystemMacro:
-				l_root._system_fptrs.emplace_back(build_ecs_system_node(u8"::", iterator, token_list_p.end()));
+				l_root._systems.emplace_back(build_ecs_system_node(u8"::", iterator, token_list_p.end()));
+				++iterator;
+				break;
+
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
+				l_root._global_systems.emplace_back(build_ecs_global_system_node(u8"::", iterator, token_list_p.end()));
 				++iterator;
 				break;
 
@@ -159,7 +165,7 @@ namespace FHT::parser
 				._classes{ framework::get_framework().get_memory_resource() },
 				._structs{ framework::get_framework().get_memory_resource() },
 				._enum_structs{ framework::get_framework().get_memory_resource() },
-				._system_fptrs{ framework::get_framework().get_memory_resource() }
+				._systems{ framework::get_framework().get_memory_resource() }
 		};
 
 		FHT::symbol_counter::symbol_count l_total_nums = FHT::symbol_counter::try_count_the_current_scope_level_symbols(out_token_iterator_p, end_p);
@@ -167,7 +173,7 @@ namespace FHT::parser
 		l_node._classes.reserve(l_total_nums._classes);
 		l_node._structs.reserve(l_total_nums._structs);
 		l_node._enum_structs.reserve(l_total_nums._enum_structs);
-		l_node._system_fptrs.reserve(l_total_nums._systems);
+		l_node._systems.reserve(l_total_nums._systems);
 
 
 		switch (out_token_iterator_p->_vocabulary)
@@ -225,7 +231,16 @@ namespace FHT::parser
 				{
 					break; // skip the system macro if it is inside a class or struct.
 				}
-				l_node._system_fptrs.emplace_back(build_ecs_system_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				l_node._systems.emplace_back(build_ecs_system_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
+				++out_token_iterator_p;
+				break;
+
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
+				if (context_stack_p.back() == Context::_ClassIdentifier || context_stack_p.back() == Context::_StructIdentifier)
+				{
+					break; // skip the system macro if it is inside a class or struct.
+				}
+				l_node._global_systems.emplace_back(build_ecs_global_system_node(l_node._target_namespace_name, out_token_iterator_p, end_p));
 				++out_token_iterator_p;
 				break;
 
@@ -903,6 +918,165 @@ namespace FHT::parser
 			}
 		}
 		while (l_paren_level > 0);
+		l_decl_attr = l_it.operator->();
+
+		std::pmr::list<token> l_tokens = FHT::tokenizer::tokenize_any_decl(l_decl_attr);
+
+		FHT::tokenizer::purge_comments(l_tokens);// removes /**/ and // comments.
+		FHT::tokenizer::purge_preprocessor(l_tokens);// removes the # preprocessor directives and its contents.
+		FHT::tokenizer::purge_string_literals_and_backslashes(l_tokens); // removes the \, characters, and strings.
+		std::erase_if(l_tokens, [](const token& token_p) -> FE::boolean { return token_p._vocabulary == Vocabulary::_LineEnd; });
+
+		for (auto it = l_tokens.begin(); it != l_tokens.end();)
+		{
+			switch (it->_vocabulary)
+			{
+			case Vocabulary::_FrogmanEngineSystemContractRunsAfter:
+				while (it->_vocabulary != Vocabulary::_LeftParen)
+				{
+					++it;
+				}
+				++it;
+				l_node._runs_after.push_back(identifier(framework::get_framework().get_memory_resource()));
+				if (it->_vocabulary != Vocabulary::_NamespaceConcatenator)
+				{
+					l_node._runs_after.back() = parent_namespace_p;
+				}
+
+				while (it->_vocabulary != Vocabulary::_RightParen)
+				{
+					l_node._runs_after.back() += it->_code;
+					++it;
+				}
+				continue;
+
+
+			case Vocabulary::_FrogmanEngineSystemContractRunsBefore:
+				while (it->_vocabulary != Vocabulary::_LeftParen)
+				{
+					++it;
+				}
+				++it;
+				l_node._runs_before.push_back(identifier(framework::get_framework().get_memory_resource()));
+				if (it->_vocabulary != Vocabulary::_NamespaceConcatenator)
+				{
+					l_node._runs_before.back() = parent_namespace_p;
+				}
+
+				while (it->_vocabulary != Vocabulary::_RightParen)
+				{
+					l_node._runs_before.back() += it->_code;
+					++it;
+				}
+				continue;
+
+
+			default:
+				++it;
+				continue;
+			}
+		}
+
+		return l_node;
+	}
+
+	_FE_NODISCARD_ global_system_node build_ecs_global_system_node(const identifier& parent_namespace_p, typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p)
+	{
+		global_system_node l_node =
+		{
+			identifier(framework::get_framework().get_memory_resource()),
+			identifier(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<identifier>(framework::get_framework().get_memory_resource()),
+			std::pmr::vector<identifier>(framework::get_framework().get_memory_resource())
+		};
+		while (out_token_iterator_p != end_p)
+		{
+			switch (out_token_iterator_p->_vocabulary)
+			{
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_LeftParen:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_Comma:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_NamespaceConcatenator:
+				++out_token_iterator_p;
+				break;
+
+			case Vocabulary::_RightParen:
+				++out_token_iterator_p;
+				goto ExitLoop;
+
+			case Vocabulary::_FrogmanEngineSystemArgSysCallPhase:
+				l_node._syscall_phase = out_token_iterator_p->_code;
+				++out_token_iterator_p;
+				break;
+
+			default:
+				THROW_CPP_SYNTAX_ERROR(true, "Frogman C++ Reflection Syntax Error: the FE_SYSTEM() macro argument order is incorrect, or is ill-formed.");
+				break;
+			}
+		}
+	ExitLoop:
+		while (out_token_iterator_p->_vocabulary != Vocabulary::_AnyDecl
+			&& out_token_iterator_p->_vocabulary != Vocabulary::_ClassStructEnumMethodForwardDeclaration)
+		{
+			++out_token_iterator_p;
+		}
+
+
+		THROW_CPP_SYNTAX_ERROR(out_token_iterator_p->_code.starts_with(u8"void") == false, "Frogman C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(void).");
+		l_node._sysname = out_token_iterator_p->_code;
+
+		constexpr auto l_void_keyword = u8"void";
+		auto l_void_pos = l_node._sysname.find(l_void_keyword);
+		FE_ASSERT(l_void_pos != identifier::npos);
+		l_node._sysname.erase(0, l_void_pos + FE::algorithm::string::length(l_void_keyword));
+
+		var::uint64 l_space_length = 0;
+		for (auto i = 0; i < l_node._sysname.length(); ++i)
+		{
+			if (l_node._sysname[i] <= ' ')
+			{
+				++l_space_length;
+				continue;
+			}
+			break;
+		}
+		l_node._sysname.erase(0, l_space_length);
+
+		auto l_end_of_fn_name_pos = l_node._sysname.find('(');
+		THROW_CPP_SYNTAX_ERROR(l_end_of_fn_name_pos == identifier::npos, "Frogman C++ Reflection Syntax Error: this function cannot be qualified as the Frogman Engine ECS system method; the function signature requirement is: void(void).");
+
+		file_buffer_t l_decl_attr = { l_node._sysname.c_str() + l_end_of_fn_name_pos, framework::get_framework().get_memory_resource() };
+
+		l_node._sysname.erase(l_end_of_fn_name_pos, l_node._sysname.length() - l_end_of_fn_name_pos);
+		l_node._sysname.insert(0, parent_namespace_p);
+
+
+		auto l_it = l_decl_attr.begin();
+		var::uint64 l_paren_level = 0;
+		do
+		{
+			THROW_CPP_SYNTAX_ERROR(l_it == l_decl_attr.end(), "Frogman C++ Reflection Syntax Error: ')' is missing.");
+
+			switch (*l_it)
+			{
+			case '(':
+				++l_paren_level;
+				++l_it;
+				continue;
+
+			case ')':
+				--l_paren_level;
+				++l_it;
+				continue;
+
+			default:
+				++l_it;
+				continue;
+			}
+		} while (l_paren_level > 0);
 		l_decl_attr = l_it.operator->();
 
 		std::pmr::list<token> l_tokens = FHT::tokenizer::tokenize_any_decl(l_decl_attr);

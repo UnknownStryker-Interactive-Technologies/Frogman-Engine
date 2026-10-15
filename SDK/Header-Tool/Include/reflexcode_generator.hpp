@@ -41,6 +41,14 @@ namespace FHT::reflexcode_generator
 			std::pmr::vector<std::pmr::wstring> _runs_before;
 		};
 
+		struct global_system_info
+		{
+			std::pmr::wstring _system_call_phase;
+
+			std::pmr::vector<std::pmr::wstring> _runs_after;
+			std::pmr::vector<std::pmr::wstring> _runs_before;
+		};
+
 		struct class_info
 		{
 			DefaultConstructorState _default_constructor_state = DefaultConstructorState::_ImplicitPublic;
@@ -63,7 +71,8 @@ namespace FHT::reflexcode_generator
 		std::pmr::unordered_map<std::pmr::wstring, class_info> _classes;
 		std::pmr::unordered_map<std::pmr::wstring, struct_info> _structs;
 		std::pmr::unordered_map<std::pmr::wstring, std::pmr::vector<std::pmr::wstring> > _enum_structs;
-		std::pmr::unordered_map<std::pmr::wstring, system_info> _system_fptrs;
+		std::pmr::unordered_map<std::pmr::wstring, system_info> _systems;
+		std::pmr::unordered_map<std::pmr::wstring, global_system_info> _global_systems;
 	};
 	using metadata_set_t = FE::concurrent_array<metadata>;
 
@@ -73,6 +82,7 @@ namespace FHT::reflexcode_generator
 	void output_struct_metadata(metadata& out_return_p, const struct_node& node_p) noexcept;
 	void output_enum_struct_metadata(metadata& out_return_p, const enum_struct_node& node_p) noexcept;
 	void output_system_metadata(metadata& out_return_p, const system_node& node_p) noexcept;
+	void output_global_system_metadata(metadata& out_return_p, const global_system_node& node_p) noexcept;
 
 	void generate_reflexcode(const metadata_set_t& metadata_set_p) noexcept;
 } 

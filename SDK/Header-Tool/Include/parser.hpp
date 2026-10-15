@@ -40,5 +40,8 @@ namespace FHT::parser
 
 	_FE_NODISCARD_ system_node build_ecs_system_node(const identifier& parent_namespace_p, 
 		                                                          typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
+
+	_FE_NODISCARD_ global_system_node build_ecs_global_system_node(const identifier& parent_namespace_p,
+																	typename std::pmr::list<token>::const_iterator& out_token_iterator_p, typename std::pmr::list<token>::const_iterator end_p);
 }
 #endif

@@ -21,7 +21,7 @@ TEST(Fiber, Execute)
 
 	FE::task task;
 	task._system = system;
-	task._world = nullptr;
+	task._argument = nullptr;
 	task._task_type = TaskPriority::_Normal;
 
 	scheduler.schedule_task(task);
@@ -40,12 +40,12 @@ TEST(Fiber, DoNotYieldDuringExecution)
 
 	FE::task task;
 	task._system = system;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = system;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -90,12 +90,12 @@ TEST(Fiber, YieldDuringExecution1)
 
 	FE::task task;
 	task._system = systemA;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemB;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -140,12 +140,12 @@ TEST(Fiber, YieldDuringExecution2)
 
 	FE::task task;
 	task._system = systemC;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemD;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
@@ -192,12 +192,12 @@ TEST(Fiber, YieldDuringExecution3)
 
 	FE::task task;
 	task._system = systemE;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 
 	task._system = systemF;
-	task._world = &data;
+	task._argument = &data;
 	task._task_type = TaskPriority::_Normal;
 	scheduler.schedule_task(task);
 

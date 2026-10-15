@@ -23,6 +23,7 @@ limitations under the License.
 #include <FE/entity.hpp>
 
 #include <absl/container/flat_hash_map.h>
+#include <concurrent_queue.h>
 
 
 
@@ -95,6 +96,7 @@ class world final
 public:
     class auth
     {
+        friend class world;
         friend class engine;
 
         constexpr auth() noexcept {};
@@ -106,24 +108,43 @@ public:
 
 private:
     using registry = entt::basic_registry<entity, internal::world::allocator<entity>>;
-	using system = void(*)(class ::FE::world&);
 
     registry m_registry;
     world_tag_t m_world_tag;
 	var::float64 m_delta_time;
-	queue<system> m_deferred_ecs_syscall_queue;
 
 	absl::flat_hash_map<std::string_view, entity, 
         absl::DefaultHashContainerHash<std::string_view>,
         absl::DefaultHashContainerEq<std::string_view>,
         std::pmr::polymorphic_allocator<std::pair<const std::string_view, entity>>> m_tagged_entities;
 
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_initialization_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_default_entity_initialization_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_begin_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_pre_world_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_post_world_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_pre_entity_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_entity_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_post_entity_tick_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_pre_physics_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_start_physics_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_physics_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_end_physics_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_post_physics_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_post_update_work_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_pre_render_queue_commit_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_post_render_queue_commit_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_end_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_default_entity_deinitialization_cmd_queue;
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>> m_deferred_world_deinitialization_cmd_queue;
+
 public:
     world(world_tag_t world_tag_p) noexcept;
     ~world() noexcept;
 
     world(world&& other_p) noexcept;
-    world& operator=(world&& other_p) noexcept;
+    world& operator=(world&& other_p) noexcept = delete;
 
     world(const world&) = delete;
     world& operator=(const world&) = delete;
@@ -203,6 +224,29 @@ public:
 
     static void create_world(world_tag_t world_tag_p) noexcept;
 	static void enter_world(world_tag_t world_tag_p) noexcept;
+
+	void enqueue_world_command(system system_p, WorldSystemCallPhase phase_p) noexcept;
+
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_initialization_cmd_queue(auth) noexcept { return m_deferred_world_initialization_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_default_entity_initialization_cmd_queue(auth) noexcept { return m_deferred_world_default_entity_initialization_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_begin_cmd_queue(auth) noexcept { return m_deferred_world_begin_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_pre_world_tick_cmd_queue(auth) noexcept { return m_deferred_pre_world_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_tick_cmd_queue(auth) noexcept { return m_deferred_world_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_post_world_tick_cmd_queue(auth) noexcept { return m_deferred_post_world_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_pre_entity_tick_cmd_queue(auth) noexcept { return m_deferred_pre_entity_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_entity_tick_cmd_queue(auth) noexcept { return m_deferred_entity_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_post_entity_tick_cmd_queue(auth) noexcept { return m_deferred_post_entity_tick_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_pre_physics_cmd_queue(auth) noexcept { return m_deferred_pre_physics_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_start_physics_cmd_queue(auth) noexcept { return m_deferred_start_physics_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_physics_cmd_queue(auth) noexcept { return m_deferred_physics_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_end_physics_cmd_queue(auth) noexcept { return m_deferred_end_physics_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_post_physics_cmd_queue(auth) noexcept { return m_deferred_post_physics_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_post_update_work_cmd_queue(auth) noexcept { return m_deferred_post_update_work_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_pre_render_queue_commit_cmd_queue(auth) noexcept { return m_deferred_pre_render_queue_commit_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_post_render_queue_commit_cmd_queue(auth) noexcept { return m_deferred_post_render_queue_commit_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_end_cmd_queue(auth) noexcept { return m_deferred_world_end_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_default_entity_deinitialization_cmd_queue(auth) noexcept { return m_deferred_world_default_entity_deinitialization_cmd_queue; }
+    concurrency::concurrent_queue<system, std::pmr::polymorphic_allocator<system>>& get_deferred_world_deinitialization_cmd_queue(auth) noexcept { return m_deferred_world_deinitialization_cmd_queue; }
 };
 
 

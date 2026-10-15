@@ -71,46 +71,71 @@ limitations under the License.
 using world_tag_t = uint16_t;
 
 #ifdef FE_WORLD_TAG
-#error FE_WORLDS is a reserved Frogman Engine macro keyword.
+	#error FE_WORLDS is a reserved Frogman Engine macro keyword.
 #else
-#define FE_WORLD_TAG \
-enum FEWorldTag : world_tag_t
+	#define FE_WORLD_TAG \
+	enum FEWorldTag : world_tag_t
 #endif
 
 #ifdef FE_SYSTEM
-#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
+	#error FE_SYSTEM is a reserved Frogman Engine macro keyword.
 #else
-// This macro is an indicator for the Frogman Engine Header Tool.
-// Incorrectly placing the arguments will fail the generated code compilation.
-#define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
-static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
-static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
+	// This macro is an indicator for the Frogman Engine Header Tool.
+	// Incorrectly placing the arguments will fail the generated code compilation.
+	#define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
+	static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
+	static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
+#endif
+
+#ifdef FE_GLOBAL_SYSTEM
+	#error FE_GLOBAL_SYSTEM is a reserved Frogman Engine macro keyword.
+#else
+	// This macro is an indicator for the Frogman Engine Header Tool.
+	// Incorrectly placing the arguments will fail the generated code compilation.
+#define FE_GLOBAL_SYSTEM(SysCallPhase) \
+	static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
 #endif
 
 
 CLASS_FORWARD_DECLARATION(FE, world);
 
+
 #ifdef RUNS_BEFORE
-#error RUNS_BEFORE is a reserved Frogman Engine macro keyword.
+	#error RUNS_BEFORE is a reserved Frogman Engine macro keyword.
 #else
-// This macro is an indicator for the Frogman Engine Header Tool.
-#define RUNS_BEFORE(x) \
-static_assert(::std::is_function_v<decltype(x)>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
-static_assert(::std::is_same_v<::FE::function_argument_t<decltype(x), 0>, ::FE::world&>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
-static_assert(::FE::function_arity_v<decltype(x)> == 1, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
-static_assert(::std::is_same_v<::FE::function_return_t<decltype(x)>, void>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro.");
+	// This macro is an indicator for the Frogman Engine Header Tool.
+	#define RUNS_BEFORE(x)
 #endif
 
-#ifdef RUNS_AFTER
-#error RUNS_AFTER is a reserved Frogman Engine macro keyword.
+#ifdef IS_RUNS_BEFORE_VALID
+	#error IS_RUNS_BEFORE_VALID is a reserved Frogman Engine macro keyword.
 #else
-// This macro is an indicator for the Frogman Engine Header Tool.
-#define RUNS_AFTER(x) \
-static_assert(::std::is_function_v<decltype(x)>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
-static_assert(::std::is_same_v<::FE::function_argument_t<decltype(x), 0>, ::FE::world&>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
-static_assert(::FE::function_arity_v<decltype(x)> == 1, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
-static_assert(::std::is_same_v<::FE::function_return_t<decltype(x)>, void>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro.");
+	#define IS_RUNS_BEFORE_VALID(x) \
+	static_assert(::std::is_function_v<decltype(x)>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
+	static_assert(::std::is_same_v<::FE::function_argument_t<decltype(x), 0>, ::FE::world&>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
+	static_assert(::FE::function_arity_v<decltype(x)> == 1, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro."); \
+	static_assert(::std::is_same_v<::FE::function_return_t<decltype(x)>, void>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_BEFORE macro.");
 #endif
+
+
+#ifdef RUNS_AFTER
+	#error RUNS_AFTER is a reserved Frogman Engine macro keyword.
+#else
+	// This macro is an indicator for the Frogman Engine Header Tool.
+	#define RUNS_AFTER(x)
+#endif
+
+#ifdef IS_RUNS_AFTER_VALID
+	#error IS_RUNS_AFTER_VALID is a reserved Frogman Engine macro keyword.
+#else
+	#define IS_RUNS_AFTER_VALID(x) \
+	static_assert(::std::is_function_v<decltype(x)>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
+	static_assert(::std::is_same_v<::FE::function_argument_t<decltype(x), 0>, ::FE::world&>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
+	static_assert(::FE::function_arity_v<decltype(x)> == 1, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro."); \
+	static_assert(::std::is_same_v<::FE::function_return_t<decltype(x)>, void>, "Frogman Engine C++: an incorrectly typed value passed to the RUNS_AFTER macro.");
+#endif
+
+
 
 
 namespace FE
