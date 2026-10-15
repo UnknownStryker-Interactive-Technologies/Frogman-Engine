@@ -89,6 +89,7 @@ enum struct Vocabulary : FE::uint16
 	_FrogmanEngineStructReflectionMacro,
 	_FrogmanEngineEnumStructReflectionMacro,
 	_FrogmanEngineSystemMacro, _FrogmanEngineSystemArgSysCallPhase, _FrogmanEngineSystemArgWorldTagEnum,
+	_FrogmanEngineGlobalSystemMacro,
 	_FrogmanEngineEnableSerialization, _FrogmanHeaderToolGeneratedReflectionMacro,
 	_FrogmanEngineSystemContractRunsAfter, _FrogmanEngineSystemContractRunsBefore,
 
@@ -132,7 +133,8 @@ const tsl::htrie_map<var::ASCII, Vocabulary> g_vocabulary =
 	{ "FE_CLASS", Vocabulary::_FrogmanEngineClassReflectionMacro },
 	{ "FE_STRUCT", Vocabulary::_FrogmanEngineStructReflectionMacro },
 	{ "FE_ENUM_STRUCT", Vocabulary::_FrogmanEngineEnumStructReflectionMacro },
-	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemMacro }
+	{ "FE_SYSTEM", Vocabulary::_FrogmanEngineSystemMacro },
+	{ "FE_GLOBAL_SYSTEM", Vocabulary::_FrogmanEngineGlobalSystemMacro }
 };
 
 

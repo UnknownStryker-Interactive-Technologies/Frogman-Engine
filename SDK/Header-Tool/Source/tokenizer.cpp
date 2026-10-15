@@ -2020,15 +2020,26 @@ namespace FHT::tokenizer
 			case Vocabulary::_FrogmanEngineEnableSerialization:
 				_FE_FALLTHROUGH_;
 
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
+				_FE_FALLTHROUGH_;
+
 			case Vocabulary::_FrogmanEngineSystemMacro:
 				if (FE::algorithm::string::space_insensitive_contains((FE::ASCII*)code_iterator_p, tl_s_key_buffer.length(), tl_s_key_buffer.c_str()))
 				{
 					out_token_p._vocabulary = it.value();
 					out_token_p._code = reinterpret_cast<FE::UTF8*>(tl_s_key_buffer.c_str());
 
-					if (out_token_p._vocabulary == Vocabulary::_FrogmanEngineSystemMacro)
+					switch (out_token_p._vocabulary)
 					{
+					case Vocabulary::_FrogmanEngineSystemMacro:
 						context_stack_p.push_back(FHT::Context::_FrogmanEngineSystemMacro);
+						break;
+					case Vocabulary::_FrogmanEngineGlobalSystemMacro:
+						context_stack_p.push_back(FHT::Context::_FrogmanEngineGlobalSystemMacro);
+						break;
+
+					default:
+						break;
 					}
 					return;
 				}
@@ -2059,33 +2070,62 @@ namespace FHT::tokenizer
 			return;
 		}
 
-		if (context_stack_p.back() == FHT::Context::_FrogmanEngineSystemMacro)
+		switch (context_stack_p.back())
 		{
-			thread_local static var::int32 tl_s_arg_index = 0;
-			auto l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ',');
-
-			switch (tl_s_arg_index)
+		case FHT::Context::_FrogmanEngineSystemMacro:
 			{
-			case 0:
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
-				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
-				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
-				++tl_s_arg_index;
-				return;
+				thread_local static var::int32 tl_s_arg_index = 0;
+				auto l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ',');
 
-			case 1:
-				l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
-				THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
-				out_token_p._code.assign(code_iterator_p, l_comma->_begin);
-				out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnum;
-				++tl_s_arg_index;
-				return;
+				switch (tl_s_arg_index)
+				{
+				case 0:
+					THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
+					out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
+					out_token_p._code.assign(code_iterator_p, l_comma->_begin);
+					++tl_s_arg_index;
+					return;
 
-			default: // EOR; reset.
-				tl_s_arg_index = 0;
-				break;
+				case 1:
+					l_comma = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
+					THROW_CPP_SYNTAX_ERROR(l_comma == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
+					out_token_p._code.assign(code_iterator_p, l_comma->_begin);
+					out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgWorldTagEnum;
+					++tl_s_arg_index;
+					return;
+
+				default: // EOR; reset.
+					tl_s_arg_index = 0;
+					break;
+				}
+				context_stack_p.pop_back();
 			}
-			context_stack_p.pop_back();
+			break;
+
+		case  FHT::Context::_FrogmanEngineGlobalSystemMacro:
+			{
+				thread_local static var::int32 tl_s_arg_index = 0;
+				auto l_arg_end = FE::algorithm::string::find_the_first<FE::UTF8>(code_iterator_p, ')');
+
+				switch (tl_s_arg_index)
+				{
+				case 0:
+					THROW_CPP_SYNTAX_ERROR(l_arg_end == std::nullopt, "Frogman C++ Error: the FE_SYSTEM macro is ill-formed.");
+					out_token_p._vocabulary = Vocabulary::_FrogmanEngineSystemArgSysCallPhase;
+					out_token_p._code.assign(code_iterator_p, l_arg_end->_begin);
+					++tl_s_arg_index;
+					return;
+
+				default: // EOR; reset.
+					tl_s_arg_index = 0;
+					break;
+				}
+				context_stack_p.pop_back();
+			}
+			break;
+
+		default:
+			break;
 		}
 	}
 

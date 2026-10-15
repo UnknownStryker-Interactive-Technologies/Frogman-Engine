@@ -46,7 +46,8 @@ namespace FHT
 
 		_ProbablyAttribute, _Attribute,
 
-		_FrogmanEngineSystemMacro
+		_FrogmanEngineSystemMacro,
+		_FrogmanEngineGlobalSystemMacro
 	};
 
 	using context_stack_t = std::pmr::vector<Context>;

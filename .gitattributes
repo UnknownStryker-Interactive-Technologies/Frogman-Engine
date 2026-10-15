@@ -1,10 +1,7 @@
 *.so binary
 *.dll binary
-
 *.a binary
 *.lib binary
-
 *.sh binary
 *.bat binary
-
 *.exe binary

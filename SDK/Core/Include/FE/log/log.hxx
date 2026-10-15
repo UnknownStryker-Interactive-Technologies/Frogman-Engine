@@ -252,6 +252,7 @@ namespace FE
 		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingLhsOperand = 10,
 		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingRhsOperand = 11,
 		_ShaderPermutationBlacklistEvaluationSyntaxError_MissingOperator = 12,
+		_FatalError_ReflexcodeExecutionFailure = 13,
 
 		_FatalMemoryError_1XX_IncorrectAddressAlignment = 100,
 		_FatalMemoryError_1XX_NullPtr = 101,

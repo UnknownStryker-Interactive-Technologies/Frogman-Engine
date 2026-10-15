@@ -56,7 +56,11 @@ limitations under the License.
 
 CLASS_FORWARD_DECLARATION(FE::framework, framework_base);
 
-
+namespace FE
+{
+	using global_system = void(*)(void);
+	using system = void(*)(class ::FE::world&);
+}
 
 
 BEGIN_NAMESPACE(FE::framework::reflection)
@@ -74,7 +78,6 @@ private:
 		FE::cache_aligned_allocator<std::pmr::string>>;
 
 	using world_tag_t = var::uint16;
-	using system = void(*)(class ::FE::world&);
 
 	using world_system_table = absl::node_hash_map<	world_tag_t,
 												std::array<std::pmr::vector<system>, world_syscall_phase_count>,
@@ -85,7 +88,7 @@ private:
 												std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, world_syscall_phase_count>>>
 	>;
 
-	using global_system_table = std::array<std::pmr::vector<system>, world_syscall_phase_count>;
+	using global_system_table = std::array<std::pmr::vector<global_system>, world_syscall_phase_count>;
 
 	lock_type m_lock;
 	std::pmr::memory_resource* m_pool;
@@ -104,11 +107,7 @@ public:
 	method_registry& operator=(const method_registry&) = delete;
 	method_registry& operator=(method_registry&&) = delete;
 
-	_FE_FORCE_INLINE_ void reserve(FE::size size_p) noexcept
-	{
-		std::lock_guard<lock_type> l_lock(m_lock);
-		m_method_registry.reserve(size_p);
-	}
+	void reserve(FE::size size_p) noexcept;
 
 	template<class TaskType>
 	void register_task(const std::string_view& task_name_p, typename TaskType::task_type function_p) noexcept
@@ -130,34 +129,13 @@ public:
 	}
 
 	FE::boolean check_presence(const std::string_view& key_p) noexcept;
-
 	// This method may return a nullptr.
 	FE::task_base* retrieve(const std::string_view& key_p) noexcept;
 
-	void associate_system(world_tag_t world_tag_p, auto syscall_phase_p, system system_function_p) noexcept
-	{
-		static_assert(::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
-		if constexpr (::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>)
-		{
-			m_global_system_table[(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
-		}
-		else
-		{
-			if (m_world_system_table.find(world_tag_p) == m_world_system_table.end())
-			{
-				typename world_system_table::mapped_type l_world_system_table;
-				for (typename world_system_table::mapped_type::value_type& vec : l_world_system_table)
-				{
-					vec = typename world_system_table::mapped_type::value_type(m_pool);
-					vec.reserve(512);
-				}
-				m_world_system_table[world_tag_p] = std::move(l_world_system_table);
-			}
 
-			m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p].emplace_back(system_function_p);
-		}
-	}
+	void associate_system(world_tag_t world_tag_p, FE::WorldSystemCallPhase syscall_phase_p, system system_function_p) noexcept;
+	void associate_global_system(FE::GlobalSystemCallPhase syscall_phase_p, global_system system_function_p) noexcept;
+
 
 	struct system_dependency
 	{
@@ -165,29 +143,19 @@ public:
 		std::pmr::vector<system> _runs_before;
 		std::pmr::vector<system> _runs_after;
 	};
-	void sort_systems_topologically(world_tag_t world_tag_p, auto syscall_phase_p, std::initializer_list<system_dependency> ilist_p) noexcept
-	{
-		static_assert(::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
-		auto& l_systems = (::std::is_same_v<::std::remove_cv_t<decltype(syscall_phase_p)>, ::FE::GlobalSystemCallPhase>) ? m_global_system_table[(FE::uint16)syscall_phase_p] : m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
-	
-		for (system_dependency& dependency : ilist_p)
-		{
+	void sort_systems_topologically(world_tag_t world_tag_p, FE::WorldSystemCallPhase syscall_phase_p, std::initializer_list<system_dependency> ilist_p) noexcept;
 
-		}
-	}
-
-	_FE_FORCE_INLINE_ typename world_system_table::mapped_type::value_type& get_world_systems(world_tag_t world_tag_p, WorldSystemCallPhase syscall_phase_p) noexcept
+	struct global_system_dependency
 	{
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
-		return m_world_system_table[world_tag_p][(FE::uint16)syscall_phase_p];
-	}
+		global_system _current_system;
+		std::pmr::vector<global_system> _runs_before;
+		std::pmr::vector<global_system> _runs_after;
+	};
+	void sort_global_systems_topologically(FE::GlobalSystemCallPhase syscall_phase_p, std::initializer_list<global_system_dependency> ilist_p) noexcept;
 
-	_FE_FORCE_INLINE_ typename global_system_table::value_type& get_global_systems(GlobalSystemCallPhase syscall_phase_p) noexcept
-	{
-		static_assert(sizeof(syscall_phase_p) == sizeof(FE::uint16));
-		return m_global_system_table[(FE::uint16)syscall_phase_p];
-	}
+
+	typename world_system_table::mapped_type::value_type& get_world_systems(world_tag_t world_tag_p, WorldSystemCallPhase syscall_phase_p) noexcept;
+	typename global_system_table::value_type& get_global_systems(GlobalSystemCallPhase syscall_phase_p) noexcept;
 };
 
 

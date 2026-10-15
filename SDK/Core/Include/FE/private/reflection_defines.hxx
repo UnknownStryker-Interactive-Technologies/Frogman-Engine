@@ -83,8 +83,17 @@ enum FEWorldTag : world_tag_t
 // This macro is an indicator for the Frogman Engine Header Tool.
 // Incorrectly placing the arguments will fail the generated code compilation.
 #define FE_SYSTEM(SysCallPhase, WorldTagEnum) \
-static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase> || ::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
+static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::WorldSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter."); \
 static_assert(static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(WorldTagEnum) <= static_cast<::std::underlying_type_t<::std::remove_cv_t<decltype(WorldTagEnum)>>>(::FE::max_value<::FE::uint16>), "Frogman Engine C++: the WorldTagEnum value exceeds 2^16.");
+#endif
+
+#ifdef FE_GLOBAL_SYSTEM
+#error FE_GLOBAL_SYSTEM is a reserved Frogman Engine macro keyword.
+#else
+// This macro is an indicator for the Frogman Engine Header Tool.
+// Incorrectly placing the arguments will fail the generated code compilation.
+#define FE_GLOBAL_SYSTEM(SysCallPhase) \
+static_assert(::std::is_same_v<::std::remove_cv_t<decltype(SysCallPhase)>, ::FE::GlobalSystemCallPhase>, "Frogman Engine C++: an incorrectly typed value passed to the SysCallPhase parameter.");
 #endif
 
 

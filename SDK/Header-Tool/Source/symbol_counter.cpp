@@ -60,6 +60,8 @@ namespace FHT::symbol_counter
 				break;
 
 			case Vocabulary::_FrogmanEngineSystemMacro:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
 				++l_count._systems;
 				break;
 
@@ -114,6 +116,8 @@ namespace FHT::symbol_counter
 				break;
 
 			case Vocabulary::_FrogmanEngineSystemMacro:
+				_FE_FALLTHROUGH_;
+			case Vocabulary::_FrogmanEngineGlobalSystemMacro:
 				++l_count._systems;
 				break;
 

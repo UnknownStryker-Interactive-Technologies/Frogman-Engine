@@ -160,6 +160,16 @@ private:
     std::atomic_bool m_should_tick;
 	FE::clock m_runtime_clock;
 
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_engine_initialization_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_game_instance_initialization_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_game_instance_begin_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_pre_game_instance_tick_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_game_instance_tick_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_post_game_instance_tick_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_game_instance_end_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_game_instance_deinitialization_cmd_queue;
+    concurrency::concurrent_queue<global_system, std::pmr::polymorphic_allocator<global_system>> m_deferred_engine_deinitialization_cmd_queue;
+
 public:
     engine(std::unique_ptr<engine_program_options> options_p) noexcept;
     virtual ~engine() noexcept override;
@@ -197,6 +207,9 @@ public:
 
 	_FE_FORCE_INLINE_ const FE::game& get_game() const noexcept { return *m_game; }
 	_FE_FORCE_INLINE_ FE::game& get_game() noexcept { return *m_game; }
+
+public:
+    void enqueue_global_command(global_system system_p, GlobalSystemCallPhase phase_p) noexcept;
 
 private:
     virtual FE::int32 launch(FE::int32 argc_p, FE::ASCII** argv_p) override;
