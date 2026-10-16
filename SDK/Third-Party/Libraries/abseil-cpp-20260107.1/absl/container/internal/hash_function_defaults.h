@@ -1,4 +1,5 @@
-﻿// Copyright 2018 The Abseil Authors.
+﻿// structure was padded due to alignment specifier
+// Copyright 2018 The Abseil Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +45,8 @@
 //
 #ifndef ABSL_CONTAINER_INTERNAL_HASH_FUNCTION_DEFAULTS_H_
 #define ABSL_CONTAINER_INTERNAL_HASH_FUNCTION_DEFAULTS_H_
-
+#pragma warning(push)
+#pragma warning(disable : 4180)
 #include <cstddef>
 #include <functional>
 #include <memory>
@@ -277,5 +279,6 @@ using hash_default_eq = typename container_internal::HashEq<T>::Eq;
 }  // namespace container_internal
 ABSL_NAMESPACE_END
 }  // namespace absl
-
+#pragma warning(pop)
 #endif  // ABSL_CONTAINER_INTERNAL_HASH_FUNCTION_DEFAULTS_H_
+

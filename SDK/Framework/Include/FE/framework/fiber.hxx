@@ -20,12 +20,14 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/memory.hxx>
 #include <FE/fqueue.hxx>
+#include <FE/framework/smart_ptr.hxx>
 
 #include <atomic>
+#include <memory_resource>
+
+#include <absl/container/flat_hash_map.h>
 
 #include <concurrent_priority_queue.h>
-
-#include <memory_resource>
 
 
 
@@ -115,8 +117,7 @@ extern "C"
 	};
 
 
-	// The priority levels are from 1 to 10, where 1 is the highest priority and 10 is the lowest priority. The scheduler will always execute the highest priority tasks first. If there are multiple tasks with the same priority, they will be executed in a round-robin fashion.
-	enum TaskPriority
+	enum TaskPriority : var::uint32
 	{
 		_Critical = 0,
 		_High = 1,
@@ -149,15 +150,84 @@ namespace FE
 {
 	// temp decl
 	class world;
-	using task_interface = void(*)(void*);
+
+	using impl = void(*)(void*);
+	namespace internal
+	{
+		struct vertex
+		{
+			void* _argument;
+			var::int64 _reference_count;
+			std::pmr::vector<impl> _runs_before;
+		};
+	}
 
 	struct task
 	{
-		FE::task_interface _system;
-		FE::world* _world;
+		impl _system;
+		void* _argument;
 		TaskPriority _task_type;
 	};
-	static_assert(FE::is_trivial_v<task>, "Static Assertion Failure: the task struct must be a trivial type.");
+
+	using task_map = absl::flat_hash_map<	impl, internal::vertex,
+		absl::DefaultHashContainerHash<impl>,
+		absl::DefaultHashContainerEq<impl>,
+		std::pmr::polymorphic_allocator< std::pair<const impl, internal::vertex> >
+	>;
+
+	class processors;
+
+	class fiber_flow
+	{
+	public:
+		class auth
+		{
+			friend class processors;
+		};
+
+		class task
+		{
+			FE::task m_task;
+			FE::smart_ptr< task_map, RefType::_Observer> m_tasks;
+
+		public:
+			task(const FE::task& task_p, FE::smart_ptr< task_map, RefType::_Observer> tasks_p) noexcept;
+			~task() noexcept = default;
+
+			task(const task& other_p) noexcept;
+			task& operator=(const task& other_p) noexcept;
+
+			task(task&& other_p) noexcept;
+			task& operator=(task&& other_p) noexcept;
+
+		public:
+			void runs_before(const FE::fiber_flow::task& other_p) noexcept;
+			void runs_after(const FE::fiber_flow::task& other_p) noexcept;
+		};
+
+	private:
+		mutable std::pmr::vector<FE::task> m_topologically_ordered_tasks;
+		mutable FE::smart_ptr< task_map, RefType::_Owner> m_tasks;
+		TaskPriority m_task_type;
+
+	public:
+		fiber_flow(TaskPriority task_type_p = TaskPriority::_None) noexcept;
+		~fiber_flow() noexcept = default;
+
+		fiber_flow(fiber_flow&& other_p) noexcept;
+		fiber_flow& operator=(fiber_flow&& other_p) noexcept;
+
+		fiber_flow(const fiber_flow& other_p) noexcept;
+		fiber_flow& operator=(const fiber_flow& other_p) noexcept;
+
+	public:
+		_FE_FORCE_INLINE_ void set_task_type(TaskPriority task_type_p) noexcept { m_task_type = task_type_p; }
+		_FE_FORCE_INLINE_ TaskPriority get_task_type() const noexcept { return m_task_type; }
+		typename FE::fiber_flow::task emplace(const FE::task& task_p) noexcept;
+
+		void sort_tasks_topologically(auth) const noexcept;
+		std::pmr::vector<FE::task>& get_topologically_ordered_tasks(auth) const noexcept;
+	};
 
 	class priority_comparator
 	{
@@ -166,8 +236,12 @@ namespace FE
 		{
 			return static_cast<var::int32>(lhs_p._task_type) > static_cast<var::int32>(rhs_p._task_type);
 		}
-	};
 
+		inline bool operator()(const std::pmr::vector<FE::task>& lhs_p, const std::pmr::vector<FE::task>& rhs_p) noexcept
+		{
+			return static_cast<var::int32>(lhs_p.front()._task_type) > static_cast<var::int32>(rhs_p.front()._task_type);
+		}
+	};
 
 	class thread_context
 	{
@@ -217,10 +291,13 @@ namespace FE
 	class fiber_scheduler final
 	{
 		FE::fqueue<FE::fiber, 8> m_fiber_pool;
-		FE::fqueue<FE::fiber, 8> m_active_fibers[8]; // The size of TaskPriority slots == 7
+		std::array<FE::fqueue<FE::fiber, 8>, 8> m_active_fibers; // The size of TaskPriority slots == 7
 		var::size m_fibers;
 		std::atomic_bool m_is_locked;
 		concurrency::concurrent_priority_queue<task, priority_comparator, std::pmr::polymorphic_allocator<task>> m_task_queue;
+		concurrency::concurrent_priority_queue<std::pmr::vector<FE::task>, priority_comparator, std::pmr::polymorphic_allocator<std::pmr::vector<FE::task>>> m_fiber_flow_queue;
+		std::pmr::vector<FE::task> m_topologically_ordered_tasks;
+		std::pmr::vector<FE::task>::iterator m_ordered_tasks_iterator;
 
 		std::unique_ptr<thread_context> m_thread_context;
 
@@ -232,6 +309,7 @@ namespace FE
 		void _FE_CDECL_ create_fiber(FE::size stack_size_p = FE::system_large_page_size) noexcept;
 
 		void _FE_CDECL_ schedule_task(const task& task_p) noexcept;
+		void _FE_CDECL_ schedule_tasks(std::pmr::vector<FE::task>&& tasks_p) noexcept;
 
 		// not thread-safe.
 		int _FE_CDECL_ execute() noexcept;

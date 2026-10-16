@@ -108,6 +108,9 @@ FE::fiber_scheduler::fiber_scheduler() noexcept
 		m_fibers(0),
 		m_is_locked(false),
 		m_task_queue(framework::framework_base::get_framework().get_concurrent_memory_resource()),
+		m_fiber_flow_queue(framework::framework_base::get_framework().get_concurrent_memory_resource()),
+		m_topologically_ordered_tasks(framework::framework_base::get_framework().get_memory_resource()),
+		m_ordered_tasks_iterator(m_topologically_ordered_tasks.end()),
 		m_thread_context(std::make_unique<thread_context>())
 {
 }
@@ -124,14 +127,40 @@ void _FE_CDECL_ FE::fiber_scheduler::schedule_task(const task& task_p) noexcept
 	m_task_queue.push(task_p);
 }
 
+void _FE_CDECL_ FE::fiber_scheduler::schedule_tasks(std::pmr::vector<FE::task>&& tasks_p) noexcept
+{
+	m_fiber_flow_queue.push(std::move(tasks_p));
+}
+
 int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 {
+	if ((m_ordered_tasks_iterator == m_topologically_ordered_tasks.end()) &&
+		(m_fiber_flow_queue.try_pop(m_topologically_ordered_tasks) == true))
+	{
+		m_ordered_tasks_iterator = m_topologically_ordered_tasks.begin();
+	}
+
 	FE::task l_to_execute;
 	if (m_task_queue.try_pop(l_to_execute) == false)
 	{
-		// publish a sleep-wait task in the game framework job system loop.
-		return _FE_FAILED_; // no more tasks to execute.
+		if (m_ordered_tasks_iterator == m_topologically_ordered_tasks.end())
+		{
+			// publish a sleep-wait task in the game framework job system loop.
+			return _FE_FAILED_; // no more tasks to execute.
+		}
+
+		l_to_execute = *m_ordered_tasks_iterator; // take it
+		++m_ordered_tasks_iterator;
 	}
+	else if (m_ordered_tasks_iterator != m_topologically_ordered_tasks.end() &&
+			(m_ordered_tasks_iterator->_task_type < l_to_execute._task_type))
+	{
+		m_task_queue.push(l_to_execute); // cancel it
+		l_to_execute = *m_ordered_tasks_iterator; // take it
+		++m_ordered_tasks_iterator;
+	}
+	FE_ASSERT(l_to_execute._system != nullptr, "The system function pointer is null.");
+
 
 	FE::fiber l_to_switch = m_fiber_pool.pop(); // get a fiber from the pool to run the task.
 	l_to_switch.m_impl->_context_ptr->_r12 = (var::uint64)l_to_execute._system; // smuggle the system function pointer into r12; the fiber entry point will call this function pointer to execute the task.
@@ -225,7 +254,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			}
 			else
 			{
-				FE_ASSERT(m_active_fibers->size() >= l_from->_task_type);
+				FE_ASSERT(m_active_fibers.size() >= l_from->_task_type);
 				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
@@ -257,7 +286,7 @@ void _FE_CDECL_ FE::fiber_scheduler::switch_fiber_context() noexcept
 			}
 			else
 			{
-				FE_ASSERT(m_active_fibers->size() >= l_from->_task_type);
+				FE_ASSERT(m_active_fibers.size() >= l_from->_task_type);
 				m_active_fibers[l_from->_task_type].emplace(std::move(l_from_fiber));
 			}
 
@@ -396,39 +425,142 @@ FE::thread_context::thread_context() noexcept
 }
 
 
-FE::fiber_task::fiber_task(task task_p, FE::smart_ptr<std::pmr::vector<task>, FE::RefType::_Observer> tasks_p) noexcept
+
+
+FE::fiber_flow::task::task(const FE::task& task_p, FE::smart_ptr<task_map, RefType::_Observer> tasks_p) noexcept
 	:	m_task(task_p),
 		m_tasks(tasks_p)
 {
 }
 
-void FE::fiber_task::runs_after(fiber_task& task_p) noexcept
+FE::fiber_flow::task::task(const task& other_p) noexcept
+	:	m_task(other_p.m_task),
+		m_tasks(other_p.m_tasks)
 {
 }
 
-void FE::fiber_task::runs_before(fiber_task& task_p) noexcept
+FE::fiber_flow::task& FE::fiber_flow::task::operator=(const task& other_p) noexcept
+{
+	m_task = other_p.m_task;
+	m_tasks = other_p.m_tasks;
+	return *this;
+}
+
+FE::fiber_flow::task::task(task&& other_p) noexcept
+	:	m_task(std::move(other_p.m_task)),
+		m_tasks(std::move(other_p.m_tasks))
 {
 }
 
+FE::fiber_flow::task& FE::fiber_flow::task::operator=(task&& other_p) noexcept
+{
+	m_task = std::move(other_p.m_task);
+	m_tasks = std::move(other_p.m_tasks);
+	return *this;
+}
 
-FE::fiber_flow::fiber_flow() noexcept
-	: m_tasks(FE::make_owner<std::pmr::vector<task>>(framework::framework_base::get_framework().get_concurrent_memory_resource()))
+void FE::fiber_flow::task::runs_before(const FE::fiber_flow::task& other_p) noexcept
+{
+	FE_ASSERT(m_tasks.is_valid() == true);
+	(*m_tasks)[m_task._system]._runs_before.push_back(other_p.m_task._system); 
+	(*m_tasks)[other_p.m_task._system]._reference_count += 1;               
+}
+
+void FE::fiber_flow::task::runs_after(const FE::fiber_flow::task& other_p) noexcept
+{
+	FE_ASSERT(m_tasks.is_valid() == true);
+	(*m_tasks)[m_task._system]._reference_count += 1;
+	(*m_tasks)[other_p.m_task._system]._runs_before.push_back(m_task._system);
+}
+
+
+
+
+FE::fiber_flow::fiber_flow(TaskPriority task_type_p) noexcept
+	:	m_topologically_ordered_tasks(framework::framework_base::get_framework().get_concurrent_memory_resource()),
+		m_tasks(FE::make_owner<task_map>(framework::framework_base::get_framework().get_concurrent_memory_resource())),
+		m_task_type(task_type_p)
 {
 }
 
 FE::fiber_flow::fiber_flow(fiber_flow&& other_p) noexcept
-	: m_tasks(std::move(other_p.m_tasks))
+	:	m_topologically_ordered_tasks(other_p.m_topologically_ordered_tasks),
+		m_tasks(std::move(other_p.m_tasks)),
+		m_task_type(other_p.m_task_type)
 {
 }
 
 FE::fiber_flow& FE::fiber_flow::operator=(fiber_flow&& other_p) noexcept
 {
+	m_topologically_ordered_tasks = std::move(other_p.m_topologically_ordered_tasks);
 	m_tasks = std::move(other_p.m_tasks);
+	m_task_type = other_p.m_task_type;
 	return *this;
 }
 
-FE::fiber_task FE::fiber_flow::emplace(const task& task_p) noexcept
+FE::fiber_flow::fiber_flow(const fiber_flow& other_p) noexcept
+	:	m_topologically_ordered_tasks(other_p.m_topologically_ordered_tasks),
+		m_tasks(FE::make_owner<task_map>(framework::framework_base::get_framework().get_concurrent_memory_resource(), *other_p.m_tasks)),
+		m_task_type(other_p.m_task_type)
 {
-	m_tasks->emplace_back(task_p);
-	return FE::fiber_task(task_p, m_tasks);
+}
+
+FE::fiber_flow& FE::fiber_flow::operator=(const fiber_flow& other_p) noexcept
+{
+	m_topologically_ordered_tasks = other_p.m_topologically_ordered_tasks;
+	m_tasks = FE::make_owner<task_map>(framework::framework_base::get_framework().get_concurrent_memory_resource(), *other_p.m_tasks);
+	m_task_type = other_p.m_task_type;
+	return *this;
+}
+
+typename FE::fiber_flow::task FE::fiber_flow::emplace(const FE::task& task_p) noexcept
+{
+	auto& l_vertex = (*m_tasks)[task_p._system];
+	l_vertex._argument = task_p._argument;
+	l_vertex._reference_count = 0;
+	l_vertex._runs_before = std::pmr::vector<impl>(framework::framework_base::get_framework().get_concurrent_memory_resource());
+	return typename FE::fiber_flow::task(task_p, m_tasks);
+}
+
+void FE::fiber_flow::sort_tasks_topologically(auth) const noexcept
+{
+	auto& l_table = (*m_tasks);
+	auto l_copy = l_table;
+	while (l_table.size() > 0)
+	{
+		bool l_has_made_progress = false;
+
+		for (auto it = l_table.begin(); it != l_table.end(); )
+		{
+			const auto& [l_current_task, l_dependency_object] = *it;
+
+			if (l_dependency_object._reference_count != 0)
+			{
+				++it;
+				continue;
+			}
+
+			l_has_made_progress = true;
+
+			m_topologically_ordered_tasks.emplace_back(l_current_task, l_dependency_object._argument, m_task_type);
+
+			for (const auto& current_runs_before_this : l_dependency_object._runs_before)
+			{
+				l_table[current_runs_before_this]._reference_count -= 1;
+			}
+
+			auto l_to_remove = it;
+			++it;
+			l_table.erase(l_to_remove);
+		}
+
+		// a whole pass emitted nothing: cyclic dependency
+		FE_EXIT_IF(l_has_made_progress == false, FE::ErrorCode::_FatalError_ReflexcodeExecutionFailure, "FE Runtime Reflection Metadata Registration Failure: a circular l_dependency_object was found among the systems.");
+	}
+	(*m_tasks) = std::move(l_copy);
+}
+
+std::pmr::vector<FE::task>& FE::fiber_flow::get_topologically_ordered_tasks(auth) const noexcept
+{
+	return m_topologically_ordered_tasks;
 }
