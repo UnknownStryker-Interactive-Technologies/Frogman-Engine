@@ -53,6 +53,7 @@ public:
 
 	// Thread-safe.
 	void schedule_task(const task& task_p) noexcept;
+	void schedule_tasks(const fiber_flow& tasks_p) noexcept;
 
 	// Not thread-safe; must not be called concurrently.
 	void activate() noexcept;

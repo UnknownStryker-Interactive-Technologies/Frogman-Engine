@@ -179,7 +179,7 @@ FE::renderer::~renderer() noexcept
 }
 
 
-void FE::renderer::__main(class FE::world&) noexcept
+void FE::renderer::__main(void*) noexcept
 {
 	auto& l_engine = FE::engine::get_engine();
 

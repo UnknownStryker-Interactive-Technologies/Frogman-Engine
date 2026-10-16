@@ -60,6 +60,16 @@ void processors::schedule_task(const task& task_p) noexcept
 	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
 }
 
+void processors::schedule_tasks(const fiber_flow& tasks_p) noexcept
+{
+	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
+
+	tasks_p.sort_tasks_topologically(fiber_flow::auth{});
+	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
+	m_scheduler[l_current_thread_index].schedule_tasks( std::move( tasks_p.get_topologically_ordered_tasks(fiber_flow::auth{}) ) );
+	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
+}
+
 
 
 
