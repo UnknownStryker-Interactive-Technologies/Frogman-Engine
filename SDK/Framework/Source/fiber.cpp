@@ -132,6 +132,35 @@ void _FE_CDECL_ FE::fiber_scheduler::schedule_tasks(std::pmr::vector<FE::task>&&
 	m_fiber_flow_queue.push(std::move(tasks_p));
 }
 
+FE::awaitable _FE_CDECL_ FE::fiber_scheduler::schedule_task_async(const task& task_p) noexcept
+{
+	FE::awaitable l_handle(task_p);
+	task l_task =
+	{
+		._system = FE::awaitable::async_wrapper,
+		._argument = l_handle,
+		._task_type = task_p._task_type
+	};
+	m_task_queue.push(l_task);
+	return l_handle;
+}
+
+FE::awaitable _FE_CDECL_ FE::fiber_scheduler::schedule_tasks_async(std::pmr::vector<FE::task>&& tasks_p) noexcept
+{
+	FE::awaitable l_handle(tasks_p.back());
+	task l_task =
+	{
+		._system = FE::awaitable::async_wrapper,
+		._argument = l_handle,
+		._task_type = tasks_p.back()._task_type
+	};
+	tasks_p.pop_back();
+	tasks_p.push_back(l_task);
+	m_fiber_flow_queue.push(std::move(tasks_p));
+	return l_handle;
+}
+
+
 int _FE_CDECL_ FE::fiber_scheduler::execute() noexcept
 {
 	if ((m_ordered_tasks_iterator == m_topologically_ordered_tasks.end()) &&
@@ -403,6 +432,8 @@ thread_local fiber_impl* FE::fiber_scheduler::tl_s_current_fiber = nullptr;
 thread_local FE::fiber_scheduler* FE::fiber_scheduler::tl_s_this_thread_fiber_scheduler = nullptr;
 
 
+
+
 FE::thread_context::thread_context() noexcept
 	: _thread_context()
 {
@@ -459,6 +490,7 @@ FE::fiber_flow::task& FE::fiber_flow::task::operator=(task&& other_p) noexcept
 	return *this;
 }
 
+
 void FE::fiber_flow::task::runs_before(const FE::fiber_flow::task& other_p) noexcept
 {
 	FE_ASSERT(m_tasks.is_valid() == true);
@@ -472,8 +504,6 @@ void FE::fiber_flow::task::runs_after(const FE::fiber_flow::task& other_p) noexc
 	(*m_tasks)[m_task._system]._reference_count += 1;
 	(*m_tasks)[other_p.m_task._system]._runs_before.push_back(m_task._system);
 }
-
-
 
 
 FE::fiber_flow::fiber_flow(TaskPriority task_type_p) noexcept
@@ -512,6 +542,7 @@ FE::fiber_flow& FE::fiber_flow::operator=(const fiber_flow& other_p) noexcept
 	m_task_type = other_p.m_task_type;
 	return *this;
 }
+
 
 typename FE::fiber_flow::task FE::fiber_flow::emplace(const FE::task& task_p) noexcept
 {
@@ -563,4 +594,48 @@ void FE::fiber_flow::sort_tasks_topologically(auth) const noexcept
 std::pmr::vector<FE::task>& FE::fiber_flow::get_topologically_ordered_tasks(auth) const noexcept
 {
 	return m_topologically_ordered_tasks;
+}
+
+
+
+
+FE::awaitable::awaitable(FE::task task_p) noexcept
+	:	m_handle( FE::make_owner<handle>( framework::framework_base::get_framework().get_concurrent_memory_resource(), task_p._system, task_p._argument, false ) )
+{
+}
+
+FE::awaitable::~awaitable() noexcept
+{
+	while(m_handle->_is_done.load(std::memory_order_acquire) == false)
+	{
+		FE::fiber_scheduler::yield();
+	}
+}
+
+FE::awaitable::awaitable(awaitable&& other_p) noexcept
+	:	m_handle( std::move(other_p.m_handle) )
+{
+}
+
+FE::awaitable& FE::awaitable::operator=(awaitable&& other_p) noexcept
+{
+	m_handle = std::move(other_p.m_handle);
+	return *this;
+}
+
+
+void FE::awaitable::await() noexcept
+{
+	while (m_handle->_is_done.load(std::memory_order_acquire) == false)
+	{
+		FE::fiber_scheduler::yield();
+	}
+}
+
+void FE::awaitable::async_wrapper(void* argument_p) noexcept
+{
+	FE_ASSERT(argument_p != nullptr);
+	FE::awaitable::handle* l_handle = (FE::awaitable::handle*)argument_p;
+	l_handle->_system(l_handle->_argument);
+	l_handle->_is_done.store(true, std::memory_order_release);
 }
