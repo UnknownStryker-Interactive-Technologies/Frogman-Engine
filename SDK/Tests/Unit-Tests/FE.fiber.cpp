@@ -315,66 +315,6 @@ TEST(Fiber, OrderedTasks)
 
 namespace
 {
-	// A spider web: one hub in the middle, web_ring_count rings of web_spoke_count nodes around it, one rim on the outside.
-	//
-	//  hub --> every node of r0
-	//  r0:  s0 > s1 > s2 > s3 > s4 > s5     ring threads  = runs_after (the direction flips on every ring)
-	//       v    v    v    v    v    v      spoke threads = runs_before
-	//  r1:  s0 < s1 < s2 < s3 < s4 < s5
-	//       v    v    v    v    v    v
-	//  r2:  s0 > s1 > s2 > s3 > s4 > s5
-	//       v    v    v    v    v    v
-	//  r3:  s0 < s1 < s2 < s3 < s4 < s5
-	//  every node of r3 --> rim
-	constexpr size_t web_spoke_count = 6;
-	constexpr size_t web_ring_count = 4;
-	constexpr size_t web_hub = 0;
-	constexpr size_t web_rim = 1 + web_ring_count * web_spoke_count;
-	constexpr size_t web_node_count = web_rim + 1;
-
-	constexpr size_t web_node(size_t ring_p, size_t spoke_p) noexcept
-	{
-		return 1 + ring_p * web_spoke_count + spoke_p;
-	}
-
-	struct web_trace
-	{
-		std::array<size_t, web_node_count> _position{}; // the place in line at which each node ran
-		std::array<int, web_node_count> _runs{};        // how many times each node ran
-		size_t _sequence = 0;                           // how many tasks have run so far
-	};
-
-	// fiber_flow keys its vertices by the system function pointer, so every node needs a function of its own.
-	template <size_t Id>
-	void web_system(void* argument) noexcept
-	{
-		static_assert(Id < web_node_count);
-
-		web_trace* l_trace = static_cast<web_trace*>(argument);
-		if (l_trace == nullptr)
-		{
-			return; // invalid argument pointer; just return.
-		}
-		l_trace->_position[Id] = l_trace->_sequence++;
-		l_trace->_runs[Id] += 1;
-	}
-
-	using web_system_t = decltype(FE::task::_system);
-
-	template <size_t... Ids>
-	constexpr std::array<web_system_t, sizeof...(Ids)> make_web_systems(std::index_sequence<Ids...>) noexcept
-	{
-		return { { &web_system<Ids>... } };
-	}
-
-	constexpr auto web_systems = make_web_systems(std::make_index_sequence<web_node_count>{});
-}
-
-
-
-
-namespace
-{
 	constexpr int task_count = 6;
 
 	// Every task writes down the place in line at which it ran: 1 = first, 0 = never ran.

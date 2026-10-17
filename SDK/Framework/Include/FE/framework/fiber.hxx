@@ -177,7 +177,7 @@ namespace FE
 
 	class processors;
 
-	class fiber_flow
+	class fiber_flow final
 	{
 	public:
 		class auth
@@ -229,21 +229,57 @@ namespace FE
 		std::pmr::vector<FE::task>& get_topologically_ordered_tasks(auth) const noexcept;
 	};
 
-	class priority_comparator
+
+	class priority_comparator final
 	{
 	public:
 		inline bool operator()(const task& lhs_p, const task& rhs_p) noexcept
 		{
 			return static_cast<var::int32>(lhs_p._task_type) > static_cast<var::int32>(rhs_p._task_type);
 		}
-
+		
 		inline bool operator()(const std::pmr::vector<FE::task>& lhs_p, const std::pmr::vector<FE::task>& rhs_p) noexcept
 		{
 			return static_cast<var::int32>(lhs_p.front()._task_type) > static_cast<var::int32>(rhs_p.front()._task_type);
 		}
 	};
 
-	class thread_context
+	class fiber_scheduler;
+
+	class awaitable final
+	{
+		friend class fiber_scheduler;
+
+		struct handle
+		{
+			impl _system = nullptr;
+			void* _argument = nullptr;
+			std::atomic_bool _is_done = false;
+		};
+
+		FE::smart_ptr<handle, RefType::_Owner> m_handle;
+
+	private:
+		awaitable(FE::task task_p) noexcept;
+
+	public:
+		~awaitable() noexcept;
+
+		awaitable(awaitable&& other_p) noexcept;
+		awaitable& operator=(awaitable&& other_p) noexcept;
+
+	public:
+		void await() noexcept;
+		static void async_wrapper(void* argument_p) noexcept;
+		operator void* () noexcept { return m_handle.operator->(); }
+
+	public:
+		awaitable(const awaitable& other_p) noexcept = delete;
+		awaitable& operator=(const awaitable& other_p) noexcept = delete;
+	};
+
+
+	class thread_context final
 	{
 	public:
 		fiber_impl _thread_context;
@@ -308,8 +344,11 @@ namespace FE
 		// not thread-safe.
 		void _FE_CDECL_ create_fiber(FE::size stack_size_p = FE::system_large_page_size) noexcept;
 
-		void _FE_CDECL_ schedule_task(const task& task_p) noexcept;
+		void _FE_CDECL_ schedule_task(const FE::task& task_p) noexcept;
 		void _FE_CDECL_ schedule_tasks(std::pmr::vector<FE::task>&& tasks_p) noexcept;
+
+		FE::awaitable _FE_CDECL_ schedule_task_async(const task& task_p) noexcept;
+		FE::awaitable _FE_CDECL_ schedule_tasks_async(std::pmr::vector<FE::task>&& tasks_p) noexcept;
 
 		// not thread-safe.
 		int _FE_CDECL_ execute() noexcept;
