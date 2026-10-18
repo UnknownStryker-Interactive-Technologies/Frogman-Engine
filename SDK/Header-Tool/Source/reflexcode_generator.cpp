@@ -838,6 +838,7 @@ namespace FHT::reflexcode_generator
 					l_generated_header += L"#include <FE/engine.hpp>\n";
 					l_generated_header += L"#include <FE/prerequisites.hxx>\n\n\n";
 
+					l_generated_header += L"#undef _FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_\n";
 					l_generated_header += L"#define _FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_";
 					l_generated_header += L" ";
 					boost::hash2::xxhash_64 l_hasher(0);
