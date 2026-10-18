@@ -24,6 +24,7 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+STRUCT_FORWARD_DECLARATION(internal::gc_ptr, metadata);
 
 class gc_metadata_base;
 
@@ -31,7 +32,7 @@ class gc_base
 {
     friend class gc_metadata_base;
 
-	std::shared_ptr<std::pmr::vector<FE::gc_base*>> m_reference_edges;
+	std::shared_ptr<std::pmr::vector<struct internal::gc_ptr::metadata*>> m_reference_edges;
 
 public:
     gc_base() noexcept;

@@ -788,13 +788,27 @@ namespace FHT::reflexcode_generator
 #pragma warning(disable: 4244)
 					std::pmr::string l_generated_header_include("#include \"");
 					l_generated_header_include.append(l_header_file_identifier.begin(), l_header_file_identifier.end());
-					l_generated_header_include += ".generated.h";
+					l_generated_header_include += ".generated.h\"";
 #pragma warning(pop)
 					var::boolean l_has_inserted_include = false;
 					if (l_target_header.find(l_generated_header_include) == std::pmr::string::npos)
 					{
-						l_generated_header_include += "\"\n";
-						l_target_header.insert(sizeof(FHT::file_io::UTF8_BOM), l_generated_header_include);
+						l_generated_header_include += "\n";
+						file_buffer_t l_target_header_buffer(l_target_header.begin(), l_target_header.end(), header_tool::get_framework().get_memory_resource());
+						std::pmr::list<token> l_tokens = FHT::tokenizer::tokenize_header(l_target_header_buffer, header_file._header_file_path);
+
+						auto l_last_preprocessor = std::find_if(l_tokens.rbegin(), l_tokens.rend(), [](const token& token_p) { return (token_p._vocabulary == Vocabulary::_Preprocessor) && (token_p._code.starts_with(u8"include")); });
+						var::size l_insertion_pos = 0;
+						if (l_last_preprocessor != l_tokens.rend())
+						{
+							for (var::size line_number = 0; line_number < l_last_preprocessor->_token_line_number; ++line_number)
+							{
+								l_insertion_pos = l_target_header.find('\n', l_insertion_pos);
+								++l_insertion_pos;
+							}
+						}
+						l_insertion_pos = (l_insertion_pos == 0) ? sizeof(FHT::file_io::UTF8_BOM) : l_insertion_pos;
+						l_target_header.insert(l_insertion_pos, l_generated_header_include);
 						l_has_inserted_include = true;
 					}
 

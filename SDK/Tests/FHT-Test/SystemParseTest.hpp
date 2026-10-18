@@ -1,4 +1,9 @@
-﻿#include "SystemParseTest.hpp.generated.h"
+﻿#include <A>
+#include <B>
+#include <C>
+#include <D>
+
+
 
 
 FE_WORLD_TAG
@@ -266,3 +271,4 @@ namespace Game
 		static void emit_selection_outline(::FE::world& world_p);
 	};
 }
+#define Fake

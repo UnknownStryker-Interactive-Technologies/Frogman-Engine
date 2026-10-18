@@ -1,5 +1,4 @@
-﻿#include "error_code.hpp.generated.h"
-#ifndef _FE_HEADER_TOOL_ERROR_CODE_HPP_
+﻿#ifndef _FE_HEADER_TOOL_ERROR_CODE_HPP_
 #define _FE_HEADER_TOOL_ERROR_CODE_HPP_
 /*
 Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
