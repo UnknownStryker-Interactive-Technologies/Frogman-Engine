@@ -1360,17 +1360,57 @@ namespace internal
 			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, 1);
 		}
 	};
+
+	template<typename T>
+	class pmr_deleter<T[]>
+	{
+		std::pmr::memory_resource* m_allocator;
+		var::size m_count;
+	public:
+		_FE_FORCE_INLINE_ pmr_deleter() noexcept = default;
+		_FE_FORCE_INLINE_ pmr_deleter(std::pmr::memory_resource* const memory_resource_p, FE::size count_p) noexcept
+			: m_allocator( ((memory_resource_p == nullptr) ? std::pmr::get_default_resource() : memory_resource_p) ),
+			  m_count(count_p)
+		{
+		}
+
+		_FE_FORCE_INLINE_ void operator()(T* ptr_p) noexcept
+		{
+			if ((ptr_p == nullptr) || (m_allocator == nullptr))
+			{
+				return;
+			}
+
+			for (var::size i = m_count; i > 0; --i)
+			{
+				ptr_p[i - 1].~T();
+			}
+			std::pmr::polymorphic_allocator<T>(m_allocator).deallocate(ptr_p, m_count);
+		}
+	};
 }
 
 template <typename T>
 using unique_ptr = ::std::unique_ptr<T, ::FE::internal::pmr_deleter<T>>;
 
 template <typename T, typename... Arguments>
-_FE_FORCE_INLINE_ unique_ptr<T> _FE_VECTOR_CALL_ make_unique(::std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept
+_FE_FORCE_INLINE_ unique_ptr<T> _FE_VECTOR_CALL_ make_unique(::std::pmr::memory_resource* const memory_resource_p, Arguments&&... arguments_p) noexcept requires (std::is_array_v<T> == false)
 {
 	T* l_object = (T*)std::pmr::polymorphic_allocator<T>(memory_resource_p).allocate_bytes(sizeof(T));
 	new (l_object) T(std::forward<Arguments&&>(arguments_p)...);
 	return unique_ptr<T>{ l_object, internal::pmr_deleter<T>(memory_resource_p) };
+}
+
+template <typename T, typename... Arguments>
+_FE_FORCE_INLINE_ unique_ptr<T> _FE_VECTOR_CALL_ make_unique(::std::pmr::memory_resource* const memory_resource_p, FE::size count_p, const Arguments&... arguments_p) noexcept requires (std::is_unbounded_array_v<T> == true)
+{
+	using element_type = std::remove_extent_t<T>;
+	element_type* l_array = std::pmr::polymorphic_allocator<element_type>(memory_resource_p).allocate(count_p);
+	for (var::size i = 0; i < count_p; ++i)
+	{
+		new (l_array + i) element_type(arguments_p...);
+	}
+	return unique_ptr<T>{ l_array, internal::pmr_deleter<T>(memory_resource_p, count_p) };
 }
 
 
