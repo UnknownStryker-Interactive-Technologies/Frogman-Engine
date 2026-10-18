@@ -110,6 +110,7 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 		m_renderer(),
 		m_window(),
 		m_game(),
+		m_reference_table( static_cast<var::int32>(base::get_program_options().get_max_concurrency()), framework_base::get_concurrent_memory_resource() ),
 		m_worlds(framework_base::get_large_memory_resource()),
 		m_current_world(),
 		m_should_tick(true),

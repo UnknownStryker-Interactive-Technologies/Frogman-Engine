@@ -1,5 +1,4 @@
-﻿#include <FE/entity.hpp>
-/*
+﻿/*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
 Licensed under the Frogman Engine License (the "License");
@@ -14,3 +13,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+#include <FE/entity.hpp>

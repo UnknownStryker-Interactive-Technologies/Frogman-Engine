@@ -29,5 +29,9 @@ void destruct(T* ptr_p)
 
 void load_reflection_data()
 {
-    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_system(FEWorldTag::_PongWorld, FE::SystemCallPhase::_EngineInitialization, &::hello_world);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().associate_global_system(FE::GlobalSystemCallPhase::_EngineInitialization, &::hello_world);
+    ::FE::framework::framework_base::get_framework().get_method_reflection().sort_global_systems_topologically(FE::GlobalSystemCallPhase::_EngineInitialization,
+        {
+        }
+    );
 }

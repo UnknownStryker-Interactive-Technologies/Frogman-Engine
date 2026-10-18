@@ -4,9 +4,14 @@
 // Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 #include <FE/framework/reflection/private/load_reflection_data.hxx>
 #include <FE/private/reflection_defines.hxx>
+#include <FE/prerequisites.hxx>
 #include <FE/framework.hxx>
 #include <FE/engine.hpp>
-#include <FE/prerequisites.hxx>
+#include <FE/app.hpp>
+#include <FE/async.hpp>
+#include <FE/memory.hpp>
+#include <FE/reflection.hpp>
+
 
 
 #undef _FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_

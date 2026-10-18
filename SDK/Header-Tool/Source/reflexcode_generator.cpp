@@ -834,9 +834,17 @@ namespace FHT::reflexcode_generator
 					l_generated_header += L"// Copyright © from 2024 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.\n";
 					l_generated_header += L"#include <FE/framework/reflection/private/load_reflection_data.hxx>\n";
 					l_generated_header += L"#include <FE/private/reflection_defines.hxx>\n";
+
+					l_generated_header += L"#include <FE/prerequisites.hxx>\n";
 					l_generated_header += L"#include <FE/framework.hxx>\n";
 					l_generated_header += L"#include <FE/engine.hpp>\n";
-					l_generated_header += L"#include <FE/prerequisites.hxx>\n\n\n";
+
+					l_generated_header += L"#include <FE/app.hpp>\n";
+					l_generated_header += L"#include <FE/async.hpp>\n";
+					l_generated_header += L"#include <FE/memory.hpp>\n";
+					l_generated_header += L"#include <FE/reflection.hpp>\n";
+
+					l_generated_header += L"\n\n\n";
 
 					l_generated_header += L"#undef _FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_\n";
 					l_generated_header += L"#define _FE_REFLECTION_FILE_PATH_HASH_GENERATED_BY_FHT_";

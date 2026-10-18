@@ -1097,14 +1097,18 @@ The FE_PROPERTY macro defines a class for property reflection that registers a s
 ensuring it is only registered once during the application's execution.
 */
 #define FE_PROPERTY(property_name)  \
-class property_metadata_##property_name \
+class property_metadata_##property_name : public ::FE::gc_metadata_base \
 { \
 public: \
 	_FE_FORCE_INLINE_ property_metadata_##property_name(auto* this_p) noexcept \
 	{ \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection() \
                                                 .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(this_p->property_name)> \
-                                                 ( *this_p, this_p->property_name, #property_name ) \
+                                                 ( *this_p, this_p->property_name, #property_name ); \
+												if constexpr (std::is_base_of_v<::FE::gc_base*, ::std::remove_const_t<decltype(this_p)>>) \
+												{ \
+													::FE::gc_metadata_base::add_watch(const_cast<FE::gc_base* const>(this_p), this_p->property_name); \
+												} \
 		); \
 	} \
 }; \

@@ -19,6 +19,8 @@ limitations under the License.
 #include <FE/framework.hxx>
 #include <FE/framework/smart_ptr.hxx>
 
+#include <FE/reference_table.hxx>
+
 #include <FE/renderer.hxx>
 #include <FE/window.hxx>
 
@@ -149,6 +151,7 @@ private:
     FE::smart_ptr<FE::renderer, FE::RefType::_Owner> m_renderer;
 	FE::smart_ptr<FE::window, FE::RefType::_Owner> m_window;
 	FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game;
+	FE::reference_table m_reference_table;
 
     using world_list =
         absl::flat_hash_map<world_tag_t, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
@@ -208,6 +211,9 @@ public:
 	_FE_FORCE_INLINE_ const FE::game& get_game() const noexcept { return *m_game; }
 	_FE_FORCE_INLINE_ FE::game& get_game() noexcept { return *m_game; }
 
+	_FE_FORCE_INLINE_ const FE::reference_table& get_reference_table() const noexcept { return m_reference_table; }
+	_FE_FORCE_INLINE_ FE::reference_table& get_reference_table() noexcept { return m_reference_table; }
+
 public:
     void enqueue_global_command(global_system system_p, GlobalSystemCallPhase phase_p) noexcept;
 
@@ -222,6 +228,19 @@ private:
 	void __read_froggy() noexcept;
 };
 #endif
+
+
+template <typename T, typename... Arguments>
+_FE_FORCE_INLINE_ FE::gc_ptr<T> _FE_VECTOR_CALL_ gcnew(std::pmr::memory_resource* const resource_p, Arguments&&... arguments_p) noexcept
+{
+    static_assert(std::is_reference_v<T> == false, "Static assertion failed: gc_ptr cannot hold a pointer to a reference type variable.");
+    static_assert(std::is_const_v<T> == false, "Static assertion failed: gc_ptr cannot hold a pointer to a const type variable.");
+    static_assert(std::is_base_of_v<FE::gc_base, std::remove_extent_t<T>> == true, "Static assertion failed: T must be derived from FE::gc_base.");
+
+    FE::gc_ptr<T> l_result(resource_p, std::forward<Arguments>(arguments_p)...);
+    FE::engine::get_engine().get_reference_table().__push_back(l_result.m_ptr.load(std::memory_order_acquire));
+    return l_result;
+}
 
 
 END_NAMESPACE

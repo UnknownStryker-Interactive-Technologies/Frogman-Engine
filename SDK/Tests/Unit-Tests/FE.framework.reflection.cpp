@@ -6,6 +6,8 @@
 
 #include <FE/framework.hxx>
 
+#include <FE/gc_ptr.hpp>
+
 // std
 #include <string>
 

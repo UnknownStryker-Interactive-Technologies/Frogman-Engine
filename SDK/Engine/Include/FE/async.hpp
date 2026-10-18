@@ -54,9 +54,6 @@ public:
 	{
 		return FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_tasks_async(tasks_p);
 	}
-
-	async() = delete;
-	~async() = delete;
 };
 
 
