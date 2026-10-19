@@ -493,7 +493,7 @@ namespace FHT::reflexcode_generator
 				{
 					FE_EXIT_IF
 					(
-						header_file._systems.find(identifier)->second._system_call_phase != header_file._systems.find(runs_before)->second._system_call_phase,
+						header_file._global_systems.find(identifier)->second._system_call_phase != header_file._global_systems.find(runs_before)->second._system_call_phase,
 						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
 						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
 					);
@@ -503,7 +503,7 @@ namespace FHT::reflexcode_generator
 				{
 					FE_EXIT_IF
 					(
-						header_file._systems.find(runs_after)->second._system_call_phase != header_file._systems.find(identifier)->second._system_call_phase,
+						header_file._global_systems.find(runs_after)->second._system_call_phase != header_file._global_systems.find(identifier)->second._system_call_phase,
 						FrogmanEngineHeaderToolError::_InputError_SyscallPhaseMismatch,
 						L"Frogman Engine Header Tool: system call phase mismatch detected in the dependency link."
 					);
