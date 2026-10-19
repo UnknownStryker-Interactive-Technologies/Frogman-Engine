@@ -19,6 +19,7 @@ limitations under the License.
 #include <FE/pair.hxx>
 
 #include <FE/framework/reflection.hxx>
+#include "error_code.hpp.generated.h"
 
 
 

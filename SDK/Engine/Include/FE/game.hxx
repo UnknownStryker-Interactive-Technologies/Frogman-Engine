@@ -38,13 +38,15 @@ class game
 
 	input_context_table m_input_contexts;
 
-	std::pmr::vector<typename input_context_table::iterator> m_current_input_contexts;
+	// The stack keeps pointers to the elements, not iterators: registering a context can rehash m_input_contexts, which
+	// invalidates its iterators, while node_hash_map keeps every element at the same address.
+	std::pmr::vector<typename input_context_table::value_type*> m_current_input_contexts;
 
 public:
 	game() noexcept;
 	~game() noexcept;
 
-	std::pmr::vector<typename input_context_table::iterator>& get_current_input_contexts() noexcept { return m_current_input_contexts; }
+	std::pmr::vector<typename input_context_table::value_type*>& get_current_input_contexts() noexcept { return m_current_input_contexts; }
 
 	input::context& register_input_context(input::context_id id_p) noexcept;
 	input::context* find_input_context(input::context_id id_p) noexcept;

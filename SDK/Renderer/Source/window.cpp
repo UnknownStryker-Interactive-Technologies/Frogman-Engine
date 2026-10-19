@@ -50,7 +50,9 @@ static void key_callback(GLFWwindow* const window_p, FE::int32 key_p, FE::int32 
 	(window_p);
 	var::boolean l_is_consumed = false;
 
-	for (auto context : FE::engine::get_engine().get_game().get_current_input_contexts())
+	// A callback can push or pop an input context, which changes the stack: go through a copy of it.
+	const auto l_contexts = FE::engine::get_engine().get_game().get_current_input_contexts();
+	for (auto context : l_contexts)
 	{
 		FE::input::keyboard& l_keyboard = context->second._keyboard;
 		FE::input::KeyState l_current_key_state = static_cast<FE::input::KeyState>(action_p);
@@ -1161,7 +1163,9 @@ static void mouse_button_callback(GLFWwindow* const window_p, FE::int32 button_p
 	(window_p);
 	var::boolean l_is_consumed = false;
 
-	for (auto context : FE::engine::get_engine().get_game().get_current_input_contexts())
+	// A callback can push or pop an input context, which changes the stack: go through a copy of it.
+	const auto l_contexts = FE::engine::get_engine().get_game().get_current_input_contexts();
+	for (auto context : l_contexts)
 	{
 		FE::input::mouse& l_mouse = context->second._mouse;
 		FE::input::ButtonState l_current_button_state = static_cast<FE::input::ButtonState>(action_p);
@@ -1252,7 +1256,9 @@ static void cursor_position_callback(GLFWwindow* const window_p, double x_p, dou
 	(window_p);
 	var::boolean l_is_consumed = false;
 
-	for (auto context : FE::engine::get_engine().get_game().get_current_input_contexts())
+	// A callback can push or pop an input context, which changes the stack: go through a copy of it.
+	const auto l_contexts = FE::engine::get_engine().get_game().get_current_input_contexts();
+	for (auto context : l_contexts)
 	{
 		FE::input::mouse& l_mouse = context->second._mouse;
 
@@ -1272,7 +1278,9 @@ static void scroll_callback(GLFWwindow* const window_p, double x_offset_p, doubl
 	(window_p);
 	var::boolean l_is_consumed = false;
 
-	for (auto context : FE::engine::get_engine().get_game().get_current_input_contexts())
+	// A callback can push or pop an input context, which changes the stack: go through a copy of it.
+	const auto l_contexts = FE::engine::get_engine().get_game().get_current_input_contexts();
+	for (auto context : l_contexts)
 	{
 		FE::input::mouse& l_mouse = context->second._mouse;
 
@@ -1292,7 +1300,9 @@ static void window_focus_callback(GLFWwindow* const window_p, FE::int32 focused_
 	(window_p);
 	if (focused_p == GLFW_FALSE)
 	{
-		for (auto context : FE::engine::get_engine().get_game().get_current_input_contexts())
+		// A callback can push or pop an input context, which changes the stack: go through a copy of it.
+		const auto l_contexts = FE::engine::get_engine().get_game().get_current_input_contexts();
+		for (auto context : l_contexts)
 		{
 			context->second.flush_pressed_keys();
 		}

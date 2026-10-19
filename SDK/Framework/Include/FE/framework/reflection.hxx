@@ -80,12 +80,12 @@ private:
 	using world_tag_t = var::uint16;
 
 	using world_system_table = absl::node_hash_map<	world_tag_t,
-												std::array<std::pmr::vector<system>, world_syscall_phase_count>,
+		std::array<std::pmr::vector<system>, world_syscall_phase_count>,
 
-												absl::DefaultHashContainerHash<world_tag_t>,
-												absl::DefaultHashContainerEq<world_tag_t>,
+		absl::DefaultHashContainerHash<world_tag_t>,
+		absl::DefaultHashContainerEq<world_tag_t>,
 
-												std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, world_syscall_phase_count>>>
+		std::pmr::polymorphic_allocator<std::pair<const world_tag_t, std::array<std::pmr::vector<system>, world_syscall_phase_count>>>
 	>;
 
 	using global_system_table = std::array<std::pmr::vector<global_system>, world_syscall_phase_count>;
@@ -283,9 +283,9 @@ private:
 	buffer_type m_buffer;
 	//input_buffer_iterator_type m_position;
 
-	absl::node_hash_map<std::pmr::string, instance_metadata, 
-		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>, 
-		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>, 
+	absl::node_hash_map<std::pmr::string, instance_metadata,
+		absl::lts_20260107::DefaultHashContainerHash<std::pmr::string>,
+		absl::lts_20260107::DefaultHashContainerEq<std::pmr::string>,
 		FE::cache_aligned_allocator<instance_metadata>
 	> m_instance_metadata_lut; // This is used to retrieve the instance metadata of a class instance.
 
@@ -311,11 +311,11 @@ public:
 	{
 		static_assert(std::is_class_v<C>, "Primitive data types cannot be registered as the host classes/structs.");
 		static_assert((std::is_reference_v<T> == false) && (std::is_pointer_v<T> == false), "Static assertion failure: raw pointers and references cannot be serialized nor deserialized.");
-		static_assert(! ((FE::is_trivial<T>::value == false) && (std::is_array_v<T>)), "Static assertion failure: fixed-sized non-trivial arrays are not serializable nor deserializable.");
+		static_assert(!((FE::is_trivial<T>::value == false) && (std::is_array_v<T>)), "Static assertion failure: fixed-sized non-trivial arrays are not serializable nor deserializable.");
 		FE_ASSERT(property_name_p.empty() != true, "Assertion failure: property name cannot be null.");
-		
+
 		property_metadata l_property_meta_data;
-		l_property_meta_data._is_container = FE::has_value_type_v<T>;
+		l_property_meta_data._is_container = FE::has_value_type_v<T> && (FE::is_trivial_v<T> == false); // A trivial container (std::array of trivial data) has no foreach task: it is stored as its bytes, like a C array.
 		static_assert(sizeof(T) <= FE::uint32_max, "Static assertion failure: the property instance size is too enormous.");
 		l_property_meta_data._size_in_byte = sizeof(T);
 		l_property_meta_data._offset_from_this = (reinterpret_cast<FE::byte* const>(&property_p) - reinterpret_cast<FE::byte*>(&host_class_instance_p));
@@ -334,40 +334,40 @@ public:
 		}
 
 
-		if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
-		{
-			// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
-			// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(Json::Value&, const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
-			framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const Json::Value&, void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
+			if constexpr ((FE::is_serializable<T>::value == true) && (FE::is_trivial<T>::value == false))
+			{
+				// This code section for serializing and deserializing a complicated multidimensional container and the third-party containers.
+				// It enables the system to serialize and deserialize a class instance without Frogman Engine reflection macro boilerplates.
+				framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(Json::Value&, const void*)> >(__get_serialization_task_name(l_property_meta_data._typename), &property_registry::__serialize_by_foreach_mutually_recursive<T>);
+				framework_base::get_framework().get_method_reflection().register_task< FE::cpp_style_task<property_registry, void(const Json::Value&, void*)> >(__get_deserialization_task_name(l_property_meta_data._typename), &property_registry::__deserialize_by_foreach_mutually_recursive<T>);
 
-			if constexpr (FE::has_value_type<T>::value == true)
-			{
-				if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
-					(FE::is_trivial<typename T::value_type>::value == false))
+				if constexpr (FE::has_value_type<T>::value == true)
 				{
-					__push_multidimensional_container_serialization_task_recursive<typename T::value_type>();
-					__push_multidimensional_container_deserialization_task_recursive<typename T::value_type>();
+					if constexpr ((FE::is_serializable<typename T::value_type>::value == true) &&
+						(FE::is_trivial<typename T::value_type>::value == false))
+					{
+						__push_multidimensional_container_serialization_task_recursive<typename T::value_type>();
+						__push_multidimensional_container_deserialization_task_recursive<typename T::value_type>();
+					}
+				}
+				else if constexpr (FE::has_element_type<T>::value == true)
+				{
+					if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
+						(FE::is_trivial<typename T::element_type>::value == false))
+					{
+						__push_multidimensional_container_serialization_task_recursive<typename T::element_type>();
+						__push_multidimensional_container_deserialization_task_recursive<typename T::element_type>();
+					}
 				}
 			}
-			else if constexpr (FE::has_element_type<T>::value == true)
-			{
-				if constexpr ((FE::is_serializable<typename T::element_type>::value == true) &&
-					(FE::is_trivial<typename T::element_type>::value == false))
-				{
-					__push_multidimensional_container_serialization_task_recursive<typename T::element_type>();
-					__push_multidimensional_container_deserialization_task_recursive<typename T::element_type>();
-				}
-			}
-		}
 
 		auto l_prop_registry_insertion_result = l_iterator->second.emplace(l_property_meta_data._offset_from_this, l_property_meta_data);
 		FE_EXIT_IF(l_prop_registry_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
-			    "FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
+			"FE Runtime Reflection Registration Error: failed to register a property metadata to the FE runtime reflection system.\nThis error might have ocurred in the FE runtime reflection metadata loader function, during the initialization.");
 
 
 		auto l_lut_it = m_instance_metadata_lut.find(l_host_class_instance_typename);
-		if ( l_lut_it == m_instance_metadata_lut.end() )
+		if (l_lut_it == m_instance_metadata_lut.end())
 		{
 			auto l_lut_insertion_result = m_instance_metadata_lut.emplace(l_host_class_instance_typename, instance_metadata());
 			FE_EXIT_IF(l_lut_insertion_result.second == false, FE::ErrorCode::_FatalError_TableInsertionFailure,
@@ -413,12 +413,12 @@ public:
 
 		Json::Value l_frogman_object(Json::objectValue); // .fo
 		Json::Value& l_fo_root = l_frogman_object;
-		
+
 		l_fo_root["version"] = version_p;
 		l_fo_root["typename"] = Json::Value(l_typename.data(), l_typename.data() + l_typename.size());
 
 		__serialize_mutually_recursive<T>(l_fo_root, object_p);
-	
+
 		Json::StreamWriterBuilder l_serializer;
 		l_serializer["indentation"] = "";
 		l_serializer["emitUTF8"] = true; // Keep the property byte sequences intact instead of re-encoding them as unicode escapes.
@@ -567,11 +567,12 @@ private:
 
 	void __push_parent_class_layers_by_typename_string_recursive(const std::string_view& typename_p) noexcept;
 
+	// Processes the class layers above stop_depth_p: 0 for the object being serialized, the depth before an element's layers for a container element.
 	template<typename T>
-	void __serialize_mutually_recursive(Json::Value& out_ret_buffer_p, const T& object_p) noexcept
+	void __serialize_mutually_recursive(Json::Value& out_ret_buffer_p, const T& object_p, FE::size stop_depth_p = 0) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (m_class_layer.empty() == false)
+		while (m_class_layer.size() > stop_depth_p)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_container)
 			{
@@ -581,7 +582,7 @@ private:
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
 
 				m_buffer.assign(reinterpret_cast<const char*>(&object_p) + l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator()),
-								__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte
+					__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte
 				);
 
 				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
@@ -589,7 +590,7 @@ private:
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
 				out_ret_buffer_p[m_key_buffer.c_str()] = Json::Value(m_buffer.data(), m_buffer.data() + m_buffer.size());
-				
+
 				// Look for the next registered property of the class.
 				++(__get_the_top_class_property_list_iterator());
 
@@ -651,11 +652,12 @@ private:
 		}
 	}
 
+	// Processes the class layers above stop_depth_p: 0 for the object being deserialized, the depth before an element's layers for a container element.
 	template<typename T>
-	void __deserialize_mutually_recursive(const Json::Value& frogman_object_p, T& out_object_p) noexcept
+	void __deserialize_mutually_recursive(const Json::Value& frogman_object_p, T& out_object_p, FE::size stop_depth_p = 0) noexcept
 	{
 		var::ptrdiff l_offset_from_the_upmost_base_class_instance = 0;
-		while (m_class_layer.empty() == false)
+		while (m_class_layer.size() > stop_depth_p)
 		{
 			switch (__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._is_container)
 			{
@@ -663,16 +665,16 @@ private:
 			{
 				// Check if the meta data is valid.
 				FE_NEGATIVE_ASSERT(__get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._size_in_byte == 0, "Assertion failed: unable to serialize a zero-byte property.");
-				
+
 				m_key_buffer = __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._host_name;
 				m_key_buffer += "::";
 				m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
 				FE_ASSERT(frogman_object_p.isMember(m_key_buffer.c_str()) == true, "Assertion failure: the serialization file does not contain the property: %s", m_key_buffer.c_str());
 				m_buffer = frogman_object_p[m_key_buffer.c_str()].asString();
-				::memcpy(	reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())), 
-							m_buffer.c_str(),
-							m_buffer.size()
+				::memcpy(reinterpret_cast<var::byte*>(&out_object_p) + (l_offset_from_the_upmost_base_class_instance + __get_memory_offset_of_the_property(__get_the_top_class_property_list_iterator())),
+					m_buffer.c_str(),
+					m_buffer.size()
 				);
 
 				// Look for the next registered property of the class layer.
@@ -769,12 +771,6 @@ private:
 			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
 
-			if constexpr (!((FE::is_serializable_primitive_v<typename Container::value_type> == false) && (FE::has_value_type_v<typename Container::value_type> == true)))
-			{
-				m_class_layer.pop_back(); // Pop the class layer of the container itself.
-			}
-
-
 			Json::Value& l_json_array = (out_ret_buffer_p[m_key_buffer.c_str()] = Json::Value(Json::arrayValue));
 			for (auto& element : *l_container)
 			{
@@ -792,11 +788,13 @@ private:
 						continue;
 					}
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
+					// The element's layers go on top of the host's; only they are processed for this element.
+					const FE::size l_host_depth = m_class_layer.size();
 					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_recursive<typename Container::value_type>();
 
 
-					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.append(Json::Value(Json::objectValue)), element);
+					__serialize_mutually_recursive<typename Container::value_type>(l_json_array.append(Json::Value(Json::objectValue)), element, l_host_depth);
 				}
 			}
 		}
@@ -809,7 +807,7 @@ private:
 	{
 		FE_ASSERT(data_p != nullptr, "Aborting the deserialization process: the pointer to the container is nullptr.");
 		static_assert(FE::is_serializable_v<Container>, "The container is unable to be deserialized: the container type is not supported and not compatible to this system.");
-		
+
 		Container* const l_container = static_cast<Container* const>(data_p);
 
 
@@ -836,12 +834,6 @@ private:
 			m_key_buffer += __get_metadata_of_the_property(__get_the_top_class_property_list_iterator())._name;
 
 
-			if constexpr (!((FE::is_serializable_primitive_v<typename Container::value_type> == false) && (FE::has_value_type_v<typename Container::value_type> == true)))
-			{
-				m_class_layer.pop_back(); // Pop the class layer of the container itself.
-			}
-
-
 			FE_ASSERT(frogman_object_p.isMember(m_key_buffer.c_str()) == true, "Assertion failure: the serialization file does not contain the property: %s", m_key_buffer.c_str());
 			const Json::Value& l_json_array = frogman_object_p[m_key_buffer.c_str()];
 			l_container->resize(l_json_array.size());
@@ -862,11 +854,13 @@ private:
 						continue;
 					}
 					// Push the member variable iterator and the class meta data to the class layer if the class meta data is found.
+					// The element's layers go on top of the host's; only they are processed for this element.
+					const FE::size l_host_depth = m_class_layer.size();
 					m_class_layer.emplace_back(&(l_search_result->second), l_search_result->second.begin());
 					__push_parent_class_layers_recursive<typename Container::value_type>();
 
 
-					__deserialize_mutually_recursive<typename Container::value_type>(element, *l_container_it);
+					__deserialize_mutually_recursive<typename Container::value_type>(element, *l_container_it, l_host_depth);
 				}
 				++l_container_it;
 			}
@@ -895,11 +889,11 @@ private:
 		absl::lts_20260107::DefaultHashContainerEq<std::string_view>,
 		std::pmr::polymorphic_allocator<std::pair<const std::string_view, std::array<var::byte, field_max_size>>>> m_string_to_value_map;
 
-	absl::flat_hash_map<std::array<var::byte, field_max_size>, std::string_view, 
-						absl::lts_20260107::DefaultHashContainerHash<std::array<var::byte, field_max_size>>,
-						absl::lts_20260107::DefaultHashContainerEq<std::array<var::byte, field_max_size>>,
-						std::pmr::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
-						> m_value_to_string_map;
+	absl::flat_hash_map<std::array<var::byte, field_max_size>, std::string_view,
+		absl::lts_20260107::DefaultHashContainerHash<std::array<var::byte, field_max_size>>,
+		absl::lts_20260107::DefaultHashContainerEq<std::array<var::byte, field_max_size>>,
+		std::pmr::polymorphic_allocator<std::pair<const std::array<var::byte, field_max_size>, std::string_view>>
+	> m_value_to_string_map;
 
 public:
 	enum_metadata(std::pmr::memory_resource* const resource_p) noexcept;
@@ -961,14 +955,14 @@ public:
 
 	template<typename EnumStruct>
 	void register_enum_struct(const std::string_view& enum_struct_name_p,
-		                      std::initializer_list< FE::pair<EnumStruct, FE::ASCII*> >&& field_list_p)
+		std::initializer_list< FE::pair<EnumStruct, FE::ASCII*> >&& field_list_p)
 	{
 		enum_metadata l_enum_struct_metadata(m_resource);
 		l_enum_struct_metadata.m_typename = enum_struct_name_p;
 		for (const FE::pair<EnumStruct, FE::ASCII*>& field : field_list_p)
 		{
 			FE_ASSERT(field._second != nullptr, "Assertion failed: nullptr cannot be mapped to an enum value.");
-			std::array<var::byte, enum_metadata::field_max_size> l_enum_bits{0};
+			std::array<var::byte, enum_metadata::field_max_size> l_enum_bits{ 0 };
 			FE::memcpy(l_enum_bits.data(), l_enum_bits.size(), &field._first, sizeof(EnumStruct));
 			l_enum_struct_metadata.m_string_to_value_map.emplace(field._second, l_enum_bits);
 			l_enum_struct_metadata.m_value_to_string_map.emplace(l_enum_bits, field._second);
@@ -989,7 +983,7 @@ END_NAMESPACE
 
 
 #ifdef FE_METHOD
-	#error FE_METHOD is a reserved Frogman Engine macro keyword.
+#error FE_METHOD is a reserved Frogman Engine macro keyword.
 #else
 /*
 The FE_METHOD macro defines a class for method reflection in a specified namespace
@@ -1040,7 +1034,7 @@ _FE_NO_UNIQUE_ADDRESS_ method_metadata_##method_name method_name##_method_meta =
 
 
 #ifdef FE_STATIC_METHOD
-	#error FE_STATIC_METHOD is a reserved Frogman Engine macro keyword.
+#error FE_STATIC_METHOD is a reserved Frogman Engine macro keyword.
 #else
 /*
 The FE_STATIC_METHOD macro defines a class that registers a static method for reflection in a specified namespace
@@ -1090,7 +1084,7 @@ _FE_NO_UNIQUE_ADDRESS_ static_method_metadata_##method_name method_name##_static
 
 
 #ifdef FE_PROPERTY
-	#error FE_PROPERTY is a reserved Frogman Engine macro keyword.
+#error FE_PROPERTY is a reserved Frogman Engine macro keyword.
 #else
 /*
 The FE_PROPERTY macro defines a class for property reflection that registers a specified property of a given type with the framework's property reflection system
@@ -1105,9 +1099,9 @@ public: \
 		FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, ::FE::framework::framework_base::get_framework().get_property_reflection() \
                                                 .register_property<::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>, decltype(this_p->property_name)> \
                                                  ( *this_p, this_p->property_name, #property_name ); \
-												if constexpr (std::is_base_of_v<::FE::gc_base*, ::std::remove_const_t<decltype(this_p)>>) \
+												if constexpr (std::is_base_of_v<::FE::gc_base, ::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>>) \
 												{ \
-													::FE::gc_metadata_base::add_watch(const_cast<FE::gc_base* const>(this_p), this_p->property_name); \
+													::FE::gc_metadata_base::add_watch(static_cast<::FE::gc_base*>(const_cast<::std::remove_const_t<::std::remove_pointer_t<decltype(this_p)>>*>(this_p)), this_p->property_name); \
 												} \
 		); \
 	} \

@@ -16,6 +16,24 @@ limitations under the License.
 */
 #include <FE/memory.hpp>
 
+#include <algorithm>
+
+
+
+
+namespace
+{
+	// flush_pressed_keys() calls the release callbacks, and a callback can push or pop an input context:
+	// the contexts are flushed from a copy of the stack (contexts_p is taken by value).
+	void flush_pressed_keys_of(const auto contexts_p) noexcept
+	{
+		for (auto l_context : contexts_p)
+		{
+			l_context->second.flush_pressed_keys();
+		}
+	}
+}
+
 
 
 
@@ -61,13 +79,10 @@ void FE::game::push_input_context(FE::input::context_id id_p) noexcept
 
 	// The real release of anything held right now would land on the new top of the stack,
 	// so every layer that received the press has to be closed out first.
-	for (auto l_context : m_current_input_contexts)
-	{
-		l_context->second.flush_pressed_keys();
-	}
+	flush_pressed_keys_of(m_current_input_contexts);
 
 	// front() is the top of the stack.
-	m_current_input_contexts.insert(m_current_input_contexts.begin(), l_iterator);
+	m_current_input_contexts.insert(m_current_input_contexts.begin(), &(*l_iterator));
 }
 
 void FE::game::pop_input_context() noexcept
@@ -77,11 +92,15 @@ void FE::game::pop_input_context() noexcept
 		return;
 	}
 
-	for (auto l_context : m_current_input_contexts)
+	const auto l_top = m_current_input_contexts.front();
+	flush_pressed_keys_of(m_current_input_contexts);
+
+	// The flush may have changed the stack: remove the context that was on top, wherever it is now.
+	const auto l_position = std::find(m_current_input_contexts.begin(), m_current_input_contexts.end(), l_top);
+	if (l_position != m_current_input_contexts.end())
 	{
-		l_context->second.flush_pressed_keys();
+		m_current_input_contexts.erase(l_position);
 	}
-	m_current_input_contexts.erase(m_current_input_contexts.begin());
 }
 
 void FE::game::pop_input_context(FE::input::context_id id_p) noexcept
@@ -90,11 +109,15 @@ void FE::game::pop_input_context(FE::input::context_id id_p) noexcept
 	{
 		if ((*l_iterator)->first == id_p)
 		{
-			for (auto l_context : m_current_input_contexts)
+			const auto l_target = *l_iterator;
+			flush_pressed_keys_of(m_current_input_contexts);
+
+			// The flush may have changed the stack and moved the context: find it again.
+			const auto l_position = std::find(m_current_input_contexts.begin(), m_current_input_contexts.end(), l_target);
+			if (l_position != m_current_input_contexts.end())
 			{
-				l_context->second.flush_pressed_keys();
+				m_current_input_contexts.erase(l_position);
 			}
-			m_current_input_contexts.erase(l_iterator);
 			return;
 		}
 	}
@@ -107,10 +130,7 @@ void FE::game::clear_input_contexts() noexcept
 		return;
 	}
 
-	for (auto l_context : m_current_input_contexts)
-	{
-		l_context->second.flush_pressed_keys();
-	}
+	flush_pressed_keys_of(m_current_input_contexts);
 	m_current_input_contexts.clear();
 }
 
