@@ -422,7 +422,7 @@ FE::int32 FE::engine::run()
 
 	m_processors->activate();
 
-	m_processors->schedule_task(l_renderer_main);
+	m_processors->schedule_thread_owning_task(l_renderer_main); // the renderer's loop does not return, so it gets a worker of its own
 
 
 	__game_main();

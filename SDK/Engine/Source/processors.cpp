@@ -28,6 +28,7 @@ BEGIN_NAMESPACE(FE)
 processors::processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, FE::size stack_size_p) noexcept
 	:	m_scheduler(),
 		m_max_workers(max_workers_p),
+		m_owned_workers(0),
 		m_fibers_per_thread(fibers_per_thread_p),
 		m_stack_size(stack_size_p),
 		m_should_terminate(false)
@@ -37,6 +38,7 @@ processors::processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, F
 	FE_ASSERT(stack_size_p >= FE::system_page_size, "Assertion Failure: the stack size must be greater than or equal to the system page size.");
 
 	m_scheduler = std::make_unique<fiber_scheduler[]>(max_workers_p);
+	m_anesthesia = std::make_unique<anesthesia[]>(max_workers_p);
 	FE_ASSERT(m_scheduler != nullptr);
 
 	for (var::int32 t = 0; t < max_workers_p; ++t)
@@ -53,43 +55,62 @@ processors::processors(FE::int32 max_workers_p, FE::int32 fibers_per_thread_p, F
 
 void processors::schedule_task(const task& task_p) noexcept
 {
+	FE_ASSERT(m_owned_workers < m_max_workers, "Assertion Failure: every worker thread is owned by a thread-owning task; no worker is left to run this task.");
+
 	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
 
-	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
+	FE::uint32 l_current_thread_index = m_owned_workers + (l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % (m_max_workers - m_owned_workers));
 	m_scheduler[ l_current_thread_index ].schedule_task(task_p);
-	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
+	__wake(l_current_thread_index); // resuscitate the thread from anesthesia
 }
 
 void processors::schedule_tasks(const fiber_flow& tasks_p) noexcept
 {
+	FE_ASSERT(m_owned_workers < m_max_workers, "Assertion Failure: every worker thread is owned by a thread-owning task; no worker is left to run this task.");
+
 	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
 
 	tasks_p.sort_tasks_topologically(fiber_flow::auth{});
-	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
+	FE::uint32 l_current_thread_index = m_owned_workers + (l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % (m_max_workers - m_owned_workers));
 	m_scheduler[l_current_thread_index].schedule_tasks( std::move( tasks_p.get_topologically_ordered_tasks(fiber_flow::auth{}) ) );
-	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
+	__wake(l_current_thread_index); // resuscitate the thread from anesthesia
 }
 
 
 FE::awaitable processors::schedule_task_async(const task& task_p) noexcept
 {
+	FE_ASSERT(m_owned_workers < m_max_workers, "Assertion Failure: every worker thread is owned by a thread-owning task; no worker is left to run this task.");
+
 	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
 
-	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
+	FE::uint32 l_current_thread_index = m_owned_workers + (l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % (m_max_workers - m_owned_workers));
 	FE::awaitable l_handle = m_scheduler[l_current_thread_index].schedule_task_async(task_p);
-	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
+	__wake(l_current_thread_index); // resuscitate the thread from anesthesia
 	return l_handle;
 }
 
 FE::awaitable processors::schedule_tasks_async(const fiber_flow& tasks_p) noexcept
 {
+	FE_ASSERT(m_owned_workers < m_max_workers, "Assertion Failure: every worker thread is owned by a thread-owning task; no worker is left to run this task.");
+
 	static std::atomic<var::uint32> l_s_next_thread_index = 0; // value overflow is intended
 
 	tasks_p.sort_tasks_topologically(fiber_flow::auth{});
-	FE::uint32 l_current_thread_index = l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % m_max_workers;
+	FE::uint32 l_current_thread_index = m_owned_workers + (l_s_next_thread_index.fetch_add(1, std::memory_order_acq_rel) % (m_max_workers - m_owned_workers));
 	FE::awaitable l_handle = m_scheduler[l_current_thread_index].schedule_tasks_async(std::move(tasks_p.get_topologically_ordered_tasks(fiber_flow::auth{})));
-	m_anesthetic_cv[l_current_thread_index].notify_one(); // resuscitate the thread from anesthesia
+	__wake(l_current_thread_index); // resuscitate the thread from anesthesia
 	return l_handle;
+}
+
+
+void processors::schedule_thread_owning_task(const task& task_p) noexcept
+{
+	FE_ASSERT(m_owned_workers + 1 < m_max_workers, "Assertion Failure: at least one worker thread must be left for the other tasks.");
+
+	FE::uint32 l_thread_index = static_cast<FE::uint32>(m_owned_workers);
+	++m_owned_workers;
+	m_scheduler[l_thread_index].schedule_task(task_p);
+	__wake(l_thread_index); // resuscitate the thread from anesthesia
 }
 
 
@@ -104,7 +125,6 @@ void processors::activate() noexcept
 	}
 
 	m_threads = std::make_unique<std::thread[]>(m_max_workers);
-	m_anesthetic_cv = std::make_unique<std::condition_variable[]>(m_max_workers);
 
 	for (var::int32 t = 0; t < m_max_workers; ++t)
 	{
@@ -115,13 +135,17 @@ void processors::activate() noexcept
 				m_scheduler[t].attach_to_current_thread();
 				while (m_should_terminate.load(std::memory_order_acquire) == false)
 				{
+					// Read the enqueue count before looking for a task: a task queued after execute() finds none raises it.
+					FE::uint64 l_enqueue_count = m_anesthesia[t]._enqueue_count.load(std::memory_order_acquire);
 					const int l_result = m_scheduler[t].execute();
 
 					if (l_result == _FE_FAILED_) // no tasks to activate, put the thread to sleep for a while to avoid busy-waiting.
 					{
-						std::mutex l_anesthetic;
-						std::unique_lock<std::mutex> l_lock(l_anesthetic);
-						m_anesthetic_cv[t].wait(l_lock);
+						std::unique_lock<std::mutex> l_lock(m_anesthesia[t]._lock);
+						m_anesthesia[t]._cv.wait(l_lock, [this, t, l_enqueue_count]() noexcept
+						{
+							return (m_anesthesia[t]._enqueue_count.load(std::memory_order_acquire) != l_enqueue_count) || m_should_terminate.load(std::memory_order_acquire);
+						});
 					}
 				}
 				m_scheduler[t].detach_from_current_thread(); // reset the thread-local pointer to the fiber scheduler before exiting the thread.
@@ -132,13 +156,28 @@ void processors::activate() noexcept
 }
 
 
+void processors::__wake(FE::uint32 thread_index_p) noexcept
+{
+	m_anesthesia[thread_index_p]._enqueue_count.fetch_add(1, std::memory_order_acq_rel);
+	{
+		// Taking the lock orders this notify after a sleeping thread's check: either the thread sees the new count, or it
+		// is already waiting and gets the notify.
+		std::lock_guard<std::mutex> l_lock(m_anesthesia[thread_index_p]._lock);
+	}
+	m_anesthesia[thread_index_p]._cv.notify_one();
+}
+
+
 void processors::terminate() noexcept
 {
 	m_should_terminate.store(true, std::memory_order_release);
 
 	for (var::int32 t = 0; t < m_max_workers; ++t)
 	{
-		m_anesthetic_cv[t].notify_all(); // resuscitate the thread from anesthesia
+		{
+			std::lock_guard<std::mutex> l_lock(m_anesthesia[t]._lock); // a thread between its check and its wait sees the flag
+		}
+		m_anesthesia[t]._cv.notify_all(); // resuscitate the thread from anesthesia
 	}
 
 	for (var::int32 t = 0; t < m_max_workers; ++t)
