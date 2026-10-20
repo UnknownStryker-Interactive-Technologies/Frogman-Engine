@@ -16,7 +16,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #include <FE/prerequisites.hxx>
-#include <memory>
+#include <FE/memory.hxx>
+
 #include <vector>
 
 
@@ -24,7 +25,9 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+
 STRUCT_FORWARD_DECLARATION(internal::gc_ptr, metadata);
+
 
 class gc_metadata_base;
 
@@ -32,7 +35,7 @@ class gc_base
 {
     friend class gc_metadata_base;
 
-	std::shared_ptr<std::pmr::vector<struct internal::gc_ptr::metadata*>> m_reference_edges;
+	FE::unique_ptr<std::pmr::vector<struct internal::gc_ptr::metadata*>> m_reference_edges;
 
 public:
     gc_base() noexcept;

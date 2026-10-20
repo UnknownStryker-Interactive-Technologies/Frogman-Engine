@@ -25,16 +25,10 @@ FE::reference_table::thread_reference_table::thread_reference_table(std::pmr::me
 }
 
 
-
-
 FE::reference_table::reference_table(FE::int32 max_concurrency_p, std::pmr::memory_resource* const resource_p) noexcept
     :   m_max_concurrency(max_concurrency_p),
         m_reference_tables(),
-	    m_cyclic_reference_killer(),
-        m_cyclic_reference_death_note(resource_p),
-        m_should_kill_cyclic_references(false),
-        m_killer_sleeper(),
-        m_condition_variable()
+        m_cyclic_reference_death_note(resource_p)
 {
     FE_ASSERT(max_concurrency_p > 0, "Assertion failed: max_concurrency must be greater than zero.");
     FE_ASSERT(resource_p != nullptr, "Assertion failed: cannot create a reference table with a null memory_resource.");
@@ -47,21 +41,9 @@ void FE::reference_table::investigate_cyclic_references(internal::gc_ptr::metada
 {
 }
 
-void FE::reference_table::fork_cyclic_reference_killer() noexcept
+void FE::reference_table::schedule_cyclic_reference_deletion() noexcept
 {
-	m_should_kill_cyclic_references.store(true, std::memory_order_release);
-	m_cyclic_reference_killer = std::thread(&FE::reference_table::__cyclic_reference_killer_main, this);
-}
 
-void FE::reference_table::join_cyclic_reference_killer() noexcept
-{
-	m_should_kill_cyclic_references.store(false, std::memory_order_release);
-    m_condition_variable.notify_all();
-
-	if (m_cyclic_reference_killer.joinable())
-	{
-		m_cyclic_reference_killer.join();
-	}
 }
 
 

@@ -20,7 +20,7 @@ limitations under the License.
 
 
 FE::gc_base::gc_base() noexcept
-	:	m_reference_edges(std::make_shared<std::pmr::vector<internal::gc_ptr::metadata*>>(FE::get_concurrent_memory_resource()))
+	:	m_reference_edges( FE::make_unique<std::pmr::vector<internal::gc_ptr::metadata*>>(FE::get_concurrent_memory_resource()) )
 {
 	m_reference_edges->reserve(64);
 }

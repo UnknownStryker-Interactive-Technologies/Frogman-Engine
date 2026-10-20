@@ -31,8 +31,6 @@ public class ProjectConfig
     public string? EncryptionMethod { get; set; } = null;
     public string? DecryptionMethod { get; set; } = null;
 
-    public uint GCIterationsPerFrame { get; set; } = 30;
-    public uint FramesPerReachabilityAnalysis { get; set; } = 60;
     public uint FiberStackSize { get; set; } = 1048576; // 1 MiB
     public uint FibersPerThread { get; set; } = 3;
 

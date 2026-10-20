@@ -61,13 +61,7 @@ private:
 
     FE::int32 m_max_concurrency;
     FE::unique_ptr<thread_reference_table[]> m_reference_tables;
-    
-    std::thread m_cyclic_reference_killer;
 	concurrency::concurrent_queue<internal::gc_ptr::metadata*, std::pmr::polymorphic_allocator<internal::gc_ptr::metadata*>> m_cyclic_reference_death_note;
-	
-    std::atomic_bool m_should_kill_cyclic_references;
-    std::mutex m_killer_sleeper;
-    std::condition_variable m_condition_variable;
 
 public:
     explicit reference_table(FE::int32 max_concurrency_p, std::pmr::memory_resource* const resource_p) noexcept;
@@ -77,24 +71,9 @@ public:
 
     void collect_garbage(FE::float64 percentage_p) noexcept;
 	void investigate_cyclic_references(internal::gc_ptr::metadata* const metadata_p, FE::uint32 max_steps_p) noexcept;
-	void fork_cyclic_reference_killer() noexcept;
-	void join_cyclic_reference_killer() noexcept;
+	void schedule_cyclic_reference_deletion() noexcept;
 
 private:
-    _FE_FORCE_INLINE_ void __cyclic_reference_killer_main() noexcept
-    {
-        while (m_should_kill_cyclic_references.load(std::memory_order_acquire) == true)
-        {
-            internal::gc_ptr::metadata* l_convict = nullptr;
-            if (m_cyclic_reference_death_note.try_pop(l_convict))
-            {
-                __collect(l_convict);
-                continue;
-            }
-            std::unique_lock<std::mutex> l_lock(m_killer_sleeper);
-            m_condition_variable.wait(l_lock);
-        }
-    }
 
     _FE_FORCE_INLINE_ void __push_back(internal::gc_ptr::metadata* const metadata_p) noexcept
     {
