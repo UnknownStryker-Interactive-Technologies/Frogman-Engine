@@ -96,6 +96,19 @@ public:
 	}
 
 
+	_FE_FORCE_INLINE_ reference operator[](size_type index_p) noexcept
+	{
+		FE_ASSERT(index_p < m_array_size, "FE::farray index is out of bounds.");
+		return base_type::operator[](index_p);
+	}
+
+	_FE_FORCE_INLINE_ const_reference operator[](size_type index_p) const noexcept
+	{
+		FE_ASSERT(index_p < m_array_size, "FE::farray index is out of bounds.");
+		return base_type::operator[](index_p);
+	}
+
+
 	_FE_FORCE_INLINE_ reference front() noexcept
 	{
 		return base_type::operator[](0);
