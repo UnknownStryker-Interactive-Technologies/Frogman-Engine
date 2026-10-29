@@ -1101,7 +1101,7 @@ public: \
                                                  ( *this_p, this_p->property_name, #property_name ); \
 												if constexpr (std::is_base_of_v<::FE::gc_base, ::std::remove_pointer_t<::std::remove_const_t<decltype(this_p)>>>) \
 												{ \
-													::FE::gc_metadata_base::add_watch(static_cast<::FE::gc_base*>(const_cast<::std::remove_const_t<::std::remove_pointer_t<decltype(this_p)>>*>(this_p)), this_p->property_name); \
+													::FE::gc_metadata_base::add_watch(const_cast<::std::remove_const_t<::std::remove_pointer_t<decltype(this_p)>>*>(this_p), this_p->property_name); \
 												} \
 		); \
 	} \

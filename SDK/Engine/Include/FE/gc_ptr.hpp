@@ -1,5 +1,5 @@
-﻿#ifndef _FROGMAN_ENGINE_GC_PTR
-#define _FROGMAN_ENGINE_GC_PTR
+﻿#ifndef _FROGMAN_ENGINE_GC_PTR_
+#define _FROGMAN_ENGINE_GC_PTR_
 /*
 Copyright © from 2022 to present, UNKNOWN STRYKER (Hojin Lee / Joey). All Rights Reserved.
 
@@ -18,6 +18,8 @@ limitations under the License.
 #include <FE/prerequisites.hxx>
 #include <FE/gc_base.hpp>
 
+#include <FE/thread_id.hxx>
+
 #include <atomic>
 #include <memory_resource>
 #include <type_traits>
@@ -28,19 +30,27 @@ limitations under the License.
 
 BEGIN_NAMESPACE(FE)
 
+
 class gc_metadata_base;
 
 namespace internal::gc_ptr
 {
-    struct metadata
+#pragma warning(push)
+#pragma warning(disable: 4324)
+    struct alignas(FE::CPU_L1_cache_line::size) metadata
     {
         FE::gc_base* _data;
+        std::atomic_bool _is_cyclic_garbage;
+        std::atomic_bool _is_garbage;
+		std::atomic_bool _is_under_concurrent_inspection;
+        std::atomic_int64_t _reference_count;
         std::pmr::memory_resource* const _resource;
-        FE::uint32 _length;
-        FE::uint32 _sizeofT;
-        FE::uint32 _alignofT;
-        std::atomic_int32_t _reference_count;
+        FE::uint64 _length;
+        FE::uint64 _sizeofT;
+        FE::uint64 _alignofT;
     };
+    static_assert(alignof(metadata) == FE::CPU_L1_cache_line::size);
+#pragma warning(pop)
 
     _FE_FORCE_INLINE_ constexpr var::size align_up(FE::size size_in_bytes_p, FE::size alignment_in_bytes_p) noexcept
     {
@@ -48,9 +58,17 @@ namespace internal::gc_ptr
     }
 }
 
+class gc_ptr_base
+{
+    friend class reference_table;
+protected:
+	virtual internal::gc_ptr::metadata* __get_control_block() const noexcept = 0;
+	virtual void __release() noexcept = 0;
+};
+
 
 template <typename T>
-class gc_ptr
+class gc_ptr : public gc_ptr_base
 {
     template <typename U>
     friend class gc_ptr;
@@ -209,9 +227,14 @@ public:
     }
 
 private:
-	control_block_type* __get_control_block() const noexcept
+	virtual control_block_type* __get_control_block() const noexcept override
 	{
 		return m_ptr.load(std::memory_order_acquire);
+	}
+
+	virtual void __release() noexcept override
+	{
+		reset();
 	}
 
     template <typename... Arguments>
@@ -229,7 +252,19 @@ private:
 
         T* const l_data = ::new(l_alloc_result) T( std::forward<Arguments>(arguments_p)... );
 
-        return ::new(static_cast<var::byte*>(l_alloc_result) + l_metadata_offset_in_bytes) control_block_type(l_data, resource_p, 1, static_cast<var::uint32>(sizeof(T)), static_cast<var::uint32>(alignof(T)), 1);
+        return ::new(static_cast<var::byte*>(l_alloc_result) + l_metadata_offset_in_bytes) 
+            control_block_type
+            (
+                l_data,
+                false,
+                false,
+                false,
+                1,
+                resource_p,
+                1,
+                sizeof(T),
+                alignof(T)
+            );
     }
 
     static control_block_type* __increment_reference_count(control_block_type* const control_block_p) noexcept
@@ -239,7 +274,7 @@ private:
             return nullptr;
         }
 
-        _FE_MAYBE_UNUSED_ FE::int32 l_previous_reference_count = control_block_p->_reference_count.fetch_add(1, std::memory_order_acq_rel);
+        _FE_MAYBE_UNUSED_ const auto l_previous_reference_count = control_block_p->_reference_count.fetch_add(1, std::memory_order_acq_rel);
         FE_ASSERT(l_previous_reference_count > 0, "Assertion failed: cannot reference a dead gc object.");
         return control_block_p;
     }
@@ -251,7 +286,7 @@ private:
             return;
         }
 
-        _FE_MAYBE_UNUSED_ FE::int32 l_previous_reference_count = control_block_p->_reference_count.fetch_sub(1, std::memory_order_acq_rel);
+        _FE_MAYBE_UNUSED_ const auto l_previous_reference_count = control_block_p->_reference_count.fetch_sub(1, std::memory_order_acq_rel);
         FE_ASSERT(l_previous_reference_count > 0, "Something went wrong with the Frogman Engine gc_ptr atomic counter.");
     }
 
@@ -264,11 +299,11 @@ private:
         return static_cast<T*>(control_block_p->_data);
     }
 };
-static_assert(sizeof(FE::gc_ptr<FE::gc_base>) == 8, "Static assertion failed: FE::gc_ptr<T> must be an 8-byte smart pointer.");
+static_assert(sizeof(FE::gc_ptr<FE::gc_base>) == 16, "Static assertion failed: FE::gc_ptr<T> must be an 16-byte smart pointer.");
 
 
 template <typename T>
-class gc_ptr<T[]>
+class gc_ptr<T[]> : public gc_ptr_base
 {
     template <typename U, typename... Arguments>
     friend FE::gc_ptr<U> _FE_VECTOR_CALL_ gcnew(std::pmr::memory_resource* const resource_p, Arguments&&... arguments_p) noexcept;
@@ -396,10 +431,15 @@ public:
     }
 
 private:
-    control_block_type* __get_control_block() const noexcept
+	virtual control_block_type* __get_control_block() const noexcept override
     {
         return m_ptr.load(std::memory_order_acquire);
     }
+
+	virtual void __release() noexcept override
+	{
+		reset();
+	}
 
     template <typename... Arguments>
     static control_block_type* _FE_VECTOR_CALL_ __allocate_new_block(std::pmr::memory_resource* const resource_p, FE::size length_p, const Arguments&... arguments_p) noexcept
@@ -423,7 +463,19 @@ private:
             ::new(l_data + i) T( arguments_p... );
         }
 
-        return ::new(static_cast<var::byte*>(l_alloc_result) + l_metadata_offset_in_bytes) control_block_type(l_data, resource_p, static_cast<var::uint32>(length_p), static_cast<var::uint32>(sizeof(T)), static_cast<var::uint32>(alignof(T)), 1);
+        return ::new(static_cast<var::byte*>(l_alloc_result) + l_metadata_offset_in_bytes) 
+            control_block_type
+            (
+                l_data, 
+                false,
+                false,
+                false,
+                1,
+                resource_p, 
+                length_p, 
+                sizeof(T), 
+                alignof(T)
+            );
     }
 
     static control_block_type* __increment_reference_count(control_block_type* const control_block_p) noexcept
@@ -433,7 +485,7 @@ private:
             return nullptr;
         }
 
-        _FE_MAYBE_UNUSED_ FE::int32 l_previous_reference_count = control_block_p->_reference_count.fetch_add(1, std::memory_order_acq_rel);
+        _FE_MAYBE_UNUSED_ const auto l_previous_reference_count = control_block_p->_reference_count.fetch_add(1, std::memory_order_acq_rel);
         FE_ASSERT(l_previous_reference_count > 0, "Assertion failed: cannot reference a dead gc object.");
         return control_block_p;
     }
@@ -445,7 +497,7 @@ private:
             return;
         }
 
-        _FE_MAYBE_UNUSED_ FE::int32 l_previous_reference_count = control_block_p->_reference_count.fetch_sub(1, std::memory_order_acq_rel);
+        _FE_MAYBE_UNUSED_ const auto l_previous_reference_count = control_block_p->_reference_count.fetch_sub(1, std::memory_order_acq_rel);
         FE_ASSERT(l_previous_reference_count > 0, "Something went wrong with the Frogman Engine gc_ptr atomic counter.");
     }
 
@@ -458,7 +510,6 @@ private:
         return static_cast<T*>(control_block_p->_data);
     }
 };
-static_assert(sizeof(FE::gc_ptr<FE::gc_base[]>) == 8, "Static assertion failed: FE::gc_ptr<T[]> must be an 8-byte smart pointer.");
 
 
 
@@ -476,15 +527,26 @@ template<typename T>
 _FE_MAYBE_UNUSED_ constexpr inline bool is_gc_ptr_v = is_gc_ptr<T>::value;
 
 
+namespace internal::gc_ptr
+{
+    // offsets from the FE::gc_base subobject to the gc_ptr properties that Host declares itself. filled by add_watch inside FE_PROPERTY's FE_DO_ONCE.
+    template <class Host>
+    inline std::pmr::vector<var::int64>& own_gc_ptr_offsets() noexcept
+    {
+        static std::pmr::vector<var::int64> s_offsets;
+        return s_offsets;
+    }
+}
+
 class gc_metadata_base
 {
 public:
-    template <typename GCPtr>
-    static void add_watch(FE::gc_base* const host_p, GCPtr& watched_object_p) noexcept
+    template <class Host, typename GCPtr>
+    static void add_watch(Host* const host_p, GCPtr& watched_object_p) noexcept
     {
         if constexpr (FE::is_gc_ptr_v<GCPtr> == true)
         {
-            host_p->m_reference_edges->emplace_back(watched_object_p.__get_control_block());
+            internal::gc_ptr::own_gc_ptr_offsets<Host>().push_back( reinterpret_cast<var::byte*>(static_cast<FE::gc_ptr_base*>(&watched_object_p)) - reinterpret_cast<var::byte*>(static_cast<FE::gc_base*>(host_p)) );
         }
     }
 };

@@ -80,6 +80,7 @@ class engine_program_options : public FE::framework::program_option
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_fullscreen;
 	FE::pair<::FE::ASCII*, var::boolean> m_enable_vsync;
     FE::pair<::FE::ASCII*, var::boolean> m_recompile_shaders;
+	FE::pair<::FE::ASCII*, var::float64> m_gc_per_frame;
 
 public:
     engine_program_options(FE::int32 argc_p, FE::ASCII** argv_p) noexcept;
@@ -93,6 +94,9 @@ public:
 
 	FE::boolean is_recompile_shaders_enabled() const noexcept;
 	FE::ASCII* view_recompile_shaders_title() const noexcept;
+
+    FE::float64 get_garbage_collections_per_frame() const noexcept;
+    FE::ASCII* view_garbage_collections_per_frame_title() const noexcept;
 };
 
 
@@ -146,12 +150,15 @@ private:
 
     FE::engine_info m_engine_info;
     FE::project_config m_project_config;
-    // Game Thread / Render Thread(Culling) / RHI Thread / Async Task Thread
+    // Game Thread / Render Thread(Culling) / RHI Thread / Async Task Threads
     FE::smart_ptr<FE::processors, FE::RefType::_Owner> m_processors;
+	FE::smart_ptr<FE::fiber_scheduler, FE::RefType::_Owner> m_game_fiber;
+    FE::smart_ptr<FE::reference_table, FE::RefType::_Owner> m_reference_table;
+    var::float64 m_gc_delta;
+
     FE::smart_ptr<FE::renderer, FE::RefType::_Owner> m_renderer;
 	FE::smart_ptr<FE::window, FE::RefType::_Owner> m_window;
 	FE::smart_ptr<FE::game, FE::RefType::_Owner> m_game;
-	FE::reference_table m_reference_table;
 
     using world_list =
         absl::flat_hash_map<world_tag_t, FE::smart_ptr<FE::world, FE::RefType::_Owner>,
@@ -190,7 +197,7 @@ public:
     _FE_FORCE_INLINE_ FE::project_config& get_project_config(_FE_MAYBE_UNUSED_ const auth&) noexcept { return m_project_config; }
 
     _FE_FORCE_INLINE_ const FE::processors& get_processors() const noexcept { return *m_processors; }
-    _FE_FORCE_INLINE_ FE::processors& get_processors(_FE_MAYBE_UNUSED_ const auth&) noexcept { return *m_processors; }
+    _FE_FORCE_INLINE_ FE::processors& get_processors() noexcept { return *m_processors; }
     // excludes the main thread from the count
 	_FE_FORCE_INLINE_ FE::int32 count_processors() const noexcept { return base::get_program_options().get_max_concurrency() - 1; } 
     void terminate_all_processors() noexcept;
@@ -211,8 +218,10 @@ public:
 	_FE_FORCE_INLINE_ const FE::game& get_game() const noexcept { return *m_game; }
 	_FE_FORCE_INLINE_ FE::game& get_game() noexcept { return *m_game; }
 
-	_FE_FORCE_INLINE_ const FE::reference_table& get_reference_table() const noexcept { return m_reference_table; }
-	_FE_FORCE_INLINE_ FE::reference_table& get_reference_table() noexcept { return m_reference_table; }
+	_FE_FORCE_INLINE_ const FE::reference_table& get_reference_table() const noexcept { return *m_reference_table; }
+	_FE_FORCE_INLINE_ FE::reference_table& get_reference_table() noexcept { return *m_reference_table; }
+
+    _FE_FORCE_INLINE_ void __set_game_gc_delta_time(FE::float64 delta_p) noexcept { m_gc_delta = delta_p; }
 
 public:
     void enqueue_global_command(global_system system_p, GlobalSystemCallPhase phase_p) noexcept;
@@ -222,7 +231,8 @@ private:
     virtual FE::int32 run() override;
     virtual FE::int32 shutdown() override;
 
-	void __game_main() noexcept;
+    static void __game_gc_main(void* this_p) noexcept;
+	static void __game_main(void* this_p) noexcept;
 
 private:
 	void __read_froggy() noexcept;
@@ -238,6 +248,8 @@ _FE_FORCE_INLINE_ FE::gc_ptr<T> _FE_VECTOR_CALL_ gcnew(std::pmr::memory_resource
     static_assert(std::is_base_of_v<FE::gc_base, std::remove_extent_t<T>> == true, "Static assertion failed: T must be derived from FE::gc_base.");
 
     FE::gc_ptr<T> l_result(resource_p, std::forward<Arguments>(arguments_p)...);
+    FE_DO_ONCE(_DO_ONCE_PER_APP_EXECUTION_, FE_ASSERT(l_result.m_ptr.load(std::memory_order_acquire)->_data->get_type_hash() == FE::framework::reflection::type_id<std::remove_extent_t<T>>().hash_code(), "Assertion failed: get_type_hash() of T must return FE::framework::reflection::type_id<T>().hash_code().");
+                                            FE::engine::get_engine().get_reference_table().__register_gc_ptr_offsets<std::remove_extent_t<T>>(FE::framework::reflection::type_id<std::remove_extent_t<T>>().hash_code()););
     FE::engine::get_engine().get_reference_table().__push_back(l_result.m_ptr.load(std::memory_order_acquire));
     return l_result;
 }

@@ -41,7 +41,8 @@ FE::engine_program_options::engine_program_options(FE::int32 argc_p, FE::ASCII**
 	:	base(argc_p, argv_p),
 		m_enable_fullscreen( "-enable-fullscreen", false ),
 		m_enable_vsync("-enable-vsync", false),
-		m_recompile_shaders("-recompile-shaders", false)
+		m_recompile_shaders("-recompile-shaders", false),
+		m_gc_per_frame("-garbage-collections-per-frame", 0)
 {
 	for (var::int32 i = 0; i < argc_p; ++i)
 	{
@@ -60,6 +61,13 @@ FE::engine_program_options::engine_program_options(FE::int32 argc_p, FE::ASCII**
 		if (algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_recompile_shaders._first) != std::nullopt)
 		{
 			m_recompile_shaders._second = true;
+			continue;
+		}
+
+		auto l_opt_gc_per_frame = algorithm::string::find_the_first<var::ASCII>(argv_p[i], m_gc_per_frame._first);
+		if (l_opt_gc_per_frame != std::nullopt && argv_p[i][l_opt_gc_per_frame->_end] == '=')
+		{	
+			m_gc_per_frame._second = algorithm::utility::string_to_float(argv_p[i] + l_opt_gc_per_frame->_end + 1)._value;
 			continue;
 		}
 	}
@@ -95,6 +103,16 @@ FE::ASCII* FE::engine_program_options::view_recompile_shaders_title() const noex
 	return m_recompile_shaders._first;
 }
 
+FE::float64 FE::engine_program_options::get_garbage_collections_per_frame() const noexcept
+{
+	return m_gc_per_frame._second;
+}
+
+FE::ASCII* FE::engine_program_options::view_garbage_collections_per_frame_title() const noexcept
+{
+	return m_gc_per_frame._first;
+}
+
 
 FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 	:	base(std::move(options_p)),
@@ -107,10 +125,14 @@ FE::engine::engine(std::unique_ptr<engine_program_options> options_p) noexcept
 		m_project_config(),
 
 		m_processors(),
+		m_game_fiber(),
+		m_reference_table(),
+		m_gc_delta(0.0),
+
 		m_renderer(),
 		m_window(),
 		m_game(),
-		m_reference_table( static_cast<var::int32>(base::get_program_options().get_max_concurrency()), framework_base::get_concurrent_memory_resource() ),
+
 		m_worlds(framework_base::get_large_memory_resource()),
 		m_current_world(),
 		m_should_tick(true),
@@ -211,13 +233,26 @@ FE::int32 FE::engine::launch(FE::int32 argc_p, FE::ASCII** argv_p)
 	m_processors = FE::make_owner<FE::processors>(framework_base::get_large_memory_resource(),
 		count_processors(),
 		m_project_config._fibers_per_thread,
-		m_project_config._fiber_stack_size);
+		m_project_config._fiber_stack_size
+	);
+
+	m_game_fiber = FE::make_owner<FE::fiber_scheduler>(framework_base::get_large_memory_resource());
+	m_game_fiber->create_fiber(m_project_config._fiber_stack_size); // game fiber
+	if (get_program_options().get_garbage_collections_per_frame() > 0)
+	{
+		m_game_fiber->create_fiber(m_project_config._fiber_stack_size); // gc fiber
+	}
+	m_game_fiber->attach_to_current_thread();
+	m_reference_table = FE::make_owner<FE::reference_table>(framework_base::get_large_memory_resource(), 
+															static_cast<var::int32>(base::get_program_options().get_max_concurrency()), 
+															framework_base::get_concurrent_memory_resource()
+	);
 
 	m_window = FE::make_owner<FE::window>(framework_base::get_large_memory_resource(), m_project_config._window_config);
-
 	m_renderer = FE::make_owner<FE::renderer>(framework_base::get_large_memory_resource(), m_processors, m_window);
 
 	m_game = FE::make_owner<FE::game>(framework_base::get_large_memory_resource());
+
 	return 0;
 }
 
@@ -318,7 +353,7 @@ FE::int32 FE::engine::run()
 
 		l_future.wait();
 		l_taskflow.clear();
-	}	// l_intro destructs → MF::Shutdown → HWND free for the D3D backend
+	}	
 
 	FE::internal::renderer::__build_and_traverse_include_dependency_graph(l_token_lists, l_shader_headers, l_shaders);
 
@@ -377,6 +412,10 @@ FE::int32 FE::engine::run()
 				l_shader_compile_splash_duration.start_clock();
 			}
 
+			if (l_splash_iterator == get_project_config()._window_config._shader_compile_splash_images.cend())
+			{
+				break;
+			}
 			const FE::image& l_image = *l_splash_iterator;
 			ImGuiIO& l_io = ImGui::GetIO();
 
@@ -415,18 +454,19 @@ FE::int32 FE::engine::run()
 	}
 
 
-	FE::task l_renderer_main = {};
-	l_renderer_main._system = &FE::renderer::__main;
-	l_renderer_main._task_type = TaskPriority::_Critical;
-	l_renderer_main._argument = nullptr;
-
+	FE::task l_task = {};
+	l_task._system = &FE::renderer::__main;
+	l_task._task_type = TaskPriority::_Critical;
+	l_task._argument = nullptr;
 	m_processors->activate();
+	m_processors->schedule_thread_owning_task(l_task); 
 
-	m_processors->schedule_thread_owning_task(l_renderer_main); // the renderer's loop does not return, so it gets a worker of its own
 
-
-	__game_main();
-
+	l_task._system = &FE::engine::__game_main;
+	l_task._task_type = TaskPriority::_Critical;
+	l_task._argument = this;
+	m_game_fiber->schedule_task(l_task);
+	m_game_fiber->execute();
 	return 0;
 }
 
@@ -437,22 +477,51 @@ FE::int32 FE::engine::shutdown()
 }
 
 
-void FE::engine::__game_main() noexcept
+void FE::engine::__game_gc_main(void* this_p) noexcept
 {
-	for (auto sys : m_method_reflection.get_global_systems(_EngineInitialization))
+	FE_ASSERT(this_p != nullptr, "Engine pointer is null.");
+	FE::engine* l_engine = static_cast<FE::engine*>(this_p);
+
+	while (l_engine->m_should_tick.load(std::memory_order_acquire))
+	{
+		FE::float64 l_garbage_collections_per_frame = l_engine->get_program_options().get_garbage_collections_per_frame();
+		
+		l_engine->m_reference_table->collect_garbages(l_garbage_collections_per_frame);
+
+		FE::fiber_scheduler::yield();
+	}
+}
+
+void FE::engine::__game_main(void* this_p) noexcept
+{
+	FE_ASSERT(this_p != nullptr, "Engine pointer is null.");
+	FE::engine* l_engine = static_cast<FE::engine*>(this_p);
+
+
+	if (l_engine->get_program_options().get_garbage_collections_per_frame() > 0)
+	{
+		FE::task l_task = {};
+		l_task._system = &FE::engine::__game_gc_main;
+		l_task._task_type = TaskPriority::_Critical;
+		l_task._argument = l_engine;
+		l_engine->m_game_fiber->schedule_task(l_task);
+	}
+
+
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_EngineInitialization))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_engine_initialization_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_engine_initialization_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
 
-	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceInitialization))
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_GameInstanceInitialization))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_game_instance_initialization_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_game_instance_initialization_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
@@ -460,10 +529,10 @@ void FE::engine::__game_main() noexcept
 
 	FE::world::create_world(0);
 	FE::world::enter_world(0);
-	auto l_current_world = m_current_world;
+	auto l_current_world = l_engine->m_current_world;
 
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
 	{
 		sys(*l_current_world);
 	}
@@ -472,7 +541,7 @@ void FE::engine::__game_main() noexcept
 		l_deferred_sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 	{
 		sys(*l_current_world);
 	}
@@ -484,16 +553,16 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceBegin))
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_GameInstanceBegin))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_game_instance_begin_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_game_instance_begin_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 	{
 		sys(*l_current_world);
 	}
@@ -508,35 +577,36 @@ void FE::engine::__game_main() noexcept
 	FE::clock l_delta_clock = {};
 	FE::clock l_physics_delta_clock = {};
 	l_physics_delta_clock.start_clock();
+	var::float64 l_physics_lag = 0.0; 
 	var::uint64 l_frame_counter = 0;
-	while (m_should_tick.load(std::memory_order_acquire))
+	while (l_engine->m_should_tick.load(std::memory_order_acquire))
 	{
 		l_delta_clock.start_clock();
 		glfwPollEvents();
 
-		for (auto sys : m_method_reflection.get_global_systems(_PreGameInstanceTick))
+		for (auto sys : l_engine->m_method_reflection.get_global_systems(_PreGameInstanceTick))
 		{
 			sys();
 		}
-		for (global_system l_deferred_sys{}; m_deferred_pre_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		for (global_system l_deferred_sys{}; l_engine->m_deferred_pre_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
 		{
 			l_deferred_sys();
 		}
 
-		for (auto sys : m_method_reflection.get_global_systems(_GameInstanceTick))
+		for (auto sys : l_engine->m_method_reflection.get_global_systems(_GameInstanceTick))
 		{
 			sys();
 		}
-		for (global_system l_deferred_sys{}; m_deferred_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		for (global_system l_deferred_sys{}; l_engine->m_deferred_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
 		{
 			l_deferred_sys();
 		}
 
-		for (auto sys : m_method_reflection.get_global_systems(_PostGameInstanceTick))
+		for (auto sys : l_engine->m_method_reflection.get_global_systems(_PostGameInstanceTick))
 		{
 			sys();
 		}
-		for (global_system l_deferred_sys{}; m_deferred_post_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
+		for (global_system l_deferred_sys{}; l_engine->m_deferred_post_game_instance_tick_cmd_queue.try_pop(l_deferred_sys);)
 		{
 			l_deferred_sys();
 		}
@@ -544,7 +614,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreWorldTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreWorldTick))
 		{
 			sys(*l_current_world);
 		}
@@ -553,7 +623,7 @@ void FE::engine::__game_main() noexcept
 			l_deferred_sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldTick))
 		{
 			sys(*l_current_world);
 		}
@@ -562,7 +632,7 @@ void FE::engine::__game_main() noexcept
 			l_deferred_sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostWorldTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostWorldTick))
 		{
 			sys(*l_current_world);
 		}
@@ -574,7 +644,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreEntityTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreEntityTick))
 		{
 			sys(*l_current_world);
 		}
@@ -583,7 +653,7 @@ void FE::engine::__game_main() noexcept
 			l_deferred_sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EntityTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EntityTick))
 		{
 			sys(*l_current_world);
 		}
@@ -592,7 +662,7 @@ void FE::engine::__game_main() noexcept
 			l_deferred_sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostEntityTick))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostEntityTick))
 		{
 			sys(*l_current_world);
 		}
@@ -605,10 +675,14 @@ void FE::engine::__game_main() noexcept
 
 
 		l_physics_delta_clock.end_clock();
-		if (l_physics_delta_clock.get_delta_milliseconds() >= l_current_world->fixed_physics_delta_milliseconds())
+		l_physics_lag += l_physics_delta_clock.get_delta_milliseconds();
+		l_physics_delta_clock.start_clock();
+		const FE::float64 l_physics_step = l_current_world->fixed_physics_delta_milliseconds();
+		l_physics_lag = std::min(l_physics_lag, l_physics_step * 5.0);
+		while (l_physics_lag + l_physics_step * 0.25 >= l_physics_step)
 		{
-			l_physics_delta_clock.start_clock();
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PrePhysics))
+			l_physics_lag -= l_physics_step;
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PrePhysics))
 			{
 				sys(*l_current_world);
 			}
@@ -617,7 +691,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _StartPhysics))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _StartPhysics))
 			{
 				sys(*l_current_world);
 			}
@@ -626,7 +700,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _Physics))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _Physics))
 			{
 				sys(*l_current_world);
 			}
@@ -635,7 +709,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EndPhysics))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _EndPhysics))
 			{
 				sys(*l_current_world);
 			}
@@ -644,7 +718,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostPhysics))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostPhysics))
 			{
 				sys(*l_current_world);
 			}
@@ -657,7 +731,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostUpdateWork))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostUpdateWork))
 		{
 			sys(*l_current_world);
 		}
@@ -669,7 +743,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreRenderQueueCommit))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PreRenderQueueCommit))
 		{
 			sys(*l_current_world);
 		}
@@ -678,7 +752,7 @@ void FE::engine::__game_main() noexcept
 			l_deferred_sys(*l_current_world);
 		}
 
-		for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostRenderQueueCommit))
+		for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _PostRenderQueueCommit))
 		{
 			sys(*l_current_world);
 		}
@@ -690,9 +764,9 @@ void FE::engine::__game_main() noexcept
 
 
 
-		if (l_current_world != m_current_world)
+		if (l_current_world != l_engine->m_current_world)
 		{
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
 			{
 				sys(*l_current_world);
 			}
@@ -701,7 +775,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
 			{
 				sys(*l_current_world);
 			}
@@ -710,7 +784,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 			{
 				sys(*l_current_world);
 			}
@@ -720,10 +794,10 @@ void FE::engine::__game_main() noexcept
 			}
 
 
-			l_current_world = m_current_world;
+			l_current_world = l_engine->m_current_world;
 
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldInitialization))
 			{
 				sys(*l_current_world);
 			}
@@ -732,7 +806,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityInitialization))
 			{
 				sys(*l_current_world);
 			}
@@ -741,7 +815,7 @@ void FE::engine::__game_main() noexcept
 				l_deferred_sys(*l_current_world);
 			}
 
-			for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
+			for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldBegin))
 			{
 				sys(*l_current_world);
 			}
@@ -749,7 +823,17 @@ void FE::engine::__game_main() noexcept
 			{
 				l_deferred_sys(*l_current_world);
 			}
+
+
+			l_physics_lag = 0.0;
+			l_physics_delta_clock.start_clock();
 		}
+
+		if (l_engine->get_program_options().get_garbage_collections_per_frame() > 0)
+		{
+			FE::fiber_scheduler::yield();
+		}
+
 		l_delta_clock.end_clock();
 		FE::float64 l_delta = l_delta_clock.get_delta_milliseconds();
 		l_current_world->set_delta_time(FE::world::auth{}, l_delta);
@@ -764,7 +848,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldEnd))
 	{
 		sys(*l_current_world);
 	}
@@ -773,11 +857,11 @@ void FE::engine::__game_main() noexcept
 		l_deferred_sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceEnd))
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_GameInstanceEnd))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_game_instance_end_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_game_instance_end_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
@@ -785,7 +869,7 @@ void FE::engine::__game_main() noexcept
 
 
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDefaultEntityDeinitialization))
 	{
 		sys(*l_current_world);
 	}
@@ -794,7 +878,7 @@ void FE::engine::__game_main() noexcept
 		l_deferred_sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
+	for (auto sys : l_engine->m_method_reflection.get_world_systems(l_current_world->get_world_tag(), _WorldDeinitialization))
 	{
 		sys(*l_current_world);
 	}
@@ -803,20 +887,20 @@ void FE::engine::__game_main() noexcept
 		l_deferred_sys(*l_current_world);
 	}
 
-	for (auto sys : m_method_reflection.get_global_systems(_GameInstanceDeinitialization))
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_GameInstanceDeinitialization))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_game_instance_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_game_instance_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
 
-	for (auto sys : m_method_reflection.get_global_systems(_EngineDeinitialization))
+	for (auto sys : l_engine->m_method_reflection.get_global_systems(_EngineDeinitialization))
 	{
 		sys();
 	}
-	for (global_system l_deferred_sys{}; m_deferred_engine_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
+	for (global_system l_deferred_sys{}; l_engine->m_deferred_engine_deinitialization_cmd_queue.try_pop(l_deferred_sys);)
 	{
 		l_deferred_sys();
 	}
@@ -870,6 +954,7 @@ void FE::engine::__read_froggy() noexcept
 
 
 		m_project_config._window_config._icon_paths = std::pmr::vector<std::pmr::string>(framework_base::get_large_memory_resource());
+		m_project_config._window_config._icon_images = std::pmr::vector<GLFWimage>(framework_base::get_large_memory_resource());
 		for (auto& element : l_window_config["IconPaths"])
 		{
 			FE_ASSERT(element.isString() == true);
@@ -887,12 +972,11 @@ void FE::engine::__read_froggy() noexcept
 				nullptr, nullptr
 			);
 #else
-			l_path_str = m_game_root_directory;
+
 #endif
 			l_path += "\\";
 			l_path += m_project_config._window_config._icon_paths.back();
 
-			m_project_config._window_config._icon_images = std::pmr::vector<GLFWimage>(framework_base::get_large_memory_resource());
 			m_project_config._window_config._icon_images.emplace_back();
 			m_project_config._window_config._icon_images.back().pixels = stbi_load(l_path.c_str(), &(m_project_config._window_config._icon_images.back().width), &(m_project_config._window_config._icon_images.back().height), nullptr, 4/*RGBA*/);
 		}

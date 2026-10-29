@@ -33,6 +33,15 @@ CLASS_FORWARD_DECLARATION(FE, shared_mutex)
 
 BEGIN_NAMESPACE(FE)
 
+#pragma warning(push)
+#pragma warning(disable:4324) // structure was padded due to alignment specifier
+struct alignas(FE::CPU_L1_cache_line::size) anesthesia
+{
+	std::condition_variable _cv;
+	std::mutex _lock;
+	std::atomic<var::uint64> _enqueue_count = 0;
+};
+#pragma warning(pop)
 
 class processors final
 {
@@ -41,7 +50,7 @@ class processors final
 
 	std::unique_ptr<fiber_scheduler[]> m_scheduler;
 	FE::int32 m_max_workers;
-	var::int32 m_owned_workers; // workers [0, m_owned_workers) run one task each and are left out of the round robin
+	std::atomic<var::int32> m_owned_workers; // workers [0, m_owned_workers) run one task each and are left out of the round robin
 	FE::int32 m_fibers_per_thread;
 	FE::size m_stack_size;
 	std::atomic_bool m_should_terminate;
@@ -49,15 +58,6 @@ class processors final
 	// One per worker thread, each on its own cache line so that waking one thread does not invalidate another's line.
 	// A schedule call raises the thread's enqueue count and notifies under its lock, and a worker that found no task
 	// sleeps until the count differs from the one it read before looking, so no wake-up is lost.
-#pragma warning(push)
-#pragma warning(disable:4324) // structure was padded due to alignment specifier
-	struct alignas(FE::CPU_L1_cache_line::size) anesthesia
-	{
-		std::condition_variable _cv;
-		std::mutex _lock;
-		std::atomic<var::uint64> _enqueue_count = 0;
-	};
-#pragma warning(pop)
 	std::unique_ptr<anesthesia[]> m_anesthesia;
 
 public:
@@ -79,8 +79,17 @@ public:
 	// Not thread-safe; must not be called concurrently.
 	void activate() noexcept;
 
+	// Thread-safe.
+	bool is_active() const noexcept;
+
 	// Thread-safe. Calling it from any thread will signal the fiber scheduler to terminate as soon as possible.
 	void terminate() noexcept;
+
+	static void yield_back_if_not_locked() noexcept;
+	static void yield() noexcept;
+
+	static bool is_fiber() noexcept;
+	static FE::fiber_scheduler* get_current_fiber_scheduler() noexcept;
 
 private:
 	// Wakes the worker thread thread_index_p after a task was queued for it.

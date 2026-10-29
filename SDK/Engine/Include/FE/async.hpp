@@ -30,12 +30,12 @@ class async
 public:
 	_FE_FORCE_INLINE_ static void schedule_task(const FE::task& task_p) noexcept
 	{
-		FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_task(task_p);
+		FE::engine::get_engine().get_processors().schedule_task(task_p);
 	}
 
 	_FE_FORCE_INLINE_ static void schedule_tasks(const fiber_flow& tasks_p) noexcept
 	{
-		FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_tasks(tasks_p);
+		FE::engine::get_engine().get_processors().schedule_tasks(tasks_p);
 	}
 
 
@@ -47,12 +47,12 @@ public:
 
 	_FE_FORCE_INLINE_ static FE::awaitable schedule_task_async(const task& task_p) noexcept
 	{
-		return FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_task_async(task_p);
+		return FE::engine::get_engine().get_processors().schedule_task_async(task_p);
 	}
 
 	_FE_FORCE_INLINE_ static FE::awaitable schedule_tasks_async(const fiber_flow& tasks_p) noexcept
 	{
-		return FE::engine::get_engine().get_processors(FE::engine::auth{}).schedule_tasks_async(tasks_p);
+		return FE::engine::get_engine().get_processors().schedule_tasks_async(tasks_p);
 	}
 };
 

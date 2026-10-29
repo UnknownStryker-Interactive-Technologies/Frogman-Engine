@@ -76,11 +76,11 @@ class list
 			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
 		}
 
-		template <class NodeAllocator, typename... Arguments>
-		constexpr node(const NodeAllocator& allocator_p, Arguments&&... arguments_p) noexcept
+		template <typename... Arguments>
+		constexpr node(Arguments&&... arguments_p) noexcept
 			:	m_prev(nullptr),
 				m_next(nullptr),
-				_value( std::make_obj_using_allocator<T>(allocator_p, std::forward<Arguments>(arguments_p)...) )
+				_value( std::forward<Arguments>(arguments_p)... )
 		{
 			//static_assert(std::is_nothrow_constructible_v<T, Arguments&&...>, "emplace_back requires nothrow-constructible T for the provided Arguments.");
 			FE_ASSERT((FE::byte*)&_value < (FE::byte*)&m_prev, "Assertion failed: this breaks the address alignment requirements of the T expected by many dependent classes.");
@@ -449,7 +449,7 @@ class list
 
 public:
 	using value_type = T;
-	using allocator_type = Allocator;
+	using allocator_type = std::allocator_traits<Allocator>::template rebind_alloc<node>;
 	using size_type = var::size;
 	using difference_type = var::ptrdiff;
 	using reference = value_type&;
@@ -461,11 +461,10 @@ public:
 	using reverse_iterator = list_iterator_wrapper<FE::reverse_iterator<list_iterator>>;
 	using const_reverse_iterator = list_iterator_wrapper<FE::const_reverse_iterator<list_iterator>>;
 
-	using node_allocator_type = std::allocator_traits<Allocator>::template rebind_alloc<node>;
-	using alloc_traits = std::allocator_traits<node_allocator_type>;
-
 private:
-	_FE_NO_UNIQUE_ADDRESS_ mutable node_allocator_type m_allocator;
+	using alloc_traits = std::allocator_traits<allocator_type>;
+
+	_FE_NO_UNIQUE_ADDRESS_ mutable allocator_type m_allocator;
 	node* m_front;
 	node* m_back;
 	size_type m_size;
@@ -530,11 +529,7 @@ public: // Member functions
 	}
 
 	constexpr list(const list& other_p)
-		:	list(other_p, std::allocator_traits<Allocator>::select_on_container_copy_construction(other_p.get_allocator()))
-	{}
-
-	constexpr list(const list& other_p, const allocator_type& alloc_p) noexcept
-		:	m_allocator(alloc_p),
+		:	m_allocator(other_p.m_allocator),
 			m_front(nullptr), 
 			m_back(nullptr), 
 			m_size(other_p.m_size)
@@ -561,7 +556,7 @@ public: // Member functions
 	}
 
 	constexpr list(list&& other_p) noexcept
-		:	m_allocator(std::move(other_p.m_allocator)),
+		:	m_allocator(other_p.m_allocator),
 			m_front(other_p.m_front),
 			m_back(other_p.m_back),
 			m_size(other_p.m_size)
@@ -571,24 +566,16 @@ public: // Member functions
 		other_p.m_size = 0;
 	}
 
+	constexpr list(const list& other_p, const allocator_type& alloc_p) noexcept
+		:	list(other_p)
+	{}
+
 	constexpr list(list&& other_p, const allocator_type& alloc_p) noexcept
 		:	m_allocator(alloc_p),
-			m_front(nullptr),
-			m_back(nullptr),
-			m_size(0)
+			m_front(other_p.m_front),
+			m_back(other_p.m_back),
+			m_size(other_p.m_size)
 	{
-		if (m_allocator != other_p.m_allocator)
-		{
-			for (T& l_element : other_p)
-			{
-				push_back(std::move(l_element));
-			}
-			return;
-		}
-
-		m_front = other_p.m_front;
-		m_back = other_p.m_back;
-		m_size = other_p.m_size;
 		other_p.m_front = nullptr;
 		other_p.m_back = nullptr;
 		other_p.m_size = 0;
@@ -618,15 +605,6 @@ public: // Member functions
 			return *this;
 		}
 
-		if constexpr (alloc_traits::propagate_on_container_copy_assignment::value == true)
-		{
-			if (m_allocator != other_p.m_allocator)
-			{
-				clear();
-			}
-			m_allocator = other_p.m_allocator;
-		}
-
 		if (other_p.m_size <= 0) // other is empty
 		{
 			FE_ASSERT(other_p.m_front == nullptr);
@@ -654,28 +632,15 @@ public: // Member functions
 			return *this;
 		}
 
-		if constexpr (alloc_traits::propagate_on_container_move_assignment::value == false)
-		{
-			if (m_allocator != other_p.m_allocator)
-			{
-				clear();
-				for (T& l_element : other_p)
-				{
-					push_back(std::move(l_element));
-				}
-				return *this;
-			}
-		}
-
 		if (m_size > 0) // deallocate the current resources
 		{
 			__deallocate_and_destruct_all(m_front, m_back);
 		}
 
 		// transfer the ownership
-		if constexpr (alloc_traits::propagate_on_container_move_assignment::value == true)
+		if constexpr (alloc_traits::propagate_on_container_copy_assignment::value == true)
 		{
-			m_allocator = std::move(other_p.m_allocator);
+			m_allocator = other_p.m_allocator;
 		}
 
 		m_front = other_p.m_front;
@@ -730,7 +695,7 @@ public: // Member functions
 	}
 
 
-	_FE_FORCE_INLINE_ constexpr allocator_type get_allocator() const noexcept { return allocator_type(m_allocator); }
+	_FE_FORCE_INLINE_ constexpr const allocator_type& get_allocator() const noexcept { return m_allocator; }
 
 
 
@@ -815,7 +780,7 @@ public: // Member functions
 		}
 		node*l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node( m_allocator, std::move(value_p) );
+		::new(l_new) node( std::move(value_p) );
 		l_new->m_next = FE::iterator_cast<node*>(pos_p);
 		l_new->m_prev = FE::iterator_cast<node*>(pos_p)->m_prev;
 		if (l_new->m_prev != nullptr)
@@ -841,7 +806,7 @@ public: // Member functions
 		}
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node(m_allocator, value_p);
+		::new(l_new) node(value_p);
 		l_new->m_next = FE::iterator_cast<node*>(pos_p);
 		l_new->m_prev = FE::iterator_cast<node*>(pos_p)->m_prev;
 		if (l_new->m_prev != nullptr)
@@ -923,7 +888,7 @@ public: // Member functions
 		}
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node( m_allocator, std::forward<Arguments>(arguments_p)... );
+		::new(l_new) node( std::forward<Arguments>(arguments_p)... );
 		l_new->m_next = FE::iterator_cast<node*>(pos_p);
 		l_new->m_prev = FE::iterator_cast<node*>(pos_p)->m_prev;
 		if (l_new->m_prev != nullptr)
@@ -1004,7 +969,7 @@ public: // Member functions
 	{
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node( m_allocator, value_p );
+		::new(l_new) node( value_p );
 
 		if (m_size == 0)
 		{
@@ -1025,7 +990,7 @@ public: // Member functions
 	{
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node( m_allocator, std::move(value_p) );
+		::new(l_new) node( std::move(value_p) );
 		
 		if (m_size == 0)
 		{
@@ -1050,7 +1015,7 @@ public: // Member functions
 
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node( m_allocator, std::forward<Arguments>(arguments_p)... );
+		::new(l_new) node( std::forward<Arguments>(arguments_p)... );
 
 		if (m_size == 0)
 		{
@@ -1101,7 +1066,7 @@ public: // Member functions
 		}
 		node* l_new = m_allocator.allocate(1);
 		FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_new) node(m_allocator, std::forward<Arguments>(arguments_p)...);
+		::new(l_new) node(std::forward<Arguments>(arguments_p)...);
 		l_new->m_next = m_front;
 		l_new->m_prev = m_front->m_prev;
 		if (l_new->m_prev != nullptr)
@@ -1165,11 +1130,7 @@ public: // Member functions
 
 	_FE_FORCE_INLINE_ void swap(list& other_p) noexcept
 	{
-		if constexpr (alloc_traits::propagate_on_container_swap::value == true)
-		{
-			using std::swap;
-			swap(m_allocator, other_p.m_allocator);
-		}
+		//std::swap(m_allocator, other_p.m_allocator);
 		std::swap(m_front, other_p.m_front);
 		std::swap(m_back, other_p.m_back);
 		std::swap(m_size, other_p.m_size);
@@ -1347,14 +1308,14 @@ private: // these are private internal functions mean to operate on the given ar
 
 		node* l_front = m_allocator.allocate(1);
 		FE_ASSERT(l_front != nullptr, "Assertion failed: allocation returned nullptr.");
-		::new(l_front) node( m_allocator, value_p );
+		::new(l_front) node( value_p );
 
 		node* l_node = l_front;
 		for (size_type i = 1; i < count_p; ++i)
 		{
 			node* l_new = m_allocator.allocate(1);
 			FE_ASSERT(l_new != nullptr, "Assertion failed: allocation returned nullptr.");
-			::new(l_new) node( m_allocator, value_p );
+			::new(l_new) node( value_p );
 
 			l_node->m_next = l_new;
 			l_new->m_prev = l_node;

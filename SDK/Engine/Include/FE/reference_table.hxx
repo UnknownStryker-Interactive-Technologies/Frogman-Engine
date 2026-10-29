@@ -1,5 +1,5 @@
-﻿#ifndef _FROGMAN_ENGINE_REFERENCE_TABLE_HXX
-#define _FROGMAN_ENGINE_REFERENCE_TABLE_HXX
+﻿#ifndef _FROGMAN_ENGINE_REFERENCE_TABLE_HXX_
+#define _FROGMAN_ENGINE_REFERENCE_TABLE_HXX_
 #pragma warning(push)
 #pragma warning(disable: 4324)
 /*
@@ -21,6 +21,7 @@ limitations under the License.
 #include <FE/farray.hxx>
 #include <FE/list.hxx>
 #include <FE/memory.hxx>
+#include <FE/processors.hxx>
 #include <FE/thread_id.hxx>
 #include <FE/framework/fiber.hxx>
 
@@ -31,6 +32,10 @@ limitations under the License.
 #include <cmath>
 #include <memory_resource>
 #include <new>
+#include <shared_mutex>
+#include <span>
+
+#include <absl/container/flat_hash_map.h>
 
 #include <concurrent_queue.h>
 
@@ -48,57 +53,87 @@ class reference_table
 public:
     constexpr static FE::size page_size_in_bytes = 4096;
     constexpr static FE::size references_per_page = (page_size_in_bytes - (2 * sizeof(void*)) - sizeof(var::size)) / sizeof(internal::gc_ptr::metadata*);
-    static_assert(sizeof(FE::list<FE::farray<internal::gc_ptr::metadata*, references_per_page>>::allocator_type::value_type) == page_size_in_bytes, "Static assertion failed: a list node of FE::reference_table must be exactly 4 KiB.");
+    static_assert(sizeof(typename FE::list< FE::farray<internal::gc_ptr::metadata*, references_per_page> >::allocator_type::value_type) == page_size_in_bytes, "Static assertion failed: a list node of FE::reference_table must be exactly 4 KiB.");
 
 private:
     struct alignas(FE::CPU_L1_cache_line::size) thread_reference_table
     {
         FE::list<FE::farray<internal::gc_ptr::metadata*, references_per_page>> _references;
-        var::size _gc_cursor;
 
         explicit thread_reference_table(std::pmr::memory_resource* const resource_p) noexcept;
     };
 
+    struct suspect
+    {
+        internal::gc_ptr::metadata* _metadata = nullptr;
+        var::size _type_hash = 0;
+    };
+
+    using gc_ptr_offset_vector = std::pmr::vector<var::int64>;
+    using gc_ptr_offset_registry_type =
+        absl::flat_hash_map<var::size, gc_ptr_offset_vector,
+        absl::DefaultHashContainerHash<var::size>, absl::DefaultHashContainerEq<var::size>,
+        std::pmr::polymorphic_allocator< std::pair<const var::size, gc_ptr_offset_vector> >
+        >;
+
     FE::int32 m_max_concurrency;
     FE::unique_ptr<thread_reference_table[]> m_reference_tables;
-	concurrency::concurrent_queue<internal::gc_ptr::metadata*, std::pmr::polymorphic_allocator<internal::gc_ptr::metadata*>> m_cyclic_reference_death_note;
+    std::shared_mutex m_gc_ptr_offset_registry_lock;
+    gc_ptr_offset_registry_type m_gc_ptr_offset_registry;
+	std::jthread m_cyclic_reference_inspector;
+	FE::anesthesia m_cyclic_reference_inspector_anesthesia;
+	concurrency::concurrent_queue< suspect, std::pmr::polymorphic_allocator<suspect> > m_suspected_cyclic_reference_queue;
 
 public:
     explicit reference_table(FE::int32 max_concurrency_p, std::pmr::memory_resource* const resource_p) noexcept;
+    ~reference_table() noexcept;
 
     reference_table(const reference_table&) = delete;
     reference_table& operator=(const reference_table&) = delete;
 
-    void collect_garbage(FE::float64 percentage_p) noexcept;
-	void investigate_cyclic_references(internal::gc_ptr::metadata* const metadata_p, FE::uint32 max_steps_p) noexcept;
-	void schedule_cyclic_reference_deletion() noexcept;
+    void collect_garbages(FE::float64 percentage_p) noexcept;
 
 private:
+    void __investigate_cyclic_references() noexcept;
 
-    _FE_FORCE_INLINE_ void __push_back(internal::gc_ptr::metadata* const metadata_p) noexcept
+    static void __collect(internal::gc_ptr::metadata* const metadata_p) noexcept;
+    void __collect_cyclic_garbage(internal::gc_ptr::metadata* const metadata_p) noexcept;
+    void __push_back(internal::gc_ptr::metadata* const metadata_p) noexcept;
+
+    template <class T>
+    void __register_gc_ptr_offsets(FE::size type_hash_p) noexcept
     {
-        FE_ASSERT(metadata_p != nullptr, "Assertion failed: cannot push back a null gc object.");
-        FE::uint16 l_thread_id = FE::get_current_thread_id();
+        gc_ptr_offset_vector l_offsets(m_gc_ptr_offset_registry.get_allocator().resource());
+        __append_gc_ptr_offsets<T>(l_offsets);
 
-        auto& l_references = m_reference_tables[l_thread_id]._references;
-        if ((l_references.is_empty() == false) && (l_references.back().size() < references_per_page))
-        {
-            l_references.back().push_back(metadata_p);
-            return;
-        }
-        l_references.emplace_back().push_back(metadata_p);
+        std::unique_lock<std::shared_mutex> l_lock(m_gc_ptr_offset_registry_lock);
+        m_gc_ptr_offset_registry.try_emplace(type_hash_p, std::move(l_offsets));
     }
 
-    _FE_FORCE_INLINE_ static void __collect(internal::gc_ptr::metadata* const metadata_p) noexcept
+    template <class T>
+    static void __append_gc_ptr_offsets(gc_ptr_offset_vector& out_offsets_p) noexcept
     {
-        FE_ASSERT(metadata_p != nullptr, "Assertion failed: cannot collect a null gc object.");
+        const gc_ptr_offset_vector& l_own_offsets = internal::gc_ptr::own_gc_ptr_offsets<T>();
+        out_offsets_p.insert(out_offsets_p.end(), l_own_offsets.begin(), l_own_offsets.end());
 
-        FE::size l_metadata_offset_in_bytes = internal::gc_ptr::align_up(static_cast<var::size>(metadata_p->_sizeofT) * metadata_p->_length, alignof(internal::gc_ptr::metadata));
-        for (var::size i = metadata_p->_length; i > 0; --i)
+        if constexpr (FE::has_base_type<T>::value == true)
         {
-            std::launder( reinterpret_cast<FE::gc_base*>(reinterpret_cast<var::byte*>(metadata_p->_data) + ((i - 1) * metadata_p->_sizeofT)) )->~gc_base();
+            if constexpr ((std::is_base_of_v<FE::gc_base, typename T::base_type> == true) && (std::is_same_v<T, typename T::base_type> == false))
+            {
+                __append_gc_ptr_offsets<typename T::base_type>(out_offsets_p);
+            }
         }
-        metadata_p->_resource->deallocate(reinterpret_cast<var::byte*>(metadata_p) - l_metadata_offset_in_bytes, l_metadata_offset_in_bytes + sizeof(internal::gc_ptr::metadata), std::max<var::size>(metadata_p->_alignofT, alignof(internal::gc_ptr::metadata)));
+    }
+
+    std::span<const var::int64> __find_gc_ptr_offsets(FE::size type_hash_p) noexcept
+    {
+        std::shared_lock<std::shared_mutex> l_lock(m_gc_ptr_offset_registry_lock);
+        auto l_search_result = m_gc_ptr_offset_registry.find(type_hash_p);
+        if (l_search_result == m_gc_ptr_offset_registry.end())
+        {
+            return {};
+        }
+        return { l_search_result->second.data(), l_search_result->second.size() };
     }
 };
 
